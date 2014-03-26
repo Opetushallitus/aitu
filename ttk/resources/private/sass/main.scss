@@ -1,0 +1,27 @@
+/* YHTEISET
+----------------------------------------------------------------------------- */
+@import "yhteiset/_yhteiset";
+
+/* LAYOUTIN PERUSTYYLIT
+----------------------------------------------------------------------------- */
+@import "partials/_base";
+
+/* HEADER JA FOOTER
+----------------------------------------------------------------------------- */
+@import "partials/_header";
+@import "partials/_footer";
+
+/* UI KOMPONENTIT
+----------------------------------------------------------------------------- */
+
+@import "partials/_ohje";
+@import "partials/_feedback";
+
+/* NÄKYMÄT
+------------------------------------------------------------------------------*/
+@import "views/_index";
+@import "views/_toimikunta";
+@import "views/_sopimus";
+@import "views/_henkilo";
+@import "views/_tutkinto";
+

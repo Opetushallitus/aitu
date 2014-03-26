@@ -1,0 +1,61 @@
+<h1>Toimikuntahaku</h1>
+
+<form>
+  <div class="actions-container">
+  <button>Luo uusi toimikunta</button>
+  <label>Toimikausi</label>
+  <select>
+    <option>Nykyinen</option>
+    <option>2016-2019</option>
+    <option>2010-2013</option>
+    <option>2007-2010</option>
+  </select>
+</div>
+   <fieldset class="search-field">
+    <label>Toimikunnan nimi tai tilikoodi</label>
+    <input type="text" ng-model="search">  </input>
+  </fieldset>
+
+  <fieldset class="search-field">
+    <label>Opintoala tai tutkinto</label>
+    <select ui-select2 ng-model="search">
+        <option value=""></option>
+        <optgroup label="Opintoala">
+          <option>Tutkinto1</option>
+          <option>Tutkinto2</option>
+        </optgroup>
+    </select>
+  </fieldset>
+
+  <fieldset class="search-field">
+    <label>Kielisyys</label>
+    <select ui-select2 ng-model="search">
+        <option value=""></option>
+        <option>Kaksikielinen</option>
+        <option>Suomi</option>
+        <option>Ruotsi</option>
+    </select>
+  </fieldset>
+
+</form>
+
+
+<h2>Tulokset</h2>
+<table class="full-width">
+  <thead>
+    <tr>
+        <th>Nimi</th>
+        <th>Diaarinumero</th>
+        <th>Tilikoodi</th>
+        <th>Kielisyys</th>
+     </tr>  
+  </thead>
+  <tbody>
+    <tr ng-repeat="toimikunta in toimikunnat | filter:search ">
+      <th>{{toimikunta.nimi}}</th>
+      <th>{{toimikunta.diaarinumero}}</th>
+      <th>{{toimikunta.tilikoodi}}</th>
+      <th>{{toimikunta.kielisyys}}</th>
+    </tr>
+  </tbody>
+</table>

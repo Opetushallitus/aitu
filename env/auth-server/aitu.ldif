@@ -1,0 +1,59 @@
+dn: uid=aitunpaakayttaja,ou=people,dc=example,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: aitunpaakayttaja
+employeeNumber: OID.aitunpaakayttaja
+givenName: Paakayttaja
+sn: USER
+cn: ROOT
+
+dn: uid=aitunkayttaja,ou=people,dc=example,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: aitunkayttaja
+employeeNumber: OID.aitunkayttaja
+givenName: Kayttaja
+sn: USER
+cn: ROOT
+
+dn: uid=T-800,ou=people,dc=example,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: T-800
+employeeNumber: OID.T-800
+givenName: Arska Raaka
+sn: USER
+cn: ROOT
+
+dn: uid=T-1001,ou=people,dc=example,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: T-1001
+employeeNumber: OID.T-1001
+givenName: Ivan Ivanovits
+sn: USER
+cn: ROOT
+
+dn: cn=APP_AITU_UPDATE_1.2.246.562.10.2013121312395140176502,ou=groups,dc=example,dc=com
+objectclass: groupOfUniqueNames
+objectclass: top
+cn: APP_AITU.1.2.246.562.10.2013121312395140176502
+uniqueMember: uid=aitunpaakayttaja,ou=people,dc=example,dc=com
+uniqueMember: uid=aitunkayttaja,ou=people,dc=example,dc=com
+uniqueMember: uid=T-1001,ou=people,dc=example,dc=com
+uniqueMember: uid=T-800,ou=people,dc=example,dc=com
+
+dn: cn=APP_AITU_CRUD_1.2.246.562.10.2013121312395140176502,ou=groups,dc=example,dc=com
+objectclass: groupOfUniqueNames
+objectclass: top
+cn: APP_AITU_CRUD_1.2.246.562.10.2013121312395140176502
+uniqueMember: uid=aitunpaakayttaja,ou=people,dc=example,dc=com
+uniqueMember: uid=T-1001,ou=people,dc=example,dc=com

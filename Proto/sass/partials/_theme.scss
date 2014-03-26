@@ -1,0 +1,14 @@
+$gray-color: rgb(128,128,128);
+$lighter-gray: lighten($gray-color, 20%);
+$lightest-gray: lighten($gray-color, 40%);
+$darker-gray: darken($gray-color, 20%);
+$darkest-gray: darken($gray-color, 40%);
+
+
+$primary-color: rgb(10,158,203);
+$lighter-primary: lighten($primary-color, 20%);
+$lightest-primary: lighten($primary-color, 40%);
+$darker-primary: darken($primary-color, 20%);
+$darkest-primary: darken($primary-color, 40%);
+
+$primary-action-text: white;

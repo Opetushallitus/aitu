@@ -1,0 +1,58 @@
+.content-box {
+  border: 1px solid rgba(0,0,0,0.2);
+  width: 40%;
+  margin: $marginL;
+  padding: $marginM;
+  display: inline-block;
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.message-container {
+  .message {
+    text-decoration: none;
+    margin: $marginS;
+    &:after {
+      content: " ";
+      display: block;
+      width: 80%;
+      margin: 0 auto;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    p {
+      margin: 0 $marginS $marginS $marginS;
+    }
+  }
+}
+
+.actions-container {
+  margin: $marginL;
+}
+
+.tiedote {
+  display: inline-block;
+  width: 45%;
+
+  h1 {
+    margin-bottom: 0;
+  }
+  p {
+    margin: 0 0 0 0;
+  }
+
+  textarea {
+    @include border-box;
+    width: 100%;
+    height: 100px;
+  }
+  label {
+    margin: 0 0 0 0;
+    width: auto;
+  }
+  .oikealle {
+    float: right;
+    margin-right: 0;
+    margin-left: $marginL;
+  }
+}

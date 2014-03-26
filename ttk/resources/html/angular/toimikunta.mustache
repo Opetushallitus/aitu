@@ -1,0 +1,103 @@
+{{=[[ ]]=}}
+[[#i18n.yleiset]]
+[[#i18n.toimikunta]]
+<h1>
+  {{toimikunta.nimi | lokalisoi:toimikunta:'nimi'}}
+  <span ng-show="toimikunta.voimassa === false">([[ei-voimassa]])</span>
+  <button ng-if="salliMuokkaus([[yllapitaja]])" class="icon edit-icon" ng-click="muokkaa()"></button>
+  <ohje tunniste="toimikunta"></ohje>
+</h1>
+
+<section class="info-section">
+  <form>
+    <fieldset>
+      <label>[[diaarinumero]]</label>
+      <p>{{toimikunta.diaarinumero}}</p>
+    </fieldset>
+    <fieldset>
+      <label>[[tilikoodi]]</label>
+      <p>{{toimikunta.tilikoodi}}</p>
+    </fieldset>
+    <fieldset>
+      <label>[[sahkoposti]]</label>
+      <p ng-hide="muokkausTila"><a href="mailto:{{toimikunta.sahkoposti}}">{{toimikunta.sahkoposti}}</a></p>
+      <input type="text" ng-model="toimikunta.sahkoposti" ng-hide="!muokkausTila" maxlength="100">
+    </fieldset>
+    <fieldset>
+      <label>[[kielisyys]]</label>
+      <enum-valikko ng-hide="!muokkausTila" nimi="kieli" arvo="toimikunta.kielisyys"></enum-valikko>
+      <p ng-hide="muokkausTila"><enum-arvo nimi="kieli" arvo="toimikunta.kielisyys"></enum-arvo></p>
+    </fieldset>
+    <luotu model="toimikunta"></luotu>
+    <muutettu model="toimikunta"></muutettu>
+    <div>
+      <label>[[toimikausi]]</label>
+      <p ng-hide="muokkausTila">{{toimikunta.toimikausi_alku | date:'dd.MM.yyyy'}} – {{toimikunta.toimikausi_loppu | date:'dd.MM.yyyy'}}</p>
+      <div ng-hide="!muokkausTila">
+        <pvm-valitsin valittu-pvm="toimikunta.toimikausi_alku" min-pvm="toimikunta.alkupvm" max-pvm="toimikunta.loppupvm" otsikko="[[toimikausi_alku]]"></pvm-valitsin>
+        <pvm-valitsin valittu-pvm="toimikunta.toimikausi_loppu" min-pvm="toimikunta.alkupvm" max-pvm="toimikunta.loppupvm" otsikko="[[toimikausi_loppu]]"></pvm-valitsin>
+      </div>
+    </div>
+    <div>
+      <tallenna disabloi-pyyntojen-ajaksi="['toimikunnan-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="'[[tallenna]]'"></tallenna>
+      <button ng-hide="!muokkausTila" ng-click="peruuta()">[[peruuta]]</button>
+    </div>
+  </form>
+</section>
+
+<span ng-hide="muokkausTila">
+  <div class="list-controls">
+    <button class="icon edit-icon" ng-click="muokkaaToimialaa()" ng-if="salliMuokkaus([[yllapitaja]])"></button>
+  </div>
+  <h2>[[tutkintotoimikunnan-toimiala]]</h2>
+  <table jarjestettava-taulukko="toimikunta.nayttotutkinto" jarjestetty-data="tutkintoJarjestetty">
+    <thead>
+    <tr>
+      <th jarjestettava-sarake="opintoala_nimi" jarjestely-fn="orderByLokalisoitu" oletus-jarjestely>[[opintoala]]</th>
+      <th jarjestettava-sarake="nimi" jarjestely-fn="orderByLokalisoitu">[[nayttotutkinto]]</th>
+      <th>[[osaamisala]]</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="tutkinto in tutkintoJarjestetty">
+      <td>{{tutkinto.opintoala_nimi | lokalisoi:tutkinto:'opintoala_nimi'}}</td>
+      <td><a href="#/tutkinto/{{tutkinto.tutkintotunnus}}">{{tutkinto.tutkintotunnus}} {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a></td>
+      <td></td>
+    </tr>
+  </table>
+
+  <span ng-if="toimikunta.voimassa">
+    <div class="list-controls">
+      <button class="icon edit-icon" ng-click="muokkaaJasenia()" ng-if="salliMuokkaus([[yllapitaja]])"></button>
+    </div>
+    <jasenyyksien-listaus class="nykyiset-jasenyydet"
+                          otsikko="'[[jasenet]]'"
+                          jasenet="nykyisetJasenet"
+                          nayta-sahkoposti="true"
+                          piilota-kesto="true">
+    </jasenyyksien-listaus>
+  </span>
+  <vanhojen-jasenyyksien-listaus class="aiemmat-jasenyydet"
+                                 otsikko="toimikunta.voimassa ? '[[aiemmat-jasenet]]' : '[[jasenet]]'"
+                                 jasenet="entisetJasenet"
+                                 salli-piilotus="toimikunta.voimassa">
+  </vanhojen-jasenyyksien-listaus>
+
+
+  <div class="list-controls">
+    <button class="icon add-icon" ng-click="siirrySopimuksenLuontiin()" ng-if="salliMuokkaus([[yllapitaja]])"></button>
+  </div>
+  <sopimusten-listaus class="nykyiset-sopimukset"
+                      otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
+                      sopimukset="nykyisetSopimukset"
+                      nayta-tutkinnot="true">
+  </sopimusten-listaus>
+
+  <vanhojen-sopimusten-listaus class="vanhat-sopimukset"
+                               otsikko="toimikunta.voimassa ? '[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]' : '[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
+                               sopimukset="entisetSopimukset"
+                               nayta-tutkinnot="true">
+  </vanhojen-sopimusten-listaus>
+
+</span>
+[[/i18n.toimikunta]]
+[[/i18n.yleiset]]

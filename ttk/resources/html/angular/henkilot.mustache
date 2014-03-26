@@ -1,0 +1,40 @@
+{{=[[ ]]=}}
+[[#i18n.henkilot]]
+<button class="button-with-icon add-user-icon luo-uusi" ng-click="luoUusi()" ng-if="[[yllapitaja]]">[[luo-uusi]]</button>
+<h1>[[henkilohaku]]</h1>
+<form>
+  <div><fieldset class="search-field">
+    <label>[[henkilon-nimi]]</label>
+    <input type="text" ng-model="search.nimi" class="search-with-autocomplete">
+  </fieldset></div>
+  <div><fieldset class="search-field">
+    <label>[[toimikunnan-nimi]]</label>
+    <input type="text" ng-model="search.toimikunta" class="search-with-autocomplete">
+  </fieldset></div>
+  <div><fieldset class="search-field">
+    <h3>[[toimikausi]]</h3>
+    <input id="toimikausi_nykyinen" type="radio" ng-model="search.toimikausi" value="nykyinen">
+    <label class="input" for="toimikausi_nykyinen">[[toimikausi-nykyinen]]</label><br/>
+    <input id="toimikausi_kaikki" type="radio" ng-model="search.toimikausi" value="kaikki">
+    <label class="input" for="toimikausi_kaikki">[[toimikausi-kaikki]]</label>
+  </fieldset></div>
+</form>
+
+<div class="search-results" lataus-indikaattori metodi-idt="['henkilolistaus']"  viesti="[[henkiloita-ladataan]]" virheviesti="[[henkiloiden-lataus-epaonnistui]]" yrita-uudelleen="haeHenkilot()">
+  <hakutulokset ng-hide="latausKaynnissa" tuloksia-sivulla="10" otsikot="['[[nimi]]', '[[toimikunta]]', '[[toimikausi]]']" hakutulokset="henkilot">
+    <div class="table-cell"><auth-linkki href="#/henkilot/{{hakutulos.henkiloid}}/tiedot">{{hakutulos.etunimi}} {{hakutulos.sukunimi}}</auth-linkki></div>
+    <div class="table-cell">
+      <div ng-repeat="jasenyys in hakutulos.jasenyydet">
+        <a href="#/toimikunta/{{jasenyys.diaarinumero}}/tiedot">{{jasenyys.nimi | nimivuosi:jasenyys:'nimi':'toimikausi_alku'}}</a>
+      </div>
+    </div>
+    <div class="table-cell">
+      <div ng-repeat="jasenyys in hakutulos.jasenyydet">
+        {{jasenyys.toimikausi_alku | date:'dd.MM.yyyy'}} – {{jasenyys.toimikausi_loppu | date:'dd.MM.yyyy'}}
+      </div>
+    </div>
+  </hakutulokset>
+</div>
+
+
+[[/i18n.henkilot]]

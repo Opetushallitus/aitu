@@ -1,0 +1,47 @@
+
+$font-body: "Open Sans", "Arial", sans-serif;
+$font-heading: "Open Sans Condensed", "Arial", sans-serif;
+$font-heading-light: "Open Sans Condensed Light", "Arial", sans-serif;
+$font-size-body: 14px;
+@mixin engraved{ text-shadow: 0px 1px 0px rgba(255,255,255,.3), 0px -1px 0px rgba(0,0,0,.7);}
+
+body {
+  font-family: $font-body;
+  font-size: $font-size-body;
+  line-height: $baseline;
+  margin-bottom: $baseline;
+  color: $darker-gray;
+}
+
+p {
+  margin-bottom: $baseline * 0.5;
+  line-height: $baseline;
+}
+
+h1 {
+  font-family: $font-heading;
+  font-weight: bold;
+  font-size: 2.14em;
+  line-height: $baseline *2;
+  margin-bottom: $marginS;
+  text-transform:uppercase;
+}
+
+h2 {
+  font-family: $font-heading-light;
+  margin-bottom: $marginM;
+  font-weight: 400;
+  font-size: 1.7em;
+  text-transform:uppercase;
+  color: $gray-color;
+}
+
+h3 {
+  font-family: $font-heading;
+  margin-bottom: $marginS;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+i {
+  margin-bottom: $marginM;
+}

@@ -1,0 +1,112 @@
+header {
+  color: black;
+  padding: $marginM;
+  margin-top: -10px !important;
+  background: url('../img/opetushallitus.svg') no-repeat right 20px content-box, url('../img/AITU-background.png') no-repeat left top;
+  .no-svg & {background-image: url('../img/opetushallitus.gif')}
+/*  border-bottom: 1px solid $lightest-gray; */
+  height: 160px;
+
+  h1 {
+    display: inline-block;
+    font-size: 4.2em;
+    font-weight: 800;
+    font-family: $font-heading-light;
+    margin: 0;
+    padding-top: 30px;
+    padding-left: 20px;
+    vertical-align: middle;
+  }
+  h2 {
+    display: inline-block;
+    width: 500px;
+    font-size: 1.7em;
+    font-weight: 300;
+    font-family: $font-heading-light;
+    margin: 0;
+    padding-top: 30px;
+    vertical-align: middle;
+  }
+  .separator {
+    position: relative;
+    top: 10px;
+    font-size: 4.2em;
+    font-weight: 100;
+    vertical-align: middle;
+  }
+  form {
+    display: block;
+    margin-top: 24px;
+    padding-left: 20px;
+    color: $darker-gray;
+
+    input {
+      @include border-box;
+      width: 30%;
+      height: $baseline + 4;
+      border: 1px solid  $primary-color;
+    }
+    button {
+      height: $baseline + 4;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    p {
+      margin: 0;
+      padding-left:10px;
+    }
+  }
+}
+
+.main-nav {
+  $nav-height: 40px;
+  $separator-color: #009dcd;
+  $font-color: $primary-action-text;
+  background-color: $primary-color;
+  min-height: $nav-height;
+  font-size: 1em;
+  a {
+    display: inline-block;
+    padding-top: 8px;
+    text-decoration: none;
+    color: $font-color!important;
+    text-transform:uppercase;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    @include clearfix;
+    li {
+      border-right: 1px solid $separator-color;
+      padding: 0 $marginM;
+      float: left;
+      height: $nav-height;
+      &:hover {background-color: $darker-primary;}
+      &:first-child {border-left: 1px solid $separator-color;}
+      a {
+        text-transform:uppercase;
+      }
+      span {
+        padding-top: 8px;
+        display: inline-block;
+      }
+
+    }
+  }
+  #current-user {float: right; padding-right: 40px; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
+  .change-lang {
+    float: right;
+  }
+  .change-lang-active {
+    display: inline-block;
+  }
+  .change-lang-inactive {
+    display: inline-block;
+  }
+  .change-lang-active:hover {
+    background-color: $darker-primary;
+  }
+  .change-lang-inactive:hover {
+    background-color: $primary-color;
+  }
+}

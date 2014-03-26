@@ -1,0 +1,69 @@
+{{=[[ ]]=}}
+[[#i18n.tutkinto]]
+<h1>{{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}} - {{tutkinto.tutkintotunnus}}</h1>
+
+<section class="info-section">
+  <fieldset>
+    <label>[[tutkintokoodi]]</label>
+    <p>{{tutkinto.tutkintotunnus}}</p>
+  </fieldset>
+    <fieldset>
+    <label>[[tutkinnonperusteiden-diaarinumero]]</label>
+    <p>{{tutkinto.peruste}}</p>
+  </fieldset>
+  <fieldset>
+    <label>[[koulutusala]]</label>
+    <p>{{tutkinto.opintoala.koulutusala.selite | lokalisoi:tutkinto.opintoala.koulutusala:'selite'}}</p>
+  </fieldset>
+  <fieldset>
+    <label>[[opintoala]]</label>
+    <p>{{tutkinto.opintoala.selite | lokalisoi:tutkinto.opintoala:'selite'}}</p>
+  </fieldset>
+  <fieldset>
+    <label>[[tutkintotaso]]</label>
+    <p><enum-arvo nimi="tutkintotaso" arvo="tutkinto.tutkintotaso"></enum-arvo></p>
+  </fieldset>
+  <fieldset ng-show="tutkinto.siirtymaaika_paattyy">
+    <label>[[siirtymaaika-paattyy]]</label>
+    <p>{{tutkinto.siirtymaaika_paattyy}}</p>
+  </fieldset>
+  <fieldset class="tutkintotyyppi">
+    <label>[[tyyppi]]</label>
+    <p>{{tutkinto.tyyppi_selite | lokalisoi:tutkinto:'tyyppi_selite'}}</p>
+  </fieldset>
+
+  <br/>
+  <fieldset class="toimikunta-lista">
+    <label>[[toimikunta]]</label>
+    <div ng-repeat="toimikunta in toimikunnat.nykyiset">
+      <a ng-href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a>
+    </div>
+  </fieldset>
+</section>
+
+<sopimusten-listaus class="nykyiset-sopimukset"
+                    otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
+                    sopimukset="sopimukset.nykyiset"
+                    nayta-peruste-sarake="true">
+</sopimusten-listaus>
+
+<vanhojen-sopimusten-listaus class="vanhat-sopimukset"
+                             otsikko="'[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]'"
+                             sopimukset="sopimukset.vanhat"
+                             nayta-peruste-sarake="true">
+</vanhojen-sopimusten-listaus>
+
+<h2>[[vanhat-toimikunnat]]</h2>
+<table>
+  <thead>
+  <tr>
+    <th>[[toimikunnan-nimi]]</th>
+    <th>[[toimikunnan-toimikausi]]</th>
+  </tr>
+  </thead>
+  <tr ng-repeat="toimikunta in toimikunnat.vanhat">
+    <td><a href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a></td>
+    <td>{{toimikunta.alkupvm | date:'dd.MM.yyyy'}} – {{toimikunta.loppupvm | date:'dd.MM.yyyy'}}</td>
+  </tr>
+</table>
+[[/i18n.tutkinto]]

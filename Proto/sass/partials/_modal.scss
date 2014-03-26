@@ -1,0 +1,126 @@
+/* Z-index of .mask must lower than .window */
+.mask {
+  position:fixed;
+  z-index:9000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+  &.black {
+    background-color:#000;
+  }
+  &.white {
+    background-color:#fff;
+  }
+}
+
+.window {
+  position:fixed;
+  z-index:9999;
+  top: 30%;
+  left: 30%;
+  padding: $marginM $marginM $marginM $marginM;
+  background: white;
+  overflow:hidden;
+  &.rounded {
+    border-radius: 6px;
+  }
+}
+
+.autosized {
+  min-width: 20%;
+  min-height:$baseline * 6;
+  height: auto;
+  width: auto;
+}
+
+.autosized-yes-no {
+  min-height:$baseline * 6;
+  height: auto;
+  width:20%;
+}
+.autosized-ok {
+  min-height:$baseline * 5;
+  height: auto;
+  width:20%;
+}
+/* Customize your modal window here, you can add background image too */
+
+.dialog-header {
+  height: 28px;
+  padding: 2px $marginL;
+  border-bottom: 1px solid;
+  h2 {
+    margin: 0px;
+    display: inline;
+  }
+  .dialog-close {
+    float: right;
+    cursor:pointer;
+    font-size: 20px;
+    margin: 0;
+  }
+}
+
+.dialog-content{
+  /* somewhat less than .autosized - .dialog-header */
+  min-height: $baseline * 4;
+  position: relative;
+  margin-top: $marginM;
+  padding-bottom: $baseline + 5px;
+
+  label, select {
+    display: block;
+    width: 90%;
+  }
+
+
+  .dialog-desc {
+    width: 300px;
+  }
+  [type=submit], .btn, button {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-top: $baseline;
+    
+  }
+
+}
+.scrolling-content {
+  overflow-y: scroll;
+  max-height: 288px;
+}
+
+.dialog-content-low {
+  min-height: $baseline * 3;
+  padding-bottom:0;
+}
+
+.with-map {
+  display: table-row;
+
+  .map-container {
+    padding: 0;
+  }
+
+  .btn-primary {
+    left: auto; right: 90px;
+    bottom: 5px;
+  }
+  a.btn-dialog {
+    right:20px;
+    bottom: 10px;
+    width: auto;
+  }
+}
+
+.with-map > div {
+  display: table-cell;
+  vertical-align: top;
+  padding-left: $marginM;
+}
+
+.neighbors-message {
+  margin: $marginM;
+}

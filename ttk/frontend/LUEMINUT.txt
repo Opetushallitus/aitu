@@ -1,0 +1,20 @@
+Javascriptin yksikkötestien ajo:
+
+Testiajoja varten täytyy asentaa nodejs <http://nodejs.org/>.
+
+Testien tarvitsemat työkalut asennetaan komennolla:
+$ npm install
+hakemistossa ttk/frontend.
+
+Testit ajetaan komennolla:
+$ grunt test
+
+Tämä jää tarkkailemaan testeihin ja Javascript-tiedostoihin tehtyjä
+muutoksia ja ajaa testit aina muutoksen jälkeen.
+
+Uusien bower kirjastojen asentaminen:
+$ bower install <kirjaston-nimi> --save
+Lisää kirjaston js-filen kopiointi gruntfilen initConfig.concat.dist.src -listaan:
+$ grunt bower
+
+

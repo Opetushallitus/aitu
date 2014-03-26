@@ -1,0 +1,29 @@
+footer .separator {margin: 0 10px;}
+
+footer.copyright-footer, footer.dev-footer {
+  @include border-box;
+  color: #ffffff;
+  a {color:$lighter-primary;}
+  .app-wrapper {
+    @include border-box;
+  }
+}
+
+footer.copyright-footer {
+  $footer-height: 120px;
+  height: $footer-height; background-color: $darkest-gray;
+  .app-wrapper {
+    padding-top: 50px;
+    height: $footer-height;
+    background: url("../img/oph_logo_footer.svg") right 10px center no-repeat;
+    .no-svg & {background-image: url("../img/oph_logo_footer.png")}
+  }
+}
+
+footer.dev-footer { background-color: $darker-primary;
+  > div {min-height: 80px;}
+  .app-wrapper {
+    padding-top: 28px;
+    color: $primary-action-text;
+  }
+}

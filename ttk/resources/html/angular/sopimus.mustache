@@ -1,0 +1,186 @@
+{{=[[ ]]=}}
+[[#i18n]]
+<h1>
+  [[jarjestamissopimus.jarjestamissopimus]]
+  <span ng-show="sopimus.voimassa === false">([[yleiset.ei-voimassa]])</span>
+  <button ng-show="salliMuokkaus()" class="icon edit-icon" ng-click="muokkaa()"></button>
+  <button ng-show="salliMuokkaus()" class="icon delete-icon" ng-click="poista()"></button>
+  <ohje tunniste="sopimus"></ohje>
+</h1>
+[[/i18n]]
+[[#i18n.jarjestamissopimus]]
+<div ng-hide="muokkausTila">
+  <div>
+    <fieldset>
+      <label>[[sopimusnumero]]</label>
+      <ohje class="right" tunniste="sopimuksen-tiedot-sopimusnumero"></ohje>
+      <p>{{sopimus.sopimusnumero}}</p>
+    </fieldset>
+    <fieldset>
+      <label>[[voimassa]]</label>
+      <p>{{sopimus.alkupvm | voimassaoloAika: sopimus.loppupvm}}</p>
+    </fieldset>
+    <fieldset>
+      <label>[[yhteyshenkilo]]</label>
+      <div>{{sopimus.vastuuhenkilo}}</div>
+      <div><a href="mailto:{{sopimus.sahkoposti}}">{{sopimus.sahkoposti}}</a></div>
+      <div>{{sopimus.puhelin}}</div>
+    </fieldset>
+  </div>
+  <div>
+    <fieldset>
+      <label>[[sopijatoimikunta]]</label>
+      <a href="#/toimikunta/{{sopimus.sopijatoimikunta.diaarinumero}}/tiedot">{{sopimus.sopijatoimikunta.nimi | nimivuosi:sopimus.sopijatoimikunta:'nimi':'toimikausi_alku'}}</a>
+    </fieldset>
+    <fieldset>
+      <label>[[nykyinen-toimikunta]]</label>
+      <a href="#/toimikunta/{{sopimus.toimikunta.diaarinumero}}/tiedot">{{sopimus.toimikunta.nimi | nimivuosi:sopimus.toimikunta:'nimi':'toimikausi_alku'}}</a>
+    </fieldset>
+    <fieldset>
+      <label>[[oppilaitos]]</label>
+      <p><a href="#/jarjestaja/{{sopimus.oppilaitos.oppilaitoskoodi}}/tiedot">{{sopimus.oppilaitos.nimi}}</a></p>
+    </fieldset>
+  </div>
+  <div>
+    <fieldset>
+      <label>[[tutkintotilaisuuksista-vastaava-oppilaitos]]</label>
+      <p><a href="#/jarjestaja/{{sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.oppilaitoskoodi}}/tiedot">{{sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi}}</a></p>
+    </fieldset>
+    <luotu model="sopimus"></luotu>
+    <muutettu model="sopimus"></muutettu>
+  </div>
+</div>
+
+<div ng-show="muokkausTila">
+  <fieldset>
+    <label>[[sopimusnumero]]</label>
+    <ohje class="right" tunniste="sopimuksen-muokkaus-sopimusnumero"></ohje>
+    <input type="text" ng-model="sopimus.sopimusnumero" maxlength="25"></input>
+  </fieldset>
+  <pvm-valitsin valittu-pvm="sopimus.alkupvm" otsikko="[[alkupvm]]"></pvm-valitsin>
+  <pvm-valitsin valittu-pvm="sopimus.loppupvm" otsikko="[[loppupvm]]"></pvm-valitsin>
+  <fieldset>
+    <label>[[yhteyshenkilon_nimi]]</label>
+    <input type="text" ng-model="sopimus.vastuuhenkilo"></input>
+  </fieldset>
+  <fieldset>
+    <label>[[yhteyshenkilon_sahkoposti]]</label>
+    <input type="text" ng-model="sopimus.sahkoposti"></input>
+  </fieldset>
+  <fieldset>
+    <label>[[yhteyshenkilon_puhelin]]</label>
+    <input type="text" ng-model="sopimus.puhelin"></input>
+  </fieldset>
+  <haku-valitsin
+    ng-show="muokkausTila"
+    otsikko="{{luontiTila ? '[[sopijatoimikunta]]' : '[[nykyinen-toimikunta]]'}}"
+    url="[[base-url]]/api/ttk/haku"
+    model="sopimus.toimikunta"
+    model-id-property="tkunta"
+    model-text-property="nimi">
+  </haku-valitsin>
+  <haku-valitsin
+    ng-show="muokkausTila"
+    otsikko="[[oppilaitos]]"
+    url="[[base-url]]/api/oppilaitos/haku"
+    model="sopimus.oppilaitos"
+    model-id-property="oppilaitoskoodi"
+    model-text-property="nimi">
+  </haku-valitsin>
+  <haku-valitsin
+    ng-show="muokkausTila"
+    otsikko="[[tutkintotilaisuuksista-vastaava-oppilaitos]]"
+    url="[[base-url]]/api/oppilaitos/haku"
+    model="sopimus.tutkintotilaisuuksista_vastaava_oppilaitos"
+    model-id-property="oppilaitoskoodi"
+    model-text-property="nimi">
+  </haku-valitsin>
+</div>
+
+<div class="list-controls">
+  <button ng-show="salliMuokkaus()" class="icon edit-icon" ng-click="muokkaaTutkintoja()"></button>
+</div>
+<h2>[[nayttotutkinnot]]</h2>
+<p ng-hide="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0">[[sopimuksella-ei-tutkintoja]]</p>
+<div class="accordion-container">
+  <div ng-show="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0" class="accordion" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto" oletuksena-auki="{{muokkausTila}}" accordion>
+    <div class="accordion-header">{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}} {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}} {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}}</div>
+    <div class="accordion-body">
+      <fieldset>
+        <label>[[tutkinnonperusteiden-diaarinumero]]</label>
+        <p class="tyhja-">{{sopimusJaTutkinto.tutkintoversio.peruste}}</p>
+      </fieldset>
+      <fieldset>
+        <label>[[tutkinnon-suorituskieli]]</label>
+        <enum-valikko ng-show="muokkausTila" nimi="kieli" arvo="sopimusJaTutkinto.kieli"></enum-valikko>
+        <p ng-hide="muokkausTila"><enum-arvo nimi="kieli" arvo="sopimusJaTutkinto.kieli" class="tyhja-"></enum-arvo></p>
+      </fieldset>
+      <fieldset>
+        <label>[[siirtymaaika-paattyy]]</label>
+        <p class="tyhja-">{{sopimusJaTutkinto.tutkintoversio.siirtymaaika_paattyy}}</p>
+      </fieldset>
+      <sopimuksen-tutkinnon-vastuuhenkilo
+        class="vastuuhenkilo"
+        muokkaus="muokkausTila"
+        otsikko="[[vastuuhenkilo]]"
+        nimi="sopimusJaTutkinto.vastuuhenkilo"
+        sahkoposti="sopimusJaTutkinto.sahkoposti"
+        puhelin="sopimusJaTutkinto.puhelin"
+        nayttotutkintomestari="sopimusJaTutkinto.nayttomestari"
+        lisatiedot="sopimusJaTutkinto.lisatiedot">
+      </sopimuksen-tutkinnon-vastuuhenkilo>
+      <sopimuksen-tutkinnon-vastuuhenkilo
+        class="varavastuuhenkilo"
+        muokkaus="muokkausTila"
+        otsikko="[[varavastuuhenkilo]]"
+        nimi="sopimusJaTutkinto.vastuuhenkilo_vara"
+        sahkoposti="sopimusJaTutkinto.sahkoposti_vara"
+        puhelin="sopimusJaTutkinto.puhelin_vara"
+        nayttotutkintomestari="sopimusJaTutkinto.nayttomestari_vara"
+        lisatiedot="sopimusJaTutkinto.lisatiedot_vara">
+      </sopimuksen-tutkinnon-vastuuhenkilo>
+      <div>
+        <fieldset ng-controller="jarjestamissuunnitelmaController">
+          <label>[[jarjestamissuunnitelma]]</label>
+          <div ng-show="sopimusJaTutkinto.jarjestamissuunnitelmat.length == 0">-</div>
+          <ul class="file-list">
+            <li ng-repeat="suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat">
+              <a href="{{'[[base-url]]/api/jarjestamissopimus/suunnitelma/' + suunnitelma.jarjestamissuunnitelma_id}}" target="_blank">{{suunnitelma.jarjestamissuunnitelma_filename}}</a>
+              <button ng-show="muokkausTila" ng-click="poistaSuunnitelma()" class="icon remove-icon-small"></button>
+            </li>
+          </ul>
+          <file-upload ng-show="muokkausTila" api-metodi="{{'[[base-url]]/api/jarjestamissopimus/suunnitelma/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}" upload-valmis="uploadValmis" liitetyyppi="jarjestamissuunnitelmat"></file-upload>
+        </fieldset>
+        <fieldset ng-controller="jarjestamissuunnitelmaController">
+          <label>[[liitteet]]</label>
+          <div ng-show="sopimusJaTutkinto.liitteet.length == 0">-</div>
+          <ul class="file-list">
+            <li ng-repeat="liite in sopimusJaTutkinto.liitteet">
+              <a href="{{'[[base-url]]/api/jarjestamissopimus/liite/' + liite.sopimuksen_liite_id}}" target="_blank">{{liite.sopimuksen_liite_filename}}</a>
+              <button ng-show="muokkausTila" ng-click="poistaLiite()" class="icon remove-icon-small"></button>
+            </li>
+          </ul>
+          <file-upload ng-show="muokkausTila" api-metodi="{{'[[base-url]]/api/jarjestamissopimus/liite/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}" upload-valmis="uploadValmis" liitetyyppi="liitteet"></file-upload>
+        </fieldset>
+      </div>
+      <div class="sopimus-tutkinnon-osat" ng-class="{'muokkaus' : muokkausTila}">
+      <sopimuksen-tutkinnonosat
+        toimipaikat="sopimus.oppilaitos.toimipaikka"
+        muokkaus="muokkausTila"
+        valitut-tutkinnonosat="sopimusJaTutkinto.sopimus_ja_tutkinto_ja_tutkinnonosa"
+        kaikki-tutkinnonosat="sopimusJaTutkinto.tutkintoversio.tutkinto_ja_tutkinnonosa"
+        valitut-osaamisalat="sopimusJaTutkinto.sopimus_ja_tutkinto_ja_osaamisala"
+        kaikki-osaamisalat="sopimusJaTutkinto.tutkintoversio.osaamisala">
+      </sopimuksen-tutkinnonosat>
+    </div>
+  </div>
+</div>
+
+[[#i18n]]
+<tallenna disabloi-pyyntojen-ajaksi="['sopimuksen-luonti', 'sopimuksen-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="!luontiTila ? '[[yleiset.tallenna]]' : '[[jarjestamissopimus.jatka-tutkintojen-lisaykseen]]'"></tallenna>
+<button ng-hide="!muokkausTila" ng-click="peruuta()">[[yleiset.peruuta]]</button>
+[[/i18n]]
+
+<button ng-hide="muokkausTila" ng-click="siirryToimikunnanSivulle(sopimus.toimikunta.diaarinumero)">[[siirry-toimikunnan-sivulle]]</button>
+
+[[/i18n.jarjestamissopimus]]

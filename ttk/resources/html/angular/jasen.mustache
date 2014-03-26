@@ -1,0 +1,75 @@
+{{=[[ ]]=}}
+[[#i18n.yleiset]]
+[[#i18n.toimikunta]]
+<h1>[[henkilon-lisays]]</h1>
+
+<div ng-if="nykyinenAskel(0)">
+  <form>
+    <haku-valitsin
+      otsikko="[[kerro-ensin-nimi-ja-sitten-jatka]]"
+      url="[[base-url]]/api/henkilo/nimi/"
+      model="search"
+      model-id-property="osat"
+      model-text-property="nimi">
+    </haku-valitsin>
+    <div>
+      <button ng-click="haeHenkilotJaSiirrySeuraavaan()">[[jatka]]</button>
+    </div>
+  </form>
+</div>
+
+<div ng-if="nykyinenAskel(1)">
+  <form>
+    <div>
+      <fieldset>
+        <label>[[valitse-henkilo]]</label>
+        <select ng-change="vaihdaTila(jasen.henkilo)" ng-model="jasen.henkilo" ng-options="h.etunimi + ' ' + h.sukunimi for h in henkilot">
+          <option value="">[[i18n.henkilot.luo-uusi]]</option>
+        </select>
+      </fieldset>
+    </div>
+
+    <ng-include src="'template/henkilo-partial'"></ng-include>
+
+    <tallenna disabloi-pyyntojen-ajaksi="['uusi-henkilo']" ng-hide="!muokkausTila" ng-click="lisaaHenkiloJaSiirrySeuraavaan(jasen.henkilo)" teksti="'[[jatka]]'"></tallenna>
+    <button ng-hide="muokkausTila" ng-click="siirrySeuraavaan()">[[jatka]]</button>
+  </form>
+
+</div>
+
+<div ng-if="nykyinenAskel(2)">
+  <p>[[lisaa-viela-henkilon-jasenyystiedot]]</p>
+  <fieldset>
+    <label>[[nimi]]</label>
+    <p>{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
+  </fieldset>
+  <form>
+    <div>
+      <haku-valitsin
+        otsikko="[[toimikunta]]"
+        url="[[base-url]]/api/ttk/haku"
+        model="jasen.toimikunta"
+        model-id-property="diaarinumero"
+        model-text-property="nimi">
+      </haku-valitsin>
+    </div>
+    <div>
+      <fieldset>
+        <label>[[rooli]]</label>
+        <enum-valikko nimi="rooli" arvo="jasen.rooli"></enum-valikko>
+      </fieldset>
+      <fieldset>
+        <label>[[edustus]]</label>
+        <enum-valikko nimi="edustus" arvo="jasen.edustus"></enum-valikko>
+      </fieldset>
+    </div>
+    <div>
+      <pvm-valitsin oletus-pvm="jasen.toimikunta.toimikausi_alku" valittu-pvm="jasen.alkupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-alkupvm]]"></pvm-valitsin>
+      <pvm-valitsin oletus-pvm="jasen.toimikunta.toimikausi_loppu" valittu-pvm="jasen.loppupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-loppupvm]]"></pvm-valitsin>
+    </div>
+    <tallenna disabloi-pyyntojen-ajaksi="['uusi-toimikunnan-jasen']" ng-click="lisaaJasen(jasen)" teksti="'[[lisaa-jasen]]'"></tallenna>
+    <button ng-click="peruuta()">[[peruuta]]</button>
+  </form>
+</div>
+[[/i18n.toimikunta]]
+[[/i18n.yleiset]]

@@ -1,0 +1,218 @@
+select {
+  height: 28px;
+}
+
+form {
+  margin-bottom: $marginL;
+}
+
+label {
+  margin-bottom: $marginS;
+  display: inline-block;
+  vertical-align: middle;
+
+  & ~ p, & ~ input, & ~ a {display: block;}
+}
+
+input[type="text"] {
+  @include border-box;
+  padding: 2px 5px;
+  &:focus {border-color: $darkest-primary;}
+  vertical-align: top;
+}
+
+.placeholder { color: #aaa; }
+
+fieldset {
+  border: 0;
+  padding: 0;
+  position: relative;
+  display: inline-block;
+  width: 30%;
+  margin: 0 $marginS $marginM 0;
+  vertical-align: top;
+  &.select2-fieldset {
+    vertical-align: bottom;
+  }
+
+  input, p, select {
+    width: 100%;
+    height: $baseline + 4;
+    margin: 0;
+    display: inline-block;
+    padding: 2px 0;
+
+    &.icon {
+      padding: 0;
+      background-color: transparent;
+      vertical-align: middle;
+    }
+    &[type=checkbox], &[type=radio]  {
+      width: 18px;
+      background: white;
+      margin: 0 $marginS 0 0;
+      border: 0;
+      vertical-align: middle;
+    }
+  }
+
+  textarea {
+    @include border-box;
+    width: 100%;
+    height: 100px;
+    padding: 5px;
+  }
+
+  input {padding-left: 2px;}
+
+  input, select {
+    border: 1px solid  $primary-color;
+  }
+  select {
+    height: 28px;
+  }
+
+  &.lisatiedot {
+    p {
+      padding: 0;
+    }
+  }
+}
+
+.select2-container .select2-container-multi .select2-results {
+  width: 50%;
+  display: block;
+
+  a, ul {
+    border: 1px solid  $primary-color;
+    background-color: white;
+    border-radius: 0;
+  }
+}
+
+.checkbox-pair {
+  display: block;
+  label {
+    display: inline;
+    width: 30%;
+  }
+  input[type=checkbox] {
+    display: inline;
+    margin: $marginM $marginS 0 0;
+    width: 18px;
+  }
+}
+
+.search-field {
+  width: 30%;
+  display: block;
+  input {width: 100%;}
+}
+
+.datepicker-dropdown {
+  $border-color: $lighter-gray;
+  position: absolute;
+  border: 1px solid $border-color;
+  background-color: #ffffff;
+  &:before {
+    border-bottom-color : $border-color !important;
+  }
+  td.day.active,
+  td.day.active:hover,
+  span.month.active,
+  span.month.active:hover {background-image: none !important; background-color: $primary-color !important;}
+  td, th {@include border-radius(0 !important);}
+  table tr td span {width: 30% !important; height: 25px !important; line-height: 25px !important; @include border-radius(0 !important);}
+  .datepicker-months th.switch {cursor: default !important;
+    &:hover {background: none !important;}
+  }
+  th.prev:hover, th.next:hover {background: none !important}
+  th.prev:before {content : "<";}
+  th.next:before {content : ">";}
+
+}
+
+fieldset.datepicker-field {
+  input {width: 92%; display: inline;}
+  .open-datepicker {
+    margin-top: -$baseline - 4px;
+    margin-left: 92%;
+    cursor: pointer;
+    $background-position : 5px -1046px;
+    display: block;
+    position: absolute;
+    background-color: $primary-color;
+    width: $baseline + 5;
+    height: $baseline + 4;
+    background-position: $background-position;
+    &:hover {
+      background-color: $darker-primary;
+      background-position: $background-position;
+    }
+  }
+}
+
+.fieldset-table { display: table; width: 100%;
+  fieldset {width: 90%;}
+}
+
+.select2-fieldset .select2-container .select2-choice .select2-arrow {
+  filter: none;
+  background-image: none;
+  background-color: #107ea2;
+  width: 25px;
+  border: 0;
+  b {
+    @include small-expand-icon-white;
+    margin-top: 10px;
+    margin-left: 9px;
+  }
+}
+
+.select2-fieldset .select2-container.select2-dropdown-open .select2-choice .select2-arrow {
+  background-color: transparent;
+  b {@include small-collapse-icon;}
+}
+
+
+.select2-container a.select2-choice, .select2-container-active a.select2-choice, .select2-container-multi ul.select2-choices {
+  background-image: none;
+  filter: none;
+  background-color: transparent;
+  border: 1px solid #107ea2;
+  color: #000000;
+}
+.select2-container a.select2-choice, .select2-container-active a.select2-choice, .select2-drop, .select2-arrow {
+  @include border-radius(0 0 0 0 !important);
+}
+.select2-drop.select2-drop-multi {
+    border-top: 1px solid;
+}
+
+.select2-container-active a.select2-choice, .select2-drop {
+  border-color: $darker-primary !important;
+  li.select2-no-results, li.select2-searching  {background-color: transparent !important;}
+}
+
+.select2-result {
+  &:nth-child(2n) {background-color: #f2f2f2}
+  &.select2-highlighted {
+    background-color: $primary-color !important;
+  }
+}
+
+.tyhja-:empty {
+  &:after {
+    /*
+      Oikeasti haluttiin sisällöksi vain {content: "-";}, mutta tietyissä tilanteissa IE9 kaatui em. ratkaisuun,
+      joten kierettiin ongelma ao. tyylillä.
+    */
+    width: 4px;
+    height: 1px;
+    background-color: $darker-gray;
+    display: inline-block;
+    vertical-align: middle;
+    content: "";
+  }
+}
+

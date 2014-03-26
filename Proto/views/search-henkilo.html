@@ -1,0 +1,36 @@
+<h1>Henkilöhaku</h1>
+
+<form>
+ 
+  <fieldset class="search-field">
+    <label>Henkilön nimi</label>
+    <input type="text" ui-select2 ng-model="search.puheenjohtaja">
+    </input>
+ </fieldset>
+  <fieldset class="search-field"> 
+    <label>Toimikunnan nimi</label>
+    <input type="text" ui-select2 ng-model="search.nimi">
+    </input>
+  </fieldset>
+
+<h2>Tulokset</h2>
+<table class="full-width">
+  <thead>
+    <tr>
+        <th>Nimi</th>
+        <th>Toimikunta</th>
+        <th>Toimikausi</th>
+        <th>Muutos pvm</th>
+        <th>Tekijä</th>
+      </tr>  
+  </thead>
+  <tbody>
+    <tr ng-repeat="toimikunta in toimikunnat | filter:search ">
+      <th><a href="#/henkilo/{{toimikunta.henkilonumero}}">{{toimikunta.puheenjohtaja}}</th>
+      <th>{{toimikunta.nimi}}</th>
+      <th>{{toimikunta.toimikausi}}</a></th>
+      <th>{{toimikunta.viimeisinMuutospaiva}}</th>
+      <th>{{toimikunta.viimeisinMuuttaja}}</th>
+    </tr>
+  </tbody>
+</table>

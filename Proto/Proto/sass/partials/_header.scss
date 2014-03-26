@@ -1,0 +1,20 @@
+.main-nav {
+  background: $bright-blue;
+  color: white;
+  padding: $marginL;
+  h1 {
+    display: inline-block;
+    font-size: 2em;
+    }
+    ul li {
+    border-right: 1px dotted white;
+    padding: 0 $marginM;
+    display: inline-block;
+    max-width: 15%;
+      a {
+        text-decoration: none;
+        color: white;
+        font-size: 1.5em;
+      }
+    }
+}

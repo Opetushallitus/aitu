@@ -1,0 +1,13 @@
+{{=[[ ]]=}}
+<hakutuloslaskuri></hakutuloslaskuri>
+
+<sivutusnavigaatio></sivutusnavigaatio>
+
+<div class="table hakutulokset">
+  <div style="display: table-row" class="table-header" data-nykyinen-sivu="{{nykyinenSivu}}">
+    <div style="display: table-cell" class="table-cell" ng-repeat="otsikko in parsitutOtsikot">{{otsikko}}</div>
+  </div>
+  <div style="display: table-row" class="table-row" ng-repeat="hakutulos in hakutulokset | sivutusSuodatin:nykyinenSivu:tuloksiaSivulla" ng-transclude></div>
+</div>
+
+<sivutusnavigaatio></sivutusnavigaatio>

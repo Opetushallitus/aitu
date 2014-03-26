@@ -1,0 +1,56 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  # Kehitystyön tietokantapalvein
+  config.vm.define "db" do |db|
+    db.vm.box = "CentOS-6.4-x86_64-v20131103.box"
+    db.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+
+    db.vm.synced_folder "../env", "/env"
+    if File.directory?("../../oph-konversio")
+      db.vm.synced_folder "../../oph-konversio", "/dumps"
+    end
+    db.vm.provision "shell", inline: "cd /env && ./dev-db.sh"
+
+    # local port 2345 -> vm port 5432
+    db.vm.network "forwarded_port", host: 2345, guest: 5432
+    db.vm.network "private_network", ip: "192.168.50.51"
+  end
+
+  # Vanhan AMTU:n ajamiseen
+  config.vm.define "amtu" do |amtu|
+    amtu.vm.box = "CentOS-6.4-x86_64-v20131103.box"
+    amtu.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+    amtu.vm.synced_folder "../env", "/env"
+  end
+
+  # Uuden AITU:n e2e-testien ajamiseen
+  config.vm.define "aitu" do |aitu|
+    aitu.vm.box = "CentOS-6.4-x86_64-v20131103.box"
+    aitu.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+
+    aitu.vm.synced_folder "../env", "/env"
+    aitu.vm.provision "shell", inline: "cd /env && ./app-server.sh '192.168.50.51' 'http://192.168.50.52/aitu' ssh/dev_id_rsa.pub"
+
+    aitu.vm.network "private_network", ip: "192.168.50.52"
+  end
+
+  # CAS- ja LDAP autentikaation palvelin kehitystyötä varten
+  config.vm.define "auth" do |auth|
+    auth.vm.box = "CentOS-6.4-x86_64-v20131103.box"
+    auth.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+
+    auth.vm.synced_folder "../env", "/env"
+    auth.vm.provision "shell", inline: "cd /env && ./dev-auth.sh"
+
+    # auth tomcat näkyviin localhostiin portissa 9090
+    auth.vm.network "forwarded_port", host: 9090, guest: 8080
+    auth.vm.network "forwarded_port", host: 9443, guest: 8443
+    # ldap näkyviin localhostiin portissa 10389
+    auth.vm.network "forwarded_port", host: 10389, guest: 10389
+    auth.vm.network "private_network", ip: "192.168.50.53"
+  end
+
+end

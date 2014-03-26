@@ -1,0 +1,26 @@
+{{=[[ ]]=}}
+[[#i18n.tutkinnot]]
+<h1>[[tutkintohaku]]</h1>
+
+<form>
+  <fieldset class="search-field">
+    <label>[[tutkinnon-nimi]]</label>
+    <input type="text" ng-model="tutkintoHakuehto.nimi" class="search-with-autocomplete">
+  </fieldset>
+  <fieldset class="search-field">
+    <h3>[[voimassaolo]]</h3>
+    <input id="voimassaolo_voimassaolevat" type="radio" ng-model="tutkintoHakuehto.voimassaolo" value="voimassaolevat">
+    <label class="input" for="voimassaolo_voimassaolevat">[[voimassaolevat]]</label><br/>
+    <input id="voimassaolo_kaikki" type="radio" ng-model="tutkintoHakuehto.voimassaolo" value="kaikki">
+    <label class="input" for="voimassaolo_kaikki">[[kaikki]]</label>
+  </fieldset>
+</form>
+<div class="search-results" lataus-indikaattori metodi-idt="['tutkintolistaus']" viesti="[[tutkintoja-ladataan]]" virheviesti="[[tutkintojen-lataus-epaonnistui]]" yrita-uudelleen="haeTutkinnot()">
+  <hakutulokset tuloksia-sivulla="10" otsikot="['[[tutkintotunnus]]', '[[nimi]]', '[[opintoala]]']" hakutulokset="tutkinnot">
+    <div class="table-cell">{{hakutulos.tutkintotunnus}}</div>
+    <div class="table-cell"><a href="#/tutkinto/{{hakutulos.tutkintotunnus}}">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
+    <div class="table-cell">{{hakutulos.opintoala_nimi | lokalisoi:hakutulos:'opintoala_nimi'}}</div>
+  </hakutulokset>
+</div>
+
+[[/i18n.tutkinnot]]

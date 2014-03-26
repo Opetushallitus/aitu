@@ -1,0 +1,23 @@
+{{=[[ ]]=}}
+[[#i18n.ohje]]
+<div class="ohje">
+  <div class="ohje-popup" ng-class="{muokkaus : muokkaus}" ng-show="nayta">
+    <button class="icon delete-icon sulje" ng-click="piilotaOhje()"></button>
+    <p ng-hide="muokkaus" ng-repeat="kappale in ohjeteksti">{{kappale.sisalto}}</p>
+    <fieldset ng-show="muokkaus">
+      <label>[[ohjeteksti-suomeksi]]</label>
+      <textarea ng-model="ohje.teksti_fi"></textarea>
+    </fieldset>
+    <fieldset ng-show="muokkaus">
+      <label>[[ohjeteksti-ruotsiksi]]</label>
+      <textarea ng-model="ohje.teksti_sv"></textarea>
+    </fieldset>
+    <a ng-if="[[yllapitaja]]" ng-hide="muokkaus" href="" class="ajax-link" ng-click="muokkaa()">[[muokkaa-ohjetta]]</a>
+    <tallenna disabloi-pyyntojen-ajaksi="['ohjeen-muokkaus']" ng-click="tallennaOhje()" ng-show="muokkaus" teksti="'[[i18n.yleiset.tallenna]]'"></tallenna>
+    <a ng-if="[[yllapitaja]]" ng-show="muokkaus" href="" class="ajax-link" ng-click="peruutaMuokkaus()">[[peruuta-muokkaus]]</a>
+  </div>
+  <div class="avaa" ng-click="naytaOhje()"></div>
+</div>
+[[/i18n.ohje]]
+
+

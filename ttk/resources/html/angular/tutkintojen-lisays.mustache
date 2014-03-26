@@ -1,0 +1,43 @@
+{{=[[ ]]=}}
+[[#i18n.tutkinnot]]
+<h1>[[valitse-tutkinnot]]</h1>
+
+<fieldset>
+  <label>[[tutkintohaku]]</label>
+  <input type="text" ng-model="tutkintoHakuehto">
+</fieldset>
+
+<h3>[[valitse-tutkinto-listalta]]</h3>
+
+<div class="tutkintovalitsin-container" lataus-indikaattori metodi-idt="['tutkintorakenneHaku']" viesti="[[tutkintorakennetta-ladataan]]" virheviesti="[[tutkintorakenteen-lataus-epaonnistui]]" yrita-uudelleen="haeTutkintorakenne()">
+  <ul class="tutkintovalitsin">
+    <li ng-repeat="koulutusala in suodatettuTutkintorakenne">
+      <a ng-class="{collapse : koulutusalaAvattu}" href="" ng-click="koulutusalaAvattu = koulutusalaAvattu ? !koulutusalaAvattu : true">{{koulutusala.selite | lokalisoi:koulutusala:'selite'}}</a>
+      <ul ng-show="suodatus || koulutusalaAvattu">
+        <li ng-repeat="opintoala in koulutusala.opintoala">
+          <a ng-class="{collapse : opintoalaAvattu}" href="" ng-click="opintoalaAvattu = opintoalaAvattu ? !opintoalaAvattu : true">{{opintoala.selite | lokalisoi:opintoala:'selite'}}</a>
+          <ul ng-show="suodatus || opintoalaAvattu">
+            <li ng-repeat="tutkinto in opintoala.nayttotutkinto">
+              <a class="tutkinto" ng-class="{added : valittu()}" href="" ng-click="valittu() ? poista() : lisaa()">{{tutkinto.tutkintotunnus + ' - '}}{{tutkinto.nimi | lokalisoi:tutkinto:'nimi'}}</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<h3 class="valitut-tutkinnot-otsikko">[[valitut-tutkinnot]]</h3>
+<ul class="valitut-tutkinnot">
+    <li ng-repeat="tutkinto in valitutTutkinnot" ng-show="valitutTutkinnot.length > 0">
+      <span>{{tutkinto.tutkintotunnus + ' - '}}{{tutkinto.nimi | lokalisoi:tutkinto:'nimi'}}</span>
+      <button class="icon remove-icon-small" ng-click="poista()"></button>
+    </li>
+    <li ng-show="valitutTutkinnot.length == 0">[[ei-valittuja-tutkintoja]]</li>
+</ul>
+
+[[#i18n.yleiset]]
+<tallenna disabloi-pyyntojen-ajaksi="['sopimuksen-tutkintojen-muokkaus', 'toimikunnan-tutkintojen-muokkaus']" ng-click="tallenna()" teksti="'[[tallenna]]'"></tallenna>
+<button ng-click="peruuta()">[[peruuta]]</button>
+[[/i18n.yleiset]]
+
+[[/i18n.tutkinnot]]

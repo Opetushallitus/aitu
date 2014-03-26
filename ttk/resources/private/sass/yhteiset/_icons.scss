@@ -1,0 +1,229 @@
+$icon-images : url('../img/oph-icon-sprite.png');
+$icon-images-svg : url('../img/oph-icon-sprite.svg');
+
+@mixin icon-images {
+  background-image: $icon-images-svg;
+  .no-svg & {background-image: $icon-images;}
+}
+
+@mixin icon-hover($position) {
+  &:hover {background-position: 0 $position;}
+}
+
+/* Voidaan käyttää elementissä, jonka perään hakutaan ikoni. Ei tarvitse erillistä dom elementtiä ikonille.
+Esim: @include icon-after(11px, 11px){@include user-icon;}; */
+@mixin icon-after($leftMargin: 0, $topMargin: 0) {
+  &:after {
+    @content;
+    @include icon-before-after($leftMargin, $topMargin);
+  }
+}
+
+@mixin icon-before($leftMargin: 0, $topMargin: 0) {
+  &:before {
+    @content;
+    @include icon-before-after($leftMargin, $topMargin);
+  }
+}
+
+@mixin icon-before-after($leftMargin: 0, $topMargin: 0) {
+  content: "";
+  position: absolute;
+  margin-top: $topMargin;
+  margin-left: $leftMargin;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+/* Ikonimääritykset */
+@mixin user-icon {
+  @include icon-images;
+  width: 17px;
+  height: 16px;
+  background-position: 0 -200px;
+}
+
+@mixin add-user-icon {
+  @include icon-images;
+  width: 26px;
+  height: 16px;
+  background-position: 0 -250px;
+}
+
+@mixin right-arrow {
+  @include icon-images;
+  width: 10px;
+  height: 14px;
+  background-position: 0 0px;
+}
+
+@mixin right-double-arrow {
+  @include icon-images;
+  width: 14px;
+  height: 15px;
+  background-position: 0 -100px;
+}
+
+@mixin left-arrow {
+  @include icon-images;
+  width: 10px;
+  height: 14px;
+  background-position: 0 -50px;
+}
+
+@mixin left-double-arrow {
+  @include icon-images;
+  width: 14px;
+  height: 15px;
+  background-position: 0 -150px;
+}
+
+@mixin edit-icon {
+  @include icon-images;
+  @include icon-hover(-800px);
+  width: 22px;
+  height: 22px;
+  background-position: 0 -750px;
+}
+
+@mixin delete-icon {
+  @include icon-images;
+  @include icon-hover(-1300px);
+  width: 16px;
+  height: 16px;
+  background-position: 0 -1250px;
+}
+
+@mixin add-icon {
+  @include icon-images;
+  @include icon-hover(-1200px);
+  width: 18px;
+  height: 18px;
+  background-position: 0 -1150px;
+}
+
+@mixin add-icon-white {
+  @include icon-images;
+  width: 20px;
+  height: 20px;
+  background-position: 0 -100px;
+}
+
+@mixin calendar-icon {
+  @include icon-images;
+  @include icon-hover(-1100px);
+  width: 18px;
+  height: 18px;
+  background-position: 0 -1050px;
+}
+
+@mixin collapse-icon {
+  @include icon-images;
+  width: 22px;
+  height: 14px;
+  background-position: 0 -350px;
+}
+
+@mixin arrow-up-icon {
+  @include icon-images;
+  width: 20px;
+  height: 13px;
+  background-position: 0 -500px;
+}
+
+@mixin arrow-down-icon {
+  @include icon-images;
+  width: 20px;
+  height: 14px;
+  background-position: 0 -550px;
+}
+
+@mixin small-expand-icon {
+  @include icon-images;
+  width: 8px;
+  height: 5px;
+  background-position: 0 -650px;
+}
+
+@mixin small-expand-icon-white {
+  @include icon-images;
+  width: 8px;
+  height: 5px;
+  background-position: 0 -1550px;
+}
+
+@mixin small-collapse-icon {
+  @include icon-images;
+  width: 8px;
+  height: 5px;
+  background-position: 0 -600px;
+}
+
+@mixin sortable-icon {
+  @include icon-images;
+  width: 8px;
+  height: 12px;
+  background-position: 0 -700px;
+}
+
+@mixin small-check-icon {
+  @include icon-images;
+  width: 16px;
+  height: 12px;
+  background-position: 0 -1350px;
+}
+
+@mixin small-remove-icon {
+  @include icon-images;
+  width: 12px;
+  height: 12px;
+  background-position: 0 -1500px;
+}
+
+@mixin help-icon {
+  @include  icon-images;
+  width: 11px;
+  height: 14px;
+  background-position: 0 -300px;
+}
+
+/* Näitä luokkia voidaan käyttää kun halutaan ikoni erilliseen dom-elementtiinsä.
+Esim: <div class="icon user-icon"></div> */
+.icon {
+  &.user-icon {
+    @include user-icon;
+  }
+  &.edit-icon {
+    @include edit-icon;
+  }
+  &.add-icon {
+    @include add-icon;
+  }
+  &.delete-icon {
+     @include delete-icon;
+   }
+  &.calendar-icon {
+    @include calendar-icon;
+  }
+  &.remove-icon-small {
+    @include small-remove-icon;
+  }
+  &.expand-icon-small {
+    @include small-expand-icon;
+  }
+  &.expand-icon-small-white {
+    @include small-expand-icon;
+  }
+  &.collapse-icon-small {
+    @include small-collapse-icon;
+  }
+}
+
+/* Nappi jossa ikoni oikeassa reunassa */
+button.button-with-icon {
+  padding-right: 50px;
+  &.add-user-icon {
+    @include icon-after(10px, 2px){@include add-user-icon;};
+  }
+}
+

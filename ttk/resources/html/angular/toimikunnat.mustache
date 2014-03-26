@@ -1,0 +1,45 @@
+{{=[[ ]]=}}
+[[#i18n.toimikunnat]]
+<h1>[[toimikuntahaku]]</h1>
+<form>
+  <div><fieldset class="search-field">
+    <label>[[toimikunnan-nimi]]</label>
+    <input type="text" ng-model="toimikuntaHakuehto.nimi" class="search-with-autocomplete">
+  </fieldset></div>
+  <div>
+    <haku-valitsin
+      otsikko="[[opintoala-tutkinto]]"
+      url="[[base-url]]/api/tutkinto/haku/tutkinnot"
+      model="tutkintoHakuehto"
+      model-id-property="termi"
+      model-text-property="nimi">
+    </haku-valitsin>
+  </div>
+  <div>
+    <enum-monivalinta nimi="kieli" otsikko="[[kielisyys]]" arvot="toimikuntaHakuehto.kielisyys"></enum-monivalinta>
+  </div>
+  <div>
+    <fieldset class="search-field">
+      <h3>[[toimikausi]]</h3>
+      <input id="toimikausi_nykyinen" type="radio" ng-model="toimikuntaHakuehto.toimikausi" value="nykyinen">
+      <label class="input" for="toimikausi_nykyinen">[[toimikausi-nykyinen]]</label><br/>
+      <input id="toimikausi_kaikki" type="radio" ng-model="toimikuntaHakuehto.toimikausi" value="kaikki">
+      <label class="input" for="toimikausi_kaikki">[[toimikausi-kaikki]]</label>
+    </fieldset>
+  </div>
+</form>
+
+<div class="search-results" lataus-indikaattori metodi-idt="['toimikuntalistaus']" viesti="[[toimikuntia-ladataan]]" virheviesti="[[toimikuntien-lataus-epaonnistui]]" yrita-uudelleen="haeToimikunnat()">
+  <hakutulokset tuloksia-sivulla="10" otsikot="['[[nimi]]', '[[diaarinumero]]', '[[i18n.yleiset.tilikoodi]]', '[[toimikausi_voimassa]]', '[[kielisyys]]']" hakutulokset="toimikunnat">
+    <div class="table-cell"><a href="#/toimikunta/{{hakutulos.diaarinumero}}/tiedot">{{hakutulos.nimi | nimivuosi:hakutulos:'nimi':'toimikausi_alku'}}</a></div>
+    <div class="table-cell">{{hakutulos.diaarinumero}}</div>
+    <div class="table-cell">{{hakutulos.tilikoodi}}</div>
+    <div class="table-cell">
+      <span ng-if="hakutulos.voimassa">[[i18n.yleinen.kylla]]</span>
+      <span ng-if="!hakutulos.voimassa">[[i18n.yleinen.ei]]</span>
+    </div>
+    <div class="table-cell"><enum-arvo nimi="kieli" arvo="hakutulos.kielisyys"></enum-arvo></div>
+  </hakutulokset>
+</div>
+
+[[/i18n.toimikunnat]]

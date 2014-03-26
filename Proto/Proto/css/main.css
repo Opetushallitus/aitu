@@ -1,0 +1,565 @@
+/* RESET
+----------------------------------------------------------------------------- */
+/*
+ * HTML5 Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+/* line 17, ../sass/partials/_boilerplate.scss */
+html,
+button,
+input,
+select,
+textarea {
+  color: #222;
+}
+
+/* line 21, ../sass/partials/_boilerplate.scss */
+body {
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/*
+ * Remove text-shadow in selection highlight: h5bp.com/i
+ * These selection rule sets have to be separate.
+ * Customize the background color to match your design.
+ */
+/* line 32, ../sass/partials/_boilerplate.scss */
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+/* line 37, ../sass/partials/_boilerplate.scss */
+::selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+/* line 46, ../sass/partials/_boilerplate.scss */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+/*
+ * Remove the gap between images and the bottom of their containers: h5bp.com/i/440
+ */
+/* line 59, ../sass/partials/_boilerplate.scss */
+img {
+  vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+/* line 67, ../sass/partials/_boilerplate.scss */
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+/* line 77, ../sass/partials/_boilerplate.scss */
+textarea {
+  resize: vertical;
+}
+
+/* ==========================================================================
+   Chrome Frame prompt
+   ========================================================================== */
+/* line 85, ../sass/partials/_boilerplate.scss */
+.chromeframe {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+/*
+ * Image replacement
+ */
+/* line 120, ../sass/partials/_boilerplate.scss */
+.ir {
+  background-color: transparent;
+  border: 0;
+  overflow: hidden;
+  /* IE 6/7 fallback */
+  *text-indent: -9999px;
+}
+
+/* line 128, ../sass/partials/_boilerplate.scss */
+.ir:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 150%;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+/* line 139, ../sass/partials/_boilerplate.scss */
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+/* line 148, ../sass/partials/_boilerplate.scss */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+/* line 165, ../sass/partials/_boilerplate.scss */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+/* line 178, ../sass/partials/_boilerplate.scss */
+.invisible {
+  visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+/* line 195, ../sass/partials/_boilerplate.scss */
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+
+/* line 200, ../sass/partials/_boilerplate.scss */
+.clearfix:after {
+  clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+/* line 209, ../sass/partials/_boilerplate.scss */
+.clearfix {
+  *zoom: 1;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */
+}
+@media print, (-o-min-device-pixel-ratio: 5 / 4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+  /* Style adjustments for high resolution devices */
+}
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+@media print {
+  /* line 236, ../sass/partials/_boilerplate.scss */
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    /* Black prints faster: h5bp.com/s */
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* line 244, ../sass/partials/_boilerplate.scss */
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  /* line 248, ../sass/partials/_boilerplate.scss */
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  /* line 252, ../sass/partials/_boilerplate.scss */
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  /*
+   * Don't show links for images, or javascript/internal links
+   */
+  /* line 262, ../sass/partials/_boilerplate.scss */
+  .ir a:after,
+  a[href^="javascript:"]:after,
+  a[href^="#"]:after {
+    content: "";
+  }
+
+  /* line 267, ../sass/partials/_boilerplate.scss */
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  /* line 272, ../sass/partials/_boilerplate.scss */
+  thead {
+    display: table-header-group;
+    /* h5bp.com/t */
+  }
+
+  /* line 277, ../sass/partials/_boilerplate.scss */
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  /* line 281, ../sass/partials/_boilerplate.scss */
+  img {
+    max-width: 100% !important;
+  }
+
+  @page {
+    margin: 0.5cm;
+}
+
+  /* line 291, ../sass/partials/_boilerplate.scss */
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* line 297, ../sass/partials/_boilerplate.scss */
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
+/*------------------------------------*\
+    ELEMENTS
+\*------------------------------------*/
+/* BASE
+----------------------------------------------------------------------------- */
+/* line 7, ../sass/partials/_base.scss */
+html {
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  /* Inflate text size on mobiles by full increments only */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* line 15, ../sass/partials/_base.scss */
+.app-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* THEME (colors and others)
+----------------------------------------------------------------------------- */
+/* TYPOGRAPHY
+----------------------------------------------------------------------------- */
+/* line 6, ../sass/partials/_typography.scss */
+body {
+  font-family: "Calibri", sans-serif;
+  font-size: 15px;
+  line-height: 24px;
+  margin-bottom: 24px;
+  color: #595959;
+}
+
+/* line 14, ../sass/partials/_typography.scss */
+p {
+  color: #616161;
+  margin-bottom: 12px;
+  line-height: 24px;
+}
+
+/* line 20, ../sass/partials/_typography.scss */
+h1 {
+  font-family: "Calibri", sans-serif;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 48px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  color: #595959;
+}
+
+/* line 31, ../sass/partials/_typography.scss */
+h2 {
+  font-family: "Calibri", sans-serif;
+  margin-bottom: 6px;
+}
+
+/* line 36, ../sass/partials/_typography.scss */
+h3 {
+  font-family: "Calibri", sans-serif;
+  font-weight: lighter;
+  margin-bottom: 6px;
+}
+
+/* line 41, ../sass/partials/_typography.scss */
+i {
+  margin-bottom: 12px;
+}
+
+/* ICONS & ANIMATIONS
+----------------------------------------------------------------------------- */
+/* NAV
+----------------------------------------------------------------------------- */
+/* line 1, ../sass/partials/_header.scss */
+.main-nav {
+  background: #77c1d0;
+  color: white;
+  padding: 24px;
+}
+/* line 5, ../sass/partials/_header.scss */
+.main-nav h1 {
+  display: inline-block;
+  font-size: 2em;
+}
+/* line 9, ../sass/partials/_header.scss */
+.main-nav ul li {
+  border-right: 1px dotted white;
+  padding: 0 12px;
+  display: inline-block;
+  max-width: 15%;
+}
+/* line 14, ../sass/partials/_header.scss */
+.main-nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 1.5em;
+}
+
+/*------------------------------------*\
+    COMPONENTS
+\*------------------------------------*/
+/* line 1, ../sass/partials/_buttons.scss */
+button {
+  background: #bfbfbf;
+  color: black;
+  border-radius: 0;
+  height: 36px;
+  box-shadow: none;
+}
+
+/* line 9, ../sass/partials/_buttons.scss */
+.primary {
+  background: #77c1d0;
+  color: white;
+  text-transform: uppercase;
+}
+
+/* line 1, ../sass/partials/_forms.scss */
+form {
+  margin-bottom: 24px;
+}
+
+/* line 5, ../sass/partials/_forms.scss */
+fieldset {
+  position: relative;
+  display: block;
+  *zoom: 1;
+  margin-bottom: 12px;
+}
+/* line 16, ../sass/main.scss */
+fieldset:before, fieldset:after {
+  content: "";
+  display: table;
+}
+/* line 20, ../sass/main.scss */
+fieldset:after {
+  clear: both;
+}
+/* line 10, ../sass/partials/_forms.scss */
+fieldset input, fieldset p {
+  width: 30%;
+  height: 24px;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+/* line 15, ../sass/partials/_forms.scss */
+fieldset input[type=checkbox], fieldset p[type=checkbox] {
+  width: 22px;
+  background: white;
+}
+/* line 20, ../sass/partials/_forms.scss */
+fieldset label {
+  font-weight: bold;
+  width: 20%;
+  text-align: right;
+  margin-right: 24px;
+  display: inline-block;
+}
+
+/* line 1, ../sass/partials/_tables.scss */
+table {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  min-width: 30%;
+}
+/* line 6, ../sass/partials/_tables.scss */
+table thead tr {
+  background: #c3e4ea;
+}
+/* line 9, ../sass/partials/_tables.scss */
+table thead tr th {
+  padding: 6px 12px;
+  border-right: 1px dotted rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+}
+/* line 18, ../sass/partials/_tables.scss */
+table tbody tr {
+  background: #e9f5f7;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+/* line 21, ../sass/partials/_tables.scss */
+table tbody tr:nth-child(odd) {
+  background: white;
+}
+/* line 24, ../sass/partials/_tables.scss */
+table tbody tr th {
+  padding: 6px 12px;
+  font-weight: lighter;
+}
+
+/* VIEWS
+------------------------------------------------------------------------------*/
+/* line 1, ../sass/views/_index.scss */
+.content-box {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: white;
+  width: 70%;
+  margin: 24px;
+  padding: 12px;
+}
+/* line 7, ../sass/views/_index.scss */
+.content-box h2 {
+  margin-top: 0;
+}
+
+/* line 13, ../sass/views/_index.scss */
+.message-container .message {
+  text-decoration: none;
+  margin: 6px;
+}
+/* line 16, ../sass/views/_index.scss */
+.message-container .message:after {
+  content: " ";
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+/* line 23, ../sass/views/_index.scss */
+.message-container .message h3 {
+  margin: 0 6px 6px 6px;
+  color: #595959;
+}
+/* line 27, ../sass/views/_index.scss */
+.message-container .message p {
+  margin: 0 6px 6px 6px;
+}
+
+/* line 33, ../sass/views/_index.scss */
+.actions-container {
+  margin: 24px;
+}
+
+/* line 1, ../sass/views/_search.scss */
+.autocomplete {
+  position: absolute;
+  top: 30px;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin-left: 22%;
+  z-index: 10;
+  box-shadow: 2px 2px 0px #595959;
+}
+/* line 10, ../sass/views/_search.scss */
+.autocomplete .ac-item {
+  padding: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  display: block;
+}
+/* line 14, ../sass/views/_search.scss */
+.autocomplete .ac-item:hover {
+  background: #9dd2dd;
+}
+/* line 17, ../sass/views/_search.scss */
+.autocomplete .ac-item:last-child {
+  border-bottom: none;
+}
+
+/*------------------------------------*\
+    OTHER
+\*------------------------------------*/
+/* ALL THE REST
+----------------------------------------------------------------------------- */
+/* line 1, ../sass/partials/_devhelp.scss */
+.devhelp {
+  position: absolute;
+  top: 420px;
+  right: 10px;
+  width: 200px;
+  background: white;
+  border: 1px solid black;
+}

@@ -1,0 +1,62 @@
+.toimikunta-lista {width: auto;}
+.tutkintotyyppi {width: auto;}
+
+.tutkintovalitsin-container {
+  height: 400px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border: 1px solid $primary-color;
+}
+
+ul.tutkintovalitsin {
+  margin: 0;
+  padding: 10px 25px;
+  ul {
+    margin: 0;
+    padding-left: 15px;
+  }
+  li {
+    list-style: none;
+    position: relative;
+  }
+  a {cursor: pointer !important;}
+  & > li {
+    & > a {
+      @include icon-before(-12px, 9px) {@include small-expand-icon;}
+      font-weight: bold;
+    }
+    & > ul > li > a {
+      @include icon-before(-12px, 9px) {@include small-expand-icon;}
+      font-weight: bold;
+    }
+  }
+
+  a.collapse {@include icon-before(-12px, 9px) {@include small-collapse-icon;}}
+
+  a.tutkinto {
+    padding: 2px;
+    display: block;
+    &.added {@include icon-after(5px, 5px) {@include small-check-icon;}}
+  }
+}
+
+ul.valitut-tutkinnot {
+  margin: 0;
+  padding: 10px;
+  border: 1px solid $primary-color;
+  li {
+    list-style: none;
+    .icon {margin-left: 5px;}
+    a {
+      @include icon-after(5px, 8px) {@include small-remove-icon;}
+      cursor: pointer !important;
+      padding: 2px;
+      display: block;
+    }
+  }
+}
+
+.valitut-tutkinnot-otsikko {
+  @include icon-before(-20px, 7px) {@include small-check-icon;}
+  margin-left: 20px;
+}

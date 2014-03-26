@@ -1,0 +1,151 @@
+<h1>{{toimikunta.nimi}}</h1> <button> Päivitä toimikunnan tietoja </button>
+
+<h2>{{toimikunta.ruotsinkielinenNimi}}</h2>
+<form>
+  <h3>Toimikunnan perustiedot</h3>
+  <fieldset>
+    <label>Tutkintotoimikunnan kielisyys</label>
+    <input type="text" ng-hide="!editMode" ng-model="toimikunta.kielisyys"></input>
+    <p ng-hide="editMode">{{toimikunta.kielisyys}}</p>
+  </fieldset>
+  <fieldset>
+    <label>Tutkintotoimikunnan toimikausi</label>
+    <input type="text" ng-hide="!editMode" ng-model="toimikunta.toimikausi"></input>
+    <p ng-hide="editMode">{{toimikunta.toimikausi}}</p>
+  </fieldset> 
+  <fieldset>  
+    <label>Tutkintotoimikunnan diaarinumero</label>
+    <input type="text" ng-hide="!editMode" ng-model="toimikunta.diaarinumero"></input>
+    <p ng-hide="editMode">{{toimikunta.diaarinumero}}</p>
+  </fieldset>
+  <fieldset>    
+    <label>Tutkintotoimikunnan numero</label>
+    <input type="text" ng-hide="!editMode" ng-model="toimikunta.tilikoodi"></input>
+    <p ng-hide="editMode">{{toimikunta.tilikoodi}}</p>
+  </fieldset>
+  <fieldset>  
+    <label>Tutkintotoimikunnan päätöspäivä</label>
+    <input type="text" ng-hide="!editMode" ng-model="toimikunta.paatospaiva"></input>
+    <p ng-hide="editMode">{{toimikunta.paatospaiva}}</p>
+  </fieldset>
+  <fieldset>  
+    <label>Tutkintotoimikunnan sähköpostiosoitteet</label>
+    <input type="text" ng-hide="!editMode" ng-model="toimikunta.sahkopostiosoitteet"></input>
+    <p ng-hide="editMode">{{toimikunta.sahkopostiosoitteet}}</p>
+  </fieldset>
+</form>
+
+<h3>Tutkintotoimikunnan opintoalat ja niiden koodit</h3>
+<table>
+  <thead>
+    <tr>
+        <th>Opintoala</th>
+        <th>Koodi</th>
+     </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="opintoala in opintoalat">
+      <th>{{opintoala.nimi}}</th>
+      <th>{{opintoala.koodi}}</th>
+    </tr>
+  </tbody>
+</table>
+<h3>Tutkintotoimikunnan näyttötutkinnot, niiden koodit ja tutkintojen tasot</h3>
+<table>
+  <thead>
+    <tr>
+        <th>Näyttötutkinto</th>
+        <th>Koodi</th>
+        <th>Tutkintotaso</th>
+     </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="nayttotutkinto in nayttotutkinnot">
+      <th>{{nayttotutkinto.nimi}}</th>
+      <th>{{nayttotutkinto.koodi}}</th>
+      <th>{{nayttotutkinto.taso}}</th>
+    </tr>
+  </tbody>
+</table>
+<button ng-hide="!editMode"> Lisää näyttötutkinto </button>
+<h3>Tutkintotoimikunnan osaamisalat ja niiden koodit</h3>
+<table>
+  <thead>
+    <tr>
+        <th>Osaamisala</th>
+        <th>Koodi</th>
+     </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="osaamisala in osaamisalat">
+      <th>{{osaamisala.nimi}}</th>
+      <th>{{osaamisala.koodi}}</th>
+    </tr>
+  </tbody>
+  </tbody>
+</table>
+<h3>Tutkintotoimikunnan tutkintonimikkeet ja niiden koodit</h3>
+<table>
+  <thead>
+    <tr>
+        <th>Tutkintonimike</th>
+        <th>Koodi</th>
+     </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="tutkintonimike in tutkintonimikkeet">
+      <th>{{tutkintonimike.nimi}}</th>
+      <th>{{tutkintonimike.koodi}}</th>
+    </tr>
+  </tbody>
+  </tbody>
+</table>
+<h3>Tutkintotasot</h3>
+<table>
+  <thead>
+    <tr>
+        <th>Tutkintotaso</th>
+        <th>Yhteyshenkilö</th>
+        <th>NMT</th>
+        <th>Sähköpostiosoite</th>
+        <th>Puhelinumero</th>
+        <th>Liitetty toimikuntaan</th>
+        <th>Poistettu toimikunnasta</th>
+        <th>Liitetty tutkintorakenteeseen</th>
+        <th>Poistettu tutkintorakenteesta</th>
+        <th>Siirtymäaika (loppupvm)</th>
+      </tr>  
+  </thead>
+  <tbody>
+    <tr ng-repeat="tutkintotaso in tutkintotasot">
+      <th>{{tutkintotaso.tutkintotaso}}</th>
+      <th><a href="#/henkilo/{{tutkintotaso.henkilonumero}}">{{tutkintotaso.yhteyshenkilo}}</a></th>
+      <th>{{tutkintotaso.nmt}}</th>
+      <th>{{tutkintotaso.sahkoposti}}</th>
+      <th>{{tutkintotaso.puhelin}}</th>
+      <th>{{tutkintotaso.liitettytmk}}</th>
+      <th>{{tutkintotaso.poistettutmk}}</th>
+      <th>{{tutkintotaso.liitettytrk}}</th>
+      <th>{{tutkintotaso.poistettutrk}}</th>
+      <th>{{tutkintotaso.siirtymaaika}}</th>
+    </tr>
+</tbody>
+</table>
+
+<h3>Toimikunnan historia</h3>
+<fieldset>
+  <label>Tutkintotoimikunnan laatija</label>
+  <p>{{toimikunta.laatija}}</p>
+ </fieldset>
+<fieldset>
+  <label>Luontipäivä</label>
+  <p>{{toimikunta.luontipaiva}}</p>
+ </fieldset>
+<fieldset>
+  <label>Tutkintotoimikunnan viimeisin muutoksen tekijä</label>
+  <p>{{toimikunta.viimeisinMuuttaja}}</p>
+ </fieldset>
+<fieldset>
+  <label>Tutkintotoimikunnan viimeisin muutoksen tekijä</label>
+  <p>{{toimikunta.viimeisinMuutospaiva}}</p>
+ </fieldset>

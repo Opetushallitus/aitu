@@ -1,0 +1,82 @@
+
+.autocomplete {
+  position: absolute;
+  top: 30px;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.2);
+  margin-left: 22%;
+  z-index: 10;
+
+  box-shadow: 2px 2px 0px $gray-color;
+  .ac-item {
+    padding: $marginS;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    display: block;
+    &:hover {
+      background: $lightest-primary;
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.actions-container {
+  width: 10%;
+  float: right;
+  margin-right: $marginL;
+}
+
+ul.pagination {
+  list-style: none; padding: 0; margin: 10px 0 10px 0; @include clearfix;
+  li {float: left;
+    &:not(.disabled) a:hover {background-color: $darker-primary;}
+    a {color: $primary-action-text; cursor: pointer; background-color: $primary-color; margin-right: $marginL; display: block; padding: 3px 10px 3px 10px;}
+    &.disabled {cursor: auto;
+      a {background-color: $disabled-primary-color;}
+    }
+  }
+  li:first-child a {
+    @include icon-before(-35px, 5px){@include left-double-arrow;}
+    padding-left: 50px;
+  }
+
+  li:first-child + li a {
+    @include icon-before(-26px, 5px){@include left-arrow;}
+    padding-left: 41px;
+  }
+
+  li:first-child + li + li a {
+    @include icon-after(20px, 5px){@include right-arrow;}
+    padding-right: 41px;
+  }
+
+  li:first-child + li + li + li a {
+    @include icon-after(20px, 5px){@include right-double-arrow;}
+    padding-right: 50px;
+  }
+
+}
+
+.search-results {
+  min-height: 550px;
+}
+
+.list-controls { float: right; @include clearfix; margin-top: $marginL;
+  button {float: left; vertical-align: middle;}
+}
+
+.loader { background: #ffffff url('../img/ajax-loader.gif') center top no-repeat; margin-left: auto; margin-right: auto; height: 66px;
+  text-align: center;
+  padding-top: 80px;
+  position: relative;
+  top: 150px;
+}
+
+.loader-error {
+  text-align: center;
+  position: relative;
+  top: 150px;
+}
+
+button.luo-uusi {float:right;}

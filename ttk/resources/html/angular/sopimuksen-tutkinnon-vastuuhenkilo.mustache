@@ -1,0 +1,42 @@
+{{=[[ ]]=}}
+[[#i18n.jarjestamissopimus]]
+<span>
+  <fieldset ng-if="!muokkaus">
+    <label>{{otsikko}}</label>
+    <div class="tyhja-">{{nimi}}</div>
+    <div><a href="mailto:{{sahkoposti}}">{{sahkoposti}}</a></div>
+    <div>{{puhelin}}</div>
+    <div ng-if="nimi">
+      <b>[[i18n.yleiset.nayttotutkintomestari]]:</b>
+      {{nayttotutkintomestari | muotoileNayttotutkintomestari}}</div>
+    <div ng-if="lisatiedot">
+      <b>[[i18n.yleiset.lisatiedot]]:</b>
+      {{lisatiedot}}
+    </div>
+  </fieldset>
+
+  <div ng-show="muokkaus" class="sopimuksen-tutkinnon-vastuuhenkilon-muokkaus">
+    <div><label>{{otsikko}}</label></div>
+    <fieldset>
+      <label>[[i18n.yleiset.nimi]]</label>
+      <input type="text" ng-model="nimi">
+    </fieldset>
+    <fieldset>
+      <label>[[i18n.yleiset.sahkoposti]]</label>
+      <input type="text" ng-model="sahkoposti">
+    </fieldset>
+    <fieldset>
+      <label>[[i18n.yleiset.puhelin]]</label>
+      <input type="text" ng-model="puhelin">
+    </fieldset>
+    <fieldset>
+      <label>[[i18n.yleiset.nayttotutkintomestari]]</label>
+      <boolean-select model="nayttotutkintomestari"></boolean-select>
+    </fieldset>
+    <fieldset>
+      <label>[[i18n.yleiset.lisatiedot]]</label>
+      <textarea ng-model="lisatiedot"></textarea>
+    </fieldset>
+  </div>
+</span>
+[[/i18n.jarjestamissopimus]]

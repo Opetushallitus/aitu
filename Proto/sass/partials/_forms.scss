@@ -1,0 +1,79 @@
+select {
+    height: 28px;
+  }
+
+
+form {
+  margin-bottom: $marginL;
+}
+ label{
+    font-weight: bold;
+    width: 20%;
+    margin: $marginM 0 $marginS;
+    display: inline-block;
+  }
+
+fieldset {
+  position: relative;
+  display: inline-block;
+  width: 20%;
+  margin: 0 1%;
+  @include clearfix;
+  margin-bottom: $marginM;
+
+  input, p, select {
+    width: 100%; 
+    height: $baseline;
+    margin: $marginS 0; 
+    display: inline-block;
+    padding: 2px 0;
+
+    &[type=checkbox] {
+      width: 18px; 
+      background: white;
+      margin: $marginM $marginS 0 0;
+    }
+  }
+
+  input, select {
+   border: 1px solid  $primary-color;
+  }
+  select {
+    height: 28px;
+  }
+  label {
+    margin: 0;
+    width: 100%;
+    display: block;
+  } 
+}
+
+.select2-container {
+  width: 50%;
+  display: block;
+
+  a {
+    border: 1px solid  $primary-color;
+    background-color: white;
+    border-radius: 0;
+  }
+  
+}
+
+.checkbox-pair {
+  display: block;
+  label { 
+    display: inline;
+    width: 30%;
+  }
+  input[type=checkbox] {
+    display: inline;
+    margin: $marginM $marginS 0 0;
+    width: 18px;
+  }
+}   
+
+.search-field {
+  width: 50%;
+  display: block;
+}

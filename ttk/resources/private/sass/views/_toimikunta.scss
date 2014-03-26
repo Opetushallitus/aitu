@@ -1,0 +1,17 @@
+table.toimikunnan-jasenet {
+  td:not(.voimassa), td:not(.voimassa) a  {color: $gray-color;}
+
+  td .datepicker-field {
+    width: 41%;
+    margin-bottom: 0;}
+  td .datepicker-field:first-child {
+    margin-right: 18px;
+  }
+
+  .removed {
+    td:first-child a  {
+      text-decoration: line-through;
+      color: $gray-color;
+    }
+  }
+}

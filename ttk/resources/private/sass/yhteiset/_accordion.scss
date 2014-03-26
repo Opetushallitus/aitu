@@ -1,0 +1,23 @@
+.accordion {
+  border: 1px solid $gray-color;
+  margin-bottom: 10px;
+}
+
+.accordion-header {
+  @include icon-before(-31px, 5px){@include arrow-down-icon;};
+  background-color: $lightest-primary;
+  padding: 5px 0;
+  color: #000000;
+  font-size: 1.1em;
+  padding-left: 40px;
+  cursor: pointer;
+  &.collapse {
+    @include icon-before(-31px, 5px){@include arrow-up-icon;};
+  }
+}
+.accordion-body {
+  display: none;
+  padding: 10px;
+  &.collapse {display: block;}
+}
+.accordion-container {margin-bottom: $marginM;}

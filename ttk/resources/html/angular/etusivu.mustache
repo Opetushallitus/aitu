@@ -1,0 +1,35 @@
+{{=[[ ]]=}}
+[[#i18n.etusivu]]
+<header class="app-wrapper ">
+  <h1>AITU</h1>
+  <span class="separator">|</span>
+  <h2>[[etusivun-otsikko]][[#ominaisuus.proto]] (proto)[[/ominaisuus.proto]]</h2>
+
+  <form class="haku" ng-if="[[yllapitaja]]">
+    <input type="text" ng-model="hakuehto" ng-change="tyhjennaPalaute()" placeholder="[[anna-diaarinumero-tai-tunnus]]"></input>
+    <button ng-click="hae(hakuehto)">[[hae]]</button>
+    <p ng-if="hakupalaute">[[ei-tuloksia]]</p>
+  </form>
+</header>
+
+[[#i18n.yleiset]]
+  <section class="tiedote" ng-show="tiedoteOlemassa() || [[yllapitaja]]">
+    <h1>
+      [[tiedote]]
+      <button ng-if="!muokkausTila && [[yllapitaja]]" class="icon edit-icon" ng-click="muokkaa()"></button>
+    </h1>
+    <label ng-hide="muokkausTila || !tiedoteOlemassa()">{{tiedote.muutettuaika | date:'dd.MM.yyyy HH:mm'}}</label>
+    <p ng-hide="muokkausTila || !tiedoteOlemassa()" ng-repeat="rivi in (tiedote.teksti | lokalisoi:tiedote:'teksti' | rivit)">{{rivi}}</p>
+    <span ng-hide="!muokkausTila">
+      <label>[[tiedote-suomeksi]]</label>
+      <textarea ng-model="tiedote.teksti_fi"></textarea>
+      <label>[[tiedote-ruotsiksi]]</label>
+      <textarea ng-model="tiedote.teksti_sv"></textarea>
+
+      <tallenna disabloi-pyyntojen-ajaksi="['tiedotteen-tallennus']" ng-hide="!muokkausTila" ng-click="julkaise()" teksti="'[[julkaise]]'"></tallenna>
+      <tallenna disabloi-pyyntojen-ajaksi="['tiedotteen-poisto']" ng-hide="!muokkausTila" ng-click="poista()" teksti="'[[poista]]'"></tallenna>
+      <button ng-hide="!muokkausTila" ng-click="peruuta()" class="oikealle">[[peruuta]]</button>
+    </span>
+  </section>
+[[/i18n.yleiset]]
+[[/i18n.etusivu]]

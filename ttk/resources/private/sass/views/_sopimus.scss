@@ -1,0 +1,60 @@
+.sopimus-tutkinnon-osat {
+  &.muokkaus {
+    margin-top: 0;
+    th:first-child{padding-left: 44px;}
+  }
+
+  input[type="radio"] {
+    margin-right: 10px;
+    margin-left: $marginL;
+    &:first-child {margin-left: 0;}
+  }
+
+  h2 {margin-top: 8px;}
+
+  table {
+    margin-bottom: $marginM;
+
+    tr:not(.valittu) {
+      td button {@include add-icon;}
+      .osan-tieto {
+        text-decoration: line-through;
+        opacity: 0.5;
+      }
+    }
+
+    td {
+      button {
+        margin-right: 15px;
+        @include delete-icon;
+      }
+    }
+
+    td.jarjestysnumero {
+      button {float: left;}
+      width: 10%;
+      text-align: center;
+    }
+  }
+}
+
+td .sopimus-ja-tutkinto-rivi {
+  position: relative;
+  padding-right: 110px;
+  border-top: 1px solid $lighter-gray;
+  &:first-child {border: none;}
+  span.perusteen-diaarinumero {
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+    width: 100px;
+    text-align: left;
+  }
+}
+
+.sopimuksen-tutkinnon-vastuuhenkilon-muokkaus {
+  border: 1px solid $lighter-gray;
+  background-color: $lightest-gray;
+  padding: $marginM $marginM 0 $marginM;
+  margin-bottom: $marginM;
+}

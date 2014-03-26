@@ -1,0 +1,105 @@
+{{=[[ ]]=}}
+
+[[#i18n.henkilo]]
+[[#i18n.yleiset]]
+
+<section class="info-section">
+  <fieldset ng-hide="muokkausTila">
+    <label ng-hide="muokkausTila">[[nimi]]</label>
+    <p ng-hide="muokkausTila">{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
+  </fieldset>
+  <fieldset ng-hide="!muokkausTila">
+    <label>[[etunimi]]</label>
+    <input type="text" ng-model="jasen.henkilo.etunimi">
+  </fieldset>
+  <fieldset ng-hide="!muokkausTila">
+    <label>[[sukunimi]]</label>
+    <input type="text"  ng-model="jasen.henkilo.sukunimi">
+  </fieldset>
+</section>
+<section class="info-section">
+  <fieldset>
+    <label>[[sukupuoli]]</label>
+    <enum-valikko ng-hide="!muokkausTila" nimi="sukupuoli" arvo="jasen.henkilo.sukupuoli"></enum-valikko>
+    <p ng-hide="muokkausTila"><enum-arvo nimi="sukupuoli" arvo="jasen.henkilo.sukupuoli"></enum-arvo></p>
+  </fieldset>
+  <fieldset>
+    <label>[[kielisyys]]</label>
+    <enum-valikko ng-hide="!muokkausTila" nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-valikko>
+    <p ng-hide="muokkausTila"><enum-arvo nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-arvo></p>
+  </fieldset>
+</section>
+
+<section class="info-section">
+  <fieldset>
+    <label>[[sahkoposti]]</label>
+    <input type="text" ng-hide="!muokkausTila" ng-model="jasen.henkilo.sahkoposti">
+    <label ng-hide="!muokkausTila"><input type="checkbox" ng-model="jasen.henkilo.sahkoposti_julkinen" /> [[julkinen]]</label>
+    <p ng-hide="muokkausTila"><a href="mailto:{{jasen.henkilo.sahkoposti}}">{{jasen.henkilo.sahkoposti}}</a></p>
+  </fieldset>
+  <fieldset>
+    <label>[[puhelin]]</label>
+    <input type="text" ng-hide="!muokkausTila" ng-model="jasen.henkilo.puhelin">
+    <label ng-hide="!muokkausTila"><input type="checkbox" ng-hide="!muokkausTila" ng-model="jasen.henkilo.puhelin_julkinen" /> [[julkinen]]</label>
+    <p ng-hide="muokkausTila">{{jasen.henkilo.puhelin}}</p>
+  </fieldset>
+  <fieldset>
+    <p ng-hide="!muokkausTila">
+      <label>[[organisaatio]]</label>
+      <input type="text" ng-hide="!muokkausTila" ng-model="jasen.henkilo.organisaatio">
+      <label>[[osoite]]</label>
+      <input type="text" ng-model="jasen.henkilo.osoite">
+      <span id="postinumero">
+        <label>[[postinumero]]</label>
+        <input type="text" ng-model="jasen.henkilo.postinumero" class="postinumero">
+      </span>
+      <span id="postitoimipaikka">
+        <label>[[postitoimipaikka]]</label>
+        <input type="text" ng-model="jasen.henkilo.postitoimipaikka" class="postitoimipaikka">
+      </span>
+      <label><input type="checkbox" ng-model="jasen.henkilo.osoite_julkinen"/> [[julkinen]]</label>
+    </p>
+    <p ng-hide="muokkausTila">
+      <label>[[postiosoite]]</label>
+      <div>{{jasen.henkilo.organisaatio}}</div>
+      <div>{{jasen.henkilo.osoite}}</div>
+      <div>{{jasen.henkilo.postinumero}} {{jasen.henkilo.postitoimipaikka}}</div>
+    </p>
+  </fieldset>
+</section>
+
+<section class="info-section">
+  <fieldset ng-hide="muokkausTila">
+    <label ng-hide="jasen.henkilo.keskusjarjesto">[[jarjesto]]</label>
+    <label ng-hide="!jasen.henkilo.keskusjarjesto">[[keskusjarjesto]]</label>
+    <p>{{jasen.henkilo.jarjesto_nimi | lokalisoi:jasen.henkilo:'jarjesto_nimi'}}</p>
+  </fieldset>
+  <haku-valitsin
+    ng-show="muokkausTila"
+    otsikko="[[jarjesto]] / [[keskusjarjesto]] (*)"
+    url="[[base-url]]/api/jarjesto/haku/"
+    model="jasen.henkilo"
+    model-id-property="jarjesto"
+    model-text-property="jarjesto_nimi">
+  </haku-valitsin>
+  <fieldset>
+    <label ng-hide="muokkausTila || jasen.henkilo.keskusjarjesto">[[keskusjarjesto]]</label>
+    <p ng-hide="muokkausTila">{{jasen.henkilo.keskusjarjesto_nimi}}</p>
+  </fieldset>
+  <fieldset>
+    <label>[[nayttotutkintomestari]]</label>
+    <p ng-hide="muokkausTila">{{jasen.henkilo.nayttomestari | muotoileNayttotutkintomestari}}</p>
+    <boolean-select ng-hide="!muokkausTila" model="jasen.henkilo.nayttomestari"></boolean-select>
+    </select>
+  </fieldset>
+</section>
+<section class="info-section">
+  <fieldset class="lisatiedot">
+    <label>[[lisatiedot]]</label>
+    <p ng-hide="muokkausTila" ng-repeat="rivi in (jasen.henkilo.lisatiedot | rivit)">{{rivi}}</p>
+    <textarea ng-hide="!muokkausTila" ng-model="jasen.henkilo.lisatiedot"></textarea>
+  </fieldset>
+</section>
+
+[[/i18n.yleiset]]
+[[/i18n.henkilo]]

@@ -1,0 +1,102 @@
+
+<h1 ng-hide="editMode">{{henkilo.etunimi}} {{henkilo.sukunimi}}</h1>
+
+<section class="info-section">
+  <h2>Perustiedot</h2>
+   <fieldset>
+    <label ng-hide="editMode">Nimi</label>
+    <p ng-hide="editMode">{{henkilo.etunimi}} {{henkilo.sukunimi}}</p>
+     <label ng-hide="!editMode">Etunimi</label>
+    <input type="text"  ng-model="henkilo.etunimi" ng-hide="!editMode"></input>
+    <label ng-hide="!editMode">Sukunimi</label>
+    <input type="text"  ng-model="henkilo.sukunimi" ng-hide="!editMode"></input>
+  </fieldset>
+  <fieldset>
+    <label>Sukupuoli</label>
+    <select ng-hide="!editMode" ng-model="henkilo.sukupuoli">
+      <option>Nainen</option>
+      <option>Mies</option>
+    </select>
+    <p ng-hide="editMode">{{henkilo.sukupuoli}}</p>
+  </fieldset>
+  <fieldset>
+    <label>Äidinkieli</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.kieli"></input>
+    <p ng-hide="editMode">{{henkilo.kieli}}</p>
+  </fieldset>
+</section>
+<section class="info-section">
+  <h2>Yhteystiedot</h2>
+  <fieldset>
+    <label ng-hide="editMode">Postiosoite</label>
+    <p ng-hide="editMode">{{henkilo.postiosoite}}, {{henkilo.postinumero}} {{henkilo.postitoimipaikka}}</p>
+    <label ng-hide="!editMode">Katuosoite</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.postiosoite"></input>
+    <label ng-hide="!editMode">Postinumero</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.postinumero"></input>
+    <label ng-hide="!editMode">Postitoimipaikka</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.postitoimipaikka"></input>
+   </fieldset>
+   <fieldset>
+    <label>Sähköposti</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.sahkoposti"></input>
+    <p ng-hide="editMode">{{henkilo.sahkoposti}}</p>
+  </fieldset>
+ <fieldset>
+    <label>Puhelinnumero</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.puhelin"></input>
+    <p ng-hide="editMode">{{henkilo.puhelin}}</p>
+  </fieldset> 
+</section>
+
+<section class="info-section">
+  <h2>Muut tiedot</h2>
+  <fieldset>
+    <label>Edustettava taho</label>
+    <select ng-hide="!editMode" ng-model="henkilo.edustettavaTaho">
+      <option>Työnantajat</option>
+      <option>Työntekijät</option>
+      <option>Opettajat</option>
+    </select>
+    <p ng-hide="editMode">{{henkilo.edustettavaTaho}}</p>
+  </fieldset>
+  <fieldset>
+    <label>Keskusjäjestö</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.keskusjarjesto"></input>
+    <p ng-hide="editMode">{{henkilo.keskusjarjesto}}</p>
+  </fieldset>
+  <fieldset>
+    <label>Järjestö</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.jarjesto"></input>
+    <p ng-hide="editMode">{{henkilo.jarjesto}}</p>
+  </fieldset>
+  <fieldset>
+    <label>Organisaatio</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.organisaatio"></input>
+    <a ng-hide="editMode">{{henkilo.organisaatio}}</a>
+  </fieldset>
+  <fieldset>
+    <label>Näyttömestarin tutkinto</label>
+    <input type="text" ng-hide="!editMode" ng-model="henkilo.nayttomestarintutkinto"></input>
+    <p ng-hide="editMode">{{henkilo.nayttomestarintutkinto}}</p>
+  </fieldset>
+</section> 
+ 
+<section class="info-section">
+  <h2>Lisätiedot</h2>
+  <textarea rows="4" cols="50" ng-hide="!editMode" ng-model="henkilo.lisatiedot"></textarea>
+  <p ng-hide="editMode">{{henkilo.lisatiedot}}</p>
+</section> 
+
+<h3>Toimikuntien jäsenyydet</h3>
+<table>
+  <thead>
+    <tr>
+        <th>Toimikunta</th>
+        <th>Rooli</th>
+        <th>Edustettava taho</th>
+        <th>Aloittanut toimessa</th>
+        <th>Toimi päättynyt</th>
+     </tr>
+  </thead>
+</table>

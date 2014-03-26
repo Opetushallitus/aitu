@@ -1,0 +1,6 @@
+{{=[[ ]]=}}
+[[#i18n]]
+<div class="loader" ng-show="latausKaynnissa">{{viesti}}</div>
+<div class="loader-error" ng-show="virhe && !latausKaynnissa"><p>{{virheviesti}}</p><button ng-click="yritaUudelleen()">[[hakutulokset.yrita-uudelleen]]</button></div>
+<div ng-hide="latausKaynnissa || virhe" ng-transclude>
+[[/i18n]]

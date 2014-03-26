@@ -1,0 +1,99 @@
+// Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
+//
+// This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+// soon as they will be approved by the European Commission - subsequent versions
+// of the EUPL (the "Licence");
+//
+// You may not use this work except in compliance with the Licence.
+// You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// European Union Public Licence for more details.
+
+angular.module('ttk', ['henkilot',
+                       'toimikunnat',
+                       'tutkinnot',
+                       'jarjestajat',
+                       'sopimukset',
+                       'filters',
+                       'directives',
+                       'ngResource',
+                       'ngRoute',
+                       'ngAnimate',
+                       'uiKomponentit',
+                       'apimetodiPalaute',
+                       'ui.select2',
+                       'ngUpload',
+                       'etusivu',
+                       'ohjeet'])
+
+  .config(['$routeProvider', '$httpProvider', 'asetukset', function($routeProvider, $httpProvider, asetukset) {
+    $routeProvider.
+      when('/', {controller: 'etusivuController', templateUrl:'template/etusivu'}).
+      otherwise({templateUrl:'template/blank'});
+
+    $httpProvider.interceptors.push(
+      function(apiCallInterceptor, $q){
+        return {
+          request : function(pyynto){
+            pyynto.timeout = asetukset.requestTimeout;
+            apiCallInterceptor.apiPyynto(pyynto);
+            return pyynto;
+          },
+          response : function(vastaus){
+            apiCallInterceptor.apiVastaus(vastaus, false);
+            return vastaus;
+          },
+          responseError : function(vastaus){
+            apiCallInterceptor.apiVastaus(vastaus, true);
+            return $q.reject(vastaus);
+          }
+        };
+      }
+    );
+
+    $httpProvider.interceptors.push(
+      ['kieli', function(kieli){
+        return {
+          request : function(pyynto){
+            pyynto.headers["Accept-Language"] = kieli;
+            return pyynto;
+          }
+        };
+      }]
+    );
+
+    $httpProvider.interceptors.push(
+      function($q){
+        return {
+          request : function(pyynto){
+            pyynto.headers["Angular-Ajax-Request"] = true;
+            return pyynto;
+          },
+          responseError : function(vastaus){
+            if(vastaus.status == 403) {
+              window.location.reload();
+            }
+            return $q.reject(vastaus);
+          }
+        };
+      }
+    );
+  }])
+
+  .constant('asetukset', {
+    requestTimeout : 120000 //2min timeout kaikille pyynnöille
+  })
+
+  .provider(
+    '$exceptionHandler',
+    {
+      $get: function( virheLogitus ) {
+
+        return( virheLogitus );
+
+      }
+    }
+  );

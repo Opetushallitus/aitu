@@ -1,0 +1,18 @@
+{{=[[ ]]=}}
+[[#i18n.yleiset]]
+<span ng-if="jasenet.length > 0 && [[yllapitaja]]">
+  <p ng-if="salliPiilotus"><a class="ajax-link show-more" href="" ng-click="toggleNaytaVanhat()">{{nautaVanhatJasenyydet ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
+
+  <div ng-show="nautaVanhatJasenyydet || !salliPiilotus">
+    <jasenyyksien-listaus
+      otsikko="otsikko"
+      jasenet="jasenet"
+      nayta-toimikunta="naytaToimikunta"
+      nayta-sahkoposti="naytaSahkoposti"
+      piilota-nimi="piilotaNimi"
+      piilota-kielisyys="piilotaKielisyys"
+      piilota-jarjesto="piilotaJarjesto">
+    </jasenyyksien-listaus>
+  </div>
+</span>
+[[/i18n.yleiset]]

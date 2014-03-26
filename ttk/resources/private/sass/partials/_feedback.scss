@@ -1,0 +1,38 @@
+div.feedback-waypoint {padding-top: 10px;}
+
+div.api-method-feedback {
+  z-index: 1;
+  top: 0;
+  list-style: none;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  &.floating {
+    position: fixed;
+    top: 0;
+  }
+  > div:first-child {margin-top: 0;}
+  > div {
+    border: 1px solid #5ac848;
+    background-color: #a5eb97;
+    color: #2c942b;
+    overflow: hidden;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    .feedback-container {
+      display: inline-block;
+      text-align: left;
+    }
+    ul {
+      display: inline-block;
+      margin-top: 0;
+      padding-left: 15px;
+    }
+
+    &.error {
+      border: 1px solid #cc0d0f;
+      background-color: #e39292;
+      color: #742022;
+    }
+  }
+}

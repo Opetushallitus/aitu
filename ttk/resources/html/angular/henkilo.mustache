@@ -1,0 +1,32 @@
+{{=[[ ]]=}}
+[[#i18n.henkilo]]
+[[#i18n.yleiset]]
+
+<h1 ng-hide="muokkausTila">{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}} <button ng-show="!muokkausTila && [[yllapitaja]]" class="icon edit-icon" ng-click="muokkaa()"></button></h1>
+
+<ng-include src="'template/henkilo-partial'"></ng-include>
+
+
+<jasenyyksien-listaus class="nykyiset-jasenyydet"
+                      otsikko="'[[jasenyydet]]'"
+                      jasenet="nykyisetJasenet"
+                      nayta-toimikunta="true"
+                      piilota-nimi="true"
+                      piilota-jarjesto="true"
+                      piilota-kielisyys="true">
+</jasenyyksien-listaus>
+
+<vanhojen-jasenyyksien-listaus class="aiemmat-jasenyydet"
+                      otsikko="'[[aiemmat-jasenyydet]]'"
+                      jasenet="entisetJasenet"
+                      nayta-toimikunta="true"
+                      piilota-nimi="true"
+                      piilota-jarjesto="true"
+                      piilota-kielisyys="true"
+                      salli-piilotus="true">
+</vanhojen-jasenyyksien-listaus>
+
+<tallenna disabloi-pyyntojen-ajaksi="['henkilon-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="'[[tallenna]]'">/tallenna>
+<button ng-hide="!muokkausTila" ng-click="peruuta()">[[peruuta]]</button>
+[[/i18n.yleiset]]
+[[/i18n.henkilo]]

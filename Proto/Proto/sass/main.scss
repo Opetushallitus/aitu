@@ -1,0 +1,95 @@
+@import "compass/css3";
+@import "compass/css3/user-interface";
+@import "compass/typography/links/link-colors";
+
+// Style wide settings
+
+// Mixins
+@mixin image-replacement {
+  text-indent:100%;
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+@mixin clearfix {
+  *zoom: 1;
+  &:before, &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+@mixin disable-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@mixin sprite-bg {
+  background-image: url('/img/icons-sprite.png');
+  background-repeat: no-repeat;
+}
+
+/* RESET
+----------------------------------------------------------------------------- */
+@import "partials/_boilerplate";
+
+/*------------------------------------*\
+    ELEMENTS
+\*------------------------------------*/
+
+/* BASE
+----------------------------------------------------------------------------- */
+@import "partials/_base";
+
+/* THEME (colors and others)
+----------------------------------------------------------------------------- */
+@import "partials/_theme";
+
+/* TYPOGRAPHY
+----------------------------------------------------------------------------- */
+@import "partials/_typography";
+
+
+/* ICONS & ANIMATIONS
+----------------------------------------------------------------------------- */
+@import "partials/_icons";
+
+/* NAV
+----------------------------------------------------------------------------- */
+@import "partials/_header";
+@import "partials/_footer";
+
+/*------------------------------------*\
+    COMPONENTS
+\*------------------------------------*/
+
+@import "partials/_buttons";
+@import "partials/_forms";
+@import "partials/_tables";
+
+
+/* VIEWS
+------------------------------------------------------------------------------*/
+@import "views/_index";
+@import "views/_search";
+@import "views/_toimikunta";
+@import "views/_sopimus";
+@import "views/_henkilo";
+
+
+
+/*------------------------------------*\
+    OTHER
+\*------------------------------------*/
+
+/* ALL THE REST
+----------------------------------------------------------------------------- */
+
+@import "partials/_devhelp";

@@ -1,0 +1,27 @@
+form {
+  margin-bottom: $marginL;
+}
+
+fieldset {
+  position: relative;
+  display: block;
+  @include clearfix;
+  margin-bottom: $marginM;
+  input, p {
+    width: 30%; 
+    height: $baseline;
+    margin-bottom: $marginS; 
+    display: inline-block;
+    &[type=checkbox] {
+      width: 22px; 
+      background: white;
+    }
+  }
+  label{
+    font-weight: bold;
+    width: 20%;
+    text-align: right;
+    margin-right: $marginL;
+    display: inline-block;
+  }
+}
