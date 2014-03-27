@@ -1,6 +1,17 @@
 {{=[[ ]]=}}
 <fieldset class="datepicker-field">
   <label ng-if="otsikko">{{otsikko}}</label>
-  <input start-date="{{minPvm}}" end-date="{{maxPvm}}" type="text" ng-model="valittuPvm" bs-datepicker>
-  <div class="open-datepicker icon calendar-icon" data-toggle="datepicker"></div>
+  <input
+    type="text"
+    datepicker-popup="dd.MM.yyyy"
+    formatteddate="valittuDate"
+    ng-model="valittuDate"
+    is-open="opened"
+    min="minDate"
+    max="maxDate"
+    show-button-bar="false"/>
+  <button
+    ng-click="open($event)"
+    class="open-datepicker icon calendar-icon">
 </fieldset>
+

@@ -25,13 +25,13 @@ describe('Services: pvm', function () {
   }));
 
   it('Muuttaa p.k.vvvv formaattia olevan stringin date:ksi ', function() {
-    var tulos = pvmService.parsiPvm('3.1.2014');
-    expect(tulos).toEqual(new Date(2014, 1, 3));
+    var tulos = pvmService.parsiPvm('28.1.2014');
+    expect(tulos).toEqual(new Date(2014, 0, 28));
   });
 
   it('Muuttaa pp.kk.vvvv formaattia olevan stringin date:ksi', function() {
-    var tulos = pvmService.parsiPvm('03.01.2014');
-    expect(tulos).toEqual(new Date(2014, 1, 3));
+    var tulos = pvmService.parsiPvm('27.05.2014');
+    expect(tulos).toEqual(new Date(2014, 4, 27));
   });
 
   it('Palauttaa null jos päivämäärästring ei sisällä kolmea pisteellä erotettua osaa', function() {

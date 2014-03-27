@@ -109,27 +109,79 @@ fieldset {
   input {width: 100%;}
 }
 
-.datepicker-dropdown {
-  $border-color: $lighter-gray;
+.datepicker-field .dropdown-menu {
+  $border-color: $primary-color;
+  list-style: none;
   position: absolute;
+  display: block;
+  z-index: 9999;
   border: 1px solid $border-color;
   background-color: #ffffff;
+  width: 250px !important;
+  padding: $marginS;
+  margin-top: -1px;
   &:before {
-    border-bottom-color : $border-color !important;
+    content: '';
+    display: inline-block;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid $border-color;
+    position: absolute;
+    top: -7px;
+    left: 6px;
   }
-  td.day.active,
-  td.day.active:hover,
-  span.month.active,
-  span.month.active:hover {background-image: none !important; background-color: $primary-color !important;}
-  td, th {@include border-radius(0 !important);}
-  table tr td span {width: 30% !important; height: 25px !important; line-height: 25px !important; @include border-radius(0 !important);}
-  .datepicker-months th.switch {cursor: default !important;
-    &:hover {background: none !important;}
+  &:after {
+    content: '';
+    display: inline-block;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #ffffff;
+    position: absolute;
+    top: -6px;
+    left: 7px;
   }
-  th.prev:hover, th.next:hover {background: none !important}
-  th.prev:before {content : "<";}
-  th.next:before {content : ">";}
+  button {
+    background-color: transparent;
+    color: $darker-gray;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    &:hover {
+      background-color: $lightest-gray;
+    }
+  }
+  tr {
+    background-color: #ffffff !important;
+    border: 0 !important;
+  }
+  thead button {
+    background: none;
+    padding: 0;
+    color : $darker-gray;
+  }
+  thead button.pull-left {
+    background: none;
+    &:before {content : "<"; color: $darker-gray;}
+  }
+  thead button.pull-right {
+    background: none;
+    &:before {content : ">"; color: $darker-gray;}
+  }
+  thead tr:first-child th:first-child + th button {width: 100%; padding: $marginS 0; }
 
+  th {text-align: center; padding: 0; vertical-align: middle;}
+
+  tbody td {
+    padding: 0;
+    button {
+      text-align: center;
+      width: 100%;
+      padding: 7px 0;
+    }
+  }
+
+  .btn-info, .btn-info:hover {color: #ffffff; background-color: $primary-color;}
 }
 
 fieldset.datepicker-field {

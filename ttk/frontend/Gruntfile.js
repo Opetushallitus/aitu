@@ -73,18 +73,14 @@ module.exports = function (grunt) {
               'bower_components/angular/angular.min.js',
               'bower_components/angular-resource/angular-resource.min.js',
               'bower_components/angular-route/angular-route.min.js',
-              'bower_components/angular-animate/angular-animate.min.js',
-              'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-              'bower_components/select2/select2.js',
+              'bower_components/select2/select2.min.js',
               'bower_components/angular-ui-select2/src/select2.js',
               'bower_components/jquery-waypoints/waypoints.min.js',
               'bower_components/lodash/dist/lodash.min.js',
               'bower_components/stacktrace/stacktrace.js',
               'bower_components/jquery-placeholder/jquery.placeholder.min.js',
-              'bower_components/angular-strap/dist/angular-strap.min.js',
-              'bower_components/angular-strap/dist/angular-strap.tpl.min.js'],
-        dest: '<%= yeoman.app %>/bower_components/bower-components.js'
-
+              'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'],
+        dest: '<%= yeoman.app %>/vendor/bower-components.js'
       }
     },
     copy: {
@@ -101,19 +97,16 @@ module.exports = function (grunt) {
         src : ['angular/angular.min.js.map',
                'angular-route/angular-route.min.js.map',
                'angular-resource/angular-resource.min.js.map',
-               'angular-strap/dist/angular-strap.min.map',
-               'angular-strap/dist/angular-strap.tpl.min.map',
-               'angular-animate/angular-animate.min.js.map',
                'jquery/dist/jquery.min.map',
                'select2/*.{png,gif}',
                'select2/select2.css',
                'modernizr/modernizr.js'],
-        dest: '<%= yeoman.app %>/bower_components',
+        dest: '<%= yeoman.app %>/vendor',
         flatten : true
       }
     },
     clean: {
-      files : ['<%= yeoman.app %>/bower_components',
+      files : ['<%= yeoman.app %>/vendor',
                'test/vendor'],
       options: {force : true}
     }

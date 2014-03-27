@@ -41,6 +41,9 @@
   (valitse-select2-optio "search" "osat" nimi)
   (odota-angular-pyyntoa)
   (paina-nappia))
+(defn paina-lisaa-jasen-nappia []
+  (w/click {:text "Lisää jäsen"})
+  (odota-angular-pyyntoa))
 
 (def testi-toimikunnat [{:diaarinumero "98/11/543"
                          :tkunta "ILMA"
@@ -73,7 +76,7 @@
   (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
   (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" alkupvm)
   (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" loppupvm)
-  (paina-nappia))
+  (paina-lisaa-jasen-nappia))
 
 (deftest ^:no-ie jasenen-lisays-sivu-test
   (testing "Toimikunnan jäsenen lisäys sivu"
@@ -120,7 +123,7 @@
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "02.08.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
-            (paina-nappia)
+            (paina-lisaa-jasen-nappia)
             ;; Niin
             (is (= #{"Aku Ankka" "Mikki Hiiri" "Simo Sisu"}
                    (set (voimassaolevat-jasenet))))
@@ -135,7 +138,7 @@
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
-            (paina-nappia)
+            (paina-lisaa-jasen-nappia)
             ;; Niin
             (is (= #{"Aku Ankka" "Mikki Hiiri" "Simo Sisu"}
                   (set (voimassaolevat-jasenet))))
@@ -164,7 +167,7 @@
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2016")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "02.08.2016")
-            (paina-nappia)
+            (paina-lisaa-jasen-nappia)
             ;;Niin
             (is (= (viestin-teksti) "Jäsenen luonti ei onnistunut"))))
         (testing "ei onnistu, jos alkupvm ennen toimikauden alkua"
@@ -177,7 +180,7 @@
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "29.07.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
-            (paina-nappia)
+            (paina-lisaa-jasen-nappia)
             ;; Niin
             (is (= (viestin-teksti) "Jäsenen luonti ei onnistunut"))))))))
 
@@ -196,10 +199,9 @@
           (paina-nappia)
           (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
           (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
-          (kirjoita-tietokenttaan "valittuPvm" "01.08.2013")
           (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
           (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
-          (paina-nappia)
+          (paina-lisaa-jasen-nappia)
           ;; Niin
           (is (= (set (voimassaolevat-jasenet))
                  #{"Aku Ankka" "Mikki Hiiri" "Roope Setä"})))))))

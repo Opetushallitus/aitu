@@ -12,42 +12,22 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('uiKomponentit', ['ui.bootstrap', '$strap.directives'])
+angular.module('uiKomponentit', ['ui.bootstrap'])
 
-  .value('$strapConfig', {
-    datepicker: {
-      language: 'fi/sv',
-      format: 'dd.mm.yyyy',
-      weekStart: 1,
-      minViewMode : 0,
-      viewMode : 0
-
-    }
+  .constant('datepickerConfig', {
+    dayFormat: 'd',
+    monthFormat: 'MMMM',
+    yearFormat: 'yyyy',
+    dayHeaderFormat: 'EEE',
+    dayTitleFormat: 'MMMM yyyy',
+    monthTitleFormat: 'yyyy',
+    showWeeks: false,
+    startingDay: 1,
+    yearRange: 20,
+    minDate: null,
+    maxDate: null
   })
 
   .run(['i18n', 'kieli', function(i18n, kieli) {
-    var paivat = i18n.kalenteri.paivat.split(',');
-    var kuukaudet = i18n.kalenteri.kuukaudet.split(',');
-
-    $.fn.datepicker.dates['fi/sv'] = {
-      days: paivat,
-      daysShort: paivat,
-      daysMin: paivat,
-      months: kuukaudet,
-      monthsShort: kuukaudet
-    };
-
-    //Jätetään pois tarpeeton vuosinäkymä datepickeristä.
-    var datePickerProto = $.fn.datepicker.Constructor.prototype;
-    datePickerProto._showMode = datePickerProto.showMode;
-    datePickerProto.showMode = showModeWithoutYear;
-
-    function showModeWithoutYear(arg) {
-      if(isNaN(arg) || this.viewMode + arg <= 1) {
-        datePickerProto._showMode.apply(this, [arg]);
-      }
-    }
-
     $.fn.select2.ajaxDefaults.params.headers = {"Accept-Language" : kieli};
-
   }])

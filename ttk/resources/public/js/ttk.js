@@ -12,7 +12,8 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('ttk', ['henkilot',
+angular.module('ttk', ['aitulocale',
+                       'henkilot',
                        'toimikunnat',
                        'tutkinnot',
                        'jarjestajat',
@@ -21,7 +22,6 @@ angular.module('ttk', ['henkilot',
                        'directives',
                        'ngResource',
                        'ngRoute',
-                       'ngAnimate',
                        'uiKomponentit',
                        'apimetodiPalaute',
                        'ui.select2',

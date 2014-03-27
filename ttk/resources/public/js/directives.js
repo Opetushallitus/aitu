@@ -209,7 +209,7 @@ angular.module('directives', ['services', 'resources'])
       }
     };
   }])
-  .directive('pvmValitsin', function(){
+  .directive('pvmValitsin', ['pvm',  function(pvm) {
     return {
       restrict: 'E',
       replace: true,
@@ -225,9 +225,58 @@ angular.module('directives', ['services', 'resources'])
         if(!scope.valittuPvm) {
           scope.valittuPvm = scope.oletusPvm;
         }
+
+        //Bootstrap datepicker ei osaa parsia muotoa dd.MM.yyyy päivämäärästringejä.
+        //Muunnetaan string muotoiset päivämäärät dateiksi.
+        scope.$watch('valittuPvm', function(value) {
+          if(value && !scope.valittuDate) {
+            scope.valittuDate = pvm.parsiPvm(value);
+          }
+        });
+
+        scope.$watch('valittuDate', function(value) {
+          scope.valittuPvm = pvm.dateToPvm(value);
+        });
+
+        scope.$watch('minPvm', function(value) {
+          if(value) {
+            scope.minDate = pvm.parsiPvm(value);
+          }
+        });
+
+        scope.$watch('maxPvm', function(value) {
+          if(value) {
+            scope.maxDate = pvm.parsiPvm(value);
+          }
+        });
+
+        scope.open = function($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+          scope.opened = true;
+        };
       }
     };
-  })
+  }])
+  .directive('formatteddate', ['$filter', 'pvm', function ($filter, pvm) {
+    return {
+      link: function (scope, element, attrs, ctrl) {
+        ctrl.$parsers.unshift(function (viewValue) {
+          if(typeof viewValue === 'string') {
+            var parsittu = pvm.parsiPvm(viewValue);
+            if(parsittu) {
+              return parsittu;
+            }
+          }
+          return viewValue;
+        });
+      },
+      priority: 1, //<-- Formatteddate- direktiivin link funktio suoritetaan datepickerin link funktion jälkeen.
+                   //    Näin saadaan custom parsefuktio 
+      restrict: 'A',
+      require: 'ngModel'
+    };
+  }])
   .directive('accordion', function(){
     return {
       link: function(scope, element, attrs) {
