@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns oph.korma.korma-auth
-  "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen sisäänkirjautuneen käyttäjän."
+  "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen sisäänkirjautuneen käyttäjän. BoneCP pool."
   (:require [clojure.tools.logging :as log]
             [aitu.toimiala.kayttajaoikeudet :as ko]))
 
@@ -25,59 +25,49 @@
 (def ^:dynamic *current-user-uid*)
 (def ^:dynamic *current-user-oid*)
 
-(defn exception-as-error
-  "Muuttaa poikkeukset (Exception) erroreiksi (Error) funktiokutsun aikana.
-  Korman käyttämässä C3P0 connection poolissa on vika jonka takia poikkeukset johtavat ikuiseen silmukkaan. Error menee läpi.
-  Kts. http://sourceforge.net/p/c3p0/bugs/100/"
-  [f]
-  (try
-    (f)
-    (catch Exception e
-      (throw (Error. (.getMessage e) e)))))
-
 (defn validate-user
   [con uid]
   {:pre [(string? uid)]}
   (log/debug "tarkistetaan käyttäjä " uid)
-  (let [pstmt (doto 
-                (.prepareStatement con "select * from kayttaja where uid = ?")
-                (.setString 1 uid))
-        rs (.executeQuery pstmt)
-        valid (.next rs)]
-    (when-not valid (throw (IllegalArgumentException. (str "Käyttäjä " uid " puuttuu tietokannasta"))))
-    (let [voimassa (.getBoolean rs "voimassa")
-          rooli (.getString rs "rooli")
-          oid (.getString rs "oid")]
-      (when-not voimassa (throw (IllegalArgumentException. (str "Käyttäjätunnus " uid " ei ole voimassa."))))
-      (log/debug (str "user " uid " ok. Rooli " rooli ))
-      oid)))
+  (with-open [pstmt (doto
+                      (.prepareStatement con "select * from kayttaja where uid = ?")
+                      (.setString 1 uid))
+              rs (.executeQuery pstmt)]
+    (let [valid (.next rs)]
+      (when-not valid (throw (IllegalArgumentException. (str "Käyttäjä " uid " puuttuu tietokannasta"))))
+     (let [voimassa (.getBoolean rs "voimassa")
+           rooli (.getString rs "rooli")
+           oid (.getString rs "oid")]
+       (when-not voimassa (throw (IllegalArgumentException. (str "Käyttäjätunnus " uid " ei ole voimassa."))))
+       (log/debug (str "user " uid " ok. Rooli " rooli ))
+       oid))))
+
+(defn exec-sql
+  "execute sql and close statement."
+  [c sql]
+  (with-open [stm (.createStatement c)]
+    (.execute stm sql)))
 
 (defn auth-onCheckOut
-  [this c s]
-  (exception-as-error
-    #(do
-       (log/debug "auth user " *current-user-uid*)
-       (let [oid (validate-user c *current-user-uid*)]
-         (deliver *current-user-oid* oid)
-         (doto
-           (.createStatement c)
-           (.execute (str "set session " psql-varname " = '" oid "'"))))
-       (log/debug "con ok" (.hashCode c)))))
+  [c]
+  (log/debug "auth user " *current-user-uid*)
+  (try
+    (let [oid (validate-user c *current-user-uid*)]
+      (deliver *current-user-oid* oid)
+      (exec-sql c (str "set session " psql-varname " = '" oid "'")))
+    (catch IllegalArgumentException e
+      (.printStackTrace e)))
+  (log/debug "con ok" (.hashCode c)))
     
 (defn auth-onCheckIn
-  [this c s]
-  (exception-as-error
-    #(do
-       (log/debug "connection release ")
-       (doto
-         (.createStatement c)
-         (.execute (str "SET " psql-varname " TO DEFAULT")))
-       (log/debug "con release ok" (.hashCode c)))))
+  [c]
+  (log/debug "connection release ")
+  (exec-sql c (str "SET " psql-varname " TO DEFAULT"))
+  (log/debug "con release ok" (.hashCode c)))
 
-(defonce customizer-impl
-  (oph.korma.auth.C3P0NamedCustomizer/setImpl
-    (reify com.mchange.v2.c3p0.ConnectionCustomizer
-      (onCheckIn [this c s]
-        (auth-onCheckIn this c s))
-      (onCheckOut [this c s]
-        (auth-onCheckOut this c s)))))
+(defonce customizer-impl-bonecp
+  (proxy [com.jolbox.bonecp.hooks.AbstractConnectionHook] []
+    (onCheckIn [c]
+      (auth-onCheckIn c))
+    (onCheckOut [c]
+      (auth-onCheckOut c))))

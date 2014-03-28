@@ -18,6 +18,7 @@
   (:require  korma.db
              [aitu.infra.i18n :as i18n]
              [korma.core :as sql]
+             [oph.korma.korma-auth :as korma-auth]
              [clj-time.coerce :as time-coerce]
              [clj-time.core :as time]))
 
@@ -34,17 +35,27 @@ kertoo mitä käyttäjätunnusta yhteyteen käytetään, esim. :user ->
    :minimum-pool-size (Integer/parseInt (:minimum-pool-size db-asetukset))
    :maximum-pool-size (Integer/parseInt (:maximum-pool-size db-asetukset))})
 
-(defn datasource
+(defn bonecp-datasource
+  "BoneCP based connection pool"
   [db-asetukset]
-  (let [korma-pool (korma.db/connection-pool (korma.db/postgres (korma-asetukset db-asetukset)))]
-    (doto (:datasource korma-pool)
-      (.setCheckoutTimeout 2000)
-      (.setTestConnectionOnCheckout true)
-      (.setConnectionCustomizerClassName "oph.korma.auth.C3P0NamedCustomizer"))))
-
+  (let [korma-postgres (korma.db/postgres (korma-asetukset db-asetukset))
+        bonecp-ds  (doto (com.jolbox.bonecp.BoneCPDataSource.)
+                     (.setJdbcUrl (str "jdbc:" (:subprotocol korma-postgres) ":" (:subname korma-postgres)))
+                     (.setUsername (:user korma-postgres))
+                     (.setPassword (:password korma-postgres))
+                     (.setConnectionTestStatement "select 42")
+                     (.setConnectionTimeoutInMs 2000)
+                     (.setDefaultAutoCommit false)
+                     (.setMaxConnectionsPerPartition 10)
+                     (.setMinConnectionsPerPartition 5)
+                     (.setPartitionCount 1)
+                     (.setConnectionHook korma-auth/customizer-impl-bonecp)
+                     )]
+  bonecp-ds))
+ 
 (defn luo-db [db-asetukset]
   (korma.db/default-connection
-    (korma.db/create-db {:make-pool? false :datasource (datasource db-asetukset)})))
+    (korma.db/create-db {:make-pool? false :datasource (bonecp-datasource db-asetukset)})))
 
 (defn convert-instances-of [c f m]
   (clojure.walk/postwalk #(if (instance? c %) (f %) %) m))

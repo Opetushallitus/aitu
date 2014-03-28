@@ -30,7 +30,8 @@
                  [org.clojars.pntblnk/clj-ldap "0.0.7"]
 
                  [org.clojure/java.jdbc "0.3.0-alpha5"]
-                 [postgresql "9.1-901.jdbc4"]
+                 [org.postgresql/postgresql "9.3-1101-jdbc41"]
+                 [com.jolbox/bonecp "0.8.0.RELEASE"]
                  [korma "0.3.0-RC6"]
                  [clj-time "0.6.0"]
 

@@ -45,6 +45,6 @@
          :toimikunta_jasen (set (map :tkunta (:jasenyys oikeudet)))})))
   ([] "Hakee sisäänkirjautuneen käyttäjän oikeudet"
     (db/transaction
-      (assert (realized? *current-user-oid*) "uid -> oid mäppäystä ei ole tapahtunut")
+      (assert (realized? *current-user-oid*) "Ongelma sisäänkirjautumisessa. uid -> oid mappays epäonnistui.")
       (hae-oikeudet @*current-user-oid*))))
 
