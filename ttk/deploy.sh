@@ -57,7 +57,7 @@ set -x
 # Ei tarkisteta isäntäavaimia, koska testiajoihin käytettävien
 # virtuaalipalvelinten IP:t vaihtuvat, kun ne tuhotaan ja luodaan uudelleen
 echo "kopioidaan uusi versio etäpalvelimelle $user_host"
-scp -i $ssh_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p $dir/start-ttk.sh $dir/stop-ttk.sh $version_jarfile $version_dbjarfile $user_host:~
+scp -i $ssh_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p "$dir/start-ttk.sh" "$dir/stop-ttk.sh" $version_jarfile $version_dbjarfile $user_host:~
 
 echo "päivitetään tietokanta ja sovellus"
 
