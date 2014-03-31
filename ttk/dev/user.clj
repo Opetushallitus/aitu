@@ -31,14 +31,22 @@
 
 (defonce ^:private palvelin (atom nil))
 
+(defn ^:private repl-asetukset 
+  "Muutetaan oletusasetuksia siten että saadaan järkevät asetukset kehitystyötä varten"
+  []
+  (assoc @(ns-resolve 'aitu.asetukset 'oletusasetukset)
+    :development-mode true
+    :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
+                      :unsafe-https true
+                      :enabled false}))
+
 (defn ^:private kaynnista! []
   {:pre [(not @palvelin)]
    :post [@palvelin]}
   (require 'aitu.palvelin)
   (require 'aitu.asetukset)
-  (reset! palvelin ((ns-resolve 'aitu.palvelin 'kaynnista!)
-                     (assoc @(ns-resolve 'aitu.asetukset 'oletusasetukset)
-                            :development-mode true))))
+  (reset! palvelin ((ns-resolve 'aitu.palvelin 'kaynnista!) (repl-asetukset))))
+
 
 (defn ^:private sammuta! []
   {:pre [@palvelin]

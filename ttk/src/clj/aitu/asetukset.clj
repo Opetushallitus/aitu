@@ -35,8 +35,8 @@
         :maximum-pool-size "15"
         :minimum-pool-size "3"}
    :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
-                     :unsafe-https true
-                     :enabled false} ; TODO: testicase jossa tämä on päällä.
+                     :unsafe-https false
+                     :enabled true}
    :ldap-auth-server {:host "localhost"
                       :port 10389}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
