@@ -28,6 +28,13 @@
           :when (re-matches polku-re (str polku))]
       polku)))
 
+(defn vastaavat-tiedostot [hakemisto polku-re f & {:keys [ohita]
+                                                     :or {ohita #{}}}]
+  (apply concat
+    (for [polku (tiedostot hakemisto polku-re ohita)]
+       (with-open [r (reader polku)]
+         (f r)))))
+             
 (defn vastaavat-rivit [hakemisto polku-re mallit & {:keys [ohita]
                                                     :or {ohita #{}}}]
   (apply concat
@@ -132,6 +139,19 @@
   (is (empty? (vastaavat-rivit "resources/i18n"
                                #".*\.properties"
                                [#"[^\p{Print}\p{Space}]+"]))))
+
+(defn properties-duplicat-keys? [r]
+  (let [dup (doto (oph.util.DuplicateAwareProperties.)
+                  (.load r)
+                  )
+        duplicates (.getDuplicates dup)]
+    duplicates))
+
+(deftest properties-duplicate-keys-test
+  "Etsitään properties tiedostoista tupla-avaimia"
+  (is (empty? (vastaavat-tiedostot "resources/i18n" #".*\.properties" 
+                properties-duplicat-keys?))))
+  
 
 (deftest pre-post-oikeassa-paikassa-test
   (is (empty? (vastaavat-muodot "src/clj" pre-post-vaarassa-paikassa?))))
