@@ -40,6 +40,8 @@ then
     exit 1
 fi
 
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 db_user=${AITU_DB_USER:-aitu}
 aituhaku_db_user=${AITUHAKU_DB_USER:-aituhaku}
 service=${AITU_SERVICE:-aitu}
@@ -55,7 +57,7 @@ set -x
 # Ei tarkisteta isäntäavaimia, koska testiajoihin käytettävien
 # virtuaalipalvelinten IP:t vaihtuvat, kun ne tuhotaan ja luodaan uudelleen
 echo "kopioidaan uusi versio etäpalvelimelle $user_host"
-scp -i $ssh_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p start-ttk.sh stop-ttk.sh $version_jarfile $version_dbjarfile $user_host:~
+scp -i $ssh_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p $dir/start-ttk.sh $dir/stop-ttk.sh $version_jarfile $version_dbjarfile $user_host:~
 
 echo "päivitetään tietokanta ja sovellus"
 
