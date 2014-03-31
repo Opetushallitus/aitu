@@ -14,8 +14,7 @@
 
 (ns oph.korma.korma-auth
   "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen sisäänkirjautuneen käyttäjän. BoneCP pool."
-  (:require [clojure.tools.logging :as log]
-            [aitu.toimiala.kayttajaoikeudet :as ko]))
+  (:require [clojure.tools.logging :as log]))
 
 (def jarjestelmakayttaja "JARJESTELMA")
 (def integraatiokayttaja "INTEGRAATIO")
