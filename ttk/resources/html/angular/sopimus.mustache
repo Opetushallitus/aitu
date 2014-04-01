@@ -145,22 +145,22 @@
           <div ng-show="sopimusJaTutkinto.jarjestamissuunnitelmat.length == 0">-</div>
           <ul class="file-list">
             <li ng-repeat="suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat">
-              <a href="{{'[[base-url]]/api/jarjestamissopimus/suunnitelma/' + suunnitelma.jarjestamissuunnitelma_id}}" target="_blank">{{suunnitelma.jarjestamissuunnitelma_filename}}</a>
+              <a href="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/suunnitelma/' + suunnitelma.jarjestamissuunnitelma_id}}" target="_blank">{{suunnitelma.jarjestamissuunnitelma_filename}}</a>
               <button ng-show="muokkausTila" ng-click="poistaSuunnitelma()" class="icon remove-icon-small"></button>
             </li>
           </ul>
-          <file-upload ng-show="muokkausTila" api-metodi="{{'[[base-url]]/api/jarjestamissopimus/suunnitelma/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}" upload-valmis="uploadValmis" liitetyyppi="jarjestamissuunnitelmat"></file-upload>
+          <file-upload ng-show="muokkausTila" api-metodi="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/suunnitelma/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}" upload-valmis="uploadValmis" liitetyyppi="jarjestamissuunnitelmat"></file-upload>
         </fieldset>
         <fieldset ng-controller="jarjestamissuunnitelmaController">
           <label>[[liitteet]]</label>
           <div ng-show="sopimusJaTutkinto.liitteet.length == 0">-</div>
           <ul class="file-list">
             <li ng-repeat="liite in sopimusJaTutkinto.liitteet">
-              <a href="{{'[[base-url]]/api/jarjestamissopimus/liite/' + liite.sopimuksen_liite_id}}" target="_blank">{{liite.sopimuksen_liite_filename}}</a>
+              <a href="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/liite/' + liite.sopimuksen_liite_id}}" target="_blank">{{liite.sopimuksen_liite_filename}}</a>
               <button ng-show="muokkausTila" ng-click="poistaLiite()" class="icon remove-icon-small"></button>
             </li>
           </ul>
-          <file-upload ng-show="muokkausTila" api-metodi="{{'[[base-url]]/api/jarjestamissopimus/liite/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}" upload-valmis="uploadValmis" liitetyyppi="liitteet"></file-upload>
+          <file-upload ng-show="muokkausTila" api-metodi="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/liite/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}" upload-valmis="uploadValmis" liitetyyppi="liitteet"></file-upload>
         </fieldset>
       </div>
       <div class="sopimus-tutkinnon-osat" ng-class="{'muokkaus' : muokkausTila}">

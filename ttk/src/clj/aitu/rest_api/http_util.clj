@@ -127,3 +127,8 @@
   ;; available to the client, the status code 404 (Not Found) can be used
   ;; instead.", joten käytetään 404:ää.
   `(if ~ehto (do ~@body) {:status 404}))
+
+(defn tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin [surrogaattiavaimeen_liittyva_entity_id entity_id]
+  (if (= surrogaattiavaimeen_liittyva_entity_id entity_id)
+    true
+    (throw (Exception. "Surrogaattiavain ei liity entiteettiin jota yritettiin päivittää."))))
