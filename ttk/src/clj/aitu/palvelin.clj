@@ -50,11 +50,10 @@
   (:url (:cas-auth-server asetukset)))
 
 (defn service-url [asetukset]
-  (let [base-url (-> asetukset :server :base-url)]
+  (let [base-url (get-in asetukset [:server :base-url])
+        port (get-in asetukset [:server :port])]
     (cond
-      (empty? base-url) (str "http://localhost:"
-                             (-> asetukset :server :port Integer/parseInt)
-                             "/")
+      (empty? base-url) (str "http://localhost:" port "/")
       (.endsWith base-url "/") base-url
       :else (str base-url "/"))))
 
@@ -112,9 +111,9 @@
                       (wrap-session {:store session-store})
                       (wrap-cas-single-sign-out session-store)
                       wrap-poikkeusten-logitus)
-                    {:port (-> asetukset :server :port Integer/parseInt)
+                    {:port (get-in asetukset [:server :port])
                      :max-body upload-limit
-                     :thread (-> asetukset :server :pool-size Integer/parseInt)})]
+                     :thread (get-in asetukset [:server :pool-size])})]
       (json-gen/add-encoder org.joda.time.DateTime
         (fn [c json-generator]
           (.writeString json-generator (.toString c))))

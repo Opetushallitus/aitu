@@ -19,7 +19,7 @@
             [clojure.tools.logging :as log]
             [oph.korma.korma-auth
              :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
-            [aitu.integraatio.kayttooikeuspalvelu :as org]))
+            [aitu.integraatio.organisaatiopalvelu :as org]))
 
 (defn paivita-organisaatiot! [asetukset]
   (binding [*current-user-uid* integraatiokayttaja
@@ -37,4 +37,4 @@
    org.quartz.Job
    (execute [this ctx]
      (let [{:strs [asetukset]} (qc/from-job-data ctx)]
-       (paivita-organisaatiot! asetukset))))
+       (org/paivita-organisaatiot! asetukset))))
