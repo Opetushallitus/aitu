@@ -38,7 +38,9 @@
                      :unsafe-https false
                      :enabled true}
    :ldap-auth-server {:host "localhost"
-                      :port 10389}
+                      :port 10389
+                      :user nil
+                      :password nil}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :eraajo false
