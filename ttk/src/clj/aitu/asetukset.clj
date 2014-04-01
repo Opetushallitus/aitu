@@ -20,25 +20,68 @@
             [aitu.util :refer [pisteavaimet->puu
                               deep-merge
                               deep-update-vals
-                              paths]])
+                              paths
+                              kaikki-optional]]
+            [schema.core :as s]
+            [schema.coerce :as sc])
   (:import [org.apache.log4j PropertyConfigurator]))
 
+(def Asetukset {:server {:port s/Int
+                         :base-url s/Str
+                         :pool-size s/Int}
+                :db {:host s/Str
+                     :port s/Int
+                     :name s/Str
+                     :user s/Str
+                     :password s/Str
+                     :maximum-pool-size s/Int
+                     :minimum-pool-size s/Int}
+                :cas-auth-server {:url s/Str
+                                  :unsafe-https Boolean
+                                  :enabled Boolean}
+                :ldap-auth-server {:host s/Str
+                                   :port s/Int
+                                   :user (s/maybe s/Str)
+                                   :password (s/maybe s/Str)}
+                :koodistopalvelu {:url s/Str}
+                :organisaatiopalvelu {:url s/Str}
+                :eraajo Boolean
+                :development-mode Boolean
+                :ominaisuus {:proto Boolean}
+                :log4j {:properties-file s/Str
+                        :refresh-interval s/Int}})
+
+(defn string->boolean [x]
+  (case x
+    "true" true
+    "false" false
+    x))
+
+(defn string-coercion-matcher [schema]
+  (or (sc/string-coercion-matcher schema)
+      ({Boolean string->boolean} schema)))
+
+(defn coerce-asetukset [asetukset]
+  ((sc/coercer Asetukset string-coercion-matcher) asetukset))
+
 (def oletusasetukset
-  {:server {:port "8080"
+  {:server {:port 8080
             :base-url "" ; http://localhost:8080
-            :pool-size "4"}
+            :pool-size 4}
    :db {:host "127.0.0.1"
-        :port "2345"
+        :port 2345
         :name "ttk"
         :user "ttk_user"
         :password "ttk"
-        :maximum-pool-size "15"
-        :minimum-pool-size "3"}
+        :maximum-pool-size 15
+        :minimum-pool-size 3}
    :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
                      :unsafe-https false
                      :enabled true}
    :ldap-auth-server {:host "localhost"
-                      :port 10389}
+                      :port 10389
+                      :user nil
+                      :password nil}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :eraajo false
@@ -54,13 +97,6 @@
 (defn kehitysmoodi?
   [asetukset]
   (true? (:development-mode asetukset)))
-
-(def konversio-map
-  {"true" true})
-
-(defn konvertoi-arvo
-  [x]
-  (get konversio-map x x))
 
 (defn konfiguroi-lokitus
   "Konfiguroidaan log4j asetukset tiedostosta joka määritellään asetuksissa."
@@ -84,20 +120,11 @@
       (log/info "Asetustiedostoa ei löydy. Käytetään oletusasetuksia")
       {})))
 
-(defn tarkista-avaimet
-  [m]
-  (let [vaarat-avaimet
-        (clojure.set/difference (paths m) (paths oletusasetukset))]
-    (assert (empty? vaarat-avaimet) (str "Viallisia avaimia asetuksissa: " vaarat-avaimet)))
-  m)
-
 (defn tulkitse-asetukset
   [property-map]
-  (tarkista-avaimet
-    (deep-update-vals konvertoi-arvo
-       (->> property-map
-          (into {})
-          pisteavaimet->puu))))
+  (->> property-map
+     (into {})
+     pisteavaimet->puu))
 
 (defn lue-asetukset
   ([oletukset] (lue-asetukset oletukset "ttk.properties"))
@@ -106,5 +133,4 @@
       (lue-asetukset-tiedostosta polku)
       (tulkitse-asetukset)
       (deep-merge oletukset)
-      (deep-update-vals konvertoi-arvo)
-      (tarkista-avaimet))))
+      (coerce-asetukset))))

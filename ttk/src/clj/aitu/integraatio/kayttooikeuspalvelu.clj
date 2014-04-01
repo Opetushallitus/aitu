@@ -29,10 +29,10 @@
    kayttajarooli (aitu-ryhma-cn "UPDATE")})
 
 (defn ryhma-dn [ryhma-cn]
-  (str "cn=" ryhma-cn ",ou=groups,dc=example,dc=com"))
+  (str "cn=" ryhma-cn ",ou=Groups,dc=opintopolku,dc=fi"))
 
 (defn henkilo-dn [oid]
-  (str "uid=" oid ",ou=people,dc=example,dc=com"))
+  (str "uid=" oid ",ou=People,dc=opintopolku,dc=fi"))
 
 (defn kayttajat [kayttooikeuspalvelu rooli]
   {:pre [(contains? roolin-ryhma-cn rooli)]}
@@ -50,7 +50,8 @@
             (for [kayttaja-dn kayttaja-dnt
                   :let [kayttaja (ldap/get yhteys kayttaja-dn)
                         _ (assert kayttaja)
-                        [etunimi sukunimi] (s/split (:givenName kayttaja) #" ")]]
+                        [etunimi toinennimi] (s/split (:cn kayttaja) #" ")
+                        sukunimi (:sn kayttaja)]]
               {:oid (:employeeNumber kayttaja)
                :uid (:uid kayttaja)
                :etunimi etunimi
@@ -63,5 +64,8 @@
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
   (fn []
-    (let [{:keys [host port]} ldap-auth-server-asetukset]
-      (ldap/connect {:host (str host ":" port)}))))
+    (let [{:keys [host port user password]} ldap-auth-server-asetukset
+          asetukset (merge {:host (str host ":" port)}
+                           (when user {:bind-dn user})
+                           (when password {:password password}))]
+      (ldap/connect asetukset))))

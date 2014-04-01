@@ -16,32 +16,38 @@
   (:require [aitu.util :refer [get-json-from-url map-by diff-maps]]
             [aitu.infra.oppilaitos-arkisto :as arkisto]))
 
-(defn hae-kaikki [asetukset]
-  (let [oids (get-json-from-url (:url asetukset))]
+(defn hae-kaikki [url]
+  (let [oids (get-json-from-url url)]
     (for [oid oids]
-      (get-json-from-url (str (:url asetukset) oid)))))
+      (get-json-from-url (str url oid)))))
 
+
+;; Koodistopalvelun oppilaitostyyppikoodistosta
 (def ^:private halutut-tyypit
-  #{"oppilaitostyyppi_21"
-    "oppilaitostyyppi_22"
-    "oppilaitostyyppi_23"
-    "oppilaitostyyppi_24"
-    "oppilaitostyyppi_41"
-    "oppilaitostyyppi_42"
-    "oppilaitostyyppi_61"
-    "oppilaitostyyppi_62"
-    "oppilaitostyyppi_63"
-    "oppilaitostyyppi_93"
-    "oppilaitostyyppi_99"
-    "oppilaitostyyppi_xx"})
+  #{"oppilaitostyyppi_21" ;; Ammatilliset oppilaitokset
+    "oppilaitostyyppi_22" ;; Ammatilliset erityisoppilaitokset
+    "oppilaitostyyppi_23" ;; Ammatilliset erikoisoppilaitokset
+    "oppilaitostyyppi_24" ;; Ammatilliset aikuiskoulutuskeskukset
+    "oppilaitostyyppi_41" ;; Ammattikorkeakoulut
+    "oppilaitostyyppi_42" ;; Yliopistot
+    "oppilaitostyyppi_61" ;; Musiikkioppilaitokset
+    "oppilaitostyyppi_62" ;; Liikunnan koulutuskeskukset
+    "oppilaitostyyppi_63" ;; Kansanopistot
+    "oppilaitostyyppi_93" ;; Muut koulutuksen järjestäjät
+    "oppilaitostyyppi_99" ;; Muut oppilaitokset
+    "oppilaitostyyppi_xx" ;; Tyyppi ei tiedossa
+    })
 
 (defn ^:private haluttu-tyyppi? [koodi]
-  (some-> (:oppilaitosTyyppiUri koodi)
-          (subs 0 19)
-          halutut-tyypit))
+  (when-let [tyyppi (:oppilaitosTyyppiUri koodi)]
+    (contains? halutut-tyypit (subs tyyppi 0 19))))
 
 (defn ^:private nimi [koodi]
   ((some-fn :fi :sv :en) (:nimi koodi)))
+
+(defn ^:private postinumero [koodi]
+  (when-let [postinumerokoodi (get-in koodi [:postiosoite :postinumeroUri])]
+    (subs postinumerokoodi 6)))
 
 (defn ^:private koodi->oppilaitos [koodi]
   {:nimi (nimi koodi)
@@ -49,8 +55,7 @@
    :sahkoposti (:emailOsoite koodi)
    :puhelin (:puhelinnumero koodi)
    :osoite (get-in koodi [:postiosoite :osoite])
-   :postinumero (some-> (get-in koodi [:postiosoite :postinumeroUri])
-                        (subs 6))
+   :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (:wwwOsoite koodi)
    :oppilaitoskoodi (:oppilaitosKoodi koodi)})
@@ -61,8 +66,7 @@
    :sahkoposti (:emailOsoite koodi)
    :puhelin (:puhelinnumero koodi)
    :osoite (get-in koodi [:postiosoite :osoite])
-   :postinumero (some-> (get-in koodi [:postiosoite :postinumeroUri])
-                        (subs 6))
+   :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (:wwwOsoite koodi)
    :toimipaikkakoodi (:toimipistekoodi koodi)})
@@ -72,10 +76,10 @@
                            :postinumero :postitoimipaikka :www_osoite
                            :oppilaitoskoodi]))
 
-(defn ^:private toimipaikan-kentat [oppilaitos]
-  (select-keys oppilaitos [:nimi :oid :sahkoposti :puhelin :osoite
-                           :postinumero :postitoimipaikka :www_osoite
-                           :toimipaikkakoodi :oppilaitos]))
+(defn ^:private toimipaikan-kentat [toimipaikka]
+  (select-keys toimipaikka [:nimi :oid :sahkoposti :puhelin :osoite
+                            :postinumero :postitoimipaikka :www_osoite
+                            :toimipaikkakoodi :oppilaitos]))
 
 (defn ^:private tyyppi [koodi]
   (cond
@@ -112,7 +116,7 @@
 
 (defn paivita-organisaatiot!
   [asetukset]
-  (let [koodit (map-by tyyppi (hae-kaikki asetukset))
+  (let [koodit (map-by tyyppi (hae-kaikki (:url asetukset)))
         oppilaitoskoodit (:oppilaitos koodit)
         toimipaikkakoodit (:toimipaikka koodit)]
     (paivita-oppilaitokset! oppilaitoskoodit)

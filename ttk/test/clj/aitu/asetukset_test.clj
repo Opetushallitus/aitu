@@ -20,15 +20,3 @@
   (testing "palauttaa tyhjän mapin jos annettua tiedostoa ei löydy"
     (is (= {} (lue-asetukset-tiedostosta "olematon tiedosto")))))
 
-(deftest viallinen-avain-ei-toimi []
-  (testing "viallinen avain ei kelpaa asetuksissa"
-    (is (thrown? Throwable
-          (tarkista-avaimet {:a :b :c {:dd :ee}})))))
-
-(deftest oikea-avain-toimii []
-  (testing "oikeat avaimet toimivat"
-    (tarkista-avaimet {:development-mode "true"})))
-
-(deftest asetusten-tyyppikonversio-toimii []
-  (testing "tyyppikonversio toimii boolean-tyypeille"
-    (is (= true (:development-mode (tulkitse-asetukset {:development-mode "true"}))))))

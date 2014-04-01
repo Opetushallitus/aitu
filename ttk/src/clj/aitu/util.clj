@@ -20,8 +20,9 @@
             [clojure.string :as string]
             [org.httpkit.client :as http]
             [clojure.set :refer [union]]
-            [clojure.walk :refer [keywordize-keys]]
-            [clojure.tools.logging :as log]))
+            [clojure.walk :refer [keywordize-keys postwalk]]
+            [clojure.tools.logging :as log]
+            [schema.core :as s]))
 
 ;; http://clojuredocs.org/clojure_contrib/clojure.contrib.map-utils/deep-merge-with
 (defn deep-merge-with
@@ -204,3 +205,15 @@
             ret)
           (next keys)))
       ret)))
+
+(defn schema? [x]
+  (instance? schema.core.Schema x))
+
+(defn kaikki-optional [schema]
+  (into {} (for [[k v] schema
+                 :let [k (s/optional-key k)]]
+             (cond
+               (schema? v) [k v]
+               (map? v) [k (kaikki-optional v)]
+               :else [k v]))))
+

@@ -122,5 +122,6 @@
                             :asetukset (with-out-str
                                          (-> asetukset
                                            (assoc-in [:db :password] "*****")
+                                           (assoc-in [:ldap-auth-server :password] "*****")
                                            pprint))
                             :build-id @build-id)))))
