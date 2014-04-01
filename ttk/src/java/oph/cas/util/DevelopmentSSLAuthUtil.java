@@ -38,83 +38,83 @@ import javax.net.ssl.SSLSocketFactory;
  */
 public class DevelopmentSSLAuthUtil {
 
-    public static final class SSLAuthConfig {
-        private final HostnameVerifier hostNameVerifier;
-        private final SSLSocketFactory socketFactory;
+  public static final class SSLAuthConfig {
+    private final HostnameVerifier hostNameVerifier;
+    private final SSLSocketFactory socketFactory;
 
-        public SSLAuthConfig(HostnameVerifier hostNameVerifier, SSLSocketFactory socketFactory) {
-            this.hostNameVerifier = hostNameVerifier;
-            this.socketFactory = socketFactory;
-        }
-
-        public HostnameVerifier getHostNameVerifier() {
-            return hostNameVerifier;
-        }
-
-        public SSLSocketFactory getSocketFactory() {
-            return socketFactory;
-        }
-     }
-
-    private static SSLAuthConfig getCurrentSSLConfig() {
-        return new SSLAuthConfig(HttpsURLConnection.getDefaultHostnameVerifier(),
-                HttpsURLConnection.getDefaultSSLSocketFactory());
+    public SSLAuthConfig(HostnameVerifier hostNameVerifier, SSLSocketFactory socketFactory) {
+      this.hostNameVerifier = hostNameVerifier;
+      this.socketFactory = socketFactory;
     }
 
-    private static SSLAuthConfig createUntrustedSSLConfiguration(HostnameVerifier verifier) throws GeneralSecurityException {
-        return new SSLAuthConfig(verifier, createUntrustedSocketFactory());
+    public HostnameVerifier getHostNameVerifier() {
+      return hostNameVerifier;
     }
 
-    private static SSLAuthConfig swapSSLConfig(SSLAuthConfig newConfiguration) {
-        SSLAuthConfig oldConfig = getCurrentSSLConfig();
-        HttpsURLConnection.setDefaultHostnameVerifier(newConfiguration.getHostNameVerifier());
-        HttpsURLConnection.setDefaultSSLSocketFactory(newConfiguration.getSocketFactory());
-        return oldConfig;
+    public SSLSocketFactory getSocketFactory() {
+      return socketFactory;
     }
+  }
 
-    public static SSLAuthConfig enableUntrustedSSLForLocalhostOnly() throws GeneralSecurityException {
-        return swapSSLConfig(createUntrustedSSLConfiguration(LOCALHOST_VERIFIER));
+  private static SSLAuthConfig getCurrentSSLConfig() {
+    return new SSLAuthConfig(HttpsURLConnection.getDefaultHostnameVerifier(),
+        HttpsURLConnection.getDefaultSSLSocketFactory());
+  }
+
+  private static SSLAuthConfig createUntrustedSSLConfiguration(HostnameVerifier verifier) throws GeneralSecurityException {
+    return new SSLAuthConfig(verifier, createUntrustedSocketFactory());
+  }
+
+  private static SSLAuthConfig swapSSLConfig(SSLAuthConfig newConfiguration) {
+    SSLAuthConfig oldConfig = getCurrentSSLConfig();
+    HttpsURLConnection.setDefaultHostnameVerifier(newConfiguration.getHostNameVerifier());
+    HttpsURLConnection.setDefaultSSLSocketFactory(newConfiguration.getSocketFactory());
+    return oldConfig;
+  }
+
+  public static SSLAuthConfig enableUntrustedSSLForLocalhostOnly() throws GeneralSecurityException {
+    return swapSSLConfig(createUntrustedSSLConfiguration(LOCALHOST_VERIFIER));
+  }
+
+  public static SSLAuthConfig enableUntrustedSSL() throws GeneralSecurityException {
+    return swapSSLConfig(createUntrustedSSLConfiguration(GLOBAL_VERIFIER));
+  }
+
+  //for localhost testing only
+  private static final HostnameVerifier LOCALHOST_VERIFIER = new HostnameVerifier() {
+    public boolean verify(String hostname, SSLSession sslSession) {
+      if (hostname.equals("localhost")) {
+        return true;
+      }
+      return false;
     }
+  };
 
-    public static SSLAuthConfig enableUntrustedSSL() throws GeneralSecurityException {
-        return swapSSLConfig(createUntrustedSSLConfiguration(GLOBAL_VERIFIER));
+  private static final HostnameVerifier GLOBAL_VERIFIER = new HostnameVerifier() {
+    public boolean verify(String hostname, SSLSession sslSession) {
+      return true;
     }
+  };
 
-    //for localhost testing only
-    private static final HostnameVerifier LOCALHOST_VERIFIER = new HostnameVerifier() {
-        public boolean verify(String hostname, SSLSession sslSession) {
-            if (hostname.equals("localhost")) {
-                return true;
-            }
-            return false;
-        }
-    };
-
-    private static final HostnameVerifier GLOBAL_VERIFIER = new HostnameVerifier() {
-        public boolean verify(String hostname, SSLSession sslSession) {
-            return true;
-        }
-    };
-
-    // Create a trust manager that does not validate certificate chains
-    private static final TrustManager UNTRUST_MANAGER = new X509TrustManager() {
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
-        public void checkClientTrusted(
-                java.security.cert.X509Certificate[] certs, String authType) {
-        }
-        public void checkServerTrusted(
-                java.security.cert.X509Certificate[] certs, String authType) {
-        }
-    };
-
-    private static SSLSocketFactory createUntrustedSocketFactory() throws GeneralSecurityException {
-        TrustManager[] trustAllCerts = new TrustManager[] { UNTRUST_MANAGER };
-
-        // Install the all-trusting trust manager
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        return sc.getSocketFactory();
+  // Create a trust manager that does not validate certificate chains
+  private static final TrustManager UNTRUST_MANAGER = new X509TrustManager() {
+    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+      return null;
     }
+    public void checkClientTrusted(
+        java.security.cert.X509Certificate[] certs, String authType) {
+    }
+    public void checkServerTrusted(
+        java.security.cert.X509Certificate[] certs, String authType) {
+    }
+  };
+
+  private static SSLSocketFactory createUntrustedSocketFactory() throws GeneralSecurityException {
+    TrustManager[] trustAllCerts = new TrustManager[] { UNTRUST_MANAGER };
+
+    // Install the all-trusting trust manager
+    SSLContext sc = SSLContext.getInstance("SSL");
+    sc.init(null, trustAllCerts, new java.security.SecureRandom());
+    return sc.getSocketFactory();
+  }
 }
