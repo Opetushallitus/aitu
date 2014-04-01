@@ -50,7 +50,8 @@
             (for [kayttaja-dn kayttaja-dnt
                   :let [kayttaja (ldap/get yhteys kayttaja-dn)
                         _ (assert kayttaja)
-                        [etunimi sukunimi] (s/split (:givenName kayttaja) #" ")]]
+                        [etunimi toinennimi] (s/split (:cn kayttaja) #" ")
+                        sukunimi (:sn kayttaja)]]
               {:oid (:employeeNumber kayttaja)
                :uid (:uid kayttaja)
                :etunimi etunimi
