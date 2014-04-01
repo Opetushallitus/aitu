@@ -4,9 +4,6 @@
 --
 -- Lisäksi on jotain pieniä rajoituksia, esim. Oraclen with-syntaksi ei käy yms.
 
--- test
-select uid, oid from kayttaja;
-
 -- OPH-236 Jäsenyyden alku ja loppupäivien tarkastaminen suhteessa toimikunnan toimikauteen
 select j.jasenyys_id, h.etunimi, h.sukunimi
   from jasenyys j
