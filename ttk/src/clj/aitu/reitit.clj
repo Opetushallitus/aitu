@@ -17,7 +17,10 @@
             [aitu.infra.status :refer [status]]
             [aitu.asetukset :refer [build-id kehitysmoodi?]]
             [aitu.toimiala.skeema :refer :all]
-
+            [aitu.rest-api.http-util :refer [json-response]]
+  
+            [aitu.integraatio.sql.validationtest :as validationtest]
+            
             aitu.rest-api.ttk
             aitu.rest-api.henkilo
             aitu.rest-api.oppilaitos
@@ -35,7 +38,7 @@
             aitu.rest-api.ohje
             aitu.rest-api.haku
             aitu.rest-api.osoitepalvelu
-
+            
             aitu.test-api.ttk
             aitu.test-api.tutkinto
             aitu.test-api.tutkintoversio
@@ -111,6 +114,8 @@
                                  :i18n (i18n/tekstit)
                                  :i18n-json (json/generate-string (i18n/tekstit))
                                  :yllapitaja yllapitaja?}))
+    (cu/defapi :status nil :get "/db-validation" []
+      (json-response (validationtest/run-queries-from-file! "resources/validationtests.sql")))
     (cu/defapi :status nil :get "/status" []
       (s/render-file "html/status"
                      (assoc (status)
