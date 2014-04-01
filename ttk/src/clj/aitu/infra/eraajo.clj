@@ -18,15 +18,18 @@
             [clojurewerkz.quartzite.jobs :as j]
             [clojurewerkz.quartzite.triggers :as t]
             [clojurewerkz.quartzite.schedule.daily-interval :as s]
+            [clojure.tools.logging :as log]
             aitu.infra.eraajo.kayttajat)
   (:import aitu.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob))
 
 
 (defn kaynnista-ajastimet! [kayttooikeuspalvelu]
+  (log/info "Käynnistetään ajastetut eräajot")
   (qs/initialize)
-  ;; Poistetaan vanhat jobit ennen uudelleenkäynnistystä
+  (log/info "Poistetaan vanhat jobit ennen uudelleenkäynnistystä")
   (qs/clear!)
   (qs/start)
+  (log/info "Eräajomoottori käynnistetty")
   (let [job (j/build
               (j/of-type PaivitaKayttajatLdapistaJob)
               (j/with-identity "paivita-kayttajat-ldapista")
