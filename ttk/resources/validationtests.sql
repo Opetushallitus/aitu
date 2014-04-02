@@ -12,3 +12,4 @@ select j.jasenyys_id, h.etunimi, h.sukunimi
     select 1 from tutkintotoimikunta t
     where t.tkunta = j.toimikunta
       and (t.toimikausi_alku > j.alkupvm or t.toimikausi_loppu < j.loppupvm));
+

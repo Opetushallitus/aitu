@@ -19,8 +19,7 @@
             [aitu.toimiala.skeema :refer :all]
             [aitu.rest-api.http-util :refer [json-response]]
   
-            [aitu.integraatio.sql.validationtest :as validationtest]
-            
+            aitu.rest-api.db-validation
             aitu.rest-api.ttk
             aitu.rest-api.henkilo
             aitu.rest-api.oppilaitos
@@ -102,7 +101,8 @@
       (c/context "/api/tiedote" [] aitu.rest-api.tiedote/reitit)
       (c/context "/api/ohje" [] aitu.rest-api.ohje/reitit)
       (c/context "/api/haku" [] aitu.rest-api.haku/reitit)
-      (c/context "/api/osoitepalvelu" [] aitu.rest-api.osoitepalvelu/reitit))
+      (c/context "/api/osoitepalvelu" [] aitu.rest-api.osoitepalvelu/reitit)
+      (c/context "/api/db-validation" [] aitu.rest-api.db-validation/reitit ))
     (testapi asetukset)
     (c/GET "/template/:nimi" [nimi]
       (angular-template nimi asetukset))
@@ -114,8 +114,6 @@
                                  :i18n (i18n/tekstit)
                                  :i18n-json (json/generate-string (i18n/tekstit))
                                  :yllapitaja yllapitaja?}))
-    (cu/defapi :status nil :get "/db-validation" []
-      (json-response (validationtest/run-queries-from-file! "resources/validationtests.sql")))
     (cu/defapi :status nil :get "/status" []
       (s/render-file "html/status"
                      (assoc (status)
