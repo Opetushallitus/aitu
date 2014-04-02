@@ -99,7 +99,7 @@
     }])
 
     .factory('jarjestamissuunnitelmaResource', ['$resource', '$routeParams', function($resource) {
-      return $resource(ttkBaseUrl + '/api/jarjestamissopimus/:liitetyyppi/:id', {'liitetyyppi': '@liitetyyppi', 'id': '@id'}, {
+      return $resource(ttkBaseUrl + '/api/jarjestamissopimus/:sopimus_id/:liitetyyppi/:id', {}, {
         delete: {
           method: 'DELETE'
         }
@@ -157,13 +157,13 @@
         }
       }])
 
-    .controller('jarjestamissuunnitelmaController', ['$scope', 'jarjestamissuunnitelmaResource', 'i18n', function($scope, resource, i18n){
+    .controller('jarjestamissuunnitelmaController', ['$scope', '$routeParams', 'jarjestamissuunnitelmaResource', 'i18n', function($scope, $routeParams, resource, i18n){
       $scope.uploadValmis = function(r, liitetyyppi) {
         $scope.sopimusJaTutkinto[liitetyyppi].push(r);
       };
 
       $scope.poistaSuunnitelma = function() {
-        var suunnitelma = { id: this.suunnitelma.jarjestamissuunnitelma_id, liitetyyppi: 'suunnitelma' };
+        var suunnitelma = { sopimus_id: $routeParams.id, id: this.suunnitelma.jarjestamissuunnitelma_id, liitetyyppi: 'suunnitelma' };
         if( confirm(i18n.jarjestamissopimus['varmista-suunnitelman-poisto']) ) {
           resource.delete(suunnitelma, function(r) {
             _.remove($scope.sopimusJaTutkinto.jarjestamissuunnitelmat, function(s){return s.jarjestamissuunnitelma_id === suunnitelma.id;});
@@ -171,7 +171,7 @@
         }
       };
       $scope.poistaLiite = function() {
-        var liite = { id: this.liite.sopimuksen_liite_id, liitetyyppi: 'liite' };
+        var liite = { sopimus_id: $routeParams.id, id: this.liite.sopimuksen_liite_id, liitetyyppi: 'liite' };
         if( confirm(i18n.jarjestamissopimus['varmista-liitteen-poisto']) ) {
           resource.delete(liite, function(r) {
             _.remove($scope.sopimusJaTutkinto.liitteet, function(s){ return s.sopimuksen_liite_id === liite.id; });

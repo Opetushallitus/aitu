@@ -30,6 +30,7 @@
 
 (def kayttaja-map
   {:oid "foo123"
+   :henkiloid "henkiloid123"
    :roolitunnus kayttajarooli
    :toimikunta_jasen #{"123"}})
 
@@ -38,7 +39,7 @@
           (saako-tehda? kayttaja-map :trolol-laulanta nil))))
 
 (deftest omien-tietojen-paivitys-kay []
-  (is (= true (saako-tehda? kayttaja-map :henkilo_paivitys "foo123"))))
+  (is (= true (saako-tehda? kayttaja-map :henkilo_paivitys "henkiloid123"))))
 
 (deftest toisen-tietojen-paivitys-ei-kay[]
   (is (= false (saako-tehda? kayttaja-map :henkilo_paivitys "adsdas"))))

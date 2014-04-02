@@ -65,7 +65,7 @@
 (def kayttajatoiminnot
   `{:toimikunta_paivitys #(or (yllapitaja?) (toimikunta-jasen? %))
     :toimikunta_katselu #(or (yllapitaja?) (toimikunta-jasen? %))
-    :henkilo_paivitys #(or (yllapitaja?) (= (:oid *current-user-authmap*) %))
+    :henkilo_paivitys #(or (yllapitaja?) (= (:henkiloid *current-user-authmap*) %))
     :omat_tiedot #(or (yllapitaja?) (= (:oid *current-user-authmap*) %))
     :sopimustiedot_luku #(or (yllapitaja?) (toimikunta-jasen? (sopimuksen-toimikunta %)))
     :logitus aitu-kayttaja?

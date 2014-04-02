@@ -15,7 +15,7 @@
 (ns aitu.rest-api.jarjestamissopimus
   (:require [compojure.core :as c]
             [korma.db :as db]
-            [aitu.rest-api.http-util :refer [parse-iso-date json-response sallittu-jos]]
+            [aitu.rest-api.http-util :refer [parse-iso-date json-response sallittu-jos tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]
             [aitu.rest-api.http-util :refer :all]
@@ -93,52 +93,73 @@
       (json-response (jarjestamissopimus/taydenna-sopimus (arkisto/hae-ja-liita-tutkinnonosiin-asti (Integer/parseInt jarjestamissopimusid)))))
 
   (cu/defapi :sopimustiedot_paivitys nil :post "/:jarjestamissopimusid/tutkinnot" [jarjestamissopimusid sopimus_ja_tutkinto]
-    (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
-      (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
-        (arkisto/paivita-tutkinnot! jarjestamissopimus_id_int sopimus_ja_tutkinto)
+    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)]
+      (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
+        (arkisto/paivita-tutkinnot! jarjestamissopimusid_int sopimus_ja_tutkinto)
         {:status 200})))
 
-  (cu/defapi :sopimustiedot_paivitys nil :post "/suunnitelma/:sopimus_ja_tutkinto" [sopimus_ja_tutkinto file]
-    (let [sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)]
-      (sallittu-jos (salli-sopimuksen-paivitys?
-                     (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int))
+  (cu/defapi :sopimustiedot_paivitys nil :post "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
+    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+          sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
+          jarjestamissopimusid_sopimus_ja_tutkinto (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int)
+          _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
+      (sallittu-jos
+        (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
         (file-upload-response (arkisto/lisaa-suunnitelma-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))
 
-  (cu/defapi :sopimustiedot_paivitys nil :delete "/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissuunnitelma_id]
-    (let [jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)]
-      (sallittu-jos (salli-sopimuksen-paivitys?
-                      (arkisto/hae-jarjestamissopimusid-jarjestamissuunnitelmalle jarjestamissuunnitelma_id_int))
+  (cu/defapi :sopimustiedot_paivitys nil :delete "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+          jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)
+          jarjestamissopimusid_jarjestamissuunnitelma (arkisto/hae-jarjestamissopimusid-jarjestamissuunnitelmalle jarjestamissuunnitelma_id_int)
+          _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_jarjestamissuunnitelma jarjestamissopimusid_int)]
+      (sallittu-jos
+        (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
         (arkisto/poista-suunnitelma! jarjestamissuunnitelma_id_int)
         {:status 200})))
 
   (cu/defapi :sopimustiedot_paivitys nil :delete "/:jarjestamissopimusid" [jarjestamissopimusid]
     (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
-      (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
+      (sallittu-jos
+        (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
         (arkisto/merkitse-sopimus-poistetuksi! jarjestamissopimus_id_int)
         {:status 200})))
 
-  (cu/defapi :suunnitelma_luku nil :get "/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissuunnitelma_id]
-    (let [suunnitelma (db/transaction (arkisto/hae-suunnitelma (Integer/parseInt jarjestamissuunnitelma_id)))
+  (cu/defapi :suunnitelma_luku nil :get "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+          jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)
+          jarjestamissopimusid_jarjestamissuunnitelma (arkisto/hae-jarjestamissopimusid-jarjestamissuunnitelmalle jarjestamissuunnitelma_id_int)
+          _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_jarjestamissuunnitelma jarjestamissopimusid_int)
+          suunnitelma (arkisto/hae-suunnitelma jarjestamissuunnitelma_id_int)
           binary-data (:jarjestamissuunnitelma suunnitelma)
           filename (:jarjestamissuunnitelma_filename suunnitelma)
           content-type (:jarjestamissuunnitelma_content_type suunnitelma)]
       (file-download-response binary-data filename content-type)))
 
-  (cu/defapi :sopimustiedot_paivitys nil :post "/liite/:sopimus_ja_tutkinto" [sopimus_ja_tutkinto file]
-    (let [sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)]
-      (sallittu-jos (salli-sopimuksen-paivitys?
-                      (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int))
+  (cu/defapi :sopimustiedot_paivitys nil :post "/:jarjestamissopimusid/liite/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
+    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+          sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
+          jarjestamissopimusid_sopimus_ja_tutkinto (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int)
+          _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
+      (sallittu-jos
+        (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
         (file-upload-response (arkisto/lisaa-liite-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))
 
-  (cu/defapi :sopimustiedot_paivitys nil :delete "/liite/:sopimuksen_liite_id" [sopimuksen_liite_id]
-    (let [sopimuksen_liite_id_int (Integer/parseInt sopimuksen_liite_id)]
-      (sallittu-jos (salli-sopimuksen-paivitys?
-                      (arkisto/hae-jarjestamissopimusid-sopimuksen-liitteelle sopimuksen_liite_id_int))
+  (cu/defapi :sopimustiedot_paivitys nil :delete "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
+    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+          sopimuksen_liite_id_int (Integer/parseInt sopimuksen_liite_id)
+          jarjestamissopimusid_liite (arkisto/hae-jarjestamissopimusid-sopimuksen-liitteelle sopimuksen_liite_id_int)
+          _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_liite jarjestamissopimusid_int)]
+      (sallittu-jos
+        (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
         (arkisto/poista-liite! sopimuksen_liite_id_int)
         {:status 200})))
 
-  (cu/defapi :sopimuksen_liite_luku nil :get "/liite/:sopimuksen_liite_id" [sopimuksen_liite_id]
-    (let [liite (db/transaction (arkisto/hae-liite (Integer/parseInt sopimuksen_liite_id)))
+  (cu/defapi :sopimuksen_liite_luku nil :get "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
+    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+          sopimuksen_liite_id_int (Integer/parseInt sopimuksen_liite_id)
+          jarjestamissopimusid_liite (arkisto/hae-jarjestamissopimusid-sopimuksen-liitteelle sopimuksen_liite_id_int)
+          _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_liite jarjestamissopimusid_int)
+          liite (db/transaction (arkisto/hae-liite jarjestamissopimusid_liite))
           binary-data (:sopimuksen_liite liite)
           filename (:sopimuksen_liite_filename liite)
           content-type (:sopimuksen_liite_content_type liite)]
