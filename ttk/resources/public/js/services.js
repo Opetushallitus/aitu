@@ -113,14 +113,16 @@ angular.module('services', [])
   .factory('pvm',['$filter', function($filter) {
     return {
       parsiPvm : function(pvm) {
-        if(pvm){
-          var parts = pvm.split('.');
-          if(parts.length === 3) {
-            return new Date(parts[2], parts[1] - 1, parts[0]);
-          } else {
-            return null;
-          }
+        if(pvm) {
+          try {
+            var parts = pvm.split('.');
+            var parsittu = new Date(parts[2], parts[1] - 1, parts[0]);
+            if(parsittu.getDate() == parts[0] && parsittu.getMonth() == parts[1] -1 && parsittu.getFullYear() == parts[2]) {
+              return parsittu;
+            }
+          } catch(e) {}
         }
+        return null;
       },
       dateToPvm : function(date) {
         return $filter('date')(date, 'dd.MM.yyyy');

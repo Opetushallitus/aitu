@@ -43,7 +43,7 @@
     <label>[[nimi]]</label>
     <p>{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
   </fieldset>
-  <form>
+  <form name="jasenForm">
     <div>
       <haku-valitsin
         otsikko="[[toimikunta]]"
@@ -67,7 +67,7 @@
       <pvm-valitsin oletus-pvm="jasen.toimikunta.toimikausi_alku" valittu-pvm="jasen.alkupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-alkupvm]]"></pvm-valitsin>
       <pvm-valitsin oletus-pvm="jasen.toimikunta.toimikausi_loppu" valittu-pvm="jasen.loppupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-loppupvm]]"></pvm-valitsin>
     </div>
-    <tallenna disabloi-pyyntojen-ajaksi="['uusi-toimikunnan-jasen']" ng-click="lisaaJasen(jasen)" teksti="'[[lisaa-jasen]]'"></tallenna>
+    <tallenna ng-disabled="!jasenForm.$valid" disabloi-pyyntojen-ajaksi="['uusi-toimikunnan-jasen']" ng-click="lisaaJasen(jasen)" teksti="'[[lisaa-jasen]]'"></tallenna>
     <button ng-click="peruuta()">[[peruuta]]</button>
   </form>
 </div>

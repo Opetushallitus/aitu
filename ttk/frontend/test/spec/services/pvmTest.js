@@ -37,6 +37,11 @@ describe('Services: pvm', function () {
   it('Palauttaa null jos päivämäärästring ei sisällä kolmea pisteellä erotettua osaa', function() {
     var tulos = pvmService.parsiPvm('03.2013');
     expect(tulos).toEqual(null);
-  })
+  });
+
+  it('Palauttaa null jos päivämäärää ei ole olemassa', function() {
+    var tulos = pvmService.parsiPvm('30.02.2013');
+    expect(tulos).toEqual(null);
+  });
 
 });

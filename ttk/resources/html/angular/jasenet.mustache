@@ -10,39 +10,41 @@
   <button class="icon add-icon" ng-click="siirryJasenenLisaykseen()"></button>
 </div>
 <h2>[[jasenet]]</h2>
-<table class="toimikunnan-jasenet">
-  <thead>
-  <tr>
-    <th>[[nimi]]</th>
-    <th>[[rooli]]</th>
-    <th>[[edustus]]</th>
-    <th>[[jarjesto]]</th>
-    <th>[[jasenyyden-voimassaolo]]</th>
-    <th>[[poista]] / [[palauta]]</th>
-  </tr>
-  </thead>
-  <tr ng-repeat="henkilo in toimikunta.jasenyys | orderBy:'voimassa':true" ng-class="{removed : henkilo.poistettu}">
-    <td ng-class="{voimassa : henkilo.voimassa}">
-      <auth-linkki href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</auth-linkki>
-      <span ng-hide="henkilo.voimassa">([[ei-voimassa]])</span>
-    </td>
-    <td><enum-valikko nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>
-    <td><enum-valikko nimi="edustus" arvo="henkilo.edustus"></enum-valikko></td>
-    <td>{{henkilo.organisaatio}}</td>
-    <td>
-      <pvm-valitsin valittu-pvm="henkilo.alkupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
-      -
-      <pvm-valitsin valittu-pvm="henkilo.loppupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
-    </td>
-    <td>
-      <button class="icon delete-icon" ng-click="poistaJasen(henkilo)" ng-hide="henkilo.poistettu"></button>
-      <button class="icon add-icon" ng-click="peruutaPoisto(henkilo)" ng-hide="!henkilo.poistettu"></button>
-    </td>
-  </tr>
-</table>
-<div>
-  <tallenna disabloi-pyyntojen-ajaksi="['muokkaa-toimikunnan-jasenia']" ng-click="tallenna(toimikunta.jasenyys)" teksti="'[[tallenna]]'"></tallenna>
-  <button ng-click="peruuta()">[[peruuta]]</button>
-</div>
+<form name="jasenetForm">
+  <table class="toimikunnan-jasenet">
+    <thead>
+    <tr>
+      <th>[[nimi]]</th>
+      <th>[[rooli]]</th>
+      <th>[[edustus]]</th>
+      <th>[[jarjesto]]</th>
+      <th>[[jasenyyden-voimassaolo]]</th>
+      <th>[[poista]] / [[palauta]]</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="henkilo in toimikunta.jasenyys | orderBy:'voimassa':true" ng-class="{removed : henkilo.poistettu}">
+      <td ng-class="{voimassa : henkilo.voimassa}">
+        <auth-linkki href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</auth-linkki>
+        <span ng-hide="henkilo.voimassa">([[ei-voimassa]])</span>
+      </td>
+      <td><enum-valikko nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>
+      <td><enum-valikko nimi="edustus" arvo="henkilo.edustus"></enum-valikko></td>
+      <td>{{henkilo.organisaatio}}</td>
+      <td>
+        <pvm-valitsin valittu-pvm="henkilo.alkupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
+        -
+        <pvm-valitsin valittu-pvm="henkilo.loppupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
+      </td>
+      <td>
+        <button class="icon delete-icon" ng-click="poistaJasen(henkilo)" ng-hide="henkilo.poistettu"></button>
+        <button class="icon add-icon" ng-click="peruutaPoisto(henkilo)" ng-hide="!henkilo.poistettu"></button>
+      </td>
+    </tr>
+  </table>
+  <div>
+    <tallenna ng-disabled="!jasenetForm.$valid" disabloi-pyyntojen-ajaksi="['muokkaa-toimikunnan-jasenia']" ng-click="tallenna(toimikunta.jasenyys)" teksti="'[[tallenna]]'"></tallenna>
+    <button ng-click="peruuta()">[[peruuta]]</button>
+  </div>
+</form>
 [[/i18n.toimikunta]]
 [[/i18n.yleiset]]

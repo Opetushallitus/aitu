@@ -19,6 +19,10 @@ input[type="text"] {
   padding: 2px 5px;
   &:focus {border-color: $darkest-primary;}
   vertical-align: top;
+
+  &.ng-invalid {
+    border: 1px solid $error-color;
+  }
 }
 
 .placeholder { color: #aaa; }

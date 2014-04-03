@@ -259,20 +259,25 @@ angular.module('directives', ['services', 'resources'])
     };
   }])
   .directive('formatteddate', ['$filter', 'pvm', function ($filter, pvm) {
+
+    function parseDate(viewValue) {
+      if(typeof viewValue === 'string' && viewValue !== '') {
+        var parsittu = pvm.parsiPvm(viewValue);
+        if(parsittu) {
+          return parsittu;
+        } else {
+          return "Invalid date";
+        }
+      }
+      return viewValue;
+    }
+
     return {
       link: function (scope, element, attrs, ctrl) {
-        ctrl.$parsers.unshift(function (viewValue) {
-          if(typeof viewValue === 'string') {
-            var parsittu = pvm.parsiPvm(viewValue);
-            if(parsittu) {
-              return parsittu;
-            }
-          }
-          return viewValue;
-        });
+        ctrl.$parsers.unshift(parseDate);
       },
       priority: 1, //<-- Formatteddate- direktiivin link funktio suoritetaan datepickerin link funktion jälkeen.
-                   //    Näin saadaan custom parsefuktio 
+                   //    Näin saadaan custom parsefuktio parseriketjun ensimmäiseksi
       restrict: 'A',
       require: 'ngModel'
     };

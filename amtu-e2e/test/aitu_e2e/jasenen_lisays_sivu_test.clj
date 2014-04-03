@@ -16,6 +16,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-cleaned-data with-data poista]]
             [clojure.set :refer [subset?]]))
 
@@ -157,7 +158,7 @@
             (lisaa-testijasen-toimikuntaan "11.09.2013" "31.07.2014")
             (is (= (viestin-teksti) "Jäsen luotu"))
             (poista [{:toimikunta "ILMA" :henkiloid 997}] jasenen-poisto-fn)))
-        (testing "ei onnistu, jos alkupvm toimikauden lopun jälkeen"
+        (testing "Tallennus nappi disabloituu, jos alkupvm toimikauden lopun jälkeen"
           (with-webdriver
             (avaa (jasenen-lisays-sivu "98/11/543"))
             (hae-henkilo "Simo Sisu")
@@ -167,10 +168,8 @@
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2016")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "02.08.2016")
-            (paina-lisaa-jasen-nappia)
-            ;;Niin
-            (is (= (viestin-teksti) "Jäsenen luonti ei onnistunut"))))
-        (testing "ei onnistu, jos alkupvm ennen toimikauden alkua"
+            (is (false? (onko-tallenna-nappi-enabloitu? "Lisää jäsen")))))
+        (testing "Tallennus nappi disabloituu, jos alkupvm ennen toimikauden alkua"
           (with-webdriver
             (avaa (jasenen-lisays-sivu "98/11/543"))
             (hae-henkilo "Simo Sisu")
@@ -180,9 +179,7 @@
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "29.07.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
-            (paina-lisaa-jasen-nappia)
-            ;; Niin
-            (is (= (viestin-teksti) "Jäsenen luonti ei onnistunut"))))))))
+            (is (false? (onko-tallenna-nappi-enabloitu? "Lisää jäsen")))))))))
 
 (deftest ^:no-ie uuden-henkilon-lisays-jaseneksi-test
   (testing "uuden henkilön lisäys jäseneksi"

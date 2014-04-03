@@ -328,13 +328,17 @@ input[type="text"] {
 input[type="text"]:focus {
   border-color: #042029;
 }
+/* line 23, ../../private/sass/yhteiset/_forms.scss */
+input[type="text"].ng-invalid {
+  border: 1px solid red;
+}
 
-/* line 24, ../../private/sass/yhteiset/_forms.scss */
+/* line 28, ../../private/sass/yhteiset/_forms.scss */
 .placeholder {
   color: #aaa;
 }
 
-/* line 26, ../../private/sass/yhteiset/_forms.scss */
+/* line 30, ../../private/sass/yhteiset/_forms.scss */
 fieldset {
   border: 0;
   padding: 0;
@@ -344,11 +348,11 @@ fieldset {
   margin: 0 6px 12px 0;
   vertical-align: top;
 }
-/* line 34, ../../private/sass/yhteiset/_forms.scss */
+/* line 38, ../../private/sass/yhteiset/_forms.scss */
 fieldset.select2-fieldset {
   vertical-align: bottom;
 }
-/* line 38, ../../private/sass/yhteiset/_forms.scss */
+/* line 42, ../../private/sass/yhteiset/_forms.scss */
 fieldset input, fieldset p, fieldset select {
   width: 100%;
   height: 28px;
@@ -356,13 +360,13 @@ fieldset input, fieldset p, fieldset select {
   display: inline-block;
   padding: 2px 0;
 }
-/* line 45, ../../private/sass/yhteiset/_forms.scss */
+/* line 49, ../../private/sass/yhteiset/_forms.scss */
 fieldset input.icon, fieldset p.icon, fieldset select.icon {
   padding: 0;
   background-color: transparent;
   vertical-align: middle;
 }
-/* line 50, ../../private/sass/yhteiset/_forms.scss */
+/* line 54, ../../private/sass/yhteiset/_forms.scss */
 fieldset input[type=checkbox], fieldset input[type=radio], fieldset p[type=checkbox], fieldset p[type=radio], fieldset select[type=checkbox], fieldset select[type=radio] {
   width: 18px;
   background: white;
@@ -370,7 +374,7 @@ fieldset input[type=checkbox], fieldset input[type=radio], fieldset p[type=check
   border: 0;
   vertical-align: middle;
 }
-/* line 59, ../../private/sass/yhteiset/_forms.scss */
+/* line 63, ../../private/sass/yhteiset/_forms.scss */
 fieldset textarea {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -379,62 +383,62 @@ fieldset textarea {
   height: 100px;
   padding: 5px;
 }
-/* line 66, ../../private/sass/yhteiset/_forms.scss */
+/* line 70, ../../private/sass/yhteiset/_forms.scss */
 fieldset input {
   padding-left: 2px;
 }
-/* line 68, ../../private/sass/yhteiset/_forms.scss */
+/* line 72, ../../private/sass/yhteiset/_forms.scss */
 fieldset input, fieldset select {
   border: 1px solid #107ea2;
 }
-/* line 71, ../../private/sass/yhteiset/_forms.scss */
+/* line 75, ../../private/sass/yhteiset/_forms.scss */
 fieldset select {
   height: 28px;
 }
-/* line 76, ../../private/sass/yhteiset/_forms.scss */
+/* line 80, ../../private/sass/yhteiset/_forms.scss */
 fieldset.lisatiedot p {
   padding: 0;
 }
 
-/* line 82, ../../private/sass/yhteiset/_forms.scss */
+/* line 86, ../../private/sass/yhteiset/_forms.scss */
 .select2-container .select2-container-multi .select2-results {
   width: 50%;
   display: block;
 }
-/* line 86, ../../private/sass/yhteiset/_forms.scss */
+/* line 90, ../../private/sass/yhteiset/_forms.scss */
 .select2-container .select2-container-multi .select2-results a, .select2-container .select2-container-multi .select2-results ul {
   border: 1px solid #107ea2;
   background-color: white;
   border-radius: 0;
 }
 
-/* line 93, ../../private/sass/yhteiset/_forms.scss */
+/* line 97, ../../private/sass/yhteiset/_forms.scss */
 .checkbox-pair {
   display: block;
 }
-/* line 95, ../../private/sass/yhteiset/_forms.scss */
+/* line 99, ../../private/sass/yhteiset/_forms.scss */
 .checkbox-pair label {
   display: inline;
   width: 30%;
 }
-/* line 99, ../../private/sass/yhteiset/_forms.scss */
+/* line 103, ../../private/sass/yhteiset/_forms.scss */
 .checkbox-pair input[type=checkbox] {
   display: inline;
   margin: 12px 6px 0 0;
   width: 18px;
 }
 
-/* line 106, ../../private/sass/yhteiset/_forms.scss */
+/* line 110, ../../private/sass/yhteiset/_forms.scss */
 .search-field {
   width: 30%;
   display: block;
 }
-/* line 109, ../../private/sass/yhteiset/_forms.scss */
+/* line 113, ../../private/sass/yhteiset/_forms.scss */
 .search-field input {
   width: 100%;
 }
 
-/* line 112, ../../private/sass/yhteiset/_forms.scss */
+/* line 116, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu {
   list-style: none;
   position: absolute;
@@ -446,7 +450,7 @@ fieldset.lisatiedot p {
   padding: 6px;
   margin-top: -1px;
 }
-/* line 123, ../../private/sass/yhteiset/_forms.scss */
+/* line 127, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu:before {
   content: '';
   display: inline-block;
@@ -457,7 +461,7 @@ fieldset.lisatiedot p {
   top: -7px;
   left: 6px;
 }
-/* line 133, ../../private/sass/yhteiset/_forms.scss */
+/* line 137, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu:after {
   content: '';
   display: inline-block;
@@ -468,7 +472,7 @@ fieldset.lisatiedot p {
   top: -6px;
   left: 7px;
 }
-/* line 143, ../../private/sass/yhteiset/_forms.scss */
+/* line 147, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu button {
   background-color: transparent;
   color: #4d4d4d;
@@ -477,72 +481,72 @@ fieldset.lisatiedot p {
   margin: 0;
   padding: 0;
 }
-/* line 150, ../../private/sass/yhteiset/_forms.scss */
+/* line 154, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu button:hover {
   background-color: #e6e6e6;
 }
-/* line 154, ../../private/sass/yhteiset/_forms.scss */
+/* line 158, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu tr {
   background-color: #ffffff !important;
   border: 0 !important;
 }
-/* line 158, ../../private/sass/yhteiset/_forms.scss */
+/* line 162, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu thead button {
   background: none;
   padding: 0;
   color: #4d4d4d;
 }
-/* line 163, ../../private/sass/yhteiset/_forms.scss */
+/* line 167, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu thead button.pull-left {
   background: none;
 }
-/* line 165, ../../private/sass/yhteiset/_forms.scss */
+/* line 169, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu thead button.pull-left:before {
   content: "<";
   color: #4d4d4d;
 }
-/* line 167, ../../private/sass/yhteiset/_forms.scss */
+/* line 171, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu thead button.pull-right {
   background: none;
 }
-/* line 169, ../../private/sass/yhteiset/_forms.scss */
+/* line 173, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu thead button.pull-right:before {
   content: ">";
   color: #4d4d4d;
 }
-/* line 171, ../../private/sass/yhteiset/_forms.scss */
+/* line 175, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu thead tr:first-child th:first-child + th button {
   width: 100%;
   padding: 6px 0;
 }
-/* line 173, ../../private/sass/yhteiset/_forms.scss */
+/* line 177, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu th {
   text-align: center;
   padding: 0;
   vertical-align: middle;
 }
-/* line 175, ../../private/sass/yhteiset/_forms.scss */
+/* line 179, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu tbody td {
   padding: 0;
 }
-/* line 177, ../../private/sass/yhteiset/_forms.scss */
+/* line 181, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu tbody td button {
   text-align: center;
   width: 100%;
   padding: 7px 0;
 }
-/* line 184, ../../private/sass/yhteiset/_forms.scss */
+/* line 188, ../../private/sass/yhteiset/_forms.scss */
 .datepicker-field .dropdown-menu .btn-info, .datepicker-field .dropdown-menu .btn-info:hover {
   color: #ffffff;
   background-color: #107ea2;
 }
 
-/* line 188, ../../private/sass/yhteiset/_forms.scss */
+/* line 192, ../../private/sass/yhteiset/_forms.scss */
 fieldset.datepicker-field input {
   width: 92%;
   display: inline;
 }
-/* line 189, ../../private/sass/yhteiset/_forms.scss */
+/* line 193, ../../private/sass/yhteiset/_forms.scss */
 fieldset.datepicker-field .open-datepicker {
   margin-top: -28px;
   margin-left: 92%;
@@ -554,23 +558,23 @@ fieldset.datepicker-field .open-datepicker {
   height: 28px;
   background-position: 5px -1046px;
 }
-/* line 200, ../../private/sass/yhteiset/_forms.scss */
+/* line 204, ../../private/sass/yhteiset/_forms.scss */
 fieldset.datepicker-field .open-datepicker:hover {
   background-color: #083f51;
   background-position: 5px -1046px;
 }
 
-/* line 207, ../../private/sass/yhteiset/_forms.scss */
+/* line 211, ../../private/sass/yhteiset/_forms.scss */
 .fieldset-table {
   display: table;
   width: 100%;
 }
-/* line 208, ../../private/sass/yhteiset/_forms.scss */
+/* line 212, ../../private/sass/yhteiset/_forms.scss */
 .fieldset-table fieldset {
   width: 90%;
 }
 
-/* line 211, ../../private/sass/yhteiset/_forms.scss */
+/* line 215, ../../private/sass/yhteiset/_forms.scss */
 .select2-fieldset .select2-container .select2-choice .select2-arrow {
   filter: none;
   background-image: none;
@@ -578,7 +582,7 @@ fieldset.datepicker-field .open-datepicker:hover {
   width: 25px;
   border: 0;
 }
-/* line 217, ../../private/sass/yhteiset/_forms.scss */
+/* line 221, ../../private/sass/yhteiset/_forms.scss */
 .select2-fieldset .select2-container .select2-choice .select2-arrow b {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
@@ -592,11 +596,11 @@ fieldset.datepicker-field .open-datepicker:hover {
   background-image: url("../img/oph-icon-sprite.png");
 }
 
-/* line 224, ../../private/sass/yhteiset/_forms.scss */
+/* line 228, ../../private/sass/yhteiset/_forms.scss */
 .select2-fieldset .select2-container.select2-dropdown-open .select2-choice .select2-arrow {
   background-color: transparent;
 }
-/* line 226, ../../private/sass/yhteiset/_forms.scss */
+/* line 230, ../../private/sass/yhteiset/_forms.scss */
 .select2-fieldset .select2-container.select2-dropdown-open .select2-choice .select2-arrow b {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
@@ -608,7 +612,7 @@ fieldset.datepicker-field .open-datepicker:hover {
   background-image: url("../img/oph-icon-sprite.png");
 }
 
-/* line 230, ../../private/sass/yhteiset/_forms.scss */
+/* line 234, ../../private/sass/yhteiset/_forms.scss */
 .select2-container a.select2-choice, .select2-container-active a.select2-choice, .select2-container-multi ul.select2-choices {
   background-image: none;
   filter: none;
@@ -617,37 +621,37 @@ fieldset.datepicker-field .open-datepicker:hover {
   color: #000000;
 }
 
-/* line 237, ../../private/sass/yhteiset/_forms.scss */
+/* line 241, ../../private/sass/yhteiset/_forms.scss */
 .select2-container a.select2-choice, .select2-container-active a.select2-choice, .select2-drop, .select2-arrow {
   -webkit-border-radius: 0 0 0 0 !important;
   -moz-border-radius: 0 0 0 0 !important;
   border-radius: 0 0 0 0 !important;
 }
 
-/* line 240, ../../private/sass/yhteiset/_forms.scss */
+/* line 244, ../../private/sass/yhteiset/_forms.scss */
 .select2-drop.select2-drop-multi {
   border-top: 1px solid;
 }
 
-/* line 244, ../../private/sass/yhteiset/_forms.scss */
+/* line 248, ../../private/sass/yhteiset/_forms.scss */
 .select2-container-active a.select2-choice, .select2-drop {
   border-color: #083f51 !important;
 }
-/* line 246, ../../private/sass/yhteiset/_forms.scss */
+/* line 250, ../../private/sass/yhteiset/_forms.scss */
 .select2-container-active a.select2-choice li.select2-no-results, .select2-container-active a.select2-choice li.select2-searching, .select2-drop li.select2-no-results, .select2-drop li.select2-searching {
   background-color: transparent !important;
 }
 
-/* line 250, ../../private/sass/yhteiset/_forms.scss */
+/* line 254, ../../private/sass/yhteiset/_forms.scss */
 .select2-result:nth-child(2n) {
   background-color: #f2f2f2;
 }
-/* line 251, ../../private/sass/yhteiset/_forms.scss */
+/* line 255, ../../private/sass/yhteiset/_forms.scss */
 .select2-result.select2-highlighted {
   background-color: #107ea2 !important;
 }
 
-/* line 257, ../../private/sass/yhteiset/_forms.scss */
+/* line 261, ../../private/sass/yhteiset/_forms.scss */
 .tyhja-:empty:after {
   /*
     Oikeasti haluttiin sisällöksi vain {content: "-";}, mutta tietyissä tilanteissa IE9 kaatui em. ratkaisuun,

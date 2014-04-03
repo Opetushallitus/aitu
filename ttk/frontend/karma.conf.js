@@ -32,8 +32,19 @@ module.exports = function(config) {
       appPath + '/js/**/*.js',
       'test/vendor/angular-mocks.js',
       'test/mock/**/*.js',
-      'test/spec/**/*.js'
+      'test/spec/**/*.js',
+      '../resources/html/**/*.mustache'
     ],
+
+    preprocessors : { '../resources/html/**/*.mustache': ['ng-html2js']},
+
+    ngHtml2JsPreprocessor: {
+      cacheIdFromPath: function(filepath) {
+        var parts = filepath.split('/');
+        var name = 'template/' + parts[parts.length - 1].split('.')[0];
+        return name;
+      }
+    },
 
     // list of files / patterns to exclude
     exclude: [],

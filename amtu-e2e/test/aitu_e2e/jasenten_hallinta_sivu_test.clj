@@ -144,8 +144,8 @@
       (testing "Jos jäsen on toimikunnassa kahteen kertaan, voi voimassaoloaikaa muokata siten että voimassaoloaika ei mene päällekkäin toisen saman henkilön jäsenyyden kanssa."
         (with-data {:toimikunnat testi-toimikunnat
                     :henkilot testi-henkilot
-                    :jasenet [(testi-jasen-maaratty-alku-ja-loppupvm "2013-08-01" "2013-08-20")
-                              (testi-jasen-maaratty-alku-ja-loppupvm "2013-09-01" "2013-09-20")]}
+                    :jasenet [(testi-jasen-maaratty-alku-ja-loppupvm "01.08.2013" "20.08.2013")
+                              (testi-jasen-maaratty-alku-ja-loppupvm "01.09.2013" "20.09.2013")]}
           (avaa (jasenten-hallinta-sivu "98/11/543"))
           (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.alkupvm" "02.08.2013")
           (tallenna-jasenet)
@@ -156,9 +156,9 @@
                     :jasenet [(testi-jasen-maaratty-alku-ja-loppupvm "2013-08-01" "2013-08-20")
                               (testi-jasen-maaratty-alku-ja-loppupvm "2013-09-01" "2013-09-20")]}
           (avaa (jasenten-hallinta-sivu "98/11/543"))
-          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.alkupvm" "2013-09-01")
-          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.loppupvm" "2013-09-20")
-          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 1 "henkilo.alkupvm" "2013-09-01")
-          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 1 "henkilo.loppupvm" "2013-09-20")
+          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.alkupvm" "01.09.2013")
+          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.loppupvm" "20.09.2013")
+          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 1 "henkilo.alkupvm" "01.09.2013")
+          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 1 "henkilo.loppupvm" "20.09.2013")
           (tallenna-jasenet)
           (is (= (viestin-teksti) "Toimikunnan jäsenten muokkaus ei onnistunut")))))))

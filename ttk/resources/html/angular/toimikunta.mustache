@@ -9,7 +9,7 @@
 </h1>
 
 <section class="info-section">
-  <form>
+  <form name="toimikuntaForm">
     <fieldset>
       <label>[[diaarinumero]]</label>
       <p>{{toimikunta.diaarinumero}}</p>
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div>
-      <tallenna disabloi-pyyntojen-ajaksi="['toimikunnan-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="'[[tallenna]]'"></tallenna>
+      <tallenna ng-disabled="!toimikuntaForm.$valid" valid="toimikuntaForm.$valid" disabloi-pyyntojen-ajaksi="['toimikunnan-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="'[[tallenna]]'"></tallenna>
       <button ng-hide="!muokkausTila" ng-click="peruuta()">[[peruuta]]</button>
     </div>
   </form>
