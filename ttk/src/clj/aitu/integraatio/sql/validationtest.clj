@@ -7,11 +7,12 @@
             [korma.db :as db]))
 
 (defn load-validation-queries! [filepath] 
-  (with-open [istream (io/input-stream filepath)] 
-    (solita.util.validationtest.SmokeTestSqlReader/readAll istream)))
+  (let [r (io/resource filepath)] 
+    (with-open [istream (.openStream  r)] 
+      (solita.util.validationtest.SmokeTestSqlReader/readAll istream))))
 
 (def default-query-list 
-  (delay (load-validation-queries! "resources/validationtests.sql")))
+  (delay (load-validation-queries! "../resources/validationtests.sql")))
   
 (defn run-queries! [query-list]
     (let [_ (log/info "Ajetaan tietokannan validointitestit: " (count query-list) " kappaletta")
