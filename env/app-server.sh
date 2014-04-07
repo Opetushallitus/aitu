@@ -68,6 +68,14 @@ mkdir "$aituhaku_install_dir/logs"
 chmod a+rwx "$aituhaku_install_dir/logs"
 sed -i -e "s|\\\$DB_HOST|$db_host|g" $aituhaku_install_dir/aituhaku.properties
 
+# Sallitaan asennusten pääsy ssh:lla
+mkdir /home/aituadmin/.ssh
+cat $id_rsa_pub >> /home/aituadmin/.ssh/authorized_keys
+
+chown -R aituadmin:aituadmin /home/aituadmin/.ssh
+chmod 700 /home/aituadmin/.ssh
+chmod 644 /home/aituadmin/.ssh/authorized_keys
+
 # Vagrant-isäntäkone
 iptables -I INPUT 1 -p tcp -s 192.168.50.1 --dport 80 -j ACCEPT
 
