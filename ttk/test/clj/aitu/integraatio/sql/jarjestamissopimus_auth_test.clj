@@ -26,42 +26,42 @@
   (is (thrown? Throwable
         (autorisointi-fn konteksti))))
 
-(deftest sopimuksen-paivitys-onnistuu-toimikunnan-jasenelta []
+(deftest ^:integraatio sopimuksen-paivitys-onnistuu-toimikunnan-jasenelta []
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-onnistuu autorisoi-sopimuksen-paivitys "1")))
 
-(deftest sopimuksen-paivitys-ei-onnistu-jos-ei-toimikunnan-jasen []
+(deftest  ^:integraatio sopimuksen-paivitys-ei-onnistu-jos-ei-toimikunnan-jasen []
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-ei-onnistu autorisoi-sopimuksen-paivitys "2")))
 
-(deftest sopimuksen-luku-onnistuu-toimikunnan-jasenelta []
+(deftest  ^:integraatio sopimuksen-luku-onnistuu-toimikunnan-jasenelta []
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-onnistuu autorisoi-sopimuksen-luku "1")))
 
-(deftest sopimuksen-luku-ei-onnistu-jos-ei-toimikunnan-jasen []
+(deftest  ^:integraatio sopimuksen-luku-ei-onnistu-jos-ei-toimikunnan-jasen []
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-ei-onnistu autorisoi-sopimuksen-luku "2")))
 
-(deftest suunnitelman-luku-onnistuu-toimikunnan-jasenelta []
+(deftest  ^:integraatio suunnitelman-luku-onnistuu-toimikunnan-jasenelta []
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-onnistuu autorisoi-suunnitelman-luku "1")))
 
-(deftest suunnitelman-luku-ei-onnistu-jos-ei-toimikunnan-jasen []
+(deftest  ^:integraatio suunnitelman-luku-ei-onnistu-jos-ei-toimikunnan-jasen []
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-ei-onnistu autorisoi-suunnitelman-luku "2")))
 
-(deftest liitteen-luku-onnistuu-toimikunnan-jasenelta []
+(deftest  ^:integraatio liitteen-luku-onnistuu-toimikunnan-jasenelta []
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-onnistuu autorisoi-liitteen-luku "1")))
 
-(deftest suunnitelman-luku-ei-onnistu-jos-ei-toimikunnan-jasen []
+(deftest  ^:integraatio suunnitelman-luku-ei-onnistu-jos-ei-toimikunnan-jasen []
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-ei-onnistu autorisoi-liitteen-luku "2")))
