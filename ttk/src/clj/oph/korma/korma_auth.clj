@@ -53,10 +53,10 @@
   (try
     (let [oid (validate-user c *current-user-uid*)]
       (deliver *current-user-oid* oid)
-      (exec-sql c (str "set session " psql-varname " = '" oid "'")))
+      (exec-sql c (str "set session " psql-varname " = '" oid "'"))
+      (log/debug "con ok" (.hashCode c)))
     (catch IllegalArgumentException e
-      (log/error "validate-user epäonnistui" e)))
-  (log/debug "con ok" (.hashCode c)))
+      (log/error "validate-user epäonnistui" e))))
 
 (defn auth-onCheckIn
   [c]
