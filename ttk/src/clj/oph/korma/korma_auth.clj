@@ -55,9 +55,9 @@
       (deliver *current-user-oid* oid)
       (exec-sql c (str "set session " psql-varname " = '" oid "'")))
     (catch IllegalArgumentException e
-      (.printStackTrace e)))
+      (log/error "validate-user epäonnistui" e)))
   (log/debug "con ok" (.hashCode c)))
-    
+
 (defn auth-onCheckIn
   [c]
   (log/debug "connection release ")
