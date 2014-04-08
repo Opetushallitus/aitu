@@ -22,7 +22,9 @@
             [aitu.asetukset :refer [lue-asetukset oletusasetukset]]
             [aitu.integraatio.sql.korma :refer [kayttaja]]
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
-            [aitu.infra.kayttajaoikeudet-arkisto :as kayttajaoikeudet-arkisto]))
+            [aitu.toimiala.kayttajaoikeudet :as ko]
+            [aitu.infra.kayttajaoikeudet-arkisto :as kayttajaoikeudet-arkisto]
+            [aitu.integraatio.sql.test-data-util :refer [default-toimikunta]]))
 
 (def testikayttaja-uid "MAN-O-TEST")
 (def testikayttaja-oid "OID.MAN-O-TEST")
@@ -67,3 +69,8 @@
 
 (defmacro testidata-poistaen-kayttajana [oid & body]
   `(tietokanta-fixture-oid (fn [] ~@body) ~oid ~oid))
+
+(defn with-user-rights [f]
+  (binding [ko/*current-user-authmap* {:roolitunnus kayttajaoikeudet/kayttajarooli :toimikunta_jasen #{{:tkunta (:tkunta default-toimikunta) :rooli "sihteeri"}
+                                                                                      {:tkunta "123" :rooli "sihteeri"}}}]
+    (f)))
