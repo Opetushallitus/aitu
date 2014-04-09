@@ -3,6 +3,7 @@
     [aitu.integraatio.sql.validationtest :as validationtest]
     [clojure.test :refer [deftest testing is]]
     [korma.core :as sql]
+     [korma.db :as db]
     [aitu.integraatio.sql.test-util :refer :all]))
 
 (defn failed? [kysely]
