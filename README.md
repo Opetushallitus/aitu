@@ -1,4 +1,4 @@
-[Näyttötutkintojärjestelmän](http://www.oph.fi/nayttotutkinnot) tutkintotoimikuntarekisteri. Rekisterisovelluksesta käytetään nimeä Aitu ja sen lähdekoodi löytyy tästä repositorysta.
+[Näyttötutkintojärjestelmän](http://www.oph.fi/nayttotutkinnot) tutkintotoimikuntarekisteri. Rekisterisovelluksesta käytetään nimeä Aitu ja sen lähdekoodi löytyy tästä repositorysta. Tämän repositoryn sisällön käyttöön liittyvät lisenssiehdot on esitelty tiedostossa LICENSE.
 
 # Repositoryn sisältö ja rakenne
 
