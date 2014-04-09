@@ -16,6 +16,7 @@
   (:import java.util.Locale)
   (:require [korma.core :as sql]
             [korma.db :as db]
+            [clojure.java.jdbc.deprecated :as deprecated-jdbc]
             [aitu.infra.i18n :as i18n]
             [oph.korma.korma-auth :as ka]
             [infra.test.data :as testdata]
@@ -54,13 +55,16 @@
               ka/*current-user-oid* (promise)
               i18n/*locale* testi-locale]
       (deliver ka/*current-user-oid* oid)
-      (binding [kayttajaoikeudet/*current-user-authmap* (kayttajaoikeudet-arkisto/hae-oikeudet oid)]
-        (try
-          (f)
-          (finally
-            (testdata/tyhjenna-testidata! oid)
-            (poista-testikayttaja!)
-            (-> pool :pool :datasource .close)))))))
+      ; avataan transaktio joka on voimassa koko kutsun (f) ajan
+      (db/transaction
+        (println (java.lang.Thread/currentThread) "can has connection " (deprecated-jdbc/find-connection))
+        (binding [kayttajaoikeudet/*current-user-authmap* (kayttajaoikeudet-arkisto/hae-oikeudet oid)]
+          (try
+            (f)
+            (finally
+              (testdata/tyhjenna-testidata! oid)
+              (poista-testikayttaja!)))))
+      (-> pool :pool :datasource .close))))
 
 (defn tietokanta-fixture [f]
   (tietokanta-fixture-oid f testikayttaja-oid testikayttaja-uid))
