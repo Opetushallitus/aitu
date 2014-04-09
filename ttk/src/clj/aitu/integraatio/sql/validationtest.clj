@@ -2,7 +2,6 @@
   "Validation tests for relational DB"
   (:require [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]
-            [clojure.java.jdbc.deprecated :as deprecated-jdbc]
             [korma.core :as sql]
             [clojure.tools.logging :as log]
             [korma.db :as db]))
@@ -15,18 +14,11 @@
 (def default-query-list 
   (delay (load-validation-queries! "validationtests.sql")))
 
-(defn get-current-korma-connection
-  "Operoidaan deprecated-apin kautta kunnes Korma siirtyy käyttämään uutta JDBC-rajapintaa."
-  []
-  {:post [(not (nil? %))]}
-  (deprecated-jdbc/find-connection))
-
 (defn run-queries! [query-list]
     (log/info "Ajetaan tietokannan validointitestit: " (count query-list) " kappaletta")
-    (let [con (get-current-korma-connection)]
-     (into [] (doall (for [query query-list]
-                       (let [tulos {:title (.getQueryTitle query)
-                                    :results (jdbc/query {:connection con} [(.getQuerySql query)])}]
-                         (log/info "Kysely " (:title tulos) " ongelmia " (count (:results tulos)) " kpl")
-                         tulos))))))
+    (into [] (doall (for [query query-list]
+                      (let [tulos {:title (.getQueryTitle query)
+                                   :results (sql/exec-raw [(.getQuerySql query)] :results)}]
+                        (log/info "Kysely " (:title tulos) " ongelmia " (count (:results tulos)) " kpl")
+                        tulos)))))
 ;    (with-open [con (.getConnection (:datasource (:pool @db/_default)))]
