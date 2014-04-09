@@ -21,4 +21,3 @@
                                    :results (sql/exec-raw [(.getQuerySql query)] :results)}]
                         (log/info "Kysely " (:title tulos) " ongelmia " (count (:results tulos)) " kpl")
                         tulos)))))
-;    (with-open [con (.getConnection (:datasource (:pool @db/_default)))]
