@@ -146,18 +146,23 @@
     toimikunta-arkisto/lisaa-jasen!))
 
 (defn lisaa-oppilaitos! []
-  (oppilaitos-arkisto/lisaa! {:oppilaitoskoodi "ABC12"
-                              :nimi "Oppilaitos"}))
+  (let [oppilaitos {:oppilaitoskoodi "ABC12"
+                    :nimi "Oppilaitos"}]
+    (oppilaitos-arkisto/lisaa! oppilaitos)
+    oppilaitos))
 
-(defn lisaa-jarjestamissopimus! [oppilaitos]
-  (let [toimikunta (lisaa-toimikunta!)]
-    (jarjestamissopimus-arkisto/lisaa!
-      {:jarjestamissopimusid 1
-       :sopimusnumero "ABCDEF01234567890"
-       :alkupvm (time/date-time 2011 1 1)
-       :oppilaitos (:oppilaitoskoodi oppilaitos)
-       :toimikunta (:tkunta toimikunta)
-       :sopijatoimikunta (:tkunta toimikunta)})))
+(defn lisaa-jarjestamissopimus!
+  ([oppilaitos]
+    (let [toimikunta (lisaa-toimikunta!)]
+      (jarjestamissopimus-arkisto/lisaa!
+        {:jarjestamissopimusid 1
+         :sopimusnumero "ABCDEF01234567890"
+         :alkupvm (time/date-time 2011 1 1)
+         :oppilaitos (:oppilaitoskoodi oppilaitos)
+         :toimikunta (:tkunta toimikunta)
+         :sopijatoimikunta (:tkunta toimikunta)})))
+  ([]
+    (lisaa-jarjestamissopimus! (lisaa-oppilaitos!))))
 
 (defn lisaa-osaamisala! [osaamisalatunnus]
   (sql/insert osaamisala

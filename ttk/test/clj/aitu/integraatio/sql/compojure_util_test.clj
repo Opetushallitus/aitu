@@ -19,6 +19,7 @@
             [ring.mock.request :as rmock]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [korma.db :as db]
+            [aitu.integraatio.sql.test-util :refer :all]
             [aitu.toimiala.kayttajaoikeudet
              :refer [yllapitajarooli kayttajarooli]])
   (:use clojure.test))
@@ -37,10 +38,6 @@
  (binding [ko/*current-user-authmap* {:roolitunnus yllapitajarooli}]
    (f)))
 
-(defn with-user-rights [f]
- (binding [ko/*current-user-authmap* {:roolitunnus kayttajarooli :toimikunta_jasen #{"123"}}]
-   (f)))
-
 (deftest yllapitaja-saa-lisata-toimikunnan []
   (let [crout (eval sample-admin-api)
         response (with-admin-rights #(crout (rmock/request :post "/toimikunta")))]
@@ -56,7 +53,7 @@
         response (with-user-rights #(crout (rmock/request :get "/toimikunta/123")))]
     (is (= (:status response) 200))))
 
-(deftest yllapitaja-saa-katsoa-toiminnan-tiedot []
+(deftest yllapitaja-saa-katsoa-toimikunnan-tiedot []
   (let [crout (eval sample-user-api)
         response (with-admin-rights #(crout (rmock/request :get "/toimikunta/123")))]
     (is (= (:status response) 200))))

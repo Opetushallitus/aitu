@@ -61,7 +61,7 @@
     })
 
     .factory('sopimusResource', ['$resource', '$routeParams', function($resource, $routeParams) {
-      return $resource(ttkBaseUrl + '/api/jarjestamissopimus/:jarjestamissopimusid', {'jarjestamissopimusid': '@jarjestamissopimusid'}, {
+      return $resource(ttkBaseUrl + '/api/jarjestamissopimus/:jarjestamissopimusid', {'jarjestamissopimusid': '@jarjestamissopimusid', 'toimikunta': '@toimikunta.tkunta'}, {
         get: {
           method: 'GET',
           params: {
@@ -82,7 +82,7 @@
           },
           id: 'sopimuksen-luonti',
           i18n: 'jarjestamissopimus',
-          url: ttkBaseUrl + '/api/jarjestamissopimus'
+          url: ttkBaseUrl + '/api/jarjestamissopimus/:toimikunta'
         },
         delete : {
           method: 'DELETE',

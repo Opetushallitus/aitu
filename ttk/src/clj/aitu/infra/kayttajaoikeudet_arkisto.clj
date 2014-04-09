@@ -24,7 +24,7 @@
   (first (sql/select henkilo
            (sql/fields :henkiloid :kayttaja_oid)
            (sql/with jasenyys
-             (sql/fields :alkupvm :loppupvm)
+             (sql/fields :alkupvm :loppupvm :rooli)
              (sql/with tutkintotoimikunta
                (sql/fields :diaarinumero :tkunta) 
                 (sql/with jarjestamissopimus
@@ -42,7 +42,7 @@
          :kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))
          :henkiloid (:henkiloid oikeudet)
          :roolitunnus (:rooli kayttaja)
-         :toimikunta_jasen (set (map :tkunta (:jasenyys oikeudet)))})))
+         :toimikunta_jasen (set (map #(select-keys % [:tkunta :rooli]) (:jasenyys oikeudet)))})))
   ([] "Hakee sisäänkirjautuneen käyttäjän oikeudet"
     (db/transaction
       (assert (realized? *current-user-oid*) "Ongelma sisäänkirjautumisessa. uid -> oid mappays epäonnistui.")

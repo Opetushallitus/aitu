@@ -32,33 +32,40 @@
   {:oid "foo123"
    :henkiloid "henkiloid123"
    :roolitunnus kayttajarooli
-   :toimikunta_jasen #{"123"}})
+   :toimikunta_jasen #{{:tkunta "123" :rooli "sihteeri"}}})
+
+(defn onnistuuko-operaatio-toimikunnalle? [operaatio tkunta]
+  (saako-tehda? kayttaja-map operaatio tkunta))
 
 (deftest vain-lueteltu-oikeus-kelpaa []
    (is (thrown? Throwable
           (saako-tehda? kayttaja-map :trolol-laulanta nil))))
 
 (deftest omien-tietojen-paivitys-kay []
-  (is (= true (saako-tehda? kayttaja-map :henkilo_paivitys "henkiloid123"))))
+  (is (saako-tehda? kayttaja-map :henkilo_paivitys "henkiloid123")))
 
 (deftest toisen-tietojen-paivitys-ei-kay[]
-  (is (= false (saako-tehda? kayttaja-map :henkilo_paivitys "adsdas"))))
+  (is (not (saako-tehda? kayttaja-map :henkilo_paivitys "adsdas"))))
 
 (deftest oman-toimikunnan-tietojen-paivitys-kay []
-  (is (= true (saako-tehda? kayttaja-map :toimikunta_paivitys "123"))))
+  (is (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "123")))
 
 (deftest toisen-toimikunnan-tietojen-paivitys-ei-kay []
-  (is (= false (saako-tehda? kayttaja-map :toimikunta_paivitys "asdds"))))
+  (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "asdd"))))
 
 (deftest kayttaja-ei-saa-tehda-yllapitotoimintoja []
-  (is (thrown? Throwable
-    (saako-tehda? kayttaja-map :toimikunta_luonti "asdds"))))
+  (is (not (saako-tehda? kayttaja-map :toimikunta_luonti nil))))
 
 (deftest yllapitaja-saa-tehda-kaikki-kayttajatoiminnot []
   (let [yllapitaja {:oid "l" :roolitunnus yllapitajarooli}]
     (doseq [oikeus (keys kayttajatoiminnot)]
-      (is (= true (saako-tehda? yllapitaja oikeus "fooid"))))))
+      (is (saako-tehda? yllapitaja oikeus "fooid")))))
 
 (deftest ei-ole-paallekkaisia-oikeus-tunnisteita []
   (is (empty? (intersection (set (keys kayttajatoiminnot)) (set (keys yllapitotoiminnot))))))
 
+(deftest sopimuksen-lisays-onnistuu-toimikunnan-jasenelta []
+  (is (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "123")))
+
+(deftest sopimuksen-lisays-ei-onnistu-jos-ei-toimikunnan-jasen []
+  (is (not (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "asdds"))))

@@ -413,3 +413,13 @@
     first
     :sopimus_ja_tutkinto
     hae-jarjestamissopimusid-sopimuksen-tutkinnolle))
+
+(defn hae-jarjestamissopimuksen-toimikunta
+  "Hakee toimikunnan tkunta-tunnisteen järjestämissopimusid:llä"
+  [jarjestamissopimusid]
+  (some->
+    (sql/select jarjestamissopimus
+      (sql/fields :toimikunta)
+      (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
+    first
+    :toimikunta))

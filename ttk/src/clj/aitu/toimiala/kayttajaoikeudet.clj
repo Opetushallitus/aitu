@@ -13,13 +13,16 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.kayttajaoikeudet
-  "https://knowledge.solita.fi/pages/viewpage.action?pageId=56984327")
+  "https://knowledge.solita.fi/pages/viewpage.action?pageId=56984327"
+  (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]))
 
 (def ^:dynamic *current-user-authmap*)
 
 ;; kayttajarooli-taulun arvot
 (def yllapitajarooli "YLLAPITAJA")
 (def kayttajarooli "KAYTTAJA")
+
+(def toimikunnan-muokkaus-roolit #{"puheenjohtaja", "varapuheenjohtaja", "sihteeri"})
 
 (defn yllapitaja?
   ([kayttaja-map]
@@ -29,8 +32,15 @@
 
 (defn toimikunta-jasen?
   ([kayttaja-map toimikuntaid]
-    (contains? (:toimikunta_jasen kayttaja-map) toimikuntaid))
+    (some #(= % toimikuntaid) (map :tkunta (:toimikunta_jasen kayttaja-map))))
   ([toimikuntaid] (toimikunta-jasen? *current-user-authmap* toimikuntaid)))
+
+(defn toimikunnan-muokkausoikeus?
+  ([kayttaja-map toimikuntaid]
+  (let [toimikunnan_jasenyydet (filter #(= (:tkunta %) toimikuntaid) (:toimikunta_jasen kayttaja-map))
+        roolit (map :rooli toimikunnan_jasenyydet)]
+    (some toimikunnan-muokkaus-roolit roolit)))
+  ([toimikuntaid] (toimikunnan-muokkausoikeus? *current-user-authmap* toimikuntaid)))
 
 (defn aitu-kayttaja?
   ([x] (aitu-kayttaja?))
@@ -45,11 +55,7 @@
 ;; muodostamassa koodissa, joten ne eivät saa olla funktio-olioita
 ;; (ks. http://stackoverflow.com/a/11287181).
 (def yllapitotoiminnot
-  `{:sopimustiedot_paivitys yllapitaja?
-    :suunnitelma_luku yllapitaja?
-    :sopimuksen_liite_luku yllapitaja?
-    :sopimus_lisays yllapitaja?
-    :toimikunta_luonti  yllapitaja?
+  `{:toimikunta_luonti  yllapitaja?
     :henkilo_lisays  yllapitaja?
     :toimikuntajasen_yllapito yllapitaja?
     :tiedote_muokkaus yllapitaja?
@@ -57,17 +63,17 @@
     :ohje_muokkaus yllapitaja?
     :etusivu_haku yllapitaja?})
 
-(defn sopimuksen-toimikunta [jarjestamissopimusid]
-; TODO aitu.infra.jarjestamissopimus-arkisto
-  -1)
-
 ;; Kuten yllä, arvot eivät saa olla funktio-olioita.
 (def kayttajatoiminnot
   `{:toimikunta_paivitys #(or (yllapitaja?) (toimikunta-jasen? %))
     :toimikunta_katselu #(or (yllapitaja?) (toimikunta-jasen? %))
     :henkilo_paivitys #(or (yllapitaja?) (= (:henkiloid *current-user-authmap*) %))
     :omat_tiedot #(or (yllapitaja?) (= (:oid *current-user-authmap*) %))
-    :sopimustiedot_luku #(or (yllapitaja?) (toimikunta-jasen? (sopimuksen-toimikunta %)))
+    :sopimus_lisays  #(or (yllapitaja?) (toimikunnan-muokkausoikeus? %))
+    :sopimustiedot_paivitys #(or (yllapitaja?) (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (Integer/parseInt %))))
+    :sopimustiedot_luku #(or (yllapitaja?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (Integer/parseInt %))))
+    :suunnitelma_luku #(or (yllapitaja?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (Integer/parseInt %))))
+    :sopimuksen_liite_luku #(or (yllapitaja?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (Integer/parseInt %))))
     :logitus aitu-kayttaja?
     :ohjeet_luku aitu-kayttaja?
     :toimikunta_haku sallittu-kaikille

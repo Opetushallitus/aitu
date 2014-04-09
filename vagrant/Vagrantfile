@@ -5,8 +5,8 @@ Vagrant.configure("2") do |config|
 
   # Kehitystyön tietokantapalvein
   config.vm.define "db" do |db|
-    db.vm.box = "CentOS-6.4-x86_64-v20131103.box"
-    db.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+    db.vm.box = "CentOS-6.5-x86_64-v20140311.box"
+    db.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
 
     db.vm.synced_folder "../env", "/env"
     if File.directory?("../../oph-konversio")
@@ -21,15 +21,15 @@ Vagrant.configure("2") do |config|
 
   # Vanhan AMTU:n ajamiseen
   config.vm.define "amtu" do |amtu|
-    amtu.vm.box = "CentOS-6.4-x86_64-v20131103.box"
-    amtu.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+    amtu.vm.box = "CentOS-6.5-x86_64-v20140311.box"
+    amtu.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
     amtu.vm.synced_folder "../env", "/env"
   end
 
   # Uuden AITU:n e2e-testien ajamiseen
   config.vm.define "aitu" do |aitu|
-    aitu.vm.box = "CentOS-6.4-x86_64-v20131103.box"
-    aitu.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+    aitu.vm.box = "CentOS-6.5-x86_64-v20140311.box"
+    aitu.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
 
     aitu.vm.synced_folder "../env", "/env"
     aitu.vm.provision "shell", inline: "cd /env && ./app-server.sh '192.168.50.51' 'http://192.168.50.52/aitu' ssh/dev_id_rsa.pub"
@@ -39,8 +39,8 @@ Vagrant.configure("2") do |config|
 
   # CAS- ja LDAP autentikaation palvelin kehitystyötä varten
   config.vm.define "auth" do |auth|
-    auth.vm.box = "CentOS-6.4-x86_64-v20131103.box"
-    auth.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+    auth.vm.box = "CentOS-6.5-x86_64-v20140311.box"
+    auth.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
 
     auth.vm.synced_folder "../env", "/env"
     auth.vm.provision "shell", inline: "cd /env && ./dev-auth.sh"

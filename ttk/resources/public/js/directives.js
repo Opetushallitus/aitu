@@ -330,7 +330,7 @@ angular.module('directives', ['services', 'resources'])
         $scope.$watch('selection', function(value){
           if(value && value[modelIdProp]) {
             $scope.model = $scope.model || {};
-            $scope.model[modelIdProp] = value[modelIdProp];
+            _.assign($scope.model, value);
           }
           else if ($scope.model) {
             delete $scope.model[modelIdProp];

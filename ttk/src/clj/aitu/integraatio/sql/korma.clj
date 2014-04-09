@@ -41,9 +41,8 @@
                      (.setMaxConnectionsPerPartition 10)
                      (.setMinConnectionsPerPartition 5)
                      (.setPartitionCount 1)
-                     (.setConnectionHook korma-auth/customizer-impl-bonecp)
-                     )]
-  bonecp-ds))
+                     (.setConnectionHook korma-auth/customizer-impl-bonecp))]
+    bonecp-ds))
 
 (defn luo-db [db-asetukset]
   (korma.db/default-connection

@@ -141,7 +141,7 @@
                          :default (for [i (iterate inc 1)]
                                     {:toimipaikkakoodi (str (- i))})})
 
-(def jarjestamissopimus-tiedot {:post-fn (constantly "/api/jarjestamissopimus/")
+(def jarjestamissopimus-tiedot {:post-fn #(str "/api/jarjestamissopimus/" (:toimikunta %))
                                 :delete-fn #(str "/api/test/jarjestamissopimus/" (:jarjestamissopimusid %))
                                 :default (for [i (iterate inc 1)]
                                            {:alkupvm menneisyydessa
