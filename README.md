@@ -28,6 +28,9 @@ vagrant up db
 vagrant up aitu
 ```
 
+Virtuaalikoneen alustaminen ensimmäisellä kerralla lataa huomattavan määrän Linux-paketteja internetistä, joten se voi kestää hitaalla verkkoyhteydellä melko pitkään. Seuraavilla kerroilla kaikkea ei enää ladata uudelleen vaan Virtualbox ja Vagrant osaavat pitää tavaraa välimuistissa.
+
+
 ## Vagrantfile ja verkkoyhteydet
 
 Vagrantfile määrittelee privaatti-IP osoitteet koneille ja joitakin port-forwardeja isäntäkoneen ja virtuaalikoneen välisiä yhteyksiä varten. Jos nämä ovat jo käytössä voi tulla ongelmia. Asian joutuu ratkaisemaan paikallisesti.
