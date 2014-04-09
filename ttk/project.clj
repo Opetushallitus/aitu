@@ -29,10 +29,10 @@
                  [cas-single-sign-out "0.1.2"]
                  [org.clojars.pntblnk/clj-ldap "0.0.7"]
 
-                 [org.clojure/java.jdbc "0.3.0-alpha5"]
+                 [org.clojure/java.jdbc "0.3.3"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
-                 [korma "0.3.0-RC6"]
+                 [korma "0.3.0-RC8"]
                  [clj-time "0.6.0"]
 
                  [org.clojure/tools.logging "0.2.6"]
