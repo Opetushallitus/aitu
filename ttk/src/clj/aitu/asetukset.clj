@@ -65,30 +65,30 @@
   ((sc/coercer Asetukset string-coercion-matcher) asetukset))
 
 (def oletusasetukset
-  {:server {:port 8080
-            :base-url "" ; http://localhost:8080
-            :pool-size 4}
-   :db {:host "127.0.0.1"
-        :port 2345
-        :name "ttk"
-        :user "ttk_user"
-        :password "ttk"
-        :maximum-pool-size 15
-        :minimum-pool-size 3}
-   :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
-                     :unsafe-https false
-                     :enabled true}
-   :ldap-auth-server {:host "localhost"
-                      :port 10389
-                      :user nil
-                      :password nil}
-   :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
-   :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
-   :eraajo false
-   :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
-   :ominaisuus {:proto false}
-   :log4j {:properties-file "resources/log4j.properties" :refresh-interval 3000} ; päivitä log4j asetukset kerran kolmessa sekunnissa dynaamisesti
-   })
+  (s/validate Asetukset {:server {:port 8080
+                                  :base-url "" ; http://localhost:8080
+                                  :pool-size 4}
+                         :db {:host "127.0.0.1"
+                              :port 2345
+                              :name "ttk"
+                              :user "ttk_user"
+                              :password "ttk"
+                              :maximum-pool-size 15
+                              :minimum-pool-size 3}
+                         :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
+                                           :unsafe-https false
+                                           :enabled true}
+                         :ldap-auth-server {:host "localhost"
+                                            :port 10389
+                                            :user nil
+                                            :password nil}
+                         :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
+                         :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
+                         :eraajo false
+                         :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
+                         :ominaisuus {:proto false}
+                         :log4j {:properties-file "resources/log4j.properties" :refresh-interval 3000} ; päivitä log4j asetukset kerran kolmessa sekunnissa dynaamisesti
+                         }))
 
 (def build-id (delay (if-let [r (resource "build-id.txt")]
                        (.trim (slurp r))
