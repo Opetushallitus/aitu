@@ -113,10 +113,10 @@
 (defn rajaa-oppilaitoksen-kentat
   "Valitsee oppilaitoksen tiedoista osoitepalvelun tarvitsemat kentät"
   [oppilaitos]
-  (let [nimi (select-and-rename-keys oppilaitos [[:nimi :fi] [:nimi :sv]])]
-    (merge {:nimi nimi
-            :oid nil}
-           oppilaitos)))
+  (let [nimi (select-and-rename-keys oppilaitos [[:nimi :fi] [:nimi :sv]])
+        oid (:oid oppilaitos)]
+    (assoc oppilaitos :nimi nimi
+                      :oid oid)))
 
 (defn hae-osoitepalvelulle
   "Hakee osoitepalvelun tarvitsemat tiedot oppilaitoksista"
