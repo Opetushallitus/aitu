@@ -1,4 +1,21 @@
-dn: uid=aitunpaakayttaja,ou=people,dc=example,dc=com
+dn: dc=opintopolku,dc=fi
+o: opintopolku.fi
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+dc: opintopolku
+
+dn: ou=People,dc=opintopolku,dc=fi
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Groups,dc=opintopolku,dc=fi
+ou: Groups
+objectClass: top
+objectClass: organizationalUnit
+
+dn: uid=aitunpaakayttaja,ou=People,dc=opintopolku,dc=fi
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
@@ -9,7 +26,7 @@ givenName: Paakayttaja
 sn: USER
 cn: ROOT
 
-dn: uid=aitunkayttaja,ou=people,dc=example,dc=com
+dn: uid=aitunkayttaja,ou=People,dc=opintopolku,dc=fi
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
@@ -20,7 +37,7 @@ givenName: Kayttaja
 sn: USER
 cn: ROOT
 
-dn: uid=T-800,ou=people,dc=example,dc=com
+dn: uid=T-800,ou=People,dc=opintopolku,dc=fi
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
@@ -31,7 +48,7 @@ givenName: Arska Raaka
 sn: USER
 cn: ROOT
 
-dn: uid=T-1001,ou=people,dc=example,dc=com
+dn: uid=T-1001,ou=People,dc=opintopolku,dc=fi
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
@@ -42,18 +59,18 @@ givenName: Ivan Ivanovits
 sn: USER
 cn: ROOT
 
-dn: cn=APP_AITU_UPDATE_1.2.246.562.10.2013121312395140176502,ou=groups,dc=example,dc=com
+dn: cn=APP_AITU_UPDATE_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
 cn: APP_AITU.1.2.246.562.10.2013121312395140176502
-uniqueMember: uid=aitunpaakayttaja,ou=people,dc=example,dc=com
-uniqueMember: uid=aitunkayttaja,ou=people,dc=example,dc=com
-uniqueMember: uid=T-1001,ou=people,dc=example,dc=com
-uniqueMember: uid=T-800,ou=people,dc=example,dc=com
+uniqueMember: uid=aitunpaakayttaja,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=aitunkayttaja,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=T-1001,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=T-800,ou=People,dc=opintopolku,dc=fi
 
-dn: cn=APP_AITU_CRUD_1.2.246.562.10.2013121312395140176502,ou=groups,dc=example,dc=com
+dn: cn=APP_AITU_CRUD_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
 cn: APP_AITU_CRUD_1.2.246.562.10.2013121312395140176502
-uniqueMember: uid=aitunpaakayttaja,ou=people,dc=example,dc=com
-uniqueMember: uid=T-1001,ou=people,dc=example,dc=com
+uniqueMember: uid=aitunpaakayttaja,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=T-1001,ou=People,dc=opintopolku,dc=fi
