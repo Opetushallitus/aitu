@@ -3,8 +3,8 @@
 <h1>
   [[jarjestamissopimus.jarjestamissopimus]]
   <span ng-show="sopimus.voimassa === false">([[yleiset.ei-voimassa]])</span>
-  <button ng-show="salliMuokkaus()" class="icon edit-icon" ng-click="muokkaa()"></button>
-  <button ng-show="salliMuokkaus()" class="icon delete-icon" ng-click="poista()"></button>
+  <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon edit-icon muokkaa-sopimusta" ng-click="muokkaa()"></auth-toiminto>
+  <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon delete-icon poista-sopimus" ng-click="poista()"></auth-toiminto>
   <ohje tunniste="sopimus"></ohje>
 </h1>
 [[/i18n]]
@@ -100,7 +100,7 @@
 </div>
 
 <div class="list-controls">
-  <button ng-show="salliMuokkaus()" class="icon edit-icon" ng-click="muokkaaTutkintoja()"></button>
+  <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon edit-icon muokkaa-tutkintoja" ng-click="muokkaaTutkintoja()"></auth-toiminto>
 </div>
 <h2>[[nayttotutkinnot]]</h2>
 <p ng-hide="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0">[[sopimuksella-ei-tutkintoja]]</p>

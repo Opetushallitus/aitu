@@ -112,7 +112,7 @@
 
 (defn aitu-url [polku]
   (str (or (System/getenv "AITU_URL")
-           "http://localhost:8080")
+           "http://192.168.50.1:8080")
        polku))
 
 (defn cas-url []
@@ -123,6 +123,15 @@
   (w/quick-fill-submit {"#username" kayttaja}
                        {"#password" kayttaja}
                        {"#password" w/submit}))
+
+(defn cas-uloskirjautuminen []
+  (let [logout-url (str (cas-url) "/logout")]
+    (w/to logout-url)
+    (try
+      (odota-kunnes (= (w/current-url) logout-url))
+      (catch TimeoutException e
+        (println (str "Odotettiin selaimen siirtyvän CAS logout -sivulle, mutta url oli '" (w/current-url) "'"))
+        (throw e)))))
 
 (defn avaa
   ([polku] (avaa aitu-url polku default-user))
@@ -142,6 +151,15 @@
         (cas-kirjautuminen kayttaja)
         (avaa osoite-fn polku kayttaja))
       (odota-angular-pyyntoa))))
+
+(defn avaa-kayttajana* [polku kayttaja f]
+  (cas-uloskirjautuminen)
+  (avaa aitu-url polku kayttaja)
+  (f)
+  (cas-uloskirjautuminen))
+
+(defmacro avaa-kayttajana [polku kayttaja & body]
+  `(avaa-kayttajana* ~polku ~kayttaja (fn [] ~@body)))
 
 (defn avaa-uudelleenladaten [polku]
   (puhdista-selain)

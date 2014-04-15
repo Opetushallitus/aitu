@@ -69,7 +69,8 @@
                           (s/optional-key :postitoimipaikka) (s/maybe s/Str)
                           :jarjesto (s/maybe s/Int)
                           :lisatiedot (s/maybe s/Str)
-                          :nayttomestari (s/maybe Boolean)})
+                          :nayttomestari (s/maybe Boolean)
+                          (s/optional-key :kayttaja_oid) (s/maybe s/Str)})
 
 (defmodel ToimikunnanJasen (merge JasenyysTiedot
                              {:etunimi s/Str

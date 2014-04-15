@@ -211,6 +211,34 @@ angular.module('services', [])
     };
   }])
 
-  .run(['edellinenLokaatio', function(edellinenLokaatio){
+  .factory('kayttooikeudet', ['$resource','$rootScope', function($resource, $rootScope) {
+    var resource = $resource(ttkBaseUrl + '/api/kayttaja', null, {
+      get: {
+        method: 'GET',
+        params: { nocache: function() { return Date.now(); }},
+        id:"henkilon-tiedot"
+      }
+    });
+
+    var oikeudet;
+
+    function paivitaOikeudet() {
+      oikeudet = resource.get().$promise;
+    }
+
+    $rootScope.$on('$locationChangeStart', function() {
+      paivitaOikeudet();
+    })
+
+    paivitaOikeudet();
+
+    return {
+      hae : function() {
+        return oikeudet;
+      }
+    }
+  }])
+
+  .run(['edellinenLokaatio', 'kayttooikeudet',  function(edellinenLokaatio, kayttooikeudet){
     //Injektointi serviceille, jotka halutaan instantioida heti.
   }]);

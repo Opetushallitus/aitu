@@ -73,6 +73,7 @@
   `(tietokanta-fixture-oid (fn [] ~@body) ~oid ~oid))
 
 (defn with-user-rights [f]
-  (binding [ko/*current-user-authmap* {:roolitunnus kayttajaoikeudet/kayttajarooli :toimikunta_jasen #{{:tkunta (:tkunta default-toimikunta) :rooli "sihteeri"}
-                                                                                      {:tkunta "123" :rooli "sihteeri"}}}]
+  (binding [ko/*current-user-authmap* {:roolitunnus kayttajaoikeudet/kayttajarooli
+                                       :toimikunta #{{:tkunta (:tkunta default-toimikunta) :rooli "sihteeri"}
+                                                     {:tkunta "123" :rooli "sihteeri"}}}]
     (f)))

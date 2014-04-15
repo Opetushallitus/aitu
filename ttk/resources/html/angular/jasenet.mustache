@@ -24,7 +24,7 @@
     </thead>
     <tr ng-repeat="henkilo in toimikunta.jasenyys | orderBy:'voimassa':true" ng-class="{removed : henkilo.poistettu}">
       <td ng-class="{voimassa : henkilo.voimassa}">
-        <auth-linkki href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</auth-linkki>
+        <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
         <span ng-hide="henkilo.voimassa">([[ei-voimassa]])</span>
       </td>
       <td><enum-valikko nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>

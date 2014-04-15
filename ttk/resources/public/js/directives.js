@@ -535,18 +535,58 @@ angular.module('directives', ['services', 'resources'])
       }
     };
   })
-  .directive('authLinkki', function() {
+  .directive('authToiminto', ['kayttooikeudet', function(kayttooikeudetService) {
+
+    function resolveTemplate(el, attrs) {
+      if(attrs.authLinkki !== undefined) {
+        return 'template/auth-linkki';
+      } else if(attrs.authNappi !== undefined) {
+        return 'template/auth-nappi';
+      }
+    }
+
     return {
       restrict: 'E',
       replace: true,
       transclude: true,
-      templateUrl : 'template/auth-linkki',
+      templateUrl : resolveTemplate,
       scope: true,
       link: function(scope, element, attrs) {
+
+        var kayttooikeudet, entityId;
+
+        var vaadittuOikeus = attrs.oikeus;
+        var konteksti = attrs.konteksti;
+
+        scope.sallittu = false;
         scope.href = attrs.href;
+
+        function paivitaOikeus() {
+          scope.sallittu = onkoSalittu();
+        }
+
+        function onkoSalittu() {
+          if(kayttooikeudet && kayttooikeudet.$resolved) {
+            try {
+              return kayttooikeudet.roolitunnus === 'YLLAPITAJA' ||
+                _(kayttooikeudet[konteksti]).filter(function(value){return value.tunniste == entityId}).pluck('oikeudet').flatten().contains(vaadittuOikeus);
+            } catch(e) {}
+          }
+          return false;
+        }
+
+        kayttooikeudetService.hae().then(function(oikeudet) {
+          kayttooikeudet = oikeudet;
+          paivitaOikeus();
+        });
+
+        attrs.$observe('entityId', function(value) {
+          entityId = value;
+          paivitaOikeus();
+        });
       }
     };
-  })
+  }])
 
   .directive('jasenyyksienListaus', function(){
     return {

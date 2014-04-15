@@ -27,8 +27,9 @@
   (map w/text (w/find-elements (-> *ng*
                                  (.repeater "henkilo in toimikunta.jasenyys")
                                  (.column "henkilo.sukunimi")))))
+
 (defn jasenien-nimet [listan-nimi]
-  (set (for [rivi (lista listan-nimi)] (first rivi))))
+  (set (map w/text (w/find-elements {:css (str listan-nimi " tbody td:nth-child(2)")}))))
 
 (defn yliviivatut [] (w/find-elements {:css ".removed"}))
 (defn poista-jasen []

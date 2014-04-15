@@ -37,12 +37,14 @@
     (db/transaction
       (let [kayttaja (kayttaja-arkisto/hae oid)
             oikeudet (hae-jasenyys-ja-sopimukset oid)
+            jasenyys (:jasenyys oikeudet)
             _ (log/debug "kontekstioikeuksia on .. " oikeudet)]
         {:oid oid
          :kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))
          :henkiloid (:henkiloid oikeudet)
          :roolitunnus (:rooli kayttaja)
-         :toimikunta_jasen (set (map #(select-keys % [:tkunta :rooli]) (:jasenyys oikeudet)))})))
+         :toimikunta (set (map #(select-keys % [:tkunta :rooli]) jasenyys))
+         :jarjestamissopimus (set (flatten (map :jarjestamissopimus jasenyys)))})))
   ([] "Hakee sisäänkirjautuneen käyttäjän oikeudet"
     (db/transaction
       (assert (realized? *current-user-oid*) "Ongelma sisäänkirjautumisessa. uid -> oid mappays epäonnistui.")

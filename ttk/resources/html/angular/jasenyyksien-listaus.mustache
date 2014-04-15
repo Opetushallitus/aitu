@@ -17,7 +17,7 @@
   <tr ng-repeat="henkilo in jasenetJarjestetty">
     <td ng-show="naytaToimikunta"><a href="#/toimikunta/{{henkilo.ttk.diaarinumero}}/tiedot">{{henkilo.ttk.nimi | nimivuosi:henkilo.ttk:'nimi':'toimikausi_alku'}}</a></td>
     <td ng-hide="piilotaNimi">
-      <auth-linkki href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</auth-linkki>
+      <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
       <span ng-show="naytaJasenyydenAlkuPvm(henkilo)">({{henkilo.alkupvm | voimassaoloAika }})</span>
     </td>
     <td><enum-arvo nimi="rooli" arvo="henkilo.rooli"></enum-arvo></td>

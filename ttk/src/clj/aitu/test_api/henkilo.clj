@@ -35,7 +35,7 @@
       {:status 200}))
   (c/POST "/:henkiloid"
           [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin
-           osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
+           osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen kayttaja_oid]
     (db/transaction
       (let [henkilodto {:henkiloid (Integer/parseInt henkiloid)
                         :etunimi etunimi
@@ -53,7 +53,8 @@
                         :postitoimipaikka postitoimipaikka
                         :jarjesto jarjesto
                         :lisatiedot lisatiedot
-                        :nayttomestari nayttomestari}]
+                        :nayttomestari nayttomestari
+                        :kayttaja_oid kayttaja_oid}]
         (validoi henkilodto
                  [[:etunimi present? :pakollinen]
                   [:sukunimi present? :pakollinen]]

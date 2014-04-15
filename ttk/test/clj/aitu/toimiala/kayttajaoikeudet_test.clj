@@ -32,10 +32,13 @@
   {:oid "foo123"
    :henkiloid "henkiloid123"
    :roolitunnus kayttajarooli
-   :toimikunta_jasen #{{:tkunta "123" :rooli "sihteeri"}}})
+   :toimikunta #{{:tkunta "123" :rooli "sihteeri"}}})
 
-(defn onnistuuko-operaatio-toimikunnalle? [operaatio tkunta]
-  (saako-tehda? kayttaja-map operaatio tkunta))
+(defn onnistuuko-operaatio-toimikunnalle?
+  ([operaatio tkunta]
+   (onnistuuko-operaatio-toimikunnalle? kayttaja-map operaatio tkunta))
+  ([kayttaja operaatio tkunta]
+   (saako-tehda? kayttaja operaatio tkunta)))
 
 (deftest vain-lueteltu-oikeus-kelpaa []
    (is (thrown? Throwable
@@ -47,8 +50,8 @@
 (deftest toisen-tietojen-paivitys-ei-kay[]
   (is (not (saako-tehda? kayttaja-map :henkilo_paivitys "adsdas"))))
 
-(deftest oman-toimikunnan-tietojen-paivitys-kay []
-  (is (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "123")))
+(deftest oman-toimikunnan-tietojen-paivitys-ei-kay []
+  (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "123"))))
 
 (deftest toisen-toimikunnan-tietojen-paivitys-ei-kay []
   (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "asdd"))))
@@ -64,8 +67,11 @@
 (deftest ei-ole-paallekkaisia-oikeus-tunnisteita []
   (is (empty? (intersection (set (keys kayttajatoiminnot)) (set (keys yllapitotoiminnot))))))
 
-(deftest sopimuksen-lisays-onnistuu-toimikunnan-jasenelta []
+(deftest sopimuksen-lisays-onnistuu-toimikunnan-muokkausjasenelta []
   (is (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "123")))
+
+(deftest sopimuksen-lisays-ei-onnistu-toimikunnan-katselujasenelta []
+  (is (not (onnistuuko-operaatio-toimikunnalle? (assoc kayttaja-map :toimikunta #{{:tkunta "123" :rooli "jasen"}}) :sopimus_lisays "123"))))
 
 (deftest sopimuksen-lisays-ei-onnistu-jos-ei-toimikunnan-jasen []
   (is (not (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "asdds"))))

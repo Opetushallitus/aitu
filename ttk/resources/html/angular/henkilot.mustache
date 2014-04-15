@@ -22,7 +22,7 @@
 
 <div class="search-results" lataus-indikaattori metodi-idt="['henkilolistaus']"  viesti="[[henkiloita-ladataan]]" virheviesti="[[henkiloiden-lataus-epaonnistui]]" yrita-uudelleen="haeHenkilot()">
   <hakutulokset ng-hide="latausKaynnissa" tuloksia-sivulla="10" otsikot="['[[nimi]]', '[[toimikunta]]', '[[toimikausi]]']" hakutulokset="henkilot">
-    <div class="table-cell"><auth-linkki href="#/henkilot/{{hakutulos.henkiloid}}/tiedot">{{hakutulos.etunimi}} {{hakutulos.sukunimi}}</auth-linkki></div>
+    <div class="table-cell"><a href="#/henkilot/{{hakutulos.henkiloid}}/tiedot">{{hakutulos.etunimi}} {{hakutulos.sukunimi}}</a></div>
     <div class="table-cell">
       <div ng-repeat="jasenyys in hakutulos.jasenyydet">
         <a href="#/toimikunta/{{jasenyys.diaarinumero}}/tiedot">{{jasenyys.nimi | nimivuosi:jasenyys:'nimi':'toimikausi_alku'}}</a>

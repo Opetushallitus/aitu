@@ -12,7 +12,7 @@
   </tr>
   </thead>
   <tr ng-repeat="sopimus in sopimuksetJarjestetty">
-    <td><auth-linkki href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot">{{sopimus.sopimusnumero}}</auth-linkki></td>
+    <td><auth-toiminto auth-linkki oikeus="sopimustiedot_luku" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot">{{sopimus.sopimusnumero}}</auth-toiminto></td>
     <td ng-show="naytaTutkinnot">
       <div class="sopimus-ja-tutkinto-rivi" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto">
         <a href="#/tutkinto/{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">{{sopimusJaTutkinto.tutkintoversio.nimi |lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}}</a>

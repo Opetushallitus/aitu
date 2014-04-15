@@ -52,7 +52,7 @@
   (odota-angular-pyyntoa))
 
 (defn jasenien-nimet []
-  (for [rivi (lista "jasenyyksien-listaus.nykyiset-jasenyydet")] (first rivi)))
+  (map w/text (w/find-elements {:css "jasenyyksien-listaus.nykyiset-jasenyydet tbody td:nth-child(2)"})))
 
 (def toimikuntasivu-testidata
   {:toimikunnat [{:nimi_fi "Ilmastointialan tutkintotoimikunta"
@@ -201,4 +201,4 @@
         (testing "Otsikon perässä on teksti (ei voimassa)"
           (is (= (sivun-otsikko) "ILMASTOINTIALAN TUTKINTOTOIMIKUNTA (EI VOIMASSA)")))
         (testing "Sivulla ei näy muokkaustoiminnallisuuksia"
-          (is (= (count (w/find-elements {:css "button.edit-icon:not(.ng-hide), button.add-icon:not(.ng-hide)"})) 0)))))))
+          (is (= (count (filter w/displayed? (w/find-elements {:css "button.edit-icon button.add-icon"}))) 0)))))))

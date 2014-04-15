@@ -4,7 +4,7 @@
 <h1>
   {{toimikunta.nimi | lokalisoi:toimikunta:'nimi'}}
   <span ng-show="toimikunta.voimassa === false">([[ei-voimassa]])</span>
-  <button ng-if="salliMuokkaus([[yllapitaja]])" class="icon edit-icon" ng-click="muokkaa()"></button>
+  <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimikuntaa" ng-click="muokkaa()"></auth-toiminto>
   <ohje tunniste="toimikunta"></ohje>
 </h1>
 
@@ -47,7 +47,7 @@
 
 <span ng-hide="muokkausTila">
   <div class="list-controls">
-    <button class="icon edit-icon" ng-click="muokkaaToimialaa()" ng-if="salliMuokkaus([[yllapitaja]])"></button>
+    <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimialaa" ng-click="muokkaaToimialaa()"></auth-toiminto>
   </div>
   <h2>[[tutkintotoimikunnan-toimiala]]</h2>
   <table jarjestettava-taulukko="toimikunta.nayttotutkinto" jarjestetty-data="tutkintoJarjestetty">
@@ -65,9 +65,9 @@
     </tr>
   </table>
 
-  <span ng-if="toimikunta.voimassa">
+  <span ng-show="toimikunta.voimassa">
     <div class="list-controls">
-      <button class="icon edit-icon" ng-click="muokkaaJasenia()" ng-if="salliMuokkaus([[yllapitaja]])"></button>
+      <auth-toiminto auth-nappi oikeus="toimikuntajasen_yllapito" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-jasenia" ng-click="muokkaaJasenia()"></auth-toiminto>
     </div>
     <jasenyyksien-listaus class="nykyiset-jasenyydet"
                           otsikko="'[[jasenet]]'"
@@ -84,7 +84,7 @@
 
 
   <div class="list-controls">
-    <button class="icon add-icon" ng-click="siirrySopimuksenLuontiin()" ng-if="salliMuokkaus([[yllapitaja]])"></button>
+    <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="sopimus_lisays" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon add-icon lisaa-sopimus" ng-click="siirrySopimuksenLuontiin()"></auth-toiminto>
   </div>
   <sopimusten-listaus class="nykyiset-sopimukset"
                       otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"

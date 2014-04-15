@@ -58,7 +58,7 @@
         response (with-admin-rights #(crout (rmock/request :get "/toimikunta/123")))]
     (is (= (:status response) 200))))
 
-(deftest kayttaja-ei-saa-katsoa-toisen-toimikunnan-tietoja []
-  (let [crout (eval sample-user-api)]
-     (is (thrown? Throwable
-                  (with-user-rights #(crout (rmock/request :get "/toimikunta/451")))))))
+(deftest kayttaja-saa-katsoa-toisen-toimikunnan-tietoja []
+  (let [crout (eval sample-user-api)
+        response (with-user-rights #(crout (rmock/request :get "/toimikunta/451")))]
+    (is (= (:status response) 200))))

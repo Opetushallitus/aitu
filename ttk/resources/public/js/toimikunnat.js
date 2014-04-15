@@ -83,8 +83,8 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       $scope.nykyisetJasenet = [];
       $scope.entisetJasenet = [];
 
-      $scope.salliMuokkaus = function(yllapitaja) {
-        return !$scope.muokkausTila && yllapitaja && $scope.toimikunta.voimassa !== false;
+      $scope.salliMuokkaus = function() {
+        return !$scope.muokkausTila && $scope.toimikunta.voimassa !== false;
       };
 
       $scope.muokkaa = function() {
