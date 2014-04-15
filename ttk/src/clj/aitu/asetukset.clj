@@ -80,8 +80,8 @@
                                            :enabled true}
                          :ldap-auth-server {:host "localhost"
                                             :port 10389
-                                            :user nil
-                                            :password nil}
+                                            :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
+                                            :password "salasana"}
                          :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
                          :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
                          :eraajo false

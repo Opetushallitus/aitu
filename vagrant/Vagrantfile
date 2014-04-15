@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
     auth.vm.network "forwarded_port", host: 9090, guest: 8080
     auth.vm.network "forwarded_port", host: 9443, guest: 8443
     # ldap näkyviin localhostiin portissa 10389
-    auth.vm.network "forwarded_port", host: 10389, guest: 10389
+    auth.vm.network "forwarded_port", host: 10389, guest: 389
     auth.vm.network "private_network", ip: "192.168.50.53"
   end
 
