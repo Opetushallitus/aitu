@@ -227,10 +227,6 @@
         (auditlog/jasenyys-operaatio! :paivitys tkunta (:jasenyys_id jasen))
         (paivita-jasenyys! tkunta (dissoc jasen :poistettu))))))
 
-(defn hae-toimikunnan-jasenet
-  [toimikunta]
-  )
-
 (defn hae-jasenyydet
   "Hakee kaikki henkilön jäsenyydet tietyssä toimikunnassa"
   [henkiloid toimikunta]
