@@ -59,7 +59,7 @@ givenName: Ivan Ivanovits
 sn: USER
 cn: ROOT
 
-dn: cn=APP_AITU_UPDATE_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
+dn: cn=APP_AITU_READ_UPDATE_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
 cn: APP_AITU.1.2.246.562.10.2013121312395140176502

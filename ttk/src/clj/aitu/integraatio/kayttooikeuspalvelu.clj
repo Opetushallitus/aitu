@@ -26,7 +26,7 @@
 
 (def roolin-ryhma-cn
   {yllapitajarooli (aitu-ryhma-cn "CRUD")
-   kayttajarooli (aitu-ryhma-cn "UPDATE")})
+   kayttajarooli (aitu-ryhma-cn "READ_UPDATE")})
 
 (defn ryhma-dn [ryhma-cn]
   (str "cn=" ryhma-cn ",ou=Groups,dc=opintopolku,dc=fi"))
