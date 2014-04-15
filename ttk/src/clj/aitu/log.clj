@@ -29,9 +29,9 @@
                     aitu.infra.print-wrapper/*requestid*
                     "-")
         message-with-id (str "[User: " uid ", request: " requestid "] " message)]
-    (cond 
-      *lisaa-uid-ja-request-id?* (f logger level throwable message-with-id)
-      (false? *lisaa-uid-ja-request-id?*) (f logger level throwable message))))
+    (if *lisaa-uid-ja-request-id?* 
+      (f logger level throwable message-with-id)
+      (f logger level throwable message))))
   
 (defn lisaa-uid-ja-requestid-hook []
   (add-hook #'clojure.tools.logging/log* #'lisaa-uid-ja-requestid))

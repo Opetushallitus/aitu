@@ -18,7 +18,6 @@
   (:require
     [oph.korma.korma-auth :as ka]
     [clojure.tools.logging :as log]
-    [clojure.tools.logging.impl :as log-impl]
     [aitu.log :as aitulog]))
 
 (def operaatiot {:poisto "poisto"
