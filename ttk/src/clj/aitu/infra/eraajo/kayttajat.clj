@@ -22,7 +22,7 @@
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
             [aitu.toimiala.kayttajaoikeudet
-             :refer [yllapitajarooli kayttajarooli]]))
+             :refer [yllapitajarooli kayttajarooli osoitepalvelurooli]]))
 
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
   (binding [*current-user-uid* integraatiokayttaja
@@ -34,7 +34,8 @@
     (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
     (kayttaja-arkisto/paivita!
       (concat (kop/kayttajat kayttooikeuspalvelu kayttajarooli)
-              (kop/kayttajat kayttooikeuspalvelu yllapitajarooli)))))
+              (kop/kayttajat kayttooikeuspalvelu yllapitajarooli)
+              (kop/kayttajat kayttooikeuspalvelu osoitepalvelurooli)))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
