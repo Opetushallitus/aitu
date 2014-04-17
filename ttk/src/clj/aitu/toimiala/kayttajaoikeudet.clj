@@ -21,6 +21,7 @@
 ;; kayttajarooli-taulun arvot
 (def yllapitajarooli "YLLAPITAJA")
 (def kayttajarooli "KAYTTAJA")
+(def osoitepalvelurooli "OSOITEPALVELU")
 
 (def toimikunnan-muokkaus-roolit #{"puheenjohtaja", "varapuheenjohtaja", "sihteeri"})
 
@@ -48,6 +49,13 @@
     (let [roolitunnus (:roolitunnus *current-user-authmap*)]
       (or (= roolitunnus yllapitajarooli)
           (= roolitunnus kayttajarooli)))))
+
+(defn osoitepalvelu-kayttaja?
+  ([x] (osoitepalvelu-kayttaja?))
+  ([]
+    (let [roolitunnus (:roolitunnus *current-user-authmap*)]
+      (or (= roolitunnus osoitepalvelurooli)
+          (= roolitunnus yllapitajarooli)))))
 
 (def sallittu-kaikille (constantly true))
 
@@ -83,7 +91,8 @@
     :toimikunta_katselu aitu-kayttaja?
     :etusivu aitu-kayttaja?
     :henkilo_haku aitu-kayttaja?
-    :yleinen-rest-api sallittu-kaikille})
+    :yleinen-rest-api sallittu-kaikille
+    :osoitepalvelu-api osoitepalvelu-kayttaja?})
 
 (def sopimustoiminnot
   `{:sopimustiedot_paivitys #(or (yllapitaja?) (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
