@@ -2,6 +2,8 @@
 # description: Aitu Start Stop Restart
 # processname: aitu
 # chkconfig: 234 20 80
+set -eu
+
 aitu_home=/data00/aitu
 
 case $1 in
@@ -25,4 +27,3 @@ status)
   fi
 ;;
 esac
-exit 0
