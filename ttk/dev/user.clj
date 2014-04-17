@@ -39,8 +39,7 @@
     (assoc :development-mode true
            :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
                              :unsafe-https true
-                             :enabled true})
-    (assoc-in [:server :base-url] "http://192.168.50.1:8080")))
+                             :enabled true})))
 
 (defn ^:private kaynnista! []
   {:pre [(not @palvelin)]

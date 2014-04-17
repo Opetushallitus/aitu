@@ -42,7 +42,7 @@
       (assoc-in [:henkilot 0 :kayttaja_oid] "OID.T-800")
       (assoc-in [:jasenet 0 :rooli] "puheenjohtaja")))
 
-(deftest ^:cas toimikuntasivu-auth-testi
+#_(deftest ^:cas toimikuntasivu-auth-testi
   (testing "Toimikuntasivu auth test:"
     (testing "Ylläpitäjä näkee kaikki muokkaustoiminnallisuudet ja linkit sopimussivuille näkyvät:"
       (with-data toimikuntasivu-testidata
@@ -89,7 +89,7 @@
             (is (toimikunnan-sopimusten-lisays-nakyy))
             (is (linkki-sopimussivulle-nakyy 1230)))))))
 
-(deftest ^:cas sopimussivu-auth-testi
+#_(deftest ^:cas sopimussivu-auth-testi
   (testing "Sopimussivu auth test:"
     (testing "Ylläpitäjä pääsee sopimussivulle ja näkee kaikki muokkaustoiminnallisuudet"
       (with-data toimikuntasivu-testidata
