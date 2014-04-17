@@ -18,9 +18,10 @@ restart)
 ;;
 status)
   if [ -f $aitu_home/ttk.pid ] && ps -p `cat $aitu_home/ttk.pid` > /dev/null; then
-    echo "aitu (pid  `cat $aitu_home/ttk.pid`) is running..."
+    echo "aitu (pid `cat $aitu_home/ttk.pid`) is running..."
   else
     echo "aitu is stopped"
+    exit 1
   fi
 ;;
 esac
