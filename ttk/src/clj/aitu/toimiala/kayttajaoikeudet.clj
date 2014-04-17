@@ -54,6 +54,7 @@
 (defn sallittu-yllapitajalle [& _] (yllapitaja?))
 
 (defn int-arvo [arvo]
+  {:post [(= (type %) Integer)]}
   (if (= (type arvo) String)
     (Integer/parseInt arvo)
     arvo))
@@ -78,10 +79,10 @@
     :logitus aitu-kayttaja?
     :kayttajan_tiedot aitu-kayttaja?
     :ohjeet_luku aitu-kayttaja?
-    :toimikunta_haku sallittu-kaikille
-    :toimikunta_katselu sallittu-kaikille
-    :etusivu sallittu-kaikille
-    :henkilo_haku sallittu-kaikille
+    :toimikunta_haku aitu-kayttaja?
+    :toimikunta_katselu aitu-kayttaja?
+    :etusivu aitu-kayttaja?
+    :henkilo_haku aitu-kayttaja?
     :yleinen-rest-api sallittu-kaikille})
 
 (def sopimustoiminnot

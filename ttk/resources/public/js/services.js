@@ -12,7 +12,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('services', [])
+angular.module('services', ['ngResource'])
   .factory('apiCallInterceptor', ['i18n', function(i18n){
 
     var pyynnot = {};
@@ -20,6 +20,15 @@ angular.module('services', [])
       paivitetty : null,
       lista : []
     };
+    var vastausCallbackit = {};
+
+    function asetaVastausCallback(metodiId, callback) {
+      if(!vastausCallbackit[metodiId]) {
+        vastausCallbackit[metodiId] = [];
+      }
+
+      vastausCallbackit[metodiId].push(callback);
+    }
 
     // Käytetään suhteellista aikaleimaa, koska saman millisekunnin aikana voi
     // tulla käsittelyyn useita pyyntöjä ja vastauksia. Ennen käytettiin
@@ -48,10 +57,15 @@ angular.module('services', [])
       var seuraa = seuraaPyyntoa(vastaus.config);
 
       if(seuraa) {
-        var pyynto = pyynnot[vastaus.config.id];
+        var id = vastaus.config.id;
+        var pyynto = pyynnot[id];
         pyynto.pyyntojaKaynnissa--;
         pyynto.viimeinenPyyntoOnnistui = !virhe;
         pyynto.paivitetty = aikaleima();
+
+        if(vastausCallbackit[id]) {
+          _.each(vastausCallbackit[id], function(callback) {callback();});
+        }
       }
 
       if(seuraa || virhe) {
@@ -64,7 +78,8 @@ angular.module('services', [])
       pyynnot : pyynnot,
       vastaukset : vastaukset,
       apiPyynto : apiPyynto,
-      apiVastaus : apiVastaus
+      apiVastaus : apiVastaus,
+      asetaVastausCallback : asetaVastausCallback
     };
 
   }])
@@ -211,34 +226,6 @@ angular.module('services', [])
     };
   }])
 
-  .factory('kayttooikeudet', ['$resource','$rootScope', function($resource, $rootScope) {
-    var resource = $resource(ttkBaseUrl + '/api/kayttaja', null, {
-      get: {
-        method: 'GET',
-        params: { nocache: function() { return Date.now(); }},
-        id:"henkilon-tiedot"
-      }
-    });
-
-    var oikeudet;
-
-    function paivitaOikeudet() {
-      oikeudet = resource.get().$promise;
-    }
-
-    $rootScope.$on('$locationChangeStart', function() {
-      paivitaOikeudet();
-    })
-
-    paivitaOikeudet();
-
-    return {
-      hae : function() {
-        return oikeudet;
-      }
-    }
-  }])
-
-  .run(['edellinenLokaatio', 'kayttooikeudet',  function(edellinenLokaatio, kayttooikeudet){
+  .run(['edellinenLokaatio',  function(edellinenLokaatio){
     //Injektointi serviceille, jotka halutaan instantioida heti.
   }]);

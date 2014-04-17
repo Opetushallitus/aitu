@@ -64,12 +64,22 @@ describe('apiCallInterceptor', function () {
     expect(apiCallInterceptor.vastaukset.lista[0]).toEqual(vastaus);
   }));
 
-  it('tallettaa virheellsen vastauksen',  inject(function(apiCallInterceptor) {
+  it('tallettaa virheellisen vastauksen',  inject(function(apiCallInterceptor) {
     var vastaus = {status: 200, config : {}}
     apiCallInterceptor.apiPyynto({});
     apiCallInterceptor.apiVastaus(vastaus, true);
     expect(apiCallInterceptor.vastaukset.lista[0]).toEqual(vastaus);
   }));
 
+  it('suorittaa asetetut vastauscallbackit', inject(function(apiCallInterceptor) {
+
+    var callback = jasmine.createSpy('vastauscallback');
+
+    apiCallInterceptor.asetaVastausCallback('henkilolistaus', callback);
+    apiCallInterceptor.apiPyynto(pyynto);
+    apiCallInterceptor.apiVastaus(vastaus);
+
+    expect(callback).toHaveBeenCalled();
+  }));
 
 });

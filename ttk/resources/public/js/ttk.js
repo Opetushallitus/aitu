@@ -13,6 +13,7 @@
 // European Union Public Licence for more details.
 
 angular.module('ttk', ['aitulocale',
+                       'kayttooikeudet',
                        'henkilot',
                        'toimikunnat',
                        'tutkinnot',
