@@ -23,7 +23,11 @@
 (def kayttajarooli "KAYTTAJA")
 (def osoitepalvelurooli "OSOITEPALVELU")
 
-(def toimikunnan-muokkaus-roolit #{"puheenjohtaja", "varapuheenjohtaja", "sihteeri"})
+(def toimikunnan-muokkaus-roolit #{"puheenjohtaja",
+                                   "varapuheenjohtaja",
+                                   "sihteeri",
+                                   "jasen",
+                                   "ulkopuolinensihteeri"})
 
 (defn yllapitaja?
   ([kayttaja-map]

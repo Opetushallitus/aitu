@@ -35,14 +35,16 @@
   (elementti-nakyy "button.poista-sopimus"))
 
 (defn testidata-toimikunnan-jasen []
-  (assoc-in toimikuntasivu-testidata [:henkilot 0 :kayttaja_oid] "OID.T-800"))
+  (-> toimikuntasivu-testidata
+      (assoc-in [:henkilot 0 :kayttaja_oid] "OID.T-800")
+      (assoc-in [:jasenet 0 :rooli] "asiantuntija")))
 
 (defn testidata-toimikunnan-muokkausjasen []
   (-> toimikuntasivu-testidata
       (assoc-in [:henkilot 0 :kayttaja_oid] "OID.T-800")
       (assoc-in [:jasenet 0 :rooli] "puheenjohtaja")))
 
-#_(deftest ^:cas toimikuntasivu-auth-testi
+(deftest ^:cas toimikuntasivu-auth-testi
   (testing "Toimikuntasivu auth test:"
     (testing "Ylläpitäjä näkee kaikki muokkaustoiminnallisuudet ja linkit sopimussivuille näkyvät:"
       (with-data toimikuntasivu-testidata
@@ -89,7 +91,7 @@
             (is (toimikunnan-sopimusten-lisays-nakyy))
             (is (linkki-sopimussivulle-nakyy 1230)))))))
 
-#_(deftest ^:cas sopimussivu-auth-testi
+(deftest ^:cas sopimussivu-auth-testi
   (testing "Sopimussivu auth test:"
     (testing "Ylläpitäjä pääsee sopimussivulle ja näkee kaikki muokkaustoiminnallisuudet"
       (with-data toimikuntasivu-testidata
@@ -125,15 +127,3 @@
             (is (sopimuksen-muokkaus-nappi-nakyy))
             (is (sopimuksen-poisto-nappi-nakyy))
             (is (sopimuksen-tutkintojen-muokkaus-nappi-nakyy)))))))))
-
-#_(deftest toimikunnan-sopimusten-lisays-auth-test
-  (testing "Toimikunnan sopimusten lisääminen"
-    ))
-
-#_(deftest toimikunnan-sopimusten-luku-auth-test
-  (testing "Toimikunnan sopimusten luku"
-    ))
-
-#_(deftest toimikunnan-sopimusten-muokkaus-auth-test
-  (testing "Toimikunnan sopimusten muokkaus"
-    ))

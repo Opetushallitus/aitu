@@ -112,7 +112,7 @@
 
 (defn aitu-url [polku]
   (str (or (System/getenv "AITU_URL")
-           "http://localhost:8080")
+           "http://192.168.50.1:8080")
        polku))
 
 (defn cas-url []
