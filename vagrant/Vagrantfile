@@ -19,13 +19,6 @@ Vagrant.configure("2") do |config|
     db.vm.network "private_network", ip: "192.168.50.51"
   end
 
-  # Vanhan AMTU:n ajamiseen
-  config.vm.define "amtu" do |amtu|
-    amtu.vm.box = "CentOS-6.5-x86_64-v20140311.box"
-    amtu.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
-    amtu.vm.synced_folder "../env", "/env"
-  end
-
   # Uuden AITU:n e2e-testien ajamiseen
   config.vm.define "aitu" do |aitu|
     aitu.vm.box = "CentOS-6.5-x86_64-v20140311.box"
