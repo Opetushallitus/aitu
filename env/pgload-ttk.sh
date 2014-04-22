@@ -13,6 +13,10 @@ set -x
 chmod u-x,go-rwx $pgpassfile
 export PGPASSFILE=$pgpassfile
 
+# Tyhjennetään halutut skeemat 
+sudo -u postgres psql -d $db -c "drop schema aituhaku cascade;"
 sudo -u postgres psql -d $db -c "drop schema public cascade; create schema public; alter user $user with superuser; grant all on schema public to public; grant all on schema public to postgres; "
+
+# Ladataan dumppitiedosto
 pg_restore --no-acl --no-owner -U $user -h $host -d $db $dumpfile
 sudo -u postgres psql -d $db -c "alter user $user with nosuperuser; "
