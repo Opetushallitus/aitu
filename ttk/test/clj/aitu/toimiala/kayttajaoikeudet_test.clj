@@ -71,7 +71,7 @@
   (is (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "123")))
 
 (deftest sopimuksen-lisays-ei-onnistu-toimikunnan-katselujasenelta []
-  (is (not (onnistuuko-operaatio-toimikunnalle? (assoc kayttaja-map :toimikunta #{{:tkunta "123" :rooli "jasen"}}) :sopimus_lisays "123"))))
+  (is (not (onnistuuko-operaatio-toimikunnalle? (assoc kayttaja-map :toimikunta #{{:tkunta "123" :rooli "asiantuntija"}}) :sopimus_lisays "123"))))
 
 (deftest sopimuksen-lisays-ei-onnistu-jos-ei-toimikunnan-jasen []
   (is (not (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "asdds"))))

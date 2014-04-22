@@ -35,7 +35,9 @@
   (elementti-nakyy "button.poista-sopimus"))
 
 (defn testidata-toimikunnan-jasen []
-  (assoc-in toimikuntasivu-testidata [:henkilot 0 :kayttaja_oid] "OID.T-800"))
+  (-> toimikuntasivu-testidata
+      (assoc-in [:henkilot 0 :kayttaja_oid] "OID.T-800")
+      (assoc-in [:jasenet 0 :rooli] "asiantuntija")))
 
 (defn testidata-toimikunnan-muokkausjasen []
   (-> toimikuntasivu-testidata
