@@ -14,7 +14,7 @@ chmod u-x,go-rwx $pgpassfile
 export PGPASSFILE=$pgpassfile
 
 # Tyhjennetään halutut skeemat 
-sudo -u postgres psql -d $db -c "drop schema aituhaku cascade;"
+sudo -u postgres psql -d $db -c "drop schema if exists aituhaku cascade;"
 sudo -u postgres psql -d $db -c "drop schema public cascade; create schema public; alter user $user with superuser; grant all on schema public to public; grant all on schema public to postgres; "
 
 # Ladataan dumppitiedosto
