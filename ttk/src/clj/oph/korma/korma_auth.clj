@@ -56,12 +56,17 @@
       (exec-sql c (str "set session " psql-varname " = '" oid "'"))
       (log/debug "con ok" (.hashCode c)))
     (catch IllegalArgumentException e
-      (log/error "validate-user epäonnistui" e))))
+      (log/error e "validate-user epäonnistui"))
+    (catch Exception e
+      (log/error e "Odottamaton poikkeus"))))
 
 (defn auth-onCheckIn
   [c]
   (log/debug "connection release ")
-  (exec-sql c (str "SET " psql-varname " TO DEFAULT"))
+  (try
+    (exec-sql c (str "SET " psql-varname " TO DEFAULT"))
+    (catch Exception e
+      (log/error e "Odottamaton poikkeus")))
   (log/debug "con release ok" (.hashCode c)))
 
 (defonce customizer-impl-bonecp
