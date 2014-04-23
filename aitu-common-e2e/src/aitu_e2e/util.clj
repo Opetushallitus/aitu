@@ -84,7 +84,7 @@
 (defn tarkista-otsikkotekstit [tulos]
   (let [tarkistettavat-elementit ["h1" "h2" "h3" "label" "th" ".table-header .table-cell"]
         tarkistukset (for [elementti tarkistettavat-elementit]
-                       {:elementti elementti :tyhjia (count (w/find-elements {:css (str elementti ":empty:not(.ng-hide)")}))})]
+                       {:elementti elementti :tyhjia (count (filter w/displayed? (w/find-elements {:css (str elementti ":empty:not(.select2-offscreen)")})))})]
 
     (is (every? #(= (:tyhjia %) 0) tarkistukset)))
   tulos)
