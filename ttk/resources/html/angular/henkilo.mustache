@@ -2,7 +2,9 @@
 [[#i18n.henkilo]]
 [[#i18n.yleiset]]
 
-<h1 ng-hide="muokkausTila">{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}} <button ng-show="!muokkausTila && [[yllapitaja]]" class="icon edit-icon" ng-click="muokkaa()"></button></h1>
+<h1 ng-hide="muokkausTila">{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}
+  <auth-toiminto auth-nappi ng-show="!muokkausTila" oikeus="henkilo_paivitys" konteksti="henkilo" entity-id="{{jasen.henkilo.henkiloid}}" class="icon edit-icon" ng-click="muokkaa()"></auth-toiminto>
+</h1>
 
 <ng-include src="'template/henkilo-partial'"></ng-include>
 

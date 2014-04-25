@@ -5,7 +5,8 @@
             [clj-webdriver.taxi :as w]
             [aitu-e2e.toimikuntasivu-test :refer [toimikuntasivu
                                                   toimikuntasivu-testidata]]
-            [aitu-e2e.jarjestamissopimussivu-test :refer [sopimussivu]]))
+            [aitu-e2e.jarjestamissopimussivu-test :refer [sopimussivu]]
+            [aitu-e2e.henkilosivu-test :refer [henkilosivu]]))
 
 (defn elementti-nakyy [css-selektori]
   (= (count (filter w/displayed? (w/find-elements {:css css-selektori}))) 1))
@@ -33,6 +34,9 @@
 
 (defn sopimuksen-tutkintojen-muokkaus-nappi-nakyy []
   (elementti-nakyy "button.poista-sopimus"))
+
+(defn henkilon-muokkaus-nappi-nakyy []
+  (elementti-nakyy "button.edit-icon"))
 
 (defn testidata-toimikunnan-jasen []
   (-> toimikuntasivu-testidata
@@ -127,3 +131,34 @@
             (is (sopimuksen-muokkaus-nappi-nakyy))
             (is (sopimuksen-poisto-nappi-nakyy))
             (is (sopimuksen-tutkintojen-muokkaus-nappi-nakyy)))))))))
+
+(deftest ^:cas henkilosivu-auth-testi
+  (testing "Henkilösivu auth test:"
+    (testing "Ylläpitäjä näkee henkilön muokkaustoiminnallisuuden"
+      (with-data toimikuntasivu-testidata
+        (with-webdriver
+          (avaa-kayttajana
+            (henkilosivu 999)
+            "T-1001"
+            (is (henkilon-muokkaus-nappi-nakyy))))))
+    (testing "Käyttäjä, joka ei ole saman toimikunnan muokkausjäsen, ei näe henkilön muokkaustoiminnallisuutta"
+      (with-data (testidata-toimikunnan-jasen)
+        (with-webdriver
+          (avaa-kayttajana
+            (henkilosivu 999)
+            "T-800"
+            (is (not (henkilon-muokkaus-nappi-nakyy)))))))
+    (testing "Käyttäjä joka on toimikunnan muokkausjäsen, näkee muokkaustoiminnallisuuden muiden toimikunnan jäsenten sivuilla"
+      (with-data (testidata-toimikunnan-muokkausjasen)
+        (with-webdriver
+          (avaa-kayttajana
+            (henkilosivu 999)
+            "T-800"
+            (is (henkilon-muokkaus-nappi-nakyy))))))
+    (testing "Käyttäjä näkee muokkaustoiminnallisuuden omalla henkilösivullaan"
+      (with-data (testidata-toimikunnan-jasen)
+        (with-webdriver
+          (avaa-kayttajana
+            (henkilosivu 998)
+            "T-800"
+            (is (henkilon-muokkaus-nappi-nakyy))))))))

@@ -234,6 +234,24 @@
     (sql/where {:henkiloid henkiloid
                 :toimikunta toimikunta})))
 
+(defn hae-toimikuntien-jasenyydet
+  "Hakee kaikki toimikunnat joissa henkilö jäsenenä"
+  [henkiloid]
+  (sql/select jasenyys
+    (sql/fields :toimikunta :alkupvm :loppupvm)
+    (sql/with tutkintotoimikunta
+      (sql/fields :toimikausi_alku :toimikausi_loppu))
+    (sql/where {:henkiloid henkiloid})))
+
+(defn hae-toimikuntien-henkilot
+  "Hakee toimikuntien henkilot"
+  [toimikunnat]
+  (sql/select jasenyys
+    (sql/fields :henkiloid :toimikunta :alkupvm :loppupvm)
+    (sql/with tutkintotoimikunta
+      (sql/fields :toimikausi_alku :toimikausi_loppu))
+    (sql/where {:toimikunta [in toimikunnat]})))
+
 (defn ^:test-api lisaa-tutkinto!
   "Lisää toimikunnan tutkinnon"
   [toimikunnan-tutkinto]

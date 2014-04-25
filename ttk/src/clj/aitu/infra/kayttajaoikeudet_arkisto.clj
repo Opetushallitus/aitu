@@ -26,7 +26,7 @@
            (sql/with jasenyys
              (sql/fields :alkupvm :loppupvm :rooli)
              (sql/with tutkintotoimikunta
-               (sql/fields :diaarinumero :tkunta) 
+               (sql/fields :diaarinumero :tkunta :toimikausi_alku :toimikausi_loppu)
                 (sql/with jarjestamissopimus
                   (sql/fields :jarjestamissopimusid))
                ))
@@ -43,7 +43,12 @@
          :kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))
          :henkiloid (:henkiloid oikeudet)
          :roolitunnus (:rooli kayttaja)
-         :toimikunta (set (map #(select-keys % [:tkunta :rooli]) jasenyys))
+         :toimikunta (set (map #(select-keys % [:tkunta
+                                                :rooli
+                                                :alkupvm
+                                                :loppupvm
+                                                :toimikausi_alku
+                                                :toimikausi_loppu]) jasenyys))
          :jarjestamissopimus (set (flatten (map :jarjestamissopimus jasenyys)))})))
   ([] "Hakee sisäänkirjautuneen käyttäjän oikeudet"
     (db/transaction

@@ -14,7 +14,10 @@
 
 (ns aitu.toimiala.kayttajaoikeudet
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=56984327"
-  (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]))
+  (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
+            [aitu.infra.ttk-arkisto :as ttk-arkisto]
+            [aitu.toimiala.voimassaolo.saanto.toimikunta :refer [toimikunta-vanhentunut?]]
+            [aitu.toimiala.voimassaolo.saanto.jasenyys :refer [taydenna-jasenyyden-voimassaolo]]))
 
 (def ^:dynamic *current-user-authmap*)
 
@@ -35,17 +38,25 @@
     (= yllapitajarooli (:roolitunnus kayttaja-map)))
   ([] (yllapitaja? *current-user-authmap*)))
 
+(defn jasenyys-voimassa? [jasenyys]
+  (:voimassa (taydenna-jasenyyden-voimassaolo jasenyys (not (toimikunta-vanhentunut? jasenyys)))))
+
 (defn toimikunta-jasen?
   ([kayttaja-map toimikuntaid]
-   (some #(= % toimikuntaid) (map :tkunta (:toimikunta kayttaja-map))))
+   (some #(= % toimikuntaid) (map :tkunta (filter jasenyys-voimassa? (:toimikunta kayttaja-map)))))
   ([toimikuntaid] (toimikunta-jasen? *current-user-authmap* toimikuntaid)))
 
 (defn toimikunnan-muokkausoikeus?
   ([kayttaja-map toimikuntaid]
-  (let [toimikunnan_jasenyydet (filter #(= (:tkunta %) toimikuntaid) (:toimikunta kayttaja-map))
-        roolit (map :rooli toimikunnan_jasenyydet)]
+  (let [toimikunnan-voimassaolevat-jasenyydet (filter #(and (= (:tkunta %) toimikuntaid) (jasenyys-voimassa? %)) (:toimikunta kayttaja-map))
+        roolit (map :rooli toimikunnan-voimassaolevat-jasenyydet)]
     (some toimikunnan-muokkaus-roolit roolit)))
   ([toimikuntaid] (toimikunnan-muokkausoikeus? *current-user-authmap* toimikuntaid)))
+
+(defn henkilon-muokkausoikeus-toimikunnan-kautta?
+  [kayttaja-map henkiloid]
+  (let [henkilon-toimikunnat (filter jasenyys-voimassa? (ttk-arkisto/hae-toimikuntien-jasenyydet henkiloid))]
+    (some #(toimikunnan-muokkausoikeus? kayttaja-map (:toimikunta %)) henkilon-toimikunnat)))
 
 (defn aitu-kayttaja?
   ([x] (aitu-kayttaja?))
@@ -66,7 +77,7 @@
 (defn sallittu-yllapitajalle [& _] (yllapitaja?))
 
 (defn int-arvo [arvo]
-  {:post [(= (type %) Integer)]}
+  {:post [(integer? %)]}
   (if (= (type arvo) String)
     (Integer/parseInt arvo)
     arvo))
@@ -86,8 +97,7 @@
 
 ;; Kuten yllä, arvot eivät saa olla funktio-olioita.
 (def kayttajatoiminnot
-  `{:henkilo_paivitys #(or (yllapitaja?) (= (:henkiloid *current-user-authmap*) %))
-    :omat_tiedot #(or (yllapitaja?) (= (:oid *current-user-authmap*) %))
+  `{:omat_tiedot #(or (yllapitaja?) (= (:oid *current-user-authmap*) %))
     :logitus aitu-kayttaja?
     :kayttajan_tiedot aitu-kayttaja?
     :ohjeet_luku aitu-kayttaja?
@@ -108,19 +118,35 @@
 (def toimikuntatoiminnot
   `{:sopimus_lisays  #(or (yllapitaja?) (toimikunnan-muokkausoikeus? %))})
 
-(def toiminnot (conj yllapitotoiminnot kayttajatoiminnot toimikuntatoiminnot sopimustoiminnot))
+(def henkilotoiminnot
+  `{:henkilo_paivitys #(or (yllapitaja?) (= (:henkiloid *current-user-authmap*) %) (henkilon-muokkausoikeus-toimikunnan-kautta? *current-user-authmap* (int-arvo %)))})
 
-(defn kayttajan-oikeudet [t id]
-  (for [toiminto (seq t)
+(def toiminnot (conj yllapitotoiminnot kayttajatoiminnot toimikuntatoiminnot sopimustoiminnot henkilotoiminnot))
+
+(defn evaluoi-oikeudet [toiminnot id]
+  (for [toiminto (seq toiminnot)
         :let [sallittu ((eval (val toiminto)) id)]
         :when sallittu]
     (key toiminto)))
 
-(defn lisaa-kayttajan-oikeudet [entityt t avain]
-  (map #(assoc % :oikeudet (kayttajan-oikeudet t (avain %)) :tunniste (avain %)) entityt))
+(defn henkilo-oikeudet [toiminnot _]
+  (for [toiminto (seq toiminnot)]
+    (key toiminto)))
+
+(defn lisaa-kayttajan-oikeudet [entityt toiminnot-tarkastus-fn toiminnot avain]
+  (map #(assoc % :oikeudet (toiminnot-tarkastus-fn toiminnot (avain %)) :tunniste (avain %)) entityt))
 
 (defn paivita-kayttajan-toimikuntakohtaiset-oikeudet [kayttajan-tiedot]
-  (update-in kayttajan-tiedot [:toimikunta] lisaa-kayttajan-oikeudet toimikuntatoiminnot :tkunta))
+  (update-in kayttajan-tiedot [:toimikunta] lisaa-kayttajan-oikeudet evaluoi-oikeudet toimikuntatoiminnot :tkunta))
 
 (defn paivita-kayttajan-sopimuskohtaiset-oikeudet [kayttajan-tiedot]
-  (update-in kayttajan-tiedot [:jarjestamissopimus] lisaa-kayttajan-oikeudet sopimustoiminnot :jarjestamissopimusid))
+  (update-in kayttajan-tiedot [:jarjestamissopimus] lisaa-kayttajan-oikeudet evaluoi-oikeudet sopimustoiminnot :jarjestamissopimusid))
+
+(defn liita-kayttajan-henkilo-oikeudet [kayttajan-tiedot]
+  (let [kayttajan-toimikunnat (filter jasenyys-voimassa? (:toimikunta kayttajan-tiedot))
+        toimikunnat-joihin-muokkausrooli (filter #(some toimikunnan-muokkaus-roolit [(:rooli %)]) kayttajan-toimikunnat)
+        muokattaviin-toimikuntiin-kuuluvat-henkilot (filter jasenyys-voimassa? (ttk-arkisto/hae-toimikuntien-henkilot (map :tkunta toimikunnat-joihin-muokkausrooli)))
+        kaikki-muokattavat-henkilot (distinct (conj muokattaviin-toimikuntiin-kuuluvat-henkilot (select-keys kayttajan-tiedot [:henkiloid])))]
+    (-> kayttajan-tiedot
+        (assoc :henkilo kaikki-muokattavat-henkilot)
+        (update-in [:henkilo] lisaa-kayttajan-oikeudet henkilo-oikeudet henkilotoiminnot :henkiloid))))

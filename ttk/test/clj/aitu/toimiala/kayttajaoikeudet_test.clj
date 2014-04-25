@@ -15,7 +15,9 @@
 (ns aitu.toimiala.kayttajaoikeudet-test
   (:require [clojure.test :refer :all]
             [clojure.set :refer [union intersection]]
-            [aitu.toimiala.kayttajaoikeudet :refer :all]))
+            [aitu.toimiala.kayttajaoikeudet :refer :all]
+            [aitu.test-timeutil :refer :all]
+            [aitu.integraatio.sql.test-util :refer [toimikunnan-jasenyys]]))
 
 (defn saako-tehda?
   "Saako käyttäjä tehdä annetun toiminnon. Toiminnon kohde voi vaikuttaa kontekstisensitiivisiin oikeuksiin ellei käyttäjä ole ylläpitäjä-roolissa"
@@ -28,27 +30,24 @@
         ((eval auth-fn))
         ((eval auth-fn) kohdeid)))))
 
-(def kayttaja-map
-  {:oid "foo123"
-   :henkiloid "henkiloid123"
-   :roolitunnus kayttajarooli
-   :toimikunta #{{:tkunta "123" :rooli "sihteeri"}}})
+(defn kayttaja-map
+  ([]
+   (kayttaja-map (toimikunnan-jasenyys "123" "sihteeri")))
+  ([jasenyys]
+    {:oid "foo123"
+     :henkiloid "henkiloid123"
+     :roolitunnus kayttajarooli
+     :toimikunta #{jasenyys}}))
 
 (defn onnistuuko-operaatio-toimikunnalle?
   ([operaatio tkunta]
-   (onnistuuko-operaatio-toimikunnalle? kayttaja-map operaatio tkunta))
+   (onnistuuko-operaatio-toimikunnalle? (kayttaja-map) operaatio tkunta))
   ([kayttaja operaatio tkunta]
    (saako-tehda? kayttaja operaatio tkunta)))
 
 (deftest vain-lueteltu-oikeus-kelpaa []
    (is (thrown? Throwable
-          (saako-tehda? kayttaja-map :trolol-laulanta nil))))
-
-(deftest omien-tietojen-paivitys-kay []
-  (is (saako-tehda? kayttaja-map :henkilo_paivitys "henkiloid123")))
-
-(deftest toisen-tietojen-paivitys-ei-kay[]
-  (is (not (saako-tehda? kayttaja-map :henkilo_paivitys "adsdas"))))
+          (saako-tehda? (kayttaja-map) :trolol-laulanta nil))))
 
 (deftest oman-toimikunnan-tietojen-paivitys-ei-kay []
   (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "123"))))
@@ -57,7 +56,7 @@
   (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "asdd"))))
 
 (deftest kayttaja-ei-saa-tehda-yllapitotoimintoja []
-  (is (not (saako-tehda? kayttaja-map :toimikunta_luonti nil))))
+  (is (not (saako-tehda? (kayttaja-map) :toimikunta_luonti nil))))
 
 (deftest yllapitaja-saa-tehda-kaikki-kayttajatoiminnot []
   (let [yllapitaja {:oid "l" :roolitunnus yllapitajarooli}]
@@ -68,10 +67,10 @@
   (is (empty? (intersection (set (keys kayttajatoiminnot)) (set (keys yllapitotoiminnot))))))
 
 (deftest sopimuksen-lisays-onnistuu-toimikunnan-muokkausjasenelta []
-  (is (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "123")))
+  (is (onnistuuko-operaatio-toimikunnalle? (kayttaja-map) :sopimus_lisays "123")))
 
 (deftest sopimuksen-lisays-ei-onnistu-toimikunnan-katselujasenelta []
-  (is (not (onnistuuko-operaatio-toimikunnalle? (assoc kayttaja-map :toimikunta #{{:tkunta "123" :rooli "asiantuntija"}}) :sopimus_lisays "123"))))
+  (is (not (onnistuuko-operaatio-toimikunnalle? (kayttaja-map (toimikunnan-jasenyys "123" "asiantuntija")) :sopimus_lisays "123"))))
 
 (deftest sopimuksen-lisays-ei-onnistu-jos-ei-toimikunnan-jasen []
   (is (not (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "asdds"))))

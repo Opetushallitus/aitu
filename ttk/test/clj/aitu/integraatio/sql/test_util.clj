@@ -24,7 +24,8 @@
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.infra.kayttajaoikeudet-arkisto :as kayttajaoikeudet-arkisto]
-            [aitu.integraatio.sql.test-data-util :refer [default-toimikunta]]))
+            [aitu.integraatio.sql.test-data-util :refer [default-toimikunta]]
+            [aitu.test-timeutil :refer [menneisyydessa tulevaisuudessa]]))
 
 (def testikayttaja-uid "MAN-O-TEST")
 (def testikayttaja-oid "OID.MAN-O-TEST")
@@ -72,8 +73,26 @@
 (defmacro testidata-poistaen-kayttajana [oid & body]
   `(tietokanta-fixture-oid (fn [] ~@body) ~oid ~oid))
 
-(defn with-user-rights [f]
-  (binding [ko/*current-user-authmap* {:roolitunnus kayttajaoikeudet/kayttajarooli
-                                       :toimikunta #{{:tkunta (:tkunta default-toimikunta) :rooli "sihteeri"}
-                                                     {:tkunta "123" :rooli "sihteeri"}}}]
-    (f)))
+(defn toimikunnan-jasenyys [tkunta rooli]
+  {:tkunta tkunta
+   :rooli rooli
+   :alkupvm menneisyydessa
+   :loppupvm tulevaisuudessa
+   :toimikausi_alku menneisyydessa
+   :toimikausi_loppu tulevaisuudessa})
+
+(defn vanhentuneen-toimikunnan-jasenyys [tkunta rooli]
+  (assoc (toimikunnan-jasenyys tkunta rooli) :toimikausi_loppu menneisyydessa))
+
+(defn voimassaolevan-toimikunnan-vanhentunut-jasenyys [tkunta rooli]
+  (assoc (toimikunnan-jasenyys tkunta rooli) :loppupvm menneisyydessa))
+
+(defn with-user-rights
+  ([f]
+   (with-user-rights {:roolitunnus kayttajaoikeudet/kayttajarooli
+                      :toimikunta #{(toimikunnan-jasenyys (:tkunta default-toimikunta) "sihteeri")
+                                    (toimikunnan-jasenyys "123" "sihteeri")}}
+                     f))
+  ([kayttaja-authmap f]
+   (binding [ko/*current-user-authmap* kayttaja-authmap]
+     (f))))
