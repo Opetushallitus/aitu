@@ -1,9 +1,9 @@
 {{=[[ ]]=}}
 [[#i18n.yleiset]]
 <span ng-if="jasenet.length > 0">
-  <p ng-if="salliPiilotus"><a class="ajax-link show-more" href="" ng-click="toggleNaytaVanhat()">{{nautaVanhatJasenyydet ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
+  <p ng-if="salliPiilotus"><a class="ajax-link show-more" href="" ng-click="toggleNaytaVanhat()">{{naytaVanhatJasenyydet ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
 
-  <div ng-show="nautaVanhatJasenyydet || !salliPiilotus">
+  <div ng-show="naytaVanhatJasenyydet || !salliPiilotus">
     <jasenyyksien-listaus
       otsikko="otsikko"
       jasenet="jasenet"

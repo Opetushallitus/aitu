@@ -630,9 +630,9 @@ angular.module('directives', ['services', 'resources'])
       },
       templateUrl : 'template/vanhojen-jasenyyksien-listaus',
       link: function(scope) {
-        scope.nautaVanhatJasenyydet = false;
+        scope.naytaVanhatJasenyydet = false;
         scope.toggleNaytaVanhat = function() {
-          scope.nautaVanhatJasenyydet = !scope.nautaVanhatJasenyydet;
+          scope.naytaVanhatJasenyydet = !scope.naytaVanhatJasenyydet;
         };
       }
     };
