@@ -23,7 +23,7 @@
   "Saako käyttäjä tehdä annetun toiminnon. Toiminnon kohde voi vaikuttaa kontekstisensitiivisiin oikeuksiin ellei käyttäjä ole ylläpitäjä-roolissa"
   [kayttaja-map toiminto kohdeid]
   {:pre [(contains? toiminnot toiminto)
-         (contains? #{yllapitajarooli kayttajarooli} (:roolitunnus kayttaja-map))]}
+         (contains? #{yllapitajarooli kayttajarooli oph-katselijarooli} (:roolitunnus kayttaja-map))]}
   (binding [*current-user-authmap* kayttaja-map]
     (let [auth-fn (get toiminnot toiminto)]
       (if (nil? kohdeid)
@@ -39,6 +39,8 @@
      :roolitunnus kayttajarooli
      :toimikunta #{jasenyys}}))
 
+(def oph-katselija-kayttaja {:roolitunnus oph-katselijarooli})
+
 (defn onnistuuko-operaatio-toimikunnalle?
   ([operaatio tkunta]
    (onnistuuko-operaatio-toimikunnalle? (kayttaja-map) operaatio tkunta))
@@ -49,28 +51,38 @@
    (is (thrown? Throwable
           (saako-tehda? (kayttaja-map) :trolol-laulanta nil))))
 
-(deftest oman-toimikunnan-tietojen-paivitys-ei-kay []
-  (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "123"))))
-
-(deftest toisen-toimikunnan-tietojen-paivitys-ei-kay []
-  (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "asdd"))))
-
-(deftest kayttaja-ei-saa-tehda-yllapitotoimintoja []
-  (is (not (saako-tehda? (kayttaja-map) :toimikunta_luonti nil))))
-
-(deftest yllapitaja-saa-tehda-kaikki-kayttajatoiminnot []
-  (let [yllapitaja {:oid "l" :roolitunnus yllapitajarooli}]
-    (doseq [oikeus (keys kayttajatoiminnot)]
-      (is (saako-tehda? yllapitaja oikeus "fooid")))))
-
 (deftest ei-ole-paallekkaisia-oikeus-tunnisteita []
   (is (empty? (intersection (set (keys kayttajatoiminnot)) (set (keys yllapitotoiminnot))))))
 
-(deftest sopimuksen-lisays-onnistuu-toimikunnan-muokkausjasenelta []
-  (is (onnistuuko-operaatio-toimikunnalle? (kayttaja-map) :sopimus_lisays "123")))
+(deftest toiminnot-test
+  (let [yllapitaja {:oid "l" :roolitunnus yllapitajarooli}
+       kayttaja (kayttaja-map)
+       oph-katselija {:roolitunnus oph-katselijarooli}
+       konteksti "fooid"]
+    (testing "Vain ylläpitäjä saa tehdä ylläpitotoimintoja"
+      (doseq [oikeus (keys yllapitotoiminnot)]
+        (is (saako-tehda? yllapitaja oikeus konteksti))
+        (is (not (saako-tehda? kayttaja oikeus konteksti)))
+        (is (not (saako-tehda? oph-katselija oikeus konteksti)))))
+    (testing "Ylläpitäjä saa tehdä kaikki toiminnot"
+      (doseq [oikeus (keys toiminnot)]
+        (is (saako-tehda? yllapitaja oikeus konteksti))))))
 
-(deftest sopimuksen-lisays-ei-onnistu-toimikunnan-katselujasenelta []
-  (is (not (onnistuuko-operaatio-toimikunnalle? (kayttaja-map (toimikunnan-jasenyys "123" "asiantuntija")) :sopimus_lisays "123"))))
+(deftest toimikunnan-tietojen-paivitys-test
+  (testing "Käyttäjä ei voi päivittää toimikuntien tietoja"
+    (testing "Oman toimikunnan päivitys"
+      (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "123"))))
+    (testing "Toisen toimikunnan päviitys"
+      (is (not (onnistuuko-operaatio-toimikunnalle?  :toimikunta_paivitys "asdd")))))
+  (testing "OPH-katselija ei voi päivittää toimikuntien tietoja"
+    (is (not (onnistuuko-operaatio-toimikunnalle? oph-katselija-kayttaja :toimikunta_paivitys "123")))))
 
-(deftest sopimuksen-lisays-ei-onnistu-jos-ei-toimikunnan-jasen []
-  (is (not (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "asdds"))))
+(deftest sopimuksen-lisays-test
+  (testing "Sopimuksen lisäys onnistuu toimikunnan muokkausjäseneltä"
+    (is (onnistuuko-operaatio-toimikunnalle? (kayttaja-map) :sopimus_lisays "123")))
+  (testing "Sopimuksen lisäys ei onnistu toimikunnan katselujäseneltä"
+    (is (not (onnistuuko-operaatio-toimikunnalle? (kayttaja-map (toimikunnan-jasenyys "123" "asiantuntija")) :sopimus_lisays "123"))))
+  (testing "Sopimuksen lisäys ei onnistu toiselle toimikunnalle"
+    (is (not (onnistuuko-operaatio-toimikunnalle? :sopimus_lisays "4321"))))
+  (testing "OPH-katselija ei saa lisätä sopimuksia"
+    (is (not (saako-tehda? oph-katselija-kayttaja :sopimus_lisays "123")))))

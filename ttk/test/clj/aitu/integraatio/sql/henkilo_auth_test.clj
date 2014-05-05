@@ -21,6 +21,8 @@
 
 (def yllapitaja-auth-map {:roolitunnus kayttajaoikeudet/yllapitajarooli})
 
+(def oph-katselija-auth-map {:roolitunnus kayttajaoikeudet/oph-katselijarooli})
+
 (defn kayttaja-auth-map
   ([]
    (kayttaja-auth-map (toimikunnan-jasenyys (:tkunta default-toimikunta) "sihteeri")))
@@ -49,7 +51,6 @@
   (is (thrown? Throwable
                (autorisoi-henkilon-lisays))))
 
-
 (deftest ^:integraatio henkilon-lisays []
   (testing "Ylläpitäjä voi lisätä henkilön"
     (with-user-rights
@@ -58,6 +59,10 @@
   (testing "Käyttäjä ei voi lisätä henkilöä"
     (with-user-rights
       (kayttaja-auth-map)
+      #(henkilon-lisays-ei-onnistu)))
+  (testing "OPH-katselija ei voi lisätä henkilöä"
+    (with-user-rights
+      oph-katselija-auth-map
       #(henkilon-lisays-ei-onnistu))))
 
 (deftest ^:integraatio henkilon-paivitys []
@@ -66,6 +71,10 @@
     (with-user-rights
       yllapitaja-auth-map
       #(henkilon-paivitys-onnistuu -1)))
+  (testing "OPH-katselija ei voi päivittää henkilön tietoja"
+    (with-user-rights
+      oph-katselija-auth-map
+      #(henkilon-paivitys-ei-onnistu -2)))
   (testing "Saman toimikunnan muokkausjäsen voi päivittää henkilön tietoja"
     (with-user-rights
       (kayttaja-auth-map)

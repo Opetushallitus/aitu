@@ -1,0 +1,1 @@
+insert into kayttajarooli (roolitunnus, kuvaus) values ('OPH-KATSELIJA', 'OPH katselijaroolilla on oikeus katsella kaikkea tietoa, mutta ei muokkausoikeutta.');

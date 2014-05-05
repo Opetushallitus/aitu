@@ -65,3 +65,23 @@
   (lisaa-jarjestamissopimus!)
   (with-user-rights
     #(operaatio-ei-onnistu autorisoi-liitteen-luku "2")))
+
+(deftest ^:integraatio oph-katselija-jarjestamissopimus-auth-test
+  (lisaa-jarjestamissopimus!)
+  (let [oph-katselija-kayttaja {:roolitunnus oph-katselijarooli}]
+    (testing "Sopimuksen päivitys ei onnistu OPH-katselijalta"
+      (with-user-rights
+        oph-katselija-kayttaja
+        #(operaatio-ei-onnistu autorisoi-sopimuksen-paivitys "1")))
+    (testing "Sopimuksen luku onnistuu OPH-katselijalta"
+      (with-user-rights
+        oph-katselija-kayttaja
+        #(operaatio-onnistuu autorisoi-sopimuksen-luku "1")))
+    (testing "Suunnitelman luku onnistuu OPH-katselijalta"
+      (with-user-rights
+        oph-katselija-kayttaja
+        #(operaatio-onnistuu autorisoi-suunnitelman-luku "1")))
+    (testing "Liitteen luku onnistuu OPH-katselijalta"
+      (with-user-rights
+        oph-katselija-kayttaja
+        #(operaatio-onnistuu autorisoi-liitteen-luku "1")))))

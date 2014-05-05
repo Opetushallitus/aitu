@@ -557,6 +557,8 @@ angular.module('directives', ['services', 'resources'])
 
         var vaadittuOikeus = attrs.oikeus;
         var konteksti = attrs.konteksti;
+        var sallitutRoolit = attrs.sallitutRoolit ? scope.$eval(attrs.sallitutRoolit) : [];
+        sallitutRoolit.push('YLLAPITAJA');
 
         scope.sallittu = false;
         scope.href = attrs.href;
@@ -568,7 +570,7 @@ angular.module('directives', ['services', 'resources'])
         function onkoSalittu() {
           if(kayttooikeudet && kayttooikeudet.$resolved) {
             try {
-              return kayttooikeudet.roolitunnus === 'YLLAPITAJA' ||
+              return _.contains(sallitutRoolit, kayttooikeudet.roolitunnus) ||
                 _(kayttooikeudet[konteksti]).filter(function(value){return value.tunniste == entityId}).pluck('oikeudet').flatten().contains(vaadittuOikeus);
             } catch(e) {}
           }
