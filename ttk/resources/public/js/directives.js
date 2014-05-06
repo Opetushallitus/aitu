@@ -466,7 +466,7 @@ angular.module('directives', ['services', 'resources'])
     var vastakkainenJarjestys = false;
     var jarjestettavaData;
 
-    $scope.$watch($attrs.jarjestettavaTaulukko, function(value) {
+    $scope.$watch($attrs.jarjestettavaTaulukko, function(value) {
       jarjestettavaData = value;
       if(jarjestettavaData) {
         jarjesta();
@@ -506,7 +506,7 @@ angular.module('directives', ['services', 'resources'])
     }
   }])
 
-  .directive('jarjestettavaSarake', function() {
+  .directive('jarjestettavaSarake', function() {
     return {
       restrict: 'A',
       scope : {

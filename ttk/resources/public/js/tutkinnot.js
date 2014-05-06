@@ -154,7 +154,7 @@ angular.module('tutkinnot', ['ngRoute'])
         }
       };
 
-      $scope.valittu = function() {
+      $scope.valittu = function() {
         return _.find($scope.valitutTutkinnot, {tutkintotunnus : this.tutkinto.tutkintotunnus }) !== undefined;
       };
 

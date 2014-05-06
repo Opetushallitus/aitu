@@ -83,13 +83,13 @@ angular.module('filters', [] )
     };
   })
 
-  .filter('orderByLokalisoitu', ['$filter','kieli', function($filter, kieli) {
+  .filter('orderByLokalisoitu', ['$filter','kieli', function($filter, kieli) {
     return function(entityt, kentta, reverse){
       return $filter('orderBy')(entityt, kentta + '_' + kieli, reverse);
     };
   }])
 
-  .filter('orderByDate', ['$filter', 'pvm', function($filter, pvm) {
+  .filter('orderByDate', ['$filter', 'pvm', function($filter, pvm) {
     return function(entityt, kentta, reverse){
       return $filter('orderBy')(entityt, function(entity){
         var d = pvm.parsiPvm(entity[kentta]);
@@ -174,7 +174,7 @@ angular.module('filters', [] )
 
   .filter('merkitseValinnatOsiin', function(){
 
-    function merkitseValinnat(osa, valitutOsat, tunnisteProperty) {
+    function merkitseValinnat(osa, valitutOsat, tunnisteProperty) {
       var hakuEhto = {};
       hakuEhto[tunnisteProperty] = osa[tunnisteProperty];
 
@@ -209,7 +209,7 @@ angular.module('filters', [] )
     }
   })
 
-  .filter('muotoileNayttotutkintomestari', ['i18n', function(i18n) {
+  .filter('muotoileNayttotutkintomestari', ['i18n', function(i18n) {
     return function(arvo){
       var naytettavaArvo = i18n.yleinen['ei-tiedossa'];
       if(arvo === true) {
