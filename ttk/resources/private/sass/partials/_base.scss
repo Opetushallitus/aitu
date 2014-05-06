@@ -2,10 +2,6 @@ $application-max-width: 1200px;
 
 html {
   background:#fff;
-  -webkit-font-smoothing: antialiased;
-  /* Inflate text size on mobiles by full increments only */
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
   height: 100%;
 }
 

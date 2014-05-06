@@ -1,15 +1,22 @@
 {{=[[ ]]=}}
 [[#i18n.etusivu]]
-<header class="app-wrapper ">
-  <h1>AITU</h1>
-  <span class="separator">|</span>
-  <h2>[[etusivun-otsikko]][[#ominaisuus.proto]] (proto)[[/ominaisuus.proto]]</h2>
+<header>
+  <div class="app-wrapper">
+    <div class="vertical-center">
+      <div class="header-content">
+        <h1>AITU</h1>
+        <span class="separator">|</span>
+        <h2>[[etusivun-otsikko]][[#ominaisuus.proto]] (proto)[[/ominaisuus.proto]]</h2>
 
-  <form class="haku" ng-if="[[yllapitaja]]">
-    <input type="text" ng-model="hakuehto" ng-change="tyhjennaPalaute()" placeholder="[[anna-diaarinumero-tai-tunnus]]"></input>
-    <button ng-click="hae(hakuehto)">[[hae]]</button>
-    <p ng-if="hakupalaute">[[ei-tuloksia]]</p>
-  </form>
+        <form class="haku" ng-if="[[yllapitaja]]">
+          <input type="text" ng-model="hakuehto" ng-change="tyhjennaPalaute()" placeholder="[[anna-diaarinumero-tai-tunnus]]"></input>
+          <button ng-click="hae(hakuehto)">[[hae]]</button>
+          <p ng-if="hakupalaute">[[ei-tuloksia]]</p>
+        </form>
+      </div>
+    </div>
+    <div class="oph-logo"></div>
+  </div>
 </header>
 
 [[#i18n.yleiset]]

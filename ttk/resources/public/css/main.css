@@ -2,7 +2,7 @@
 ----------------------------------------------------------------------------- */
 /* YHTEISET TYYLIT (AITU, AITUHAKU JA AIPAL)
 ----------------------------------------------------------------------------- */
-/* line 7, ../../private/sass/yhteiset/_typography.scss */
+/* line 6, ../../private/sass/yhteiset/_typography.scss */
 body {
   font-family: "Open Sans", "Arial", sans-serif;
   font-size: 14px;
@@ -10,13 +10,13 @@ body {
   color: #4d4d4d;
 }
 
-/* line 14, ../../private/sass/yhteiset/_typography.scss */
+/* line 13, ../../private/sass/yhteiset/_typography.scss */
 p {
   margin-bottom: 12px;
   line-height: 24px;
 }
 
-/* line 19, ../../private/sass/yhteiset/_typography.scss */
+/* line 18, ../../private/sass/yhteiset/_typography.scss */
 h1 {
   font-family: "Open Sans Condensed", "Arial", sans-serif;
   font-weight: 700;
@@ -26,7 +26,7 @@ h1 {
   text-transform: uppercase;
 }
 
-/* line 28, ../../private/sass/yhteiset/_typography.scss */
+/* line 27, ../../private/sass/yhteiset/_typography.scss */
 h2 {
   font-family: "Open Sans Condensed", "Arial", sans-serif;
   margin-bottom: 12px;
@@ -36,7 +36,7 @@ h2 {
   color: gray;
 }
 
-/* line 37, ../../private/sass/yhteiset/_typography.scss */
+/* line 36, ../../private/sass/yhteiset/_typography.scss */
 h3 {
   font-family: "Open Sans Condensed", "Arial", sans-serif;
   margin-bottom: 6px;
@@ -44,71 +44,73 @@ h3 {
   font-weight: 700;
 }
 
-/* line 44, ../../private/sass/yhteiset/_typography.scss */
+/* line 43, ../../private/sass/yhteiset/_typography.scss */
 label {
   font-size: 1em;
   font-family: "Open Sans", "Arial", sans-serif;
   font-weight: 700;
 }
-/* line 48, ../../private/sass/yhteiset/_typography.scss */
+/* line 47, ../../private/sass/yhteiset/_typography.scss */
 label input {
   font-weight: normal;
 }
 
-/* line 53, ../../private/sass/yhteiset/_typography.scss */
+/* line 52, ../../private/sass/yhteiset/_typography.scss */
 a {
   color: #107ea2;
   text-decoration: none;
 }
-/* line 54, ../../private/sass/yhteiset/_typography.scss */
+/* line 53, ../../private/sass/yhteiset/_typography.scss */
 a:not(.ajax-link)[href=""] {
   color: #4d4d4d;
   cursor: default;
 }
-/* line 58, ../../private/sass/yhteiset/_typography.scss */
+/* line 57, ../../private/sass/yhteiset/_typography.scss */
 a.show-more:before {
   content: "[";
 }
-/* line 59, ../../private/sass/yhteiset/_typography.scss */
+/* line 58, ../../private/sass/yhteiset/_typography.scss */
 a.show-more:after {
   content: "]";
 }
-/* line 61, ../../private/sass/yhteiset/_typography.scss */
+/* line 60, ../../private/sass/yhteiset/_typography.scss */
 a:hover {
   color: #083f51;
   text-decoration: underline;
 }
-/* line 64, ../../private/sass/yhteiset/_typography.scss */
+/* line 63, ../../private/sass/yhteiset/_typography.scss */
 .pagination a:hover, .tutkintovalitsin a:hover {
   text-decoration: none;
 }
 
 @font-face {
   font-family: 'Open Sans';
-  font-style: normal;
   font-weight: 400;
-  src: local("Open Sans"), local("OpenSans"), url("../font/opensans.woff") format("woff");
+  src: url("../font/opensans.woff") format("woff");
 }
 
 @font-face {
   font-family: 'Open Sans';
-  font-style: normal;
+  font-weight: 600;
+  src: url("../font/opensans-semibold.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Open Sans';
   font-weight: 700;
-  src: local("Open Sans Bold"), local("OpenSans-Bold"), url("../font/opensans-bold.woff") format("woff");
+  src: url("../font/opensans-bold.woff") format("woff");
 }
 
 @font-face {
   font-family: 'Open Sans Condensed';
-  font-style: normal;
   font-weight: 300;
-  src: local("Open Sans Cond Light"), local("OpenSans-CondensedLight"), url("../font/opensans-condensed-light.woff") format("woff");
+  src: url("../font/opensans-condensed-light.woff") format("woff");
 }
 
 @font-face {
   font-family: 'Open Sans Condensed';
-  font-style: normal;
   font-weight: 700;
-  src: local("Open Sans Condensed Bold"), local("OpenSans-CondensedBold"), url("../font/opensans-condensed-bold.woff") format("woff");
+  src: url("../font/opensans-condensed-bold.woff") format("woff");
 }
 
 /* Voidaan käyttää elementissä, jonka perään hakutaan ikoni. Ei tarvitse erillistä dom elementtiä ikonille.
@@ -1128,36 +1130,32 @@ ul.file-list li a {
 /* line 3, ../../private/sass/partials/_base.scss */
 html {
   background: #fff;
-  -webkit-font-smoothing: antialiased;
-  /* Inflate text size on mobiles by full increments only */
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
   height: 100%;
 }
 
-/* line 12, ../../private/sass/partials/_base.scss */
+/* line 8, ../../private/sass/partials/_base.scss */
 body {
   display: table;
   width: 100%;
   height: 100%;
 }
-/* line 13, ../../private/sass/partials/_base.scss */
+/* line 9, ../../private/sass/partials/_base.scss */
 body > div {
   display: table-row;
 }
-/* line 14, ../../private/sass/partials/_base.scss */
+/* line 10, ../../private/sass/partials/_base.scss */
 body footer {
   display: table-row;
   height: 100%;
 }
 
-/* line 17, ../../private/sass/partials/_base.scss */
+/* line 13, ../../private/sass/partials/_base.scss */
 #content {
   padding: 0 6px 24px 6px;
   min-height: 400px;
 }
 
-/* line 22, ../../private/sass/partials/_base.scss */
+/* line 18, ../../private/sass/partials/_base.scss */
 .app-wrapper {
   max-width: 1200px;
   margin: 0 auto;
@@ -1169,54 +1167,75 @@ body footer {
 /* line 1, ../../private/sass/partials/_header.scss */
 header {
   color: black;
-  padding: 12px;
-  margin-top: -10px !important;
-  background: url("../img/opetushallitus.svg") no-repeat right 20px content-box, url("../img/AITU-background.png") no-repeat left top;
-  /*  border-bottom: 1px solid $lightest-gray; */
+  background-color: #e1e1e1;
   height: 160px;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  margin-top: -10px;
 }
-/* line 6, ../../private/sass/partials/_header.scss */
-.no-svg header {
-  background-image: url("../img/opetushallitus.gif");
+/* line 12, ../../private/sass/partials/_header.scss */
+header .app-wrapper {
+  height: 160px;
+  background: #e1e1e1 url("../img/AITU-background.png") no-repeat left top;
+  height: 100%;
+  position: relative;
 }
-/* line 10, ../../private/sass/partials/_header.scss */
-header h1 {
-  display: inline-block;
-  font-size: 4.2em;
-  font-weight: 800;
-  font-family: "Open Sans Condensed", "Arial", sans-serif;
-  margin: 0;
-  padding-top: 30px;
-  padding-left: 20px;
+/* line 19, ../../private/sass/partials/_header.scss */
+header .vertical-center {
+  height: 160px;
+  display: table-cell;
   vertical-align: middle;
 }
-/* line 20, ../../private/sass/partials/_header.scss */
-header h2 {
+/* line 25, ../../private/sass/partials/_header.scss */
+header .header-content {
+  margin-left: 6px;
+}
+/* line 27, ../../private/sass/partials/_header.scss */
+header .header-content h1, header .header-content .separator, header .header-content h2 {
   display: inline-block;
+  vertical-align: middle;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* line 35, ../../private/sass/partials/_header.scss */
+header .separator {
+  font-size: 4.2em;
+  font-weight: 100;
+  position: relative;
+  top: -5px;
+}
+/* line 42, ../../private/sass/partials/_header.scss */
+header .oph-logo {
+  width: 271px;
+  height: 70px;
+  position: absolute;
+  right: 6px;
+  top: 45px;
+  background: transparent url("../img/opetushallitus.svg") 0 center no-repeat;
+}
+/* line 49, ../../private/sass/partials/_header.scss */
+.no-svg header .oph-logo {
+  background-image: url("../img/opetushallitus.gif");
+}
+/* line 52, ../../private/sass/partials/_header.scss */
+header h1 {
+  font-size: 4.2em;
+}
+/* line 56, ../../private/sass/partials/_header.scss */
+header h2 {
   width: 500px;
   font-size: 1.7em;
   font-weight: 300;
-  font-family: "Open Sans Condensed", "Arial", sans-serif;
-  margin: 0;
-  padding-top: 30px;
-  vertical-align: middle;
 }
-/* line 30, ../../private/sass/partials/_header.scss */
-header .separator {
-  position: relative;
-  top: 10px;
-  font-size: 4.2em;
-  font-weight: 100;
-  vertical-align: middle;
-}
-/* line 37, ../../private/sass/partials/_header.scss */
+/* line 62, ../../private/sass/partials/_header.scss */
 header form {
   display: block;
-  margin-top: 24px;
-  padding-left: 20px;
   color: #4d4d4d;
+  margin: 24px 0 0 0;
+  padding: 0;
 }
-/* line 43, ../../private/sass/partials/_header.scss */
+/* line 68, ../../private/sass/partials/_header.scss */
 header form input {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1225,25 +1244,25 @@ header form input {
   height: 28px;
   border: 1px solid #107ea2;
 }
-/* line 49, ../../private/sass/partials/_header.scss */
+/* line 74, ../../private/sass/partials/_header.scss */
 header form button {
   height: 28px;
   text-transform: uppercase;
   margin: 0;
 }
-/* line 54, ../../private/sass/partials/_header.scss */
+/* line 79, ../../private/sass/partials/_header.scss */
 header form p {
   margin: 0;
   padding-left: 10px;
 }
 
-/* line 61, ../../private/sass/partials/_header.scss */
+/* line 86, ../../private/sass/partials/_header.scss */
 .main-nav {
   background-color: #107ea2;
   min-height: 40px;
   font-size: 1em;
 }
-/* line 68, ../../private/sass/partials/_header.scss */
+/* line 93, ../../private/sass/partials/_header.scss */
 .main-nav a {
   display: inline-block;
   padding-top: 8px;
@@ -1251,7 +1270,7 @@ header form p {
   color: white !important;
   text-transform: uppercase;
 }
-/* line 75, ../../private/sass/partials/_header.scss */
+/* line 100, ../../private/sass/partials/_header.scss */
 .main-nav ul {
   margin: 0;
   padding: 0;
@@ -1266,31 +1285,31 @@ header form p {
 .main-nav ul:after {
   clear: both;
 }
-/* line 79, ../../private/sass/partials/_header.scss */
+/* line 104, ../../private/sass/partials/_header.scss */
 .main-nav ul li {
   border-right: 1px solid #009dcd;
   padding: 0 12px;
   float: left;
   height: 40px;
 }
-/* line 84, ../../private/sass/partials/_header.scss */
+/* line 109, ../../private/sass/partials/_header.scss */
 .main-nav ul li:hover {
   background-color: #083f51;
 }
-/* line 85, ../../private/sass/partials/_header.scss */
+/* line 110, ../../private/sass/partials/_header.scss */
 .main-nav ul li:first-child {
   border-left: 1px solid #009dcd;
 }
-/* line 86, ../../private/sass/partials/_header.scss */
+/* line 111, ../../private/sass/partials/_header.scss */
 .main-nav ul li a {
   text-transform: uppercase;
 }
-/* line 89, ../../private/sass/partials/_header.scss */
+/* line 114, ../../private/sass/partials/_header.scss */
 .main-nav ul li span {
   padding-top: 8px;
   display: inline-block;
 }
-/* line 96, ../../private/sass/partials/_header.scss */
+/* line 121, ../../private/sass/partials/_header.scss */
 .main-nav #current-user {
   float: right;
   padding-right: 40px;
@@ -1314,23 +1333,23 @@ header form p {
 .no-svg .main-nav #current-user:after {
   background-image: url("../img/oph-icon-sprite.png");
 }
-/* line 97, ../../private/sass/partials/_header.scss */
+/* line 122, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang {
   float: right;
 }
-/* line 100, ../../private/sass/partials/_header.scss */
+/* line 125, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-active {
   display: inline-block;
 }
-/* line 103, ../../private/sass/partials/_header.scss */
+/* line 128, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-inactive {
   display: inline-block;
 }
-/* line 106, ../../private/sass/partials/_header.scss */
+/* line 131, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-active:hover {
   background-color: #083f51;
 }
-/* line 109, ../../private/sass/partials/_header.scss */
+/* line 134, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-inactive:hover {
   background-color: #107ea2;
 }
