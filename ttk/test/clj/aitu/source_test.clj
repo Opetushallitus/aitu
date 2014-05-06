@@ -23,7 +23,7 @@
 (defn tiedostot [hakemisto polku-re ohita]
   (let [ohita (set (map file ohita))]
     (for [polku (file-seq (file hakemisto))
-          :when (not (or (.isDirectory polku)  
+          :when (not (or (.isDirectory polku)
                          (ohita polku)))
           :when (re-matches polku-re (str polku))]
       polku)))
@@ -34,7 +34,7 @@
     (for [polku (tiedostot hakemisto polku-re ohita)]
        (with-open [r (reader polku)]
          (f r)))))
-             
+
 (defn vastaavat-rivit [hakemisto polku-re mallit & {:keys [ohita]
                                                     :or {ohita #{}}}]
   (apply concat
@@ -58,7 +58,7 @@
                        :while (not= muoto ::eof)
                        :when (ehto muoto)]
                    (str polku ": " muoto)))))))
-  
+
 
 (defn pre-post [muoto]
   (when (= 'defn (nth muoto 0))
@@ -82,7 +82,7 @@
   (when-let [pp (pre-post muoto)]
     (not (every? vector? (vals pp)))))
 
-(defn get-meta [o] 
+(defn get-meta [o]
   "http://stackoverflow.com/questions/12432561/how-to-get-the-metadata-of-clojure-function-arguments"
   (->> *ns* ns-map (filter (fn [[_ v]] (and (var? v) (= o (var-get v))))) first second meta))
 
@@ -98,7 +98,7 @@
 
 (defn sivuvaikutuksellinen-funktio? [muoto]
   "Jos funktion nimi loppuu huutomerkkiin, tulkitaan että sillä on sivuvaikutuksia."
-  (and 
+  (and
     (= 'defn (nth muoto 0))
     (let [fn-name (name (nth muoto 1))]
       (.endsWith fn-name "!"))))
@@ -108,18 +108,22 @@
   (let [sisaltaa-audit-kutsun? (some #(and (symbol? %)
                                         (= "auditlog" (.getNamespace %)))
                                  (flatten muoto))]
-    (when (and 
+    (when (and
             (ei-audit-logitettava-funktio? muoto)
             (sivuvaikutuksellinen-funktio? muoto)
             (not sisaltaa-audit-kutsun?))
       (println "! AUDITLOG kutsu puuttuu: " (nth muoto 1))
       (str (nth muoto 1)))))
 
+(def nbsp )
+
 (deftest js-debug-test
   (is (empty? (vastaavat-rivit "resources/public/js"
                                #".*\.js"
                                [#"console\.log"
-                                #"debugger"]
+                                #"debugger"
+                                (re-pattern (str \u00a0)) ; non-breaking space
+                                ]
                                :ohita ["resources/public/js/vendor/angular.js"
                                        "resources/public/js/vendor/stacktrace.js"]))))
 
@@ -149,9 +153,9 @@
 
 (deftest properties-duplicate-keys-test
   "Etsitään properties tiedostoista tupla-avaimia"
-  (is (empty? (vastaavat-tiedostot "resources/i18n" #".*\.properties" 
+  (is (empty? (vastaavat-tiedostot "resources/i18n" #".*\.properties"
                 properties-duplicat-keys?))))
-  
+
 
 (deftest pre-post-oikeassa-paikassa-test
   (is (empty? (vastaavat-muodot "src/clj" pre-post-vaarassa-paikassa?))))
