@@ -21,12 +21,12 @@
 - name: Muodosta migraatiopaketin nimi etäpalvelimella
   set_fact:
     migraatio_jar_palvelimella: "{{ palvelu }}-db-{{ build }}.jar"
-  when: migraatio_jar is defined
+  when: (migraatio_jar is defined) and (migraatio_jar != '')
 
 - name: Kopioi migraatioskriptit palvelimelle
   copy: src={{ migraatio_jar }} dest={{ asennushakemisto }}/{{ migraatio_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
   register: kopioi_migraatio
-  when: migraatio_jar is defined
+  when: migraatio_jar_palvelimella is defined
 
 - name: Päivitä palvelun ohjausskriptit
   template: src={{ item }}.sh dest={{ asennushakemisto }}/{{ item }}-{{ palvelu }}.sh owner=tomcat group=tomcat mode=0755
