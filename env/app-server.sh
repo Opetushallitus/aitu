@@ -28,7 +28,7 @@ useradd -r -s /bin/false tomcat
 
 # aituadmin-käyttäjälle oikeudet ajaa rootina asennukseen tarvittavat komennot
 # ilman salasanaa
-echo 'aituadmin ALL = NOPASSWD: /bin/cp * /data00/aitu, /bin/ln -sf * ttk.jar, /bin/chown tomcat\:tomcat -R /data00/aitu, /sbin/service aitu *' >> /etc/sudoers
+echo 'aituadmin ALL = NOPASSWD: ALL' >> /etc/sudoers
 
 #init.d-skripti
 cp app-server/aitu-init.d.sh /etc/init.d/aitu
