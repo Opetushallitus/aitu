@@ -1,0 +1,64 @@
+---
+- name: Muodosta sovelluspaketin nimi etäpalvelimella
+  set_fact:
+    sovellus_jar_palvelimella: "{{ palvelu }}-{{ build }}.jar"
+
+- name: Luo asennushakemisto palvelimelle
+  file: path={{ asennushakemisto }} state=directory owner=tomcat group=tomcat mode=0755
+
+- name: Kopioi sovelluksen asetustiedosto palvelimelle
+  template: src={{ inventory_dir }}/{{ sovelluksen_asetustiedosto }} dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644
+  when: sovelluksen_asetustiedosto is defined
+
+- name: Kopioi migraation asetustiedosto palvelimelle
+  template: src={{ inventory_dir }}/{{ migraation_asetustiedosto }} dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644
+  when: migraation_asetustiedosto is defined
+
+- name: Kopioi versio palvelimelle
+  copy: src={{ sovellus_jar }} dest={{ asennushakemisto }}/{{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
+  register: version_kopiointi
+
+- name: Muodosta migraatiopaketin nimi etäpalvelimella
+  set_fact:
+    migraatio_jar_palvelimella: "{{ palvelu }}-db-{{ build }}.jar"
+  when: migraatio_jar is defined
+
+- name: Kopioi migraatioskriptit palvelimelle
+  copy: src={{ migraatio_jar }} dest={{ asennushakemisto }}/{{ migraatio_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
+  register: kopioi_migraatio
+  when: migraatio_jar is defined
+
+- name: Päivitä palvelun ohjausskriptit
+  template: src={{ item }}.sh dest={{ asennushakemisto }}/{{ item }}-{{ palvelu }}.sh owner=tomcat group=tomcat mode=0755
+  with_items:
+  - start
+  - stop
+  - status
+
+- name: Päivitä palvelun init.d-skripti
+  template: src=init.d.sh dest=/etc/init.d/{{ palvelu }} owner=root group=root mode=0755
+
+- name: Pysäytä palvelu
+  service: name={{ palvelu }} state=stopped
+
+- name: Luo lokihakemisto palvelimelle
+  file: path={{ asennushakemisto }}/logs state=directory owner=tomcat group=tomcat mode=0755
+
+- name: Suorita datan migraatio
+  shell: chdir={{ asennushakemisto }} java -jar {{ migraatio_jar_palvelimella }} {{ migraation_argumentit }} 1> logs/migraatio.stdout.`date +%Y-%m-%d-%H-%M-%S` 2> logs/migraatio.stderr.`date +%Y-%m-%d-%H-%M-%S`
+  register: migraatio
+  ignore_errors: yes
+  when: not (kopioi_migraatio | skipped)
+
+- name: Ota versio käyttöön
+  file: path={{ asennushakemisto }}/{{ palvelu }}.jar state=link src={{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat
+  when: (migraatio | skipped) or (migraatio | success)
+
+- name: Käynnistä palvelu
+  service: name={{ palvelu }} state=started
+
+- name: Merkitään palvelu käynnistettäväksi palvelimen käynnistyksen yhteydessä
+  service: name={{ palvelu }} enabled=yes
+
+- name: Tarkasta, että kaikki asennusvaiheet onnistuivat
+  assert: that="(migraatio | skipped) or (migraatio | success)"

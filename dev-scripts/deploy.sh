@@ -1,22 +1,21 @@
 #!/bin/bash
 set -eu
 
-REPO_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+if ! [[ $(ansible --version 2> /dev/null) == 'ansible 1.6' ]]
+then
+  echo 'Asenna Ansible 1.6: http://docs.ansible.com/intro_installation.html'
+  exit 1
+fi
+
+repo_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 set -x
 
-cd $REPO_PATH/ttk
+cd $repo_path/ttk
 lein do clean, uberjar
-ttk_jar=$REPO_PATH/ttk/target/ttk-standalone.jar
 
-cd $REPO_PATH/ttk-db
+cd $repo_path/ttk-db
 lein do clean, uberjar
-ttk_db_jar=$REPO_PATH/ttk-db/target/ttk-db-standalone.jar
 
-chmod go= $REPO_PATH/env/ssh/dev_id_rsa
-cd $REPO_PATH/ttk
-
-export AITU_DB_USER=ttk_user
-export AITUHAKU_DB_USER=aituhaku_user
-export AITU_SSH_KEY=$REPO_PATH/env/ssh/dev_id_rsa
-./deploy.sh -c -t $ttk_jar $ttk_db_jar aituadmin@192.168.50.52
+cd $repo_path/ansible
+ansible-playbook -i aitu_vagrant/hosts yhteiset/julkaise_paikallinen_versio.yml -e "sovellus_jar=\"$repo_path/ttk/target/ttk-standalone.jar\" migraatio_jar=\"$repo_path/ttk-db/target/ttk-db-standalone.jar\""
