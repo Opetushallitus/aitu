@@ -4,7 +4,6 @@
 [oph_palvelu:vars]
 ansible_ssh_user = aituadmin
 palvelu = aitu
-ci_projekti = aitu
 asennushakemisto = /data00/aitu
 sovelluksen_asetustiedosto = ttk.properties
 migraation_asetustiedosto = ttk-db.properties
