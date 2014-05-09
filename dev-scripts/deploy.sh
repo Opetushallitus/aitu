@@ -1,9 +1,9 @@
 #!/bin/bash
 set -eu
 
-if ! [[ $(ansible --version 2> /dev/null) == 'ansible 1.6' ]]
+if ! [[ $(ansible --version 2> /dev/null) == 'ansible 1.6.1' ]]
 then
-  echo 'Asenna Ansible 1.6: http://docs.ansible.com/intro_installation.html'
+  echo 'Asenna Ansible 1.6.1: http://docs.ansible.com/intro_installation.html'
   exit 1
 fi
 
