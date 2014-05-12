@@ -28,8 +28,8 @@
   {:pre [clojure.core/string?]}
   (let [ln (min (.length s) maxlength)]
     (-> s
-      (str/replace "\n" " " )
-      (str/replace "\r" " ")
+      (str/replace "\n" "!")
+      (str/replace "\r" "!")
       (.substring 0 ln))))
 
 (c/defroutes reitit
@@ -37,10 +37,10 @@
     (let [rivinvaihto "\n"]
       (log/info (str rivinvaihto
                      "--- Javascript virhe ---" rivinvaihto
-                     "Virheen url: " virheenUrl rivinvaihto
-                     "User agent string: " userAgent rivinvaihto
-                     "Virheviesti: " virheviesti rivinvaihto
-                     "Stacktrace: " stackTrace rivinvaihto
-                     "Aiheuttaja: " cause rivinvaihto
+                     "Virheen url: " (sanitize virheenUrl) rivinvaihto
+                     "User agent string: " (sanitize userAgent) rivinvaihto
+                     "Virheviesti: " (sanitize virheviesti) rivinvaihto
+                     "Stacktrace: " (sanitize stackTrace) rivinvaihto
+                     "Aiheuttaja: " (sanitize cause) rivinvaihto
                      "------------------------")))
     {:status 200}))

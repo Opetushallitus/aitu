@@ -3,7 +3,7 @@
             [aitu.rest_api.js-log :as js-log]))
 
 (deftest test-linefeeds
-  (is (= "a  b" (js-log/sanitize "a\n\rb")))
+  (is (= "a!!b" (js-log/sanitize "a\n\rb")))
   (is (= "c" (js-log/sanitize "c")))
   (is (= "" (js-log/sanitize ""))))
 
