@@ -65,11 +65,11 @@
   shell: chdir={{ asennushakemisto }} java -jar {{ migraatio_jar_palvelimella }} {{ migraation_argumentit }} 1> logs/{{ palvelu }}-migraatio.stdout.`date +%Y-%m-%d-%H-%M-%S` 2> logs/{{ palvelu }}-migraatio.stderr.`date +%Y-%m-%d-%H-%M-%S`
   register: migraatio
   ignore_errors: yes
-  when: (kopioi_migraatio | success)
+  when: not kopioi_migraatio|skipped
 
 - name: Ota versio käyttöön
   file: path={{ asennushakemisto }}/{{ palvelu }}.jar state=link src={{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat
-  when: (migraatio | skipped) or (migraatio | success)
+  when: migraatio|success
 
 - name: Käynnistä palvelu
   service: name={{ palvelu }} state=started
@@ -78,4 +78,4 @@
   service: name={{ palvelu }} enabled=yes
 
 - name: Tarkasta, että kaikki asennusvaiheet onnistuivat
-  assert: that="(migraatio | skipped) or (migraatio | success)"
+  assert: that="migraatio|success"
