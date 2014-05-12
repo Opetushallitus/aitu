@@ -20,6 +20,10 @@
 - name: Luo asennushakemisto palvelimelle
   file: path={{ asennushakemisto }} state=directory owner=tomcat group=tomcat mode=0755
 
+- name: Kopioi lokituksen asetustiedosto palvelimelle
+  copy: src={{ inventory_dir }}/{{ lokituksen_asetustiedosto }} dest={{ asennushakemisto }}/resources/ owner=tomcat group=tomcat mode=0644
+  when: lokituksen_asetustiedosto is defined
+
 - name: Kopioi sovelluksen asetustiedosto palvelimelle
   template: src={{ inventory_dir }}/{{ sovelluksen_asetustiedosto }} dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644
   when: sovelluksen_asetustiedosto is defined
