@@ -37,22 +37,46 @@ describe('Directives: tallenna', function() {
   });
 
   beforeEach(inject(function($compile, $rootScope, apiCallInterceptor){
+
+    var formHtml = '<form name="testForm">';
+    formHtml += '<input ng-model="testModel" ng-required="true">';
+    formHtml += '<tallenna formi-validi="testForm.$valid" disabloi-pyyntojen-ajaksi="[\'sopimuksen-luonti\']" teksti="\'Tallenna\'"></tallenna></form>';
+
     rootScope = $rootScope;
     interceptor = apiCallInterceptor;
-    elementti = $compile('<tallenna disabloi-pyyntojen-ajaksi="[\'sopimuksen-luonti\']" teksti="\'Tallenna\'"></tallenna>')($rootScope);
+    elementti = $compile(formHtml)($rootScope);
     rootScope.$digest();
   }));
 
   it('Näyttää teksti attribuutin arvon button tagien sisällä', function() {
-    expect(elementti.html()).toEqual('Tallenna');
+    expect(elementti.text()).toEqual('Tallenna');
   });
 
   it('Disabloi napin kun pyyntö käynnisssä ja enabloi kun vastaus saapuu', function() {
+    var button = elementti.find('button');
+
+    rootScope.testModel = "syöte";
     interceptor.apiPyynto(pyynto);
     rootScope.$digest();
-    expect(elementti.prop('disabled')).toEqual(true);
+
+    expect(button.prop('disabled')).toEqual(true);
+
     interceptor.apiVastaus(vastaus);
     rootScope.$digest();
-    expect(elementti.prop('disabled')).toEqual(false);
+
+    expect(button.prop('disabled')).toEqual(false);
+  });
+
+  it('Disabloi tallennuksen jos pakollisia kenttiä ei ole täytetty ja enabloi kun pakolliset kentät täytetty.', function() {
+    var input = elementti.find('input');
+    var button = elementti.find('button');
+
+    expect(button.prop('disabled')).toEqual(true);
+
+    input.val('syöte');
+    input.trigger('change');
+    rootScope.$digest();
+
+    expect(button.prop('disabled')).toEqual(false);
   });
 });

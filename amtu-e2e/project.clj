@@ -19,7 +19,7 @@
                  [cheshire "5.2.0"]
                  [com.paulhammant/ngwebdriver "0.9.1"]
                  [clj-time "0.6.0"]
-                 [solita/opetushallitus-aitu-e2e "1.3.0"]]
+                 [solita/opetushallitus-aitu-e2e "1.5.0"]]
   :plugins [[test2junit "1.0.1"]]
 
   :test-selectors {:ie (complement :no-ie)

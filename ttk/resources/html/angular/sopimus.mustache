@@ -54,11 +54,11 @@
 <div ng-show="muokkausTila">
   <form name="sopimuksenMuokkausForm">
     <fieldset>
-      <label>[[sopimusnumero]]</label>
+      <label class="pakollinen">[[sopimusnumero]]</label>
       <ohje class="right" tunniste="sopimuksen-muokkaus-sopimusnumero"></ohje>
-      <input type="text" ng-model="sopimus.sopimusnumero" maxlength="25"></input>
+      <input ng-required="true" type="text" ng-model="sopimus.sopimusnumero" maxlength="25"></input>
     </fieldset>
-    <pvm-valitsin valittu-pvm="sopimus.alkupvm" otsikko="[[alkupvm]]"></pvm-valitsin>
+    <pvm-valitsin pakollinen="true" valittu-pvm="sopimus.alkupvm" otsikko="[[alkupvm]]"></pvm-valitsin>
     <pvm-valitsin valittu-pvm="sopimus.loppupvm" otsikko="[[loppupvm]]"></pvm-valitsin>
     <fieldset>
       <label>[[yhteyshenkilon_nimi]]</label>
@@ -78,7 +78,8 @@
       url="[[base-url]]/api/ttk/haku"
       model="sopimus.toimikunta"
       model-id-property="tkunta"
-      model-text-property="nimi">
+      model-text-property="nimi"
+      pakollinen="true">
     </haku-valitsin>
     <haku-valitsin
       ng-show="muokkausTila"
@@ -86,7 +87,8 @@
       url="[[base-url]]/api/oppilaitos/haku"
       model="sopimus.oppilaitos"
       model-id-property="oppilaitoskoodi"
-      model-text-property="nimi">
+      model-text-property="nimi"
+      pakollinen="true">
     </haku-valitsin>
     <haku-valitsin
       ng-show="muokkausTila"
@@ -96,6 +98,7 @@
       model-id-property="oppilaitoskoodi"
       model-text-property="nimi">
     </haku-valitsin>
+    <pakollisia-kenttia></pakollisia-kenttia>
   </form>
 </div>
 
@@ -179,7 +182,7 @@
 </div>
 
 [[#i18n]]
-<tallenna ng-disabled="!sopimuksenMuokkausForm.$valid" disabloi-pyyntojen-ajaksi="['sopimuksen-luonti', 'sopimuksen-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="!luontiTila ? '[[yleiset.tallenna]]' : '[[jarjestamissopimus.jatka-tutkintojen-lisaykseen]]'"></tallenna>
+<tallenna formi-validi="sopimuksenMuokkausForm.$valid" disabloi-pyyntojen-ajaksi="['sopimuksen-luonti', 'sopimuksen-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="!luontiTila ? '[[yleiset.tallenna]]' : '[[jarjestamissopimus.jatka-tutkintojen-lisaykseen]]'"></tallenna>
 <button ng-hide="!muokkausTila" ng-click="peruuta()">[[yleiset.peruuta]]</button>
 [[/i18n]]
 

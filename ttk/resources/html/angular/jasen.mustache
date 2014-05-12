@@ -19,7 +19,7 @@
 </div>
 
 <div ng-if="nykyinenAskel(1)">
-  <form>
+  <form name="jasenForm1">
     <div>
       <fieldset>
         <label>[[valitse-henkilo]]</label>
@@ -28,10 +28,9 @@
         </select>
       </fieldset>
     </div>
-
     <ng-include src="'template/henkilo-partial'"></ng-include>
-
-    <tallenna disabloi-pyyntojen-ajaksi="['uusi-henkilo']" ng-hide="!muokkausTila" ng-click="lisaaHenkiloJaSiirrySeuraavaan(jasen.henkilo)" teksti="'[[jatka]]'"></tallenna>
+    <pakollisia-kenttia ng-show="muokkausTila"></pakollisia-kenttia>
+    <tallenna ng-show="muokkausTila" formi-validi="jasenForm1.$valid" disabloi-pyyntojen-ajaksi="['uusi-henkilo']" ng-click="lisaaHenkiloJaSiirrySeuraavaan(jasen.henkilo)" teksti="'[[jatka]]'"></tallenna>
     <button ng-hide="muokkausTila" ng-click="siirrySeuraavaan()">[[jatka]]</button>
   </form>
 
@@ -43,31 +42,33 @@
     <label>[[nimi]]</label>
     <p>{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
   </fieldset>
-  <form name="jasenForm">
+  <form name="jasenForm2">
     <div>
       <haku-valitsin
         otsikko="[[toimikunta]]"
         url="[[base-url]]/api/ttk/haku"
         model="jasen.toimikunta"
         model-id-property="diaarinumero"
-        model-text-property="nimi">
+        model-text-property="nimi"
+        pakollinen="true">
       </haku-valitsin>
     </div>
     <div>
       <fieldset>
-        <label>[[rooli]]</label>
-        <enum-valikko nimi="rooli" arvo="jasen.rooli"></enum-valikko>
+        <label class="pakollinen">[[rooli]]</label>
+        <enum-valikko pakollinen="true" nimi="rooli" arvo="jasen.rooli"></enum-valikko>
       </fieldset>
       <fieldset>
-        <label>[[edustus]]</label>
-        <enum-valikko nimi="edustus" arvo="jasen.edustus"></enum-valikko>
+        <label class="pakollinen">[[edustus]]</label>
+        <enum-valikko pakollinen="true" nimi="edustus" arvo="jasen.edustus"></enum-valikko>
       </fieldset>
     </div>
     <div>
-      <pvm-valitsin oletus-pvm="jasen.toimikunta.toimikausi_alku" valittu-pvm="jasen.alkupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-alkupvm]]"></pvm-valitsin>
-      <pvm-valitsin oletus-pvm="jasen.toimikunta.toimikausi_loppu" valittu-pvm="jasen.loppupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-loppupvm]]"></pvm-valitsin>
+      <pvm-valitsin pakollinen="true" oletus-pvm="jasen.toimikunta.toimikausi_alku" valittu-pvm="jasen.alkupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-alkupvm]]"></pvm-valitsin>
+      <pvm-valitsin pakollinen="true" oletus-pvm="jasen.toimikunta.toimikausi_loppu" valittu-pvm="jasen.loppupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-loppupvm]]"></pvm-valitsin>
     </div>
-    <tallenna ng-disabled="!jasenForm.$valid" disabloi-pyyntojen-ajaksi="['uusi-toimikunnan-jasen']" ng-click="lisaaJasen(jasen)" teksti="'[[lisaa-jasen]]'"></tallenna>
+    <pakollisia-kenttia></pakollisia-kenttia>
+    <tallenna formi-validi="jasenForm2.$valid" disabloi-pyyntojen-ajaksi="['uusi-toimikunnan-jasen']" ng-click="lisaaJasen(jasen)" teksti="'[[lisaa-jasen]]'"></tallenna>
     <button ng-click="peruuta()">[[peruuta]]</button>
   </form>
 </div>

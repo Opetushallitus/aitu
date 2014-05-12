@@ -185,8 +185,7 @@
         (avaa-sopimuksen-muokkaussivu 1230)
         (syota-pvm "sopimus.alkupvm" "")
         (odota-angular-pyyntoa)
-        (tallenna)
-        (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut")))))
+        (is (= (not (tallennus-nappi-aktiivinen?)))))))
   (testing "Jarjestamissopimuksen muokkaus ei onnistu, alkupvm loppupvm:n jälkeen"
     (with-webdriver
       (du/with-data jarjestamissopimus-data
@@ -214,6 +213,16 @@
         (tallenna)
         (is (= (viestin-teksti) "Järjestämissopimuksen tietoja muokattu"))
         (is (= (elementin-teksti "sopimus.sopimusnumero") "3210abc"))))))
+
+(deftest jarjestamissopimus-muokkaussivu-pakolliset-kentat-test
+  (testing "Järjestämissopimuksen muokkaussivu - pakolliset kentät:"
+    (with-webdriver
+      (du/with-data jarjestamissopimus-data
+        (avaa-sopimuksen-muokkaussivu 1230)
+        (is (pakollinen-kentta? "Sopimusnumero"))
+        (is (pakollinen-kentta? "Järjestämissopimus alkaa"))
+        (is (pakollinen-kentta? "Nykyinen toimikunta"))
+        (is (pakollinen-kentta? "Koulutuksen järjestäjä, yhteisö tai säätiö"))))))
 
 (deftest jarjestamissuunnitelman-poistaminen-test
   (testing "Järjestämissuunnitelman poistaminen heittää confirm dialogin"

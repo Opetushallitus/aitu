@@ -86,7 +86,7 @@
           ;;Niin
           (is (= (viestin-teksti) "Henkilön tietoja muokattu"))
           (is (= (henkilon-kokonimi) "Ahto SimakuutioMuokattu")))))
-    (testing "henkilön tietojen muokkaus ei onnistu jos vaadittuja tietoja puuttuu ja näytetään virheilmoitus"
+    (testing "tallennusnappi on disabloituna jos pakollisia tietoja puuttuu."
       (with-webdriver
         ;; Oletetaan, että
         (with-data
@@ -97,10 +97,8 @@
           (avaa (henkilon-muokkaussivu 999))
           (tyhjenna-input "jasen.henkilo.sukunimi")
           (odota-angular-pyyntoa)
-          (tallenna)
-          (odota-angular-pyyntoa)
           ;;Niin
-          (is (= (viestin-teksti) "Henkilön tietojen muokkaus ei onnistunut"))))))
+          (is (not (tallennus-nappi-aktiivinen?)))))))
   (testing "uuden henkilön luonti"
     (testing "uuden henkilön luontiin pääsee painamalla uuden henkilön luonti -nappia henkilölistaussivulla"
       (with-webdriver
@@ -194,3 +192,14 @@
             (tallenna)
             ;; Niin
             (is (= (jarjeston-nimi) "Pikkujärjestö"))))))))
+
+(deftest henkilosivu-muokkaus-pakolliset-kentat-test
+  (testing "Henkilön muokkaussivun pakolliset kentät"
+    (with-webdriver
+      (with-data
+        {:henkilot [{:henkiloid 999
+                     :etunimi "Ahto"
+                     :sukunimi "Simakuutio"}]}
+        (avaa (henkilon-muokkaussivu 999))
+        (is (pakollinen-kentta? "Etunimi"))
+        (is (pakollinen-kentta? "Sukunimi"))))))

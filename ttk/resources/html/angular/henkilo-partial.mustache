@@ -5,16 +5,16 @@
 
 <section class="info-section">
   <fieldset ng-hide="muokkausTila">
-    <label ng-hide="muokkausTila">[[nimi]]</label>
-    <p ng-hide="muokkausTila">{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
+    <label>[[nimi]]</label>
+    <p>{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
   </fieldset>
   <fieldset ng-hide="!muokkausTila">
-    <label>[[etunimi]]</label>
-    <input type="text" ng-model="jasen.henkilo.etunimi">
+    <label class="pakollinen">[[etunimi]]</label>
+    <input ng-required="true" type="text" ng-model="jasen.henkilo.etunimi">
   </fieldset>
   <fieldset ng-hide="!muokkausTila">
-    <label>[[sukunimi]]</label>
-    <input type="text"  ng-model="jasen.henkilo.sukunimi">
+    <label class="pakollinen">[[sukunimi]]</label>
+    <input ng-required="true" type="text"  ng-model="jasen.henkilo.sukunimi">
   </fieldset>
 </section>
 <section class="info-section">
@@ -76,7 +76,7 @@
   </fieldset>
   <haku-valitsin
     ng-show="muokkausTila"
-    otsikko="[[jarjesto]] / [[keskusjarjesto]] (*)"
+    otsikko="[[jarjesto]] / [[keskusjarjesto]]"
     url="[[base-url]]/api/jarjesto/haku/"
     model="jasen.henkilo"
     model-id-property="jarjesto"

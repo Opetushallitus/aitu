@@ -92,8 +92,8 @@
             (avaa (jasenen-lisays-sivu "98/11/543"))
             (paina-nappia)
             ;; Niin
-            (is (w/enabled? {:css "button[ng-click=\"lisaaHenkiloJaSiirrySeuraavaan(jasen.henkilo)\"]"}))
-            (not (w/enabled? {:css "button[ng-click=\"siirrySeuraavaan()\"]"}))))
+            (is (w/displayed? {:css "button[ng-click=\"lisaaHenkiloJaSiirrySeuraavaan(jasen.henkilo)\"]"}))
+            (not (w/displayed? {:css "button[ng-click=\"siirrySeuraavaan()\"]"}))))
         (with-webdriver
           (testing "pitäisi olla valintatilassa jos henkilö löytyy"
             ;; Kun
