@@ -14,6 +14,9 @@
   set_fact:
     sovellus_jar_palvelimella: "{{ palvelu }}-{{ build }}.jar"
 
+- name: Luo tomcat-käyttäjä
+  user: name=tomcat system=yes shell=/bin/false
+
 - name: Luo asennushakemisto palvelimelle
   file: path={{ asennushakemisto }} state=directory owner=tomcat group=tomcat mode=0755
 
