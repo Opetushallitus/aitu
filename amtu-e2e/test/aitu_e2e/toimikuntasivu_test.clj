@@ -146,6 +146,14 @@
         (testing "pitäisi näyttää toimikausi"
           (is (= (toimikausi) "01.08.2013 – 31.07.2016")))))))
 
+(deftest toimikuntasivu-muokkaus-test-pakolliset-kentat
+  (testing "Toimikuntasivu - pakolliset kentät:"
+    (with-webdriver
+      (with-data toimikuntasivu-testidata
+        (avaa (toimikunnan-muokkaussivu "98/11/543"))
+        (is (pakollinen-kentta? "Alkupäivä"))
+        (is (pakollinen-kentta? "Loppupäivä"))))))
+
 (deftest vanhentuneen-toimikunnan-muokkaus-test
   (testing "Vanhentuneen toimikunnan muokkaus ei onnistu"
     (with-webdriver

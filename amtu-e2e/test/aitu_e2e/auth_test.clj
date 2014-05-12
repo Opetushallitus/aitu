@@ -162,3 +162,32 @@
             (henkilosivu 998)
             "T-800"
             (is (henkilon-muokkaus-nappi-nakyy))))))))
+
+(deftest ^:cas oph-katselija-auth-testi
+  (testing "Toimikuntasivu: OPH-katselija ei näe muokkaustoiminnallisuuksia, mutta näkee linkit sopimussivuille."
+    (with-data toimikuntasivu-testidata
+      (with-webdriver
+        (avaa-kayttajana
+          (toimikuntasivu "98/11/543")
+          "oph-katselija"
+          (is (not (toimikunnan-muokkaus-nappi-nakyy)))
+          (is (not (toimikunnan-toimialan-muokkaus-nappi-nakyy)))
+          (is (not (toimikunnan-jasenten-muokkaus-nappi-nakyy)))
+          (is (not (toimikunnan-sopimusten-lisays-nakyy)))
+          (is (linkki-sopimussivulle-nakyy 1230))))))
+  (testing "Sopimussivu: OPH-katselija ei näe muokkaustoiminnallisuuksia"
+    (with-data toimikuntasivu-testidata
+      (with-webdriver
+        (avaa-kayttajana
+          (sopimussivu 1230)
+          "oph-katselija"
+          (is (not (sopimuksen-muokkaus-nappi-nakyy)))
+          (is (not (sopimuksen-poisto-nappi-nakyy)))
+          (is (not (sopimuksen-tutkintojen-muokkaus-nappi-nakyy)))))))
+  (testing "Henkilösivu: OPH-katselija ei näe muokkaustoiminnallisuuksia"
+    (with-data toimikuntasivu-testidata
+      (with-webdriver
+        (avaa-kayttajana
+          (henkilosivu 999)
+          "oph-katselija"
+          (is (not (henkilon-muokkaus-nappi-nakyy))))))))

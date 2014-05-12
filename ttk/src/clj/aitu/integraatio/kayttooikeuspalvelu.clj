@@ -32,9 +32,6 @@
 (defn ryhma-dn [ryhma-cn]
   (str "cn=" ryhma-cn ",ou=Groups,dc=opintopolku,dc=fi"))
 
-(defn henkilo-dn [oid]
-  (str "uid=" oid ",ou=People,dc=opintopolku,dc=fi"))
-
 (defn kayttajat [kayttooikeuspalvelu rooli]
   {:pre [(contains? roolin-ryhma-cn rooli)]}
   (let [yhteys (kayttooikeuspalvelu)

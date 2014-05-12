@@ -139,23 +139,26 @@ angular.module('directives', ['services', 'resources'])
     };
   })
   .directive('enumValikko', ['i18n', 'EnumResource', '$compile', function (i18n, EnumResource, $compile) {
+
+    var template = '<select ng-model="arvo" ng-required="pakollinen"><option ng-selected="{{arvo === e.nimi}}" ng-repeat="e in arvot" value="{{e.nimi}}">{{ i18n.enum[nimi + "-arvo"][e.nimi] }}</option></select>';
+
     return {
       restrict: 'E',
       replace: true,
       scope: {
-        arvo: "=",
-        nimi: "@"
+        arvo : '=',
+        nimi : '@',
+        pakollinen: '='
       },
-      template : '<span></span>',
+      template : '<span>' + template + '</span>',
       link: function (scope, element, attrs) {
-        var template = '<select ng-model="arvo">';
-        if(attrs.sallityhja) template += '<option value=""></option>';
-        template += '<option ng-selected="{{arvo === e.nimi}}" ng-repeat="e in arvot" value="{{e.nimi}}">{{ i18n.enum[nimi + "-arvo"][e.nimi] }}</option></select>';
+
         scope.i18n = i18n;
         EnumResource.get({'enum': attrs.nimi}, function(arvot){
           scope.arvot = arvot;
           //Compiletaan template vasta kun enumdata on saatavilla. Muutoin ie9 rendaa selectin väärin.
           var compiled = $compile(template)(scope);
+          element.empty();
           element.append(compiled);
         });
       }
@@ -218,7 +221,8 @@ angular.module('directives', ['services', 'resources'])
         oletusPvm : '=',
         minPvm : '=',
         maxPvm : '=',
-        otsikko : '@'
+        otsikko : '@',
+        pakollinen : '='
       },
       templateUrl : 'template/pvm-valitsin',
       link : function(scope) {
@@ -311,13 +315,10 @@ angular.module('directives', ['services', 'resources'])
         otsikko : '@',
         url : '@',
         model : '=',
-        // Select2 hävittää saamastaan model-oliosta kenttiä valinnan
-        // vaihtuessa. Tämän vuoksi ei voida antaa Angular-scopessa olevaa
-        // modelia suoraan Select2:lle, vaan annetaan sille eri olio, ja
-        // pidetään watcheilla niiden id- ja text-kentät synkassa.
         modelIdProperty : '@',
         modelTextProperty : '@',
-        searchPropertyMap : '@'
+        searchPropertyMap : '@',
+        pakollinen : '='
       },
       templateUrl : 'template/haku-valitsin',
       controller : function($scope) {
@@ -325,24 +326,26 @@ angular.module('directives', ['services', 'resources'])
         var modelTextProp = $scope.modelTextProperty;
         var searchPropertyMap = $scope.$eval($scope.searchPropertyMap);
 
-        $scope.selection = $scope.model || {};
+        // Select2 hävittää saamastaan model-oliosta kenttiä valinnan
+        // vaihtuessa. Tämän vuoksi ei voida antaa Angular-scopessa olevaa
+        // modelia suoraan Select2:lle, vaan annetaan sille eri olio, ja
+        // pidetään watcheilla niiden id- ja text-kentät synkassa.
 
         $scope.$watch('selection', function(value){
           if(value && value[modelIdProp]) {
             $scope.model = $scope.model || {};
             _.assign($scope.model, value);
-          }
-          else if ($scope.model) {
+          } else if (value === '') {
+            //Kun tyhjennetään select2 inputti.
             delete $scope.model[modelIdProp];
-          }
-        });
+          }});
 
         $scope.$watch('model', function(value) {
-          if (value) {
+          if (value && value[modelIdProp]) {
+            $scope.selection = $scope.selection ? $scope.selection : {};
             $scope.selection[modelIdProp] = value[modelIdProp];
             $scope.selection[modelTextProp] = lokalisoituTeksti(value, modelTextProp);
-          }
-        });
+          }});
 
         function lokalisoituTeksti(obj, textProp) {
           var teksti = '';
@@ -399,7 +402,8 @@ angular.module('directives', ['services', 'resources'])
           },
           formatSearching: function () {
             return i18n.yleiset['etsitaan'];
-          }
+          },
+          initSelection : function () {}
         };
       }
     };
@@ -466,7 +470,7 @@ angular.module('directives', ['services', 'resources'])
     var vastakkainenJarjestys = false;
     var jarjestettavaData;
 
-    $scope.$watch($attrs.jarjestettavaTaulukko, function(value) {
+    $scope.$watch($attrs.jarjestettavaTaulukko, function(value) {
       jarjestettavaData = value;
       if(jarjestettavaData) {
         jarjesta();
@@ -506,7 +510,7 @@ angular.module('directives', ['services', 'resources'])
     }
   }])
 
-  .directive('jarjestettavaSarake', function() {
+  .directive('jarjestettavaSarake', function() {
     return {
       restrict: 'A',
       scope : {
@@ -557,6 +561,8 @@ angular.module('directives', ['services', 'resources'])
 
         var vaadittuOikeus = attrs.oikeus;
         var konteksti = attrs.konteksti;
+        var sallitutRoolit = attrs.sallitutRoolit ? scope.$eval(attrs.sallitutRoolit) : [];
+        sallitutRoolit.push('YLLAPITAJA');
 
         scope.sallittu = false;
         scope.href = attrs.href;
@@ -568,7 +574,7 @@ angular.module('directives', ['services', 'resources'])
         function onkoSalittu() {
           if(kayttooikeudet && kayttooikeudet.$resolved) {
             try {
-              return kayttooikeudet.roolitunnus === 'YLLAPITAJA' ||
+              return _.contains(sallitutRoolit, kayttooikeudet.roolitunnus) ||
                 _(kayttooikeudet[konteksti]).filter(function(value){return value.tunniste == entityId}).pluck('oikeudet').flatten().contains(vaadittuOikeus);
             } catch(e) {}
           }
@@ -674,7 +680,7 @@ angular.module('directives', ['services', 'resources'])
 
   .directive('tallenna', ['apiCallInterceptor', function(apiCallInterceptor){
 
-    function pyyntojaKaynnissa(metodiIdt) {
+    function onkoPyyntojaKaynnissa(metodiIdt) {
       return !_(apiCallInterceptor.pyynnot).pick(metodiIdt).every({pyyntojaKaynnissa : 0});
     }
 
@@ -682,20 +688,28 @@ angular.module('directives', ['services', 'resources'])
       restrict: 'E',
       scope: {
         disabloiPyyntojenAjaksi: '@',
+        formiValidi : '=',
         teksti : '='
       },
-      template : '<button>{{teksti}}</button>',
+      template : '<button ng-disabled="tallennusDisabloitu">{{teksti}}</button>',
       replace : true,
       link : function(scope, el) {
         var idt = scope.$eval(scope.disabloiPyyntojenAjaksi);
-        var tarkistaOnkoPyyntoja = _.partial(pyyntojaKaynnissa, idt);
+        var pyyntojaKaynnissa = false;
+        var tarkistaOnkoPyyntoja = _.partial(onkoPyyntojaKaynnissa, idt);
+
+        scope.tallennusDisabloitu = false;
+
+        function paivitaTila() {
+          scope.tallennusDisabloitu = scope.formiValidi === false || pyyntojaKaynnissa;
+        }
+
         scope.$watch(tarkistaOnkoPyyntoja, function(value){
-          if(value) {
-            el.prop('disabled', true);
-          } else {
-            el.prop('disabled', false);
-          }
+          pyyntojaKaynnissa = value ? true : false;
+          paivitaTila();
         });
+
+        scope.$watch('formiValidi', paivitaTila );
       }
     };
   }])
@@ -707,4 +721,15 @@ angular.module('directives', ['services', 'resources'])
         $(element).placeholder();
       }
     }
-  });
+  })
+
+  .directive('pakollisiaKenttia', ['i18n', function(i18n) {
+    return {
+      restrict: 'E',
+      replace: true,
+      template: '<div class="pakollisia-kenttia-teksti">{{i18n.yleiset["pakollisia-kenttia"]}}</div>',
+      link: function(scope) {
+        scope.i18n = i18n;
+      }
+    }
+  }]);

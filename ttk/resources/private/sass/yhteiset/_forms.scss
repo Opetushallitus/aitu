@@ -4,6 +4,10 @@ select {
 
 form {
   margin-bottom: $marginL;
+
+  .pakollisia-kenttia-teksti {
+    margin: $marginM 0;
+  }
 }
 
 label {
@@ -12,6 +16,10 @@ label {
   vertical-align: middle;
 
   & ~ p, & ~ input, & ~ a {display: block;}
+
+  &.pakollinen:after {
+    content : " (*)";
+  }
 }
 
 input[type="text"] {
@@ -20,7 +28,7 @@ input[type="text"] {
   &:focus {border-color: $darkest-primary;}
   vertical-align: top;
 
-  &.ng-invalid {
+  &.ng-invalid-date {
     border: 1px solid $error-color;
   }
 }

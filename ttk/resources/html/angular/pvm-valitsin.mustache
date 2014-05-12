@@ -1,11 +1,12 @@
 <fieldset class="datepicker-field">
   <!--{{=[[ ]]=}}-->
-  <label ng-if="otsikko">{{otsikko}}</label>
+  <label ng-if="otsikko" ng-class="{pakollinen : pakollinen}">{{otsikko}}</label>
   <input
     type="text"
     datepicker-popup="dd.MM.yyyy"
     formatteddate="valittuDate"
     ng-model="valittuDate"
+    ng-required="pakollinen"
     is-open="opened"
     min="minDate"
     max="maxDate"

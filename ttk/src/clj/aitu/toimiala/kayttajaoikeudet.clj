@@ -25,6 +25,7 @@
 (def yllapitajarooli "YLLAPITAJA")
 (def kayttajarooli "KAYTTAJA")
 (def osoitepalvelurooli "OSOITEPALVELU")
+(def oph-katselijarooli "OPH-KATSELIJA")
 
 (def toimikunnan-muokkaus-roolit #{"puheenjohtaja",
                                    "varapuheenjohtaja",
@@ -32,11 +33,18 @@
                                    "jasen",
                                    "ulkopuolinensihteeri"})
 
+(defn onko-kayttajan-rooli?
+  [kayttaja-map rooli]
+  {:pre [(contains? #{yllapitajarooli kayttajarooli oph-katselijarooli} (:roolitunnus kayttaja-map))]}
+  (= rooli (:roolitunnus kayttaja-map)))
+
 (defn yllapitaja?
   ([kayttaja-map]
-    {:pre [(contains? #{yllapitajarooli kayttajarooli} (:roolitunnus kayttaja-map))]}
-    (= yllapitajarooli (:roolitunnus kayttaja-map)))
+   (onko-kayttajan-rooli? kayttaja-map yllapitajarooli))
   ([] (yllapitaja? *current-user-authmap*)))
+
+(defn oph-katselija? []
+  (onko-kayttajan-rooli? *current-user-authmap* oph-katselijarooli))
 
 (defn jasenyys-voimassa? [jasenyys]
   (:voimassa (taydenna-jasenyyden-voimassaolo jasenyys (not (toimikunta-vanhentunut? jasenyys)))))
@@ -63,7 +71,8 @@
   ([]
     (let [roolitunnus (:roolitunnus *current-user-authmap*)]
       (or (= roolitunnus yllapitajarooli)
-          (= roolitunnus kayttajarooli)))))
+          (= roolitunnus kayttajarooli)
+          (= roolitunnus oph-katselijarooli)))))
 
 (defn osoitepalvelu-kayttaja?
   ([x] (osoitepalvelu-kayttaja?))
@@ -110,9 +119,9 @@
 
 (def sopimustoiminnot
   `{:sopimustiedot_paivitys #(or (yllapitaja?) (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
-    :sopimustiedot_luku #(or (yllapitaja?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
-    :suunnitelma_luku #(or (yllapitaja?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
-    :sopimuksen_liite_luku #(or (yllapitaja?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))})
+    :sopimustiedot_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
+    :suunnitelma_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
+    :sopimuksen_liite_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))})
 
 
 (def toimikuntatoiminnot

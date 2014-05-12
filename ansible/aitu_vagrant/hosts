@@ -1,0 +1,13 @@
+[oph_db]
+192.168.50.51
+
+[oph_palvelu]
+192.168.50.52
+
+[oph_palvelu:vars]
+ansible_ssh_user = aituadmin
+palvelu = aitu
+asennushakemisto = /data00/aitu
+sovelluksen_asetustiedosto = ttk.properties
+migraation_asetustiedosto = ttk-db.properties
+migraation_argumentit = -u ttk_user --aituhaku-username aituhaku_user --clear -t

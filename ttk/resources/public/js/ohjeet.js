@@ -58,7 +58,7 @@ angular.module('ohjeet', [])
           scope.muokkaus = false;
         }
 
-        scope.tallennaOhje = function() {
+        scope.tallennaOhje = function() {
           if(!scope.ohje.ohjetunniste) {
             scope.ohje.ohjetunniste = scope.tunniste;
           }

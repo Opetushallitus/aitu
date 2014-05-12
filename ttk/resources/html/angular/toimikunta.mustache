@@ -34,12 +34,13 @@
       <label>[[toimikausi]]</label>
       <p ng-hide="muokkausTila">{{toimikunta.toimikausi_alku | date:'dd.MM.yyyy'}} – {{toimikunta.toimikausi_loppu | date:'dd.MM.yyyy'}}</p>
       <div ng-hide="!muokkausTila">
-        <pvm-valitsin valittu-pvm="toimikunta.toimikausi_alku" min-pvm="toimikunta.alkupvm" max-pvm="toimikunta.loppupvm" otsikko="[[toimikausi_alku]]"></pvm-valitsin>
-        <pvm-valitsin valittu-pvm="toimikunta.toimikausi_loppu" min-pvm="toimikunta.alkupvm" max-pvm="toimikunta.loppupvm" otsikko="[[toimikausi_loppu]]"></pvm-valitsin>
+        <pvm-valitsin pakollinen="true" valittu-pvm="toimikunta.toimikausi_alku" min-pvm="toimikunta.alkupvm" max-pvm="toimikunta.loppupvm" otsikko="[[toimikausi_alku]]"></pvm-valitsin>
+        <pvm-valitsin pakollinen="true" valittu-pvm="toimikunta.toimikausi_loppu" min-pvm="toimikunta.alkupvm" max-pvm="toimikunta.loppupvm" otsikko="[[toimikausi_loppu]]"></pvm-valitsin>
       </div>
     </div>
+    <pakollisia-kenttia ng-show="muokkausTila"></pakollisia-kenttia>
     <div>
-      <tallenna ng-disabled="!toimikuntaForm.$valid" valid="toimikuntaForm.$valid" disabloi-pyyntojen-ajaksi="['toimikunnan-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="'[[tallenna]]'"></tallenna>
+      <tallenna formi-validi="toimikuntaForm.$valid" disabloi-pyyntojen-ajaksi="['toimikunnan-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="'[[tallenna]]'"></tallenna>
       <button ng-hide="!muokkausTila" ng-click="peruuta()">[[peruuta]]</button>
     </div>
   </form>

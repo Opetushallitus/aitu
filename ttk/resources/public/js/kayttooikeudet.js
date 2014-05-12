@@ -11,7 +11,7 @@ angular.module('kayttooikeudet', ['ngResource'])
 
     var oikeudet;
 
-    function paivitaOikeudet() {
+    function paivitaOikeudet() {
       oikeudet = resource.get().$promise;
     }
 

@@ -97,6 +97,5 @@
           (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
           (syota-pvm "sopimus.alkupvm" " ")
           (odota-angular-pyyntoa)
-          (tallenna)
-          (is (= (viestin-teksti) "Järjestämissopimuksen luonti ei onnistunut")))))))
+          (is (not (tallennus-nappi-aktiivinen?))))))))
 

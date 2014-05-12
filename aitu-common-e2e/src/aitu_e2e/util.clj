@@ -200,6 +200,17 @@
   (w/click "button[ng-click=\"tallenna()\"]")
   (odota-angular-pyyntoa))
 
+(defn tallennus-nappi-aktiivinen? []
+  (w/enabled? (w/find-element {:css "button[ng-click=\"tallenna()\"]"})))
+
+(defn pakollinen-kentta? [label-text]
+  (let [elementti (first (filter w/displayed? (w/find-elements {:text label-text :tag "label"})))]
+    (some->
+      elementti
+      (w/attribute "class")
+      (.indexOf "pakollinen")
+      (> -1))))
+
 (defn valitse-select2-optio
   "Valitsee ensimmäisen option hakuehto listalta"
   [malli tunnistekentta hakuehto ]

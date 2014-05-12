@@ -118,7 +118,7 @@
         $scope.muokkaa = function() {
           crudLocation.siirryMuokkaukseen($routeParams.id, '/sopimus');
         };
-        $scope.poista = function() {
+        $scope.poista = function() {
           if(confirm(i18n.jarjestamissopimus['varmista-sopimuksen-poisto'])) {
             sopimusResource.delete({jarjestamissopimusid : $routeParams.id }, function(){
               siirryToimikunnanSivulle($scope.sopimus.toimikunta.diaarinumero);
@@ -126,7 +126,7 @@
           }
         };
 
-        $scope.muokkaaTutkintoja = function() {
+        $scope.muokkaaTutkintoja = function() {
           $location.path('/sopimus/' + $routeParams.id + '/tutkinnot');
         };
         $scope.siirryToimikunnanSivulle = siirryToimikunnanSivulle;
@@ -141,7 +141,7 @@
           if(tutkinnonOsia === 0 && osaamisAloja === 0) {
             otsikko = i18n.jarjestamissopimus['koko-tutkinto'];
           } else {
-            if (tutkinnonOsia > 0) {
+            if (tutkinnonOsia > 0) {
               osat.push(i18n.jarjestamissopimus['tutkinnon-osia'] + ': ' + tutkinnonOsia + '/' + sopimusJaTutkinto.tutkintoversio.tutkinto_ja_tutkinnonosa.length);
             }
             if (osaamisAloja > 0) {
@@ -308,7 +308,7 @@
       };
     })
 
-    .filter('jarjestaValitutJarjestysnumerolla', ['$filter', function($filter) {
+    .filter('jarjestaValitutJarjestysnumerolla', ['$filter', function($filter) {
       return function(entityt, tutkinnonosatJarjestysnumerolla, reverse){
         return $filter('orderBy')(entityt, function(entity){
           var tutkinnonosaJaJarjestysnumero = _.find(tutkinnonosatJarjestysnumerolla, {osatunnus: entity.osatunnus});

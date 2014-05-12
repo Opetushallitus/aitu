@@ -1,6 +1,5 @@
 $font-body: "Open Sans", "Arial", sans-serif;
 $font-heading: "Open Sans Condensed", "Arial", sans-serif;
-$font-heading-light: "Open Sans Condensed", "Arial", sans-serif;
 $font-size-body: 14px;
 @mixin engraved{ text-shadow: 0px 1px 0px rgba(255,255,255,.3), 0px -1px 0px rgba(0,0,0,.7);}
 
@@ -26,7 +25,7 @@ h1 {
 }
 
 h2 {
-  font-family: $font-heading-light;
+  font-family:$font-heading;
   margin-bottom: $marginM;
   font-weight: 300;
   font-size: 1.7em;
@@ -67,27 +66,29 @@ a {color : $primary-color; text-decoration: none;
 
 @font-face {
   font-family: 'Open Sans';
-  font-style: normal;
   font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url('../font/opensans.woff') format('woff');
+  src: url('../font/opensans.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Open Sans';
-  font-style: normal;
+  font-weight: 600;
+  src: url('../font/opensans-semibold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
   font-weight: 700;
-  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../font/opensans-bold.woff') format('woff');
+  src: url('../font/opensans-bold.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Open Sans Condensed';
-  font-style: normal;
   font-weight: 300;
-  src: local('Open Sans Cond Light'), local('OpenSans-CondensedLight'), url('../font/opensans-condensed-light.woff') format('woff');
+  src: url('../font/opensans-condensed-light.woff') format('woff');
 }
 @font-face {
   font-family: 'Open Sans Condensed';
-  font-style: normal;
   font-weight: 700;
-  src: local('Open Sans Condensed Bold'), local('OpenSans-CondensedBold'), url('../font/opensans-condensed-bold.woff') format('woff');
+  src: url('../font/opensans-condensed-bold.woff') format('woff');
 }

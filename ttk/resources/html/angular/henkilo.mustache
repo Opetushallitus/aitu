@@ -5,8 +5,9 @@
 <h1 ng-hide="muokkausTila">{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}
   <auth-toiminto auth-nappi ng-show="!muokkausTila" oikeus="henkilo_paivitys" konteksti="henkilo" entity-id="{{jasen.henkilo.henkiloid}}" class="icon edit-icon" ng-click="muokkaa()"></auth-toiminto>
 </h1>
-
+<form name="henkiloForm">
 <ng-include src="'template/henkilo-partial'"></ng-include>
+</form>
 
 
 <jasenyyksien-listaus class="nykyiset-jasenyydet"
@@ -28,7 +29,7 @@
                       salli-piilotus="true">
 </vanhojen-jasenyyksien-listaus>
 
-<tallenna disabloi-pyyntojen-ajaksi="['henkilon-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="'[[tallenna]]'">/tallenna>
+<tallenna formi-validi="henkiloForm.$valid" disabloi-pyyntojen-ajaksi="['henkilon-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="'[[tallenna]]'"></tallenna>
 <button ng-hide="!muokkausTila" ng-click="peruuta()">[[peruuta]]</button>
 [[/i18n.yleiset]]
 [[/i18n.henkilo]]

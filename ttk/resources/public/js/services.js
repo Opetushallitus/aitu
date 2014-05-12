@@ -111,7 +111,7 @@ angular.module('services', ['ngResource'])
     }
 
     return {
-      kysyVarmistusPoistuttaessa : function() {
+      kysyVarmistusPoistuttaessa : function() {
         kysyVarmistus = true;
       },
       tallenna : function(resource, okCallback) {
@@ -127,12 +127,12 @@ angular.module('services', ['ngResource'])
 
   .factory('pvm',['$filter', function($filter) {
     return {
-      parsiPvm : function(pvm) {
+      parsiPvm : function(pvm) {
         if(pvm) {
           try {
             var parts = pvm.split('.');
             var parsittu = new Date(parts[2], parts[1] - 1, parts[0]);
-            if(parsittu.getDate() == parts[0] && parsittu.getMonth() == parts[1] -1 && parsittu.getFullYear() == parts[2]) {
+            if(parsittu.getDate() == parts[0] && parsittu.getMonth() == parts[1] -1 && parsittu.getFullYear() == parts[2]) {
               return parsittu;
             }
           } catch(e) {}

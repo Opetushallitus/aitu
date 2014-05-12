@@ -118,7 +118,7 @@ angular.module('apimetodiPalaute', ['services'])
       return (vastaus.config.method === 'POST' ||
               vastaus.config.method === 'PUT' ||
               vastaus.config.method === 'DELETE') &&
-              vastaus.config.i18n  ||
+              vastaus.config.i18n  ||
               vastaus.status !== 200;
     }
 
