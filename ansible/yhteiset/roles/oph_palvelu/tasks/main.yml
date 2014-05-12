@@ -1,3 +1,14 @@
+# Pakolliset parametrit:
+# - palvelu: Palvelun nimi (esim. "aitu-snapshot")
+# - build: Buildin numero tai muu tunniste (esim. "dev")
+# - asennushakemisto: Palvelun asennushakemisto
+#
+# Valinnaiset parametrit:
+# - sovelluksen_asetustiedosto: Polku sovelluksen asetustiedostoon Ansiblea
+#                               ajavalla koneella (suhteessa inventoryyn)
+# - migraatio_asetustiedosto: Polku migraation asetustiedostoon Ansiblea
+#                             ajavalla koneella (suhteessa inventoryyn)
+# - migraation_argumentit: Migraatiolle annettavat komentoriviargumentit
 ---
 - name: Muodosta sovelluspaketin nimi etäpalvelimella
   set_fact:
@@ -16,7 +27,6 @@
 
 - name: Kopioi versio palvelimelle
   copy: src={{ sovellus_jar }} dest={{ asennushakemisto }}/{{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
-  register: version_kopiointi
 
 - name: Muodosta migraatiopaketin nimi etäpalvelimella
   set_fact:
@@ -45,10 +55,10 @@
   file: path={{ asennushakemisto }}/logs state=directory owner=tomcat group=tomcat mode=0755
 
 - name: Suorita datan migraatio
-  shell: chdir={{ asennushakemisto }} java -jar {{ migraatio_jar_palvelimella }} {{ migraation_argumentit }} 1> logs/migraatio.stdout.`date +%Y-%m-%d-%H-%M-%S` 2> logs/migraatio.stderr.`date +%Y-%m-%d-%H-%M-%S`
+  shell: chdir={{ asennushakemisto }} java -jar {{ migraatio_jar_palvelimella }} {{ migraation_argumentit }} 1> logs/{{ palvelu }}-migraatio.stdout.`date +%Y-%m-%d-%H-%M-%S` 2> logs/{{ palvelu }}-migraatio.stderr.`date +%Y-%m-%d-%H-%M-%S`
   register: migraatio
   ignore_errors: yes
-  when: not (kopioi_migraatio | skipped)
+  when: (kopioi_migraatio | success)
 
 - name: Ota versio käyttöön
   file: path={{ asennushakemisto }}/{{ palvelu }}.jar state=link src={{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat
