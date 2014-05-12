@@ -25,7 +25,7 @@
                  :paivitys "päivitys"})
 
 (defn ^:private kirjoita!
-  [tieto operaatio tiedot-map]
+  ([tieto operaatio tiedot-map]
   {:pre [(bound? #'ka/*current-user-uid*),
          (contains? operaatiot operaatio)
          (keyword? tieto)
@@ -34,6 +34,8 @@
         msg (str "uid: " uid " oper: " (operaatio operaatiot) " kohde: " (name tieto) " meta: (" tiedot-map ")")]
     (binding [aitulog/*lisaa-uid-ja-request-id?* false]
       (log/info msg))))
+  ([tieto operaatio]
+    (kirjoita! tieto operaatio {})))
 
 (defn jarjestamissopimus-paivitys!
   [sopimusid diaarinumero]
