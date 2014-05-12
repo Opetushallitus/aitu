@@ -25,89 +25,92 @@
                  :paivitys "päivitys"})
 
 (defn ^:private kirjoita!
-  [tieto operaatio & tiedot-map]
+  [tieto operaatio tiedot-map]
   {:pre [(bound? #'ka/*current-user-uid*),
-         (contains? operaatiot operaatio)]}
+         (contains? operaatiot operaatio)
+         (keyword? tieto)
+         (map? tiedot-map)]}
   (let [uid ka/*current-user-uid*
-        msg (str "uid: " uid " oper: " (operaatio operaatiot) " kohde: " tieto " meta: " tiedot-map )]
+        msg (str "uid: " uid " oper: " (operaatio operaatiot) " kohde: " (name tieto) " meta: (" tiedot-map ")")]
     (binding [aitulog/*lisaa-uid-ja-request-id?* false]
       (log/info msg))))
 
 (defn jarjestamissopimus-paivitys!
   [sopimusid diaarinumero]
-  (kirjoita! "järjestämissopimus" :paivitys
+  (kirjoita! :järjestämissopimus :paivitys
     {:sopimusid sopimusid
      :diaarinumero diaarinumero}))
 
 (defn jarjestamissopimus-lisays!
   [sopimusid diaarinumero]
-  (kirjoita! "järjestämissopimus" :lisays
+  (kirjoita! :järjestämissopimus :lisays
     {:sopimusid sopimusid
      :diaarinumero diaarinumero}))
 
 (defn jarjestamissopimus-poisto!
   [sopimusid diaarinumero]
-  (kirjoita! "järjestämissopimus" :poisto
+  (kirjoita! :järjestämissopimus :poisto
     {:sopimusid sopimusid
      :diaarinumero diaarinumero}))
 
 (defn tutkintotoimikunta-operaatio!
   [operaatio tkunta diaarinumero]
-  (kirjoita! "tutkintotoimikunta" operaatio
+  (kirjoita! :tutkintotoimikunta operaatio
              {:tkunta tkunta
               :diaarinumero diaarinumero}))
 
 (defn toimikunnan-tutkinnot-paivitys!
   [toimikunta tutkintotunnukset]
-  (kirjoita! "toimikunnan-tutkinto" :paivitys
+  (kirjoita! :toimikunnan-tutkinto :paivitys
              {:toimikunta toimikunta
               :tutkintotunnukset tutkintotunnukset}))
 
 (defn jasenyys-operaatio!
   [operaatio tkunta jasenyys_id]
-  (kirjoita! "jäsenyys" operaatio
+  (kirjoita! :jäsenyys operaatio
              {:tkunta tkunta
               :jasenyys_id jasenyys_id}))
 
 (defn henkilo-operaatio!
   [operaatio & henkilo_id]
-  (kirjoita! "henkilö" operaatio
+  (kirjoita! :henkilö operaatio
              {:henkilo_id henkilo_id}))
 
 (defn sopimuksen-tutkinnot-operaatio!
   [operaatio jarjestamissopimusid tutkintoversiot]
-  (kirjoita! "sopimuksen-tutkinto" operaatio
+  (kirjoita! :sopimuksen-tutkinto operaatio
              {:jarjestamissopimusid jarjestamissopimusid
               :tutkintoversiot tutkintoversiot}))
 
 (defn tutkinnon-suunnitelma-operaatio!
   [operaatio jarjestamissuunnitelma_id & sopimus_ja_tutkinto]
-  (kirjoita! "tutkinnon-suunnitelma" operaatio
+  (kirjoita! :tutkinnon-suunnitelma operaatio
              (merge {:jarjestamissuunnitelma_id jarjestamissuunnitelma_id}
                     (when sopimus_ja_tutkinto {:sopimus_ja_tutkinto sopimus_ja_tutkinto}))))
 
 (defn tutkinnon-liite-operaatio!
   [operaatio sopimuksen_liite_id & sopimus_ja_tutkinto]
-  (kirjoita! "tutkinnon-liite" operaatio
+  (kirjoita! :tutkinnon-liite operaatio
              (merge {:sopimuksen_liite_id sopimuksen_liite_id}
                     (when sopimus_ja_tutkinto {:sopimus_ja_tutkinto sopimus_ja_tutkinto}))))
 
 (defn sopimuksen-tutkinnon-osat-paivitys!
   [sopimus_ja_tutkinto_id tutkinnon_osa_idt]
-  (kirjoita! "sopimuksen-tutkinnon-osat" :paivitys
+  (kirjoita! :sopimuksen-tutkinnon-osat :paivitys
              {:sopimus_ja_tutkinto_id sopimus_ja_tutkinto_id
               :tutkinnon_osa_idt tutkinnon_osa_idt}))
 
 (defn sopimuksen-osaamisalat-paivitys!
   [sopimus_ja_tutkinto_id osaamisala_idt]
-  (kirjoita! "sopimuksen-osaamisalat" :paivitys
+  (kirjoita! :sopimuksen-osaamisalat :paivitys
              {:sopimus_ja_tutkinto_id sopimus_ja_tutkinto_id
               :osaamisala_idt osaamisala_idt}))
 
 (defn ohjeen-paivitys!
   [ohjetunniste]
-  (kirjoita! "ohje" :paivitys {:ohjetunniste ohjetunniste}))
+  (kirjoita! :ohje :paivitys {:ohjetunniste ohjetunniste}))
 
 (defn tiedote-operaatio!
   [operaatio]
-  (kirjoita! "tiedote" operaatio))
+  {:pre [(contains? operaatiot operaatio)]}
+  (kirjoita! :tiedote operaatio))
