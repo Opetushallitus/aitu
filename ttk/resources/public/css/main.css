@@ -1182,38 +1182,42 @@ header {
   left: 0;
   margin-top: -10px;
 }
-/* line 12, ../../private/sass/partials/_header.scss */
+/* line 4, ../../private/sass/partials/_header.scss */
+header + section {
+  margin-top: 160px;
+}
+/* line 14, ../../private/sass/partials/_header.scss */
 header .app-wrapper {
   height: 160px;
   background: #e1e1e1 url("../img/AITU-background.png") no-repeat left top;
   height: 100%;
   position: relative;
 }
-/* line 19, ../../private/sass/partials/_header.scss */
+/* line 21, ../../private/sass/partials/_header.scss */
 header .vertical-center {
   height: 160px;
   display: table-cell;
   vertical-align: middle;
 }
-/* line 25, ../../private/sass/partials/_header.scss */
+/* line 27, ../../private/sass/partials/_header.scss */
 header .header-content {
   margin-left: 6px;
 }
-/* line 27, ../../private/sass/partials/_header.scss */
+/* line 29, ../../private/sass/partials/_header.scss */
 header .header-content h1, header .header-content .separator, header .header-content h2 {
   display: inline-block;
   vertical-align: middle;
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 35, ../../private/sass/partials/_header.scss */
+/* line 37, ../../private/sass/partials/_header.scss */
 header .separator {
   font-size: 4.2em;
   font-weight: 100;
   position: relative;
   top: -5px;
 }
-/* line 42, ../../private/sass/partials/_header.scss */
+/* line 44, ../../private/sass/partials/_header.scss */
 header .oph-logo {
   width: 271px;
   height: 70px;
@@ -1222,28 +1226,28 @@ header .oph-logo {
   top: 45px;
   background: transparent url("../img/opetushallitus.svg") 0 center no-repeat;
 }
-/* line 49, ../../private/sass/partials/_header.scss */
+/* line 51, ../../private/sass/partials/_header.scss */
 .no-svg header .oph-logo {
   background-image: url("../img/opetushallitus.gif");
 }
-/* line 52, ../../private/sass/partials/_header.scss */
+/* line 54, ../../private/sass/partials/_header.scss */
 header h1 {
   font-size: 4.2em;
 }
-/* line 56, ../../private/sass/partials/_header.scss */
+/* line 58, ../../private/sass/partials/_header.scss */
 header h2 {
   width: 500px;
   font-size: 1.7em;
   font-weight: 300;
 }
-/* line 62, ../../private/sass/partials/_header.scss */
+/* line 64, ../../private/sass/partials/_header.scss */
 header form {
   display: block;
   color: #4d4d4d;
   margin: 24px 0 0 0;
   padding: 0;
 }
-/* line 68, ../../private/sass/partials/_header.scss */
+/* line 70, ../../private/sass/partials/_header.scss */
 header form input {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1252,25 +1256,25 @@ header form input {
   height: 28px;
   border: 1px solid #107ea2;
 }
-/* line 74, ../../private/sass/partials/_header.scss */
+/* line 76, ../../private/sass/partials/_header.scss */
 header form button {
   height: 28px;
   text-transform: uppercase;
   margin: 0;
 }
-/* line 79, ../../private/sass/partials/_header.scss */
+/* line 81, ../../private/sass/partials/_header.scss */
 header form p {
   margin: 0;
   padding-left: 10px;
 }
 
-/* line 86, ../../private/sass/partials/_header.scss */
+/* line 88, ../../private/sass/partials/_header.scss */
 .main-nav {
   background-color: #107ea2;
   min-height: 40px;
   font-size: 1em;
 }
-/* line 93, ../../private/sass/partials/_header.scss */
+/* line 95, ../../private/sass/partials/_header.scss */
 .main-nav a {
   display: inline-block;
   padding-top: 8px;
@@ -1278,7 +1282,7 @@ header form p {
   color: white !important;
   text-transform: uppercase;
 }
-/* line 100, ../../private/sass/partials/_header.scss */
+/* line 102, ../../private/sass/partials/_header.scss */
 .main-nav ul {
   margin: 0;
   padding: 0;
@@ -1293,31 +1297,31 @@ header form p {
 .main-nav ul:after {
   clear: both;
 }
-/* line 104, ../../private/sass/partials/_header.scss */
+/* line 106, ../../private/sass/partials/_header.scss */
 .main-nav ul li {
   border-right: 1px solid #009dcd;
   padding: 0 12px;
   float: left;
   height: 40px;
 }
-/* line 109, ../../private/sass/partials/_header.scss */
+/* line 111, ../../private/sass/partials/_header.scss */
 .main-nav ul li:hover {
   background-color: #083f51;
 }
-/* line 110, ../../private/sass/partials/_header.scss */
+/* line 112, ../../private/sass/partials/_header.scss */
 .main-nav ul li:first-child {
   border-left: 1px solid #009dcd;
 }
-/* line 111, ../../private/sass/partials/_header.scss */
+/* line 113, ../../private/sass/partials/_header.scss */
 .main-nav ul li a {
   text-transform: uppercase;
 }
-/* line 114, ../../private/sass/partials/_header.scss */
+/* line 116, ../../private/sass/partials/_header.scss */
 .main-nav ul li span {
   padding-top: 8px;
   display: inline-block;
 }
-/* line 121, ../../private/sass/partials/_header.scss */
+/* line 123, ../../private/sass/partials/_header.scss */
 .main-nav #current-user {
   float: right;
   padding-right: 40px;
@@ -1341,23 +1345,23 @@ header form p {
 .no-svg .main-nav #current-user:after {
   background-image: url("../img/oph-icon-sprite.png");
 }
-/* line 122, ../../private/sass/partials/_header.scss */
+/* line 124, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang {
   float: right;
 }
-/* line 125, ../../private/sass/partials/_header.scss */
+/* line 127, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-active {
   display: inline-block;
 }
-/* line 128, ../../private/sass/partials/_header.scss */
+/* line 130, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-inactive {
   display: inline-block;
 }
-/* line 131, ../../private/sass/partials/_header.scss */
+/* line 133, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-active:hover {
   background-color: #083f51;
 }
-/* line 134, ../../private/sass/partials/_header.scss */
+/* line 136, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-inactive:hover {
   background-color: #107ea2;
 }

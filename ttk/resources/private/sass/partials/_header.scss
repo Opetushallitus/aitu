@@ -1,6 +1,8 @@
 header {
   $header-height: 160px;
 
+  & + section {margin-top: $header-height;}
+
   color: black;
   background-color: #e1e1e1;
   height: $header-height;
