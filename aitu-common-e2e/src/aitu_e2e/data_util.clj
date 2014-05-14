@@ -215,7 +215,9 @@
   (doseq [entity entityt]
     (metodi (aitu-url (url-fn entity))
       {:headers {"Content-Type" "application/json"
-                 "Accept-Language" "fi"}
+                 "Accept-Language" "fi"
+                 "Cookie" "XSRF-TOKEN=e2e-xsrf-token"
+                 "X-XSRF-TOKEN" "e2e-xsrf-token"}
        :body (json/generate-string entity)})))
 
 (defn on-olemassa
