@@ -1,0 +1,48 @@
+# Pakolliset parametrit:
+# - tietokanta: Tietokannan nimi
+# - tietokannan_peruskayttaja: Tietokannan peruskäyttäjän nimi
+# - tietokannan_paakayttaja: Tietokannan pääkäyttäjän nimi
+#
+# Valinnaiset parametrit:
+# - tietokannan_peruskayttajan_salasana: Arvotaan, jos ei määritetty
+# - tietokannan_paakayttajan_salasana: Arvotaan, jos ei määritetty
+---
+- name: Asenna Ansiblen tarvitsema tietokantakirjasto
+  yum: name=python-psycopg2 state=present
+  sudo: yes
+  sudo_user: root
+
+- name: Lisää tietokanta
+  postgresql_db: name={{ tietokanta }}
+
+- name: Lisää tietokannan peruskäyttäjä
+  postgresql_user: name={{ tietokannan_peruskayttaja }}
+  register: lisaa_peruskayttaja
+
+- name: Aseta tietokannan peruskäyttäjän salasana
+  postgresql_user: name={{ tietokannan_peruskayttaja }} password={{ tietokannan_peruskayttajan_salasana|default(lookup('password', inventory_dir + '/salasanat/tietokannan_peruskayttaja')) }}
+  when: (tietokannan_peruskayttajan_salasana is defined) or lisaa_peruskayttaja|changed
+
+- name: Anna tietokannan peruskäyttäjälle oikeudet tietokantaan
+  postgresql_privs:
+    db: postgres
+    priv: CONNECT
+    type: database
+    obj: "{{ tietokanta }}"
+    role: "{{ tietokannan_peruskayttaja }}"
+
+- name: Lisää tietokannan pääkäyttäjä
+  postgresql_user: name={{ tietokannan_paakayttaja }}
+  register: lisaa_paakayttaja
+
+- name: Aseta tietokannan pääkäyttäjän salasana
+  postgresql_user: name={{ tietokannan_paakayttaja }} password={{ tietokannan_paakayttajan_salasana|default(lookup('password', inventory_dir + '/salasanat/tietokannan_paakayttaja')) }}
+  when: (tietokannan_paakayttajan_salasana is defined) or lisaa_paakayttaja|changed
+
+- name: Anna tietokannan pääkäyttäjälle oikeudet tietokantaan
+  postgresql_privs:
+    db: postgres
+    privs: ALL
+    type: database
+    obj: "{{ tietokanta }}"
+    role: "{{ tietokannan_paakayttaja }}"

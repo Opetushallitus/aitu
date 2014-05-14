@@ -1,4 +1,6 @@
 ---
+- include: konfiguroi_tietokanta.yml
+
 - name: Julkaise paikallisesti käännetty versio OPH:n palvelusta
   hosts: oph_palvelu
   sudo: yes

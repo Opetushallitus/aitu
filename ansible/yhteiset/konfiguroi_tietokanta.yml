@@ -1,0 +1,8 @@
+---
+- name: Konfiguroi tietokanta
+  hosts: oph_db
+  gather_facts: no
+  roles:
+    - role: oph_db
+      sudo: yes
+      sudo_user: postgres

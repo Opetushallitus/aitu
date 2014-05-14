@@ -25,12 +25,40 @@
   when: lokituksen_asetustiedosto is defined
 
 - name: Kopioi sovelluksen asetustiedosto palvelimelle
-  template: src={{ inventory_dir }}/{{ sovelluksen_asetustiedosto }} dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644
+  template: src={{ inventory_dir }}/{{ sovelluksen_asetustiedosto }} dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644 force=no
   when: sovelluksen_asetustiedosto is defined
 
+- name: Aseta tietokantakäyttäjä sovelluksen asetustiedostoon
+  replace:
+    dest: "{{ asennushakemisto }}/{{ sovelluksen_asetustiedosto }}"
+    regexp: ^db\.user.*
+    replace: db.user = {{ tietokannan_peruskayttaja }}
+  when: tietokannan_peruskayttaja is defined
+
+- name: Aseta tietokantakäyttäjän salasana sovelluksen asetustiedostoon
+  replace:
+    dest: "{{ asennushakemisto }}/{{ sovelluksen_asetustiedosto }}"
+    regexp: ^db\.password.*
+    replace: db.password = {{ tietokannan_peruskayttajan_salasana }}
+  when: tietokannan_peruskayttajan_salasana is defined
+
 - name: Kopioi migraation asetustiedosto palvelimelle
-  template: src={{ inventory_dir }}/{{ migraation_asetustiedosto }} dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644
+  template: src={{ inventory_dir }}/{{ migraation_asetustiedosto }} dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644 force=no
   when: migraation_asetustiedosto is defined
+
+- name: Aseta tietokantakäyttäjä migraation asetustiedostoon
+  replace:
+    dest: "{{ asennushakemisto }}/{{ migraation_asetustiedosto }}"
+    regexp: ^db\.user.*
+    replace: db.user = {{ tietokannan_paakayttaja }}
+  when: tietokannan_paakayttaja is defined
+
+- name: Aseta tietokantakäyttäjän salasana migraation asetustiedostoon
+  replace:
+    dest: "{{ asennushakemisto }}/{{ migraation_asetustiedosto }}"
+    regexp: ^db\.password.*
+    replace: db.password = {{ tietokannan_paakayttajan_salasana }}
+  when: tietokannan_paakayttajan_salasana is defined
 
 - name: Kopioi versio palvelimelle
   copy: src={{ sovellus_jar }} dest={{ asennushakemisto }}/{{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
