@@ -101,6 +101,14 @@
       (sql/fields [:selite_fi :opintoala_nimi_fi] [:selite_sv :opintoala_nimi_sv]))
     (sql/with tutkintotoimikunta)))
 
+(defn hae-tutkinnot-tutkinnonosat-osaamisalat
+  "Hakee kaikkien tutkintojen sekä niihin liittyvien tutkinnonosien ja osaamisalojen uusimman version."
+  []
+  (sql/select nayttotutkinto
+    (sql/with uusin-versio
+      (sql/with tutkinnonosa)
+      (sql/with osaamisala))))
+
 (defn liita-sopimus-ja-tutkinto-riviin
   [sopimus-ja-tutkinto]
   (let [{:keys [jarjestamissopimusid]} sopimus-ja-tutkinto]
@@ -153,15 +161,14 @@
       (sort-by :termi))))
 
 (defn hae-opintoalat-osaamisalat-tutkinnonosat
-  "Hakee listan kaikista opintoaloista, osaamisaloista ja tutkinnon osista annetun termin perusteella
-   Koska tutkinnonosia ei ole vielä toteutettu tietomalliin, listaa tällä hetkellä vain opintoalat"
+  "Hakee listan kaikista opintoaloista, osaamisaloista ja tutkinnon osista annetun termin perusteella."
   [termi]
   (let [opintoalat (sql/select opintoala
                      (sql/fields [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
         osaamisalat (sql/select osaamisala
-                      (sql/fields [:nimi :nimi_fi] [:nimi :nimi_sv]))
+                      (sql/fields :nimi_fi :nimi_sv))
         tutkinnonosat (sql/select tutkinnonosa
-                        (sql/fields [:nimi :nimi_fi] [:nimi :nimi_sv]))
+                        (sql/fields :nimi_fi :nimi_sv))
         kaikki (for [ala (concat opintoalat osaamisalat tutkinnonosat)]
                  (assoc ala :termi (:nimi_fi ala)))]
     (->> kaikki

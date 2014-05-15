@@ -18,12 +18,12 @@
       <tbody>
         <tr ng-if="muokkaus" ng-repeat="tutkinnonosa in kaikkiTutkinnonosat | orderBy:'jarjestysnumero' | merkitseValinnatOsiin:valitutTutkinnonosat:'osatunnus'" ng-class="{valittu : tutkinnonosa.valittu}">
           <td class="jarjestysnumero"><button class="icon" ng-click="valitseTutkinnonosa(this.tutkinnonosa)"></button>{{tutkinnonosa.jarjestysnumero}}</td>
-          <td><span class="osan-tieto nimi">{{tutkinnonosa.nimi}}</span></td>
+          <td><span class="osan-tieto nimi">{{tutkinnonosa.nimi | lokalisoi:tutkinnonosa:'nimi'}}</span></td>
           <td><span class="osan-tieto kuvaus">{{tutkinnonosa.kuvaus}}</span></td>
         </tr>
         <tr ng-if="!muokkaus" ng-repeat="valittuTutkinnonosa in valitutTutkinnonosat | jarjestaValitutJarjestysnumerolla:kaikkiTutkinnonosat" class="valittu">
           <td class="jarjestysnumero">{{valittuTutkinnonosa | naytaJarjestysnumeroValitulleTutkinnonosalle:kaikkiTutkinnonosat}}</td>
-          <td><span class="osan-tieto nimi">{{valittuTutkinnonosa.nimi}}</span></td>
+          <td><span class="osan-tieto nimi">{{valittuTutkinnonosa.nimi | lokalisoi:valittuTutkinnonosa:'nimi'}}</span></td>
           <td><span class="osan-tieto kuvaus">{{valittuTutkinnonosa.kuvaus}}</span></td>
         </tr>
       </tbody>
@@ -40,11 +40,11 @@
       </thead>
       <tbody>
       <tr ng-if="muokkaus" ng-repeat="osaamisala in kaikkiOsaamisalat | merkitseValinnatOsiin:valitutOsaamisalat:'osaamisalatunnus'" ng-class="{valittu : osaamisala.valittu}">
-        <td><button class="icon" ng-click="valitseOsaamisala(this.osaamisala)"></button><span class="osan-tieto nimi">{{osaamisala.nimi}}</span></td>
+        <td><button class="icon" ng-click="valitseOsaamisala(this.osaamisala)"></button><span class="osan-tieto nimi">{{osaamisala.nimi | lokalisoi:osaamisala:'nimi'}}</span></td>
         <td><span class="osan-tieto kuvaus">{{osaamisala.kuvaus}}</span></td>
       </tr>
       <tr ng-if="!muokkaus" ng-repeat="valittuOsaamisala in valitutOsaamisalat" class="valittu">
-        <td><span class="osan-tieto nimi">{{valittuOsaamisala.nimi}}</span></td>
+        <td><span class="osan-tieto nimi">{{valittuOsaamisala.nimi | lokalisoi:valittuOsaamisala:'nimi'}}</span></td>
         <td><span class="osan-tieto kuvaus">{{valittuOsaamisala.kuvaus}}</span></td>
       </tr>
       </tbody>

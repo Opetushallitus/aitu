@@ -55,8 +55,8 @@
     "liitä sopimus_ja_tutkinto-riveihin:"
     (with-redefs [liita-sopimus-ja-tutkinto-riviin
                   (fn [haku-fn rivi] {:sopimus-ja-tutkinto-rivi-liitetty true})]
-      (let [rivit [{:nimi "rivi1"}
-                   {:nimi "rivi2"}]]
+      (let [rivit [{:nimi_fi "rivi1"}
+                   {:nimi_fi "rivi2"}]]
         (testing
           "liittää kaikki rivit"
           (is (every? true? (map :sopimus-ja-tutkinto-rivi-liitetty (liita-sopimus-ja-tutkinto-riveihin identity rivit)))))))))

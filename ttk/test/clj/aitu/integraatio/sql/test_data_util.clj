@@ -166,7 +166,7 @@
 
 (defn lisaa-osaamisala! [osaamisalatunnus]
   (sql/insert osaamisala
-    (sql/values (merge {:nimi osaamisalatunnus
+    (sql/values (merge {:nimi_fi osaamisalatunnus
                         :osaamisalatunnus osaamisalatunnus
                         :voimassa_alkupvm (time/date-time 2011 1 1)
                         :versio 1}))))

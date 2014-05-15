@@ -88,11 +88,15 @@
                                "              left join opintoala oa on t.opintoala = oa.opintoala_tkkoodi "
                                "              left join tutkinto_ja_tutkinnonosa tjt on tv.tutkintoversio_id = tjt.tutkintoversio "
                                "              left join tutkinnonosa tos on tjt.tutkinnonosa = tos.tutkinnonosa_id "
+                               "              left join osaamisala osala on tv.tutkintoversio_id = osala.tutkintoversio "
                                "              where js.oppilaitos = ol.oppilaitoskoodi "
                                "                    and (oa.selite_fi ilike ? "
                                "                         or oa.selite_sv ilike ? "
-                               "                         or tos.nimi ilike ?)) ")
-                          (repeat 3 termi)]
+                               "                         or osala.nimi_fi ilike ? "
+                               "                         or osala.nimi_sv ilike ? "
+                               "                         or tos.nimi_fi ilike ? "
+                               "                         or tos.nimi_sv ilike ?)) ")
+                          (repeat 6 termi)]
                          :results)))))
 
 (defn hae-termilla

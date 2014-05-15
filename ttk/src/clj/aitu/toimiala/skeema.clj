@@ -153,7 +153,8 @@
                                       AuditTiedot))
 
 ;; TODO: osaamisala ja osaamisala_id sisältää saman tiedon: käytetäänkö molempia?
-(defmodel SopimusJaTutkintoJaOsaamisala (merge {:nimi s/Str
+(defmodel SopimusJaTutkintoJaOsaamisala (merge {:nimi_fi s/Str
+                                                :nimi_sv (s/maybe s/Str)
                                                 :voimassa_alkupvm org.joda.time.LocalDate
                                                 :sopimus_ja_tutkinto s/Int
                                                 :voimassa_loppupvm org.joda.time.LocalDate
@@ -168,7 +169,8 @@
 
   ;; TODO: tutkinnonosa ja tutkinnonosa_id sisältää saman tiedon: käytetäänkö molempia?
 (defmodel SopimusJaTutkintoJaTutkinnonosa (merge {:tutkinnonosa s/Int
-                                                  :nimi s/Str
+                                                  :nimi_fi s/Str
+                                                  :nimi_sv (s/maybe s/Str)
                                                   :sopimus_ja_tutkinto s/Int
                                                   :versio s/Int
                                                   :tutkinnonosa_id s/Int

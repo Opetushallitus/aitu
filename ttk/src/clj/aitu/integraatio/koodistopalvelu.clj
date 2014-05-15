@@ -175,22 +175,49 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
 (defn muutokset
   [uusi vanha]
   (into {}
-        (for [[avain [uusi-arvo vanha-arvo :as diff]] (diff-maps uusi vanha)]
+        (for [[avain [uusi-arvo vanha-arvo :as diff]] (diff-maps uusi vanha)
+              :when diff]
           [avain (cond
-                  (nil? diff) :ei-muuttunut
-                  (nil? uusi-arvo) :poistunut
-                  (nil? vanha-arvo) :uusi
-                  (map? uusi-arvo) (muutokset uusi-arvo vanha-arvo)
+                  (nil? uusi-arvo) diff
+                  (nil? vanha-arvo) diff
+                  (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
                   :else diff)])))
 
 (defn tutkinto-muutokset
   [asetukset]
-  (let [vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
-                          [(:tutkintotunnus tutkinto) (select-keys tutkinto [:nimi_fi :nimi_sv :tutkintotunnus
-                                                                            :voimassa_alkupvm :voimassa_loppupvm])]))
-        uudet (map-by :tutkintotunnus
-                      (map #(dissoc % :koodiUri) (hae-tutkinnot asetukset)))]
-    (muutokset uudet vanhat)))
+  (let [vanhat (for [tutkinto (tutkinto-arkisto/hae-tutkinnot-tutkinnonosat-osaamisalat)
+                     :let [tutkinnonosat (for [osa (:tutkinnonosa tutkinto)]
+                                           (select-and-rename-keys osa
+                                                                   [[:nimi :nimi_fi] [:nimi :nimi_sv] :osatunnus
+                                                                    :voimassa_alkupvm :voimassa_loppupvm]))
+                           osaamisalat (for [ala (:osaamisala tutkinto)]
+                                         (select-and-rename-keys ala
+                                                                 [[:nimi :nimi_fi] [:nimi :nimi_sv] :osaamisalatunnus
+                                                                  :voimassa_alkupvm :voimassa_loppupvm]))]]
+                 (assoc (select-keys tutkinto [:nimi_fi :nimi_sv :tutkintotunnus
+                                               :voimassa_alkupvm :voimassa_loppupvm])
+                        :tutkinnonosat tutkinnonosat
+                        :osaamisalat osaamisalat))
+        vanhat-tutkinnonosat (map-by :osatunnus (mapcat :tutkinnonosat vanhat))
+        vanhat-osaamisalat (map-by :osaamisalatunnus (mapcat :osaamisalat vanhat))
+        vanhat (->> vanhat
+                 (map #(update-in % [:tutkinnonosat] (comp set (partial map :osatunnus))))
+                 (map #(update-in % [:osaamisalat] (comp set (partial map :osaamisalatunnus))))
+                 (map-by :tutkintotunnus))
+        uudet (->>
+                (hae-tutkinnot asetukset)
+                (map (partial lisaa-opintoala-koulutusala-tutkinnonosat asetukset))
+                (filter #(#{"02" "03"} (:tyyppi %)))
+                (map #(dissoc % :koodiUri :tyyppi :opintoala_tkkoodi :koulutusala_tkkoodi)))
+        uudet-tutkinnonosat (map-by :osatunnus (mapcat :tutkinnonosat uudet))
+        uudet-osaamisalat (map-by :osaamisalatunnus (mapcat :osaamisalat uudet))
+        uudet (->> uudet
+                 (map #(update-in % [:tutkinnonosat] (comp set (partial map :osatunnus))))
+                 (map #(update-in % [:osaamisalat] (comp set (partial map :osaamisalatunnus))))
+                 (map-by :tutkintotunnus))]
+    {:tutkinnot (muutokset uudet vanhat)
+     :osaamisalat (muutokset uudet-osaamisalat vanhat-osaamisalat)
+     :tutkinnonosat (muutokset uudet-tutkinnonosat vanhat-tutkinnonosat)}))
 
 ;; Koulutusalat ja opintoalat käsitellään hieman eri tavalla, koska tietomallissa niillä on selite eikä nimi
 

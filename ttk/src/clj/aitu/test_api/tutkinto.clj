@@ -53,7 +53,7 @@
   (c/POST "/tutkinnonosa" [tutkintoversio osatunnus versio nimi kuvaus jarjestysnumero]
     (db/transaction
       (tutkinto-arkisto/lisaa-tutkinnon-osa! tutkintoversio jarjestysnumero {:osatunnus osatunnus
-                                                                             :nimi nimi
+                                                                             :nimi_fi nimi
                                                                              :versio versio
                                                                              :kuvaus kuvaus}))
     {:status 200})
@@ -61,7 +61,7 @@
     (db/transaction
       (tutkinto-arkisto/lisaa-osaamisala! {:osaamisalatunnus osaamisalatunnus
                                            :tutkintoversio tutkintoversio
-                                           :nimi nimi
+                                           :nimi_fi nimi
                                            :versio versio
                                            :kuvaus kuvaus
                                            :voimassa_alkupvm (parse-iso-date voimassa_alkupvm)}))
