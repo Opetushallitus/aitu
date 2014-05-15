@@ -21,7 +21,7 @@
   file: path={{ asennushakemisto }} state=directory owner=tomcat group=tomcat mode=0755
 
 - name: Kopioi lokituksen asetustiedosto palvelimelle
-  copy: src={{ inventory_dir }}/{{ lokituksen_asetustiedosto }} dest={{ asennushakemisto }}/resources/ owner=tomcat group=tomcat mode=0644
+  copy: src={{ inventory_dir }}/{{ lokituksen_asetustiedosto }} dest={{ asennushakemisto }}/resources/ owner=tomcat group=tomcat mode=0644 force=no
   when: lokituksen_asetustiedosto is defined
 
 - name: Kopioi sovelluksen asetustiedosto palvelimelle
