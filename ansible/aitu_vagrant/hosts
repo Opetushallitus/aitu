@@ -1,11 +1,23 @@
+# vim: ft=dosini
 [oph_db]
 192.168.50.51
 
 [oph_palvelu]
 192.168.50.52
 
-[oph_palvelu:vars]
+[all:vars]
 ansible_ssh_user = aituadmin
+tietokanta = ttk
+tietokannan_peruskayttaja = ttk_user
+tietokannan_paakayttaja = ttk_adm
+
+# Käytetään tunnettuja salasanoja, koska dev-scripts/create-db-schema.sh ajaa
+# migraation suoraan (ilman asennusta tai ttk-db.properties-tiedostoa) ja
+# sisältää tämän vuoksi salasanat
+tietokannan_peruskayttajan_salasana = ttk
+tietokannan_paakayttajan_salasana = ttk-adm
+
+[oph_palvelu:vars]
 palvelu = aitu
 asennushakemisto = /data00/aitu
 sovelluksen_asetustiedosto = ttk.properties

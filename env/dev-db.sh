@@ -1,11 +1,8 @@
 #!/bin/bash
 set -eu
 
-software/postgresql.sh
+./db-server.sh 192.168.50.51 ssh/dev_id_rsa.pub
 
 # poistetaan esteet hostin ja guestin valilta
 iptables -F
 service iptables save
-
-# alustetaan ttk tietokanta ilman tauluja
-sudo -u postgres psql --file=db/dev.sql
