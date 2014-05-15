@@ -8,6 +8,7 @@
     "angular-mocks": "1.2.14",
     "angular-route": "1.2.14",
     "angular-resource": "1.2.14",
+    "angular-cookies": "1.2.14",
     "angular-bootstrap": "0.10.0",
     "jquery": "2.1.0",
     "angular-ui-select2": "0.0.5",

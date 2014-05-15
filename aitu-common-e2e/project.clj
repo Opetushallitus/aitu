@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(defproject solita/opetushallitus-aitu-e2e "1.6.0"
+(defproject solita/opetushallitus-aitu-e2e "1.7.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [clj-webdriver "0.6.1"]
                  [clj-http "0.7.6"]

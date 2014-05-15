@@ -18,6 +18,7 @@
             [aitu.asetukset :refer [build-id kehitysmoodi?]]
             [aitu.toimiala.skeema :refer :all]
             [aitu.rest-api.http-util :refer [json-response]]
+            [aitu.infra.csrf-token :refer [aseta-csrf-token tarkasta-csrf-token]]
   
             aitu.rest-api.db-validation
             aitu.rest-api.ttk
@@ -85,35 +86,38 @@
       :title "AITU API"
       :description "AITUn julkinen rajapinta")
     (swaggered "AITU"
-      (c/context "/api/ttk" [] aitu.rest-api.ttk/reitit)
-      (c/context "/api/henkilo" [] aitu.rest-api.henkilo/reitit)
-      (c/context "/api/kayttaja" [] aitu.rest-api.kayttaja/reitit)
-      (c/context "/api/koulutusala" [] aitu.rest-api.koulutusala/reitit)
-      (c/context "/api/opintoala" [] aitu.rest-api.opintoala/reitit)
-      (c/context "/api/tutkinto" [] aitu.rest-api.tutkinto/reitit)
-      (c/context "/api/toimikausi" [] aitu.rest-api.toimikausi/reitit)
-      (c/context "/api/oppilaitos" [] aitu.rest-api.oppilaitos/reitit)
-      (c/context "/api/jarjestamissopimus" [] aitu.rest-api.jarjestamissopimus/reitit)
-      (c/context "/api/tutkintorakenne" []  aitu.rest-api.tutkintorakenne/reitit)
-      (c/context "/api/jarjesto" [] aitu.rest-api.jarjesto/reitit)
-      (c/context "/api/enum" [] aitu.rest-api.enum/reitit)
-      (c/context "/api/jslog" [] aitu.rest_api.js-log/reitit)
-      (c/context "/api/tiedote" [] aitu.rest-api.tiedote/reitit)
-      (c/context "/api/ohje" [] aitu.rest-api.ohje/reitit)
-      (c/context "/api/haku" [] aitu.rest-api.haku/reitit)
+      (c/context "/api/ttk" [] (tarkasta-csrf-token aitu.rest-api.ttk/reitit))
+      (c/context "/api/henkilo" [] (tarkasta-csrf-token aitu.rest-api.henkilo/reitit))
+      (c/context "/api/kayttaja" [] (tarkasta-csrf-token aitu.rest-api.kayttaja/reitit))
+      (c/context "/api/koulutusala" [] (tarkasta-csrf-token aitu.rest-api.koulutusala/reitit))
+      (c/context "/api/opintoala" [] (tarkasta-csrf-token aitu.rest-api.opintoala/reitit))
+      (c/context "/api/tutkinto" [] (tarkasta-csrf-token aitu.rest-api.tutkinto/reitit))
+      (c/context "/api/toimikausi" [] (tarkasta-csrf-token aitu.rest-api.toimikausi/reitit))
+      (c/context "/api/oppilaitos" [] (tarkasta-csrf-token aitu.rest-api.oppilaitos/reitit))
+      (c/context "/api/jarjestamissopimus" [] (tarkasta-csrf-token aitu.rest-api.jarjestamissopimus/reitit))
+      (c/context "/api/tutkintorakenne" []  (tarkasta-csrf-token aitu.rest-api.tutkintorakenne/reitit))
+      (c/context "/api/jarjesto" [] (tarkasta-csrf-token aitu.rest-api.jarjesto/reitit))
+      (c/context "/api/enum" [] (tarkasta-csrf-token aitu.rest-api.enum/reitit))
+      (c/context "/api/jslog" [] (tarkasta-csrf-token aitu.rest_api.js-log/reitit))
+      (c/context "/api/tiedote" [] (tarkasta-csrf-token aitu.rest-api.tiedote/reitit))
+      (c/context "/api/ohje" [] (tarkasta-csrf-token aitu.rest-api.ohje/reitit))
+      (c/context "/api/haku" [] (tarkasta-csrf-token aitu.rest-api.haku/reitit))
       (c/context "/api/osoitepalvelu" [] aitu.rest-api.osoitepalvelu/reitit)
       (c/context "/api/db-validation" [] aitu.rest-api.db-validation/reitit ))
     (testapi asetukset)
     (c/GET "/template/:nimi" [nimi]
       (angular-template nimi asetukset))
     (cu/defapi :etusivu nil :get "/" []
-      (s/render-file "html/ttk" {:build-id @build-id
-                                 :current-user (:kayttajan_nimi *current-user-authmap*)
-                                 :base-url (-> asetukset :server :base-url)
-                                 :ominaisuus (:ominaisuus asetukset)
-                                 :i18n (i18n/tekstit)
-                                 :i18n-json (json/generate-string (i18n/tekstit))
-                                 :yllapitaja yllapitaja?}))
+      {:body (s/render-file "html/ttk" {:build-id @build-id
+                                        :current-user (:kayttajan_nimi *current-user-authmap*)
+                                        :base-url (-> asetukset :server :base-url)
+                                        :ominaisuus (:ominaisuus asetukset)
+                                        :i18n (i18n/tekstit)
+                                        :i18n-json (json/generate-string (i18n/tekstit))
+                                        :yllapitaja yllapitaja?})
+       :status 200
+       :headers {"Content-Type" "text/html"
+                 "Set-cookie" (aseta-csrf-token)}})
     (cu/defapi :status nil :get "/status" []
       (s/render-file "html/status"
                      (assoc (status)

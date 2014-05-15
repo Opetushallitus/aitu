@@ -12,7 +12,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('uiKomponentit', ['ui.bootstrap'])
+angular.module('uiKomponentit', ['ui.bootstrap', 'ngCookies'])
 
   .constant('datepickerConfig', {
     dayFormat: 'd',
@@ -28,6 +28,6 @@ angular.module('uiKomponentit', ['ui.bootstrap'])
     maxDate: null
   })
 
-  .run(['i18n', 'kieli', function(i18n, kieli) {
-    $.fn.select2.ajaxDefaults.params.headers = {"Accept-Language" : kieli};
+  .run(['i18n', 'kieli', '$cookies', function(i18n, kieli, $cookies) {
+    $.fn.select2.ajaxDefaults.params.headers = {"Accept-Language" : kieli, "x-xsrf-token" : $cookies['XSRF-TOKEN']};
   }])
