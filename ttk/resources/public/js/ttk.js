@@ -84,6 +84,14 @@ angular.module('ttk', ['aitulocale',
     );
   }])
 
+  .controller('AituController', ['$scope', '$window', 'i18n', function($scope, $window, i18n){
+    $scope.varmistaLogout = function() {
+      if(confirm(i18n['haluatko-kirjautua-ulos'])) {
+        $window.location = aituLogoutUrl;
+      }
+    };
+  }])
+
   .constant('asetukset', {
     requestTimeout : 120000 //2min timeout kaikille pyynnöille
   })

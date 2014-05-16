@@ -4,6 +4,7 @@
 <head>
   <script>var ttkBaseUrl = "[[base-url]]";</script>
   <script>var aituI18n = [[& i18n-json]];</script>
+  <script>var aituLogoutUrl = '[[logout-url]]';</script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>[[i18n.tutkintotoimikuntarekisteri]]</title>
@@ -14,12 +15,12 @@
   <link rel="stylesheet" href="[[base-url]]/vendor/select2.css">
   <script src="[[base-url]]/vendor/modernizr.js"></script>
 </head>
-<body>
+<body ng-controller="AituController">
 <div>
   <nav class="main-nav">
     <div class="app-wrapper ">
       <kielen-vaihto></kielen-vaihto>
-      <div id="current-user"><a href="">[[current-user]]</a></div>
+      <div id="current-user"><a href="" ng-click="varmistaLogout()">[[current-user]]</a></div>
       <ul>
         [[#i18n.navigaatio]]
         <li><a href="#/">[[etusivu]]</a></li>

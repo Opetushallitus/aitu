@@ -19,7 +19,7 @@
             [aitu.toimiala.skeema :refer :all]
             [aitu.rest-api.http-util :refer [json-response]]
             [aitu.infra.csrf-token :refer [aseta-csrf-token tarkasta-csrf-token]]
-  
+
             aitu.rest-api.db-validation
             aitu.rest-api.ttk
             aitu.rest-api.henkilo
@@ -38,7 +38,7 @@
             aitu.rest-api.ohje
             aitu.rest-api.haku
             aitu.rest-api.osoitepalvelu
-            
+
             aitu.test-api.ttk
             aitu.test-api.tutkinto
             aitu.test-api.tutkintoversio
@@ -111,6 +111,7 @@
       {:body (s/render-file "html/ttk" {:build-id @build-id
                                         :current-user (:kayttajan_nimi *current-user-authmap*)
                                         :base-url (-> asetukset :server :base-url)
+                                        :logout-url (str (-> asetukset :cas-auth-server :url) "/logout")
                                         :ominaisuus (:ominaisuus asetukset)
                                         :i18n (i18n/tekstit)
                                         :i18n-json (json/generate-string (i18n/tekstit))
