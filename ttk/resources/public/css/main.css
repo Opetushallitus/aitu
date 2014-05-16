@@ -1346,22 +1346,39 @@ header form p {
   background-image: url("../img/oph-icon-sprite.png");
 }
 /* line 124, ../../private/sass/partials/_header.scss */
+.main-nav #logout {
+  border-right: 1px solid #009dcd;
+  padding: 0 12px;
+  float: right;
+  height: 40px;
+}
+/* line 129, ../../private/sass/partials/_header.scss */
+.main-nav #logout:hover {
+  background-color: #083f51;
+}
+/* line 130, ../../private/sass/partials/_header.scss */
+.main-nav #logout span {
+  padding-top: 8px;
+  display: inline-block;
+  color: red;
+}
+/* line 136, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang {
   float: right;
 }
-/* line 127, ../../private/sass/partials/_header.scss */
+/* line 139, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-active {
   display: inline-block;
 }
-/* line 130, ../../private/sass/partials/_header.scss */
+/* line 142, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-inactive {
   display: inline-block;
 }
-/* line 133, ../../private/sass/partials/_header.scss */
+/* line 145, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-active:hover {
   background-color: #083f51;
 }
-/* line 136, ../../private/sass/partials/_header.scss */
+/* line 148, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-inactive:hover {
   background-color: #107ea2;
 }

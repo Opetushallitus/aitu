@@ -19,8 +19,9 @@
 <div>
   <nav class="main-nav">
     <div class="app-wrapper ">
+      <div id="logout" ng-click="varmistaLogout()"><span>X</span></div>
       <kielen-vaihto></kielen-vaihto>
-      <div id="current-user"><a href="" ng-click="varmistaLogout()">[[current-user]]</a></div>
+      <div id="current-user"><a href="">[[current-user]]</a></div>
       <ul>
         [[#i18n.navigaatio]]
         <li><a href="#/">[[etusivu]]</a></li>
