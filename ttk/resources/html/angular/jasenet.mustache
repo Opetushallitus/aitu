@@ -27,13 +27,13 @@
         <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
         <span ng-hide="henkilo.voimassa">([[ei-voimassa]])</span>
       </td>
-      <td><enum-valikko nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>
-      <td><enum-valikko nimi="edustus" arvo="henkilo.edustus"></enum-valikko></td>
+      <td><enum-valikko pakollinen="true" nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>
+      <td><enum-valikko pakollinen="true" nimi="edustus" arvo="henkilo.edustus"></enum-valikko></td>
       <td>{{henkilo.organisaatio}}</td>
       <td>
-        <pvm-valitsin valittu-pvm="henkilo.alkupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
+        <pvm-valitsin pakollinen="true" valittu-pvm="henkilo.alkupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
         -
-        <pvm-valitsin valittu-pvm="henkilo.loppupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
+        <pvm-valitsin pakollinen="true" valittu-pvm="henkilo.loppupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
       </td>
       <td>
         <button class="icon delete-icon" ng-click="poistaJasen(henkilo)" ng-hide="henkilo.poistettu"></button>

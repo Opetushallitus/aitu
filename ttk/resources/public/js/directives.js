@@ -140,7 +140,8 @@ angular.module('directives', ['services', 'resources'])
   })
   .directive('enumValikko', ['i18n', 'EnumResource', '$compile', function (i18n, EnumResource, $compile) {
 
-    var template = '<select ng-model="arvo" ng-required="pakollinen"><option ng-selected="{{arvo === e.nimi}}" ng-repeat="e in arvot" value="{{e.nimi}}">{{ i18n.enum[nimi + "-arvo"][e.nimi] }}</option></select>';
+    var template = '<select ng-model="arvo" ng-required="pakollinen" ng-options="arvo.nimi as arvo.label for arvo in arvot">';
+    template += '<option value="" ng-if="(pakollinen && !arvo) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
 
     return {
       restrict: 'E',
@@ -153,13 +154,21 @@ angular.module('directives', ['services', 'resources'])
       template : '<span>' + template + '</span>',
       link: function (scope, element, attrs) {
 
+        var nimi = scope.nimi;
+
         scope.i18n = i18n;
         EnumResource.get({'enum': attrs.nimi}, function(arvot){
-          scope.arvot = arvot;
+          scope.arvot = _.map(arvot, function(arvo) {return {nimi: arvo.nimi, label: i18n.enum[nimi + "-arvo"][arvo.nimi]}});
           //Compiletaan template vasta kun enumdata on saatavilla. Muutoin ie9 rendaa selectin väärin.
           var compiled = $compile(template)(scope);
           element.empty();
           element.append(compiled);
+        });
+
+        scope.$watch('arvo', function(value) {
+          if(value === '') {
+           scope.arvo = null;
+          }
         });
       }
     };
@@ -664,16 +673,28 @@ angular.module('directives', ['services', 'resources'])
     };
   })
 
-  .directive('booleanSelect', ['boolValues', function(boolValues){
+  .directive('booleanSelect', ['boolValues', 'i18n', function(boolValues, i18n){
+
+    var template = '<select ng-model="model" ng-required="pakollinen" ng-options="b.value as b.name for b in boolValues">';
+    template += '<option value="" ng-if="(pakollinen && !model) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
+
     return {
       restrict: 'E',
       replace: true,
       scope : {
-        model: '='
+        model: '=',
+        pakollinen: '='
       },
-      template : '<select ng-model="model" ng-options="b.value as b.name for b in boolValues">',
+      template : template,
       link : function(scope) {
         scope.boolValues = boolValues;
+        scope.i18n = i18n;
+
+        scope.$watch('model', function(value) {
+          if(value === '') {
+            scope.model = null;
+          }
+        })
       }
     };
   }])

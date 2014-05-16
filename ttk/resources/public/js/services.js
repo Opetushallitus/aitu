@@ -12,7 +12,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('services', ['ngResource'])
+angular.module('services', ['ngResource', 'ngCookies'])
   .factory('apiCallInterceptor', ['i18n', function(i18n){
 
     var pyynnot = {};
@@ -162,9 +162,12 @@ angular.module('services', ['ngResource'])
     }
   }])
 
-  .factory('virheLogitusApi', ['$log', '$window', function($log, $window){
+  .factory('virheLogitusApi', ['$log', '$window', '$injector', function($log, $window, $injector){
     return {
       lahetaPalvelimelle : function(poikkeus, aiheuttaja){
+
+        var cookies = $injector.get('$cookies'); //Run time injektio circular depencencyn välttämiseksi
+
         try {
           var virheviesti = poikkeus.toString();
           var stackTrace = printStackTrace({ e: poikkeus });
@@ -173,6 +176,7 @@ angular.module('services', ['ngResource'])
             type: 'POST',
             url: ttkBaseUrl + '/api/jslog/virhe',
             contentType: 'application/json',
+            headers : {'x-xsrf-token' : cookies['XSRF-TOKEN']},
             data: angular.toJson({
               virheenUrl: $window.location.href,
               userAgent : navigator.userAgent,

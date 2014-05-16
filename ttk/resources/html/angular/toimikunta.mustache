@@ -24,8 +24,8 @@
       <input type="text" ng-model="toimikunta.sahkoposti" ng-hide="!muokkausTila" maxlength="100">
     </fieldset>
     <fieldset>
-      <label>[[kielisyys]]</label>
-      <enum-valikko ng-hide="!muokkausTila" nimi="kieli" arvo="toimikunta.kielisyys"></enum-valikko>
+      <label ng-class="{pakollinen : muokkausTila}">[[kielisyys]]</label>
+      <enum-valikko pakollinen="true" ng-hide="!muokkausTila" nimi="kieli" arvo="toimikunta.kielisyys"></enum-valikko>
       <p ng-hide="muokkausTila"><enum-arvo nimi="kieli" arvo="toimikunta.kielisyys"></enum-arvo></p>
     </fieldset>
     <luotu model="toimikunta"></luotu>

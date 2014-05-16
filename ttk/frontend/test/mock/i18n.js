@@ -17,7 +17,13 @@
 angular.module('mock.i18n', []).factory('i18n', function() {
   return {
     'virheet' : {'virhe-api-metodissa' : 'Default virheviesti' },
-    'yleiset' : {'alkaen' : 'alkaen', 'asti' : 'asti'},
+    'yleiset' : {
+      'alkaen' : 'alkaen',
+      'asti' : 'asti',
+      'ei-valintaa' : 'ei valintaa',
+      'valitse' : 'valitse',
+      'kylla' : 'kyllä',
+      'ei' : 'ei'},
     'henkilo' : {
       'muokkaus-onnistui' : 'Muokkaus onnistui',
       'muokkaus-ei-onnistunut' : 'Muokkaus ei onnistunut',
@@ -33,6 +39,13 @@ angular.module('mock.i18n', []).factory('i18n', function() {
     'yleinen' : {
       'kylla' : 'kyllä',
       'ei' : 'ei'
+    },
+    'enum' : {
+      'test-enum-arvo' : {
+        'valinta1' : 'valinta1',
+        'valinta2' : 'valinta2',
+        'valinta3' : 'valinta3'
+      }
     }
   };
 });
