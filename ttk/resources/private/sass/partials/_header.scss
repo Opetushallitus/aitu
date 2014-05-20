@@ -123,15 +123,11 @@ header {
   #current-user {float: right; padding-right: 40px; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
   #logout {
     border-right: 1px solid $separator-color;
-    padding: 0 $marginM;
+    padding: 0 15px;
     float: right;
     height: $nav-height;
+    @include icon-after(-5px, 11px){@include logout-icon;};
     &:hover {background-color: $darker-primary;}
-    span {
-      padding-top: 8px;
-      display: inline-block;
-      color: red;
-    }
   }
   .change-lang {
     float: right;

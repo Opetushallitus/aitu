@@ -187,6 +187,20 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
   background-position: 0 -300px;
 }
 
+@mixin search-icon {
+  @include icon-images;
+  width: 18px;
+  height: 18px;
+  background-position: 0 -1600px;
+}
+
+@mixin logout-icon {
+  @include icon-images;
+  width: 17px;
+  height: 16px;
+  background-position: 0 -1650px;
+}
+
 /* Näitä luokkia voidaan käyttää kun halutaan ikoni erilliseen dom-elementtiinsä.
 Esim: <div class="icon user-icon"></div> */
 .icon {
@@ -216,6 +230,9 @@ Esim: <div class="icon user-icon"></div> */
   }
   &.collapse-icon-small {
     @include small-collapse-icon;
+  }
+  &.logout-icon {
+    @include logout-icon;
   }
 }
 
