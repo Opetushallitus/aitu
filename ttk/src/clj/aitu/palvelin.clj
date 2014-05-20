@@ -57,6 +57,10 @@
       (.endsWith base-url "/") base-url
       :else (str base-url "/"))))
 
+(defn service-path [base-url]
+  (let [path (drop 3 (clojure.string/split base-url #"/"))]
+    (str "/" (clojure.string/join "/" path))))
+
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
 
@@ -108,7 +112,9 @@
                       wrap-params
                       (wrap-resource "public")
                       wrap-content-type
-                      (wrap-session {:store session-store})
+                      (wrap-session {:store session-store
+                                     :cookie-attrs {:http-only true
+                                                    :path (service-path(get-in asetukset [:server :base-url]))}})
                       (wrap-cas-single-sign-out session-store)
                       wrap-poikkeusten-logitus)
                     {:port (get-in asetukset [:server :port])
