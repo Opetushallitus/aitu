@@ -22,7 +22,8 @@
                  [solita/opetushallitus-aitu-e2e "1.6.0"]]
   :plugins [[test2junit "1.0.1"]]
 
-  :test-selectors {:ie (complement :no-ie)
+  :test-selectors {:ie (complement (some-fn :no-ie :ie-epastabiili))
+                   :ie-epastabiili :ie-epastabiili
                    :no-ie :no-ie
                    :no-cas (complement :cas)
                    :default (constantly true)})

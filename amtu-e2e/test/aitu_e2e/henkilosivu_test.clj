@@ -164,7 +164,7 @@
             ;; Niin
             (is (= (jarjeston-nimi) "Pikkujärjestö"))))))))
 
-(deftest henkilo-jarjestolla-muokkaus-test
+(deftest ^:ie-epastabiili henkilo-jarjestolla-muokkaus-test
   (testing "henkilö järjestön muokkaus"
     (testing "pitäisi pystyä poistamaan järjestö henkilöltä"
       (with-webdriver

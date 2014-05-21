@@ -52,7 +52,7 @@
           (avaa-etusivu-ruotsiksi)
           (is (tiedote-teksti-tasmaa "ruotsi")))))))
 
-(deftest tiedoteen-muokkaus-test
+(deftest ^:ie-epastabiili tiedoteen-muokkaus-test
   (testing "Tiedotteen muokkaus onnistuu"
     (with-webdriver
       (with-cleaned-data {:tiedote [{:teksti_fi "suomi"}]}
@@ -63,7 +63,7 @@
         (is (= (viestin-teksti) "Tiedote julkaistu"))
         (is (tiedote-teksti-tasmaa "Uusi tiedote"))))))
 
-(deftest tiedoteen-lisays-test
+(deftest ^:ie-epastabiili tiedoteen-lisays-test
   (testing "Tiedotteen lisays onnistuu"
     (with-webdriver
       (with-cleaned-data {}
@@ -75,7 +75,7 @@
         (is (= (viestin-teksti) "Tiedote julkaistu"))
         (is (tiedote-teksti-tasmaa "Uusi tiedote"))))))
 
-(deftest tietotteen-poisto-test
+(deftest ^:ie-epastabiili tietotteen-poisto-test
   (testing "Etusivulle mentäessä tiedote näkyvissä on näkyvissä"
     (with-webdriver
       (with-cleaned-data {:tiedote [{:teksti_fi "suomenkielinen tiedot"
