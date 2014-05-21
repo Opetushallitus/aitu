@@ -114,7 +114,8 @@
                       wrap-content-type
                       (wrap-session {:store session-store
                                      :cookie-attrs {:http-only true
-                                                    :path (service-path(get-in asetukset [:server :base-url]))}})
+                                                    :path (service-path(get-in asetukset [:server :base-url]))
+                                                    :secure (not (:development-mode asetukset))}})
                       (wrap-cas-single-sign-out session-store)
                       wrap-poikkeusten-logitus)
                     {:port (get-in asetukset [:server :port])
