@@ -52,7 +52,6 @@
                3 {:arvo 2}
                4 {:arvo 1}}]
     (is (= (muutokset uudet vanhat)
-           {1 :poistunut
-            2 :ei-muuttunut
+           {1 [nil {:arvo 1}]
             3 {:arvo [2 1]}
-            4 :uusi}))))
+            4 [{:arvo 1} nil]}))))
