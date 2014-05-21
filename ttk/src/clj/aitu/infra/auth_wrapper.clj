@@ -34,6 +34,6 @@
       (binding [ka/*current-user-uid* userid
                 ka/*current-user-oid* (promise)]
         (let [kayttajatiedot (kayttajaoikeudet-arkisto/hae-oikeudet)]
-          (log/info "käyttäjä autentikoitu " kayttajatiedot)
+          (log/info "käyttäjä autentikoitu " kayttajatiedot (when ko/*impersonoitu-oid* (str ": impersonoija=" ka/*current-user-uid*)))
           (binding [ko/*current-user-authmap* kayttajatiedot]
             (ring-handler request)))))))

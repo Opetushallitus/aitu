@@ -20,6 +20,7 @@
             [aitu.toimiala.voimassaolo.saanto.jasenyys :refer [taydenna-jasenyyden-voimassaolo]]))
 
 (def ^:dynamic *current-user-authmap*)
+(def ^:dynamic *impersonoitu-oid* nil)
 
 ;; kayttajarooli-taulun arvot
 (def kayttajaroolit {:yllapitaja "YLLAPITAJA"
@@ -37,6 +38,10 @@
   [kayttaja-map rooli]
   {:pre [(some #{(:roolitunnus kayttaja-map)} (vals kayttajaroolit))]}
   (= rooli (:roolitunnus kayttaja-map)))
+
+(defn yllapitajarooli?
+  [rooli]
+  (= yllapitajarooli rooli))
 
 (defn yllapitaja?
   ([kayttaja-map]

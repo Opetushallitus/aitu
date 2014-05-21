@@ -17,7 +17,8 @@
             [korma.core :as sql]
             [clojure.tools.logging :as log]
             [oph.korma.korma-auth :refer [*current-user-oid*]]
-            [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto])
+            [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
+            [aitu.toimiala.kayttajaoikeudet :as ko])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-jasenyys-ja-sopimukset [kayttajaid]
@@ -31,15 +32,24 @@
                   (sql/fields :jarjestamissopimusid))
                ))
            (sql/where {:kayttaja_oid kayttajaid}))))
-  
+
+(defn impersonoitu-kayttaja
+  "tarvittaessa suorittaa ylläpitäjätason käyttäjälle impersonaation"
+  [alkuperainen-kayttaja]
+  (if (and (ko/yllapitajarooli? (:rooli alkuperainen-kayttaja))
+           ko/*impersonoitu-oid*)
+    (kayttaja-arkisto/hae ko/*impersonoitu-oid*)
+    alkuperainen-kayttaja))
+
 (defn hae-oikeudet
-  ([oid] "Hakee oikeudet kuvaavan tietorakenteen käyttäjätunnuksen perusteella."
+  ([oid] "Hakee oikeudet kuvaavan tietorakenteen käyttäjätunnuksen tai impersonoidun käyttäjätunnuksen perusteella."
     (db/transaction
-      (let [kayttaja (kayttaja-arkisto/hae oid)
-            oikeudet (hae-jasenyys-ja-sopimukset oid)
+      (let [alkuperainen-kayttaja (kayttaja-arkisto/hae oid)
+            kayttaja (impersonoitu-kayttaja alkuperainen-kayttaja)
+            oikeudet (hae-jasenyys-ja-sopimukset (:oid kayttaja))
             jasenyys (:jasenyys oikeudet)
             _ (log/debug "kontekstioikeuksia on .. " oikeudet)]
-        {:oid oid
+        {:oid (:oid kayttaja)
          :kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))
          :henkiloid (:henkiloid oikeudet)
          :roolitunnus (:rooli kayttaja)
