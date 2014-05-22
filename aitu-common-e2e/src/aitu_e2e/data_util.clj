@@ -107,6 +107,7 @@
                                   :nimi_fi (str "Tutkinto " i)
                                   :nimi_sv (str "Tutkinto (sv)" i)
                                   :opintoala "24"
+                                  :tyyppi "02"
                                   :tutkintotaso "perustutkinto"
                                   :voimassa_alkupvm menneisyydessa
                                   :voimassa_loppupvm tulevaisuudessa})})
