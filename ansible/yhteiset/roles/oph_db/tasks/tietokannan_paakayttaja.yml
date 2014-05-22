@@ -1,0 +1,17 @@
+# Pakolliset parametrit:
+# - tietokanta: Tietokannan nimi
+# - tietokannan_paakayttaja: Tietokannan pääkäyttäjän nimi
+#
+# Valinnaiset parametrit:
+# - tietokannan_paakayttajan_salasana: Arvotaan, jos ei määritetty
+---
+- name: Lisää tietokannan pääkäyttäjä
+  postgresql_user: name={{ tietokannan_paakayttaja }}
+  register: lisaa_paakayttaja
+
+- name: Aseta tietokannan pääkäyttäjän salasana
+  postgresql_user: name={{ tietokannan_paakayttaja }} password={{ tietokannan_paakayttajan_salasana|default(lookup('password', inventory_dir + '/salasanat/tietokannan_paakayttaja')) }}
+  when: (tietokannan_paakayttajan_salasana is defined) or lisaa_paakayttaja|changed
+
+- name: Anna tietokannan pääkäyttäjälle oikeudet tietokantaan
+  command: psql -c 'GRANT ALL PRIVILEGES ON DATABASE {{ tietokanta }} TO {{ tietokannan_paakayttaja }}'

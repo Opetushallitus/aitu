@@ -1,0 +1,21 @@
+# Pakolliset parametrit:
+# - tietokanta: Tietokannan nimi
+# - skeema: Skeeman nimi
+# - skeeman_peruskayttaja: Skeeman peruskäyttäjän nimi
+#
+# Valinnaiset parametrit:
+# - skeeman_peruskayttajan_salasana: Arvotaan, jos ei määritetty
+---
+- name: Lisää skeeman peruskäyttäjä
+  postgresql_user: name={{ skeeman_peruskayttaja }}
+  register: lisaa_peruskayttaja
+
+- name: Aseta skeeman peruskäyttäjän salasana
+  postgresql_user: name={{ skeeman_peruskayttaja }} password={{ skeeman_peruskayttajan_salasana|default(lookup('password', inventory_dir + '/salasanat/skeeman_peruskayttaja')) }}
+  when: (skeeman_peruskayttajan_salasana is defined) or lisaa_peruskayttaja|changed
+
+- name: Anna skeeman peruskäyttäjälle oikeudet skeemaan
+  command: psql -c 'GRANT USAGE ON SCHEMA {{ skeema }} TO {{ skeeman_peruskayttaja }}' {{ tietokanta }}
+
+- name: Anna skeeman peruskäyttäjälle oikeudet skeeman tauluihin
+  command: psql -c 'GRANT SELECT ON ALL TABLES IN SCHEMA {{ skeema }} TO {{ skeeman_peruskayttaja }}' {{ tietokanta }}

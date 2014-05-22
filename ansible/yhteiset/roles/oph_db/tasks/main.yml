@@ -1,8 +1,11 @@
 # Pakolliset parametrit:
 # - tietokanta: Tietokannan nimi
-# - tietokannan_peruskayttaja: Tietokannan peruskäyttäjän nimi
 #
 # Valinnaiset parametrit:
+# - skeema: Skeeman nimi
+# - skeeman_peruskayttaja: Skeeman peruskäyttäjän nimi
+# - skeeman_peruskayttajan_salasana: Arvotaan, jos ei määritetty
+# - tietokannan_peruskayttaja: Tietokannan peruskäyttäjän nimi
 # - tietokannan_paakayttaja: Tietokannan pääkäyttäjän nimi
 # - tietokannan_peruskayttajan_salasana: Arvotaan, jos ei määritetty
 # - tietokannan_paakayttajan_salasana: Arvotaan, jos ei määritetty
@@ -15,36 +18,15 @@
 - name: Lisää tietokanta
   postgresql_db: name={{ tietokanta }}
 
-- name: Lisää tietokannan peruskäyttäjä
-  postgresql_user: name={{ tietokannan_peruskayttaja }}
-  register: lisaa_peruskayttaja
+# Skeemaa hallitaan ko. tietokannan migraatioskripteillä, joten sitä ei luoda
+# tässä. Skeemaa käyttävää projektia ei voida julkaista ympäristöön, ennen kuin
+# tietokannan omistama projekti on julkaistu siihen.
 
-- name: Aseta tietokannan peruskäyttäjän salasana
-  postgresql_user: name={{ tietokannan_peruskayttaja }} password={{ tietokannan_peruskayttajan_salasana|default(lookup('password', inventory_dir + '/salasanat/tietokannan_peruskayttaja')) }}
-  when: (tietokannan_peruskayttajan_salasana is defined) or lisaa_peruskayttaja|changed
-
-- name: Anna tietokannan peruskäyttäjälle oikeudet tietokantaan
-  postgresql_privs:
-    db: postgres
-    priv: CONNECT
-    type: database
-    obj: "{{ tietokanta }}"
-    role: "{{ tietokannan_peruskayttaja }}"
-
-- name: Lisää tietokannan pääkäyttäjä
-  postgresql_user: name={{ tietokannan_paakayttaja }}
-  register: lisaa_paakayttaja
+- include: tietokannan_paakayttaja.yml
   when: tietokannan_paakayttaja is defined
 
-- name: Aseta tietokannan pääkäyttäjän salasana
-  postgresql_user: name={{ tietokannan_paakayttaja }} password={{ tietokannan_paakayttajan_salasana|default(lookup('password', inventory_dir + '/salasanat/tietokannan_paakayttaja')) }}
-  when: (tietokannan_paakayttaja is defined) and (tietokannan_paakayttajan_salasana is defined) or lisaa_paakayttaja|changed
+- include: tietokannan_peruskayttaja.yml
+  when: tietokannan_peruskayttaja is defined
 
-- name: Anna tietokannan pääkäyttäjälle oikeudet tietokantaan
-  postgresql_privs:
-    db: postgres
-    privs: ALL
-    type: database
-    obj: "{{ tietokanta }}"
-    role: "{{ tietokannan_paakayttaja }}"
-  when: tietokannan_paakayttaja is defined
+- include: skeeman_peruskayttaja.yml
+  when: skeeman_peruskayttaja is defined
