@@ -33,7 +33,9 @@
   {:post [(tutkinto? %)]}
   {:tutkintotunnus "123456"
    :nimi_fi "Autoalan perustutkinto"
-   :opintoala "OAK"})
+   :opintoala "OAK"
+   :tyyppi "02"
+   :tutkintotaso "perustutkinto"})
 
 (defn default-tutkintoversio []
   {:post [(tutkintoversio? %)]}
