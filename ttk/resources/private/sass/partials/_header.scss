@@ -120,7 +120,7 @@ header {
 
     }
   }
-  #current-user {float: right; padding-right: 40px; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
+  #current-user {float: right; padding-right: 40px; padding-left: $marginM; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
   .impersonoitu {
     background-color: red;
   }
