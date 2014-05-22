@@ -121,6 +121,9 @@ header {
     }
   }
   #current-user {float: right; padding-right: 40px; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
+  .impersonoitu {
+    background-color: red;
+  }
   #logout {
     border-right: 1px solid $separator-color;
     padding: 0 15px;

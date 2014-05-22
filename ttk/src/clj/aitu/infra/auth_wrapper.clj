@@ -30,9 +30,12 @@
 (defn wrap-sessionuser [ring-handler]
   (fn [request]
     (let [userid (get-userid-from-request request)
+          impersonoitu-oid (get-in request [:session :impersonoitu-oid])
+          _ (log/info "IMPER: " impersonoitu-oid)
           _ (log/debug "userid set to " userid)]
       (binding [ka/*current-user-uid* userid
-                ka/*current-user-oid* (promise)]
+                ka/*current-user-oid* (promise)
+                ko/*impersonoitu-oid* impersonoitu-oid]
         (let [kayttajatiedot (kayttajaoikeudet-arkisto/hae-oikeudet)]
           (log/info "käyttäjä autentikoitu " kayttajatiedot (when ko/*impersonoitu-oid* (str ": impersonoija=" ka/*current-user-uid*)))
           (binding [ko/*current-user-authmap* kayttajatiedot]

@@ -90,6 +90,8 @@
 
 (defn sallittu-yllapitajalle [& _] (yllapitaja?))
 
+(defn sallittu-impersonoidulle [& _] (not= *impersonoitu-oid* nil))
+
 (defn int-arvo [arvo]
   {:post [(integer? %)]}
   (if (= (type arvo) String)
@@ -107,7 +109,8 @@
     :tiedote_muokkaus sallittu-yllapitajalle
     :status sallittu-yllapitajalle
     :ohje_muokkaus sallittu-yllapitajalle
-    :etusivu_haku sallittu-yllapitajalle})
+    :etusivu_haku sallittu-yllapitajalle
+    :impersonointi sallittu-yllapitajalle})
 
 ;; Kuten yllä, arvot eivät saa olla funktio-olioita.
 (def kayttajatoiminnot
@@ -120,7 +123,8 @@
     :etusivu aitu-kayttaja?
     :henkilo_haku aitu-kayttaja?
     :yleinen-rest-api sallittu-kaikille
-    :osoitepalvelu-api osoitepalvelu-kayttaja?})
+    :osoitepalvelu-api osoitepalvelu-kayttaja?
+    :impersonointi-lopetus sallittu-impersonoidulle})
 
 (def sopimustoiminnot
   `{:sopimustiedot_paivitys #(or (yllapitaja?) (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))

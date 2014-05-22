@@ -27,6 +27,12 @@
             [korma.db :as db]))
 
 (c/defroutes reitit
+  (cu/defapi :impersonointi nil :post "/impersonoi" [:as {session :session}, oid]
+    {:status 200
+     :session (assoc session :impersonoitu-oid oid)})
+  (cu/defapi :impersonointi-lopetus nil :post "/lopeta-impersonointi" {session :session}
+    {:status 200
+     :session (dissoc session :impersonoitu-oid)})
   (cu/defapi :kayttajan_tiedot nil :get "/" []
              (let [oikeudet (ko-arkisto/hae-oikeudet)
                    roolitunnus (:roolitunnus oikeudet)]
@@ -40,3 +46,4 @@
                      json-response))))
   (cu/defapi :omat_tiedot oid :get "/:oid" [oid]
     (json-response (arkisto/hae oid))))
+

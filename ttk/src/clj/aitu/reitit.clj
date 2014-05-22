@@ -13,7 +13,7 @@
 
             [aitu.infra.i18n :as i18n]
             [aitu.toimiala.kayttajaoikeudet
-             :refer [*current-user-authmap* yllapitaja?]]
+             :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
             [aitu.infra.status :refer [status]]
             [aitu.asetukset :refer [build-id kehitysmoodi?]]
             [aitu.toimiala.skeema :refer :all]
@@ -110,6 +110,7 @@
     (cu/defapi :etusivu nil :get "/" []
       {:body (s/render-file "html/ttk" {:build-id @build-id
                                         :current-user (:kayttajan_nimi *current-user-authmap*)
+                                        :impersonoitu (if *impersonoitu-oid* "true" "false")
                                         :base-url (-> asetukset :server :base-url)
                                         :logout-url (str (-> asetukset :cas-auth-server :url) "/logout")
                                         :ominaisuus (:ominaisuus asetukset)

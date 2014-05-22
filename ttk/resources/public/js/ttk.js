@@ -84,11 +84,36 @@ angular.module('ttk', ['aitulocale',
     );
   }])
 
-  .controller('AituController', ['$scope', '$window', 'i18n', function($scope, $window, i18n){
+  .factory('impersonaatioResource', ['$resource', function($resource) {
+    return $resource(null, null, {
+      impersonoi: {
+        method: 'POST',
+        url: ttkBaseUrl + '/api/kayttaja/impersonoi',
+        id:"impersonoi"
+      },
+      lopeta: {
+        method: 'POST',
+        url: ttkBaseUrl + '/api/kayttaja/lopeta-impersonointi',
+        id:"impersonoi-lopetus"
+      }
+    });
+  }])
+
+  .controller('AituController', ['$scope', '$window', 'i18n', 'impersonaatioResource', function($scope, $window, i18n, impersonaatioResource){
     $scope.varmistaLogout = function() {
       if(confirm(i18n['haluatko-kirjautua-ulos'])) {
         $window.location = aituLogoutUrl;
       }
+    };
+    $scope.impersonoi = function() {
+      impersonaatioResource.impersonoi({oid: 'OID.T-800'}, function() {
+        $window.location = ttkBaseUrl;
+      });
+    };
+    $scope.lopetaImpersonointi = function() {
+      impersonaatioResource.lopeta(null, function() {
+        $window.location = ttkBaseUrl;
+      });
     };
   }])
 
