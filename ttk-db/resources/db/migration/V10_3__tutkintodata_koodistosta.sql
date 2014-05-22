@@ -4456,8 +4456,7 @@ where uusin_versio_id is null;
 
 insert into tutkinnonosa (osatunnus, nimi_fi, nimi_sv, versio, koodistoversio, voimassa_alkupvm, voimassa_loppupvm)
 select o.osatunnus, o.nimi_fi, o.nimi_sv, o.versio, o.koodistoversio, o.voimassa_alkupvm, o.voimassa_loppupvm
-from tutkinnonosa_tmp o 
-join nayttotutkinto t on o.tutkintotunnus = t.tutkintotunnus;
+from tutkinnonosa_tmp o;
 
 insert into tutkinto_ja_tutkinnonosa (tutkintoversio, tutkinnonosa, jarjestysnumero)
 select v.tutkintoversio_id tutkintoversio, o.tutkinnonosa_id tutkinnonosa, jarjestysnumero
@@ -4910,3 +4909,4 @@ update osaamisala set tutkintoversio = (select tutkintoversio_id from tutkintove
 update osaamisala set tutkintoversio = (select tutkintoversio_id from tutkintoversio where tutkintotunnus = '354205') where osaamisalatunnus = '2055';
 update osaamisala set tutkintoversio = (select tutkintoversio_id from tutkintoversio where tutkintotunnus = '354205') where osaamisalatunnus = '2056';
 delete from osaamisala o where tutkintoversio is null;
+delete from tutkinnonosa where not exists (select 1 from tutkinto_ja_tutkinnonosa where tutkinnonosa = tutkinnonosa_id);
