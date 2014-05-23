@@ -16,6 +16,7 @@
   (:require [clojure.test :refer :all]
             [clojure.set :refer [union intersection]]
             [aitu.toimiala.kayttajaoikeudet :refer :all]
+            [aitu.toimiala.kayttajaroolit :refer :all]
             [aitu.test-timeutil :refer :all]
             [aitu.integraatio.sql.test-util :refer [toimikunnan-jasenyys]]))
 

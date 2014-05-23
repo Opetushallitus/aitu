@@ -3,9 +3,8 @@
             [clojure.test :refer [deftest testing is are use-fixtures]]
             [aitu.integraatio.sql.test-data-util :refer :all]
             [aitu.integraatio.sql.test-util :refer :all]
-            [aitu.toimiala.kayttajaoikeudet :refer :all]
             [oph.korma.korma-auth :as ka]
-            [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
+            [aitu.toimiala.kayttajaroolit :refer :all]
             [aitu.test-timeutil :refer :all]))
 
 (use-fixtures :each tietokanta-fixture)

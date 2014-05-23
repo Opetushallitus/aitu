@@ -16,7 +16,7 @@
   (:require [clojure.string :as s]
             [clojure.tools.logging :as log]
             [clj-ldap.client :as ldap]
-            [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]]))
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
 (def aitu-organisaatio "1.2.246.562.10.2013121312395140176502")
 (def toimikunnat-organisaatio "1.2.246.562.10.59113820717")

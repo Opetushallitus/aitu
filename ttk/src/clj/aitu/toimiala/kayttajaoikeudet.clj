@@ -17,16 +17,11 @@
   (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.infra.ttk-arkisto :as ttk-arkisto]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :refer [toimikunta-vanhentunut?]]
-            [aitu.toimiala.voimassaolo.saanto.jasenyys :refer [taydenna-jasenyyden-voimassaolo]]))
+            [aitu.toimiala.voimassaolo.saanto.jasenyys :refer [taydenna-jasenyyden-voimassaolo]]
+            [aitu.toimiala.kayttajaroolit :refer :all]))
 
 (def ^:dynamic *current-user-authmap*)
 (def ^:dynamic *impersonoitu-oid* nil)
-
-;; kayttajarooli-taulun arvot
-(def kayttajaroolit {:yllapitaja "YLLAPITAJA"
-                     :kayttaja "KAYTTAJA"
-                     :osoitepalvelu "OSOITEPALVELU"
-                     :oph-katselija "OPH-KATSELIJA"})
 
 (def toimikunnan-muokkaus-roolit #{"puheenjohtaja",
                                    "varapuheenjohtaja",
@@ -90,7 +85,8 @@
 
 (defn sallittu-yllapitajalle [& _] (yllapitaja?))
 
-(defn sallittu-impersonoidulle [& _] (not= *impersonoitu-oid* nil))
+(defn sallittu-impersonoidulle [& _]
+  (or (yllapitaja?) (not= *impersonoitu-oid* nil)))
 
 (defn int-arvo [arvo]
   {:post [(integer? %)]}

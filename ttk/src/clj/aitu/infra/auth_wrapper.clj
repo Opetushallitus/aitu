@@ -31,8 +31,7 @@
   (fn [request]
     (let [userid (get-userid-from-request request)
           impersonoitu-oid (get-in request [:session :impersonoitu-oid])
-          _ (log/info "IMPER: " impersonoitu-oid)
-          _ (log/debug "userid set to " userid)]
+          _ (log/debug "userid set to " userid ", impersonated oid " impersonoitu-oid)]
       (binding [ka/*current-user-uid* userid
                 ka/*current-user-oid* (promise)
                 ko/*impersonoitu-oid* impersonoitu-oid]

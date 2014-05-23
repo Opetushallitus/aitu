@@ -21,7 +21,7 @@
              :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
-            [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]]))
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
 ;; Roolit siinä järjestyksessä missä ne pitää hakea käyttöoikeuspalvelusta.
 ;; Jos käyttäjällä on useampi rooli, viimeisimpänä määritelty jää voimaan.

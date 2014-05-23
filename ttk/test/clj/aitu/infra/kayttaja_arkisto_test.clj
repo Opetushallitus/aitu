@@ -19,7 +19,7 @@
             [aitu.infra.kayttaja-arkisto :refer :all]
             [aitu.integraatio.sql.korma :as taulut]
             [oph.korma.korma-auth :refer [*current-user-oid* integraatiokayttaja]]
-            [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]]))
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
 (defn kayttajat [& kt]
   (map merge

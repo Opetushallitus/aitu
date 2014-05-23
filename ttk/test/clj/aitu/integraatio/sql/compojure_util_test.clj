@@ -20,7 +20,7 @@
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [korma.db :as db]
             [aitu.integraatio.sql.test-util :refer :all]
-            [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]])
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]])
   (:use clojure.test))
 
 (def sample-admin-api

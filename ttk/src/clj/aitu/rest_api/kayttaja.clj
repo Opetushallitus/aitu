@@ -18,8 +18,8 @@
             [aitu.infra.kayttaja-arkisto :as arkisto]
             [aitu.toimiala.kayttajaoikeudet :refer [paivita-kayttajan-toimikuntakohtaiset-oikeudet
                                                     paivita-kayttajan-sopimuskohtaiset-oikeudet
-                                                    liita-kayttajan-henkilo-oikeudet
-                                                    kayttajaroolit]]
+                                                    liita-kayttajan-henkilo-oikeudet]]
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aitu.infra.kayttajaoikeudet-arkisto :as ko-arkisto]
             [aitu.rest-api.http-util :refer [json-response]]
             [aitu.toimiala.kayttajaoikeudet :as ko]
@@ -30,9 +30,14 @@
   (cu/defapi :impersonointi nil :post "/impersonoi" [:as {session :session}, oid]
     {:status 200
      :session (assoc session :impersonoitu-oid oid)})
+
   (cu/defapi :impersonointi-lopetus nil :post "/lopeta-impersonointi" {session :session}
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
+
+  (cu/defapi :impersonointi nil :get "/impersonoitavat" []
+    (json-response (arkisto/hae-impersonoitavat)))
+
   (cu/defapi :kayttajan_tiedot nil :get "/" []
              (let [oikeudet (ko-arkisto/hae-oikeudet)
                    roolitunnus (:roolitunnus oikeudet)]

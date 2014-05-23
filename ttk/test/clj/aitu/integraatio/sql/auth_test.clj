@@ -21,7 +21,8 @@
             [aitu.integraatio.sql.test-data-util :as data]
             [aitu.infra.i18n :as i18n]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture testikayttaja-oid tietokanta-fixture-oid testi-locale alusta-korma!]]
-            [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap* kayttajaroolit]]))
+            [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
 (deftest ^:integraatio auth-user-set!
   "testaa että authorization systeemi audit-trailia varten toimii"

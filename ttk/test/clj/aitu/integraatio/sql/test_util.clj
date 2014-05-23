@@ -21,7 +21,7 @@
             [infra.test.data :as testdata]
             [aitu.asetukset :refer [lue-asetukset oletusasetukset]]
             [aitu.integraatio.sql.korma :refer [kayttaja]]
-            [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
+            [aitu.toimiala.kayttajaroolit :refer [kayttajarooli]]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.infra.kayttajaoikeudet-arkisto :as kayttajaoikeudet-arkisto]
             [aitu.integraatio.sql.test-data-util :refer [default-toimikunta]]
@@ -59,7 +59,7 @@
       (deliver ka/*current-user-oid* oid)
       ; avataan transaktio joka on voimassa koko kutsun (f) ajan
       (db/transaction
-        (binding [kayttajaoikeudet/*current-user-authmap* (kayttajaoikeudet-arkisto/hae-oikeudet oid)]
+        (binding [ko/*current-user-authmap* (kayttajaoikeudet-arkisto/hae-oikeudet oid)]
           (try
             (f)
             (finally

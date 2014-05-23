@@ -19,8 +19,7 @@
             [oph.korma.korma-auth :as ka]
             [aitu.asetukset :refer [lue-asetukset]]
             [aitu.integraatio.sql.korma :refer [kayttaja]]
-            [aitu.toimiala.kayttajaoikeudet
-             :refer [kayttajaroolit]]))
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
 (def taulut ["jarjestamissuunnitelma"
              "sopimus_ja_tutkinto_ja_osaamisala"
