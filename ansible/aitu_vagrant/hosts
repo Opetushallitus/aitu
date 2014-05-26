@@ -10,12 +10,16 @@ ansible_ssh_user = aituadmin
 tietokanta = ttk
 tietokannan_peruskayttaja = ttk_user
 tietokannan_paakayttaja = ttk_adm
+skeema = aituhaku
 
 # Käytetään tunnettuja salasanoja, koska dev-scripts/create-db-schema.sh ajaa
 # migraation suoraan (ilman asennusta tai ttk-db.properties-tiedostoa) ja
 # sisältää tämän vuoksi salasanat
 tietokannan_peruskayttajan_salasana = ttk
 tietokannan_paakayttajan_salasana = ttk-adm
+
+[oph_db:vars]
+salli_dumpin_lataus = yes
 
 [oph_palvelu:vars]
 palvelu = aitu
