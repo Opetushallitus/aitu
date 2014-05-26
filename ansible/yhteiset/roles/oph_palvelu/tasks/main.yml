@@ -79,6 +79,7 @@
   - start
   - stop
   - status
+  - migrate
 
 - name: Päivitä palvelun init.d-skripti
   template: src=init.d.sh dest=/etc/init.d/{{ palvelu }} owner=root group=root mode=0755
@@ -89,20 +90,23 @@
 - name: Luo lokihakemisto palvelimelle
   file: path={{ asennushakemisto }}/logs state=directory owner=tomcat group=tomcat mode=0755
 
+- name: Ota migraatioskripti käyttöön
+  file: path={{ asennushakemisto }}/{{ palvelu }}-db.jar state=link src={{ migraatio_jar_palvelimella }} owner=tomcat group=tomcat
+
 - name: Suorita datan migraatio
-  shell: chdir={{ asennushakemisto }} java -jar {{ migraatio_jar_palvelimella }} {{ migraation_argumentit }} 1> logs/{{ palvelu }}-migraatio.stdout.`date +%Y-%m-%d-%H-%M-%S` 2> logs/{{ palvelu }}-migraatio.stderr.`date +%Y-%m-%d-%H-%M-%S`
-  register: migraatio
+  command: "{{ asennushakemisto }}/migrate-{{ palvelu }}.sh"
   ignore_errors: yes
+  register: migraatio
   when: not kopioi_migraatio|skipped
 
-- name: Ota versio käyttöön
+- name: Ota palvelun versio käyttöön
   file: path={{ asennushakemisto }}/{{ palvelu }}.jar state=link src={{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat
   when: migraatio|success
 
 - name: Käynnistä palvelu
   service: name={{ palvelu }} state=started
 
-- name: Merkitään palvelu käynnistettäväksi palvelimen käynnistyksen yhteydessä
+- name: Merkitse palvelu käynnistettäväksi palvelimen käynnistyksen yhteydessä
   service: name={{ palvelu }} enabled=yes
 
 - name: Tarkasta, että kaikki asennusvaiheet onnistuivat
