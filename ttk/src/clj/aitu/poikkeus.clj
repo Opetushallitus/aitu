@@ -23,6 +23,11 @@
     (.printStackTrace t (PrintWriter. string-writer))
     (.toString string-writer)))
 
+(defn throwable->simplestring [t]
+  (let [msg (.getMessage t)
+        type (.toString (.getClass t))]
+    (str "msg: " msg "\n" "type: " type)))
+
 (defn wrap-poikkeusten-logitus
   [handler]
   (fn [request]
@@ -32,4 +37,4 @@
         (log/error t (.getMessage t))
         {:status 500
          :headers {"Content-Type" "text/plain"}
-         :body (throwable->string t)}))))
+         :body (throwable->simplestring t)}))))
