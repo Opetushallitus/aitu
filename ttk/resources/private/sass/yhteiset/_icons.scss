@@ -19,6 +19,17 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
   }
 }
 
+@mixin icon-right($right: 0, $top: 0) {
+  &:after {
+    @content;
+    position: absolute;
+    top: $top;
+    right: $right;
+    z-index: 1;
+    background-repeat: no-repeat;
+  }
+}
+
 @mixin icon-before($leftMargin: 0, $topMargin: 0) {
   &:before {
     @content;

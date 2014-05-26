@@ -21,8 +21,15 @@
     <div class="app-wrapper ">
       <div id="logout" ng-click="varmistaLogout()"></div>
       <kielen-vaihto></kielen-vaihto>
-      <div id="current-user" ng-if="[[impersonoitu]]" class="impersonoitu"><a href="" ng-click="lopetaImpersonointi()">[[current-user]]</a></div>
-      <div id="current-user" ng-if="![[impersonoitu]]"><a href="" ng-click="impersonoi()">[[current-user]]</a></div>
+      <ul id="current-user">
+        <li>
+          <a href="">[[current-user]]</a>
+          <ul>
+            <li ng-if="![[impersonoitu]]"><a href="" ng-click="impersonoi()">Vaihda avustettavaksi käyttäjäksi</a></li>
+            <li ng-if="[[impersonoitu]]"><a href="" ng-click="lopetaImpersonointi()">Lopeta avustus</a></li>
+          </ul>
+        </li>
+      </ul>
       <ul>
         [[#i18n.navigaatio]]
         <li><a href="#/">[[etusivu]]</a></li>

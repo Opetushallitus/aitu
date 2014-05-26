@@ -120,7 +120,52 @@ header {
 
     }
   }
-  #current-user {float: right; padding-right: 40px; padding-left: $marginM; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
+  #current-user {
+    float: right;
+    padding-right: 30px;
+    padding-left: $marginM;
+    color: $font-color;
+    position:relative;
+    @include icon-right(11px, 11px){@include user-icon;};
+    height: $nav-height;
+    &:hover {background-color: $darker-primary;}
+    li {
+      position: relative;
+      border: 0;
+      &:hover {
+        ul {
+          background-color: $primary-color;
+          left:-$marginM;
+          padding-right: $marginM + 30px;
+          top: $nav-height;
+          &:hover {
+            background: $darker-primary;
+          }
+          li {
+            background-color: $primary-color;
+            a {
+              text-transform: none;
+              &:hover {
+                cursor: pointer;
+              }
+            }
+            &:hover {
+              background: $darker-primary;
+            }
+          }
+        }
+      }
+    }
+    ul {
+      position:absolute;
+      left:-9999px;
+      width:100%;
+      z-index: 10;
+      a {
+        white-space: nowrap;
+      }
+    }
+  }
   .impersonoitu {
     background-color: red;
   }
