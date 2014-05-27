@@ -160,8 +160,8 @@
       (filter #(sisaltaako-kentat? % [:nimi_fi :nimi_sv] termi))
       (sort-by :termi))))
 
-(defn hae-opintoalat-osaamisalat-tutkinnonosat
-  "Hakee listan kaikista opintoaloista, osaamisaloista ja tutkinnon osista annetun termin perusteella."
+(defn hae-opintoalat-tutkinnot-osaamisalat-tutkinnonosat
+  "Hakee listan kaikista opintoaloista, tutkinnoista, osaamisaloista ja tutkinnon osista annetun termin perusteella."
   [termi]
   (let [opintoalat (sql/select opintoala
                      (sql/fields [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
@@ -169,7 +169,9 @@
                       (sql/fields :nimi_fi :nimi_sv))
         tutkinnonosat (sql/select tutkinnonosa
                         (sql/fields :nimi_fi :nimi_sv))
-        kaikki (for [ala (concat opintoalat osaamisalat tutkinnonosat)]
+        tutkinnot (sql/select nayttotutkinto
+                    (sql/fields :nimi_fi :nimi_sv))
+        kaikki (for [ala (concat opintoalat osaamisalat tutkinnonosat tutkinnot)]
                  (assoc ala :termi (:nimi_fi ala)))]
     (->> kaikki
       (filter #(sisaltaako-kentat? % [:nimi_fi :nimi_sv] termi))

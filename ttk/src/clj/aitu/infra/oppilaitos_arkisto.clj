@@ -72,7 +72,7 @@
     (sql/order :nimi)))
 
 (defn hae-alalla
-  "Hakee kaikki tietyn alan oppilaitokset. Ala sisältää opintoalan, osaamisalan ja tutkinnon osan."
+  "Hakee kaikki tietyn alan oppilaitokset. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
   [ala]
   (if (clojure.string/blank? ala)
     (hae-kaikki)
@@ -95,8 +95,10 @@
                                "                         or osala.nimi_fi ilike ? "
                                "                         or osala.nimi_sv ilike ? "
                                "                         or tos.nimi_fi ilike ? "
-                               "                         or tos.nimi_sv ilike ?)) ")
-                          (repeat 6 termi)]
+                               "                         or tos.nimi_sv ilike ?"
+                               "                         or t.nimi_fi ilike ?"
+                               "                         or t.nimi_sv ilike ?)) ")
+                          (repeat 8 termi)]
                          :results)))))
 
 (defn hae-termilla

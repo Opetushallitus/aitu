@@ -74,15 +74,24 @@
   when: migraatio_jar_palvelimella is defined
 
 - name: Päivitä palvelun ohjausskriptit
-  template: src={{ item }}.sh dest={{ asennushakemisto }}/{{ item }}-{{ palvelu }}.sh owner=tomcat group=tomcat mode=0755
+  template: src={{ item }}.sh.j2 dest={{ asennushakemisto }}/{{ item }}-{{ palvelu }}.sh owner=tomcat group=tomcat mode=0755
   with_items:
   - start
   - stop
   - status
-  - migrate
+
+- include: migraatioskripti.yml
+  dest: "{{ asennushakemisto }}/migrate-install-{{ palvelu }}.sh"
+  migraation_argumentit: "{{ migraation_argumentit_asennuksen_jalkeen|default(migraation_argumentit) }}"
+  when: migraatio_jar_palvelimella is defined
+
+- include: migraatioskripti.yml
+  dest: "{{ asennushakemisto }}/migrate-dump-{{ palvelu }}.sh"
+  migraation_argumentit: "{{ migraation_argumentit_dumpin_jalkeen|default(migraation_argumentit) }}"
+  when: migraatio_jar_palvelimella is defined
 
 - name: Päivitä palvelun init.d-skripti
-  template: src=init.d.sh dest=/etc/init.d/{{ palvelu }} owner=root group=root mode=0755
+  template: src=init.d.sh.j2 dest=/etc/init.d/{{ palvelu }} owner=root group=root mode=0755
 
 - name: Pysäytä palvelu
   service: name={{ palvelu }} state=stopped
@@ -94,7 +103,7 @@
   file: path={{ asennushakemisto }}/{{ palvelu }}-db.jar state=link src={{ migraatio_jar_palvelimella }} owner=tomcat group=tomcat
 
 - name: Suorita datan migraatio
-  command: "{{ asennushakemisto }}/migrate-{{ palvelu }}.sh"
+  command: "{{ asennushakemisto }}/migrate-install-{{ palvelu }}.sh"
   ignore_errors: yes
   register: migraatio
   when: not kopioi_migraatio|skipped

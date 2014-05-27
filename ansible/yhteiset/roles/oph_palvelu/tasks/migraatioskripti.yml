@@ -1,0 +1,8 @@
+---
+- name: Päivitä migraatioskripti
+  template:
+    src: migrate.sh.j2
+    dest: "{{ dest }}"
+    owner: tomcat
+    group: tomcat
+    mode: 0755
