@@ -1,6 +1,6 @@
 .impersonointi-haku {
   $impersonointi-width: 500px;
-  $impersonointi-height: 300px;
+  $impersonointi-height: 160px;
 
   @include box-shadow;
   z-index: 10;
@@ -13,4 +13,13 @@
   left: 50%;
   top: 100px;
   width: $impersonointi-width;
+
+  button.sulje {
+    position: absolute;
+    right: 4px;
+    top: 0px;
+  }
+  fieldset {
+    width: 100%;
+  }
 }

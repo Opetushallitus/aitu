@@ -99,7 +99,8 @@ angular.module('ttk', ['aitulocale',
     });
   }])
 
-  .controller('AituController', ['$scope', '$window', 'i18n', 'impersonaatioResource', function($scope, $window, i18n, impersonaatioResource){
+  .controller('AituController', ['$scope', '$window', 'i18n', 'impersonaatioResource', function($scope, $window, i18n, impersonaatioResource) {
+    $scope.impersonoitava = {};
     $scope.varmistaLogout = function() {
       if(confirm(i18n['haluatko-kirjautua-ulos'])) {
         $window.location = aituLogoutUrl;
@@ -108,8 +109,11 @@ angular.module('ttk', ['aitulocale',
     $scope.valitse = function() {
       $scope.valitseHenkilo = true;
     };
-    $scope.impersonoi = function(oid) {
-      impersonaatioResource.impersonoi({oid: oid}, function() {
+    $scope.piilota = function() {
+      $scope.valitseHenkilo = false;
+    };
+    $scope.impersonoi = function() {
+      impersonaatioResource.impersonoi({oid: $scope.impersonoitava.oid}, function() {
         $window.location = ttkBaseUrl;
       });
     };

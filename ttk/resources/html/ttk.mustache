@@ -44,9 +44,19 @@
       </ul>
     </div>
   </nav>
-  <div class="impersonointi-haku" ng-class="{valitse-henkilo: valitseHenkilo}" ng-if="valitseHenkilo">
-    <h3>Valitse avustettava käyttäjä</h3>
-    <a href="" ng-click="impersonoi('OID.T-800')">T-800</a>
+  <div class="impersonointi-haku ng-hide" ng-class="{valitse-henkilo: valitseHenkilo}" ng-show="valitseHenkilo">
+    <button class="icon delete-icon sulje" ng-click="piilota()"></button>
+    <form name="impersonoiForm">
+      <haku-valitsin
+        otsikko="Valitse avustettava käyttäjä"
+        url="[[base-url]]/api/kayttaja/impersonoitava"
+        model="impersonoitava"
+        model-id-property="oid"
+        model-text-property="nimi"
+        pakollinen="true">
+      </haku-valitsin>
+      <tallenna formi-validi="impersonoiForm.$valid" ng-click="impersonoi()" teksti="'Valitse käyttäjä'"></tallenna>
+    </form>
   </div>
   <div id="content" class="app-wrapper">
     <api-metodi-palaute></api-metodi-palaute>

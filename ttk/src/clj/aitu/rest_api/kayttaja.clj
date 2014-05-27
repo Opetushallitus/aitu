@@ -35,8 +35,8 @@
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
 
-  (cu/defapi :impersonointi nil :get "/impersonoitavat" []
-    (json-response (arkisto/hae-impersonoitavat)))
+  (cu/defapi :impersonointi nil :get "/impersonoitava" [termi]
+    (json-response (arkisto/hae-impersonoitava-termilla termi)))
 
   (cu/defapi :kayttajan_tiedot nil :get "/" []
              (let [oikeudet (ko-arkisto/hae-oikeudet)

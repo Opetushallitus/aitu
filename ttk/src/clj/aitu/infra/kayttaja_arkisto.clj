@@ -17,7 +17,9 @@
             [korma.db :as db]
             [clojure.tools.logging :as log]
             [aitu.integraatio.sql.korma :as taulut]
-            [aitu.toimiala.kayttajaroolit :refer [yllapitajarooli]]
+            [aitu.toimiala.kayttajaroolit :refer [yllapitajarooli
+                                                  osoitepalvelurooli]]
+            [aitu.util :refer [sisaltaako-kentat?]]
             [oph.korma.korma-auth :refer [*current-user-uid*
                                           *current-user-oid*
                                           integraatiokayttaja]]))
@@ -54,9 +56,13 @@
           (log/debug "Luodaan uusi käyttäjä")
           (sql/insert taulut/kayttaja (sql/values k)))))))
 
-(defn hae-impersonoitavat
-  "Hakee impersonoitavat käyttäjät, eli muut kun ylläpitäjä-käyttäjät"
-  []
-  (sql/select taulut/kayttaja
-    (sql/fields :oid :etunimi :sukunimi)
-    (sql/where (not= :rooli yllapitajarooli))))
+(defn hae-impersonoitava-termilla
+  "Hakee impersonoitavia käyttäjiä termillä"
+  [termi]
+  (for [kayttaja (sql/select taulut/kayttaja
+                   (sql/fields :oid :uid :etunimi :sukunimi)
+                   (sql/where (and (not= :rooli yllapitajarooli)
+                                   (not= :rooli osoitepalvelurooli))))
+        :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
+    {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
+     :oid (:oid kayttaja)}))
