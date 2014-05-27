@@ -21,11 +21,11 @@
     <div class="app-wrapper ">
       <div id="logout" ng-click="varmistaLogout()"></div>
       <kielen-vaihto></kielen-vaihto>
-      <ul id="current-user">
+      <ul id="current-user" ng-class="{impersonoitu : [[impersonoitu]]}">
         <li>
           <a href="">[[current-user]]</a>
           <ul>
-            <li ng-if="![[impersonoitu]]"><a href="" ng-click="impersonoi()">Vaihda avustettavaksi käyttäjäksi</a></li>
+            <li ng-if="![[impersonoitu]]"><a href="" ng-click="valitse()">Vaihda avustettavaksi käyttäjäksi</a></li>
             <li ng-if="[[impersonoitu]]"><a href="" ng-click="lopetaImpersonointi()">Lopeta avustus</a></li>
           </ul>
         </li>
@@ -44,6 +44,10 @@
       </ul>
     </div>
   </nav>
+  <div class="impersonointi-haku" ng-class="{valitse-henkilo: valitseHenkilo}" ng-if="valitseHenkilo">
+    <h3>Valitse avustettava käyttäjä</h3>
+    <a href="" ng-click="impersonoi('OID.T-800')">T-800</a>
+  </div>
   <div id="content" class="app-wrapper">
     <api-metodi-palaute></api-metodi-palaute>
     <div ng-view></div>

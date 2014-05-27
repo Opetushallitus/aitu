@@ -136,13 +136,13 @@ header {
         ul {
           background-color: $primary-color;
           left:-$marginM;
-          padding-right: $marginM + 30px;
+          padding: inherit;
+          width: auto;
           top: $nav-height;
           &:hover {
-            background: $darker-primary;
+            background-color: $darker-primary;
           }
           li {
-            background-color: $primary-color;
             a {
               text-transform: none;
               &:hover {

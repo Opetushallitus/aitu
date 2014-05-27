@@ -1370,16 +1370,13 @@ header form p {
 .main-nav #current-user li:hover ul {
   background-color: #107ea2;
   left: -12px;
-  padding-right: 42px;
+  padding: inherit;
+  width: auto;
   top: 40px;
 }
-/* line 141, ../../private/sass/partials/_header.scss */
+/* line 142, ../../private/sass/partials/_header.scss */
 .main-nav #current-user li:hover ul:hover {
-  background: #083f51;
-}
-/* line 144, ../../private/sass/partials/_header.scss */
-.main-nav #current-user li:hover ul li {
-  background-color: #107ea2;
+  background-color: #083f51;
 }
 /* line 146, ../../private/sass/partials/_header.scss */
 .main-nav #current-user li:hover ul li a {
@@ -1662,6 +1659,23 @@ div.api-method-feedback > div.error {
   border: 1px solid #cc0d0f;
   background-color: #e39292;
   color: #742022;
+}
+
+/* line 1, ../../private/sass/partials/_impersonointi.scss */
+.impersonointi-haku {
+  -moz-box-shadow: 2px 2px 8px -1px gray;
+  -webkit-box-shadow: 2px 2px 8px -1px gray;
+  box-shadow: 2px 2px 8px -1px gray;
+  z-index: 10;
+  position: absolute;
+  border: 2px solid #4d4d4d;
+  background-color: white;
+  min-height: 300px;
+  padding: 5px 10px;
+  margin-left: -250px;
+  left: 50%;
+  top: 100px;
+  width: 500px;
 }
 
 /* NÄKYMÄT

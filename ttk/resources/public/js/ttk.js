@@ -105,8 +105,11 @@ angular.module('ttk', ['aitulocale',
         $window.location = aituLogoutUrl;
       }
     };
-    $scope.impersonoi = function() {
-      impersonaatioResource.impersonoi({oid: 'OID.T-800'}, function() {
+    $scope.valitse = function() {
+      $scope.valitseHenkilo = true;
+    };
+    $scope.impersonoi = function(oid) {
+      impersonaatioResource.impersonoi({oid: oid}, function() {
         $window.location = ttkBaseUrl;
       });
     };
