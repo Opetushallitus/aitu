@@ -26,4 +26,5 @@ palvelu = aitu
 asennushakemisto = /data00/aitu
 sovelluksen_asetustiedosto = ttk.properties
 migraation_asetustiedosto = ttk-db.properties
-migraation_argumentit = -u {{ tietokannan_peruskayttaja }} --aituhaku-username aituhaku_user --clear -t
+migraation_argumentit_asennuksen_jalkeen = -u {{ tietokannan_peruskayttaja }} --aituhaku-username aituhaku_user --clear -t
+migraation_argumentit_dumpin_jalkeen = -u {{ tietokannan_peruskayttaja }} --aituhaku-username aituhaku_user -t

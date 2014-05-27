@@ -20,7 +20,7 @@
 
 # Skeemaa hallitaan ko. tietokannan migraatioskripteillä, joten sitä ei luoda
 # tässä. Skeemaa käyttävää projektia ei voida julkaista ympäristöön, ennen kuin
-# tietokannan omistama projekti on julkaistu siihen.
+# tietokannan omistava projekti on julkaistu siihen.
 
 - include: tietokannan_paakayttaja.yml
   when: tietokannan_paakayttaja is defined
