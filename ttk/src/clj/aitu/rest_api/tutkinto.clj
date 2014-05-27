@@ -29,7 +29,7 @@
   (cu/defapi :yleinen-rest-api nil :get "/:tutkintotunnus" [tutkintotunnus]
     (json-response (tutkinto/taydenna-tutkinto (arkisto/hae tutkintotunnus))))
   (cu/defapi :yleinen-rest-api nil :get "/haku/osat" [termi :as req]
-    (cachable-json-response req (arkisto/hae-opintoalat-osaamisalat-tutkinnonosat termi)))
+    (cachable-json-response req (arkisto/hae-opintoalat-tutkinnot-osaamisalat-tutkinnonosat termi)))
   (cu/defapi :yleinen-rest-api nil :get "/haku/tutkinnot" [termi :as req]
     (cachable-json-response req (arkisto/hae-opintoalat-tutkinnot termi))))
 

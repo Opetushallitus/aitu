@@ -43,7 +43,7 @@
       (json-response (oppilaitos/taydenna-oppilaitos (arkisto/hae oppilaitoskoodi)) OppilaitosLaajatTiedot)))
 
   (GET* "/haku/ala" [termi :as req]
-    :summary "Hakee kaikki oppilaitokset joiden osaamisalan selite tai tutkinnonosan nimi sisältää annetun termin"
+    :summary "Hakee kaikki oppilaitokset joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan nimi sisältää annetun termin"
     :return [OppilaitosTiedot]
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
       (cachable-json-response req (arkisto/hae-alalla termi) [OppilaitosTiedot]))))
