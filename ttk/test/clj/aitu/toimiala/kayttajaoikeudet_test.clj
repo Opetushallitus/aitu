@@ -23,7 +23,7 @@
   "Saako käyttäjä tehdä annetun toiminnon. Toiminnon kohde voi vaikuttaa kontekstisensitiivisiin oikeuksiin ellei käyttäjä ole ylläpitäjä-roolissa"
   [kayttaja-map toiminto kohdeid]
   {:pre [(contains? toiminnot toiminto)
-         (contains? #{yllapitajarooli kayttajarooli oph-katselijarooli} (:roolitunnus kayttaja-map))]}
+         (some #{(:roolitunnus kayttaja-map)} (vals kayttajaroolit))]}
   (binding [*current-user-authmap* kayttaja-map]
     (let [auth-fn (get toiminnot toiminto)]
       (if (nil? kohdeid)
@@ -36,10 +36,10 @@
   ([jasenyys]
     {:oid "foo123"
      :henkiloid "henkiloid123"
-     :roolitunnus kayttajarooli
+     :roolitunnus (:kayttaja kayttajaroolit)
      :toimikunta #{jasenyys}}))
 
-(def oph-katselija-kayttaja {:roolitunnus oph-katselijarooli})
+(def oph-katselija-kayttaja {:roolitunnus (:oph-katselija kayttajaroolit)})
 
 (defn onnistuuko-operaatio-toimikunnalle?
   ([operaatio tkunta]
@@ -55,9 +55,9 @@
   (is (empty? (intersection (set (keys kayttajatoiminnot)) (set (keys yllapitotoiminnot))))))
 
 (deftest toiminnot-test
-  (let [yllapitaja {:oid "l" :roolitunnus yllapitajarooli}
+  (let [yllapitaja {:oid "l" :roolitunnus (:yllapitaja kayttajaroolit)}
        kayttaja (kayttaja-map)
-       oph-katselija {:roolitunnus oph-katselijarooli}
+       oph-katselija {:roolitunnus (:oph-katselija kayttajaroolit)}
        konteksti "fooid"]
     (testing "Vain ylläpitäjä saa tehdä ylläpitotoimintoja"
       (doseq [oikeus (keys yllapitotoiminnot)]

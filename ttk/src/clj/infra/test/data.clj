@@ -20,7 +20,7 @@
             [aitu.asetukset :refer [lue-asetukset]]
             [aitu.integraatio.sql.korma :refer [kayttaja]]
             [aitu.toimiala.kayttajaoikeudet
-             :refer [yllapitajarooli kayttajarooli]]))
+             :refer [kayttajaroolit]]))
 
 (def taulut ["jarjestamissuunnitelma"
              "sopimus_ja_tutkinto_ja_osaamisala"
@@ -67,7 +67,7 @@
                        :uid testikayttaja-uid
                        :oid testikayttaja-oid}))))))
   ([testikayttaja-oid testikayttaja-uid]
-    (luo-testikayttaja! testikayttaja-oid testikayttaja-uid yllapitajarooli)))
+    (luo-testikayttaja! testikayttaja-oid testikayttaja-uid (:yllapitaja kayttajaroolit))))
 
 (defn poista-testikayttaja!
   [testikayttaja-oid]

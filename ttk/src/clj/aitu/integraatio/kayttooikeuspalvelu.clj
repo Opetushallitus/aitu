@@ -16,8 +16,7 @@
   (:require [clojure.string :as s]
             [clojure.tools.logging :as log]
             [clj-ldap.client :as ldap]
-            [aitu.toimiala.kayttajaoikeudet
-             :refer [yllapitajarooli kayttajarooli osoitepalvelurooli]]))
+            [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]]))
 
 (def aitu-organisaatio "1.2.246.562.10.2013121312395140176502")
 
@@ -25,9 +24,9 @@
   (str "APP_AITU_" nimi "_" aitu-organisaatio))
 
 (def roolin-ryhma-cn
-  {yllapitajarooli (aitu-ryhma-cn "CRUD")
-   kayttajarooli (aitu-ryhma-cn "READ_UPDATE")
-   osoitepalvelurooli (aitu-ryhma-cn "OSOITEPALVELU")})
+  {(:yllapitaja kayttajaroolit) (aitu-ryhma-cn "CRUD")
+   (:kayttaja kayttajaroolit) (aitu-ryhma-cn "READ_UPDATE")
+   (:osoitepalvelu kayttajaroolit) (aitu-ryhma-cn "OSOITEPALVELU")})
 
 (defn ryhma-dn [ryhma-cn]
   (str "cn=" ryhma-cn ",ou=Groups,dc=opintopolku,dc=fi"))

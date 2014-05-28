@@ -68,7 +68,7 @@
 
 (deftest ^:integraatio oph-katselija-jarjestamissopimus-auth-test
   (lisaa-jarjestamissopimus!)
-  (let [oph-katselija-kayttaja {:roolitunnus oph-katselijarooli}]
+  (let [oph-katselija-kayttaja {:roolitunnus (:oph-katselija kayttajaroolit)}]
     (testing "Sopimuksen päivitys ei onnistu OPH-katselijalta"
       (with-user-rights
         oph-katselija-kayttaja

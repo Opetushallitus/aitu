@@ -19,8 +19,7 @@
             [aitu.toimiala.kayttajaoikeudet :refer [paivita-kayttajan-toimikuntakohtaiset-oikeudet
                                                     paivita-kayttajan-sopimuskohtaiset-oikeudet
                                                     liita-kayttajan-henkilo-oikeudet
-                                                    yllapitajarooli
-                                                    oph-katselijarooli]]
+                                                    kayttajaroolit]]
             [aitu.infra.kayttajaoikeudet-arkisto :as ko-arkisto]
             [aitu.rest-api.http-util :refer [json-response]]
             [aitu.toimiala.kayttajaoikeudet :as ko]
@@ -31,8 +30,8 @@
   (cu/defapi :kayttajan_tiedot nil :get "/" []
              (let [oikeudet (ko-arkisto/hae-oikeudet)
                    roolitunnus (:roolitunnus oikeudet)]
-               (if (or (= roolitunnus yllapitajarooli)
-                       (= roolitunnus oph-katselijarooli))
+               (if (or (= roolitunnus (:yllapitaja kayttajaroolit))
+                       (= roolitunnus (:oph-katselija kayttajaroolit)))
                  (json-response oikeudet)
                  (-> oikeudet
                      paivita-kayttajan-toimikuntakohtaiset-oikeudet

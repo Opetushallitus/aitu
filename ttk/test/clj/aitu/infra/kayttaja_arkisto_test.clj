@@ -19,15 +19,14 @@
             [aitu.infra.kayttaja-arkisto :refer :all]
             [aitu.integraatio.sql.korma :as taulut]
             [oph.korma.korma-auth :refer [*current-user-oid* integraatiokayttaja]]
-            [aitu.toimiala.kayttajaoikeudet
-             :refer [yllapitajarooli kayttajarooli]]))
+            [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]]))
 
 (defn kayttajat [& kt]
   (map merge
        (for [i (iterate inc 0)]
          {:etunimi (str "etu" i)
           :sukunimi (str "suku" i)
-          :rooli kayttajarooli})
+          :rooli (:kayttaja kayttajaroolit)})
        kt))
 
 (defn on-olemassa-kayttajat [& kt]

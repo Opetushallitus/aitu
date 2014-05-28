@@ -21,8 +21,7 @@
              :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
-            [aitu.toimiala.kayttajaoikeudet
-             :refer [yllapitajarooli kayttajarooli osoitepalvelurooli]]))
+            [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]]))
 
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
   (binding [*current-user-uid* integraatiokayttaja
@@ -33,9 +32,8 @@
             *current-user-oid* (promise)]
     (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
     (kayttaja-arkisto/paivita!
-      (concat (kop/kayttajat kayttooikeuspalvelu kayttajarooli)
-              (kop/kayttajat kayttooikeuspalvelu yllapitajarooli)
-              (kop/kayttajat kayttooikeuspalvelu osoitepalvelurooli)))))
+      (apply concat (for [rooli (vals kayttajaroolit)]
+                      (kop/kayttajat kayttooikeuspalvelu rooli))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.

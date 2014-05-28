@@ -36,7 +36,7 @@
   (testdata/luo-testikayttaja! testikayttaja-oid testikayttaja-uid))
 
 (defn poista-testikayttaja!
-  [] 
+  []
   (testdata/poista-testikayttaja! testikayttaja-oid))
 
 (defn alusta-korma! []
@@ -89,7 +89,7 @@
 
 (defn with-user-rights
   ([f]
-   (with-user-rights {:roolitunnus kayttajaoikeudet/kayttajarooli
+   (with-user-rights {:roolitunnus (:kayttaja kayttajaoikeudet/kayttajaroolit)
                       :toimikunta #{(toimikunnan-jasenyys (:tkunta default-toimikunta) "sihteeri")
                                     (toimikunnan-jasenyys "123" "sihteeri")}}
                      f))

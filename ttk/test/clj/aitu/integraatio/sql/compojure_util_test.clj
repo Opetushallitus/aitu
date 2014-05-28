@@ -20,8 +20,7 @@
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [korma.db :as db]
             [aitu.integraatio.sql.test-util :refer :all]
-            [aitu.toimiala.kayttajaoikeudet
-             :refer [yllapitajarooli kayttajarooli]])
+            [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]])
   (:use clojure.test))
 
 (def sample-admin-api
@@ -35,7 +34,7 @@
       {:status 200})))
 
 (defn with-admin-rights [f]
- (binding [ko/*current-user-authmap* {:roolitunnus yllapitajarooli}]
+ (binding [ko/*current-user-authmap* {:roolitunnus (:yllapitaja kayttajaroolit)}]
    (f)))
 
 (deftest yllapitaja-saa-lisata-toimikunnan []

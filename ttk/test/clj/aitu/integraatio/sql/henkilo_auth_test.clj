@@ -19,16 +19,16 @@
   (lisaa-jasen! {:toimikunta (:tkunta default-toimikunta) :henkiloid -1})
   (lisaa-jasen! {:toimikunta (:tkunta default-toimikunta) :henkiloid -4 :loppupvm menneisyydessa}))
 
-(def yllapitaja-auth-map {:roolitunnus kayttajaoikeudet/yllapitajarooli})
+(def yllapitaja-auth-map {:roolitunnus (:yllapitaja kayttajaroolit)})
 
-(def oph-katselija-auth-map {:roolitunnus kayttajaoikeudet/oph-katselijarooli})
+(def oph-katselija-auth-map {:roolitunnus (:oph-katselija kayttajaroolit)})
 
 (defn kayttaja-auth-map
   ([]
    (kayttaja-auth-map (toimikunnan-jasenyys (:tkunta default-toimikunta) "sihteeri")))
   ([jasenyys]
   {:henkiloid -3
-   :roolitunnus kayttajaoikeudet/kayttajarooli
+   :roolitunnus (:kayttaja kayttajaroolit)
    :toimikunta #{jasenyys}}))
 
 (defn autorisoi-henkilon-paivitys [henkiloid]

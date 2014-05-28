@@ -22,10 +22,10 @@
 (def ^:dynamic *current-user-authmap*)
 
 ;; kayttajarooli-taulun arvot
-(def yllapitajarooli "YLLAPITAJA")
-(def kayttajarooli "KAYTTAJA")
-(def osoitepalvelurooli "OSOITEPALVELU")
-(def oph-katselijarooli "OPH-KATSELIJA")
+(def kayttajaroolit {:yllapitaja "YLLAPITAJA"
+                     :kayttaja "KAYTTAJA"
+                     :osoitepalvelu "OSOITEPALVELU"
+                     :oph-katselija "OPH-KATSELIJA"})
 
 (def toimikunnan-muokkaus-roolit #{"puheenjohtaja",
                                    "varapuheenjohtaja",
@@ -35,16 +35,16 @@
 
 (defn onko-kayttajan-rooli?
   [kayttaja-map rooli]
-  {:pre [(contains? #{yllapitajarooli kayttajarooli oph-katselijarooli} (:roolitunnus kayttaja-map))]}
+  {:pre [(some #{(:roolitunnus kayttaja-map)} (vals kayttajaroolit))]}
   (= rooli (:roolitunnus kayttaja-map)))
 
 (defn yllapitaja?
   ([kayttaja-map]
-   (onko-kayttajan-rooli? kayttaja-map yllapitajarooli))
+   (onko-kayttajan-rooli? kayttaja-map (:yllapitaja kayttajaroolit)))
   ([] (yllapitaja? *current-user-authmap*)))
 
 (defn oph-katselija? []
-  (onko-kayttajan-rooli? *current-user-authmap* oph-katselijarooli))
+  (onko-kayttajan-rooli? *current-user-authmap* (:oph-katselija kayttajaroolit)))
 
 (defn jasenyys-voimassa? [jasenyys]
   (:voimassa (taydenna-jasenyyden-voimassaolo jasenyys (not (toimikunta-vanhentunut? jasenyys)))))
@@ -70,16 +70,14 @@
   ([x] (aitu-kayttaja?))
   ([]
     (let [roolitunnus (:roolitunnus *current-user-authmap*)]
-      (or (= roolitunnus yllapitajarooli)
-          (= roolitunnus kayttajarooli)
-          (= roolitunnus oph-katselijarooli)))))
+      (some #{roolitunnus} (vals kayttajaroolit)))))
 
 (defn osoitepalvelu-kayttaja?
   ([x] (osoitepalvelu-kayttaja?))
   ([]
     (let [roolitunnus (:roolitunnus *current-user-authmap*)]
-      (or (= roolitunnus osoitepalvelurooli)
-          (= roolitunnus yllapitajarooli)))))
+      (or (= roolitunnus (:osoitepalvelu kayttajaroolit))
+          (= roolitunnus (:yllapitaja kayttajaroolit))))))
 
 (def sallittu-kaikille (constantly true))
 

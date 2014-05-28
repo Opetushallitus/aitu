@@ -30,7 +30,7 @@
 
 ; kolme oppilaitosta
 ; opintoala "sähköala"
-; johon kuuluu tutkinto jotta 
+; johon kuuluu tutkinto jotta
 ; kahdella oppilaitoksella voimassa oleva järjestämissopimus tutkintoon ja siten opintoalaan
 
 (defn jarjestajahaku-sopimukset-data []
@@ -43,7 +43,7 @@
         toimikunta-map (dt/setup-toimikunta toimikuntatunnus)
         sopimus1 (dt/setup-voimassaoleva-jarjestamissopimus oppilaitos1 toimikuntatunnus tutkinto)
         sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus oppilaitos2 toimikuntatunnus tutkinto)]
-    (dt/merge-datamaps tutkinto-map toimikunta-map sopimus1 sopimus2 
+    (dt/merge-datamaps tutkinto-map toimikunta-map sopimus1 sopimus2
       {:oppilaitokset [oppilaitos1 oppilaitos2 oppilaitos-ilman-sopimusta]})))
 
 (deftest tutkintolista-test []
