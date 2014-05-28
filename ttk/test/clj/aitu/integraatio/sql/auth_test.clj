@@ -47,7 +47,7 @@
   "Testaa että kannasta puuttuvalla käyttäjätunnuksella ei voi avata kantayhteyksiä."
   []
   (let [puuttuva-kayttaja {:oid "AKUANKKA"}
-        olemassaoleva-kayttaja {:roolitunnus {:yllapitaja kayttajaroolit}, :oid auth/default-test-user-oid, :uid auth/default-test-user-uid }
+        olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid auth/default-test-user-oid, :uid auth/default-test-user-uid }
         arbitrary-sql-read henkilo-arkisto/hae-kaikki]
     (is (thrown? Throwable
                  (tietokanta-oper
