@@ -21,7 +21,7 @@
             [infra.test.data :as testdata]
             [aitu.asetukset :refer [lue-asetukset oletusasetukset]]
             [aitu.integraatio.sql.korma :refer [kayttaja]]
-            [aitu.toimiala.kayttajaroolit :refer [kayttajarooli]]
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.infra.kayttajaoikeudet-arkisto :as kayttajaoikeudet-arkisto]
             [aitu.integraatio.sql.test-data-util :refer [default-toimikunta]]
@@ -89,7 +89,7 @@
 
 (defn with-user-rights
   ([f]
-   (with-user-rights {:roolitunnus (:kayttaja kayttajaoikeudet/kayttajaroolit)
+   (with-user-rights {:roolitunnus (:kayttaja kayttajaroolit)
                       :toimikunta #{(toimikunnan-jasenyys (:tkunta default-toimikunta) "sihteeri")
                                     (toimikunnan-jasenyys "123" "sihteeri")}}
                      f))

@@ -36,7 +36,7 @@
 
 (defn yllapitajarooli?
   [rooli]
-  (= yllapitajarooli rooli))
+  (= (:yllapitaja kayttajaroolit) rooli))
 
 (defn yllapitaja?
   ([kayttaja-map]

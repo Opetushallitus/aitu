@@ -17,8 +17,7 @@
             [korma.db :as db]
             [clojure.tools.logging :as log]
             [aitu.integraatio.sql.korma :as taulut]
-            [aitu.toimiala.kayttajaroolit :refer [yllapitajarooli
-                                                  osoitepalvelurooli]]
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aitu.util :refer [sisaltaako-kentat?]]
             [oph.korma.korma-auth :refer [*current-user-uid*
                                           *current-user-oid*
@@ -61,8 +60,8 @@
   [termi]
   (for [kayttaja (sql/select taulut/kayttaja
                    (sql/fields :oid :uid :etunimi :sukunimi)
-                   (sql/where (and (not= :rooli yllapitajarooli)
-                                   (not= :rooli osoitepalvelurooli))))
+                   (sql/where (and (not= :rooli (:yllapitaja kayttajaroolit))
+                                   (not= :rooli (:osoitepalvelu kayttajaroolit)))))
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
