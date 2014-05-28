@@ -70,7 +70,9 @@
   ([x] (aitu-kayttaja?))
   ([]
     (let [roolitunnus (:roolitunnus *current-user-authmap*)]
-      (some #{roolitunnus} (vals kayttajaroolit)))))
+      (or (= roolitunnus (:kayttaja kayttajaroolit))
+          (= roolitunnus (:yllapitaja kayttajaroolit))
+          (= roolitunnus (:oph-katselija kayttajaroolit))))))
 
 (defn osoitepalvelu-kayttaja?
   ([x] (osoitepalvelu-kayttaja?))
