@@ -49,9 +49,9 @@
                                           :tutkintotunnus "TU1"}]})
 
 (defn toimikunnan-tutkinnot []
-  (map w/text (w/find-elements (-> *ng*
+  (sort (map w/text (w/find-elements (-> *ng*
                                  (.repeater "tutkinto in tutkintoJarjestetty")
-                                 (.column "tutkinto.nimi")))))
+                                 (.column "tutkinto.nimi"))))))
 
 (deftest toimikunnan-tutkintojen-naytto-test
   (testing "Toimikunnan tutkintojen muokkaussivu aukeaa ja näyttää alussa valittuna toimikunnan tutkinnot"
