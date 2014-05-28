@@ -23,6 +23,11 @@
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
             [aitu.toimiala.kayttajaoikeudet :refer [kayttajaroolit]]))
 
+;; Roolit siinä järjestyksessä missä ne pitää hakea käyttöoikeuspalvelusta.
+;; Jos käyttäjällä on useampi rooli, viimeisimpänä määritelty jää voimaan.
+(def roolit-jarjestyksessa [:kayttaja :oph-katselija :osoitepalvelu :yllapitaja])
+(assert (= (set roolit-jarjestyksessa) (set (keys kayttajaroolit))))
+
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
   (binding [*current-user-uid* integraatiokayttaja
             ;; Tietokantayhteyden avaus asettaa *current-user-oid*-promisen
@@ -32,8 +37,8 @@
             *current-user-oid* (promise)]
     (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
     (kayttaja-arkisto/paivita!
-      (apply concat (for [rooli (vals kayttajaroolit)]
-                      (kop/kayttajat kayttooikeuspalvelu rooli))))))
+      (apply concat (for [rooli roolit-jarjestyksessa]
+                      (kop/kayttajat kayttooikeuspalvelu (get kayttajaroolit rooli)))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
