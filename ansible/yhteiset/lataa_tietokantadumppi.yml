@@ -1,0 +1,16 @@
+---
+- name: Lataa tietokantadumppi
+  hosts: oph_db
+  gather_facts: no
+  roles:
+    - role: oph_db_lataa_dumppi
+      sudo: yes
+      sudo_user: postgres
+
+- name: Suorita migraatio
+  hosts: oph_palvelu
+  gather_facts: no
+  tasks:
+    - name: Suorita migraatio
+      sudo: yes
+      command: "{{ asennushakemisto }}/migrate-dump-{{ palvelu }}.sh"
