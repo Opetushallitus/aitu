@@ -46,6 +46,9 @@
         (let [response (ring-handler req)
               finish (System/currentTimeMillis)
               total  (- finish start)]
+          (if (or (= response nil)
+                  (= (:status response) 404))
+            (log/warn (str "Response nil or status 404, uri: " (:uri req) ", query-string: " (:query-string req))))
           (log/info (str "Request " *requestid* " end. Status: " (:status response) " Duration: " total " ms. uri: " (:uri req)))
           response)))))
 
