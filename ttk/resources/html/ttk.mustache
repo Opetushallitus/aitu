@@ -25,7 +25,7 @@
       <ul id="current-user" ng-class="{impersonoitu : [[impersonoitu]]}">
         <li>
           <a href="">[[current-user]]</a>
-          <ul ng-if="[[yllapitaja]]">
+          <ul ng-if="[[yllapitaja]] || [[impersonoitu]]">
             <li ng-if="![[impersonoitu]]"><a href="" ng-click="valitse()">[[vaihda-avustettavaksi-kayttajaksi]]</a></li>
             <li ng-if="[[impersonoitu]]"><a href="" ng-click="lopetaImpersonointi()">[[lopeta-avustus]]</a></li>
           </ul>
