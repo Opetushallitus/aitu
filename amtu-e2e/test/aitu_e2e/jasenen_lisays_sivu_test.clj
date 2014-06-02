@@ -35,8 +35,17 @@
 (defn kirjoita-tietokenttaan [kentta arvo]
   (w/input-text (str "input[ng-model=\"" kentta "\"]") arvo)
   (odota-angular-pyyntoa))
+#_(defn paina-nappia []
+   (w/click {:css "button:not([class*='ng-hide']):not([class*='open-datepicker'])"})
+   (odota-angular-pyyntoa))
 (defn paina-nappia []
-  (w/click {:css "button:not([class*='ng-hide']):not([class*='open-datepicker'])"})
+  (w/click {:css "button[ng-click=\"haeHenkilotJaSiirrySeuraavaan()\"]"})
+  (odota-angular-pyyntoa))
+(defn paina-lisaa-henkilo-nappia []
+  (w/click {:css "button[ng-click=\"lisaaHenkiloJaSiirrySeuraavaan(jasen.henkilo)\"]"})
+  (odota-angular-pyyntoa))
+(defn paina-siirry-seuraavaan-nappia []
+  (w/click {:css "button[ng-click=\"siirrySeuraavaan()\"]"})
   (odota-angular-pyyntoa))
 (defn hae-henkilo [nimi]
   (valitse-select2-optio "search" "osat" nimi)
@@ -71,7 +80,7 @@
   [alkupvm loppupvm]
   (avaa (jasenen-lisays-sivu "98/11/543"))
   (hae-henkilo "Simo Sisu")
-  (paina-nappia)
+  (paina-siirry-seuraavaan-nappia)
   ;; Kun
   (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
   (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
@@ -118,7 +127,7 @@
           (with-webdriver
             (avaa (jasenen-lisays-sivu "98/11/543"))
             (hae-henkilo "Simo Sisu")
-            (paina-nappia)
+            (paina-siirry-seuraavaan-nappia)
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
@@ -133,7 +142,7 @@
           (with-webdriver
             (avaa (jasenen-lisays-sivu "98/11/543"))
             (hae-henkilo "Simo Sisu")
-            (paina-nappia)
+            (paina-siirry-seuraavaan-nappia)
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
@@ -162,7 +171,7 @@
           (with-webdriver
             (avaa (jasenen-lisays-sivu "98/11/543"))
             (hae-henkilo "Simo Sisu")
-            (paina-nappia)
+            (paina-siirry-seuraavaan-nappia)
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
@@ -173,7 +182,7 @@
           (with-webdriver
             (avaa (jasenen-lisays-sivu "98/11/543"))
             (hae-henkilo "Simo Sisu")
-            (paina-nappia)
+            (paina-siirry-seuraavaan-nappia)
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
@@ -193,7 +202,7 @@
           ;; Kun
           (kirjoita-tietokenttaan "jasen.henkilo.etunimi" "Roope")
           (kirjoita-tietokenttaan "jasen.henkilo.sukunimi" "Setä")
-          (paina-nappia)
+          (paina-lisaa-henkilo-nappia)
           (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
           (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
           (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")

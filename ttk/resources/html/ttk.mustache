@@ -17,6 +17,7 @@
 </head>
 <body ng-controller="AituController">
 <div>
+  [[#i18n.impersonointi]]
   <nav class="main-nav">
     <div class="app-wrapper ">
       <div id="logout" ng-click="varmistaLogout()"></div>
@@ -24,9 +25,9 @@
       <ul id="current-user" ng-class="{impersonoitu : [[impersonoitu]]}">
         <li>
           <a href="">[[current-user]]</a>
-          <ul>
-            <li ng-if="![[impersonoitu]]"><a href="" ng-click="valitse()">Vaihda avustettavaksi käyttäjäksi</a></li>
-            <li ng-if="[[impersonoitu]]"><a href="" ng-click="lopetaImpersonointi()">Lopeta avustus</a></li>
+          <ul ng-if="[[yllapitaja]]">
+            <li ng-if="![[impersonoitu]]"><a href="" ng-click="valitse()">[[vaihda-avustettavaksi-kayttajaksi]]</a></li>
+            <li ng-if="[[impersonoitu]]"><a href="" ng-click="lopetaImpersonointi()">[[lopeta-avustus]]</a></li>
           </ul>
         </li>
       </ul>
@@ -44,20 +45,21 @@
       </ul>
     </div>
   </nav>
-  <div class="impersonointi-haku ng-hide" ng-class="{valitse-henkilo: valitseHenkilo}" ng-show="valitseHenkilo">
+  <div class="impersonointi-haku ng-hide" ng-show="valitseHenkilo">
     <button class="icon delete-icon sulje" ng-click="piilota()"></button>
     <form name="impersonoiForm">
       <haku-valitsin
-        otsikko="Valitse avustettava käyttäjä"
+        otsikko="[[valitse-avustettava-kayttaja]]"
         url="[[base-url]]/api/kayttaja/impersonoitava"
         model="impersonoitava"
         model-id-property="oid"
         model-text-property="nimi"
         pakollinen="true">
       </haku-valitsin>
-      <tallenna formi-validi="impersonoiForm.$valid" ng-click="impersonoi()" teksti="'Valitse käyttäjä'"></tallenna>
+      <tallenna formi-validi="impersonoiForm.$valid" ng-click="impersonoi()" teksti="'[[valitse-kayttaja]]'"></tallenna>
     </form>
   </div>
+  [[/i18n.impersonointi]]
   <div id="content" class="app-wrapper">
     <api-metodi-palaute></api-metodi-palaute>
     <div ng-view></div>

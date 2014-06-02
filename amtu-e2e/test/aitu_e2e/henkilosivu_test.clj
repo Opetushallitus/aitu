@@ -34,7 +34,7 @@
   (odota-angular-pyyntoa))
 
 (defn poista-jarjestovalinta []
-  (w/click {:css "abbr.select2-search-choice-close"})
+  (w/click {:css "fieldset[model=\"jasen.henkilo\"][model-id-property=\"jarjesto\"] abbr.select2-search-choice-close"})
   (odota-angular-pyyntoa))
 
 (defn jarjeston-nimi []
