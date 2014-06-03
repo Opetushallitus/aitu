@@ -191,3 +191,20 @@
           (henkilosivu 999)
           "oph-katselija"
           (is (not (henkilon-muokkaus-nappi-nakyy))))))))
+
+(def etusivu "/fi/#/")
+
+(deftest ^:cas impersonointi-auth-test
+  (testing "Impersonointi auth test:"
+    (testing "ylläpitäjällä on impersonointi valikko"
+      (with-webdriver
+        (avaa-kayttajana
+          etusivu
+          "T-1001"
+          (is (w/exists? {:css "#current-user>li a[ng-click=\"valitse()\"]"})))))
+    (testing "käyttäjällä ei ole impersonointivalikkoa"
+      (with-webdriver
+        (avaa-kayttajana
+          etusivu
+          "T-800"
+          (is (not (w/exists? {:css "#current-user>li a[ng-click=\"valitse()\"]"}))))))))
