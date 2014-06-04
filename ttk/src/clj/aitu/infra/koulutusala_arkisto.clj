@@ -30,12 +30,19 @@
   (sql/delete koulutusala
     (sql/where {:koulutusala_tkkoodi koodi})))
 
-(defn ^:test-api lisaa!
+(defn lisaa!
   "Lisää koulutusalan arkistoon."
   [uusi-koulutusala]
   {:pre [(domain/koulutusala? uusi-koulutusala)]}
   (sql/insert koulutusala
     (sql/values uusi-koulutusala)))
+
+(defn paivita!
+  [ala]
+  {:pre [(domain/koulutusala? ala)]}
+  (sql/update koulutusala
+    (sql/set-fields (dissoc ala :koulutusala_tkkoodi))
+    (sql/where {:koulutusala_tkkoodi (:koulutusala_tkkoodi ala)})))
 
 (defn hae-kaikki
   "Hakee kaikki koulutusalat."
