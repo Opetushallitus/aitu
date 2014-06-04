@@ -24,6 +24,7 @@
 
   :test-selectors {:ie (complement (some-fn :no-ie :ie-epastabiili))
                    :ie-epastabiili :ie-epastabiili
+                   :ie-kaikki (complement :no-ie)
                    :no-ie :no-ie
                    :no-cas (complement :cas)
                    :default (constantly true)})

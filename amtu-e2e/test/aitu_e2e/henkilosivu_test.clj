@@ -193,6 +193,22 @@
             ;; Niin
             (is (= (jarjeston-nimi) "Pikkujärjestö"))))))))
 
+(deftest oph-643-test
+  (testing "Henkilön keskusjärjestön tulee näkyä henkilönmuokkaussivulla"
+    (with-webdriver
+      (let [jarjesto (dt/jarjesto-nimella "Pikkujärjestö")
+            henkilo (dt/henkilo-jarjestolla "Ahto" "Simakuutio" (:jarjestoid jarjesto))]
+        (with-data
+          {:jarjestot [jarjesto]
+           :henkilot [henkilo]}
+          (avaa (henkilon-muokkaussivu (:henkiloid henkilo)))
+          ;; Oikea järjestö on valittu sekä ensimmäisellä että toisella
+          ;; muokkauskerralla
+          (is (w/find-element {:class "select2-chosen", :text "Pikkujärjestö"}))
+          (tallenna)
+          (avaa (henkilon-muokkaussivu (:henkiloid henkilo)))
+          (is (w/find-element {:class "select2-chosen", :text "Pikkujärjestö"})))))))
+
 (deftest henkilosivu-muokkaus-pakolliset-kentat-test
   (testing "Henkilön muokkaussivun pakolliset kentät"
     (with-webdriver
