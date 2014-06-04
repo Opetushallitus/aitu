@@ -30,12 +30,23 @@
   (sql/delete opintoala
     (sql/where {:opintoala_tkkoodi koodi})))
 
-(defn ^:test-api lisaa!
+(defn lisaa!
   "Lisää opintoalan arkistoon."
   [uusi-opintoala]
-  {:pre [(domain/opintoala? uusi-opintoala)]}
-  (sql/insert opintoala
-    (sql/values uusi-opintoala)))
+  (if (domain/opintoala? uusi-opintoala)
+    (sql/insert opintoala
+      (sql/values uusi-opintoala))
+    (do (println uusi-opintoala) (assert false))))
+
+(defn paivita!
+  [ala]
+  #_{:pre [(domain/opintoala? ala)]}
+  (when-not (domain/opintoala? ala)
+    (println ala)
+    (assert false))
+  (sql/update opintoala
+   (sql/set-fields (dissoc ala :opintoala_tkkoodi))
+   (sql/where {:opintoala_tkkoodi (:opintoala_tkkoodi ala)})))
 
 (defn hae-kaikki
   "Hakee kaikki opintoalat."
