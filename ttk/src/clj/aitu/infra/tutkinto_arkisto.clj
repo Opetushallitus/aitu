@@ -26,14 +26,14 @@
   []
   (sql/exec-raw "delete from nayttotutkinto"))
 
-(defn ^:test-api lisaa!
+(defn lisaa!
   "Lisää tutkinnon arkistoon."
   [tutkinto]
   {:pre [(toimiala/tutkinto? tutkinto)]}
   (sql/insert nayttotutkinto
     (sql/values tutkinto)))
 
-(defn ^:test-api lisaa-tutkintoversio!
+(defn lisaa-tutkintoversio!
   "Lisää tutkintoversion arkistoon"
   [versio]
   {:pre [(toimiala/tutkintoversio? versio)]}
@@ -43,13 +43,36 @@
 (defn ^:test-api paivita!
   "Päivittää tutkinnon tiedot"
   [tutkintotunnus tutkinto]
-  {:pre [(toimiala/tutkinto? tutkinto)]}
   (sql/update nayttotutkinto
     (sql/set-fields (dissoc tutkinto :tutkintotunnus))
     (sql/where {:tutkintotunnus tutkintotunnus})))
 
-(defn ^:test-api lisaa-tutkinto-ja-versio!
-  "Lisää arkistoon tutkinnon ja sille tutkintoversion"
+(defn ^:private hae-uusin-tutkintoversio
+  [tutkintotunnus]
+  (first (sql/select tutkintoversio
+           (sql/where (= :tutkintoversio_id (sql/subselect nayttotutkinto
+                                              (sql/fields :uusin_versio_id)
+                                              (sql/where {:tutkintotunnus tutkintotunnus})))))))
+
+(defn paivita-tutkinto!
+  "Tekee uuden version tutkinnosta ja palauttaa tutkintoversion id:n"
+  [tutkinto]
+  (let [tutkintotiedot (select-keys tutkinto [:nimi_fi :nimi_sv :opintoala :tyyppi :tutkintotaso])
+        versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio :jarjestyskoodistoversio])
+        tutkintotunnus (:tutkintotunnus tutkinto)
+        vanha-versio (hae-uusin-tutkintoversio tutkintotunnus)
+        uusi-versio (->
+                      (merge vanha-versio versiotiedot)
+                      (update-in [:versio] inc)
+                      (dissoc :tutkintoversio_id))]
+    (when (seq tutkintotiedot)
+      (paivita! tutkintotunnus tutkintotiedot))
+    (let [tutkintoversio-id (:tutkintoversio_id (lisaa-tutkintoversio! uusi-versio))]
+      (paivita! tutkintotunnus {:uusin_versio_id tutkintoversio-id})
+      tutkintoversio-id)))
+
+(defn lisaa-tutkinto-ja-versio!
+  "Lisää arkistoon tutkinnon ja sille tutkintoversion. Palauttaa lisätyn tutkintoversion id:n."
   [tutkinto-ja-versio]
   (let [tutkinto (select-keys tutkinto-ja-versio [:tutkintotunnus :opintoala :tyyppi :tutkintotaso :nimi_fi :nimi_sv :uusin_versio_id])
         versio (select-keys tutkinto-ja-versio [:tutkintotunnus :tutkintoversio_id :versio :koodistoversio :peruste
@@ -58,9 +81,18 @@
     (let [versio (lisaa-tutkintoversio! versio)
           tutkintotunnus (:tutkintotunnus tutkinto)
           tutkinto (merge {:uusin_versio_id (:tutkintoversio_id versio)} tutkinto)]
-      (paivita! tutkintotunnus tutkinto))))
+      (paivita! tutkintotunnus tutkinto)
+      (:tutkintoversio_id versio))))
 
-(defn ^:test-api lisaa-tutkinnon-osa!
+(defn ^:private hae-tutkinnonosan-uusin-versio
+  [osatunnus]
+  (first (sql/select tutkinnonosa
+           (sql/where (and (= :osatunnus osatunnus)
+                           (= :versio (sql/subselect tutkinnonosa
+                                        (sql/aggregate (max :versio) :max_versio)
+                                        (sql/where {:osatunnus osatunnus}))))))))
+
+(defn lisaa-tutkinnon-osa!
   "Lisää tutkinnon osan"
   [tutkintoversio_id jarjestysnumero osa]
   (let [osa (sql/insert tutkinnonosa
@@ -69,6 +101,16 @@
       (sql/values {:tutkintoversio tutkintoversio_id
                    :tutkinnonosa (:tutkinnonosa_id osa)
                    :jarjestysnumero jarjestysnumero}))))
+
+(defn paivita-tutkinnon-osa!
+  "Tekee uuden version tutkinnonosasta"
+  [tutkintoversio_id jarjestysnumero osa]
+  (let [vanha-osa (hae-tutkinnonosan-uusin-versio (:osatunnus osa))
+        uusi-osa (->
+                   (merge vanha-osa osa)
+                   (update-in [:versio] inc)
+                   (dissoc :tutkinnonosa_id))]
+    (lisaa-tutkinnon-osa! tutkintoversio_id jarjestysnumero uusi-osa)))
 
 (defn ^:test-api poista-tutkinnon-osa!
   "Poistaa tutkinnon osan"
@@ -80,11 +122,29 @@
   (sql/delete tutkinnonosa
     (sql/where {:osatunnus osatunnus})))
 
-(defn ^:test-api lisaa-osaamisala!
+(defn ^:private hae-osaamisalan-uusin-versio
+  [osaamisalatunnus]
+  (first (sql/select osaamisala
+           (sql/where (and (= :osaamisalatunnus osaamisalatunnus)
+                           (= :versio (sql/subselect osaamisala
+                                        (sql/aggregate (max :versio) :max_versio)
+                                        (sql/where {:osaamisalatunnus osaamisalatunnus}))))))))
+
+(defn lisaa-osaamisala!
   "Lisää osaamisalan"
   [oala]
   (sql/insert osaamisala
     (sql/values oala)))
+
+(defn paivita-osaamisala!
+  "Lisää uuden version osaamisalasta"
+  [oala]
+  (let [vanha-ala (hae-osaamisalan-uusin-versio (:osaamisalatunnus oala))
+        uusi-ala (->
+                   (merge vanha-ala oala)
+                   (update-in [:versio] inc)
+                   (dissoc :osaamisala_id))]
+    (lisaa-osaamisala! uusi-ala)))
 
 (defn ^:test-api poista-osaamisala!
   "Poistaa osaamisalan"
@@ -106,8 +166,11 @@
   []
   (sql/select nayttotutkinto
     (sql/with uusin-versio
-      (sql/with tutkinnonosa)
-      (sql/with osaamisala))))
+      (sql/with tutkinto-ja-tutkinnonosa
+        (sql/with tutkinnonosa))
+      (sql/with osaamisala))
+    (sql/with opintoala
+      (sql/fields :koulutusala_tkkoodi))))
 
 (defn liita-sopimus-ja-tutkinto-riviin
   [sopimus-ja-tutkinto]
