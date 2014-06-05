@@ -6,13 +6,26 @@
     <label>[[jarjestajan-nimi]]</label>
     <input type="text" ng-model="search.nimi" class="search-with-autocomplete">
   </fieldset>
-  <haku-valitsin
-    otsikko="[[opintoala-osaamisala-tutkinnonosa]]"
-    url="[[base-url]]/api/tutkinto/haku/osat"
-    model="search"
-    model-id-property="termi"
-    model-text-property="nimi">
-  </haku-valitsin>
+  <div>
+    <haku-valitsin
+      otsikko="[[opintoala-tutkinto]]"
+      url="[[base-url]]/api/tutkinto/haku/tutkinnot"
+      model="tutkintoHakuehto"
+      model-id-property="termi"
+      model-text-property="nimi"
+      model-optional-properties="properties">
+    </haku-valitsin>
+  </div>
+  <div>
+    <haku-valitsin
+      otsikko="[[opintoala-osaamisala-tutkinnonosa]]"
+      url="[[base-url]]/api/tutkinto/haku/osat"
+      model="search"
+      model-id-property="termi"
+      model-text-property="nimi"
+      model-optional-properties="properties">
+    </haku-valitsin>
+  </div>
 </form>
 
 <div class="search-results" lataus-indikaattori metodi-idt="['jarjestajalistaus']" viesti="[[jarjestajia-ladataan]]" virheviesti="[[jarjestajien-lataus-epaonnistui]]" yrita-uudelleen="haeJarjestajat()">
