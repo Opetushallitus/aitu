@@ -316,7 +316,14 @@ angular.module('directives', ['services', 'resources'])
       }
     };
   })
-  .directive('hakuValitsin', ['i18n', 'kieli',  function(i18n, kieli){
+  .factory('modelPromise', ['$q', function($q) {
+    return function(model){
+      // Palauttaa promisen, joka sisältää annetun modelin. Jos model on Angular
+      // resource, palauttaa sen oman promisen.
+      return (model && model.$promise) || $q.when(model);
+    }
+  }])
+  .directive('hakuValitsin', ['i18n', 'kieli', 'modelPromise', function(i18n, kieli, modelPromise) {
     return {
       restrict: 'E',
       replace: true,
@@ -349,12 +356,20 @@ angular.module('directives', ['services', 'resources'])
             delete $scope.model[modelIdProp];
           }});
 
+        // Jostain syystä watch ei huomaa, kun Angular resourcen promise
+        // valmistuu ja täyttää puuttuvat kentät modeliin. Kierretään ongelma
+        // odottamalla promisea eksplisiittisesti. Direktiivin model voi olla
+        // myös tavallinen olio, joten haetaan modelille promise
+        // modelPromise-funktiolla (ks. yllä).
         $scope.$watch('model', function(value) {
-          if (value && value[modelIdProp]) {
-            $scope.selection = $scope.selection ? $scope.selection : {};
-            $scope.selection[modelIdProp] = value[modelIdProp];
-            $scope.selection[modelTextProp] = lokalisoituTeksti(value, modelTextProp);
-          }});
+          modelPromise(value).then(function(){
+            if (value && value[modelIdProp]) {
+              $scope.selection = $scope.selection ? $scope.selection : {};
+              $scope.selection[modelIdProp] = value[modelIdProp];
+              $scope.selection[modelTextProp] = lokalisoituTeksti(value, modelTextProp);
+            }
+          })
+        });
 
         function lokalisoituTeksti(obj, textProp) {
           var teksti = '';
