@@ -49,15 +49,9 @@ angular.module('jarjestajat', ['ngRoute'])
       $scope.i18n = i18n;
       $scope.kaikkiJarjestajat = [];
       $scope.jarjestajat = [];
-      $scope.search = {nimi: "", termi: "", properties: ""};
-      $scope.tutkintoHakuehto = {nimi: "", termi: "", properties: ""};
-
+      $scope.search = {nimi: "", termi: ""};
       $scope.$watch('search.nimi', suodataJarjestajat);
       $scope.$watch('search.termi', haeJarjestajat);
-
-      $scope.$watch('tutkintoHakuehto.nimi', suodataJarjestajat);
-      $scope.$watch('tutkintoHakuehto.termi', haeJarjestajat);
-
       $scope.$watchCollection('kaikkiJarjestajat', suodataJarjestajat);
 
       haeJarjestajat();
@@ -68,8 +62,7 @@ angular.module('jarjestajat', ['ngRoute'])
       }
 
       function haeJarjestajat() {
-        $scope.search.properties = {tutkinto: $scope.tutkintoHakuehto.termi};
-        $scope.kaikkiJarjestajat = JarjestajaHakuResource.query({termi: $scope.search.termi, tutkinto: $scope.tutkintoHakuehto.termi});
+        $scope.kaikkiJarjestajat = JarjestajaHakuResource.query({termi: $scope.search.termi});
       }
     }
   ])

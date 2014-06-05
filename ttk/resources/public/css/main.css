@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* YHTEISET
 ----------------------------------------------------------------------------- */
 /* YHTEISET TYYLIT (AITU, AITUHAKU JA AIPAL)
@@ -1312,24 +1311,26 @@ header form p {
 /* line 106, ../../private/sass/partials/_header.scss */
 .main-nav ul li {
   border-right: 1px solid #009dcd;
+  padding: 0 12px;
   float: left;
   height: 40px;
-  display: table;
 }
 /* line 111, ../../private/sass/partials/_header.scss */
+.main-nav ul li:hover {
+  background-color: #083f51;
+}
+/* line 112, ../../private/sass/partials/_header.scss */
 .main-nav ul li:first-child {
   border-left: 1px solid #009dcd;
 }
-/* line 112, ../../private/sass/partials/_header.scss */
-.main-nav ul li a, .main-nav ul li span {
+/* line 113, ../../private/sass/partials/_header.scss */
+.main-nav ul li a {
   text-transform: uppercase;
-  display: table-cell;
-  vertical-align: middle;
-  padding: 0 12px;
 }
-/* line 119, ../../private/sass/partials/_header.scss */
-.main-nav ul li a:hover {
-  background-color: #083f51;
+/* line 116, ../../private/sass/partials/_header.scss */
+.main-nav ul li span {
+  padding-top: 8px;
+  display: inline-block;
 }
 /* line 123, ../../private/sass/partials/_header.scss */
 .main-nav #current-user {
@@ -1364,11 +1365,8 @@ header form p {
 .main-nav #current-user li {
   position: relative;
   border: 0;
-  margin-right: -30px;
-  padding-right: 30px;
-  z-index: 2;
 }
-/* line 139, ../../private/sass/partials/_header.scss */
+/* line 136, ../../private/sass/partials/_header.scss */
 .main-nav #current-user li:hover ul {
   background-color: #107ea2;
   left: -12px;
@@ -1376,44 +1374,43 @@ header form p {
   width: auto;
   top: 40px;
 }
-/* line 145, ../../private/sass/partials/_header.scss */
+/* line 142, ../../private/sass/partials/_header.scss */
 .main-nav #current-user li:hover ul:hover {
   background-color: #083f51;
 }
-/* line 149, ../../private/sass/partials/_header.scss */
+/* line 146, ../../private/sass/partials/_header.scss */
 .main-nav #current-user li:hover ul li a {
   text-transform: none;
 }
-/* line 151, ../../private/sass/partials/_header.scss */
+/* line 148, ../../private/sass/partials/_header.scss */
 .main-nav #current-user li:hover ul li a:hover {
   cursor: pointer;
 }
-/* line 155, ../../private/sass/partials/_header.scss */
+/* line 152, ../../private/sass/partials/_header.scss */
 .main-nav #current-user li:hover ul li:hover {
   background: #083f51;
 }
-/* line 162, ../../private/sass/partials/_header.scss */
+/* line 159, ../../private/sass/partials/_header.scss */
 .main-nav #current-user ul {
   position: absolute;
   left: -9999px;
   width: 100%;
   z-index: 10;
 }
-/* line 167, ../../private/sass/partials/_header.scss */
+/* line 164, ../../private/sass/partials/_header.scss */
 .main-nav #current-user ul a {
   white-space: nowrap;
 }
-/* line 172, ../../private/sass/partials/_header.scss */
+/* line 169, ../../private/sass/partials/_header.scss */
 .main-nav .impersonoitu {
   background-color: red;
 }
-/* line 175, ../../private/sass/partials/_header.scss */
+/* line 172, ../../private/sass/partials/_header.scss */
 .main-nav #logout {
-  border-left: 1px solid #009dcd;
+  border-right: 1px solid #009dcd;
   padding: 0 15px;
   float: right;
   height: 40px;
-  cursor: pointer;
 }
 /* line 16, ../../private/sass/yhteiset/_icons.scss */
 .main-nav #logout:after {
@@ -1432,19 +1429,27 @@ header form p {
 .no-svg .main-nav #logout:after {
   background-image: url("../img/oph-icon-sprite.png");
 }
-/* line 181, ../../private/sass/partials/_header.scss */
+/* line 178, ../../private/sass/partials/_header.scss */
 .main-nav #logout:hover {
   background-color: #083f51;
 }
-/* line 184, ../../private/sass/partials/_header.scss */
+/* line 180, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang {
   float: right;
 }
-/* line 187, ../../private/sass/partials/_header.scss */
+/* line 183, ../../private/sass/partials/_header.scss */
+.main-nav .change-lang-active {
+  display: inline-block;
+}
+/* line 186, ../../private/sass/partials/_header.scss */
+.main-nav .change-lang-inactive {
+  display: inline-block;
+}
+/* line 189, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-active:hover {
   background-color: #083f51;
 }
-/* line 190, ../../private/sass/partials/_header.scss */
+/* line 192, ../../private/sass/partials/_header.scss */
 .main-nav .change-lang-inactive:hover {
   background-color: #107ea2;
 }

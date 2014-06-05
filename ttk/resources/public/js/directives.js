@@ -334,8 +334,7 @@ angular.module('directives', ['services', 'resources'])
         modelIdProperty : '@',
         modelTextProperty : '@',
         searchPropertyMap : '@',
-        pakollinen : '=',
-        modelOptionalProperties : '@'
+        pakollinen : '='
       },
       templateUrl : 'template/haku-valitsin',
       controller : function($scope) {
@@ -402,11 +401,9 @@ angular.module('directives', ['services', 'resources'])
             dataType: 'json',
             quietMillis: 500,
             data: function (term) {
-              var params = {termi: term};
-              if(typeof $scope.model[$scope.modelOptionalProperties] === 'object'){
-                _.extend(params, $scope.model[$scope.modelOptionalProperties]);
-              }
-              return params;
+              return {
+                termi: term // search term
+              };
             },
             results: function (data) {
               return {results: _.map(data, mapSearchResult)};

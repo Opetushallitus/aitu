@@ -105,19 +105,19 @@ header {
     @include clearfix;
     li {
       border-right: 1px solid $separator-color;
+      padding: 0 $marginM;
       float: left;
       height: $nav-height;
-      display: table;
+      &:hover {background-color: $darker-primary;}
       &:first-child {border-left: 1px solid $separator-color;}
-      a,span {
+      a {
         text-transform:uppercase;
-        display: table-cell;
-        vertical-align: middle;
-        padding: 0 $marginM;
       }
-      a{
-        &:hover {background-color: $darker-primary;}
+      span {
+        padding-top: 8px;
+        display: inline-block;
       }
+
     }
   }
   #current-user {
@@ -132,9 +132,6 @@ header {
     li {
       position: relative;
       border: 0;
-      margin-right: -30px;
-      padding-right: 30px;
-      z-index: 2;
       &:hover {
         ul {
           background-color: $primary-color;
@@ -173,16 +170,21 @@ header {
     background-color: red;
   }
   #logout {
-    border-left: 1px solid $separator-color;
+    border-right: 1px solid $separator-color;
     padding: 0 15px;
     float: right;
     height: $nav-height;
     @include icon-after(-5px, 11px){@include logout-icon;};
     &:hover {background-color: $darker-primary;}
-    cursor: pointer;
   }
   .change-lang {
     float: right;
+  }
+  .change-lang-active {
+    display: inline-block;
+  }
+  .change-lang-inactive {
+    display: inline-block;
   }
   .change-lang-active:hover {
     background-color: $darker-primary;
