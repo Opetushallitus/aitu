@@ -300,3 +300,19 @@
         (tallenna)
         (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut"))))))
 
+(defn aseta-liite [tyyppi]
+  (w/send-keys {:css (str "div[liitetyyppi=\"" tyyppi "\"] input[type=\"file\"]")} (str (java.lang.System/getProperty "user.dir") "/project.clj"))
+  (odota-angular-pyyntoa))
+
+(defn paina-tallenna-liite-nappia [tyyppi]
+  (w/click {:css (str "div[liitetyyppi=\"" tyyppi "\"] button[upload-submit]")})
+  (odota-angular-pyyntoa))
+
+(deftest jarjestamissopimus-muokkaussivu-jarjestamisuunnitelman-lisays-test
+  (testing "Järjestämissopimuksen muokkaussivu järjestämissuunnitelman lisäys:"
+    (with-webdriver
+      (du/with-data jarjestamissopimus-data
+        (avaa-sopimuksen-muokkaussivu 1230)
+        (aseta-liite "jarjestamissuunnitelmat")
+        (paina-tallenna-liite-nappia "jarjestamissuunnitelmat")
+        (is (> (count (w/find-elements (-> *ng* (.repeater "suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat") (.column "suunnitelma.jarjestamissuunnitelma_filename")))) 0))))))
