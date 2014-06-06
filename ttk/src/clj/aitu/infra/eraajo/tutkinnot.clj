@@ -163,9 +163,9 @@
   (try
     (db/transaction
       (log/info "Aloitetaan tutkintojen päivitys koodistopalvelusta")
-      (tallenna-koulutusalat! (koodisto/koulutusala-muutokset asetukset))
-      (tallenna-opintoalat! (koodisto/opintoala-muutokset asetukset))
-      (paivita-tutkinnot! asetukset (koodisto/tutkinto-muutokset asetukset))
+      (tallenna-koulutusalat! (koodisto/hae-koulutusala-muutokset asetukset))
+      (tallenna-opintoalat! (koodisto/hae-opintoala-muutokset asetukset))
+      (paivita-tutkinnot! asetukset (koodisto/hae-tutkinto-muutokset asetukset))
       (log/info "Tutkintojen päivitys koodistopalvelusta valmis"))
     (catch org.postgresql.util.PSQLException e
       (log/error e "Tutkintojen päivitys koodistopalvelusta epäonnistui"))))
