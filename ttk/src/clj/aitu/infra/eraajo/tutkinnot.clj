@@ -32,10 +32,12 @@
 
 (defn tallenna-uudet-opintoalat! [opintoalat]
   (doseq [ala opintoalat]
+    (log/info "Lisätään opintoala " (:opintoala_tkkoodi ala))
     (opintoala-arkisto/lisaa! ala)))
 
 (defn tallenna-muuttuneet-opintoalat! [opintoalat]
   (doseq [ala opintoalat]
+    (log/info "Päivitetään opintoala " (:opintoala_tkkoodi ala) ", muutokset: " (dissoc ala :opintoala_tkkoodi))
     (opintoala-arkisto/paivita! ala)))
 
 (defn nimi->selite [ala]
@@ -54,10 +56,12 @@
 
 (defn tallenna-uudet-koulutusalat! [koulutusalat]
   (doseq [ala koulutusalat]
+    (log/info "Lisätään koulutusala " (:koulutusala_tkkoodi ala))
     (koulutusala-arkisto/lisaa! ala)))
 
 (defn tallenna-muuttuneet-koulutusalat! [koulutusalat]
   (doseq [ala koulutusalat]
+    (log/info "Päivitetään koulutusala " (:koulutusala_tkkoodi ala) ", muutokset: " (dissoc ala :koulutusala_tkkoodi))
     (koulutusala-arkisto/paivita! ala)))
 
 (defn tallenna-koulutusalat! [koulutusalat]
@@ -73,12 +77,14 @@
 
 (defn tallenna-uudet-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
   (doseq [{:keys [jarjestysnumero tutkinnonosa]} tutkinnonosat]
+    (log/info "Lisätään tutkinnonosa " (:osatunnus tutkinnonosa))
     (tutkinto-arkisto/lisaa-tutkinnon-osa! tutkintoversio-id
                                            jarjestysnumero
                                            (assoc tutkinnonosa :versio 1))))
 
 (defn tallenna-muuttuneet-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
   (doseq [{:keys [jarjestysnumero tutkinnonosa]} tutkinnonosat]
+    (log/info "Päivitetään tutkinnonosa " (:osatunnus tutkinnonosa) ", muutokset: " (dissoc tutkinnonosa :osatunnus))
     (tutkinto-arkisto/paivita-tutkinnon-osa! tutkintoversio-id
                                              jarjestysnumero
                                              tutkinnonosa)))
@@ -95,12 +101,14 @@
 
 (defn tallenna-uudet-osaamisalat! [tutkintoversio-id osaamisalat]
   (doseq [osaamisala osaamisalat]
+    (log/info "Lisätään osaamisala " (:osaamisalatunnus osaamisala))
     (tutkinto-arkisto/lisaa-osaamisala! (assoc osaamisala
                                                :versio 1
                                                :tutkintoversio tutkintoversio-id))))
 
 (defn tallenna-muuttuneet-osaamisalat! [tutkintoversio-id osaamisalat]
   (doseq [osaamisala osaamisalat]
+    (log/info "Päivitetään osaamisala " (:osaamisalatunnus osaamisala) ", muutokset: " (dissoc osaamisala :osaamisalatunnus))
     (tutkinto-arkisto/paivita-osaamisala! (assoc osaamisala :tutkintoversio tutkintoversio-id))))
 
 (defn tallenna-osaamisalat! [tutkintoversio-id osaamisalat]
