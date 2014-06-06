@@ -98,6 +98,15 @@
         (arkisto/paivita-tutkinnot! jarjestamissopimusid_int sopimus_ja_tutkinto)
         {:status 200})))
 
+  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid" [jarjestamissopimusid]
+    (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
+      (sallittu-jos
+        (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
+        (arkisto/merkitse-sopimus-poistetuksi! jarjestamissopimus_id_int)
+        {:status 200}))))
+
+
+(c/defroutes liite-reitit
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
@@ -115,13 +124,6 @@
       (sallittu-jos
         (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
         (arkisto/poista-suunnitelma! jarjestamissuunnitelma_id_int)
-        {:status 200})))
-
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid" [jarjestamissopimusid]
-    (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
-      (sallittu-jos
-        (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
-        (arkisto/merkitse-sopimus-poistetuksi! jarjestamissopimus_id_int)
         {:status 200})))
 
   (cu/defapi :suunnitelma_luku jarjestamissopimusid :get "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
