@@ -15,7 +15,75 @@
 (ns aitu.integraatio.koodistopalvelu-test
   (:require [clojure.test :refer :all]
             [clj-time.core :as time]
-            [aitu.integraatio.koodistopalvelu :refer :all]))
+            [aitu.integraatio.koodistopalvelu :refer :all]
+            [aitu.util :refer :all]))
+
+
+;; Muoto jossa data tulee tutkinto-arkistosta
+(def tutkinto {:tutkintotunnus "1"
+               :voimassa_alkupvm (time/local-date 2014 1 1)
+               :voimassa_loppupvm (time/local-date 2199 1 1)
+               :tyyppi "03"
+               :tutkintotaso "ammattitutkinto"
+               :nimi_fi "Testauksen ammattitutkinto"
+               :nimi_sv "Samma på svenska"
+               :osajarjestyskoodisto "testauksenatjarjestys"
+               :jarjestyskoodistoversio 1
+               :koodistoversio 1
+               :opintoala_tkkoodi "OA1"
+               :koulutusala_tkkoodi "KA1"
+               :tutkinto_ja_tutkinnonosa [{:jarjestysnumero 1
+                                           :nimi_fi "Tutkinnonosa"
+                                           :nimi_sv nil
+                                           :osatunnus "10"
+                                           :voimassa_alkupvm (time/local-date 2014 1 1)
+                                           :voimassa_loppupvm (time/local-date 2199 1 1)}]})
+
+;; Muoto jossa data tulee koodistopalvelusta
+(def koodisto-uusi {:koulutusala_tkkoodi "5"
+                    :voimassa_loppupvm (time/local-date 2199 1 1)
+                    :tila "HYVAKSYTTY"
+                    :nimi_fi "Kylmämestarin erikoisammattitutkinto"
+                    :nimi_sv "Specialyrkesexamen för kylmästare"
+                    :opintoala_tkkoodi "501"
+                    :jarjestyskoodistoversio 2
+                    :voimassa_alkupvm (time/local-date 2002 1 1)
+                    :tutkinnonosat [{:jarjestysnumero 1
+                                     :nimi_fi "Ammatin tiedolliset perusvalmiudet"
+                                     :nimi_sv nil
+                                     :osatunnus "104351"
+                                     :voimassa_alkupvm (time/local-date 2013 12 17)
+                                     :voimassa_loppupvm (time/local-date 2199 1 1)}]
+                    :tyyppi "03"
+                    :osajarjestyskoodisto "kylmamestarineatjarjestys"
+                    :tutkintotaso "erikoisammattitutkinto"
+                    :osaamisalat '()
+                    :tutkintotunnus "357207"})
+
+(def koodisto-muuttunut {:koulutusala_tkkoodi "KA1"
+                         :voimassa_loppupvm (time/local-date 2199 1 1)
+                         :nimi_fi "Testauksen ammattitutkinto"
+                         :nimi_sv "Yrkesexamen för testning"
+                         :opintoala_tkkoodi "OA1"
+                         :jarjestyskoodistoversio 2
+                         :voimassa_alkupvm (time/local-date 2014 1 1)
+                         :tutkinnonosat [{:jarjestysnumero 1
+                                          :nimi_fi "Tutkinnonosa"
+                                          :nimi_sv nil
+                                          :osatunnus "10"
+                                          :voimassa_alkupvm (time/local-date 2014 1 1)
+                                          :voimassa_loppupvm (time/local-date 2199 1 1)}
+                                         {:jarjestysnumero 2
+                                          :nimi_fi "Tutkinnonosa 2"
+                                          :nimi_sv nil
+                                          :osatunnus "11"
+                                          :voimassa_alkupvm (time/local-date 2014 1 1)
+                                          :voimassa_loppupvm (time/local-date 2199 1 1)}]
+                         :tyyppi "03"
+                         :osajarjestyskoodisto "testauksenatjarjestys"
+                         :tutkintotaso "ammattitutkinto"
+                         :osaamisalat ()
+                         :tutkintotunnus "1"})
 
 (deftest koodi->kasite-test
    (let [koodi {:metadata [{:kieli "FI"
@@ -43,6 +111,116 @@
              :tutkintotunnus "352201"
              :voimassa_alkupvm (time/local-date 1997 1 1)
              :voimassa_loppupvm (time/local-date 2013 12 31)}))))
+
+(deftest tutkintodata->vertailumuoto-test
+  (let [vertailumuoto (tutkintodata->vertailumuoto [tutkinto])]
+    (is (= vertailumuoto {:tutkinnot {"1" {:tutkintotunnus "1"
+                                           :opintoala "OA1"
+                                           :koulutusala "KA1"
+                                           :voimassa_alkupvm (time/local-date 2014 1 1)
+                                           :voimassa_loppupvm (time/local-date 2199 1 1)
+                                           :tyyppi "03"
+                                           :tutkintotaso "ammattitutkinto"
+                                           :nimi_fi "Testauksen ammattitutkinto"
+                                           :nimi_sv "Samma på svenska"
+                                           :osajarjestyskoodisto "testauksenatjarjestys"
+                                           :jarjestyskoodistoversio 1
+                                           :koodistoversio 1
+                                           :osaamisalat #{}
+                                           :tutkinnonosat #{{:jarjestysnumero 1
+                                                             :osatunnus "10"}}}}
+                          :osaamisalat {}
+                          :tutkinnonosat {"10" {:jarjestysnumero 1
+                                                :nimi_fi "Tutkinnonosa"
+                                                :nimi_sv nil
+                                                :osatunnus "10"
+                                                :voimassa_alkupvm (time/local-date 2014 1 1)
+                                                :voimassa_loppupvm (time/local-date 2199 1 1)}}}))))
+
+(deftest koodistodata->vertailumuoto-test
+  (let [vertailumuoto (koodistodata->vertailumuoto 1 [koodisto-muuttunut])]
+    (is (= vertailumuoto {:tutkinnot {"1" {:tutkintotunnus "1"
+                                           :opintoala "OA1"
+                                           :koulutusala "KA1"
+                                           :voimassa_alkupvm (time/local-date 2014 1 1)
+                                           :voimassa_loppupvm (time/local-date 2199 1 1)
+                                           :tyyppi "03"
+                                           :tutkintotaso "ammattitutkinto"
+                                           :nimi_fi "Testauksen ammattitutkinto"
+                                           :nimi_sv "Yrkesexamen för testning"
+                                           :osajarjestyskoodisto "testauksenatjarjestys"
+                                           :jarjestyskoodistoversio 2
+                                           :koodistoversio 1
+                                           :osaamisalat #{}
+                                           :tutkinnonosat #{{:jarjestysnumero 1
+                                                             :osatunnus "10"}
+                                                            {:jarjestysnumero 2
+                                                             :osatunnus "11"}}}}
+                          :osaamisalat {}
+                          :tutkinnonosat {"10" {:jarjestysnumero 1
+                                                :nimi_fi "Tutkinnonosa"
+                                                :nimi_sv nil
+                                                :osatunnus "10"
+                                                :voimassa_alkupvm (time/local-date 2014 1 1)
+                                                :voimassa_loppupvm (time/local-date 2199 1 1)}
+                                          "11" {:jarjestysnumero 2
+                                                :nimi_fi "Tutkinnonosa 2"
+                                                :nimi_sv nil
+                                                :osatunnus "11"
+                                                :voimassa_alkupvm (time/local-date 2014 1 1)
+                                                :voimassa_loppupvm (time/local-date 2199 1 1)}}}))))
+
+(deftest tutkinto-muutokset-test
+  (let [{:keys [tutkinnot osaamisalat tutkinnonosat]} (tutkinto-muutokset [tutkinto] 1 [koodisto-uusi koodisto-muuttunut])]
+    (is (= osaamisalat {}))
+    (is (= tutkinnonosat {"11" [{:jarjestysnumero 2
+                                                :nimi_fi "Tutkinnonosa 2"
+                                                :nimi_sv nil
+                                                :osatunnus "11"
+                                                :voimassa_alkupvm (time/local-date 2014 1 1)
+                                                :voimassa_loppupvm (time/local-date 2199 1 1)}
+                                nil]
+                          "104351" [{:jarjestysnumero 1
+                                     :nimi_fi "Ammatin tiedolliset perusvalmiudet"
+                                     :nimi_sv nil
+                                     :osatunnus "104351"
+                                     :voimassa_alkupvm (time/local-date 2013 12 17)
+                                     :voimassa_loppupvm (time/local-date 2199 1 1)}
+                                    nil]}))
+    (is (= tutkinnot {"1" {:nimi_sv ["Yrkesexamen för testning" "Samma på svenska"]
+                           :tutkinnonosat [#{{:jarjestysnumero 1
+                                              :osatunnus "10"}
+                                             {:jarjestysnumero 2
+                                              :osatunnus "11"}}
+                                           #{{:jarjestysnumero 1
+                                              :osatunnus "10"}}]
+                           :jarjestyskoodistoversio [2 1]
+                           :tutkintotunnus nil
+                           :opintoala nil
+                           :koulutusala nil
+                           :voimassa_alkupvm nil
+                           :voimassa_loppupvm nil
+                           :tyyppi nil
+                           :tutkintotaso nil
+                           :nimi_fi nil
+                           :osajarjestyskoodisto nil
+                           :koodistoversio nil
+                           :osaamisalat nil}
+                      "357207" [{:koulutusala "5"
+                                 :voimassa_loppupvm (time/local-date 2199 1 1)
+                                 :nimi_fi "Kylmämestarin erikoisammattitutkinto"
+                                 :nimi_sv "Specialyrkesexamen för kylmästare"
+                                 :opintoala "501"
+                                 :jarjestyskoodistoversio 2
+                                 :koodistoversio 1
+                                 :voimassa_alkupvm (time/local-date 2002 1 1)
+                                 :tutkinnonosat #{{:jarjestysnumero 1
+                                                   :osatunnus "104351"}}
+                                 :tyyppi "03"
+                                 :osajarjestyskoodisto "kylmamestarineatjarjestys"
+                                 :tutkintotaso "erikoisammattitutkinto"
+                                 :osaamisalat #{}
+                                 :tutkintotunnus "357207"} nil]}))))
 
 (deftest muutokset-test
   (let [vanhat {1 {:arvo 1}

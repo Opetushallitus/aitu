@@ -141,7 +141,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn ^:private hae-alakoodit
   [asetukset koodi] (get-json-from-url (str (:url asetukset) "relaatio/sisaltyy-alakoodit/" (:koodiUri koodi))))
 
-(defn ^:private lisaa-opintoala-koulutusala-tutkinnonosat
+(defn lisaa-opintoala-koulutusala-tutkinnonosat
   [asetukset tutkinto]
   (let [alakoodit (get-json-from-url (str (:url asetukset) "relaatio/sisaltyy-alakoodit/" (:koodiUri tutkinto)))
         osajarjestyskoodisto (alakoodit->jarjestyskoodisto alakoodit)
@@ -168,20 +168,21 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                     :tyyppi (:koodiArvo tutkintotyyppi)
                     :tutkintotaso (tutkintotasokoodi->tutkintotaso tutkintotasokoodi)
                     :osaamisalat osaamisalat
-                    :jarjestyskoodistoversio jarjestyskoodistoversio}))))
+                    :jarjestyskoodistoversio jarjestyskoodistoversio
+                    :osajarjestyskoodisto osajarjestyskoodisto}))))
 
 (defn hae-koodisto
   [asetukset koodisto versio]
   (koodi->kasite (get-json-from-url (str (:url asetukset) koodisto "?koodistoVersio=" versio)) :koodisto))
 
 (defn hae-tutkinto
-  [asetukset tutkintotunnus]
-  (hae-koodi asetukset))
+  [asetukset tutkintotunnus versio]
+  (hae-koodi asetukset "koulutus" (str "koulutus_" tutkintotunnus) versio))
 
 (defn hae-tutkinnot
   [asetukset]
   (let [koodistoversio (koodiston-uusin-versio asetukset "koulutus")]
-    (map koodi->tutkinto (hae-koodit asetukset "koulutus" koodistoversio))))
+    (map koodi->tutkinto (hae-koodit asetukset "koulutus" #_koodistoversio))))
 
 (defn hae-koulutusalat
   [asetukset]
@@ -244,7 +245,7 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
 (def ^:private tutkinnon-kentat
   [:nimi_fi :nimi_sv :tutkintotunnus :tutkintotaso :opintoala
    :voimassa_alkupvm :voimassa_loppupvm :tyyppi :koulutusala
-   :jarjestyskoodistoversio :koodistoversio])
+   :osajarjestyskoodisto :jarjestyskoodistoversio :koodistoversio])
 
 (defn tutkintodata->vertailumuoto
   [tutkintodata]
@@ -257,7 +258,8 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
                                             (select-keys ala [:nimi_fi :nimi_sv :osaamisalatunnus
                                                               :voimassa_alkupvm :voimassa_loppupvm]))]]
                     (-> tutkinto
-                      (rename-keys {:koulutusala_tkkoodi :koulutusala})
+                      (rename-keys {:koulutusala_tkkoodi :koulutusala
+                                    :opintoala_tkkoodi :opintoala})
                       (select-keys tutkinnon-kentat)
                       (assoc :tutkinnonosat tutkinnonosat
                              :osaamisalat osaamisalat)))
