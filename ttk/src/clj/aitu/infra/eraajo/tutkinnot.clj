@@ -127,34 +127,38 @@
     (tutkinto-arkisto/paivita-tutkinto! (dissoc tutkinto :osaamisalat :tutkinnonosat))))
 
 (defn paivita-tutkinnot! [koodistoasetukset tutkintomuutokset]
-  (try
-    (db/transaction
-      (let [opintoalat (set (map :opintoala_tkkoodi (opintoala-arkisto/hae-kaikki)))
-            {:keys [tutkinnot osaamisalat tutkinnonosat]} tutkintomuutokset]
-        (doseq [t (keep uusi tutkinnot)
-                :when (contains? opintoalat (:opintoala t))]
-          (let [tutkintoversio-id (tutkinto-arkisto/lisaa-tutkinto-ja-versio! (assoc (dissoc t :osaamisalat :tutkinnonosat)
-                                                                                     :versio 1))
-                osaamisalat (map osaamisalat (:osaamisalat t))
-                tutkinnonosat (for [{:keys [osatunnus jarjestysnumero]} (:tutkinnonosat t)]
-                                {:jarjestysnumero jarjestysnumero
-                                 :tutkinnonosa (tutkinnonosat osatunnus)})]
-            (tallenna-osaamisalat! tutkintoversio-id osaamisalat)
-            (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)))
-        (doseq [t (keep muuttunut tutkinnot)
-                :when (contains? opintoalat (:opintoala t))]
-          (let [tutkintoversio-id (paivita-tutkinto! koodistoasetukset t)
-                osaamisalat (map osaamisalat (:osaamisalat t))
-                tutkinnonosat (for [{:keys [osatunnus jarjestysnumero]} (:tutkinnonosat t)]
-                                {:jarjestysnumero jarjestysnumero
-                                 :tutkinnonosa (tutkinnonosat osatunnus)})]
-            (tallenna-osaamisalat! tutkintoversio-id osaamisalat)
-            (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)))))
-    (catch org.postgresql.util.PSQLException e
-      (log/error e "Tutkintojen päivitys koodistopalvelusta epäonnistui"))))
+  (let [opintoalat (set (map :opintoala_tkkoodi (opintoala-arkisto/hae-kaikki)))
+        {:keys [tutkinnot osaamisalat tutkinnonosat]} tutkintomuutokset]
+    (doseq [t (keep uusi tutkinnot)
+            :when (contains? opintoalat (:opintoala t))]
+      (log/info "Lisätään tutkinto " (:tutkintotunnus t))
+      (let [tutkintoversio-id (tutkinto-arkisto/lisaa-tutkinto-ja-versio! (assoc (dissoc t :osaamisalat :tutkinnonosat)
+                                                                                 :versio 1))
+            osaamisalat (map osaamisalat (:osaamisalat t))
+            tutkinnonosat (for [{:keys [osatunnus jarjestysnumero]} (:tutkinnonosat t)]
+                            {:jarjestysnumero jarjestysnumero
+                             :tutkinnonosa (tutkinnonosat osatunnus)})]
+        (tallenna-osaamisalat! tutkintoversio-id osaamisalat)
+        (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)))
+    (doseq [t (keep muuttunut tutkinnot)
+            :when (contains? opintoalat (:opintoala t))]
+      (log/info "Päivitetään tutkinto " (:tutkintotunnus t) ", muutokset: " (dissoc t :tutkintotunnus))
+      (let [tutkintoversio-id (paivita-tutkinto! koodistoasetukset t)
+            osaamisalat (map osaamisalat (:osaamisalat t))
+            tutkinnonosat (for [{:keys [osatunnus jarjestysnumero]} (:tutkinnonosat t)]
+                            {:jarjestysnumero jarjestysnumero
+                             :tutkinnonosa (tutkinnonosat osatunnus)})]
+        (tallenna-osaamisalat! tutkintoversio-id osaamisalat)
+        (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)))))
 
 (defn paivita-tutkinnot-koodistopalvelusta! [asetukset]
-  (tallenna-koulutusalat! (koodisto/koulutusala-muutokset asetukset))
-  (tallenna-opintoalat! (koodisto/opintoala-muutokset asetukset))
-  (paivita-tutkinnot! asetukset (koodisto/tutkinto-muutokset asetukset)))
+  (try
+    (db/transaction
+      (log/info "Aloitetaan tutkintojen päivitys koodistopalvelusta")
+      (tallenna-koulutusalat! (koodisto/koulutusala-muutokset asetukset))
+      (tallenna-opintoalat! (koodisto/opintoala-muutokset asetukset))
+      (paivita-tutkinnot! asetukset (koodisto/tutkinto-muutokset asetukset))
+      (log/info "Tutkintojen päivitys koodistopalvelusta valmis"))
+    (catch org.postgresql.util.PSQLException e
+      (log/error e "Tutkintojen päivitys koodistopalvelusta epäonnistui"))))
 
