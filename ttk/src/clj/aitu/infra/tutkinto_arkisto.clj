@@ -40,7 +40,13 @@
   (sql/insert tutkintoversio
     (sql/values versio)))
 
-(defn ^:test-api paivita!
+(defn paivita-tutkintoversio!
+  [versio]
+  (sql/update tutkintoversio
+    (sql/set-fields (dissoc versio :tutkintoversio_id))
+    (sql/where {:tutkintoversio_id (:tutkintoversio_id versio)})))
+
+(defn paivita!
   "Päivittää tutkinnon tiedot"
   [tutkintotunnus tutkinto]
   (sql/update nayttotutkinto
