@@ -20,8 +20,9 @@
   [[#i18n.impersonointi]]
   <nav class="main-nav">
     <div class="app-wrapper ">
-      <div id="logout" ng-click="varmistaLogout()"></div>
       <kielen-vaihto></kielen-vaihto>
+      [[#i18n.navigaatio]]
+      <div id="logout" ng-click="varmistaLogout()" title="[[kirjaudu-ulos]]"></div>
       <ul id="current-user" ng-class="{impersonoitu : [[impersonoitu]]}">
         <li>
           <a href="">[[current-user]]</a>
@@ -32,7 +33,7 @@
         </li>
       </ul>
       <ul>
-        [[#i18n.navigaatio]]
+
         <li><a href="#/">[[etusivu]]</a></li>
         <li><a href="#/search-tutkinto">[[tutkinnot]]</a></li>
         <li><a href="#/search-toimikunta">[[toimikunnat]]</a></li>
@@ -41,8 +42,8 @@
         [[#ominaisuus.proto]]
         <li><a href="#/search">[[raportit]]</a></li>
         [[/ominaisuus.proto]]
-        [[/i18n.navigaatio]]
       </ul>
+      [[/i18n.navigaatio]]
     </div>
   </nav>
   <div class="impersonointi-haku ng-hide" ng-show="valitseHenkilo">

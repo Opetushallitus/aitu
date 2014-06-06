@@ -105,44 +105,49 @@ header {
     @include clearfix;
     li {
       border-right: 1px solid $separator-color;
-      padding: 0 $marginM;
       float: left;
       height: $nav-height;
-      &:hover {background-color: $darker-primary;}
+      display: table;
       &:first-child {border-left: 1px solid $separator-color;}
-      a {
+      a,span {
+        padding: 0 $marginM;
+        display: table-cell;
+        vertical-align: middle;
         text-transform:uppercase;
       }
-      span {
-        padding-top: 8px;
-        display: inline-block;
+      a {
+        &:hover {background-color: $darker-primary;}
       }
-
+      span {
+        cursor: default;
+      }
     }
   }
   #current-user {
     float: right;
-    padding-right: 30px;
-    padding-left: $marginM;
     color: $font-color;
     position:relative;
     @include icon-right(11px, 11px){@include user-icon;};
     height: $nav-height;
     &:hover {background-color: $darker-primary;}
     li {
+      z-index: 2;
       position: relative;
       border: 0;
+      padding-right: 30px;
+      padding-left: $marginM;
       &:hover {
         ul {
           background-color: $primary-color;
-          left:-$marginM;
-          padding: inherit;
+          left: 0px;
+          padding: 0;
           width: auto;
           top: $nav-height;
           &:hover {
             background-color: $darker-primary;
           }
           li {
+            padding: 0;
             a {
               text-transform: none;
               &:hover {
@@ -170,21 +175,16 @@ header {
     background-color: red;
   }
   #logout {
-    border-right: 1px solid $separator-color;
+    border-left: 1px solid $separator-color;
     padding: 0 15px;
     float: right;
     height: $nav-height;
+    cursor: pointer;
     @include icon-after(-5px, 11px){@include logout-icon;};
     &:hover {background-color: $darker-primary;}
   }
   .change-lang {
     float: right;
-  }
-  .change-lang-active {
-    display: inline-block;
-  }
-  .change-lang-inactive {
-    display: inline-block;
   }
   .change-lang-active:hover {
     background-color: $darker-primary;
