@@ -56,12 +56,15 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn ^:private hae-koodit
   "Hakee kaikki koodit annetusta koodistosta ja asettaa koodin koodiarvon avaimeksi arvokentta"
-  [asetukset koodisto]
-  (get-json-from-url (str (:url asetukset) koodisto "/koodi")))
+  ([asetukset koodisto] (get-json-from-url (str (:url asetukset) koodisto "/koodi")))
+  ([asetukset koodisto versio] (get-json-from-url (str (:url asetukset) koodisto "/koodi?koodistoVersio=" versio))))
+
+(defn ^:private hae-koodi
+  [asetukset koodisto koodiuri versio] (get-json-from-url (str (:url asetukset) koodisto "/koodi/" koodiuri "?koodistoVersio=" versio)))
 
 (defn ^:private hae-rinnasteiset
   "Hakee koodistopalvelusta annetun koodin kanssa rinnasteiset koodit"
-  [asetukset koodi]
+  [asetukset koodi versio]
   (get-json-from-url (str (:url asetukset) "relaatio/rinnasteinen/" (:koodiUri koodi))))
 
 (defn kuuluu-koodistoon
@@ -96,8 +99,8 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   (-> (some-value osajarjestys-koodi? alakoodit) :koodisto :koodistoUri))
 
 (defn ^:private jarjestyskoodi->tutkinnonosa
-  [asetukset koodi]
-  (some-> (koodi->tutkinnonosa (first (hae-rinnasteiset asetukset koodi)))
+  [asetukset koodi versio]
+  (some-> (koodi->tutkinnonosa (first (hae-rinnasteiset asetukset koodi versio)))
     (assoc :jarjestysnumero (:jarjestysnumero koodi))))
 
 (defn ^:private tutkintotyyppi-koodi?
@@ -135,49 +138,65 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
         koulutusala (some-value koulutusala-koodi? ylakoodit)]
     (assoc opintoala :koulutusala_tkkoodi (:koodiArvo koulutusala))))
 
+(defn ^:private hae-alakoodit
+  [asetukset koodi] (get-json-from-url (str (:url asetukset) "relaatio/sisaltyy-alakoodit/" (:koodiUri koodi))))
+
 (defn ^:private lisaa-opintoala-koulutusala-tutkinnonosat
   [asetukset tutkinto]
   (let [alakoodit (get-json-from-url (str (:url asetukset) "relaatio/sisaltyy-alakoodit/" (:koodiUri tutkinto)))
-        opintoala (some-value opintoala-koodi? alakoodit)
-        koulutusala (some-value koulutusala-koodi? alakoodit)
         osajarjestyskoodisto (alakoodit->jarjestyskoodisto alakoodit)
         jarjestyskoodistoversio (some->> osajarjestyskoodisto (koodiston-uusin-versio asetukset))
-        tutkinnonosat (keep (partial jarjestyskoodi->tutkinnonosa asetukset) (alakoodit->jarjestyskoodit alakoodit))
-        osaamisalat (map koodi->osaamisala (filter osaamisala-koodi? alakoodit))
+        alakoodit (hae-alakoodit asetukset tutkinto)
+        opintoala (some-value opintoala-koodi? alakoodit)
+        koulutusala (some-value koulutusala-koodi? alakoodit)
+        tutkinnonosat (keep #(jarjestyskoodi->tutkinnonosa asetukset % jarjestyskoodistoversio) (alakoodit->jarjestyskoodit alakoodit))
+        osaamisalakoodit (filter osaamisala-koodi? alakoodit)
+        osaamisalakoodistoversio (koodiston-uusin-versio asetukset "osaamisala")
+        osaamisalat (for [{koodi-uri :koodiUri} osaamisalakoodit]
+                      (koodi->osaamisala (hae-koodi asetukset "osaamisala" koodi-uri osaamisalakoodistoversio)))
         tutkintotyyppi (some-value tutkintotyyppi-koodi? alakoodit)
         tutkintotasokoodi (some-value tutkintotasokoodi? alakoodit)]
-    (assoc tutkinto :opintoala_tkkoodi (:koodiArvo opintoala)
+    (cond
+      (and (some osajarjestys-koodi? alakoodit)
+            (not jarjestyskoodistoversio)) nil ; Järjestyskoodistosta ei voimassaolevaa versiota
+      (and (seq osaamisalakoodit)
+           (not osaamisalakoodistoversio)) nil ; Osaamisalakoodistosta ei voimassaolevaa versiota
+      :else (merge tutkinto
+                   {:opintoala_tkkoodi (:koodiArvo opintoala)
                     :koulutusala_tkkoodi (:koodiArvo koulutusala)
                     :tutkinnonosat tutkinnonosat
                     :tyyppi (:koodiArvo tutkintotyyppi)
                     :tutkintotaso (tutkintotasokoodi->tutkintotaso tutkintotasokoodi)
                     :osaamisalat osaamisalat
-                    :jarjestyskoodistoversio jarjestyskoodistoversio)))
+                    :jarjestyskoodistoversio jarjestyskoodistoversio}))))
+
+(defn hae-koodisto
+  [asetukset koodisto versio]
+  (koodi->kasite (get-json-from-url (str (:url asetukset) koodisto "?koodistoVersio=" versio)) :koodisto))
+
+(defn hae-tutkinto
+  [asetukset tutkintotunnus]
+  (hae-koodi asetukset))
 
 (defn hae-tutkinnot
   [asetukset]
-  (map koodi->tutkinto (hae-koodit asetukset "koulutus")))
+  (let [koodistoversio (koodiston-uusin-versio asetukset "koulutus")]
+    (map koodi->tutkinto (hae-koodit asetukset "koulutus" koodistoversio))))
 
 (defn hae-koulutusalat
   [asetukset]
-  (->> (hae-koodit asetukset "koulutusalaoph2002")
-    (map koodi->koulutusala)
-    (map #(dissoc % :kuvaus_fi :kuvaus_sv))))
+  (let [koodistoversio (koodiston-uusin-versio asetukset "koulutusalaoph2002")]
+    (->> (hae-koodit asetukset "koulutusalaoph2002" koodistoversio)
+      (map koodi->koulutusala)
+      (map #(dissoc % :kuvaus_fi :kuvaus_sv)))))
 
 (defn hae-opintoalat
   [asetukset]
-  (->> (hae-koodit asetukset "opintoalaoph2002")
-    (map koodi->opintoala)
-    (map (partial lisaa-opintoalaan-koulutusala asetukset))
-    (map #(dissoc % :kuvaus_fi :kuvaus_sv))))
-
-(defn hae-tutkinnonosat
-  [asetukset]
-  (map koodi->tutkinnonosa (hae-koodit asetukset "tutkinnonosat")))
-
-(defn hae-osaamisalat
-  [asetukset]
-  (map koodi->osaamisala (hae-koodit asetukset "osaamisala")))
+  (let [koodistoversio (koodiston-uusin-versio asetukset "opintoalaoph2002")]
+    (->> (hae-koodit asetukset "opintoalaoph2002" koodistoversio)
+      (map koodi->opintoala)
+      (map (partial lisaa-opintoalaan-koulutusala asetukset))
+      (map #(dissoc % :kuvaus_fi :kuvaus_sv)))))
 
 (defn tutkintorakenne
   "Lukee koko tutkintorakenteen koodistosta. Suoritus kestää n. 8 minuuttia ja aiheuttaa
@@ -189,8 +208,9 @@ sisältää listan siihen kuuluvista tutkinnoista, joista jokainen
 sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
    [asetukset]
    (let [oa-tunnus->tutkinnot (group-by :opintoala_tkkoodi
-                                        (for [tutkinto (hae-tutkinnot asetukset)]
-                                          (lisaa-opintoala-koulutusala-tutkinnonosat asetukset tutkinto)))
+                                        (keep identity
+                                              (for [tutkinto (hae-tutkinnot asetukset)]
+                                                (lisaa-opintoala-koulutusala-tutkinnonosat asetukset tutkinto))))
          ;; Muodostetaan map opintoalatunnuksesta koulutusalatunnukseen.
          ;; Koulutusalatunnus saadaan mistä tahansa kyseisen opintoalan tutkinnosta.
          ;; Koodistopalvelussa ei ole relaatiota opintoala->koulutusala.
@@ -213,17 +233,18 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
         (for [[avain [uusi-arvo vanha-arvo :as diff]] (diff-maps uusi vanha)
               :when diff]
           [avain (cond
-                  (nil? uusi-arvo) diff
-                  (nil? vanha-arvo) diff
-                  (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
-                  :else diff)])))
+                   (nil? uusi-arvo) diff
+                   (nil? vanha-arvo) diff
+                   (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
+                   :else diff)])))
 
 (defn ^:private tunnus-jarjestysnro [tutkinnonosa]
   (select-keys tutkinnonosa [:osatunnus :jarjestysnumero]))
 
 (def ^:private tutkinnon-kentat
   [:nimi_fi :nimi_sv :tutkintotunnus :tutkintotaso :opintoala
-   :voimassa_alkupvm :voimassa_loppupvm :tyyppi :koulutusala])
+   :voimassa_alkupvm :voimassa_loppupvm :tyyppi :koulutusala
+   :jarjestyskoodistoversio :koodistoversio])
 
 (defn tutkinto-muutokset
   [asetukset]
@@ -250,6 +271,7 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
         uudet (->>
                 (hae-tutkinnot asetukset)
                 (map (partial lisaa-opintoala-koulutusala-tutkinnonosat asetukset))
+                (map #(assoc % :koodistoversio koodistoversio))
                 (filter #(#{"02" "03"} (:tyyppi %)))
                 (map #(rename-keys % {:opintoala_tkkoodi :opintoala, :koulutusala_tkkoodi :koulutusala}))
                 (map #(select-keys % (conj tutkinnon-kentat :tutkinnonosat :osaamisalat))))
