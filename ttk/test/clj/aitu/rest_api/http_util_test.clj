@@ -57,14 +57,18 @@
 (deftest json-response-test
   (testing "json-response"
     (testing "palauttaa 404-vastauksen nil-syötteellä"
-      (is (= (json-response nil)
-             {:status 404})))
+      (is (= (:status (json-response nil)) 404)))
+
+    (testing "palauttaa content-typen ei-nil-syötteellä"
+      (let [data {:foo "Bar"}]
+        (is (= (:headers (json-response data))
+               {"Content-Type" "application/json"}))))
 
     (testing "palauttaa 200-vastauksen ei-nil-syötteellä"
-      (let [data {:etunimi "Ahto"
-                  :sukunimi "Simakuutio"
-                  :henkiloid 12345}]
-        (is (= (json-response data)
-               {:status 200
-                :body data
-                :headers {"Content-Type" "application/json"}}))))))
+      (let [data {:foo "Bar"}]
+        (is (= (:status (json-response data)) 200))))
+
+    (testing "palauttaa vastauksen sarjallisetettuna ei-nil-syötteellä"
+      (let [data {:foo "Bar"}]
+        (is (= (:body (json-response data))
+               "{\"foo\":\"Bar\"}"))))))
