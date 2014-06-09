@@ -3,7 +3,7 @@
   assert: that="'{{ salli_dumpin_lataus|default('no') }}'=='yes'"
 
 - name: Kopioi dumppi palvelimelle
-  copy: src={{ dumppi }} dest=/tmp/oph_db_dump.db owner=postgres mode=600
+  copy: src="{{ dumppi }}" dest=/tmp/oph_db_dump.db owner=postgres mode=600
 
 - name: Tee pgpass-tiedosto
   template: src=pgpass.j2 dest=/tmp/oph_db_dump.pgpass owner=postgres mode=600
@@ -19,7 +19,7 @@
   command: psql -d {{ tietokanta }} -c 'alter user {{ tietokannan_paakayttaja }} with superuser;'
 
 - name: Lataa dumppi tietokantaan
-  shell: PGPASSFILE=/tmp/oph_db_dump.pgpass pg_restore --no-acl --no-owner -h {{ tietokantapalvelimen_yksityinen_nimi }} -U {{ tietokannan_paakayttaja }} -d {{ tietokanta }} /tmp/oph_db_dump.db
+  shell: PGPASSFILE=/tmp/oph_db_dump.pgpass pg_restore --no-acl --no-owner -h {{ tietokantapalvelimen_yksityinen_nimi|default(groups['oph_db'][0]) }} -U {{ tietokannan_paakayttaja }} -d {{ tietokanta }} /tmp/oph_db_dump.db
 
 - name: Poista tietokannan pääkäyttäjän superuser-status
   command: psql -d {{ tietokanta }} -c 'alter user {{ tietokannan_paakayttaja }} with nosuperuser;'
