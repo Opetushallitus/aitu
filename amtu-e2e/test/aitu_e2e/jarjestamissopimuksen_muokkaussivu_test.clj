@@ -302,17 +302,29 @@
 
 (defn aseta-liite [tyyppi]
   (w/send-keys {:css (str "div[liitetyyppi=\"" tyyppi "\"] input[type=\"file\"]")} (str (java.lang.System/getProperty "user.dir") "/project.clj"))
+  (odota-kunnes (-> (w/find-elements {:css (str "div[liitetyyppi=\"" tyyppi "\"] button[upload-submit]:not(.ng-hide)")}) (count) (> 0)))
   (odota-angular-pyyntoa))
 
 (defn paina-tallenna-liite-nappia [tyyppi]
   (w/click {:css (str "div[liitetyyppi=\"" tyyppi "\"] button[upload-submit]")})
+  (Thread/sleep 500) ; Kunnes tulee parempi tapa odotella vastausta
   (odota-angular-pyyntoa))
+
 
 (deftest jarjestamissopimus-muokkaussivu-jarjestamisuunnitelman-lisays-test
   (testing "Järjestämissopimuksen muokkaussivu järjestämissuunnitelman lisäys:"
     (with-webdriver
-      (du/with-data jarjestamissopimus-data
+      (du/with-cleaned-data jarjestamissopimus-data
         (avaa-sopimuksen-muokkaussivu 1230)
         (aseta-liite "jarjestamissuunnitelmat")
         (paina-tallenna-liite-nappia "jarjestamissuunnitelmat")
-        (is (> (count (w/find-elements (-> *ng* (.repeater "suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat") (.column "suunnitelma.jarjestamissuunnitelma_filename")))) 0))))))
+        (is (= (count (w/find-elements (-> *ng* (.repeater "suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat") (.column "suunnitelma.jarjestamissuunnitelma_filename")))) 1))))))
+
+(deftest jarjestamissopimus-muokkaussivu-liitteen-lisays-test
+  (testing "Järjestämissopimuksen muokkaussivu liitteen lisäys:"
+    (with-webdriver
+      (du/with-cleaned-data jarjestamissopimus-data
+        (avaa-sopimuksen-muokkaussivu 1230)
+        (aseta-liite "liitteet")
+        (paina-tallenna-liite-nappia "liitteet")
+        (is (= (count (w/find-elements (-> *ng* (.repeater "liite in sopimusJaTutkinto.liitteet") (.column "liite.sopimuksen_liite_filename")))) 1))))))

@@ -80,7 +80,8 @@ module.exports = function (grunt) {
               'bower_components/lodash/dist/lodash.min.js',
               'bower_components/stacktrace/stacktrace.js',
               'bower_components/jquery-placeholder/jquery.placeholder.min.js',
-              'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'],
+              'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+              'bower_components/ngUpload/ng-upload.js'],
         dest: '<%= yeoman.app %>/vendor/bower-components.js'
       }
     },

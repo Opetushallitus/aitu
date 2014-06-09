@@ -23,6 +23,8 @@
 
 (def taulut ["jarjestamissuunnitelma"
              "sopimus_ja_tutkinto_ja_osaamisala"
+             "sopimuksen_liite"
+             "jarjestamissuunnitelma"
              "sopimus_ja_tutkinto"
              "jarjestamissopimus"
              "toimipaikka"
