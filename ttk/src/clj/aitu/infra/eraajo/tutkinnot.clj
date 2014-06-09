@@ -65,9 +65,8 @@
     (koulutusala-arkisto/paivita! ala)))
 
 (defn tallenna-koulutusalat! [koulutusalat]
-  (>pprint koulutusalat)
   (let [uudet (for [[alakoodi ala] koulutusalat
-                    :when (vector? ala)]
+                    :when (and (vector? ala) (first ala))]
                 (nimi->selite (first ala)))
         muuttuneet (for [[alakoodi ala] koulutusalat
                          :when (map? ala)]
