@@ -145,6 +145,7 @@
                                        :nimi_fi s/Str
                                        :versio s/Int
                                        :jarjestyskoodistoversio (s/maybe s/Int)
+                                       :osajarjestyskoodisto (s/maybe s/Str)
                                        :tyyppi (s/maybe s/Str)
                                        :siirtymaajan_loppupvm org.joda.time.LocalDate
                                        (s/optional-key :siirtymaaika_paattyy) org.joda.time.LocalDate
