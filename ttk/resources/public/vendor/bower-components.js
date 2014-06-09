@@ -1052,11 +1052,11 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.transition","ui
 //
 // <div ng-app="app">
 //   <div ng-controller="mainCtrl">
-//    <form ng-attr-action="/uploads" 
-//      ng-upload="completed(content)"> 
+//    <form ng-attr-action="/uploads"
+//      ng-upload="completed(content)">
 //      ng-upload-loading="loading()"
 //      <input type="file" name="avatar"></input>
-//      <input type="submit" value="Upload" 
+//      <input type="submit" value="Upload"
 //         ng-disabled="$isUploading"></input>
 //    </form>
 //  </div>
@@ -1138,7 +1138,7 @@ angular.module('ngUpload', [])
         //    // add the Rails CSRF hidden input to form
         //    enableRailsCsrf: bool
         // }
-        var fn = attrs.ngUpload ? $parse(attrs.ngUpload) : null;
+        var fn = attrs.ngUpload ? $parse(attrs.ngUpload) : angular.noop;
         var loading = attrs.ngUploadLoading ? $parse(attrs.ngUploadLoading) : null;
 
         if ( attrs.hasOwnProperty( "uploadOptionsConvertHidden" ) ) {
@@ -1187,7 +1187,7 @@ angular.module('ngUpload', [])
           // if form is invalid don't submit (e.g. keypress 13)
           if(formController && formController.$invalid) return false;
           // perform check before submit file
-          if (options.beforeSubmit) { return options.beforeSubmit(); }
+          if (options.beforeSubmit && options.beforeSubmit(scope, {}) == false) return false;
 
           // bind load after submit to prevent initial load triggering uploadEnd
           iframe.bind('load', uploadEnd);

@@ -83,7 +83,7 @@
     (if (nil? data)
       {:status 404}
       {:status 200
-       :body data
+       :body (cheshire/generate-string data)
        :headers {"Content-Type" "application/json"}}))
   ([data schema]
     (json-response (s/validate (s/maybe schema) data))))
