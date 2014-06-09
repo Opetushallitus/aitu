@@ -103,10 +103,8 @@
       (sallittu-jos
         (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
         (arkisto/merkitse-sopimus-poistetuksi! jarjestamissopimus_id_int)
-        {:status 200}))))
+        {:status 200})))
 
-
-(c/defroutes liite-reitit
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
@@ -126,17 +124,6 @@
         (arkisto/poista-suunnitelma! jarjestamissuunnitelma_id_int)
         {:status 200})))
 
-  (cu/defapi :suunnitelma_luku jarjestamissopimusid :get "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
-    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
-          jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)
-          jarjestamissopimusid_jarjestamissuunnitelma (arkisto/hae-jarjestamissopimusid-jarjestamissuunnitelmalle jarjestamissuunnitelma_id_int)
-          _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_jarjestamissuunnitelma jarjestamissopimusid_int)
-          suunnitelma (arkisto/hae-suunnitelma jarjestamissuunnitelma_id_int)
-          binary-data (:jarjestamissuunnitelma suunnitelma)
-          filename (:jarjestamissuunnitelma_filename suunnitelma)
-          content-type (:jarjestamissuunnitelma_content_type suunnitelma)]
-      (file-download-response binary-data filename content-type)))
-
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/liite/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
@@ -154,7 +141,20 @@
       (sallittu-jos
         (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
         (arkisto/poista-liite! sopimuksen_liite_id_int)
-        {:status 200})))
+        {:status 200}))))
+
+; Liitteiden lataukselle omat reitit. Ei csrf tarkistusta.
+(c/defroutes liite-lataus-reitit
+  (cu/defapi :suunnitelma_luku jarjestamissopimusid :get "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+    (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+          jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)
+          jarjestamissopimusid_jarjestamissuunnitelma (arkisto/hae-jarjestamissopimusid-jarjestamissuunnitelmalle jarjestamissuunnitelma_id_int)
+          _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_jarjestamissuunnitelma jarjestamissopimusid_int)
+          suunnitelma (arkisto/hae-suunnitelma jarjestamissuunnitelma_id_int)
+          binary-data (:jarjestamissuunnitelma suunnitelma)
+          filename (:jarjestamissuunnitelma_filename suunnitelma)
+          content-type (:jarjestamissuunnitelma_content_type suunnitelma)]
+      (file-download-response binary-data filename content-type)))
 
   (cu/defapi :sopimuksen_liite_luku jarjestamissopimusid :get "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)

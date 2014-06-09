@@ -6,9 +6,24 @@
   {:cookies {"XSRF-TOKEN" {:value cookie-arvo}}
    :headers {"x-xsrf-token" header-arvo}})
 
-(deftest tarkasta-csrf-token-test
+(defn generoi-request-token-parameterihin [cookie-arvo header-arvo]
+  {:cookies {"XSRF-TOKEN" {:value cookie-arvo}}
+   :multipart-params {"x-xsrf-token" header-arvo}})
+
+(deftest validi-csrf-token-test
   (testing "CSRF tokenin tarkastus"
-    (let [tarkastus-fn (tarkasta-csrf-token (fn [_] {:status 200}))
+    (let [virheellinen-request (generoi-request "virheellinentoken" "token")
+          request (generoi-request "token" "token")
+          virheellinen-param-request (generoi-request-token-parameterihin "virheellinentoken" "token")
+          param-request (generoi-request-token-parameterihin "token" "token")]
+      (is (not (validi-csrf-token? virheellinen-request)))
+      (is (validi-csrf-token? request))
+      (is (not (validi-csrf-token? virheellinen-param-request)))
+      (is (validi-csrf-token? param-request)))))
+
+(deftest wrap-tarkasta-csrf-token-test
+  (testing "CSRF token wrapper"
+    (let [tarkastus-fn (wrap-tarkasta-csrf-token (fn [_] {:status 200}))
           virheellinen-request (generoi-request "virheellinentoken" "token")
           request (generoi-request "token" "token")]
       (is (= (tarkastus-fn virheellinen-request) {:status 401}))

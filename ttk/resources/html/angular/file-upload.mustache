@@ -6,6 +6,7 @@
     <input class="valittu-tiedosto" ng-show="tiedostoValittu" type="text" disabled>
     <button ng-show="tiedostoValittu" ng-class="{loading : $isUploading}" upload-submit>[[tallenna]]</button>
     <input type="file" name="file">
+    <input type="hidden" class="x-xsrf-token" name="x-xsrf-token" value="">
   </form>
   <button class="cancel-upload" ng-show="tiedostoValittu" ng-click="reset()">[[peruuta]]</button>
 </div>

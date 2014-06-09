@@ -12,7 +12,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('directives', ['services', 'resources'])
+angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('hakutulokset', function($parse, i18n){
     return {
       restrict: 'E',
@@ -433,7 +433,7 @@ angular.module('directives', ['services', 'resources'])
     };
   }])
 
-  .directive('fileUpload', function(){
+  .directive('fileUpload', ['$cookies' , function($cookies){
     return {
       restrict: 'E',
       replace : true,
@@ -450,6 +450,9 @@ angular.module('directives', ['services', 'resources'])
 
         el.find('input[type=file]').change(function(event){
           var filename = event.target.value? _.last(event.target.value.split('\\')) : '';
+
+          el.find('input.x-xsrf-token').val($cookies['XSRF-TOKEN']);
+
           scope.tiedostoValittu = filename.length > 0;
           el.find('input.valittu-tiedosto').val(filename);
           scope.$apply();
@@ -466,7 +469,7 @@ angular.module('directives', ['services', 'resources'])
         }
       }
     };
-  })
+  }])
 
   .directive('copyright', function() {
     return {
