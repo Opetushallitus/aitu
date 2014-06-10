@@ -16,9 +16,9 @@
   (:require [clojure.test :refer [deftest is testing]]
             [aitu-e2e.jarjestamissopimussivu-test :refer [sopimussivu jarjestamissopimus-data]]
             [clj-webdriver.taxi :as w]
+            [clj-http.client :as hc]
             [aitu-e2e.util :refer :all]
             [aitu-e2e.data-util :as du]))
-
 
 (defn avaa-sopimuksen-muokkaussivu [jarjestamissopimusid]
   (avaa (sopimussivu jarjestamissopimusid))
@@ -300,8 +300,10 @@
         (tallenna)
         (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut"))))))
 
-(defn aseta-liite [tyyppi]
-  (w/send-keys {:css (str "div[liitetyyppi=\"" tyyppi "\"] input[type=\"file\"]")} (str (java.lang.System/getProperty "user.dir") "/project.clj"))
+(def project-clj (str (java.lang.System/getProperty "user.dir") "/project.clj"))
+
+(defn aseta-liite [tyyppi polku]
+  (w/send-keys {:css (str "div[liitetyyppi=\"" tyyppi "\"] input[type=\"file\"]")} polku)
   (odota-kunnes (-> (w/find-elements {:css (str "div[liitetyyppi=\"" tyyppi "\"] button[upload-submit]:not(.ng-hide)")}) (count) (> 0)))
   (odota-angular-pyyntoa))
 
@@ -310,21 +312,48 @@
   (Thread/sleep 500) ; Kunnes tulee parempi tapa odotella vastausta
   (odota-angular-pyyntoa))
 
+;; Olettaa, että sopimuksella on vain yksi näyttötutkinto.
+(defn sopimuksen-liitteet []
+  (let [linkit (w/find-elements
+                 (-> *ng*
+                   (.repeater "liite in sopimusJaTutkinto.liitteet")
+                   (.column "liite.sopimuksen_liite_filename")))]
+    (into {} (map (juxt w/text #(w/attribute % "href")) linkit))))
+
+;; Olettaa, että sopimuksella on vain yksi näyttötutkinto.
+(defn sopimuksen-suunnitelmat []
+  (let [linkit (w/find-elements
+                 (-> *ng*
+                   (.repeater "suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat")
+                   (.column "suunnitelma.jarjestamissuunnitelma_filename")))]
+    (into {} (map (juxt w/text #(w/attribute % "href")) linkit))))
 
 (deftest jarjestamissopimus-muokkaussivu-jarjestamisuunnitelman-lisays-test
-  (testing "Järjestämissopimuksen muokkaussivu järjestämissuunnitelman lisäys:"
+  (testing "Lisätty järjestämissuunnitelma näkyy sopimuksen sivulla"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
         (avaa-sopimuksen-muokkaussivu 1230)
-        (aseta-liite "jarjestamissuunnitelmat")
+        (aseta-liite "jarjestamissuunnitelmat" project-clj)
         (paina-tallenna-liite-nappia "jarjestamissuunnitelmat")
-        (is (= (count (w/find-elements (-> *ng* (.repeater "suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat") (.column "suunnitelma.jarjestamissuunnitelma_filename")))) 1))))))
+        (is (= (map key (sopimuksen-suunnitelmat)) ["project.clj"]))))))
 
-(deftest jarjestamissopimus-muokkaussivu-liitteen-lisays-test
-  (testing "Järjestämissopimuksen muokkaussivu liitteen lisäys:"
+(defn lisaa-liite-sopimukseen [nro polku]
+  (avaa-sopimuksen-muokkaussivu nro)
+  (aseta-liite "liitteet" polku)
+  (paina-tallenna-liite-nappia "liitteet"))
+
+(deftest liitteen-lisays-test
+  (testing "Lisätty liite näkyy sopimuksen sivulla"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (aseta-liite "liitteet")
-        (paina-tallenna-liite-nappia "liitteet")
-        (is (= (count (w/find-elements (-> *ng* (.repeater "liite in sopimusJaTutkinto.liitteet") (.column "liite.sopimuksen_liite_filename")))) 1))))))
+        (lisaa-liite-sopimukseen 1230 project-clj)
+        (is (= (map key (sopimuksen-liitteet)) ["project.clj"]))))))
+
+(deftest liitteen-lataus-test
+  (testing "Liitteen lataus palauttaa alkuperäisen tiedoston sellaisenaan"
+    (with-webdriver
+      (du/with-cleaned-data jarjestamissopimus-data
+        (lisaa-liite-sopimukseen 1230 project-clj)
+        (is (= (:body (hc/get (val (first (sopimuksen-liitteet)))
+                              {:cookies {"ring-session" (w/cookie "ring-session")}}))
+               (slurp project-clj)))))))
