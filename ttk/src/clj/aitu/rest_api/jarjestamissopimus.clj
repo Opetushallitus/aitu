@@ -161,7 +161,7 @@
           sopimuksen_liite_id_int (Integer/parseInt sopimuksen_liite_id)
           jarjestamissopimusid_liite (arkisto/hae-jarjestamissopimusid-sopimuksen-liitteelle sopimuksen_liite_id_int)
           _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_liite jarjestamissopimusid_int)
-          liite (db/transaction (arkisto/hae-liite jarjestamissopimusid_liite))
+          liite (arkisto/hae-liite sopimuksen_liite_id_int)
           binary-data (:sopimuksen_liite liite)
           filename (:sopimuksen_liite_filename liite)
           content-type (:sopimuksen_liite_content_type liite)]
