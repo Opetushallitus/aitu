@@ -328,14 +328,30 @@
                    (.column "suunnitelma.jarjestamissuunnitelma_filename")))]
     (into {} (map (juxt w/text #(w/attribute % "href")) linkit))))
 
-(deftest jarjestamissopimus-muokkaussivu-jarjestamisuunnitelman-lisays-test
+(defn lataa-tiedosto-webdriverin-istunnossa [url]
+  (:body (hc/get url
+                 {:cookies {"ring-session" (w/cookie "ring-session")}})))
+
+(defn lisaa-suunnitelma-sopimukseen [nro polku]
+  (avaa-sopimuksen-muokkaussivu nro)
+  (aseta-liite "jarjestamissuunnitelmat" polku)
+  (paina-tallenna-liite-nappia "jarjestamissuunnitelmat"))
+
+(deftest jarjestamisuunnitelman-lisays-test
   (testing "Lisätty järjestämissuunnitelma näkyy sopimuksen sivulla"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (aseta-liite "jarjestamissuunnitelmat" project-clj)
-        (paina-tallenna-liite-nappia "jarjestamissuunnitelmat")
+        (lisaa-suunnitelma-sopimukseen 1230 project-clj)
         (is (= (map key (sopimuksen-suunnitelmat)) ["project.clj"]))))))
+
+(deftest jarjestamissuunnitelman-lataus-test
+  (testing "Järjestämissuunnitelman lataus palauttaa alkuperäisen tiedoston sellaisenaan"
+    (with-webdriver
+      (du/with-cleaned-data jarjestamissopimus-data
+        (lisaa-suunnitelma-sopimukseen 1230 project-clj)
+        (is (= (lataa-tiedosto-webdriverin-istunnossa
+                 (val (first (sopimuksen-suunnitelmat))))
+               (slurp project-clj)))))))
 
 (defn lisaa-liite-sopimukseen [nro polku]
   (avaa-sopimuksen-muokkaussivu nro)
@@ -354,6 +370,6 @@
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
         (lisaa-liite-sopimukseen 1230 project-clj)
-        (is (= (:body (hc/get (val (first (sopimuksen-liitteet)))
-                              {:cookies {"ring-session" (w/cookie "ring-session")}}))
+        (is (= (lataa-tiedosto-webdriverin-istunnossa
+                 (val (first (sopimuksen-liitteet))))
                (slurp project-clj)))))))
