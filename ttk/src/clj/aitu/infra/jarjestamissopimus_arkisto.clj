@@ -344,6 +344,7 @@
 (defn hae-suunnitelma
   "Hakuu järjestämissuunnitelman"
   [jarjestamissuunnitelma_id]
+  {:post [(not (nil? %))]}
   (first
     (sql/select jarjestamissuunnitelma
       (sql/fields :jarjestamissuunnitelma
@@ -373,6 +374,7 @@
 (defn hae-liite
   "Hakee sopimuksen liitteen"
   [sopimuksen_liite_id]
+  {:post [(not (nil? %))]}
   (first
     (sql/select sopimuksen-liite
       (sql/fields :sopimuksen_liite
