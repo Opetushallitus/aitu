@@ -33,14 +33,14 @@
     dest: "{{ asennushakemisto }}/{{ sovelluksen_asetustiedosto }}"
     regexp: ^db\.user.*
     replace: db.user = {{ tietokannan_peruskayttaja }}
-  when: tietokannan_peruskayttaja is defined
+  when: (tietokannan_peruskayttaja is defined) and (sovelluksen_asetustiedosto is defined)
 
 - name: Aseta tietokantakäyttäjän salasana sovelluksen asetustiedostoon
   replace:
     dest: "{{ asennushakemisto }}/{{ sovelluksen_asetustiedosto }}"
     regexp: ^db\.password.*
     replace: db.password = {{ tietokannan_peruskayttajan_salasana }}
-  when: tietokannan_peruskayttajan_salasana is defined
+  when: (tietokannan_peruskayttajan_salasana is defined) and (sovelluksen_asetustiedosto is defined)
 
 - name: Kopioi migraation asetustiedosto palvelimelle
   template: src="{{ inventory_dir }}/{{ migraation_asetustiedosto }}" dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644 force=no
@@ -51,7 +51,7 @@
     dest: "{{ asennushakemisto }}/{{ migraation_asetustiedosto }}"
     regexp: ^db\.user.*
     replace: db.user = {{ tietokannan_paakayttaja }}
-  when: tietokannan_paakayttaja is defined
+  when: (tietokannan_paakayttaja is defined) and (migraation_asetustiedosto is defined)
 
 - name: Aseta tietokantakäyttäjän salasana migraation asetustiedostoon
   replace:
