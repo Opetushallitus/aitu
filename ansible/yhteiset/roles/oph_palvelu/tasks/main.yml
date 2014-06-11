@@ -20,6 +20,20 @@
 - name: Luo asennushakemisto palvelimelle
   file: path={{ asennushakemisto }} state=directory owner=tomcat group=tomcat mode=0755
 
+- name: Kopioi versio palvelimelle
+  copy: src={{ sovellus_jar }} dest={{ asennushakemisto }}/{{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
+
+- name: Pura build-id.txt sovelluspaketista
+  shell: jar xf {{ sovellus_jar_palvelimella }} build-id.txt chdir="{{ asennushakemisto }}"
+
+- name: Päivitä asennukset.txt
+  shell: >
+    echo
+    "$(date '+%Y-%m-%d %H:%M:%S') |
+    {{ ansible_ssh_user }} |
+    $(cat build-id.txt)" >> asennukset.txt
+    chdir={{ asennushakemisto }}
+
 - name: Kopioi lokituksen asetustiedosto palvelimelle
   copy: src="{{ inventory_dir }}/{{ lokituksen_asetustiedosto }}" dest={{ asennushakemisto }}/resources/ owner=tomcat group=tomcat mode=0644 force=no
   when: lokituksen_asetustiedosto is defined
@@ -59,9 +73,6 @@
     regexp: ^db\.password.*
     replace: db.password = {{ tietokannan_paakayttajan_salasana }}
   when: tietokannan_paakayttajan_salasana is defined
-
-- name: Kopioi versio palvelimelle
-  copy: src={{ sovellus_jar }} dest={{ asennushakemisto }}/{{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
 
 - name: Muodosta migraatiopaketin nimi etäpalvelimella
   set_fact:
