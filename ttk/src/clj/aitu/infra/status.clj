@@ -33,4 +33,8 @@
       nil)))
 
 (defn status []
-  {:tietokantaversio (tietokantaversio)})
+  {:tietokantaversio (tietokantaversio)
+   :asennukset (try
+                 (slurp "asennukset.txt")
+                 (catch java.io.FileNotFoundException _
+                   nil))})
