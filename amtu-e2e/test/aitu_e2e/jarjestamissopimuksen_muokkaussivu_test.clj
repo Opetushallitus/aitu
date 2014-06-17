@@ -337,14 +337,19 @@
   (aseta-liite "jarjestamissuunnitelmat" polku)
   (paina-tallenna-liite-nappia "jarjestamissuunnitelmat"))
 
-(deftest jarjestamisuunnitelman-lisays-test
+;; Tiedostonlatausnappuloiden tyylittely on tehty lisäämällä tyylitellyn napin
+;; päälle läpinäkyvä (opacity: 0%) <input type="file"> -elementti.
+;; IE-WebDriverin mielestä opacity 0% -elementit eivät ole käsiteltäviä, joten
+;; tiedoston syöttäminen ei onnistu samalla tavalla, kuin Firefoxilla.
+(deftest ^:no-ie jarjestamisuunnitelman-lisays-test
   (testing "Lisätty järjestämissuunnitelma näkyy sopimuksen sivulla"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
         (lisaa-suunnitelma-sopimukseen 1230 project-clj)
         (is (= (map key (sopimuksen-suunnitelmat)) ["project.clj"]))))))
 
-(deftest jarjestamissuunnitelman-lataus-test
+;; Ks. yllä
+(deftest ^:no-ie jarjestamissuunnitelman-lataus-test
   (testing "Järjestämissuunnitelman lataus palauttaa alkuperäisen tiedoston sellaisenaan"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
@@ -358,14 +363,16 @@
   (aseta-liite "liitteet" polku)
   (paina-tallenna-liite-nappia "liitteet"))
 
-(deftest liitteen-lisays-test
+;; Ks. yllä
+(deftest ^:no-ie liitteen-lisays-test
   (testing "Lisätty liite näkyy sopimuksen sivulla"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
         (lisaa-liite-sopimukseen 1230 project-clj)
         (is (= (map key (sopimuksen-liitteet)) ["project.clj"]))))))
 
-(deftest liitteen-lataus-test
+;; Ks. yllä
+(deftest ^:no-ie liitteen-lataus-test
   (testing "Liitteen lataus palauttaa alkuperäisen tiedoston sellaisenaan"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
