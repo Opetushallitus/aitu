@@ -3,7 +3,7 @@
   <div class="api-method-feedback">
     <div ng-repeat="palaute in palautteet" ng-class="{error : palaute.virhe}">
       <div class="feedback-container">
-        <p class="message">{{palaute.viesti}}</p>
+        <p class="message" ng-bind="palaute.viesti"></p>
         <ul ng-hide="palaute.virheet.length == 0">
           <li ng-repeat="virhe in palaute.virheet">{{virhe.ominaisuus}} : {{virhe.viesti}}</li>
         </ul>
