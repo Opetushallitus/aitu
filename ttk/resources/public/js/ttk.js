@@ -134,13 +134,6 @@ angular.module('ttk', ['angular-loading-bar',
     cfpLoadingBarProvider.includeSpinner = false;
   }])
 
-  .provider(
-    '$exceptionHandler',
-    {
-      $get: function( virheLogitus ) {
-
-        return( virheLogitus );
-
-      }
-    }
-  );
+  .factory('$exceptionHandler', ['virheLogitus', function(virheLogitus) {
+    return virheLogitus;
+  }]);
