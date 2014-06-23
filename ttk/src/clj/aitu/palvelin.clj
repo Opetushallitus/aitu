@@ -25,6 +25,7 @@
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.session.memory :refer [memory-store]]
             [ring.middleware.content-type :refer [wrap-content-type]]
+            [ring.middleware.x-headers :refer [wrap-frame-options]]
             [clojure.tools.logging :as log]
             [cheshire.generate :as json-gen]
             schema.core
@@ -112,6 +113,7 @@
                       wrap-params
                       (wrap-resource "public")
                       wrap-content-type
+                      (wrap-frame-options :deny)
                       (wrap-session {:store session-store
                                      :cookie-attrs {:http-only true
                                                     :path (service-path(get-in asetukset [:server :base-url]))
