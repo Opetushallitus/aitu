@@ -12,7 +12,8 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('ttk', ['aitulocale',
+angular.module('ttk', ['angular-loading-bar',
+                       'aitulocale',
                        'kayttooikeudet',
                        'henkilot',
                        'toimikunnat',
@@ -127,6 +128,11 @@ angular.module('ttk', ['aitulocale',
   .constant('asetukset', {
     requestTimeout : 120000 //2min timeout kaikille pyynnöille
   })
+
+  .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.latencyThreshold = 100;
+    cfpLoadingBarProvider.includeSpinner = false;
+  }])
 
   .provider(
     '$exceptionHandler',
