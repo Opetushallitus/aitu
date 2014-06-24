@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.integraatio.organisaatiopalvelu
-  (:require [aitu.util :refer [get-json-from-url map-by diff-maps]]
+  (:require [aitu.util :refer [get-json-from-url map-by diff-maps some-value]]
             [aitu.infra.oppilaitos-arkisto :as arkisto]
             [clojure.tools.logging :as log]))
 
@@ -46,31 +46,61 @@
 (defn ^:private nimi [koodi]
   ((some-fn :fi :sv :en) (:nimi koodi)))
 
+(defn ^:private nimi-sv [koodi]
+  ((some-fn :sv :fi :en) (:nimi koodi)))
+
 (defn ^:private postinumero [koodi]
   (when-let [postinumerokoodi (get-in koodi [:postiosoite :postinumeroUri])]
     (subs postinumerokoodi 6)))
 
-(defn ^:private koodi->oppilaitos [koodi]
-  {:nimi (nimi koodi)
+(defn ^:private email [koodi]
+  (some :email (:yhteystiedot koodi)))
+
+(defn ^:private www-osoite [koodi]
+  (some :www (:yhteystiedot koodi)))
+
+(defn ^:private puhelin [koodi]
+  (:numero (some-value #(= "puhelin" (:tyyppi %)) (:yhteystiedot koodi))))
+
+(defn ^:private koodi->koulutustoimija [koodi]
+  {:nimi_fi (nimi koodi)
+   :nimi_sv (nimi-sv koodi)
    :oid (:oid koodi)
-   :sahkoposti (:emailOsoite koodi)
-   :puhelin (:puhelinnumero koodi)
+   :sahkoposti (email koodi)
+   :puhelin (puhelin koodi)
    :osoite (get-in koodi [:postiosoite :osoite])
    :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
-   :www_osoite (:wwwOsoite koodi)
+   :www_osoite (www-osoite koodi)
+   :ytunnus (:ytunnus koodi)})
+
+(defn ^:private koodi->oppilaitos [koodi]
+  {:nimi (nimi koodi)
+   :oid (:oid koodi)
+   :sahkoposti (email koodi)
+   :puhelin (puhelin koodi)
+   :osoite (get-in koodi [:postiosoite :osoite])
+   :postinumero (postinumero koodi)
+   :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
+   :www_osoite (www-osoite koodi)
    :oppilaitoskoodi (:oppilaitosKoodi koodi)})
 
 (defn ^:private koodi->toimipaikka [koodi]
   {:nimi (nimi koodi)
    :oid (:oid koodi)
-   :sahkoposti (:emailOsoite koodi)
-   :puhelin (:puhelinnumero koodi)
+   :sahkoposti (email koodi)
+   :puhelin (puhelin koodi)
    :osoite (get-in koodi [:postiosoite :osoite])
    :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
-   :www_osoite (:wwwOsoite koodi)
+   :www_osoite (www-osoite koodi)
    :toimipaikkakoodi (:toimipistekoodi koodi)})
+
+(defn ^:private koulutustoimijan-kentat [oppilaitos]
+  (when oppilaitos 
+    (select-keys oppilaitos [:nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
+                             :postinumero :postitoimipaikka :www_osoite
+                             :ytunnus])))
 
 (defn ^:private oppilaitoksen-kentat [oppilaitos]
   (when oppilaitos 
@@ -86,16 +116,48 @@
 
 (defn ^:private tyyppi [koodi]
   (cond
+    (some #{"Koulutustoimija"} (:tyypit koodi)) :koulutustoimija
     (haluttu-tyyppi? koodi) :oppilaitos
     (:toimipistekoodi koodi) :toimipaikka))
 
-(defn ^:private paivita-oppilaitokset! [koodit]
-  (let [oppilaitokset (->> (arkisto/hae-kaikki-integraatiolle)
-                        (map-by :oid))]
-    (doseq [koodi koodit
-            :let [oid (:oid koodi)
-                  vanha-oppilaitos (oppilaitoksen-kentat (get oppilaitokset oid))
-                  uusi-oppilaitos (koodi->oppilaitos koodi)]]
+(defn ^:private oid-polku [koulutustoimijakoodit oppilaitoskoodit]
+  (loop [oid->ytunnus (into {} (for [kt koulutustoimijakoodit]
+                                 [(:oid kt) (:ytunnus kt)]))
+         oppilaitoskoodit oppilaitoskoodit]
+    (if (seq oppilaitoskoodit) 
+      (recur (into oid->ytunnus (for [o oppilaitoskoodit
+                                      :when (contains? oid->ytunnus (:parentOid o))]
+                                  [(:oid o) (oid->ytunnus (:parentOid o))]))
+             (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
+      oid->ytunnus)))
+
+(defn ^:private paivita-koulutustoimijat! [koodit]
+  (let [koulutustoimijat (->> (arkisto/hae-koulutustoimijat-integraatiolle)
+                           (map-by :ytunnus))]
+    (doseq [koodi (vals (map-by :ytunnus koodit)) ;; Poistetaan duplikaatit
+            :let [y-tunnus (:ytunnus koodi)
+                  vanha-kt (koulutustoimijan-kentat (get koulutustoimijat y-tunnus))
+                  uusi-kt (koodi->koulutustoimija koodi)]
+            :when y-tunnus]
+      (cond
+        (nil? vanha-kt) (do
+                          (log/info "Uusi koulutustoimija: " (:ytunnus uusi-kt))
+                          (arkisto/lisaa-koulutustoimija! uusi-kt))
+        (not= vanha-kt uusi-kt) (do
+                                  (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
+                                  (arkisto/paivita-koulutustoimija! uusi-kt))))))
+
+(defn ^:private paivita-oppilaitokset! [koodit koulutustoimijakoodit]
+  (let [oid->ytunnus (oid-polku koulutustoimijakoodit koodit)
+        oppilaitokset (->> (arkisto/hae-kaikki-integraatiolle)
+                        (map-by :oppilaitoskoodi))]
+    (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit
+            :when (contains? oid->ytunnus (:parentOid koodi))
+            :let [oppilaitoskoodi (:oppilaitosKoodi koodi)
+                  koulutustoimija (oid->ytunnus (:parentOid koodi))
+                  vanha-oppilaitos (oppilaitoksen-kentat (get oppilaitokset oppilaitoskoodi))
+                  uusi-oppilaitos (assoc (koodi->oppilaitos koodi)
+                                         :koulutustoimija koulutustoimija)]]
       (cond
         (nil? vanha-oppilaitos) (do
                                   (log/info "Uusi oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
@@ -105,18 +167,18 @@
                                                   (arkisto/paivita! uusi-oppilaitos))))))
 
 
-(defn ^:private paivita-toimipaikat! [koodit]
-  (let [oppilaitokset (->> (arkisto/hae-kaikki-integraatiolle)
-                        (map-by :oid))
+(defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit]
+  (let [oid->oppilaitostunnus (into {} (for [o oppilaitoskoodit]
+                                         [(:oid o) (:oppilaitosKoodi o)]))
         toimipaikat (->> (arkisto/hae-kaikki-toimipaikat-integraatiolle)
-                      (map-by :oid))]
-    (doseq [koodi koodit
-            :when (contains? oppilaitokset (:parentOid koodi))
-            :let [oid (:oid koodi)
-                  oppilaitos (get oppilaitokset (:parentOid koodi))
-                  vanha-toimipaikka (toimipaikan-kentat (get toimipaikat oid))
+                      (map-by :toimipaikkakoodi))]
+    (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit
+            :when (contains? oid->oppilaitostunnus (:parentOid koodi))
+            :let [toimipaikkakoodi (:toimipistekoodi koodi)
+                  oppilaitos (oid->oppilaitostunnus (:parentOid koodi))
+                  vanha-toimipaikka (toimipaikan-kentat (get toimipaikat toimipaikkakoodi))
                   uusi-toimipaikka (assoc (koodi->toimipaikka koodi)
-                                          :oppilaitos (:oppilaitoskoodi oppilaitos))]]
+                                          :oppilaitos oppilaitos)]]
       (cond
         (nil? vanha-toimipaikka) (do
                                    (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka)) 
@@ -131,7 +193,10 @@
   (let [kaikki-koodit (hae-kaikki (:url asetukset))
         koodit (group-by tyyppi kaikki-koodit)
         _ (log/info "Haettu kaikki organisaatiot")
+        koulutustoimijakoodit (:koulutustoimija koodit)
         oppilaitoskoodit (:oppilaitos koodit)
         toimipaikkakoodit (:toimipaikka koodit)]
-    (paivita-oppilaitokset! oppilaitoskoodit)
-    (paivita-toimipaikat! toimipaikkakoodit)))
+    (paivita-koulutustoimijat! koulutustoimijakoodit)
+    (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
+    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit)
+    (arkisto/poista-oppilaitoksettomat-koulutustoimijat!)))
