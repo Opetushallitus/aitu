@@ -68,13 +68,7 @@
     (sql/set-fields (dissoc kt :ytunnus))
     (sql/where {:ytunnus (:ytunnus kt)})))
 
-(defn ^:integration-api poista-oppilaitoksettomat-koulutustoimijat!
-  []
-  (sql/delete koulutustoimija
-    (sql/where (not (sql/sqlfn exists (sql/subselect oppilaitos
-                                        (sql/where {:oppilaitos.koulutustoimija :koulutustoimija.ytunnus})))))))
-
-(defn hae-koulutustoimijat
+(defn hae-koulutustoimijat-julkiset-tiedot
   "Hakee kaikkien koulutustoimijoiden julkiset tiedot"
   []
   (sql/select koulutustoimija
@@ -82,10 +76,10 @@
                 :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
     (sql/order :nimi)))
 
-(defn hae-koulutustoimijat-integraatiolle []
+(defn hae-koulutustoimijat[]
   (sql/select koulutustoimija))
 
-(defn hae-kaikki
+(defn hae-kaikki-julkiset-tiedot
   "Hakee kaikkien oppilaitokset julkiset tiedot"
   []
   (sql/select oppilaitos
@@ -93,25 +87,25 @@
                 :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue)
     (sql/order :nimi)))
 
-(defn hae-kaikki-integraatiolle
+(defn hae-kaikki
   "Hakee kaikkien oppilaitosten kaikki tiedot"
   []
   (sql/select oppilaitos))
 
-(defn hae-kaikki-toimipaikat []
+(defn hae-kaikki-toimipaikat-julkiset-tiedot []
   (sql/select toimipaikka
     (sql/fields :toimipaikkakoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
                 :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :oppilaitos)
     (sql/order :nimi)))
 
-(defn hae-kaikki-toimipaikat-integraatiolle []
+(defn hae-kaikki-toimipaikat []
   (sql/select toimipaikka))
 
 (defn hae-alalla
   "Hakee kaikki tietyn alan oppilaitokset. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
   [ala]
   (if (clojure.string/blank? ala)
-    (hae-kaikki)
+    (hae-kaikki-julkiset-tiedot)
     (let [termi (str "%" ala "%")]
       (map sql-timestamp->joda-datetime
            (sql/exec-raw [(str "select oppilaitoskoodi, nimi, kieli, muutettu_kayttaja, luotu_kayttaja, muutettuaika, luotuaika, "

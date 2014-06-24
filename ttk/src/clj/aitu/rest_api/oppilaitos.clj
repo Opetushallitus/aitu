@@ -28,7 +28,7 @@
     :summary "Hakee kaikki oppilaitokset"
     :return [OppilaitosTiedot]
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (cachable-json-response req (arkisto/hae-kaikki) [OppilaitosTiedot])))
+      (cachable-json-response req (arkisto/hae-kaikki-julkiset-tiedot) [OppilaitosTiedot])))
 
   (GET*  "/haku" [termi :as req]
     :summary "Hakee kaikki oppilaitokset joiden nimi sisältää annetun termin"

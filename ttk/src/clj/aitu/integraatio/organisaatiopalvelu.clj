@@ -96,14 +96,14 @@
    :www_osoite (www-osoite koodi)
    :toimipaikkakoodi (:toimipistekoodi koodi)})
 
-(defn ^:private koulutustoimijan-kentat [oppilaitos]
-  (when oppilaitos 
-    (select-keys oppilaitos [:nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
-                             :postinumero :postitoimipaikka :www_osoite
-                             :ytunnus])))
+(defn ^:private koulutustoimijan-kentat [koulutustoimija]
+  (when koulutustoimija
+    (select-keys koulutustoimija [:nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
+                                  :postinumero :postitoimipaikka :www_osoite
+                                  :ytunnus])))
 
 (defn ^:private oppilaitoksen-kentat [oppilaitos]
-  (when oppilaitos 
+  (when oppilaitos
     (select-keys oppilaitos [:nimi :oid :sahkoposti :puhelin :osoite
                              :postinumero :postitoimipaikka :www_osoite
                              :oppilaitoskoodi])))
@@ -124,7 +124,7 @@
   (loop [oid->ytunnus (into {} (for [kt koulutustoimijakoodit]
                                  [(:oid kt) (:ytunnus kt)]))
          oppilaitoskoodit oppilaitoskoodit]
-    (if (seq oppilaitoskoodit) 
+    (if (seq oppilaitoskoodit)
       (recur (into oid->ytunnus (for [o oppilaitoskoodit
                                       :when (contains? oid->ytunnus (:parentOid o))]
                                   [(:oid o) (oid->ytunnus (:parentOid o))]))
@@ -132,7 +132,7 @@
       oid->ytunnus)))
 
 (defn ^:private paivita-koulutustoimijat! [koodit]
-  (let [koulutustoimijat (->> (arkisto/hae-koulutustoimijat-integraatiolle)
+  (let [koulutustoimijat (->> (arkisto/hae-koulutustoimijat)
                            (map-by :ytunnus))]
     (doseq [koodi (vals (map-by :ytunnus koodit)) ;; Poistetaan duplikaatit
             :let [y-tunnus (:ytunnus koodi)
@@ -149,7 +149,7 @@
 
 (defn ^:private paivita-oppilaitokset! [koodit koulutustoimijakoodit]
   (let [oid->ytunnus (oid-polku koulutustoimijakoodit koodit)
-        oppilaitokset (->> (arkisto/hae-kaikki-integraatiolle)
+        oppilaitokset (->> (arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
     (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit
             :when (contains? oid->ytunnus (:parentOid koodi))
@@ -170,7 +170,7 @@
 (defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit]
   (let [oid->oppilaitostunnus (into {} (for [o oppilaitoskoodit]
                                          [(:oid o) (:oppilaitosKoodi o)]))
-        toimipaikat (->> (arkisto/hae-kaikki-toimipaikat-integraatiolle)
+        toimipaikat (->> (arkisto/hae-kaikki-toimipaikat)
                       (map-by :toimipaikkakoodi))]
     (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit
             :when (contains? oid->oppilaitostunnus (:parentOid koodi))
@@ -198,5 +198,4 @@
         toimipaikkakoodit (:toimipaikka koodit)]
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
-    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit)
-    (arkisto/poista-oppilaitoksettomat-koulutustoimijat!)))
+    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit)))
