@@ -83,7 +83,7 @@
          toimikunta-ja-tutkinto tutkintotyyppi peruste jarjesto
          keskusjarjesto tutkinnonosa osaamisala jarjestamissuunnitelma
          toimipaikka tutkintoversio uusin-versio tutkinto-ja-tutkinnonosa
-         sopimuksen-liite)
+         sopimuksen-liite koulutustoimija)
 
 (defmacro defentity
   "Wrapperi Korman defentitylle, lisää yleiset prepare/transform-funktiot."
@@ -128,13 +128,21 @@
 (defentity kayttaja
   (sql/pk :oid))
 
+(defentity koulutustoimija
+  (sql/table :koulutustoimija)
+  (sql/pk :ytunnus)
+  (sql/has-many oppilaitos
+    {:fk :koulutustoimija}))
+
 (defentity oppilaitos
   (sql/table :oppilaitos)
   (sql/pk :oppilaitoskoodi)
   (sql/has-many jarjestamissopimus
     {:fk :oppilaitos})
   (sql/has-many toimipaikka
-    {:fk :toimipaikka}))
+    {:fk :toimipaikka})
+  (sql/belongs-to koulutustoimija
+    {:fk :koulutustoimija}))
 
 (defentity toimipaikka
   (sql/pk :toimipaikkakoodi)
