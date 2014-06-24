@@ -36,5 +36,5 @@
 (defrecord PaivitaOrganisaatiotJob []
    org.quartz.Job
    (execute [this ctx]
-     (let [{:strs [asetukset]} (qc/from-job-data ctx)]
-       (org/paivita-organisaatiot! asetukset))))
+     (let [{asetukset "asetukset"} (qc/from-job-data ctx)]
+       (paivita-organisaatiot! asetukset))))

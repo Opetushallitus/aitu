@@ -18,12 +18,28 @@
             [clojurewerkz.quartzite.jobs :as j]
             [clojurewerkz.quartzite.triggers :as t]
             [clojurewerkz.quartzite.schedule.daily-interval :as s]
+            [clojurewerkz.quartzite.schedule.cron :as cron]
             [clojure.tools.logging :as log]
+            [clj-time.core :as time :refer [minutes seconds from-now]]
             aitu.infra.eraajo.kayttajat
             aitu.infra.eraajo.organisaatiot)
   (:import aitu.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
            aitu.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob))
 
+(defn ^:private seuraava-kellonaika 
+  "Palauttaa seuraavan ajanhetken jolloin kello on annetun verran"
+  [h m s]
+  (let [hetki-tanaan (-> 
+                       (time/now)
+                       (time/to-time-zone (time/time-zone-for-id "Europe/Helsinki"))
+                       (.withHourOfDay h)
+                       (.withMinuteOfHour m)
+                       (.withSecondOfMinute s)
+                       (.withMillisOfSecond 0))
+        nyt (time/now)]
+    (if (time/after? hetki-tanaan nyt)
+      hetki-tanaan
+      (time/plus hetki-tanaan (time/days 1)))))
 
 (defn kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
@@ -47,8 +63,8 @@
                   (j/using-job-data {"asetukset" organisaatiopalvelu-asetukset}))
         trigger-daily (t/build
                         (t/with-identity "daily")
-                        (t/start-now)
+                        (t/start-at (seuraava-kellonaika 3 0 0))
                         (t/with-schedule (s/schedule
-                                           (s/time-of-day 4 0 0))))]
+                                            (s/with-interval-in-days 1))))]
     (qs/schedule ldap-job trigger-5min)
     (qs/schedule org-job trigger-daily)))

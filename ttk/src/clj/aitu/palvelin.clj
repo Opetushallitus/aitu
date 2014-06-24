@@ -84,9 +84,9 @@
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
-(defn kaynnista-eraajon-ajastimet! [ldap-auth-server-asetukset]
-  (let [kop (kop/tee-kayttooikeuspalvelu ldap-auth-server-asetukset)]
-    (eraajo/kaynnista-ajastimet! kop)))
+(defn kaynnista-eraajon-ajastimet! [asetukset]
+  (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
+    (eraajo/kaynnista-ajastimet! kop (:organisaatiopalvelu asetukset))))
 
 (defn kaynnista! [oletus-asetukset]
   (try
@@ -131,7 +131,7 @@
           (.writeString json-generator (.toString c "dd.MM.yyyy"))))
       (when (or (not (:development-mode asetukset))
                 (:eraajo asetukset))
-        (kaynnista-eraajon-ajastimet! (:ldap-auth-server asetukset)))
+        (kaynnista-eraajon-ajastimet! asetukset))
       (log/info "Kehitysmoodi päällä:" (kehitysmoodi? asetukset))
       (log/info "Palvelin käynnistetty:" (service-url asetukset))
       {:sammuta sammuta

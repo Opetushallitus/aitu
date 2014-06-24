@@ -190,7 +190,7 @@
 (defn paivita-organisaatiot!
   [asetukset]
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
-  (let [kaikki-koodit (hae-kaikki (:url asetukset))
+  (let [kaikki-koodit (hae-kaikki (get asetukset "url"))
         koodit (group-by tyyppi kaikki-koodit)
         _ (log/info "Haettu kaikki organisaatiot")
         koulutustoimijakoodit (:koulutustoimija koodit)
