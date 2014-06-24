@@ -14,7 +14,8 @@
 
 (ns aitu.integraatio.organisaatiopalvelu
   (:require [aitu.util :refer [get-json-from-url map-by diff-maps]]
-            [aitu.infra.oppilaitos-arkisto :as arkisto]))
+            [aitu.infra.oppilaitos-arkisto :as arkisto]
+            [clojure.tools.logging :as log]))
 
 (defn hae-kaikki [url]
   (let [oids (get-json-from-url url)]
@@ -72,14 +73,16 @@
    :toimipaikkakoodi (:toimipistekoodi koodi)})
 
 (defn ^:private oppilaitoksen-kentat [oppilaitos]
-  (select-keys oppilaitos [:nimi :oid :sahkoposti :puhelin :osoite
-                           :postinumero :postitoimipaikka :www_osoite
-                           :oppilaitoskoodi]))
+  (when oppilaitos 
+    (select-keys oppilaitos [:nimi :oid :sahkoposti :puhelin :osoite
+                             :postinumero :postitoimipaikka :www_osoite
+                             :oppilaitoskoodi])))
 
 (defn ^:private toimipaikan-kentat [toimipaikka]
-  (select-keys toimipaikka [:nimi :oid :sahkoposti :puhelin :osoite
-                            :postinumero :postitoimipaikka :www_osoite
-                            :toimipaikkakoodi :oppilaitos]))
+  (when toimipaikka
+    (select-keys toimipaikka [:nimi :oid :sahkoposti :puhelin :osoite
+                              :postinumero :postitoimipaikka :www_osoite
+                              :toimipaikkakoodi :oppilaitos])))
 
 (defn ^:private tyyppi [koodi]
   (cond
@@ -87,21 +90,25 @@
     (:toimipistekoodi koodi) :toimipaikka))
 
 (defn ^:private paivita-oppilaitokset! [koodit]
-  (let [oppilaitokset (->> (arkisto/hae-kaikki)
+  (let [oppilaitokset (->> (arkisto/hae-kaikki-integraatiolle)
                         (map-by :oid))]
     (doseq [koodi koodit
             :let [oid (:oid koodi)
                   vanha-oppilaitos (oppilaitoksen-kentat (get oppilaitokset oid))
                   uusi-oppilaitos (koodi->oppilaitos koodi)]]
       (cond
-        (nil? vanha-oppilaitos) (arkisto/lisaa! uusi-oppilaitos)
-        (not= vanha-oppilaitos uusi-oppilaitos) (arkisto/paivita! uusi-oppilaitos)))))
+        (nil? vanha-oppilaitos) (do
+                                  (log/info "Uusi oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
+                                  (arkisto/lisaa! uusi-oppilaitos))
+        (not= vanha-oppilaitos uusi-oppilaitos) (do
+                                                  (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
+                                                  (arkisto/paivita! uusi-oppilaitos))))))
 
 
 (defn ^:private paivita-toimipaikat! [koodit]
-  (let [oppilaitokset (->> (arkisto/hae-kaikki)
+  (let [oppilaitokset (->> (arkisto/hae-kaikki-integraatiolle)
                         (map-by :oid))
-        toimipaikat (->> (arkisto/hae-kaikki-toimipaikat)
+        toimipaikat (->> (arkisto/hae-kaikki-toimipaikat-integraatiolle)
                       (map-by :oid))]
     (doseq [koodi koodit
             :when (contains? oppilaitokset (:parentOid koodi))
@@ -111,12 +118,19 @@
                   uusi-toimipaikka (assoc (koodi->toimipaikka koodi)
                                           :oppilaitos (:oppilaitoskoodi oppilaitos))]]
       (cond
-        (nil? vanha-toimipaikka) (arkisto/lisaa-toimipaikka! uusi-toimipaikka)
-        (not= vanha-toimipaikka uusi-toimipaikka) (arkisto/paivita-toimipaikka! uusi-toimipaikka)))))
+        (nil? vanha-toimipaikka) (do
+                                   (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka)) 
+                                   (arkisto/lisaa-toimipaikka! uusi-toimipaikka))
+        (not= vanha-toimipaikka uusi-toimipaikka) (do 
+                                                    (log/info "Muuttunut toimipaikka: " (diff-maps uusi-toimipaikka vanha-toimipaikka))
+                                                    (arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
 
 (defn paivita-organisaatiot!
   [asetukset]
-  (let [koodit (map-by tyyppi (hae-kaikki (:url asetukset)))
+  (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
+  (let [kaikki-koodit (hae-kaikki (:url asetukset))
+        koodit (group-by tyyppi kaikki-koodit)
+        _ (log/info "Haettu kaikki organisaatiot")
         oppilaitoskoodit (:oppilaitos koodit)
         toimipaikkakoodit (:toimipaikka koodit)]
     (paivita-oppilaitokset! oppilaitoskoodit)

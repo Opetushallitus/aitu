@@ -58,18 +58,26 @@
     (sql/where {:toimipaikkakoodi toimipaikkakoodi})))
 
 (defn hae-kaikki
-  "Hakee kaikki oppilaitokset"
+  "Hakee kaikkien oppilaitokset julkiset tiedot"
   []
   (sql/select oppilaitos
     (sql/fields :oppilaitoskoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
                 :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue)
     (sql/order :nimi)))
 
+(defn hae-kaikki-integraatiolle
+  "Hakee kaikkien oppilaitosten kaikki tiedot"
+  []
+  (sql/select oppilaitos))
+
 (defn hae-kaikki-toimipaikat []
   (sql/select toimipaikka
     (sql/fields :toimipaikkakoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
                 :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :oppilaitos)
     (sql/order :nimi)))
+
+(defn hae-kaikki-toimipaikat-integraatiolle []
+  (sql/select toimipaikka))
 
 (defn hae-alalla
   "Hakee kaikki tietyn alan oppilaitokset. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
