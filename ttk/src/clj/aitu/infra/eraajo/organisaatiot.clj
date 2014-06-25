@@ -29,7 +29,8 @@
             ;; käsittelijästä, meidän täytyy luoda promise itse.
             *current-user-oid* (promise)]
     (log/info "Päivitetään organisaatiot organisaatiopalvelusta")
-    (org/paivita-organisaatiot! asetukset)))
+    (org/paivita-organisaatiot! asetukset)
+    (log/info "Organisaatioiden päivitys organisaatiopalvelusta valmis")))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
