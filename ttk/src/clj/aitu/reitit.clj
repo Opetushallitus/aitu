@@ -1,6 +1,5 @@
 (ns aitu.reitit
-  (:require
-            [cheshire.core :as json]
+  (:require [cheshire.core :as json]
             [stencil.core :as s]
             [stencil.loader :as sl]
             [clojure.tools.logging :as log]
@@ -23,6 +22,7 @@
             aitu.rest-api.db-validation
             aitu.rest-api.ttk
             aitu.rest-api.henkilo
+            aitu.rest-api.koulutustoimija
             aitu.rest-api.oppilaitos
             aitu.rest-api.tutkinto
             aitu.rest-api.toimikausi
@@ -94,6 +94,7 @@
       (c/context "/api/tutkinto" [] (wrap-tarkasta-csrf-token aitu.rest-api.tutkinto/reitit))
       (c/context "/api/toimikausi" [] (wrap-tarkasta-csrf-token aitu.rest-api.toimikausi/reitit))
       (c/context "/api/oppilaitos" [] (wrap-tarkasta-csrf-token aitu.rest-api.oppilaitos/reitit))
+      (c/context "/api/koulutustoimija" [] (wrap-tarkasta-csrf-token aitu.rest-api.koulutustoimija/reitit))
       (c/context "/api/jarjestamissopimus" [] aitu.rest-api.jarjestamissopimus/liite-lataus-reitit)
       (c/context "/api/jarjestamissopimus" [] (wrap-tarkasta-csrf-token aitu.rest-api.jarjestamissopimus/reitit))
       (c/context "/api/tutkintorakenne" []  (wrap-tarkasta-csrf-token aitu.rest-api.tutkintorakenne/reitit))
