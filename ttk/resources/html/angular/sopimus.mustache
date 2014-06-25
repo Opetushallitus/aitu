@@ -37,8 +37,8 @@
       <a href="#/toimikunta/{{sopimus.toimikunta.diaarinumero}}/tiedot">{{sopimus.toimikunta.nimi | nimivuosi:sopimus.toimikunta:'nimi':'toimikausi_alku'}}</a>
     </fieldset>
     <fieldset>
-      <label>[[oppilaitos]]</label>
-      <p><a href="#/jarjestaja/{{sopimus.oppilaitos.oppilaitoskoodi}}/tiedot">{{sopimus.oppilaitos.nimi}}</a></p>
+      <label>[[koulutustoimija]]</label>
+      <p><a href="#/jarjestaja/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi | lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></p>
     </fieldset>
   </div>
   <div>
@@ -83,10 +83,10 @@
     </haku-valitsin>
     <haku-valitsin
       ng-show="muokkausTila"
-      otsikko="[[oppilaitos]]"
-      url="[[base-url]]/api/oppilaitos/haku"
-      model="sopimus.oppilaitos"
-      model-id-property="oppilaitoskoodi"
+      otsikko="[[koulutustoimija]]"
+      url="[[base-url]]/api/koulutustoimija/haku"
+      model="sopimus.koulutustoimija"
+      model-id-property="ytunnus"
       model-text-property="nimi"
       pakollinen="true">
     </haku-valitsin>
@@ -170,7 +170,7 @@
       </div>
       <div class="sopimus-tutkinnon-osat" ng-class="{'muokkaus' : muokkausTila}">
       <sopimuksen-tutkinnonosat
-        toimipaikat="sopimus.oppilaitos.toimipaikka"
+        toimipaikat="sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.toimipaikka"
         muokkaus="muokkausTila"
         valitut-tutkinnonosat="sopimusJaTutkinto.sopimus_ja_tutkinto_ja_tutkinnonosa"
         kaikki-tutkinnonosat="sopimusJaTutkinto.tutkintoversio.tutkinto_ja_tutkinnonosa"
