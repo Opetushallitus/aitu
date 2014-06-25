@@ -38,18 +38,28 @@
   {:post [(jarjestamissopimus? %)]}
   {:toimikunta "TKUN"
    :sopijatoimikunta "TKUN"
-   :oppilaitos "OP1"
+   :koulutustoimija "KT1"
+   :tutkintotilaisuuksista_vastaava_oppilaitos "OP1"
    :alkupvm (parse-local-date (formatters :year-month-day) "2013-02-01")
    :loppupvm (parse-local-date (formatters :year-month-day) "2099-02-01")
    :sopimusnumero "1234"})
 
 (defn lisaa-testidata! []
+  (sql/exec-raw (str "insert into koulutustoimija("
+                     "ytunnus,"
+                     "nimi_fi"
+                     ")values("
+                     "'KT1',"
+                     "'Koulutustoimijan nimi'"
+                     ")"))
   (sql/exec-raw (str "insert into oppilaitos("
                      "oppilaitoskoodi,"
-                     "nimi"
+                     "nimi,"
+                     "koulutustoimija"
                      ")values("
                      "'OP1',"
-                     "'Oppilaitoksen nimi'"
+                     "'Oppilaitoksen nimi',"
+                     "'KT1'"
                      ")"))
   (sql/exec-raw (str "insert into tutkintotoimikunta("
                      "tkunta,"
