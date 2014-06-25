@@ -62,6 +62,9 @@
 (defn ^:private puhelin [koodi]
   (:numero (some-value #(= "puhelin" (:tyyppi %)) (:yhteystiedot koodi))))
 
+(defn ^:private y-tunnus [koodi]
+  (or (:ytunnus koodi) (:virastoTunnus koodi)))
+
 (defn ^:private koodi->koulutustoimija [koodi]
   {:nimi_fi (nimi koodi)
    :nimi_sv (nimi-sv koodi)
@@ -72,7 +75,7 @@
    :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (www-osoite koodi)
-   :ytunnus (:ytunnus koodi)})
+   :ytunnus (y-tunnus koodi)})
 
 (defn ^:private koodi->oppilaitos [koodi]
   {:nimi (nimi koodi)
@@ -106,7 +109,7 @@
   (when oppilaitos
     (select-keys oppilaitos [:nimi :oid :sahkoposti :puhelin :osoite
                              :postinumero :postitoimipaikka :www_osoite
-                             :oppilaitoskoodi])))
+                             :oppilaitoskoodi :koulutustoimija])))
 
 (defn ^:private toimipaikan-kentat [toimipaikka]
   (when toimipaikka
@@ -134,10 +137,10 @@
 (defn ^:private paivita-koulutustoimijat! [koodit]
   (let [koulutustoimijat (->> (arkisto/hae-koulutustoimijat)
                            (map-by :ytunnus))]
-    (doseq [koodi (vals (map-by :ytunnus koodit)) ;; Poistetaan duplikaatit
-            :let [y-tunnus (:ytunnus koodi)
-                  vanha-kt (koulutustoimijan-kentat (get koulutustoimijat y-tunnus))
-                  uusi-kt (koodi->koulutustoimija koodi)]
+    (doseq [koodi (vals (map-by y-tunnus koodit)) ;; Poistetaan duplikaatit
+            :let [uusi-kt (koodi->koulutustoimija koodi)
+                  y-tunnus (:ytunnus uusi-kt)
+                  vanha-kt (koulutustoimijan-kentat (get koulutustoimijat y-tunnus))]
             :when y-tunnus]
       (cond
         (nil? vanha-kt) (do
@@ -184,7 +187,7 @@
                                    (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka)) 
                                    (arkisto/lisaa-toimipaikka! uusi-toimipaikka))
         (not= vanha-toimipaikka uusi-toimipaikka) (do 
-                                                    (log/info "Muuttunut toimipaikka: " (diff-maps uusi-toimipaikka vanha-toimipaikka))
+                                                    (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                                     (arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
 
 (defn paivita-organisaatiot!
