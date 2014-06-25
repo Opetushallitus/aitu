@@ -96,6 +96,20 @@
 
 (declare SopimusJaTutkinto)
 
+(defmodel KoulutustoimijaLinkki {:nimi_fi s/Str
+                                 :nimi_sv (s/maybe s/Str)
+                                 :ytunnus s/Str})
+
+(defmodel KoulutustoimijanTiedot (merge KoulutustoimijaLinkki
+                                        {:postinumero (s/maybe s/Str)
+                                         :osoite (s/maybe s/Str)
+                                         :postitoimipaikka (s/maybe s/Str)
+                                         :puhelin (s/maybe s/Str)
+                                         :www_osoite (s/maybe s/Str)
+                                         :sahkoposti (s/maybe s/Str)}))
+
+(defmodel Koulutustoimija (merge KoulutustoimijanTiedot AuditTiedot))
+
 (defmodel OppilaitosLinkki {:nimi s/Str
                             :oppilaitoskoodi s/Str})
 
@@ -120,7 +134,7 @@
                                            (s/optional-key :poistettu) Boolean
                                            :toimikunta s/Str
                                            (s/optional-key :sopijatoimikunta) s/Str
-                                           :oppilaitos s/Str
+                                           :koulutustoimija s/Str
                                            :tutkintotilaisuuksista_vastaava_oppilaitos (s/maybe s/Str)
                                            (s/optional-key :vastuuhenkilo) (s/maybe s/Str)
                                            (s/optional-key :puhelin) (s/maybe s/Str)
@@ -131,7 +145,7 @@
                                    :jarjestamissuunnitelma_filename s/Str})
 
 (defmodel SopimuksenLiiteLinkki {:sopimuksen_liite_id s/Int
-                            :sopimuksen_liite_filename s/Str})
+                                 :sopimuksen_liite_filename s/Str})
 
 (defmodel TutkintoversioTiedot (merge {:peruste (s/maybe s/Str)
                                        :voimassa_alkupvm org.joda.time.LocalDate
@@ -204,7 +218,7 @@
                                    (optional-keys AuditTiedot)))
 
 (defmodel Jarjestamissopimus (merge JarjestamissopimusTiedot
-                                    {:oppilaitos OppilaitosTiedot
+                                    {:koulutustoimija KoulutustoimijanTiedot
                                      :tutkintotilaisuuksista_vastaava_oppilaitos (s/maybe OppilaitosTiedot)
                                      (s/optional-key :sopimus_ja_tutkinto) [SopimusJaTutkinto]}))
 
