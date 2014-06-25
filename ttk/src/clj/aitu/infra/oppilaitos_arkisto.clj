@@ -57,28 +57,6 @@
   (sql/delete toimipaikka
     (sql/where {:toimipaikkakoodi toimipaikkakoodi})))
 
-(defn ^:integration-api lisaa-koulutustoimija!
-  [kt]
-  (sql/insert koulutustoimija
-    (sql/values kt)))
-
-(defn ^:integration-api paivita-koulutustoimija!
-  [kt]
-  (sql/update koulutustoimija
-    (sql/set-fields (dissoc kt :ytunnus))
-    (sql/where {:ytunnus (:ytunnus kt)})))
-
-(defn hae-koulutustoimijat-julkiset-tiedot
-  "Hakee kaikkien koulutustoimijoiden julkiset tiedot"
-  []
-  (sql/select koulutustoimija
-    (sql/fields :oppilaitoskoodi :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
-                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
-    (sql/order :nimi)))
-
-(defn hae-koulutustoimijat[]
-  (sql/select koulutustoimija))
-
 (defn hae-kaikki-julkiset-tiedot
   "Hakee kaikkien oppilaitokset julkiset tiedot"
   []
@@ -155,7 +133,7 @@
                       :oid oid)))
 
 (defn hae-osoitepalvelulle
-  "Hakee osoitepalvelun tarvitsemat tiedot oppilaitoksista"
+  "Hakee osoitehienoa palvelun tarvitsemat tiedot oppilaitoksista"
   []
   (let [oppilaitokset (sql/select oppilaitos
                         (sql/fields :oppilaitoskoodi :nimi :sahkoposti

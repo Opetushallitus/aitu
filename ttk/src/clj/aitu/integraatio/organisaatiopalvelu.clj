@@ -14,7 +14,8 @@
 
 (ns aitu.integraatio.organisaatiopalvelu
   (:require [aitu.util :refer [get-json-from-url map-by diff-maps some-value]]
-            [aitu.infra.oppilaitos-arkisto :as arkisto]
+            [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
+            [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
             [clojure.tools.logging :as log]))
 
 (defn hae-kaikki [url]
@@ -135,7 +136,7 @@
       oid->ytunnus)))
 
 (defn ^:private paivita-koulutustoimijat! [koodit]
-  (let [koulutustoimijat (->> (arkisto/hae-koulutustoimijat)
+  (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki)
                            (map-by :ytunnus))]
     (doseq [koodi (vals (map-by y-tunnus koodit)) ;; Poistetaan duplikaatit
             :let [uusi-kt (koodi->koulutustoimija koodi)
@@ -145,14 +146,14 @@
       (cond
         (nil? vanha-kt) (do
                           (log/info "Uusi koulutustoimija: " (:ytunnus uusi-kt))
-                          (arkisto/lisaa-koulutustoimija! uusi-kt))
+                          (koulutustoimija-arkisto/lisaa! uusi-kt))
         (not= vanha-kt uusi-kt) (do
                                   (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
-                                  (arkisto/paivita-koulutustoimija! uusi-kt))))))
+                                  (koulutustoimija-arkisto/paivita! uusi-kt))))))
 
 (defn ^:private paivita-oppilaitokset! [koodit koulutustoimijakoodit]
   (let [oid->ytunnus (oid-polku koulutustoimijakoodit koodit)
-        oppilaitokset (->> (arkisto/hae-kaikki)
+        oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
     (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit
             :when (contains? oid->ytunnus (:parentOid koodi))
@@ -164,16 +165,16 @@
       (cond
         (nil? vanha-oppilaitos) (do
                                   (log/info "Uusi oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
-                                  (arkisto/lisaa! uusi-oppilaitos))
+                                  (oppilaitos-arkisto/lisaa! uusi-oppilaitos))
         (not= vanha-oppilaitos uusi-oppilaitos) (do
                                                   (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
-                                                  (arkisto/paivita! uusi-oppilaitos))))))
+                                                  (oppilaitos-arkisto/paivita! uusi-oppilaitos))))))
 
 
 (defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit]
   (let [oid->oppilaitostunnus (into {} (for [o oppilaitoskoodit]
                                          [(:oid o) (:oppilaitosKoodi o)]))
-        toimipaikat (->> (arkisto/hae-kaikki-toimipaikat)
+        toimipaikat (->> (oppilaitos-arkisto/hae-kaikki-toimipaikat)
                       (map-by :toimipaikkakoodi))]
     (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit
             :when (contains? oid->oppilaitostunnus (:parentOid koodi))
@@ -185,10 +186,10 @@
       (cond
         (nil? vanha-toimipaikka) (do
                                    (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka)) 
-                                   (arkisto/lisaa-toimipaikka! uusi-toimipaikka))
+                                   (oppilaitos-arkisto/lisaa-toimipaikka! uusi-toimipaikka))
         (not= vanha-toimipaikka uusi-toimipaikka) (do 
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
-                                                    (arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
+                                                    (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
 
 (defn paivita-organisaatiot!
   [asetukset]
