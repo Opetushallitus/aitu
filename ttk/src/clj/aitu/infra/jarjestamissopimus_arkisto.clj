@@ -20,6 +20,7 @@
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
+             [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.integraatio.sql.jarjestamissopimus :as sopimus-kaytava]
              [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
              [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
@@ -47,8 +48,8 @@
   [jarjestamissopimusid]
 
   (let [sopimus (sopimus-kaytava/hae jarjestamissopimusid)
-      sopimusid (:jarjestamissopimusid sopimus)
-      diaarinumero (:sopimusnumero sopimus)]
+        sopimusid (:jarjestamissopimusid sopimus)
+        diaarinumero (:sopimusnumero sopimus)]
     (auditlog/jarjestamissopimus-poisto! sopimusid diaarinumero))
 
   (sql/update jarjestamissopimus
@@ -64,7 +65,7 @@
   {:pre [(domain/jarjestamissopimus? sopimus)]}
 
   (let [sopimus (sql/insert jarjestamissopimus
-                 (sql/values sopimus))
+                  (sql/values sopimus))
         sopimusid (:jarjestamissopimusid sopimus)
         diaarinumero (:sopimusnumero sopimus)]
     (auditlog/jarjestamissopimus-lisays! sopimusid diaarinumero)
@@ -151,7 +152,7 @@
   (some-> jarjestamissopimus
       (update-in [:toimikunta] toimikunta-kaytava/hae)
       (update-in [:sopijatoimikunta] toimikunta-kaytava/hae)
-      (update-in [:oppilaitos] oppilaitos-kaytava/hae)
+      (update-in [:koulutustoimija] koulutustoimija-kaytava/hae)
       (update-in [:tutkintotilaisuuksista_vastaava_oppilaitos] oppilaitos-kaytava/hae)
       (update-in [:muutettu_kayttaja] kayttaja-arkisto/hae)
       (update-in [:luotu_kayttaja] kayttaja-arkisto/hae)))
@@ -173,8 +174,8 @@
 (defn liita-oppilaitoksen-toimipaikat
   "Liittää toimipaikat oppilaitokselle"
   [jarjestamissopimus]
-  (let [oppilaitoskoodi (get-in jarjestamissopimus [:oppilaitos :oppilaitoskoodi])]
-    (assoc-in jarjestamissopimus [:oppilaitos :toimipaikka] (oppilaitos-kaytava/hae-oppilaitoksen-toimipaikat oppilaitoskoodi))))
+  (let [oppilaitoskoodi (get-in jarjestamissopimus [:tutkintotilaisuuksista_vastaava_oppilaitos :oppilaitoskoodi])]
+    (assoc-in jarjestamissopimus [:tutkintotilaisuuksista_vastaava_oppilaitos :toimipaikka] (oppilaitos-kaytava/hae-oppilaitoksen-toimipaikat oppilaitoskoodi))))
 
 (defn ^:private rajaa-tutkinnon-kentat
   "Valitsee sopimuksen tutkinnoista osoitepalvelun tarvitsemat kentät"
@@ -202,7 +203,8 @@
                                            :toimikunta
                                            :vastuuhenkilo
                                            :sahkoposti
-                                           :oppilaitos])
+                                           :tutkintotilaisuuksista_vastaava_oppilaitos
+                                           :koulutustoimija])
                   (update-in [:toimikunta] :tkunta)
                   (update-in [:tutkinnot] #(map rajaa-tutkinnon-kentat %))))))
 

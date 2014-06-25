@@ -18,7 +18,7 @@
 
 (defn jarjestamissopimus? [x]
   "Onko järjestämissopimuksen tietosisältö oikeellinen?"
-  (and (contains? x :oppilaitos)
+  (and (contains? x :koulutustoimija)
        (contains? x :sopimusnumero)
        (contains? x :alkupvm)
        (contains? x :toimikunta)))

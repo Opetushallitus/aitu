@@ -149,12 +149,6 @@
   (sql/belongs-to oppilaitos
     {:fk :oppilaitos}))
 
-(defentity tutkintotilaisuuksista-vastaava-oppilaitos
-  (sql/table :oppilaitos :tutkintotilaisuuksista_vastaava_oppilaitos)
-  (sql/pk :oppilaitoskoodi)
-  (sql/has-many jarjestamissopimus
-    {:fk :tutkintotilaisuuksista_vastaava_oppilaitos}))
-
 (defentity tutkintotoimikunta
   (sql/pk :tkunta)
   (sql/belongs-to toimikausi
@@ -245,9 +239,9 @@
 (defentity jarjestamissopimus
   (sql/table :jarjestamissopimus)
   (sql/pk :jarjestamissopimusid)
+  (sql/belongs-to koulutustoimija
+    {:fk :koulutustoimija})
   (sql/belongs-to oppilaitos
-    {:fk :oppilaitos})
-  (sql/belongs-to tutkintotilaisuuksista-vastaava-oppilaitos
     {:fk :tutkintotilaisuuksista_vastaava_oppilaitos})
   (sql/belongs-to tutkintotoimikunta
     {:fk :toimikunta})
