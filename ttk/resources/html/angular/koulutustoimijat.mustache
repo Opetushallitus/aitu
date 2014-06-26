@@ -1,0 +1,25 @@
+{{=[[ ]]=}}
+[[#i18n.koulutustoimijat]]
+<h1>[[koulutustoimijahaku]]</h1>
+<form>
+  <div><fieldset class="search-field">
+    <label>[[koulutustoimijan-nimi]]</label>
+    <input type="text" ng-model="search.nimi" class="search-with-autocomplete">
+  </fieldset>
+  <haku-valitsin
+    otsikko="[[opintoala-osaamisala-tutkinnonosa]]"
+    url="[[base-url]]/api/tutkinto/haku/osat"
+    model="search"
+    model-id-property="termi"
+    model-text-property="nimi">
+  </haku-valitsin>
+</form>
+
+<div class="search-results" lataus-indikaattori metodi-idt="['koulutustoimijalistaus']" viesti="[[koulutustoimijoita-ladataan]]" virheviesti="[[koulutustoimijoiden-lataus-epaonnistui]]" yrita-uudelleen="haeKoulutustoimijat()">
+  <hakutulokset tuloksia-sivulla="10" otsikot="['[[i18n.yleiset.nimi]]', '[[ytunnus]]']" hakutulokset="koulutustoimijat">
+    <div class="table-cell"><a href="#/koulutustoimija/{{hakutulos.ytunnus}}/tiedot">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
+    <div class="table-cell">{{hakutulos.ytunnus}}</div>
+  </hakutulokset>
+</div>
+
+[[/i18n.koulutustoimijat]]

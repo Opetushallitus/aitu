@@ -218,10 +218,9 @@
                                    (optional-keys AuditTiedot)))
 
 (defmodel Jarjestamissopimus (merge JarjestamissopimusTiedot
-                                    {:koulutustoimija KoulutustoimijanTiedot
+                                    {:koulutustoimija Koulutustoimija
                                      :tutkintotilaisuuksista_vastaava_oppilaitos (s/maybe OppilaitosTiedot)
                                      (s/optional-key :sopimus_ja_tutkinto) [SopimusJaTutkinto]}))
-
 
 (defmodel TutkinnonTiedot {:tutkintotunnus s/Str
                            :opintoala s/Str

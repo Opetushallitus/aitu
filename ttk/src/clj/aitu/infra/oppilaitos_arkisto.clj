@@ -97,7 +97,7 @@
                                "              left join tutkinto_ja_tutkinnonosa tjt on tv.tutkintoversio_id = tjt.tutkintoversio "
                                "              left join tutkinnonosa tos on tjt.tutkinnonosa = tos.tutkinnonosa_id "
                                "              left join osaamisala osala on tv.tutkintoversio_id = osala.tutkintoversio "
-                               "              where js.oppilaitos = ol.oppilaitoskoodi "
+                               "              where js.tutkintotilaisuuksista_vastaava_oppilaitos = ol.oppilaitoskoodi "
                                "                    and (oa.selite_fi ilike ? "
                                "                         or oa.selite_sv ilike ? "
                                "                         or osala.nimi_fi ilike ? "

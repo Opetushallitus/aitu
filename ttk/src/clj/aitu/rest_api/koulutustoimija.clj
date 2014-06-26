@@ -22,5 +22,9 @@
             [aitu.toimiala.skeema :refer :all]))
 
 (c/defroutes reitit
+  (cu/defapi :yleinen-rest-api nil :get "/" req
+    (cachable-json-response req (arkisto/hae-julkiset-tiedot) [Koulutustoimija]))
   (cu/defapi :yleinen-rest-api nil :get "/haku" [termi :as req]
-    (cachable-json-response req (arkisto/hae-termilla termi) [KoulutustoimijaLinkki])))
+    (cachable-json-response req (arkisto/hae-termilla termi) [KoulutustoimijaLinkki]))
+  (cu/defapi :yleinen-rest-api nil :get "/haku/ala" [termi :as req]
+    (cachable-json-response req (arkisto/hae-alalla termi) [Koulutustoimija])))

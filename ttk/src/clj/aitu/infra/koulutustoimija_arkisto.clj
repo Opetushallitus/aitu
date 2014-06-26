@@ -37,9 +37,9 @@
   "Hakee kaikkien koulutustoimijoiden julkiset tiedot"
   []
   (sql/select koulutustoimija
-    (sql/fields :oppilaitoskoodi :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
+    (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
                 :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
-    (sql/order :nimi)))
+    (sql/order :nimi_fi)))
 
 (defn hae-kaikki []
   (sql/select koulutustoimija))
@@ -50,3 +50,33 @@
   (for [koulutustoimija (hae-kaikki)
         :when (sisaltaako-kentat? koulutustoimija [:nimi_fi :nimi_sv] termi)]
     (select-keys koulutustoimija [:ytunnus :nimi_fi :nimi_sv])))
+
+(defn hae-alalla
+  "Hakee kaikki tietyn alan koulutustoimijat. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
+  [ala]
+  (if (clojure.string/blank? ala)
+    (hae-julkiset-tiedot)
+    (let [termi (str "%" ala "%")]
+      (map sql-timestamp->joda-datetime
+           (sql/exec-raw [(str "select ytunnus, nimi_fi, nimi_sv, muutettu_kayttaja, luotu_kayttaja, muutettuaika, luotuaika, "
+                               "sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite "
+                               "from koulutustoimija kt "
+                               "where exists (select 1 from jarjestamissopimus js "
+                               "              join sopimus_ja_tutkinto st on js.jarjestamissopimusid = st.jarjestamissopimusid "
+                               "              join tutkintoversio tv on st.tutkintoversio = tv.tutkintoversio_id "
+                               "              join nayttotutkinto t on tv.tutkintotunnus = t.tutkintotunnus "
+                               "              left join opintoala oa on t.opintoala = oa.opintoala_tkkoodi "
+                               "              left join tutkinto_ja_tutkinnonosa tjt on tv.tutkintoversio_id = tjt.tutkintoversio "
+                               "              left join tutkinnonosa tos on tjt.tutkinnonosa = tos.tutkinnonosa_id "
+                               "              left join osaamisala osala on tv.tutkintoversio_id = osala.tutkintoversio "
+                               "              where js.koulutustoimija = kt.ytunnus "
+                               "                    and (oa.selite_fi ilike ? "
+                               "                         or oa.selite_sv ilike ? "
+                               "                         or osala.nimi_fi ilike ? "
+                               "                         or osala.nimi_sv ilike ? "
+                               "                         or tos.nimi_fi ilike ? "
+                               "                         or tos.nimi_sv ilike ?"
+                               "                         or t.nimi_fi ilike ?"
+                               "                         or t.nimi_sv ilike ?)) ")
+                          (repeat 8 termi)]
+                         :results)))))
