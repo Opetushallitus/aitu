@@ -37,7 +37,9 @@
     (du/with-data
       {:toimikunnat [{:tkunta "TTK1"
                       :toimikausi 2}]
-       :oppilaitokset [{:oppilaitoskoodi "12345"}]
+       :koulutustoimijat [{:ytunnus "0000000-0"}]
+       :oppilaitokset [{:oppilaitoskoodi "12345"
+                        :koulutustoimija "0000000-0"}]
        :koulutusalat [{:koodi "KA1"}]
        :opintoalat [{:koodi "OA1"
                      :koulutusala "KA1"}]}

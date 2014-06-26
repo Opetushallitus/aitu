@@ -72,6 +72,7 @@
         (c/context "/api/test/koulutusala" [] aitu.test-api.koulutusala/reitit)
         (c/context "/api/test/opintoala" [] aitu.test-api.opintoala/reitit)
         (c/context "/api/test/peruste" [] aitu.test-api.peruste/reitit)
+        (c/context "/api/test/koulutustoimija" [] aitu.test-api.koulutustoimija/reitit)
         (c/context "/api/test/oppilaitos" [] aitu.test-api.oppilaitos/reitit)
         (c/context "/api/test/jarjestamissopimus" [] aitu.test-api.jarjestamissopimus/reitit)
         (c/context "/api/test/henkilo" [] aitu.test-api.henkilo/reitit)

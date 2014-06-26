@@ -28,6 +28,11 @@
     (sql/set-fields (dissoc kt :ytunnus))
     (sql/where {:ytunnus (:ytunnus kt)})))
 
+(defn ^:test-api poista!
+  [y-tunnus]
+  (sql/delete koulutustoimija
+    (sql/where {:ytunnus y-tunnus})))
+
 (defn hae-julkiset-tiedot
   "Hakee kaikkien koulutustoimijoiden julkiset tiedot"
   []

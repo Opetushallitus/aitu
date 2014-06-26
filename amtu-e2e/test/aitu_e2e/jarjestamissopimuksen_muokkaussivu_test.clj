@@ -136,7 +136,7 @@
           (avaa-sopimuksen-muokkaussivu 1230)
           (syota-pvm "sopimus.alkupvm" "24.03.1980")
           (syota-pvm "sopimus.loppupvm" "01.02.2199")
-          (valitse-select2-optio "sopimus.oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
+          (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus" "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (syota-kenttaan "sopimus.vastuuhenkilo" "Roope Ankka")
           (syota-kenttaan "sopimus.sahkoposti" "rankka@jokudomain.com")
@@ -161,7 +161,7 @@
           (avaa-tutkinnon-tiedot)
           (testing "Sopimuksen perustiedot tallettuvat oikein"
             (is (= (elementin-teksti "sopimus.alkupvm") "24.03.1980 - 01.02.2199"))
-            (is (= (elementin-teksti "sopimus.oppilaitos.nimi") "Hanhivaaran urheiluopisto"))
+            (is (= (elementin-teksti "sopimus.koulutustoimija.nimi") "Hanhivaaran kaupunki"))
             (is (= (elementin-teksti "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi") "Hanhivaaran urheiluopisto"))
             (is (= (elementin-teksti "sopimus.vastuuhenkilo") "Roope Ankka"))
             (is (= (elementin-teksti "sopimus.sahkoposti") "rankka@jokudomain.com"))

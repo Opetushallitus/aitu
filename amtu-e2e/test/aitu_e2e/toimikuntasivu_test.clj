@@ -79,7 +79,10 @@
               :henkilo {:henkiloid 999}
               :edustus "asiantuntija"
               :rooli "asiantuntija"}]
+   :koulutustoimijat [{:ytunnus "0000000-0"
+                       :nimi_fi "Ankkalinnan kaupunki"}]
    :oppilaitokset [{:oppilaitoskoodi "12345"
+                    :koulutustoimija "0000000-0"
                     :nimi "Ankkalinnan aikuiskoulutuskeskus"}]
    :koulutusalat [{:selite_fi "Tekniikan ja liikenteen ala"
                    :koodi "KA1"}]
@@ -94,7 +97,8 @@
                             :jarjestamissopimusid 1230
                             :toimikunta "ILMA"
                             :sopijatoimikunta "ILMA"
-                            :oppilaitos "12345"}]
+                            :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
+                            :koulutustoimija "0000000-0"}]
    :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
                           :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]})
 

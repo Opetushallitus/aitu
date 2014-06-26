@@ -19,10 +19,11 @@
             [korma.db :as db]))
 
 (c/defroutes reitit
-  (c/POST "/" [oppilaitoskoodi nimi alue sahkoposti puhelin osoite postinumero postitoimipaikka]
+  (c/POST "/" [oppilaitoskoodi koulutustoimija nimi alue sahkoposti puhelin osoite postinumero postitoimipaikka]
     (db/transaction
       (oppilaitos-arkisto/lisaa! {:oppilaitoskoodi oppilaitoskoodi
                                   :nimi nimi
+                                  :koulutustoimija koulutustoimija
                                   :alue alue
                                   :sahkoposti sahkoposti
                                   :puhelin puhelin

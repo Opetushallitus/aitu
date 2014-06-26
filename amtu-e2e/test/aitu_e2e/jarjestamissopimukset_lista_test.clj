@@ -25,7 +25,10 @@
             [aitu-e2e.toimikuntasivu-test :refer [toimikuntasivu]]))
 
 (def perustiedot {:toimikunnat [(dt/toimikunta-diaarinumerolla "98/11/543" "ILMA")]
+                  :koulutustoimijat [{:ytunnus "0000000-0"
+                                      :nimi_fi "Ankkalinnan kaupunki"}]
                   :oppilaitokset [{:oppilaitoskoodi "12345"
+                                   :koulutustoimija "0000000-0"
                                    :nimi "Ankkalinnan aikuiskoulutuskeskus"}]
                   :koulutusalat [{:nimi "Tekniikan ja liikenteen ala"
                                   :koodi "KA1"}]
@@ -40,7 +43,8 @@
                                            :jarjestamissopimusid 1230
                                            :toimikunta "ILMA"
                                            :sopijatoimikunta "ILMA"
-                                           :oppilaitos "12345"}]
+                                           :koulutustoimija "0000000-0"
+                                           :tutkintotilaisuuksista_vastaava_oppilaitos "12345"}]
                   :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
                                          :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]})
 
@@ -78,14 +82,14 @@
           (is (= (first (jarjestamissopimukset)) "123" )))))
     (with-webdriver
       (testing "pitäisi näyttää 2 järjestämissopimusta"
-        (let [sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus "1234" "12345"  "ILMA" 1)]
+        (let [sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus "1234" "0000000-0" "12345"  "ILMA" 1)]
           (with-data (dt/merge-datamaps perustiedot sopimus2)
             (avaa (testattava-sivu-fn))
             (is (= (count (jarjestamissopimukset)) 2 ))
             (is (= (first (jarjestamissopimukset)) "123"))
             (is (= (last (jarjestamissopimukset)) "1234" ))))))
     (with-webdriver
-      (let [vanhentuva-sopimus (dt/setup-voimassaoleva-jarjestamissopimus "1234" "12345"  "ILMA" 1)]
+      (let [vanhentuva-sopimus (dt/setup-voimassaoleva-jarjestamissopimus "1234" "0000000-0" "12345"  "ILMA" 1)]
         (with-data (dt/merge-datamaps perustiedot vanhentuva-sopimus)
           (aseta-jarjestamissopimus-paattyneeksi (:jarjestamissopimukset vanhentuva-sopimus))
           (testing "kun vanhoja järjestämissopimuksia löytyy"
@@ -107,7 +111,7 @@
   (testing "Vanhan toimikunnan sivu"
 
     (with-webdriver
-      (let [vanha-sopimus (dt/setup-lakannut-jarjestamissopimus "1234" "12345"  "ILMA" 1)]
+      (let [vanha-sopimus (dt/setup-lakannut-jarjestamissopimus "1234" "0000000-0" "12345"  "ILMA" 1)]
         (with-data (dt/merge-datamaps vanha-sopimus
                      (update-in perustiedot [:toimikunnat 0] merge {:toimikausi 1
                                                                     :toimikausi_alku "2010-08-01"
@@ -174,7 +178,7 @@
     (testing
       "tutkinto ei ole voimassa:"
       (with-webdriver
-        (let [vanhentuva-sopimus (dt/setup-voimassaoleva-jarjestamissopimus "1234" "12345"  "ILMA" 1)]
+        (let [vanhentuva-sopimus (dt/setup-voimassaoleva-jarjestamissopimus "1234" "0000000-0" "12345"  "ILMA" 1)]
           (with-data (dt/merge-datamaps (perustiedot-vanhalla-tutkinnolla) vanhentuva-sopimus)
             (aseta-jarjestamissopimus-paattyneeksi (:jarjestamissopimukset vanhentuva-sopimus))
             (avaa (tutkintosivu "TU1"))

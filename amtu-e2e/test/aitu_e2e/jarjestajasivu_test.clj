@@ -51,13 +51,15 @@
           osoite "Oppilaitoskatu 1"
           postinumero "12345"
           postitoimipaikka "Postitoimipaikka"
-          oppilaitos (merge (dt/setup-oppilaitos) {:puhelin puhelin
-                                                   :sahkoposti sahkoposti
-                                                   :osoite osoite
-                                                   :postinumero postinumero
-                                                   :postitoimipaikka postitoimipaikka})
+          koulutustoimija (dt/setup-koulutustoimija)
+          oppilaitos (merge (dt/setup-oppilaitos (:ytunnus koulutustoimija)) {:puhelin puhelin
+                                                                              :sahkoposti sahkoposti
+                                                                              :osoite osoite
+                                                                              :postinumero postinumero
+                                                                              :postitoimipaikka postitoimipaikka})
           tunnus (:oppilaitoskoodi oppilaitos)]
-      (with-data {:oppilaitokset [oppilaitos]}
+      (with-data {:koulutustoimijat [koulutustoimija]
+                  :oppilaitokset [oppilaitos]}
         (testing "pitäisi näyttaa tiedot järjestäjästä"
           ;; Kun
           (avaa (jarjestajasivu tunnus))
@@ -69,16 +71,18 @@
           (is (= (oppilaitoksen-tieto "jarjestaja.postitoimipaikka") (str postinumero " " postitoimipaikka))))))))
 
 (defn jarjestajasivu-sopimukset-data [oppilaitostunnus]
-  (let [oppilaitos (dt/setup-oppilaitos oppilaitostunnus)
+  (let [koulutustoimija (dt/setup-koulutustoimija)
+        oppilaitos (dt/setup-oppilaitos oppilaitostunnus (:ytunnus koulutustoimija))
         tutkintotunnus "TU1"
         tutkintoversio 1
         tutkinto-map (dt/setup-tutkinto-map tutkintotunnus tutkintoversio)
         toimikuntatunnus "ILMA"
-        sopimus1 (dt/setup-voimassaoleva-jarjestamissopimus oppilaitostunnus toimikuntatunnus tutkintoversio)
-        sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus oppilaitostunnus toimikuntatunnus tutkintoversio)
+        sopimus1 (dt/setup-voimassaoleva-jarjestamissopimus koulutustoimija oppilaitostunnus toimikuntatunnus tutkintoversio)
+        sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus koulutustoimija oppilaitostunnus toimikuntatunnus tutkintoversio)
         ]
     (dt/merge-datamaps sopimus1 sopimus2 tutkinto-map
       {:oppilaitokset [oppilaitos]
+       :koulutustoimijat [koulutustoimija]
        :toimikunnat [{:tkunta toimikuntatunnus}]})))
 
    (deftest jarjestajasivu-sopimukset-test []

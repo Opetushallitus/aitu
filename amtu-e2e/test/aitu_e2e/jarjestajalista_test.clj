@@ -34,17 +34,21 @@
 ; kahdella oppilaitoksella voimassa oleva järjestämissopimus tutkintoon ja siten opintoalaan
 
 (defn jarjestajahaku-sopimukset-data []
-  (let [oppilaitos1 (dt/oppilaitos-nimella "aaAnkkalinnan aikuiskoulutuskeskus")
-        oppilaitos2 (dt/oppilaitos-nimella "aaHanhivaaran kauppaopisto")
-        oppilaitos-ilman-sopimusta (dt/oppilaitos-nimella "aaRuikonperän multakurkkuopisto")
+  (let [koulutustoimija1 (dt/setup-koulutustoimija)
+        koulutustoimija2 (dt/setup-koulutustoimija)
+        koulutustoimija-ilman-sopimusta (dt/setup-koulutustoimija)
+        oppilaitos1 (dt/oppilaitos-nimella "aaAnkkalinnan aikuiskoulutuskeskus" (:ytunnus koulutustoimija1))
+        oppilaitos2 (dt/oppilaitos-nimella "aaHanhivaaran kauppaopisto" (:ytunnus koulutustoimija2))
+        oppilaitos-ilman-sopimusta (dt/oppilaitos-nimella "aaRuikonperän multakurkkuopisto" (:ytunnus koulutustoimija-ilman-sopimusta))
         tutkinto-map (dt/tutkinto-opintoalan-nimella "Sähköala")
         tutkinto (:tutkinnot tutkinto-map)
         toimikuntatunnus "ILMA"
         toimikunta-map (dt/setup-toimikunta toimikuntatunnus)
-        sopimus1 (dt/setup-voimassaoleva-jarjestamissopimus oppilaitos1 toimikuntatunnus tutkinto)
-        sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus oppilaitos2 toimikuntatunnus tutkinto)]
+        sopimus1 (dt/setup-voimassaoleva-jarjestamissopimus koulutustoimija1 oppilaitos1 toimikuntatunnus tutkinto)
+        sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus koulutustoimija2 oppilaitos2 toimikuntatunnus tutkinto)]
     (dt/merge-datamaps tutkinto-map toimikunta-map sopimus1 sopimus2
-      {:oppilaitokset [oppilaitos1 oppilaitos2 oppilaitos-ilman-sopimusta]})))
+      {:oppilaitokset [oppilaitos1 oppilaitos2 oppilaitos-ilman-sopimusta]
+       :koulutustoimijat [koulutustoimija1 koulutustoimija2 koulutustoimija-ilman-sopimusta]})))
 
 (deftest tutkintolista-test []
   (with-webdriver

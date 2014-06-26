@@ -42,9 +42,15 @@
                               :jasenet [{:toimikunta "ILMA"
                                          :diaarinumero "98/11/543"
                                          :henkilo {:henkiloid 998}}]
+                              :koulutustoimijat [{:ytunnus "0000000-0"
+                                                  :nimi_fi "Ankkalinnan kaupunki"}
+                                                 {:ytunnus "1111111-1"
+                                                  :nimi_fi "Hanhivaaran kaupunki"}]
                               :oppilaitokset [{:oppilaitoskoodi "12345"
+                                               :koulutustoimija "0000000-0"
                                                :nimi "Ankkalinnan aikuiskoulutuskeskus"}
                                               {:oppilaitoskoodi "24681"
+                                               :koulutustoimija "1111111-1"
                                                :nimi "Hanhivaaran urheiluopisto"}]
                               :koulutusalat [{:selite_fi "Testi koulutusala"
                                               :koodi "KA1"}]
@@ -67,14 +73,16 @@
                                                        :jarjestamissopimusid 1230
                                                        :toimikunta "ILMA"
                                                        :sopijatoimikunta "ILMA"
-                                                       :oppilaitos "12345"
+                                                       :koulutustoimija "0000000-0"
+                                                       :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
                                                        :alkupvm du/menneisyydessa
                                                        :loppupvm du/tulevaisuudessa}
                                                       {:sopimusnumero "321"
                                                        :jarjestamissopimusid 1231
                                                        :toimikunta "ILMA"
                                                        :sopijatoimikunta "ILMA"
-                                                       :oppilaitos "12345"
+                                                       :koulutustoimija "0000000-0"
+                                                       :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
                                                        :alkupvm du/menneisyydessa
                                                        :loppupvm du/tulevaisuudessa}]
                               :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
@@ -118,7 +126,15 @@
 
         (testing "oppilaitoksen nimi näkyy sivulla"
           (let [oppilaitoksen-nimi (-> *ng*
-                                       (.binding "sopimus.oppilaitos.nimi")
+                                       (.binding "sopimus.koulutustoimija.nimi")
+                                       (w/find-elements)
+                                       (first)
+                                       (w/text))]
+            (is (= oppilaitoksen-nimi "Ankkalinnan kaupunki"))))
+        
+        (testing "oppilaitoksen nimi näkyy sivulla"
+          (let [oppilaitoksen-nimi (-> *ng*
+                                       (.binding "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi")
                                        (w/find-elements)
                                        (first)
                                        (w/text))]
