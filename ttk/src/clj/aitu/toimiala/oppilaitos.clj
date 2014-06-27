@@ -13,9 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.oppilaitos
-  (:require [aitu.toimiala.voimassaolo.oppilaitos :as voimassaolo]))
+  (:require [aitu.toimiala.voimassaolo.oppilaitos :as voimassaolo]
+            [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]))
 
 (defn taydenna-oppilaitos
   "Täydentää oppilaitoksen tiedot, kuten voimassaolo"
   [oppilaitos]
-  (voimassaolo/taydenna-oppilaitoksen-ja-liittyvien-tietojen-voimassaolo oppilaitos))
+  (some-> oppilaitos
+    voimassaolo/taydenna-oppilaitoksen-ja-liittyvien-tietojen-voimassaolo
+    (update-in [:koulutustoimija] koulutustoimija-kaytava/hae-linkki)))

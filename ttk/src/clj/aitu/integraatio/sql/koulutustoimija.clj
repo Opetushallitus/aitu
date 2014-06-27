@@ -34,3 +34,9 @@
     (sql/fields :oppilaitoskoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
                 :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue)
     (sql/where {:koulutustoimija :ytunnus})))
+
+(defn hae-linkki
+  "Hakee koulutustoimijalinkin (y-tunnus ja nimi) y-tunnuksen perusteella"
+  [y-tunnus]
+  (some-> (hae y-tunnus)
+    (select-keys [:ytunnus :nimi_fi :nimi_sv])))

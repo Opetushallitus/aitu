@@ -121,7 +121,8 @@
                                       :www_osoite (s/maybe s/Str)
                                       :postitoimipaikka (s/maybe s/Str)
                                       :kieli (s/maybe Kieli)
-                                      :sahkoposti (s/maybe s/Str)}))
+                                      :sahkoposti (s/maybe s/Str)
+                                      :koulutustoimija (s/maybe s/Str)}))
 
 (defmodel OppilaitosTiedot (merge OppilaitoksenTiedot AuditTiedot))
 
@@ -267,7 +268,8 @@
 (defmodel OppilaitosLaajatTiedot (merge OppilaitoksenTiedot
                                         AuditTiedot
                                         {:jarjestamissopimus [JarjestamissopimusJaToimikunnat]
-                                         :voimassa Boolean}))
+                                         :voimassa Boolean
+                                         :koulutustoimija KoulutustoimijaLinkki}))
 
 (defmodel KoulutustoimijaLaajatTiedot (merge KoulutustoimijanTiedot
                                              AuditTiedot
