@@ -38,7 +38,7 @@
     </fieldset>
     <fieldset>
       <label>[[koulutustoimija]]</label>
-      <p><a href="#/jarjestaja/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi | lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></p>
+      <p><a href="#/koulutustoimija/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi | lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></p>
     </fieldset>
   </div>
   <div>
@@ -96,7 +96,8 @@
       url="[[base-url]]/api/oppilaitos/haku"
       model="sopimus.tutkintotilaisuuksista_vastaava_oppilaitos"
       model-id-property="oppilaitoskoodi"
-      model-text-property="nimi">
+      model-text-property="nimi"
+      pakollinen="true">
     </haku-valitsin>
     <pakollisia-kenttia></pakollisia-kenttia>
   </form>

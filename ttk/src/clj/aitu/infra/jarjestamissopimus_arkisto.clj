@@ -237,6 +237,13 @@
     (mapv liita-perustiedot-sopimukseen)
     (mapv liita-tutkinnot-sopimukseen)))
 
+(defn hae-koulutustoimijan-sopimukset
+  "Hakee koulutustoimijan järjestämissopimukset ja liittää niihin tarvittavat tiedot"
+  [y-tunnus]
+  (->> (sopimus-kaytava/hae-koulutustoimijan-sopimukset y-tunnus)
+    (mapv liita-perustiedot-sopimukseen)
+    (mapv liita-tutkinnot-sopimukseen)))
+
 (defn uniikki-sopimusnumero? [sopimusnumero jarjestamissopimusid]
   (-> (sql/select jarjestamissopimus
         (sql/where {:sopimusnumero sopimusnumero

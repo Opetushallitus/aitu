@@ -269,6 +269,10 @@
                                         {:jarjestamissopimus [JarjestamissopimusJaToimikunnat]
                                          :voimassa Boolean}))
 
+(defmodel KoulutustoimijaLaajatTiedot (merge KoulutustoimijanTiedot
+                                             AuditTiedot
+                                             {:jarjestamissopimus [JarjestamissopimusJaToimikunnat]}))
+
 (defmodel Lokalisoitu
   {:fi s/Str
    :sv s/Str})

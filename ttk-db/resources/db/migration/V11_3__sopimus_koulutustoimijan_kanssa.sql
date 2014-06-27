@@ -20,5 +20,4 @@ alter table jarjestamissopimus add column koulutustoimija varchar(10) references
 update jarjestamissopimus set koulutustoimija = (select koulutustoimija from oppilaitos where oppilaitoskoodi = jarjestamissopimus.oppilaitos);
 update jarjestamissopimus set tutkintotilaisuuksista_vastaava_oppilaitos = oppilaitos where tutkintotilaisuuksista_vastaava_oppilaitos is null;
 
-alter table jarjestamissopimus alter column koulutustoimija set not null;
 alter table jarjestamissopimus alter column oppilaitos drop not null;

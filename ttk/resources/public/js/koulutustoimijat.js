@@ -16,7 +16,8 @@ angular.module('koulutustoimijat', ['ngRoute'])
 
   .config(function($routeProvider) {
     $routeProvider.
-      when('/search-koulutustoimija', {controller:'KoulutustoimijatController', templateUrl:'template/koulutustoimijat'});
+      when('/search-koulutustoimija', {controller:'KoulutustoimijatController', templateUrl:'template/koulutustoimijat'}).
+      when('/koulutustoimija/:id/tiedot', {controller:'KoulutustoimijaTiedotController', templateUrl:'template/koulutustoimija'});
   })
 
   .factory('KoulutustoimijaResource', ['$resource', function($resource) {
@@ -25,6 +26,10 @@ angular.module('koulutustoimijat', ['ngRoute'])
         method: 'GET',
         isArray: true,
         id : 'koulutustoimijalistaus'
+      },
+      get: {
+        method: 'GET',
+        id : 'koulutustoimija'
       }
     });
   }])
@@ -39,7 +44,7 @@ angular.module('koulutustoimijat', ['ngRoute'])
     });
   }])
 
-  .controller('KoulutustoimijatController', ['$scope', 'KoulutustoimijaHakuResource', '$filter', 'i18n',
+  .controller('KoulutustoimijatController', ['$scope', 'KoulutustoimijaHakuResource', '$filter', 'i18n', 
     function($scope, KoulutustoimijaHakuResource, $filter, i18n) {
       $scope.i18n = i18n;
       $scope.kaikkiKoulutustoimijat = [];
@@ -59,5 +64,20 @@ angular.module('koulutustoimijat', ['ngRoute'])
       function haeKoulutustoimijat() {
         $scope.kaikkiKoulutustoimijat = KoulutustoimijaHakuResource.query({termi: $scope.search.termi});
       }
+    }
+  ])
+
+  .controller('KoulutustoimijaTiedotController', ['$scope', '$routeParams', 'KoulutustoimijaResource', '$filter',
+    function($scope, $routeParams, KoulutustoimijaResource, $filter) {
+      $scope.koulutustoimija = KoulutustoimijaResource.get({ytunnus : $routeParams.id});
+      $scope.sopimukset = {
+        nykyiset: [],
+        vanhat: []
+      };
+
+      $scope.koulutustoimija.$promise.then(function(koulutustoimija) {
+        $scope.sopimukset.nykyiset = $filter('voimassaOlevat')(koulutustoimija.jarjestamissopimus, true);
+        $scope.sopimukset.vanhat = $filter('voimassaOlevat')(koulutustoimija.jarjestamissopimus, false);
+      });
     }
   ]);

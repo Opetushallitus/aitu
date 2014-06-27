@@ -1,0 +1,42 @@
+{{=[[ ]]=}}
+[[#i18n.koulutustoimijat]]
+<h1>{{koulutustoimija.nimi | lokalisoi:koulutustoimija:'nimi'}}</h1>
+
+<section class="info-section">
+  <fieldset>
+    <label>[[ytunnus]]</label>
+    <p>{{koulutustoimija.ytunnus}}</p>
+  </fieldset>
+  <fieldset>
+    <label>[[i18n.yleiset.sahkoposti]]</label>
+    <p><a ng-href="mailto:{{koulutustoimija.sahkoposti}}">{{koulutustoimija.sahkoposti}}</a></p>
+  </fieldset>
+  <fieldset>
+    <label>[[i18n.yleiset.puhelin]]</label>
+    <p>{{koulutustoimija.puhelin}}</p>
+  </fieldset>
+  <fieldset>
+    <label>[[i18n.yleiset.osoite]]</label>
+    <div>{{koulutustoimija.osoite}}</div>
+    <div>{{koulutustoimija.postinumero}} {{koulutustoimija.postitoimipaikka}}</div>
+  </fieldset>
+  <fieldset>
+    <label>[[i18n.yleiset.www-osoite]]</label>
+    <p><a ng-href="{{koulutustoimija.www_osoite}}">{{koulutustoimija.www_osoite}}</a></p>
+  </fieldset>
+</section>
+
+<sopimusten-listaus class="nykyiset-sopimukset"
+                    otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
+                    sopimukset="sopimukset.nykyiset"
+                    nayta-tutkinnot="true"
+                    piilota-jarjestajat="true" >
+</sopimusten-listaus>
+
+<vanhojen-sopimusten-listaus class="vanhat-sopimukset"
+                             otsikko="'[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]'"
+                             sopimukset="sopimukset.vanhat"
+                             nayta-tutkinnot="true"
+                             piilota-jarjestajat="true">
+</vanhojen-sopimusten-listaus>
+[[/i18n.koulutustoimijat]]

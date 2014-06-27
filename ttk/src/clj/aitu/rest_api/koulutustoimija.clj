@@ -18,6 +18,7 @@
             [korma.db :as db]
             [aitu.compojure-util :as cu]
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
+            [aitu.toimiala.koulutustoimija :as koulutustoimija]
             [aitu.rest-api.http-util :refer [cachable-json-response json-response]]
             [aitu.toimiala.skeema :refer :all]))
 
@@ -25,6 +26,8 @@
   (cu/defapi :yleinen-rest-api nil :get "/" req
     (cachable-json-response req (arkisto/hae-julkiset-tiedot) [Koulutustoimija]))
   (cu/defapi :yleinen-rest-api nil :get "/haku" [termi :as req]
-    (cachable-json-response req (arkisto/hae-termilla termi) [KoulutustoimijaLinkki]))
+    (json-response (arkisto/hae-termilla termi) [KoulutustoimijaLinkki]))
+  (cu/defapi :yleinen-rest-api nil :get "/:ytunnus" [ytunnus]
+    (json-response (koulutustoimija/taydenna-koulutustoimija (arkisto/hae ytunnus)) KoulutustoimijaLaajatTiedot))
   (cu/defapi :yleinen-rest-api nil :get "/haku/ala" [termi :as req]
     (cachable-json-response req (arkisto/hae-alalla termi) [Koulutustoimija])))

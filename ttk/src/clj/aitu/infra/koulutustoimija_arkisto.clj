@@ -14,7 +14,9 @@
 
 (ns aitu.infra.koulutustoimija-arkisto
   (:require  [korma.core :as sql]
-             [aitu.util :refer [sisaltaako-kentat? select-and-rename-keys]])
+             [aitu.util :refer [sisaltaako-kentat? select-and-rename-keys]]
+             [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
+             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn ^:integration-api lisaa!
@@ -33,6 +35,14 @@
   (sql/delete koulutustoimija
     (sql/where {:ytunnus y-tunnus})))
 
+(defn hae
+  "Hakee yhden koulutustoimijan julkiset tiedot"
+  [y-tunnus]
+  (let [koulutustoimija (koulutustoimija-kaytava/hae y-tunnus)
+        sopimukset (sopimus-arkisto/hae-koulutustoimijan-sopimukset y-tunnus)]
+    (some-> koulutustoimija
+      (assoc :jarjestamissopimus sopimukset))))
+
 (defn hae-julkiset-tiedot
   "Hakee kaikkien koulutustoimijoiden julkiset tiedot"
   []
@@ -47,7 +57,7 @@
 (defn hae-termilla
   "Suodattaa hakutuloksia termillä"
   [termi]
-  (for [koulutustoimija (hae-kaikki)
+  (for [koulutustoimija (hae-julkiset-tiedot)
         :when (sisaltaako-kentat? koulutustoimija [:nimi_fi :nimi_sv] termi)]
     (select-keys koulutustoimija [:ytunnus :nimi_fi :nimi_sv])))
 
