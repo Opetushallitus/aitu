@@ -26,9 +26,11 @@
             [ring.middleware.session.memory :refer [memory-store]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
+            [ring.middleware.session-timeout :refer [wrap-idle-session-timeout]]
             [clojure.tools.logging :as log]
             [cheshire.generate :as json-gen]
             schema.core
+            [stencil.core :as s]
 
             aitu.integraatio.sql.korma
 
@@ -88,6 +90,11 @@
   (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
     (eraajo/kaynnista-ajastimet! kop (:organisaatiopalvelu asetukset))))
 
+(defn timeout-response [asetukset]
+  {:status 403
+   :headers {"Content-Type" "text/html"}
+   :body (s/render-file "html/sessio-vanhentunut" {:service-url (get-in asetukset [:server :base-url])})})
+
 (defn kaynnista! [oletus-asetukset]
   (try
     (let [asetukset (lue-asetukset oletus-asetukset)
@@ -106,6 +113,8 @@
                       (i18n/wrap-locale
                         :ei-redirectia #"/api.*"
                         :base-url (-> asetukset :server :base-url))
+                      (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
+                                                  :timeout-response (timeout-response asetukset)})
                       auth/wrap-sessionuser
                       log-request-wrapper
                       (auth-middleware asetukset)
