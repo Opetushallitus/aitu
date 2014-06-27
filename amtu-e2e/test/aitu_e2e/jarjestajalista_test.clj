@@ -34,9 +34,9 @@
 ; kahdella oppilaitoksella voimassa oleva järjestämissopimus tutkintoon ja siten opintoalaan
 
 (defn jarjestajahaku-sopimukset-data []
-  (let [koulutustoimija1 (dt/setup-koulutustoimija)
-        koulutustoimija2 (dt/setup-koulutustoimija)
-        koulutustoimija-ilman-sopimusta (dt/setup-koulutustoimija)
+  (let [koulutustoimija1 (dt/setup-koulutustoimija "KT1" "aaAnkkalinnan kaupunki")
+        koulutustoimija2 (dt/setup-koulutustoimija "KT2" "aaHanhivaaran kaupunki")
+        koulutustoimija-ilman-sopimusta (dt/setup-koulutustoimija "KT3" "aaRuikonperän koulutuskuntayhtymä")
         oppilaitos1 (dt/oppilaitos-nimella "aaAnkkalinnan aikuiskoulutuskeskus" (:ytunnus koulutustoimija1))
         oppilaitos2 (dt/oppilaitos-nimella "aaHanhivaaran kauppaopisto" (:ytunnus koulutustoimija2))
         oppilaitos-ilman-sopimusta (dt/oppilaitos-nimella "aaRuikonperän multakurkkuopisto" (:ytunnus koulutustoimija-ilman-sopimusta))

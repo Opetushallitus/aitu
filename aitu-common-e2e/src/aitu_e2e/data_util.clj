@@ -133,7 +133,8 @@
                              :delete-fn #(str "/api/test/koulutustoimija/" (:ytunnus %))
                              :default (for [i (iterate inc 1)]
                                         {:ytunnus (str (- i))
-                                         :nimi_fi (str "Koulutustoimija " i)})})
+                                         :nimi_fi (str "Koulutustoimija " i)
+                                         :nimi_sv (str "Koulutustoimija " i)})})
 
 (def oppilaitos-tiedot {:post-fn (constantly "/api/test/oppilaitos/")
                         :delete-fn #(str "/api/test/oppilaitos/" (:oppilaitoskoodi %))

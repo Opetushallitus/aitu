@@ -70,9 +70,9 @@
           (is (= (oppilaitoksen-tieto "jarjestaja.osoite") osoite))
           (is (= (oppilaitoksen-tieto "jarjestaja.postitoimipaikka") (str postinumero " " postitoimipaikka))))))))
 
-(defn jarjestajasivu-sopimukset-data [oppilaitostunnus]
-  (let [koulutustoimija (dt/setup-koulutustoimija)
-        oppilaitos (dt/setup-oppilaitos oppilaitostunnus (:ytunnus koulutustoimija))
+(defn jarjestajasivu-sopimukset-data [y-tunnus oppilaitostunnus]
+  (let [koulutustoimija (dt/setup-koulutustoimija y-tunnus)
+        oppilaitos (dt/setup-oppilaitos oppilaitostunnus y-tunnus)
         tutkintotunnus "TU1"
         tutkintoversio 1
         tutkinto-map (dt/setup-tutkinto-map tutkintotunnus tutkintoversio)
@@ -89,7 +89,7 @@
      (with-webdriver
        ;; Oletetaan, että
        (let [oppilaitostunnus "12345"
-             testidata (jarjestajasivu-sopimukset-data oppilaitostunnus)
+             testidata (jarjestajasivu-sopimukset-data "0000000-0" oppilaitostunnus)
              testitutkinto_nimi (:nimi_fi (first (:tutkinnot testidata)))
              vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 1])
              vanhentuva-sopnro (:sopimusnumero vanhentuva-sopimus)
