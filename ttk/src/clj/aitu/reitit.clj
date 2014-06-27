@@ -43,6 +43,7 @@
             aitu.test-api.tutkinto
             aitu.test-api.tutkintoversio
             aitu.test-api.tutkintotyyppi
+            aitu.test-api.koulutustoimija
             aitu.test-api.peruste
             aitu.test-api.koulutusala
             aitu.test-api.opintoala
