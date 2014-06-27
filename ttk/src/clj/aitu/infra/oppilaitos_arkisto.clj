@@ -138,10 +138,10 @@
   (let [oppilaitokset (sql/select oppilaitos
                         (sql/fields :oppilaitoskoodi :nimi :sahkoposti
                                     :osoite :postinumero :postitoimipaikka))
-        sopimukset (group-by :oppilaitos (sopimus-arkisto/hae-kaikki-osoitepalvelulle))]
+        sopimukset (group-by :tutkintotilaisuuksista_vastaava_oppilaitos (sopimus-arkisto/hae-kaikki-osoitepalvelulle))]
     (for [oppilaitos oppilaitokset
           :let [oppilaitoksen-sopimukset (some->> (get sopimukset (:oppilaitoskoodi oppilaitos))
-                                           (map #(dissoc % :oppilaitos)))]
+                                           (map #(dissoc % :oppilaitos :tutkintotilaisuuksista_vastaava_oppilaitos :koulutustoimija)))]
           :when oppilaitoksen-sopimukset]
       (-> oppilaitos
         rajaa-oppilaitoksen-kentat
