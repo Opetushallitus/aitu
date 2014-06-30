@@ -7,7 +7,7 @@
     <th jarjestettava-sarake="sopimusnumero" oletus-jarjestely>[[sopimusnumero]]</th>
     <th ng-show="naytaTutkinnot">[[tutkinnot]]</th>
     <th ng-show="naytaPerusteSarake">[[tutkinnonperusteiden-diaarinumero]]</th>
-    <th jarjestettava-sarake="koulutustoimija.nimi" ng-hide="piilotaJarjestajat">[[koulutustoimija]]</th>
+    <th jarjestettava-sarake="koulutustoimija.nimi" ng-hide="piilotaOppilaitokset">[[koulutustoimija]]</th>
     <th jarjestettava-sarake="alkupvm" jarjestely-fn="orderByDate">[[voimassaolo]]</th>
   </tr>
   </thead>
@@ -20,7 +20,7 @@
       </div>
     </td>
     <td ng-show="naytaPerusteSarake"><div ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto">{{sopimusJaTutkinto.tutkintoversio.peruste}}</div></td>
-    <td ng-hide="piilotaJarjestajat"><a href="#/jarjestaja/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi |lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></td>
+    <td ng-hide="piilotaOppilaitokset"><a href="#/jarjestaja/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi |lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></td>
     <td>{{sopimus.alkupvm | date:'dd.MM.yyyy'}} – {{sopimus.loppupvm | date:'dd.MM.yyyy'}}</td>
   </tr>
 </table>
