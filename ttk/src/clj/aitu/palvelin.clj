@@ -101,7 +101,7 @@
           _ (konfiguroi-lokitus asetukset)
           _ (log/info "Käynnistetään Aitu" @build-id)
           _ (aitu.integraatio.sql.korma/luo-db (:db asetukset))
-          upload-limit 100000000 ; max file upload (and general HTTP body) size in bytes
+          upload-limit (* 10 1024 1024) ; max file upload (and general HTTP body) size in bytes
           session-store (memory-store)
           _ (require 'aitu.reitit)
           reitit ((eval 'aitu.reitit/reitit) asetukset)
