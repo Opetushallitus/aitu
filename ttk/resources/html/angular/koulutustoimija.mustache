@@ -39,4 +39,20 @@
                              nayta-tutkinnot="true"
                              piilota-jarjestajat="true">
 </vanhojen-sopimusten-listaus>
+
+<h2>[[oppilaitokset]]</h2>
+<table>
+  <thead>
+    <tr>
+      <th>[[i18n.yleiset.nimi]]</th>
+      <th>[[i18n.oppilaitokset.oppilaitoskoodi]]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="oppilaitos in koulutustoimija.oppilaitokset">
+      <td><a ng-href="#/oppilaitos/{{oppilaitos.oppilaitoskoodi}}/tiedot">{{oppilaitos.nimi}}</a></td>
+      <td>{{oppilaitos.oppilaitoskoodi}}</td>
+    </tr>
+  </tbody>
+</table>
 [[/i18n.koulutustoimijat]]

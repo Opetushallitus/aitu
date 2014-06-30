@@ -133,7 +133,7 @@
                       :oid oid)))
 
 (defn hae-osoitepalvelulle
-  "Hakee osoitehienoa palvelun tarvitsemat tiedot oppilaitoksista"
+  "Hakee osoitepalvelun tarvitsemat tiedot oppilaitoksista"
   []
   (let [oppilaitokset (sql/select oppilaitos
                         (sql/fields :oppilaitoskoodi :nimi :sahkoposti

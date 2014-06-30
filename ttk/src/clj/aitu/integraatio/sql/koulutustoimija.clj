@@ -31,9 +31,8 @@
   [y-tunnus]
   (sql/select
     oppilaitos
-    (sql/fields :oppilaitoskoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
-                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue)
-    (sql/where {:koulutustoimija :ytunnus})))
+    (sql/fields :oppilaitoskoodi :nimi)
+    (sql/where {:koulutustoimija y-tunnus})))
 
 (defn hae-linkki
   "Hakee koulutustoimijalinkin (y-tunnus ja nimi) y-tunnuksen perusteella"

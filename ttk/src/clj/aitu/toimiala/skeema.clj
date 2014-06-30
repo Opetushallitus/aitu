@@ -97,7 +97,7 @@
 (declare SopimusJaTutkinto)
 
 (defmodel KoulutustoimijaLinkki {:nimi_fi s/Str
-                                 :nimi_sv (s/maybe s/Str)
+                                 :nimi_sv s/Str
                                  :ytunnus s/Str})
 
 (defmodel KoulutustoimijanTiedot (merge KoulutustoimijaLinkki
@@ -122,7 +122,7 @@
                                       :postitoimipaikka (s/maybe s/Str)
                                       :kieli (s/maybe Kieli)
                                       :sahkoposti (s/maybe s/Str)
-                                      :koulutustoimija (s/maybe s/Str)}))
+                                      :koulutustoimija s/Str}))
 
 (defmodel OppilaitosTiedot (merge OppilaitoksenTiedot AuditTiedot))
 
@@ -273,7 +273,8 @@
 
 (defmodel KoulutustoimijaLaajatTiedot (merge KoulutustoimijanTiedot
                                              AuditTiedot
-                                             {:jarjestamissopimus [JarjestamissopimusJaToimikunnat]}))
+                                             {:jarjestamissopimus [JarjestamissopimusJaToimikunnat]
+                                              :oppilaitokset [OppilaitosLinkki]}))
 
 (defmodel Lokalisoitu
   {:fi s/Str

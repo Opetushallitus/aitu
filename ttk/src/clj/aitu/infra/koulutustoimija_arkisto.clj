@@ -39,9 +39,11 @@
   "Hakee yhden koulutustoimijan julkiset tiedot"
   [y-tunnus]
   (let [koulutustoimija (koulutustoimija-kaytava/hae y-tunnus)
-        sopimukset (sopimus-arkisto/hae-koulutustoimijan-sopimukset y-tunnus)]
+        sopimukset (sopimus-arkisto/hae-koulutustoimijan-sopimukset y-tunnus)
+        oppilaitokset (koulutustoimija-kaytava/hae-koulutustoimijan-oppilaitokset y-tunnus)]
     (some-> koulutustoimija
-      (assoc :jarjestamissopimus sopimukset))))
+      (assoc :jarjestamissopimus sopimukset
+             :oppilaitokset oppilaitokset))))
 
 (defn hae-julkiset-tiedot
   "Hakee kaikkien koulutustoimijoiden julkiset tiedot"
