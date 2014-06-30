@@ -124,7 +124,7 @@
     (haluttu-tyyppi? koodi) :oppilaitos
     (:toimipistekoodi koodi) :toimipaikka))
 
-(defn ^:private oid-polku [koulutustoimijakoodit oppilaitoskoodit]
+(defn oid-polku [koulutustoimijakoodit oppilaitoskoodit]
   (loop [oid->ytunnus (into {} (for [kt koulutustoimijakoodit]
                                  [(:oid kt) (:ytunnus kt)]))
          oppilaitoskoodit oppilaitoskoodit]
