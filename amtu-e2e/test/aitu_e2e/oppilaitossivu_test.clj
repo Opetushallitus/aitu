@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu-e2e.jarjestajasivu-test
+(ns aitu-e2e.oppilaitossivu-test
   (:require [clojure.set :refer [subset?]]
             [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
@@ -27,7 +27,7 @@
             [clj-time.core :as time]
             [clj-time.format :as time-format]))
 
-(defn jarjestajasivu [id] (str "/fi/#/jarjestaja/" id "/tiedot"))
+(defn oppilaitossivu [id] (str "/fi/#/oppilaitos/" id "/tiedot"))
 
 (def nayta-vanhat-selector "a[ng-click=\"toggleNaytaVanhat()\"]")
 
@@ -43,7 +43,7 @@
       (first)
       (w/text)))
 
-(deftest jarjestajasivu-test []
+(deftest oppilaitossivu-test []
   (with-webdriver
     ;; Oletetaan, että
     (let [puhelin "040123456"
@@ -60,17 +60,17 @@
           tunnus (:oppilaitoskoodi oppilaitos)]
       (with-data {:koulutustoimijat [koulutustoimija]
                   :oppilaitokset [oppilaitos]}
-        (testing "pitäisi näyttaa tiedot järjestäjästä"
+        (testing "pitäisi näyttaa tiedot oppilaitoksesta"
           ;; Kun
-          (avaa (jarjestajasivu tunnus))
+          (avaa (oppilaitossivu tunnus))
           ;; Niin
           (is (= (sivun-otsikko) (clojure.string/upper-case (:nimi oppilaitos))))
-          (is (= (oppilaitoksen-tieto "jarjestaja.puhelin") puhelin))
-          (is (= (oppilaitoksen-tieto "jarjestaja.sahkoposti") sahkoposti))
-          (is (= (oppilaitoksen-tieto "jarjestaja.osoite") osoite))
-          (is (= (oppilaitoksen-tieto "jarjestaja.postitoimipaikka") (str postinumero " " postitoimipaikka))))))))
+          (is (= (oppilaitoksen-tieto "oppilaitos.puhelin") puhelin))
+          (is (= (oppilaitoksen-tieto "oppilaitos.sahkoposti") sahkoposti))
+          (is (= (oppilaitoksen-tieto "oppilaitos.osoite") osoite))
+          (is (= (oppilaitoksen-tieto "oppilaitos.postitoimipaikka") (str postinumero " " postitoimipaikka))))))))
 
-(defn jarjestajasivu-sopimukset-data [y-tunnus oppilaitostunnus]
+(defn oppilaitossivu-sopimukset-data [y-tunnus oppilaitostunnus]
   (let [koulutustoimija (dt/setup-koulutustoimija y-tunnus)
         oppilaitos (dt/setup-oppilaitos oppilaitostunnus y-tunnus)
         tutkintotunnus "TU1"
@@ -85,21 +85,21 @@
        :koulutustoimijat [koulutustoimija]
        :toimikunnat [{:tkunta toimikuntatunnus}]})))
 
-   (deftest jarjestajasivu-sopimukset-test []
+   (deftest oppilaitossivu-sopimukset-test []
      (with-webdriver
        ;; Oletetaan, että
        (let [oppilaitostunnus "12345"
-             testidata (jarjestajasivu-sopimukset-data "0000000-0" oppilaitostunnus)
+             testidata (oppilaitossivu-sopimukset-data "0000000-0" oppilaitostunnus)
              testitutkinto_nimi (:nimi_fi (first (:tutkinnot testidata)))
              vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 1])
              vanhentuva-sopnro (:sopimusnumero vanhentuva-sopimus)
              ei-vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 0])
              ei-vanhentuva-sopnro (:sopimusnumero ei-vanhentuva-sopimus)]
          (with-data testidata
-           (testing "pitäisi näyttaa listoissa uudet ja vanhat järjestäjän sopimukset"
+           (testing "pitäisi näyttaa listoissa uudet ja vanhat oppilaitoksen sopimukset"
              (aseta-jarjestamissopimus-paattyneeksi vanhentuva-sopimus)
              ;; Kun
-             (avaa (jarjestajasivu oppilaitostunnus))
+             (avaa (oppilaitossivu oppilaitostunnus))
              (w/click nayta-vanhat-selector)
              ;; Niin
              (is (= #{[ei-vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " tulevaisuudessa-kayttoliittyman-muodossa)]}

@@ -26,7 +26,7 @@
             [aitu-e2e.datatehdas :as dt]
             [clj-time.core :as time]
             [clj-time.format :as time-format]
-            [aitu-e2e.jarjestajasivu-test :refer [jarjestajasivu-sopimukset-data]]))
+            [aitu-e2e.oppilaitossivu-test :refer [oppilaitossivu-sopimukset-data]]))
 
 (defn koulutustoimijasivu [id] (str "/fi/#/koulutustoimija/" id "/tiedot"))
 
@@ -74,7 +74,7 @@
     ;; Oletetaan, että
     (let [y-tunnus "0000000-0"
           oppilaitostunnus "12345"
-          testidata (jarjestajasivu-sopimukset-data y-tunnus oppilaitostunnus)
+          testidata (oppilaitossivu-sopimukset-data y-tunnus oppilaitostunnus)
           testitutkinto_nimi (:nimi_fi (first (:tutkinnot testidata)))
           vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 1])
           vanhentuva-sopnro (:sopimusnumero vanhentuva-sopimus)

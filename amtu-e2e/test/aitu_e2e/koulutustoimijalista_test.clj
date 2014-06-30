@@ -19,7 +19,7 @@
             [aitu-e2e.util :refer :all]
             [aitu-e2e.datatehdas :as dt]
             [aitu-e2e.data-util :refer [with-data]]
-            [aitu-e2e.jarjestajalista-test :refer [jarjestajahaku-sopimukset-data]]))
+            [aitu-e2e.oppilaitoslista-test :refer [oppilaitoshaku-sopimukset-data]]))
 
 (def koulutustoimijalista "/fi/#/search-koulutustoimija")
 
@@ -32,7 +32,7 @@
   (with-webdriver
     (testing "koulutustoimijalista"
       ;; Oletetaan, että
-      (with-data (jarjestajahaku-sopimukset-data)
+      (with-data (oppilaitoshaku-sopimukset-data)
         (testing "pitäisi näyttaa lista koulutustoimijoista"
           ;; Kun
           (avaa koulutustoimijalista)

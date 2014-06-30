@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu-e2e.jarjestajalista-test
+(ns aitu-e2e.oppilaitoslista-test
   (:require [clojure.set :refer [subset?]]
             [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
@@ -20,9 +20,9 @@
             [aitu-e2e.datatehdas :as dt]
             [aitu-e2e.data-util :refer [with-data]]))
 
-(def jarjestajalista "/fi/#/search-jarjestaja")
+(def oppilaitoslista "/fi/#/search-oppilaitos")
 
-(defn nakyvat-jarjestajat []
+(defn nakyvat-oppilaitokset []
   (map w/text (w/find-elements (-> *ng*
                                  (.repeater "hakutulos in hakutulokset")
                                  (.column "hakutulos.nimi")))))
@@ -33,7 +33,7 @@
 ; johon kuuluu tutkinto jotta
 ; kahdella oppilaitoksella voimassa oleva järjestämissopimus tutkintoon ja siten opintoalaan
 
-(defn jarjestajahaku-sopimukset-data []
+(defn oppilaitoshaku-sopimukset-data []
   (let [koulutustoimija1 (dt/setup-koulutustoimija "KT1" "aaAnkkalinnan kaupunki")
         koulutustoimija2 (dt/setup-koulutustoimija "KT2" "aaHanhivaaran kaupunki")
         koulutustoimija-ilman-sopimusta (dt/setup-koulutustoimija "KT3" "aaRuikonperän koulutuskuntayhtymä")
@@ -52,20 +52,20 @@
 
 (deftest tutkintolista-test []
   (with-webdriver
-    (testing "järjestäjälista"
+    (testing "oppilaitoslista"
       ;; Oletetaan, että
-      (with-data (jarjestajahaku-sopimukset-data)
-        (testing "pitäisi näyttaa lista järjestäjistä"
+      (with-data (oppilaitoshaku-sopimukset-data)
+        (testing "pitäisi näyttaa lista oppilaitoksista"
           ;; Kun
-          (avaa jarjestajalista)
+          (avaa oppilaitoslista)
           ;; Niin
           (is (subset? #{"aaRuikonperän multakurkkuopisto" "aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"}
-                       (set (nakyvat-jarjestajat)))))
+                       (set (nakyvat-oppilaitokset)))))
 
-        (testing "Pitäisi näyttää lista järjestäjistä joilla on tietyn opintoalan tutkinto vastuulla"
+        (testing "Pitäisi näyttää lista oppilaitoksista joilla on tietyn opintoalan tutkinto vastuulla"
           ;; Kun
-          (avaa jarjestajalista)
+          (avaa oppilaitoslista)
           (valitse-select2-optio "search" "termi" "Sähköala")
           (odota-angular-pyyntoa)
           ;; Niin
-          (is (= (nakyvat-jarjestajat) ["aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"])))))))
+          (is (= (nakyvat-oppilaitokset) ["aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"])))))))
