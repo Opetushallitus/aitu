@@ -6,6 +6,6 @@
 
 (def query-list @validationtest/default-query-list)
 
-(c/defroutes reitit 
+(c/defroutes reitit
   (cu/defapi :status nil :get "/" []
     (json-response (validationtest/run-queries! query-list))))

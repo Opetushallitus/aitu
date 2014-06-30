@@ -19,7 +19,7 @@
 
 (defn ^:private jarjestamissopimuksen-kentat
   [query]
-  (sql/fields query 
+  (sql/fields query
               :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm :toimikunta
               :sopijatoimikunta :tutkintotilaisuuksista_vastaava_oppilaitos
               :vastuuhenkilo :puhelin :sahkoposti :koulutustoimija :poistettu
@@ -41,7 +41,7 @@
   (vec
     (sql/select
      jarjestamissopimus
-     (sql/fields :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm 
+     (sql/fields :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm
                  :koulutustoimija :tutkintotilaisuuksista_vastaava_oppilaitos :toimikunta)
      (sql/where {:toimikunta toimikunta
                  :poistettu false}))))

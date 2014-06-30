@@ -86,7 +86,7 @@ public class SmokeTestSqlReader {
     } catch (IOException ioe) {
       throw new IllegalStateException("Could not read SQL file " + file + "! ", ioe);
     } finally {
-      if (is != null) is.close(); 
+      if (is != null) is.close();
     }
   }
 }

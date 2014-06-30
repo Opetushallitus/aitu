@@ -185,9 +185,9 @@
                                           :oppilaitos oppilaitos)]]
       (cond
         (nil? vanha-toimipaikka) (do
-                                   (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka)) 
+                                   (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                    (oppilaitos-arkisto/lisaa-toimipaikka! uusi-toimipaikka))
-        (not= vanha-toimipaikka uusi-toimipaikka) (do 
+        (not= vanha-toimipaikka uusi-toimipaikka) (do
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
 

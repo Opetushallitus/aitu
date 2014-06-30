@@ -6,12 +6,12 @@
             [clojure.tools.logging :as log]
             [korma.db :as db]))
 
-(defn load-validation-queries! [filepath] 
-  (let [r (io/resource filepath)] 
-    (with-open [istream (.openStream  r)] 
+(defn load-validation-queries! [filepath]
+  (let [r (io/resource filepath)]
+    (with-open [istream (.openStream  r)]
       (solita.util.validationtest.SmokeTestSqlReader/readAll istream))))
 
-(def default-query-list 
+(def default-query-list
   (delay (load-validation-queries! "validationtests.sql")))
 
 (defn run-queries! [query-list]
