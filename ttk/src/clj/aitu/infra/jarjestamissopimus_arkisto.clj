@@ -29,6 +29,9 @@
              [aitu.auditlog :as auditlog])
   (:use [aitu.integraatio.sql.korma]))
 
+(defn ^:private aseta-oppilaitos-kentta [sopimus]
+  (assoc sopimus :oppilaitos (:tutkintotilaisuuksista_vastaava_oppilaitos sopimus)))
+
 (defn ^:test-api poista!
   "Poistaa järjestämissopimuksen."
   [jarjestamissopimusid]
@@ -65,7 +68,7 @@
   {:pre [(domain/jarjestamissopimus? sopimus)]}
 
   (let [sopimus (sql/insert jarjestamissopimus
-                  (sql/values sopimus))
+                  (sql/values (aseta-oppilaitos-kentta sopimus)))
         sopimusid (:jarjestamissopimusid sopimus)
         diaarinumero (:sopimusnumero sopimus)]
     (auditlog/jarjestamissopimus-lisays! sopimusid diaarinumero)
@@ -131,7 +134,7 @@
   (auditlog/jarjestamissopimus-paivitys! (:jarjestamissopimusid sopimus)
     (:sopimusnumero sopimus))
   (sql/update jarjestamissopimus
-    (sql/set-fields sopimus)
+    (sql/set-fields (aseta-oppilaitos-kentta sopimus))
     (sql/where {:jarjestamissopimusid (:jarjestamissopimusid sopimus)}))
   (doseq [sopimus_ja_tutkinto sopimuksen_tutkinnot]
     (let [jarjestamissopimusid (:jarjestamissopimusid sopimus)
