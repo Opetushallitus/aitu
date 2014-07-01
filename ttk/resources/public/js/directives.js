@@ -114,7 +114,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         naytaTutkinnot : '=',
         naytaPerusteSarake : '=',
         otsikko : '=',
-        piilotaOppilaitokset : '='
+        piilotaKoulutustoimijat : '='
       },
       templateUrl : 'template/sopimusten-listaus',
       link: function(scope) {}
@@ -127,7 +127,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         sopimukset : '=',
         naytaTutkinnot : '=',
         otsikko : '=',
-        piilotaOppilaitokset : '='
+        piilotaKoulutustoimijat : '='
       },
       templateUrl : 'template/vanhojen-sopimusten-listaus',
       link: function(scope) {
