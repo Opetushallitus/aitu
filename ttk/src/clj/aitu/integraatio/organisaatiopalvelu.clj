@@ -124,7 +124,7 @@
     (haluttu-tyyppi? koodi) :oppilaitos
     (:toimipistekoodi koodi) :toimipaikka))
 
-(defn oid-polku [koulutustoimijakoodit oppilaitoskoodit]
+(defn generoi-oid->y-tunnus [koulutustoimijakoodit oppilaitoskoodit]
   (loop [oid->ytunnus (into {} (for [kt koulutustoimijakoodit]
                                  [(:oid kt) (:ytunnus kt)]))
          oppilaitoskoodit oppilaitoskoodit]
@@ -152,7 +152,7 @@
                                   (koulutustoimija-arkisto/paivita! uusi-kt))))))
 
 (defn ^:private paivita-oppilaitokset! [koodit koulutustoimijakoodit]
-  (let [oid->ytunnus (oid-polku koulutustoimijakoodit koodit)
+  (let [oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit koodit)
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
     (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit

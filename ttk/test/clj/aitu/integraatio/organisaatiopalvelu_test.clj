@@ -16,7 +16,8 @@
   (:require [clojure.test :refer :all]
             [aitu.integraatio.organisaatiopalvelu :refer :all]))
 
-(deftest oid-polku-test
+(deftest generoi-oid->ytunnus-test
+  ;; Koulutustoimija 1 <- oppilaitos 2 <-  oppilaitos 3
   (let [koulutustoimijakoodit [{:ytunnus "0000000-0"
                                 :oid "1"}]
         oppilaitoskoodit [{:oppilaitoskoodi "12345"
@@ -25,8 +26,8 @@
                           {:oppilaitoskoodi "23456"
                            :oid "3"
                            :parentOid "2"}]]
-    (testing "oid-polku"
-      (is (= (oid-polku koulutustoimijakoodit oppilaitoskoodit)
+    (testing "Oppilaitoksen Y-tunnuksena käytetään oppilaitoksen koulutustoimijan Y-tunnusta"
+      (is (= (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
              {"1" "0000000-0"
               "2" "0000000-0"
               "3" "0000000-0"})))))
