@@ -1,13 +1,15 @@
 {{=[[ ]]=}}
 [[#i18n.yleiset]]
-<p><a class="ajax-link show-more" href="" ng-show="sopimukset.length > 0" ng-click="toggleNaytaVanhat()">{{nautaVanhatSopimukset ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
+<div>
+  <p><a class="ajax-link show-more" href="" ng-show="sopimukset.length > 0" ng-click="toggleNaytaVanhat()">{{nautaVanhatSopimukset ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
 
-<div ng-show="nautaVanhatSopimukset">
-  <sopimusten-listaus
-    otsikko="otsikko"
-    sopimukset="sopimukset"
-    nayta-tutkinnot="naytaTutkinnot"
-    piilota-koulutustoimijat="piilotaKoulutustoimijat">
-  </sopimusten-listaus>
+  <div ng-show="nautaVanhatSopimukset">
+    <sopimusten-listaus
+      otsikko="otsikko"
+      sopimukset="sopimukset"
+      nayta-tutkinnot="naytaTutkinnot"
+      piilota-koulutustoimijat="piilotaKoulutustoimijat">
+    </sopimusten-listaus>
+  </div>
 </div>
 [[/i18n.yleiset]]

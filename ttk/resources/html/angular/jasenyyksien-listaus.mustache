@@ -1,31 +1,33 @@
 {{=[[ ]]=}}
 [[#i18n.yleiset]]
-<h2>{{otsikko}}</h2>
-<table jarjestettava-taulukko="jasenet" jarjestetty-data="jasenetJarjestetty">
-  <thead>
-  <tr>
-    <th jarjestettava-sarake="ttk" jarjestely-fn="orderByToimikuntaNimiVuosi:nimi:toimikausi_alku" ng-show="naytaToimikunta">[[toimikunta]]</th>
-    <th jarjestettava-sarake="sukunimi" oletus-jarjestely ng-hide="piilotaNimi">[[nimi]]</th>
-    <th jarjestettava-sarake="rooli" jarjestely-fn="orderByEnumArvo:rooli">[[rooli]]</th>
-    <th jarjestettava-sarake="edustus" jarjestely-fn="orderByEnumArvo:edustus">[[edustus]]</th>
-    <th jarjestettava-sarake="jarjesto_nimi" jarjestely-fn="orderByLokalisoitu" ng-hide="piilotaJarjesto">[[jarjesto]]</th>
-    <th jarjestettava-sarake="aidinkieli" jarjestely-fn="orderByEnumArvo:kieli" ng-hide="piilotaKielisyys">[[kielisyys]]</th>
-    <th jarjestettava-sarake="sahkoposti" ng-show="naytaSahkoposti">[[sahkoposti]]</th>
-    <th ng-hide="piilotaKesto">[[i18n.toimikunta.toimen-kesto]]</th>
-  </tr>
-  </thead>
-  <tr ng-repeat="henkilo in jasenetJarjestetty">
-    <td ng-show="naytaToimikunta"><a href="#/toimikunta/{{henkilo.ttk.diaarinumero}}/tiedot">{{henkilo.ttk.nimi | nimivuosi:henkilo.ttk:'nimi':'toimikausi_alku'}}</a></td>
-    <td ng-hide="piilotaNimi">
-      <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
-      <span ng-show="naytaJasenyydenAlkuPvm(henkilo)">({{henkilo.alkupvm | voimassaoloAika }})</span>
-    </td>
-    <td><enum-arvo nimi="rooli" arvo="henkilo.rooli"></enum-arvo></td>
-    <td><enum-arvo nimi="edustus" arvo="henkilo.edustus"></enum-arvo></td>
-    <td ng-hide="piilotaJarjesto">{{henkilo | lokalisoi:henkilo:'jarjesto_nimi'}}</td>
-    <td ng-hide="piilotaKielisyys"><enum-arvo nimi="kieli" arvo="henkilo.aidinkieli"></enum-arvo></td>
-    <td ng-show="naytaSahkoposti"><a href="mailto:{{henkilo.sahkoposti}}">{{henkilo.sahkoposti}}</a></td>
-    <td ng-hide="piilotaKesto">{{henkilo.alkupvm | date:'dd.MM.yyyy'}} - {{henkilo.loppupvm | date:'dd.MM.yyyy'}}</td>
-  </tr>
-</table>
+<div>
+  <h2>{{otsikko}}</h2>
+  <table jarjestettava-taulukko="jasenet" jarjestetty-data="jasenetJarjestetty">
+    <thead>
+    <tr>
+      <th jarjestettava-sarake="ttk" jarjestely-fn="orderByToimikuntaNimiVuosi:nimi:toimikausi_alku" ng-show="naytaToimikunta">[[toimikunta]]</th>
+      <th jarjestettava-sarake="sukunimi" oletus-jarjestely ng-hide="piilotaNimi">[[nimi]]</th>
+      <th jarjestettava-sarake="rooli" jarjestely-fn="orderByEnumArvo:rooli">[[rooli]]</th>
+      <th jarjestettava-sarake="edustus" jarjestely-fn="orderByEnumArvo:edustus">[[edustus]]</th>
+      <th jarjestettava-sarake="jarjesto_nimi" jarjestely-fn="orderByLokalisoitu" ng-hide="piilotaJarjesto">[[jarjesto]]</th>
+      <th jarjestettava-sarake="aidinkieli" jarjestely-fn="orderByEnumArvo:kieli" ng-hide="piilotaKielisyys">[[kielisyys]]</th>
+      <th jarjestettava-sarake="sahkoposti" ng-show="naytaSahkoposti">[[sahkoposti]]</th>
+      <th ng-hide="piilotaKesto">[[i18n.toimikunta.toimen-kesto]]</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="henkilo in jasenetJarjestetty">
+      <td ng-show="naytaToimikunta"><a href="#/toimikunta/{{henkilo.ttk.diaarinumero}}/tiedot">{{henkilo.ttk.nimi | nimivuosi:henkilo.ttk:'nimi':'toimikausi_alku'}}</a></td>
+      <td ng-hide="piilotaNimi">
+        <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
+        <span ng-show="naytaJasenyydenAlkuPvm(henkilo)">({{henkilo.alkupvm | voimassaoloAika }})</span>
+      </td>
+      <td><enum-arvo nimi="rooli" arvo="henkilo.rooli"></enum-arvo></td>
+      <td><enum-arvo nimi="edustus" arvo="henkilo.edustus"></enum-arvo></td>
+      <td ng-hide="piilotaJarjesto">{{henkilo | lokalisoi:henkilo:'jarjesto_nimi'}}</td>
+      <td ng-hide="piilotaKielisyys"><enum-arvo nimi="kieli" arvo="henkilo.aidinkieli"></enum-arvo></td>
+      <td ng-show="naytaSahkoposti"><a href="mailto:{{henkilo.sahkoposti}}">{{henkilo.sahkoposti}}</a></td>
+      <td ng-hide="piilotaKesto">{{henkilo.alkupvm | date:'dd.MM.yyyy'}} - {{henkilo.loppupvm | date:'dd.MM.yyyy'}}</td>
+    </tr>
+  </table>
+</div>
 [[/i18n.yleiset]]

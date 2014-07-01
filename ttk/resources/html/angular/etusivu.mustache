@@ -22,8 +22,8 @@
 [[#i18n.yleiset]]
   <section class="tiedote" ng-show="tiedoteOlemassa() || [[yllapitaja]]">
     <h1>
-      [[tiedote]]
       <button ng-if="!muokkausTila && [[yllapitaja]]" class="icon edit-icon" ng-click="muokkaa()"></button>
+      [[tiedote]]
     </h1>
     <label ng-hide="muokkausTila || !tiedoteOlemassa()">{{tiedote.muutettuaika | date:'dd.MM.yyyy HH:mm'}}</label>
     <p ng-hide="muokkausTila || !tiedoteOlemassa()" ng-repeat="rivi in (tiedote.teksti | lokalisoi:tiedote:'teksti' | rivit)">{{rivi}}</p>
