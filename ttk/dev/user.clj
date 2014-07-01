@@ -31,13 +31,13 @@
 
 (defonce ^:private palvelin (atom nil))
 
-(defn ^:private repl-asetukset 
+(defn ^:private repl-asetukset
   "Muutetaan oletusasetuksia siten että saadaan järkevät asetukset kehitystyötä varten"
   []
   (->
     @(ns-resolve 'aitu.asetukset 'oletusasetukset)
     (assoc :development-mode true
-           :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
+           :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
                              :unsafe-https true
                              :enabled true})
     (assoc-in [:server :base-url] "http://192.168.50.1:8080")))
