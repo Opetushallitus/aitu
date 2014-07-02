@@ -25,7 +25,6 @@
            org.openqa.selenium.firefox.FirefoxDriver
            org.openqa.selenium.TimeoutException)
   (:require [clojure.test :refer [is]]
-            [clojure.string :as string]
             [clj-webdriver.taxi :as w]
             [clj-webdriver.driver :refer [init-driver]]))
 
@@ -116,56 +115,46 @@
            "http://192.168.50.1:8080")
        polku))
 
-(defn casissa? []
-  (= (w/title) "CAS – Central Authentication Service"))
-
-(def cas-url (atom nil))
+(defn cas-url []
+  (or (System/getenv "CAS_URL")
+      "https://localhost:9443/cas-server-webapp-3.5.2"))
 
 (defn cas-kirjautuminen [kayttaja]
-  {:pre [(casissa?)]}
-  (reset! cas-url (string/replace (w/current-url) #"(.*)/login.*" "$1"))
   (w/quick-fill-submit {"#username" kayttaja}
                        {"#password" kayttaja}
                        {"#password" w/submit}))
 
 (defn cas-uloskirjautuminen []
-  ;; cas-url asetetaan sisäänkirjautumisen yhteydessä. Jos ei olla kirjauduttu
-  ;; sisään, ei tarvitse kirjautua uloskaan.
-  (when @cas-url
-    (let [logout-url (str @cas-url "/logout")]
-      (w/to logout-url)
-      (try
-        (odota-kunnes (= (w/current-url) logout-url))
-        (catch TimeoutException e
-          (println (str "Odotettiin selaimen siirtyvän CAS logout -sivulle, mutta url oli '" (w/current-url) "'"))
-          (throw e)))
-      (reset! cas-url nil))))
+  (let [logout-url (str (cas-url) "/logout")]
+    (w/to logout-url)
+    (try
+      (odota-kunnes (= (w/current-url) logout-url))
+      (catch TimeoutException e
+        (println (str "Odotettiin selaimen siirtyvän CAS logout -sivulle, mutta url oli '" (w/current-url) "'"))
+        (throw e)))))
 
 (defn avaa
-  ([polku]
-    (avaa polku default-user))
-  ([polku kayttaja]
-    (let [url (aitu-url polku)]
-      ;; Jos ollaan jo oikealla sivulla, ei siirrytä minnekään. OS X /
-      ;; Firefox 30 / WebDriver 2.42.2 -yhdistelmällä nykyisen URL:n avaaminen +
-      ;; JavaScriptin suorittaminen heti perään saa selaimen jämähtämään.
+  ([polku] (avaa aitu-url polku default-user))
+  ([osoite-fn polku] (avaa osoite-fn polku default-user))
+  ([osoite-fn polku kayttaja]
+    (let [url (osoite-fn polku)
+          cas-url (cas-url)]
+      (w/to url)
+      (try
+        (odota-kunnes (or (= (w/current-url) url)
+                          (re-find (re-pattern cas-url) (w/current-url))))
+        (catch TimeoutException e
+          (println (str "Odotettiin selaimen siirtyvän URLiin '" url "' tai '" cas-url "'"
+                        ", mutta sen URL oli '" (w/current-url) "'"))
+          (throw e)))
       (when (not= (w/current-url) url)
-        (w/to url)
-        (try
-          (odota-kunnes (or (= (w/current-url) url) (casissa?)))
-          (catch TimeoutException e
-            (println (str "Odotettiin selaimen siirtyvän URLiin '" url "'"
-                          ", mutta sen URL oli '" (w/current-url) "'"))
-            (throw e))))
-      (if (casissa?)
-        (do
-          (cas-kirjautuminen kayttaja)
-          (recur polku kayttaja))
-        (odota-angular-pyyntoa)))))
+        (cas-kirjautuminen kayttaja)
+        (avaa osoite-fn polku kayttaja))
+      (odota-angular-pyyntoa))))
 
 (defn avaa-kayttajana* [polku kayttaja f]
   (cas-uloskirjautuminen)
-  (avaa polku kayttaja)
+  (avaa aitu-url polku kayttaja)
   (f)
   (cas-uloskirjautuminen))
 
