@@ -2,9 +2,6 @@
 <!DOCTYPE html>
 <html ng-app="ttk">
 <head>
-  <script>var ttkBaseUrl = "[[base-url]]";</script>
-  <script>var aituI18n = [[& i18n-json]];</script>
-  <script>var aituLogoutUrl = '[[logout-url]]';</script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>[[i18n.tutkintotoimikuntarekisteri]]</title>
@@ -14,8 +11,10 @@
   <link rel="stylesheet" href="[[base-url]]/css/main.css">
   <link rel="stylesheet" href="[[base-url]]/vendor/select2.css">
   <link rel="stylesheet" href="[[base-url]]/vendor/loading-bar.css">
-
   <script src="[[base-url]]/vendor/modernizr.js"></script>
+  <script>var ttkBaseUrl = "[[base-url]]";</script>
+  <script>var aituI18n = [[& i18n-json]];</script>
+  <script>var aituLogoutUrl = '[[logout-url]]';</script>
 </head>
 <body ng-controller="AituController">
 <div>
