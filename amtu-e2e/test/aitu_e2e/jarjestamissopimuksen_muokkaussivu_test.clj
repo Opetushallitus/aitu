@@ -226,28 +226,31 @@
 
 (deftest jarjestamissuunnitelman-poistaminen-test
   (testing "Järjestämissuunnitelman poistaminen heittää confirm dialogin"
-    (with-webdriver
-      (du/with-data (jarjestamissopimus-data-with-suunnitelma)
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (is (= (filejen-lkm) 1))
-        (poista-suunnitelma)
-        (odota-poistodialogia))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (du/with-data (jarjestamissopimus-data-with-suunnitelma)
+          (avaa-sopimuksen-muokkaussivu 1230)
+          (is (= (filejen-lkm) 1))
+          (poista-suunnitelma)
+          (odota-poistodialogia)))))
   (testing "Järjestämissopimus poistuu hyväksymällä confirm"
     (with-webdriver
-      (du/with-data (jarjestamissopimus-data-with-suunnitelma)
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (poista-suunnitelma)
-        (odota-poistodialogia)
-        (hyvaksyn-dialogin)
-        (is (= (filejen-lkm) 0)))))
+      (dialogit-kaytossa
+        (du/with-data (jarjestamissopimus-data-with-suunnitelma)
+          (avaa-sopimuksen-muokkaussivu 1230)
+          (poista-suunnitelma)
+          (odota-poistodialogia)
+          (hyvaksyn-dialogin)
+          (is (= (filejen-lkm) 0))))))
   (testing "Järjestämissopimus ei poistu, jos peruuttaa confirmin"
     (with-webdriver
-      (du/with-data (jarjestamissopimus-data-with-suunnitelma)
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (poista-suunnitelma)
-        (odota-poistodialogia)
-        (peruutan-dialogin)
-        (is (= (filejen-lkm) 1))))))
+      (dialogit-kaytossa
+        (du/with-data (jarjestamissopimus-data-with-suunnitelma)
+          (avaa-sopimuksen-muokkaussivu 1230)
+          (poista-suunnitelma)
+          (odota-poistodialogia)
+          (peruutan-dialogin)
+          (is (= (filejen-lkm) 1)))))))
 
 (deftest sopimuksen-tutkintojen-osien-ja-osaamisalojen-muokkaus-test
   (testing "Radiobuttoneista on aluksi valittuna Kaikki osaamisalat ja tutkinnon osat"

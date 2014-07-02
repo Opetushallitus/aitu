@@ -34,20 +34,44 @@
 (defmacro odota-kunnes [& body]
   `(w/wait-until (fn [] ~@body) 20000))
 
+(def ^:dynamic *dialogit-kaytossa?* false)
+
+(defmacro dialogit-kaytossa [& body]
+  `(binding [*dialogit-kaytossa?* true]
+     ~@body))
+
+(declare dialogi-nakyvissa?)
+
 (defn odota-sivun-latautumista []
-  (let [ready-state (atom nil)]
-    (try
-      (odota-kunnes (= (reset! ready-state
-                               (w/execute-script "return document.readyState"))
-                       "complete"))
-      (catch TimeoutException e
-        (println (str "document.readyState == '" @ready-state "'"))
-        (throw e)))))
+  ;; OS X / FF 30 / WebDriver 2.42.2 -yhdistelmällä JavaScriptin suorittaminen
+  ;; ei toimi, jos dialogi on näkyvissä. Oletetaan, että sivu on latautunut, jos
+  ;; joku skripti on ehtinyt näyttää dialogin.
+  ;;
+  ;; Dialogien tarkastaminen on hidasta (> 2 s), joten tehdään se vain, jos
+  ;; testataan dialogeja näyttävää koodia.
+  (when (or (not *dialogit-kaytossa?*)
+            (not (dialogi-nakyvissa?)))
+    (let [ready-state (atom nil)]
+      (try
+        (odota-kunnes (= (reset! ready-state
+                                 (w/execute-script "return document.readyState"))
+                         "complete"))
+        (catch TimeoutException e
+          (println (str "document.readyState == '" @ready-state "'"))
+          (throw e))))))
 
 (defn odota-angular-pyyntoa []
-  (odota-sivun-latautumista)
-  (WaitForAngularRequestsToFinish/waitForAngularRequestsToFinish
-    (:webdriver w/*driver*)))
+  ;; OS X / FF 30 / WebDriver 2.42.2 -yhdistelmällä JavaScriptin suorittaminen
+  ;; ei toimi, jos dialogi on näkyvissä. Oletetaan, että Angular on valmis, jos
+  ;; joku skripti on ehtinyt näyttää dialogin.
+  ;;
+  ;; Dialogien tarkastaminen on hidasta (> 2 s), joten tehdään se vain, jos
+  ;; testataan dialogeja näyttävää koodia.
+  (when (or (not *dialogit-kaytossa?*)
+            (not (dialogi-nakyvissa?)))
+    (odota-sivun-latautumista)
+    (WaitForAngularRequestsToFinish/waitForAngularRequestsToFinish
+      (:webdriver w/*driver*))))
 
 (defn luo-webdriver! []
   (let [remote_url (System/getenv "REMOTE_URL")
@@ -70,13 +94,13 @@
   (w/to "about:blank")
   (odota-sivun-latautumista))
 
-(defn tarkista-js-virheet [f]
+(defn tarkasta-js-virheet [f]
   (let [tulos (f)
-        js-virheet (try
-                     (w/execute-script "return window.jsErrors")
-                     (catch UnhandledAlertException _
-                       (-> w/*driver* :webdriver .switchTo .alert .accept)
-                       (w/execute-script "return window.jsErrors")))]
+        _ (when *dialogit-kaytossa?*
+            (try
+              (-> w/*driver* :webdriver .switchTo .alert .dismiss)
+              (catch NoAlertPresentException _)))
+        js-virheet (w/execute-script "return window.jsErrors")]
     (is (empty? js-virheet))
     (w/execute-script "window.jsErrors = []")
     tulos))
@@ -96,13 +120,13 @@
         (puhdista-selain)
         (catch UnhandledAlertException _
           (-> w/*driver* :webdriver .switchTo .alert .accept)))
-      (-> (tarkista-js-virheet f)
+      (-> (tarkasta-js-virheet f)
           (tarkista-otsikkotekstit)))
     (do
       (luo-webdriver!)
       (try
         (binding [*ng* (ByAngular. (:webdriver w/*driver*))]
-          (-> (tarkista-js-virheet f)
+          (-> (tarkasta-js-virheet f)
               (tarkista-otsikkotekstit)))
         (finally
           (w/quit))))))
@@ -234,12 +258,17 @@
     (w/clear selector)
     (w/input-text selector pvm)))
 
-(defn dialogi-nakyvissa? [teksti-re]
-  (try
-    (let [alert (-> w/*driver* :webdriver .switchTo .alert)]
-      (boolean (re-find teksti-re (.getText alert))))
-    (catch NoAlertPresentException _
-      false)))
+(defn dialogi-nakyvissa?
+  ([]
+    (dialogi-nakyvissa? nil))
+  ([teksti-re]
+    (try
+      (let [alert (-> w/*driver* :webdriver .switchTo .alert)]
+        (if teksti-re
+          (boolean (re-find teksti-re (.getText alert)))
+          true))
+      (catch NoAlertPresentException _
+        false))))
 
 (defn peruutan-dialogin []
   (-> w/*driver* :webdriver .switchTo .alert .dismiss)
