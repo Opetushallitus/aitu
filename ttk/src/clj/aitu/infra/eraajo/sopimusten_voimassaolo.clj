@@ -13,8 +13,7 @@
   (binding [*current-user-oid* (promise)
             *current-user-uid* jarjestelmakayttaja]
     (db/transaction
-      (doseq [{:keys [jarjestamissopimusid voimassa]} (sopimus-arkisto/hae-kaikki)]
-       (sopimus-arkisto/aseta-voimassaolo jarjestamissopimusid voimassa))))
+      (sopimus-arkisto/paivita-sopimusten-voimassaolo!)))
   (log/info "Sopimusten voimassaolotiedon päivitys valmis"))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan

@@ -39,21 +39,24 @@
                    (j/of-type PaivitaKayttajatLdapistaJob)
                    (j/with-identity "paivita-kayttajat-ldapista")
                    (j/using-job-data {"kayttooikeuspalvelu" kayttooikeuspalvelu}))
-        trigger-5min (t/build
-                       (t/with-identity "5-min-valein")
-                       (t/start-now)
-                       (t/with-schedule (s/schedule
-                                          (s/with-interval-in-minutes 5))))
+        ldap-trigger-5min (t/build
+                            (t/with-identity "5-min-valein")
+                            (t/start-now)
+                            (t/with-schedule (s/schedule
+                                               (s/with-interval-in-minutes 5))))
         org-job (j/build
                   (j/of-type PaivitaOrganisaatiotJob)
                   (j/with-identity "paivita-organisaatiot")
                   (j/using-job-data {"asetukset" organisaatiopalvelu-asetukset}))
-        trigger-org-daily (t/build
+        org-trigger-daily (t/build
                             (t/with-identity "daily3")
                             (t/start-now)
                             (t/with-schedule (cron/schedule
-                                                (cron/cron-schedule "0 0 3 * * ?"))))
-        trigger-sopimus-daily (t/build
+                                               (cron/cron-schedule "0 0 3 * * ?"))))
+        sopimus-job-daily (j/build
+                            (j/of-type PaivitaSopimustenVoimassaoloJob)
+                            (j/with-identity "paivita-sopimusten-voimassaolo"))
+        sopimus-trigger-daily (t/build
                                 (t/with-identity "daily4")
                                 (t/start-now)
                                 (t/with-schedule (cron/schedule
@@ -61,13 +64,10 @@
         sopimus-job-now (j/build
                           (j/of-type PaivitaSopimustenVoimassaoloJob)
                           (j/with-identity "paivita-sopimusten-voimassaolo-nyt"))
-        sopimus-job (j/build
-                      (j/of-type PaivitaSopimustenVoimassaoloJob)
-                      (j/with-identity "paivita-sopimusten-voimassaolo"))
-        trigger-now (t/build
-                      (t/with-identity "nyt")
-                      (t/start-now))]
-    (qs/schedule ldap-job trigger-5min)
-    (qs/schedule org-job trigger-org-daily)
-    (qs/schedule sopimus-job trigger-sopimus-daily)
-    (qs/schedule sopimus-job-now trigger-now)))
+        sopimus-trigger-now (t/build
+                              (t/with-identity "nyt")
+                              (t/start-now))]
+    (qs/schedule ldap-job ldap-trigger-5min)
+    (qs/schedule org-job org-trigger-daily)
+    (qs/schedule sopimus-job-daily sopimus-trigger-daily)
+    (qs/schedule sopimus-job-now sopimus-trigger-now)))

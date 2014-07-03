@@ -47,11 +47,25 @@
   (sql/delete jarjestamissopimus
     (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
 
-(defn ^:integration-api aseta-voimassaolo
+(defn ^:integration-api aseta-sopimuksen-voimassaolo!
   [jarjestamissopimusid voimassa]
   (sql/update jarjestamissopimus
     (sql/set-fields {:voimassa voimassa})
     (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
+
+(declare hae-kaikki hae-ja-liita-tutkinnonosiin-asti)
+
+(defn ^:integration-api paivita-sopimusten-voimassaolo!
+  []
+  (doseq [{:keys [jarjestamissopimusid voimassa]} (hae-kaikki)]
+    (aseta-sopimuksen-voimassaolo! jarjestamissopimusid voimassa)))
+
+(defn ^:integration-api paivita-sopimuksen-voimassaolo!
+  "Päivittää annetulla id:llä olevan sopimuksen voimassaolotiedon"
+  [jarjestamissopimusid]
+  (let [sopimus (voimassaolo/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo
+                  (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid))]
+    (aseta-sopimuksen-voimassaolo! jarjestamissopimusid (:voimassa sopimus))))
 
 (defn merkitse-sopimus-poistetuksi!
   "Asettaa sopimukselle poistettu -flagin"
@@ -137,7 +151,6 @@
   "Päivittää sopimuksen tiedot"
   [sopimus sopimuksen_tutkinnot]
   {:pre [(domain/jarjestamissopimus? sopimus)]}
-
   (auditlog/jarjestamissopimus-paivitys! (:jarjestamissopimusid sopimus)
     (:sopimusnumero sopimus))
   (sql/update jarjestamissopimus
@@ -155,7 +168,8 @@
           (paivita-sopimuksen-osaamisalat! sopimus_ja_tutkinto sopimus_ja_tutkinto_id))
         (throw (Exception. (str "Sopimuksen tutkintojen paivitys ei ole sallittu."
                                 "jarjestamissopimusid: " jarjestamissopimusid
-                                " sopimus_ja_tutkinto_id: " sopimus_ja_tutkinto_id)))))))
+                                " sopimus_ja_tutkinto_id: " sopimus_ja_tutkinto_id))))))
+  (paivita-sopimuksen-voimassaolo! (:jarjestamissopimusid sopimus)))
 
 (defn ^:private liita-perustiedot-sopimukseen
   [jarjestamissopimus]
@@ -326,7 +340,8 @@
         lisattavat (clojure.set/difference uudet-tutkintoversiot vanhat-tutkintoversiot)]
     (auditlog/sopimuksen-tutkinnot-operaatio! :paivitys jarjestamissopimusid uudet-tutkintoversiot)
     (poista-tutkinnot-sopimukselta! jarjestamissopimusid poistettavat)
-    (lisaa-tutkinnot-sopimukselle! jarjestamissopimusid lisattavat)))
+    (lisaa-tutkinnot-sopimukselle! jarjestamissopimusid lisattavat)
+    (paivita-sopimuksen-voimassaolo! jarjestamissopimusid)))
 
 (defn lisaa-suunnitelma-tutkinnolle!
   "Lisää järjestämissuunnitelman tutkinnolle"
