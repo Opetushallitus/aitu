@@ -3,15 +3,19 @@
              :refer [defjob]]
             [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
+            [korma.db :as db]
             [oph.korma.korma-auth
              :refer [*current-user-uid* *current-user-oid* jarjestelmakayttaja]]
             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]))
 
 (defn paivita-sopimusten-voimassaolo! []
+  (log/info "Päivitetään sopimusten voimassaolotieto")
   (binding [*current-user-oid* (promise)
             *current-user-uid* jarjestelmakayttaja]
-    (doseq [{:keys [jarjestamissopimusid voimassa]} (sopimus-arkisto/hae-kaikki)]
-      (sopimus-arkisto/aseta-voimassaolo jarjestamissopimusid voimassa))))
+    (db/transaction
+      (doseq [{:keys [jarjestamissopimusid voimassa]} (sopimus-arkisto/hae-kaikki)]
+       (sopimus-arkisto/aseta-voimassaolo jarjestamissopimusid voimassa))))
+  (log/info "Sopimusten voimassaolotiedon päivitys valmis"))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.

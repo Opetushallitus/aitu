@@ -22,9 +22,11 @@
             [clojure.tools.logging :as log]
             [clj-time.core :as time :refer [minutes seconds from-now]]
             aitu.infra.eraajo.kayttajat
-            aitu.infra.eraajo.organisaatiot)
+            aitu.infra.eraajo.organisaatiot
+            aitu.infra.eraajo.sopimusten-voimassaolo)
   (:import aitu.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
-           aitu.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob))
+           aitu.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
+           aitu.infra.eraajo.sopimusten_voimassaolo.PaivitaSopimustenVoimassaoloJob))
 
 (defn kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
@@ -46,10 +48,26 @@
                   (j/of-type PaivitaOrganisaatiotJob)
                   (j/with-identity "paivita-organisaatiot")
                   (j/using-job-data {"asetukset" organisaatiopalvelu-asetukset}))
-        trigger-daily (t/build
-                        (t/with-identity "daily")
-                        (t/start-now)
-                        (t/with-schedule (cron/schedule
-                                            (cron/cron-schedule "0 0 3 * * ?"))))]
+        trigger-org-daily (t/build
+                            (t/with-identity "daily3")
+                            (t/start-now)
+                            (t/with-schedule (cron/schedule
+                                                (cron/cron-schedule "0 0 3 * * ?"))))
+        trigger-sopimus-daily (t/build
+                                (t/with-identity "daily4")
+                                (t/start-now)
+                                (t/with-schedule (cron/schedule
+                                                   (cron/cron-schedule "0 0 4 * * ?"))))
+        sopimus-job-now (j/build
+                          (j/of-type PaivitaSopimustenVoimassaoloJob)
+                          (j/with-identity "paivita-sopimusten-voimassaolo-nyt"))
+        sopimus-job (j/build
+                      (j/of-type PaivitaSopimustenVoimassaoloJob)
+                      (j/with-identity "paivita-sopimusten-voimassaolo"))
+        trigger-now (t/build
+                      (t/with-identity "nyt")
+                      (t/start-now))]
     (qs/schedule ldap-job trigger-5min)
-    (qs/schedule org-job trigger-daily)))
+    (qs/schedule org-job trigger-org-daily)
+    (qs/schedule sopimus-job trigger-sopimus-daily)
+    (qs/schedule sopimus-job-now trigger-now)))
