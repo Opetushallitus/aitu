@@ -174,36 +174,32 @@
           (throw e)))
       (reset! cas-url nil))))
 
-(defn avaa
-  ([polku]
-    (avaa polku default-user))
-  ([polku kayttaja]
-    (let [url (aitu-url polku)]
-      (w/to url)
-      (try
-        (odota-kunnes (or (= (w/current-url) url) (casissa?)))
-        (catch TimeoutException e
-          (println (str "Odotettiin selaimen siirtyvän URLiin '" url "'"
-                        ", mutta sen URL oli '" (w/current-url) "'"))
-          (throw e)))
-      (if (casissa?)
-        (do
-          (cas-kirjautuminen kayttaja)
-          (recur polku kayttaja))
-        (odota-angular-pyyntoa)))))
+(defn avaa-url
+  ([url]
+    (avaa-url url default-user))
+  ([url kayttaja]
+    (w/to url)
+    (try
+      (odota-kunnes (or (= (w/current-url) url) (casissa?)))
+      (catch TimeoutException e
+        (println (str "Odotettiin selaimen siirtyvän URLiin '" url "'"
+                      ", mutta sen URL oli '" (w/current-url) "'"))
+        (throw e)))
+    (if (casissa?)
+      (do
+        (cas-kirjautuminen kayttaja)
+        (recur url kayttaja))
+      (odota-angular-pyyntoa))))
 
-(defn avaa-kayttajana* [polku kayttaja f]
+(defn avaa-url-kayttajana* [url kayttaja f]
   (cas-uloskirjautuminen)
-  (avaa polku kayttaja)
+  (avaa-url url kayttaja)
   (f)
   (cas-uloskirjautuminen))
 
-(defmacro avaa-kayttajana [polku kayttaja & body]
-  `(avaa-kayttajana* ~polku ~kayttaja (fn [] ~@body)))
-
-(defn avaa-uudelleenladaten [polku]
+(defn avaa-url-uudelleenladaten [url]
   (puhdista-selain)
-  (avaa polku))
+  (avaa-url url))
 
 (defn sivun-otsikko []
   (w/text "h1"))
