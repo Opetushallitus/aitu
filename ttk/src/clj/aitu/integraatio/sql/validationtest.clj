@@ -1,10 +1,8 @@
 (ns aitu.integraatio.sql.validationtest
   "Validation tests for relational DB"
   (:require [clojure.java.io :as io]
-            [clojure.java.jdbc :as jdbc]
             [korma.core :as sql]
-            [clojure.tools.logging :as log]
-            [korma.db :as db]))
+            [clojure.tools.logging :as log]))
 
 (defn load-validation-queries! [filepath]
   (let [r (io/resource filepath)]
