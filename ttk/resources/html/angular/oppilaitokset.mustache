@@ -16,10 +16,11 @@
 </form>
 
 <div class="search-results" lataus-indikaattori metodi-idt="['oppilaitoslistaus']" viesti="[[oppilaitoksia-ladataan]]" virheviesti="[[oppilaitoksien-lataus-epaonnistui]]" yrita-uudelleen="haeOppilaitokset()">
-  <hakutulokset tuloksia-sivulla="10" otsikot="['[[i18n.yleiset.nimi]]', '[[oppilaitoskoodi]]', '[[i18n.yleiset.kielisyys]]']" hakutulokset="oppilaitokset">
+  <hakutulokset tuloksia-sivulla="10" otsikot="['[[i18n.yleiset.nimi]]', '[[oppilaitoskoodi]]', '[[i18n.yleiset.kielisyys]]', '[[i18n.yleiset.sopimukset]]']" hakutulokset="oppilaitokset">
     <div class="table-cell"><a href="#/oppilaitos/{{hakutulos.oppilaitoskoodi}}/tiedot">{{hakutulos.nimi}}</a></div>
     <div class="table-cell">{{hakutulos.oppilaitoskoodi}}</div>
     <div class="table-cell">{{i18n['enum']['kieli-arvo'][hakutulos.kieli]}}</div>
+    <div class="table-cell">{{hakutulos.sopimusten_maara}}</div>
   </hakutulokset>
 </div>
 

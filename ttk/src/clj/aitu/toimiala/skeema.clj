@@ -122,7 +122,8 @@
                                       :postitoimipaikka (s/maybe s/Str)
                                       :kieli (s/maybe Kieli)
                                       :sahkoposti (s/maybe s/Str)
-                                      :koulutustoimija s/Str}))
+                                      :koulutustoimija s/Str
+                                      (s/optional-key :sopimusten_maara) s/Int}))
 
 (defmodel OppilaitosTiedot (merge OppilaitoksenTiedot AuditTiedot))
 
