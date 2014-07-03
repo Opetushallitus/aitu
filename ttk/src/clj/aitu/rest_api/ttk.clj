@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.ttk
-  (:require [compojure.core :refer [PUT POST defroutes]]
+  (:require [compojure.core :refer [GET PUT POST defroutes]]
             schema.core
             [cheshire.core :as cheshire]
             [clj-time.core :as time]
@@ -23,7 +23,8 @@
             [aitu.rest-api.http-util
              :refer [validoi validoi-entity-saannoilla
                      luo-validoinnin-virhevastaus cachable-json-response
-                     json-response parse-iso-date sallittu-jos]]
+                     json-response parse-iso-date sallittu-jos
+                     textfile-download-response]]
             [valip.predicates :refer [present?]]
             [aitu.infra.i18n :as i18n]
             [aitu.infra.validaatio :as val]
@@ -32,7 +33,8 @@
             [aitu.rest-api.http-util :refer [cachable-json-response]]
             [aitu.compojure-util :as cu]
             [korma.db :as db]
-            [compojure.api.sweet :refer :all]))
+            [compojure.api.sweet :refer :all]
+            [clojure-csv.core :refer [write-csv]]))
 
 (defn salli-toimikunnan-paivitys? [diaarinumero]
   (some->
@@ -88,6 +90,14 @@
   (doseq [jasenyys jasenyydet]
     (arkisto/paivita-tai-poista-jasenyys! diaarinumero jasenyys))
   {:status 200})
+
+(defroutes raportti-reitit
+  (GET ["/:tkunta/sopimukset"] [tkunta]
+    (cu/autorisoitu-transaktio :toimikunta_haku nil
+      (let [sopimukset-csv (write-csv #spy/p (map #(map (fn [elem] (str (val elem))) %) (arkisto/hae-sopimukset tkunta)))
+            filename "sopimukset.csv"
+            content-type "text/csv"]
+        (textfile-download-response sopimukset-csv filename content-type)))))
 
 (defroutes private-reitit
   (PUT ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet]

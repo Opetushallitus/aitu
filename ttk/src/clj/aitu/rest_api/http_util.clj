@@ -95,6 +95,13 @@
    :headers {"Content-type" content-type
              "Content-Disposition" (str "attachment; filename=\"" filename "\"")}})
 
+(defn textfile-download-response
+  [data filename content-type]
+  {:status 200
+   :body (str data)
+   :headers {"Content-type" content-type
+             "Content-Disposition" (str "attachment; filename=\"" filename "\"")}})
+
 (defn file-upload-response
   [data]
   (assoc (json-response data) :headers {"Content-Type" "text/html"}))

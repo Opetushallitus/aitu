@@ -92,6 +92,7 @@
     <div class="list-controls">
       <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="sopimus_lisays" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon add-icon lisaa-sopimus" ng-click="siirrySopimuksenLuontiin()"></auth-toiminto>
     </div>
+    <a ng-href="[[base-url]]/api/ttk/{{toimikunta.tkunta}}/sopimukset" target="_blank">LATAA CSV</a>
     <sopimusten-listaus class="nykyiset-sopimukset"
                         otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
                         sopimukset="nykyisetSopimukset"
