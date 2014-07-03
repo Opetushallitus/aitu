@@ -106,10 +106,11 @@
                                          :postitoimipaikka (s/maybe s/Str)
                                          :puhelin (s/maybe s/Str)
                                          :www_osoite (s/maybe s/Str)
-                                         :sahkoposti (s/maybe s/Str)
-                                         (s/optional-key :sopimusten_maara) s/Int}))
+                                         :sahkoposti (s/maybe s/Str)}))
 
 (defmodel Koulutustoimija (merge KoulutustoimijanTiedot AuditTiedot))
+
+(defmodel KoulutustoimijaLista (assoc Koulutustoimija :sopimusten_maara s/Int))
 
 (defmodel OppilaitosLinkki {:nimi s/Str
                             :oppilaitoskoodi s/Str})
@@ -123,10 +124,11 @@
                                       :postitoimipaikka (s/maybe s/Str)
                                       :kieli (s/maybe Kieli)
                                       :sahkoposti (s/maybe s/Str)
-                                      :koulutustoimija s/Str
-                                      (s/optional-key :sopimusten_maara) s/Int}))
+                                      :koulutustoimija s/Str}))
 
 (defmodel OppilaitosTiedot (merge OppilaitoksenTiedot AuditTiedot))
+
+(defmodel OppilaitosLista (assoc OppilaitosTiedot :sopimusten_maara s/Int))
 
 (defmodel JarjestamissopimusTiedot (merge {:jarjestamissopimusid s/Int
                                            :alkupvm (s/maybe org.joda.time.LocalDate)

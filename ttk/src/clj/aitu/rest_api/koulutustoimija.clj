@@ -24,10 +24,10 @@
 
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/" req
-    (cachable-json-response req (arkisto/hae-julkiset-tiedot) [Koulutustoimija]))
+    (cachable-json-response req (arkisto/hae-julkiset-tiedot) [KoulutustoimijaLista]))
   (cu/defapi :yleinen-rest-api nil :get "/haku" [termi :as req]
     (json-response (arkisto/hae-termilla termi) [KoulutustoimijaLinkki]))
   (cu/defapi :yleinen-rest-api nil :get "/:ytunnus" [ytunnus]
     (json-response (koulutustoimija/taydenna-koulutustoimija (arkisto/hae ytunnus)) KoulutustoimijaLaajatTiedot))
   (cu/defapi :yleinen-rest-api nil :get "/haku/ala" [termi :as req]
-    (cachable-json-response req (arkisto/hae-alalla termi) [Koulutustoimija])))
+    (cachable-json-response req (arkisto/hae-alalla termi) [KoulutustoimijaLista])))
