@@ -48,11 +48,11 @@
                                  (.column "sopimusJaTutkinto.tutkintoversio.nimi")))))
 
 (defn klikkaa-taulukon-sarakkeen-otsikkoa [taulukko sarake]
-  (w/click {:css (str "jasenyyksien-listaus.nykyiset-jasenyydet table[jarjestettava-taulukko=\"" taulukko "\"] th[jarjestettava-sarake=\"" sarake "\"]")})
+  (w/click {:css (str ".nykyiset-jasenyydet table[jarjestettava-taulukko=\"" taulukko "\"] th[jarjestettava-sarake=\"" sarake "\"]")})
   (odota-angular-pyyntoa))
 
 (defn jasenien-nimet []
-  (map w/text (w/find-elements {:css "jasenyyksien-listaus.nykyiset-jasenyydet tbody td:nth-child(2)"})))
+  (map w/text (w/find-elements {:css ".nykyiset-jasenyydet tbody td:nth-child(2)"})))
 
 (def toimikuntasivu-testidata
   {:toimikunnat [{:nimi_fi "Ilmastointialan tutkintotoimikunta"

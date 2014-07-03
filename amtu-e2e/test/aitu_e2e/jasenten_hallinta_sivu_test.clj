@@ -114,9 +114,9 @@
           (is (= (viestin-teksti) "Toimikunnan jäseniä muokattu"))
           (testing "jäsen poistuu toimikunnasta"
             (is (= #{"Mikki Hiiri"}
-                   (jasenien-nimet "jasenyyksien-listaus.nykyiset-jasenyydet")))
+                   (jasenien-nimet ".nykyiset-jasenyydet")))
             (is (= #{}
-                  (jasenien-nimet "vanhojen-jasenyyksien-listaus.aiemmat-jasenyydet")))))))
+                  (jasenien-nimet ".aiemmat-jasenyydet")))))))
     (with-webdriver
       (testing "jäsenen roolin muutoksen tallennus"
         ;; Oletetaan, että
@@ -129,7 +129,7 @@
           (tallenna-jasenet)
           (is (= (viestin-teksti) "Toimikunnan jäseniä muokattu"))
           (testing "voimassaolevat jäsenet pitäisi näyttää muokattu jäsen uusilla tiedoilla"
-            (is (re-find #"Aku Ankka sihteeri" (listarivi "jasenyyksien-listaus.nykyiset-jasenyydet" 0)))))))))
+            (is (re-find #"Aku Ankka sihteeri" (listarivi ".nykyiset-jasenyydet" 0)))))))))
 
 (deftest ^:no-ie jasenten-hallinta-sivu-test-voimassaolo-muutokset
   (testing "Toimikunnan jäsenten hallinta sivu"

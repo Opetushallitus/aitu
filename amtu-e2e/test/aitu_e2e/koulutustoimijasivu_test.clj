@@ -88,6 +88,6 @@
           (w/click nayta-vanhat-selector)
           ;; Niin
           (is (= #{[ei-vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " tulevaisuudessa-kayttoliittyman-muodossa)]}
-                 (sopimuslista "sopimusten-listaus.nykyiset-sopimukset")))
+                 (sopimuslista ".nykyiset-sopimukset")))
           (is (= #{[vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " menneisyydessa-kayttoliittyman-muodossa)]}
-                 (sopimuslista "vanhojen-sopimusten-listaus.vanhat-sopimukset"))))))))
+                 (sopimuslista ".vanhat-sopimukset"))))))))

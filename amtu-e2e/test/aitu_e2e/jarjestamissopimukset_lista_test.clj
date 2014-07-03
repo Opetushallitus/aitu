@@ -64,10 +64,10 @@
 
 (def nayta-vanhat-selector "a[ng-click=\"toggleNaytaVanhat()\"]")
 
-(def vanhojen-sopimusten-lista-selector ".vanhat-sopimukset sopimusten-listaus")
+(def vanhojen-sopimusten-lista-selector ".vanhat-sopimukset>div")
 
 (defn nykyisten-jarjestamissopimusten-lkm []
-  (count (w/find-elements {:css "sopimusten-listaus.nykyiset-sopimukset  tbody tr"})))
+  (count (w/find-elements {:css ".nykyiset-sopimukset  tbody tr"})))
 
 (defn vanhojen-jarjestamissopimusten-lkm []
   (count (w/find-elements {:css (str vanhojen-sopimusten-lista-selector " tbody tr")})))
