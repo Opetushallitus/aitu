@@ -13,6 +13,17 @@
     model-id-property="termi"
     model-text-property="nimi">
   </haku-valitsin>
+  <div>
+    <fieldset class="search-field">
+      <h3>[[i18n.yleiset.voimassaolevia-sopimuksia]]</h3>
+      <input id="sopimuksia_kylla" type="radio" ng-model="search.sopimuksia" value="kylla">
+      <label class="input" for="sopimuksia_kylla">[[i18n.yleinen.kylla]]</label><br/>
+      <input id="sopimuksia_ei" type="radio" ng-model="search.sopimuksia" value="ei">
+      <label class="input" for="sopimuksia_ei">[[i18n.yleinen.ei]]</label><br/>
+      <input id="sopimuksia_kaikki" type="radio" ng-model="search.sopimuksia" value="kaikki">
+      <label class="input" for="sopimuksia_kaikki">[[i18n.yleiset.nayta-kaikki]]</label>
+    </fieldset>
+  </div>
 </form>
 
 <div class="search-results" lataus-indikaattori metodi-idt="['koulutustoimijalistaus']" viesti="[[koulutustoimijoita-ladataan]]" virheviesti="[[koulutustoimijoiden-lataus-epaonnistui]]" yrita-uudelleen="haeKoulutustoimijat()">

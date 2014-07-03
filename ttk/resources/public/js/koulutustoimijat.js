@@ -49,8 +49,9 @@ angular.module('koulutustoimijat', ['ngRoute'])
       $scope.i18n = i18n;
       $scope.kaikkiKoulutustoimijat = [];
       $scope.koulutustoimijat = [];
-      $scope.search = {nimi: "", termi: ""};
+      $scope.search = {nimi: "", termi: "", sopimuksia: "kylla"};
       $scope.$watch('search.nimi', suodataKoulutustoimijat);
+      $scope.$watch('search.sopimuksia', suodataKoulutustoimijat);
       $scope.$watch('search.termi', haeKoulutustoimijat);
       $scope.$watchCollection('kaikkiKoulutustoimijat', suodataKoulutustoimijat);
 
@@ -58,7 +59,8 @@ angular.module('koulutustoimijat', ['ngRoute'])
 
       function suodataKoulutustoimijat() {
         var filteredNimella = $filter('suomiJaRuotsi')($scope.kaikkiKoulutustoimijat, 'nimi', $scope.search.nimi);
-        $scope.koulutustoimijat = $filter('orderByLokalisoitu')(filteredNimella, 'nimi');
+        var filteredSopimuksilla = $filter('sopimukset')(filteredNimella, $scope.search.sopimuksia);
+        $scope.koulutustoimijat = $filter('orderByLokalisoitu')(filteredSopimuksilla, 'nimi');
       }
 
       function haeKoulutustoimijat() {
