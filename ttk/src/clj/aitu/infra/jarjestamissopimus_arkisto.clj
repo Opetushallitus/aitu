@@ -24,6 +24,7 @@
              [aitu.integraatio.sql.jarjestamissopimus :as sopimus-kaytava]
              [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
              [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
+             [aitu.toimiala.voimassaolo.jarjestamissopimus :as voimassaolo]
              [aitu.toimiala.voimassaolo.saanto.osoitepalvelu-jarjestamissopimus :as osoitepalvelu-voimassaolo]
              [clj-time.core :as time]
              [aitu.auditlog :as auditlog])
@@ -44,6 +45,12 @@
   (sql/delete sopimus-ja-tutkinto
     (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
   (sql/delete jarjestamissopimus
+    (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
+
+(defn ^:integration-api aseta-voimassaolo
+  [jarjestamissopimusid voimassa]
+  (sql/update jarjestamissopimus
+    (sql/set-fields {:voimassa voimassa})
     (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
 
 (defn merkitse-sopimus-poistetuksi!
@@ -189,6 +196,14 @@
                                     [:sahkoposti :sahkoposti_vastuuhenkilo]
                                     [:vastuuhenkilo_vara :varavastuuhenkilo]
                                     [:sahkoposti_vara :sahkoposti_varavastuuhenkilo]]))
+
+(defn hae-kaikki
+  []
+  (->> (sql/select jarjestamissopimus
+         (sql/where {:poistettu false}))
+    (map liita-perustiedot-sopimukseen)
+    (map liita-tutkinnot-sopimukseen)
+    (map voimassaolo/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo)))
 
 (defn hae-kaikki-osoitepalvelulle
   "Hakee kaikki järjestämissopimukset ja niihin liittyvät tutkinnot osoitepalvelua varten"
