@@ -57,7 +57,7 @@
     not))
 
 (c/defroutes reitit
-  (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin]
+  (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
       (let [sopimus (merge {:sopimusnumero sopimusnumero
                             :toimikunta tkunta
                             :sopijatoimikunta (paljas-tai-kentan-arvo sopijatoimikunta :tkunta)
@@ -67,7 +67,8 @@
                             :loppupvm (if loppupvm (parse-iso-date loppupvm) nil)
                             :vastuuhenkilo vastuuhenkilo
                             :puhelin puhelin
-                            :sahkoposti sahkoposti}
+                            :sahkoposti sahkoposti
+                            :voimassa voimassa}
                            (when jarjestamissopimusid {:jarjestamissopimusid jarjestamissopimusid}))]
         (validoi sopimus (luo-sopimuksen-luonnille-validointisaannot sopimus) ((i18n/tekstit) :validointi)
                  (let [uusi-sopimus (arkisto/lisaa! sopimus)]

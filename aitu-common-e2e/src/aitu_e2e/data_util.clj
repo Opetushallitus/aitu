@@ -154,7 +154,8 @@
                                 :delete-fn #(str "/api/test/jarjestamissopimus/" (:jarjestamissopimusid %))
                                 :default (for [i (iterate inc 1)]
                                            {:alkupvm menneisyydessa
-                                            :loppupvm tulevaisuudessa})})
+                                            :loppupvm tulevaisuudessa
+                                            :voimassa true})})
 
 (def jarjestamissuunnitelma-tiedot {:post-fn #(str "/api/test/jarjestamissopimus/" (:jarjestamissopimusid %) "/suunnitelma")
                                 :delete-fn #(str "/api/test/jarjestamissopimus/" (:jarjestamissopimusid %) "/suunnitelma")

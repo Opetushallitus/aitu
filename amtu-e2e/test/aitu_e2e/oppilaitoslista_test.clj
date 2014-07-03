@@ -27,6 +27,13 @@
                                  (.repeater "hakutulos in hakutulokset")
                                  (.column "hakutulos.nimi")))))
 
+(defn valitse-ei-sopimuksia []
+  (w/click "#sopimuksia_ei")
+  (odota-angular-pyyntoa))
+
+(defn valitse-nayta-kaikki []
+  (w/click "#sopimuksia_kaikki")
+  (odota-angular-pyyntoa))
 
 ; kolme oppilaitosta
 ; opintoala "sähköala"
@@ -55,9 +62,25 @@
     (testing "oppilaitoslista"
       ;; Oletetaan, että
       (with-data (oppilaitoshaku-sopimukset-data)
-        (testing "pitäisi näyttaa lista oppilaitoksista"
+        (testing "pitäisi näyttaa lista oppilaitoksista joilla on järjestämissopimus"
           ;; Kun
           (avaa oppilaitoslista)
+          ;; Niin
+          (is (subset? #{"aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"}
+                       (set (nakyvat-oppilaitokset)))))
+
+        (testing "pitäisi näyttaa lista oppilaitoksista joilla ei ole järjestämissopimusta"
+          ;; Kun
+          (avaa oppilaitoslista)
+          (valitse-ei-sopimuksia)
+          ;; Niin
+          (is (subset? #{"aaRuikonperän multakurkkuopisto"}
+                       (set (nakyvat-oppilaitokset)))))
+
+        (testing "pitäisi näyttaa lista kaikista oppilaitoksista"
+          ;; Kun
+          (avaa oppilaitoslista)
+          (valitse-nayta-kaikki)
           ;; Niin
           (is (subset? #{"aaRuikonperän multakurkkuopisto" "aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"}
                        (set (nakyvat-oppilaitokset)))))

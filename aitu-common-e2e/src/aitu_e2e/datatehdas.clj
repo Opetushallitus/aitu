@@ -35,7 +35,7 @@
      :nimi_fi nimi})
   ([y-tunnus]
     (setup-koulutustoimija y-tunnus "Ruikonperän koulutuskuntayhtymä"))
-  ([] 
+  ([]
     (setup-koulutustoimija (uusi-ytunnus!))))
 
 (defn setup-oppilaitos
@@ -90,7 +90,8 @@
         :jarjestamissopimusid jarjestamissopimusid
         :sopimusnumero sopimusnumero
         :alkupvm menneisyydessa
-        :loppupvm tulevaisuudessa}
+        :loppupvm tulevaisuudessa
+        :voimassa true}
        :sopimus_ja_tutkinto
        {:jarjestamissopimusid jarjestamissopimusid
         :sopimus_ja_tutkinto [{:tutkintoversio_id tutkintoversio-id}]}}))
@@ -98,9 +99,9 @@
     (setup-voimassaoleva-jarjestamissopimus (uusi-sopimusnumero!) y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)))
 
 (defn setup-lakannut-jarjestamissopimus [sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio]
-  (assoc-in
-    (setup-voimassaoleva-jarjestamissopimus sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)
-    [:jarjestamissopimukset :loppupvm] menneisyydessa))
+  (-> (setup-voimassaoleva-jarjestamissopimus sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)
+    (assoc-in [:jarjestamissopimukset :loppupvm] menneisyydessa)
+    (assoc-in [:jarjestamissopimukset :voimassa] false)))
 
 
 (defn setup-toimikunta

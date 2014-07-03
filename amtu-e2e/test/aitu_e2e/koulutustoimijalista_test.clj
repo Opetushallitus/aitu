@@ -23,6 +23,14 @@
 
 (def koulutustoimijalista "/fi/#/search-koulutustoimija")
 
+(defn valitse-ei-sopimuksia []
+  (w/click "#sopimuksia_ei")
+  (odota-angular-pyyntoa))
+
+(defn valitse-nayta-kaikki []
+  (w/click "#sopimuksia_kaikki")
+  (odota-angular-pyyntoa))
+
 (defn nakyvat-koulutustoimijat []
   (map w/text (w/find-elements (-> *ng*
                                  (.repeater "hakutulos in hakutulokset")
@@ -33,9 +41,25 @@
     (testing "koulutustoimijalista"
       ;; Oletetaan, että
       (with-data (oppilaitoshaku-sopimukset-data)
-        (testing "pitäisi näyttaa lista koulutustoimijoista"
+        (testing "pitäisi näyttaa lista koulutustoimijoista joilla on järjestämissopimus"
           ;; Kun
           (avaa koulutustoimijalista)
+          ;; Niin
+          (is (subset? #{"aaAnkkalinnan kaupunki" "aaHanhivaaran kaupunki"}
+                       (set (nakyvat-koulutustoimijat)))))
+
+        (testing "pitäisi näyttaa lista koulutustoimijoista joilla ei ole järjestämissopimusta"
+          ;; Kun
+          (avaa koulutustoimijalista)
+          (valitse-ei-sopimuksia)
+          ;; Niin
+          (is (subset? #{"aaRuikonperän koulutuskuntayhtymä"}
+                       (set (nakyvat-koulutustoimijat)))))
+
+        (testing "pitäisi näyttaa lista kaikista koulutustoimijoista"
+          ;; Kun
+          (avaa koulutustoimijalista)
+          (valitse-nayta-kaikki)
           ;; Niin
           (is (subset? #{"aaRuikonperän koulutuskuntayhtymä" "aaAnkkalinnan kaupunki" "aaHanhivaaran kaupunki"}
                        (set (nakyvat-koulutustoimijat)))))

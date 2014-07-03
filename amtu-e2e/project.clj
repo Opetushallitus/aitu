@@ -14,7 +14,7 @@
 
 (defproject aitu-e2e "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [solita/opetushallitus-aitu-e2e "1.9.0"]
+                 [solita/opetushallitus-aitu-e2e "1.10.0"]
                  [clj-webdriver "0.6.1"]
                  [clj-http "0.9.2"]
                  [cheshire "5.3.1"]
