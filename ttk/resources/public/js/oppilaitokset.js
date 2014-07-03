@@ -49,8 +49,9 @@ angular.module('oppilaitokset', ['ngRoute'])
       $scope.i18n = i18n;
       $scope.kaikkiOppilaitokset = [];
       $scope.oppilaitokset = [];
-      $scope.search = {nimi: "", termi: ""};
+      $scope.search = {nimi: "", termi: "", sopimuksia: "kylla"};
       $scope.$watch('search.nimi', suodataOppilaitokset);
+      $scope.$watch('search.sopimuksia', suodataOppilaitokset);
       $scope.$watch('search.termi', haeOppilaitokset);
       $scope.$watchCollection('kaikkiOppilaitokset', suodataOppilaitokset);
 
@@ -58,7 +59,8 @@ angular.module('oppilaitokset', ['ngRoute'])
 
       function suodataOppilaitokset() {
         var filteredNimella = $filter('filter')($scope.kaikkiOppilaitokset, {nimi: $scope.search.nimi});
-        $scope.oppilaitokset = $filter('orderBy')(filteredNimella, 'nimi');
+        var filteredSopimuksilla = $filter('sopimukset')(filteredNimella, $scope.search.sopimuksia);
+        $scope.oppilaitokset = $filter('orderBy')(filteredSopimuksilla, 'nimi');
       }
 
       function haeOppilaitokset() {

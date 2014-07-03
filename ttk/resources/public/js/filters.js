@@ -230,4 +230,20 @@ angular.module('filters', [] )
         return _.some(terms, {'nimi': entity[kentta]});
       });
     };
+  }])
+
+  .filter('sopimukset', [function() {
+    return function(entityt, ehto) {
+      if(ehto === "kaikki") {
+        return entityt;
+      } else if (ehto === "kylla") {
+        return _.filter(entityt, function(entity) {
+          return entity.sopimusten_maara > 0;
+        });
+      } else {
+        return _.filter(entityt, function(entity) {
+          return entity.sopimusten_maara === 0;
+        });
+      }
+    }
   }]);
