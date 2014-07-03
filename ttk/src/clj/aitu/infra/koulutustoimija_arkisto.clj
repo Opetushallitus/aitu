@@ -50,7 +50,8 @@
   []
   (sql/select koulutustoimija
     (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
-                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
+                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite
+                (sql/raw "(select count(*) from jarjestamissopimus where koulutustoimija = ytunnus and voimassa) as sopimusten_maara"))
     (sql/order :nimi_fi)))
 
 (defn hae-kaikki []
@@ -71,7 +72,8 @@
     (let [termi (str "%" ala "%")]
       (map sql-timestamp->joda-datetime
            (sql/exec-raw [(str "select ytunnus, nimi_fi, nimi_sv, muutettu_kayttaja, luotu_kayttaja, muutettuaika, luotuaika, "
-                               "sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite "
+                               "sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite, "
+                               "(select count(*) from jarjestamissopimus where koulutustoimija = ytunnus and voimassa) as sopimusten_maara "
                                "from koulutustoimija kt "
                                "where exists (select 1 from jarjestamissopimus js "
                                "              join sopimus_ja_tutkinto st on js.jarjestamissopimusid = st.jarjestamissopimusid "

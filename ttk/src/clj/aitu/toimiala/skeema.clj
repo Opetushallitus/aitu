@@ -106,7 +106,8 @@
                                          :postitoimipaikka (s/maybe s/Str)
                                          :puhelin (s/maybe s/Str)
                                          :www_osoite (s/maybe s/Str)
-                                         :sahkoposti (s/maybe s/Str)}))
+                                         :sahkoposti (s/maybe s/Str)
+                                         (s/optional-key :sopimusten_maara) s/Int}))
 
 (defmodel Koulutustoimija (merge KoulutustoimijanTiedot AuditTiedot))
 
