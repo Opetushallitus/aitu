@@ -91,7 +91,19 @@
     (-> driver :webdriver .manage .timeouts (.setScriptTimeout 30 TimeUnit/SECONDS))))
 
 (defn puhdista-selain []
+  ;; Siirrytään about:blank -sivulle kahdesti, koska ensimmäinen siirtymä
+  ;; saattaa siirtymisen sijasta avata selaimen varmistusdialogin. Tämä tilanne
+  ;; tunnistetaan siitä, että toinen siirtymä heittää UnhandledAlertExceptionin,
+  ;; jolloin kuitataan dialogi, jotta siirtymä saadaan suoritettua loppuun.
+  ;;
+  ;; Toinen vaihtoehto olisi tarkistaa dialogin näkyvyys eksplisiittisesti ennen
+  ;; ensimmäistä siirtymää, mutta tarkistus kestää > 2 s, joten tämä tapa on
+  ;; nopeampi.
   (w/to "about:blank")
+  (try
+    (w/to "about:blank")
+    (catch UnhandledAlertException _
+      (-> w/*driver* :webdriver .switchTo .alert .accept)))
   (odota-sivun-latautumista))
 
 (defn tarkasta-js-virheet [f]
@@ -116,10 +128,7 @@
 (defn with-webdriver* [f]
   (if (bound? #'*ng*)
     (do
-      (try
-        (puhdista-selain)
-        (catch UnhandledAlertException _
-          (-> w/*driver* :webdriver .switchTo .alert .accept)))
+      (puhdista-selain)
       (-> (tarkasta-js-virheet f)
           (tarkista-otsikkotekstit)))
     (do

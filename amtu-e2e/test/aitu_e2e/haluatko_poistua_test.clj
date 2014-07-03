@@ -30,12 +30,7 @@
   (alan-muokata-tietoja))
 
 (defn navigoin-pois-sivulta-osoiterivia-kayttaen []
-  (try
-    (avaa-uudelleenladaten "/fi/#/")
-    ;; Jos dialogi on jo näkyvissä, tulee Angularin odottamisyrityksestä
-    ;; UnhandledAlertException, mutta se ei haittaa, koska meitä kiinnostaa vain
-    ;; dialogin ilmestyminen, eikä muun sivun stabiilius.
-    (catch UnhandledAlertException _)))
+  (w/to "about:blank"))
 
 (defn navigoin-pois-sivulta-navigointipalkkia-kayttaen []
   (w/click {:text "Tutkinnot"})
@@ -176,4 +171,3 @@
           (navigoin-pois-sivulta-osoiterivia-kayttaen)
           ;; Niin
           (is (not (selaimen-haluatko-poistua-dialogi-nakyvissa?))))))))
-
