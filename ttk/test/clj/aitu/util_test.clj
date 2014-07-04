@@ -130,7 +130,7 @@
 
 (deftest keyword-vertailu-test
   (let [jarjestys [:a :b :c]]
-    (testing "vertailee avaimet oikein"
+    (testing "vertailee avaimet oikein, tuntemattomat avaimet viimeiseksi"
       (are [tulos key1 key2] (= tulos (keyword-vertailu jarjestys key1 key2))
            -1 :a :b
            1 :b :a
@@ -144,6 +144,6 @@
 (deftest otsikot-ja-sarakkeet-jarjestykseen-test
   (let [jarjestys [:b :c]]
     (are [tulos data] (= tulos (otsikot-ja-sarakkeet-jarjestykseen data jarjestys))
-         [(list "b" "c") (list "b1" "c1")] (list {:c "c1" :b "b1"})
-         [(list "b" "c") (list "b1" "c1") (list "b2" "c2")] (list {:c "c1" :b "b1"} {:c "c2" :b "b2"})
-         [(list "b" "c" "a") (list "b1" "c1" "a1")] (list {:a "a1" :c "c1" :b "b1"}))))
+         [["b" "c"] ["b1" "c1"]] [{:c "c1" :b "b1"}]
+         [["b" "c"] ["b1" "c1"] ["b2" "c2"]] [{:c "c1" :b "b1"} {:c "c2" :b "b2"}]
+         [["b" "c" "a"] ["b1" "c1" "a1"]] [{:a "a1" :c "c1" :b "b1"}])))

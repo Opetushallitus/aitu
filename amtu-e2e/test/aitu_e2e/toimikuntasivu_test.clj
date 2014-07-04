@@ -225,6 +225,6 @@
       (with-data toimikuntasivu-testidata
         (avaa (toimikuntasivu "98/11/543"))
         (is (= (lataa-tiedosto-webdriverin-istunnossa (sopimukset-linkki))
-               (clojure.string/join "\n" [ "sopimusnumero;tutkinto_nimi_fi;tutkinto_nimi_sv;peruste;koulutustoimija_nimi_fi;koulutustoimija_nimi_sv;alkupvm;loppupvm"
+               (clojure.string/join "\n" ["sopimusnumero;tutkinto_nimi_fi;tutkinto_nimi_sv;peruste;koulutustoimija_nimi_fi;koulutustoimija_nimi_sv;alkupvm;loppupvm"
                                           "123;Ilmastointialan tutkinto;Tutkinto (sv)1;;Ankkalinnan kaupunki;Koulutustoimija 1;2014-07-03;2014-07-05"
                                           ""])))))))
