@@ -45,7 +45,8 @@
              :refer [*current-user-authmap* yllapitaja?]]
             [aitu.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
-            [aitu.infra.eraajo :as eraajo]))
+            [aitu.infra.eraajo :as eraajo]
+            [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]))
 
 (schema.core/set-fn-validation! true)
 
@@ -143,6 +144,7 @@
         (kaynnista-eraajon-ajastimet! asetukset))
       (log/info "Kehitysmoodi päällä:" (kehitysmoodi? asetukset))
       (log/info "Palvelin käynnistetty:" (service-url asetukset))
+      (.start (Thread. sopimusten-voimassaolo/paivita-sopimusten-voimassaolo!))
       {:sammuta sammuta
        :asetukset asetukset})
   (catch Throwable t

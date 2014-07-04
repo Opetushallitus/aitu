@@ -53,21 +53,14 @@
                             (t/start-now)
                             (t/with-schedule (cron/schedule
                                                (cron/cron-schedule "0 0 3 * * ?"))))
-        sopimus-job-daily (j/build
-                            (j/of-type PaivitaSopimustenVoimassaoloJob)
-                            (j/with-identity "paivita-sopimusten-voimassaolo"))
+        sopimus-job (j/build
+                      (j/of-type PaivitaSopimustenVoimassaoloJob)
+                      (j/with-identity "paivita-sopimusten-voimassaolo"))
         sopimus-trigger-daily (t/build
                                 (t/with-identity "daily4")
                                 (t/start-now)
                                 (t/with-schedule (cron/schedule
-                                                   (cron/cron-schedule "0 0 4 * * ?"))))
-        sopimus-job-now (j/build
-                          (j/of-type PaivitaSopimustenVoimassaoloJob)
-                          (j/with-identity "paivita-sopimusten-voimassaolo-nyt"))
-        sopimus-trigger-now (t/build
-                              (t/with-identity "nyt")
-                              (t/start-now))]
+                                                   (cron/cron-schedule "0 0 4 * * ?"))))]
     (qs/schedule ldap-job ldap-trigger-5min)
     (qs/schedule org-job org-trigger-daily)
-    (qs/schedule sopimus-job-daily sopimus-trigger-daily)
-    (qs/schedule sopimus-job-now sopimus-trigger-now)))
+    (qs/schedule sopimus-job sopimus-trigger-daily)))
