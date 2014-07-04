@@ -91,10 +91,29 @@
     (arkisto/paivita-tai-poista-jasenyys! diaarinumero jasenyys))
   {:status 200})
 
+(def sopimuskenttien-jarjestys
+  [:sopimusnumero :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
+
+(defn vertaa-avaimia
+  "vertaa avaimia halutun järjestys-taulukon mukaisesti, tuntemattomat avaimet loppuun"
+  [jarjestys a b]
+  (compare [(.indexOf (reverse jarjestys) b) b]
+           [(.indexOf (reverse jarjestys) a) a]))
+
+(defn jarjesta-avaimet
+  "Järjestää mapin taulukkona annetun järjestyksen mukaiseksi"
+  [m jarjestys]
+  (into (sorted-map-by #(vertaa-avaimia jarjestys %1 %2)) m))
+
+(defn muuta-jarjestetyksi-taulukoksi [m]
+  (for [rivi m]
+    (for [[_ v] (jarjesta-avaimet rivi sopimuskenttien-jarjestys)]
+      (str v))))
+
 (defroutes raportti-reitit
   (GET ["/:tkunta/sopimukset"] [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (let [sopimukset-csv (write-csv #spy/p (map #(map (fn [elem] (str (val elem))) %) (arkisto/hae-sopimukset tkunta)))
+      (let [sopimukset-csv (write-csv (muuta-jarjestetyksi-taulukoksi (arkisto/hae-sopimukset tkunta)) :delimiter \;)
             filename "sopimukset.csv"
             content-type "text/csv"]
         (textfile-download-response sopimukset-csv filename content-type)))))
