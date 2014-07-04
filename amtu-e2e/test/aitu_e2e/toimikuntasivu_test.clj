@@ -215,3 +215,16 @@
           (is (= (sivun-otsikko) "ILMASTOINTIALAN TUTKINTOTOIMIKUNTA (EI VOIMASSA)")))
         (testing "Sivulla ei näy muokkaustoiminnallisuuksia"
           (is (= (count (filter w/displayed? (w/find-elements {:css "button.edit-icon button.add-icon"}))) 0)))))))
+
+(defn sopimukset-linkki []
+  (w/attribute (w/find-element {:css "a.liite-linkki"}) "href"))
+
+(deftest toimikuntasivu-sopimukset-download-test
+  (testing "toimikuntasivu sopimusten download linkki"
+    (with-webdriver
+      (with-data toimikuntasivu-testidata
+        (avaa (toimikuntasivu "98/11/543"))
+        (is (= (lataa-tiedosto-webdriverin-istunnossa (sopimukset-linkki))
+               (clojure.string/join "\n" [ "sopimusnumero;tutkinto_nimi_fi;tutkinto_nimi_sv;peruste;koulutustoimija_nimi_fi;koulutustoimija_nimi_sv;alkupvm;loppupvm"
+                                          "123;Ilmastointialan tutkinto;Tutkinto (sv)1;;Ankkalinnan kaupunki;Koulutustoimija 1;2014-07-03;2014-07-05"
+                                          ""])))))))

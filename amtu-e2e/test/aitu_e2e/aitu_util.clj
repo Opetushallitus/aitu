@@ -1,5 +1,6 @@
 (ns aitu-e2e.aitu-util
   (:require [clj-webdriver.taxi :as w]
+            [clj-http.client :as hc]
             [aitu-e2e.util :refer :all]))
 
 (defn onko-tallenna-nappi-enabloitu? [napin-teksti]
@@ -19,3 +20,7 @@
 
 (defn avaa-uudelleenladaten [polku]
   (avaa-url-uudelleenladaten (aitu-url polku)))
+
+(defn lataa-tiedosto-webdriverin-istunnossa [url]
+  (:body (hc/get url
+                 {:cookies {"ring-session" (w/cookie "ring-session")}})))

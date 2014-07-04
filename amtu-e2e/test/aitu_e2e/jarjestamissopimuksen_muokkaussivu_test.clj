@@ -16,7 +16,6 @@
   (:require [clojure.test :refer [deftest is testing]]
             [aitu-e2e.jarjestamissopimussivu-test :refer [sopimussivu jarjestamissopimus-data]]
             [clj-webdriver.taxi :as w]
-            [clj-http.client :as hc]
             [aitu-e2e.util :refer :all]
             [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :as du]))
@@ -331,10 +330,6 @@
                    (.repeater "suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat")
                    (.column "suunnitelma.jarjestamissuunnitelma_filename")))]
     (into {} (map (juxt w/text #(w/attribute % "href")) linkit))))
-
-(defn lataa-tiedosto-webdriverin-istunnossa [url]
-  (:body (hc/get url
-                 {:cookies {"ring-session" (w/cookie "ring-session")}})))
 
 (defn lisaa-suunnitelma-sopimukseen [nro polku]
   (avaa-sopimuksen-muokkaussivu nro)
