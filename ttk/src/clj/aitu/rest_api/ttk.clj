@@ -15,10 +15,6 @@
 (ns aitu.rest-api.ttk
   (:require [compojure.core :refer [GET PUT POST defroutes]]
             schema.core
-            [cheshire.core :as cheshire]
-            [clj-time.core :as time]
-            [clj-time.format :as timef]
-            [clj-time.coerce :as time-coerce]
             [aitu.infra.ttk-arkisto :as arkisto]
             [aitu.rest-api.http-util
              :refer [validoi validoi-entity-saannoilla
@@ -32,9 +28,8 @@
             [aitu.toimiala.skeema :refer :all]
             [aitu.rest-api.http-util :refer [cachable-json-response]]
             [aitu.compojure-util :as cu]
-            [korma.db :as db]
             [compojure.api.sweet :refer :all]
-            [clojure-csv.core :refer [write-csv]]))
+            [aitu.util :refer [muodosta-csv]]))
 
 (defn salli-toimikunnan-paivitys? [diaarinumero]
   (some->
@@ -94,26 +89,10 @@
 (def sopimuskenttien-jarjestys
   [:sopimusnumero :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
 
-(defn vertaa-avaimia
-  "vertaa avaimia halutun järjestys-taulukon mukaisesti, tuntemattomat avaimet loppuun"
-  [jarjestys a b]
-  (compare [(.indexOf (reverse jarjestys) b) b]
-           [(.indexOf (reverse jarjestys) a) a]))
-
-(defn jarjesta-avaimet
-  "Järjestää mapin taulukkona annetun järjestyksen mukaiseksi"
-  [m jarjestys]
-  (into (sorted-map-by #(vertaa-avaimia jarjestys %1 %2)) m))
-
-(defn muuta-jarjestetyksi-taulukoksi [m]
-  (for [rivi m]
-    (for [[_ v] (jarjesta-avaimet rivi sopimuskenttien-jarjestys)]
-      (str v))))
-
 (defroutes raportti-reitit
   (GET ["/:tkunta/sopimukset"] [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (let [sopimukset-csv (write-csv (muuta-jarjestetyksi-taulukoksi (arkisto/hae-sopimukset tkunta)) :delimiter \;)
+      (let [sopimukset-csv (muodosta-csv (arkisto/hae-sopimukset tkunta) sopimuskenttien-jarjestys)
             filename "sopimukset.csv"
             content-type "text/csv"]
         (textfile-download-response sopimukset-csv filename content-type)))))
