@@ -18,6 +18,7 @@
             [clj-webdriver.taxi :as w]
             [clj-http.client :as hc]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :as du]))
 
 (defn avaa-sopimuksen-muokkaussivu [jarjestamissopimusid]

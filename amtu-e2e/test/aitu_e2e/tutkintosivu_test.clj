@@ -16,6 +16,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data]]
             [aitu-e2e.datatehdas :as dt]))
 

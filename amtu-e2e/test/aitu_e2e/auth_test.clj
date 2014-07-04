@@ -1,6 +1,7 @@
 (ns aitu-e2e.auth-test
   (:require [clojure.test :refer [deftest is testing]]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data with-cleaned-data]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.toimikuntasivu-test :refer [toimikuntasivu

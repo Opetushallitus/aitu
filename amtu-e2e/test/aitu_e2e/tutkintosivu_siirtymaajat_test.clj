@@ -17,6 +17,7 @@
             [clj-webdriver.taxi :as w]
             [clj-time.core :as time]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :as du]))
 
 (defn tutkintosivu [tutkintotunnus] (str "/fi/#/tutkinto/" tutkintotunnus))

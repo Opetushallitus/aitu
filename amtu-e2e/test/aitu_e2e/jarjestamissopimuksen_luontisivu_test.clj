@@ -18,6 +18,7 @@
             [aitu-e2e.toimikuntasivu-test :refer [toimikuntasivu]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data with-cleaned-data]]))
 
 (defn avaa-sopimuksen-luontisivu-toimikunnalle [diaarinumero]

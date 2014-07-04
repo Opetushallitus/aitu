@@ -15,7 +15,8 @@
 (ns aitu-e2e.kielenvaihto-test
   (:require [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
-            [aitu-e2e.util :refer :all])
+            [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all])
   (:import org.openqa.selenium.TimeoutException))
 
 (defn avaa-etusivu-suomeksi [] (avaa (str "/fi/#/")))

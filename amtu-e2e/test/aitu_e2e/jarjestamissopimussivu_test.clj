@@ -17,6 +17,7 @@
             [clj-webdriver.taxi :as w]
             [clj-time.core :as time]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :as du]))
 
 (defn sopimussivu [jarjestamissopimusid] (str "/fi/#/sopimus/" jarjestamissopimusid "/tiedot"))
@@ -131,7 +132,7 @@
                                        (first)
                                        (w/text))]
             (is (= oppilaitoksen-nimi "Ankkalinnan kaupunki"))))
-        
+
         (testing "oppilaitoksen nimi näkyy sivulla"
           (let [oppilaitoksen-nimi (-> *ng*
                                        (.binding "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi")

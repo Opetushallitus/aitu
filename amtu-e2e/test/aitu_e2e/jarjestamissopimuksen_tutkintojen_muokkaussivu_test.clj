@@ -17,6 +17,7 @@
             [aitu-e2e.jarjestamissopimussivu-test :refer [sopimussivu jarjestamissopimus-data]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data]]))
 
 (defn avaa-tutkintojen-muokkaussivu [jarjestamissopimusid]
