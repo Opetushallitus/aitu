@@ -212,7 +212,7 @@
 
 (defn kirjaudu-ulos-toisessa-ikkunassa []
   (let [paaikkuna (w/window)
-        ikkunat (w/execute-script (str "window.open('" @cas-url "/logout')"))
+        _ (w/execute-script (str "window.open('" @cas-url "/logout')"))
         cas-ikkuna (first (disj (set (w/windows))
                                 paaikkuna))]
     (w/switch-to-window cas-ikkuna)
