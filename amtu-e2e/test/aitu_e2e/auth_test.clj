@@ -219,7 +219,7 @@
 (defn navigoi-tutkinnot-sivulle []
   (w/click {:text "Tutkinnot"}))
 
-(deftest ajax-uudelleenohjaus-test
+(deftest ^:cas ajax-uudelleenohjaus-test
   (testing "Käyttäjä, jonka istunto on suljettu, ohjataan sisäänkirjautumiseen AJAX-pyynnön yhteydessä"
     (with-webdriver
       (avaa etusivu)
