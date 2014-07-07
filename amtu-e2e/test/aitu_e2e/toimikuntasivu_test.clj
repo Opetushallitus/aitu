@@ -223,7 +223,9 @@
 (defn sopimukset-linkki []
   (w/attribute (w/find-element {:css "a.liite-linkki"}) "href"))
 
-(deftest toimikuntasivu-sopimukset-download-test
+;; Tiedostojen lataaminen ei onnistu IE:llä, koska IE ei näytä WebDriverille
+;; HTTPOnly-evästeitä (istuntoeväste mukaan lukien).
+(deftest ^:no-ie toimikuntasivu-sopimukset-download-test
   (testing "toimikuntasivu sopimusten download linkki"
     (with-webdriver
       (with-data toimikuntasivu-testidata
