@@ -212,14 +212,12 @@
 
 (defn kirjaudu-ulos-toisessa-ikkunassa []
   (w/execute-script (str "window.open('" @cas-url "/logout')"))
-  (odota-angular-pyyntoa)
   (w/switch-to-window 1)
   (w/close)
   (w/switch-to-window 0))
 
 (defn navigoi-tutkinnot-sivulle []
-  (w/click {:text "Tutkinnot"})
-  (odota-sivun-latautumista))
+  (w/click {:text "Tutkinnot"}))
 
 (deftest ajax-uudelleenohjaus-test
   (testing "Käyttäjä, jonka istunto on suljettu, ohjataan sisäänkirjautumiseen AJAX-pyynnön yhteydessä"
@@ -227,4 +225,4 @@
       (avaa etusivu)
       (kirjaudu-ulos-toisessa-ikkunassa)
       (navigoi-tutkinnot-sivulle)
-      (is (casissa?)))))
+      (odota-kunnes (casissa?)))))
