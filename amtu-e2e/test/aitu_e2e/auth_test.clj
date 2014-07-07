@@ -211,10 +211,13 @@
           (is (not (w/exists? {:css "#current-user>li a[ng-click=\"valitse()\"]"}))))))))
 
 (defn kirjaudu-ulos-toisessa-ikkunassa []
-  (w/execute-script (str "window.open('" @cas-url "/logout')"))
-  (w/switch-to-window 1)
-  (w/close)
-  (w/switch-to-window 0))
+  (let [paaikkuna (w/window)
+        ikkunat (w/execute-script (str "window.open('" @cas-url "/logout')"))
+        cas-ikkuna (first (disj (set (w/windows))
+                                paaikkuna))]
+    (w/switch-to-window cas-ikkuna)
+    (w/close)
+    (w/switch-to-window paaikkuna)))
 
 (defn navigoi-tutkinnot-sivulle []
   (w/click {:text "Tutkinnot"}))
