@@ -99,7 +99,11 @@
                             :toimikunta "ILMA"
                             :sopijatoimikunta "ILMA"
                             :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
-                            :koulutustoimija "0000000-0"}]
+                            :koulutustoimija "0000000-0"
+                            ;; Sopimuksen täytyy olla voimassa, muuten
+                            ;; tutkintojen lisäys ei onnistu.
+                            :alkupvm "2014-07-03"
+                            :loppupvm "2099-01-01"}]
    :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
                           :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]})
 
@@ -226,5 +230,5 @@
         (avaa (toimikuntasivu "98/11/543"))
         (is (= (lataa-tiedosto-webdriverin-istunnossa (sopimukset-linkki))
                (clojure.string/join "\n" ["sopimusnumero;tutkinto_nimi_fi;tutkinto_nimi_sv;peruste;koulutustoimija_nimi_fi;koulutustoimija_nimi_sv;alkupvm;loppupvm"
-                                          "123;Ilmastointialan tutkinto;Tutkinto (sv)1;;Ankkalinnan kaupunki;Koulutustoimija 1;2014-07-03;2014-07-05"
+                                          "123;Ilmastointialan tutkinto;Tutkinto (sv)1;;Ankkalinnan kaupunki;Koulutustoimija 1;2014-07-03;2099-01-01"
                                           ""])))))))
