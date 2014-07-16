@@ -3,6 +3,7 @@ dev-scripts/create-db-schema.sh: Alustaa Vagrant-virtuaalikoneen tietokannan rak
 dev-scripts/create-db-dump.sh: Luo Vagrant-virtuaalikoneen kannasta kokonaisen dumpin (rakenne ja data).
 dev-scripts/load-db-dump.sh: Lataa Vagrant-virtuaalikoneeseen kannan dumpin (rakenne ja data). Huom! Tällä hetkellä e2e-testit eivät toimi dumpin kanssa (edellisen skriptin generoima testidata on OK).
 dev-scripts/konvertoi.sh: Ajaa konversion Vagrant-virtuaalikoneen kantaan ja päivittää versionhallinnassa olevan kantadumpin vastaamaan konversion tulosta. Dumpin päivityksen voi estää valitsimella `--ei-dumppia`.
+dev-scripts/copy-db.sh: Tekee annetusta tietokannasta kopion uudelle nimelle. Jos kohdenimi on jo olemassa, korvaa ko. kannan lähdekannan kopiolla. Tällä skriptillä voi tallentaa tietokannan tilan ja palauttaa sen erittäin nopeasti.
 
 dev-scripts/init-aitu.sh: Luo Vagrant-virtuaalikoneen, jossa on reverse proxyksi konfiguroitu Apache, ja tekee siihen deployn softasta (ks. seuraava skripti). Softaan pääsee käsiksi urlissa http://192.168.50.52/aitu/.
 dev-scripts/deploy.sh: Tekee softasta (ttk-hakemistossa) uberjarin ja tekee deployn Vagrant-virtuaalikoneeseen.
