@@ -162,20 +162,25 @@
       oppilaitos-arkisto/lisaa!)))
 
 (defn lisaa-jarjestamissopimus!
-  ([koulutustoimija oppilaitos]
+  ([koulutustoimija oppilaitos jarjestamissopimus]
     (let [toimikunta (lisaa-toimikunta!)]
       (jarjestamissopimus-arkisto/lisaa!
-        {:jarjestamissopimusid 1
-         :sopimusnumero "ABCDEF01234567890"
-         :alkupvm (time/date-time 2011 1 1)
-         :koulutustoimija (:ytunnus koulutustoimija)
-         :tutkintotilaisuuksista_vastaava_oppilaitos (:oppilaitoskoodi oppilaitos)
-         :toimikunta (:tkunta toimikunta)
-         :sopijatoimikunta (:tkunta toimikunta)})))
-  ([]
+        (merge {:jarjestamissopimusid 1
+                :sopimusnumero "ABCDEF01234567890"
+                :alkupvm (time/date-time 2011 1 1)
+                :koulutustoimija (:ytunnus koulutustoimija)
+                :tutkintotilaisuuksista_vastaava_oppilaitos (:oppilaitoskoodi oppilaitos)
+                :toimikunta (:tkunta toimikunta)
+                :sopijatoimikunta (:tkunta toimikunta)}
+               jarjestamissopimus))))
+  ([koulutustoimija oppilaitos]
+    (lisaa-jarjestamissopimus! koulutustoimija oppilaitos {}))
+  ([jarjestamissopimus]
     (let [koulutustoimija (lisaa-koulutustoimija!)
-          oppilaitos (lisaa-oppilaitos! koulutustoimija)] 
-      (lisaa-jarjestamissopimus! koulutustoimija oppilaitos))))
+          oppilaitos (lisaa-oppilaitos! koulutustoimija)]
+      (lisaa-jarjestamissopimus! koulutustoimija oppilaitos jarjestamissopimus)))
+  ([]
+    (lisaa-jarjestamissopimus! {})))
 
 (defn lisaa-osaamisala! [osaamisalatunnus]
   (sql/insert osaamisala

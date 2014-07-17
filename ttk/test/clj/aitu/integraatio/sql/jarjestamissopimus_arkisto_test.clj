@@ -205,3 +205,12 @@ tietorakenteen osia."
         (is (= (sopimuksen-tutkintojen-osaamisalat sopimus)
                {"TU1" #{"OA2"}
                 "TU2" #{"OA1" "OA3"}}))))))
+
+(deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-test
+  (lisaa-koulutus-ja-opintoala!)
+  (lisaa-tutkinto! {})
+  (doseq [id [1 2 3]]
+    (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+  (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
+  (is (= #{1 2 3} (set (map :tutkintoversio (arkisto/hae-sopimuksen-tutkinnot 99))))))
