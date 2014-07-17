@@ -190,14 +190,18 @@ tietorakenteen osia."
             (-> (hae-taydellinen-sopimus (:jarjestamissopimusid sopimus))
               :sopimus_ja_tutkinto
               seq->vec),
-            ;; uudet-sopimus-tutkinto-liitokset:ssa opintoalan OA1 on poistettu
+            ;; uudet-sopimus-tutkinto-liitokset:ssa opintoala OA1 on poistettu
             ;; tutkinnosta TU1 ja lisätty tutkintoon TU2
+            oa1? #(= (:nimi_fi %) "OA1")
             oa1
-            (-> sopimus-tutkinto-liitokset
-              (get 0) :sopimus_ja_tutkinto_ja_osaamisala last),
+            (->> sopimus-tutkinto-liitokset
+              (mapcat :sopimus_ja_tutkinto_ja_osaamisala)
+              (filter oa1?)
+              first),
             uudet-sopimus-tutkinto-liitokset
             (-> sopimus-tutkinto-liitokset
-              (update-in [0 :sopimus_ja_tutkinto_ja_osaamisala] butlast)
+              (update-in [0 :sopimus_ja_tutkinto_ja_osaamisala]
+                         (partial remove oa1?))
               (update-in [1 :sopimus_ja_tutkinto_ja_osaamisala] conj oa1))]
         ;; Kun
         (arkisto/paivita! sopimus uudet-sopimus-tutkinto-liitokset)
