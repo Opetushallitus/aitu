@@ -286,7 +286,7 @@
 (defn poista-tutkinnot-sopimukselta!
   "Poistaa tutkintoja järjestämissopimukselta asettamalla poistettu = true"
   [jarjestamissopimusid tutkintoversiot]
-  (auditlog/sopimuksen-tutkinnot-operaatio! :poisto jarjestamissopimusid (map :tutkintoversio tutkintoversiot))
+  (auditlog/sopimuksen-tutkinnot-operaatio! :poisto jarjestamissopimusid tutkintoversiot)
   (doseq [tutkintoversio tutkintoversiot]
     (sql/update sopimus-ja-tutkinto
       (sql/set-fields {:poistettu true})
