@@ -28,7 +28,8 @@
                      sopimus-ja-tutkinto
                      sopimus-ja-tutkinto-ja-osaamisala
                      tutkintoversio]]
-            [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]))
+            [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
+            [aitu.auditlog :as auditlog]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -240,3 +241,15 @@ tietorakenteen osia."
          (->> (arkisto/hae-sopimuksen-tutkinnot 99)
            (map #(select-keys % [:tutkintoversio :kieli]))
            set))))
+
+(deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-auditlog-test
+  (testing "lisaa-tutkinnot-sopimukselle! kirjaa sopimuksen ja tutkinnot auditlogiin"
+    (lisaa-koulutus-ja-opintoala!)
+    (lisaa-tutkinto! {})
+    (doseq [id [1 2 3]]
+      (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+    (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+    (let [log (atom [])]
+      (with-redefs [auditlog/sopimuksen-tutkinnot-operaatio! #(swap! log conj %&)]
+        (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
+        (is (= [[:lisays 99 [1 2 3]]] @log))))))
