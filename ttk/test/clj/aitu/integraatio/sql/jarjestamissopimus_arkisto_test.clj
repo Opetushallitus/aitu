@@ -15,7 +15,7 @@
 (ns aitu.integraatio.sql.jarjestamissopimus-arkisto-test
   (:import java.io.File
            org.apache.commons.io.FileUtils)
-  (:require [clojure.test :refer [deftest testing is are use-fixtures]]
+  (:require [clojure.test :refer :all]
             [clojure.walk :refer [postwalk]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [aitu.toimiala.jarjestamissopimus :refer :all]
@@ -210,7 +210,7 @@ tietorakenteen osia."
                {"TU1" #{"OA2"}
                 "TU2" #{"OA1" "OA3"}}))))))
 
-(deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-test
+(deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-tutkintoversio-id-test
   (lisaa-koulutus-ja-opintoala!)
   (lisaa-tutkinto! {})
   (doseq [id [1 2 3]]
@@ -218,3 +218,25 @@ tietorakenteen osia."
   (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
   (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
   (is (= #{1 2 3} (set (map :tutkintoversio (arkisto/hae-sopimuksen-tutkinnot 99))))))
+
+(deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-tutkintoversio-map-test
+  (lisaa-koulutus-ja-opintoala!)
+  (lisaa-tutkinto! {})
+  (doseq [id [1 2 3]]
+    (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+  (arkisto/lisaa-tutkinnot-sopimukselle! 99 [{:tutkintoversio 1
+                                              :kieli "fi"}
+                                             {:tutkintoversio 2
+                                              :kieli "2k"}
+                                             {:tutkintoversio 3
+                                              :kieli "sv"}])
+  (is (= #{{:tutkintoversio 1
+            :kieli "fi"}
+           {:tutkintoversio 2
+            :kieli "2k"}
+           {:tutkintoversio 3
+            :kieli "sv"}}
+         (->> (arkisto/hae-sopimuksen-tutkinnot 99)
+           (map #(select-keys % [:tutkintoversio :kieli]))
+           set))))

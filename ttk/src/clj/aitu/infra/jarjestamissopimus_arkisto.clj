@@ -312,17 +312,20 @@
 (defn lisaa-tutkinnot-sopimukselle!
   "Lisää tutkinnot sopimukselle"
   [jarjestamissopimusid tutkintoversiot]
-  (auditlog/sopimuksen-tutkinnot-operaatio! :lisays jarjestamissopimusid (map :tutkintoversio tutkintoversiot))
-  (let [sopimus-tutkinto-liitokset
-        (doall
-          (for [tutkintoversio tutkintoversiot]
-            (sql/insert sopimus-ja-tutkinto
-              (sql/values {:jarjestamissopimusid jarjestamissopimusid :tutkintoversio tutkintoversio}))))]
-    ;; Triggeröidään muutos myös sopimustaulussa että muokkaajan tiedot tallentuvat myös sinne
-    (sql/update jarjestamissopimus
-      (sql/set-fields {:muutettuaika (time/now)})
-      (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
-    sopimus-tutkinto-liitokset))
+  (let [tutkintoversiot (map #(if (map? %) % {:tutkintoversio %})
+                             tutkintoversiot)]
+    (auditlog/sopimuksen-tutkinnot-operaatio! :lisays jarjestamissopimusid (map :tutkintoversio tutkintoversiot))
+    (let [sopimus-tutkinto-liitokset
+          (doall
+            (for [tutkintoversio tutkintoversiot]
+              (sql/insert sopimus-ja-tutkinto
+                          (sql/values (assoc tutkintoversio
+                                             :jarjestamissopimusid jarjestamissopimusid)))))]
+      ;; Triggeröidään muutos myös sopimustaulussa että muokkaajan tiedot tallentuvat myös sinne
+      (sql/update jarjestamissopimus
+                  (sql/set-fields {:muutettuaika (time/now)})
+                  (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
+      sopimus-tutkinto-liitokset)))
 
 (defn hae-sopimuksen-tutkinnot
   "Hakee tutkinnot sopimukselle"
