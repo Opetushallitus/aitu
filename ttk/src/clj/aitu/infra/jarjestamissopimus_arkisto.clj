@@ -283,7 +283,7 @@
       (count)
       (= 0)))
 
-(defn ^:private poista-tutkinnot-sopimukselta!
+(defn poista-tutkinnot-sopimukselta!
   "Poistaa tutkintoja järjestämissopimukselta asettamalla poistettu = true"
   [jarjestamissopimusid tutkintoversiot]
   (auditlog/sopimuksen-tutkinnot-operaatio! :poisto jarjestamissopimusid (map :tutkintoversio tutkintoversiot))
@@ -319,12 +319,12 @@
           (doall
             (for [tutkintoversio tutkintoversiot]
               (sql/insert sopimus-ja-tutkinto
-                          (sql/values (assoc tutkintoversio
-                                             :jarjestamissopimusid jarjestamissopimusid)))))]
+                (sql/values (assoc tutkintoversio
+                                   :jarjestamissopimusid jarjestamissopimusid)))))]
       ;; Triggeröidään muutos myös sopimustaulussa että muokkaajan tiedot tallentuvat myös sinne
       (sql/update jarjestamissopimus
-                  (sql/set-fields {:muutettuaika (time/now)})
-                  (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
+        (sql/set-fields {:muutettuaika (time/now)})
+        (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
       sopimus-tutkinto-liitokset)))
 
 (defn hae-sopimuksen-tutkinnot

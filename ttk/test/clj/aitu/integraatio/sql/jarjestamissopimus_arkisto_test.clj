@@ -267,3 +267,13 @@ tietorakenteen osia."
       (with-redefs [auditlog/sopimuksen-tutkinnot-operaatio! #(swap! log conj %&)]
         (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
         (is (= [[:lisays 99 [1 2 3]]] @log))))))
+
+(deftest ^:integraatio poista-tutkinnot-sopimukselta!-tutkintoversio-id-test
+  (lisaa-koulutus-ja-opintoala!)
+  (lisaa-tutkinto! {})
+  (doseq [id [1 2 3]]
+    (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+  (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
+  (arkisto/poista-tutkinnot-sopimukselta! 99 [2 3])
+  (is (= #{1} (set (map :tutkintoversio (arkisto/hae-sopimuksen-tutkinnot 99))))))
