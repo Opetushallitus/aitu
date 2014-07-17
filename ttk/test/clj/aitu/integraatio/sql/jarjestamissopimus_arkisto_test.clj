@@ -119,6 +119,20 @@
       (is (= sopimuksen-tutkintojen-lkm 1))
       (is (= sopimuksen-tutkintotunnus "34567"))))
 
+(deftest ^:integraatio paivita-tutkinnot!-auditlog-test
+  (testing "paivita-tutkinnot! kirjaa sopimuksen ja tutkinnot auditlogiin"
+    (lisaa-koulutus-ja-opintoala!)
+    (lisaa-tutkinto! {})
+    (doseq [id [1 2 3]]
+      (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+    (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+    (let [log (atom [])]
+      (with-redefs [auditlog/sopimuksen-tutkinnot-operaatio! #(swap! log conj %&)]
+        (arkisto/paivita-tutkinnot! 99 [{:tutkintoversio_id 1}
+                                        {:tutkintoversio_id 2}
+                                        {:tutkintoversio_id 3}])
+        (is (= [:paivitys 99 #{1 2 3}] (first @log)))))))
+
 (deftest ^:integraatio lisaa-ja-poista-suunnitelma-sopimuksen-tutkinnolle!
   "Lisää järjestämissuunnitelman sopimuksen tutkinnolle"
   (lisaa-testidata!)
