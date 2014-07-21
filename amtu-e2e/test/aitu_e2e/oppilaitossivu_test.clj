@@ -12,11 +12,12 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu-e2e.jarjestajasivu-test
+(ns aitu-e2e.oppilaitossivu-test
   (:require [clojure.set :refer [subset?]]
             [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data
                                         menneisyydessa
                                         tulevaisuudessa
@@ -27,7 +28,7 @@
             [clj-time.core :as time]
             [clj-time.format :as time-format]))
 
-(defn jarjestajasivu [id] (str "/fi/#/jarjestaja/" id "/tiedot"))
+(defn oppilaitossivu [id] (str "/fi/#/oppilaitos/" id "/tiedot"))
 
 (def nayta-vanhat-selector "a[ng-click=\"toggleNaytaVanhat()\"]")
 
@@ -43,7 +44,7 @@
       (first)
       (w/text)))
 
-(deftest jarjestajasivu-test []
+(deftest oppilaitossivu-test []
   (with-webdriver
     ;; Oletetaan, että
     (let [puhelin "040123456"
@@ -51,54 +52,58 @@
           osoite "Oppilaitoskatu 1"
           postinumero "12345"
           postitoimipaikka "Postitoimipaikka"
-          oppilaitos (merge (dt/setup-oppilaitos) {:puhelin puhelin
-                                                   :sahkoposti sahkoposti
-                                                   :osoite osoite
-                                                   :postinumero postinumero
-                                                   :postitoimipaikka postitoimipaikka})
+          koulutustoimija (dt/setup-koulutustoimija)
+          oppilaitos (merge (dt/setup-oppilaitos (:ytunnus koulutustoimija)) {:puhelin puhelin
+                                                                              :sahkoposti sahkoposti
+                                                                              :osoite osoite
+                                                                              :postinumero postinumero
+                                                                              :postitoimipaikka postitoimipaikka})
           tunnus (:oppilaitoskoodi oppilaitos)]
-      (with-data {:oppilaitokset [oppilaitos]}
-        (testing "pitäisi näyttaa tiedot järjestäjästä"
+      (with-data {:koulutustoimijat [koulutustoimija]
+                  :oppilaitokset [oppilaitos]}
+        (testing "pitäisi näyttaa tiedot oppilaitoksesta"
           ;; Kun
-          (avaa (jarjestajasivu tunnus))
+          (avaa (oppilaitossivu tunnus))
           ;; Niin
           (is (= (sivun-otsikko) (clojure.string/upper-case (:nimi oppilaitos))))
-          (is (= (oppilaitoksen-tieto "jarjestaja.puhelin") puhelin))
-          (is (= (oppilaitoksen-tieto "jarjestaja.sahkoposti") sahkoposti))
-          (is (= (oppilaitoksen-tieto "jarjestaja.osoite") osoite))
-          (is (= (oppilaitoksen-tieto "jarjestaja.postitoimipaikka") (str postinumero " " postitoimipaikka))))))))
+          (is (= (oppilaitoksen-tieto "oppilaitos.puhelin") puhelin))
+          (is (= (oppilaitoksen-tieto "oppilaitos.sahkoposti") sahkoposti))
+          (is (= (oppilaitoksen-tieto "oppilaitos.osoite") osoite))
+          (is (= (oppilaitoksen-tieto "oppilaitos.postitoimipaikka") (str postinumero " " postitoimipaikka))))))))
 
-(defn jarjestajasivu-sopimukset-data [oppilaitostunnus]
-  (let [oppilaitos (dt/setup-oppilaitos oppilaitostunnus)
+(defn oppilaitossivu-sopimukset-data [y-tunnus oppilaitostunnus]
+  (let [koulutustoimija (dt/setup-koulutustoimija y-tunnus)
+        oppilaitos (dt/setup-oppilaitos oppilaitostunnus y-tunnus)
         tutkintotunnus "TU1"
         tutkintoversio 1
         tutkinto-map (dt/setup-tutkinto-map tutkintotunnus tutkintoversio)
         toimikuntatunnus "ILMA"
-        sopimus1 (dt/setup-voimassaoleva-jarjestamissopimus oppilaitostunnus toimikuntatunnus tutkintoversio)
-        sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus oppilaitostunnus toimikuntatunnus tutkintoversio)
+        sopimus1 (dt/setup-voimassaoleva-jarjestamissopimus koulutustoimija oppilaitostunnus toimikuntatunnus tutkintoversio)
+        sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus koulutustoimija oppilaitostunnus toimikuntatunnus tutkintoversio)
         ]
     (dt/merge-datamaps sopimus1 sopimus2 tutkinto-map
       {:oppilaitokset [oppilaitos]
+       :koulutustoimijat [koulutustoimija]
        :toimikunnat [{:tkunta toimikuntatunnus}]})))
 
-   (deftest jarjestajasivu-sopimukset-test []
+   (deftest oppilaitossivu-sopimukset-test []
      (with-webdriver
        ;; Oletetaan, että
        (let [oppilaitostunnus "12345"
-             testidata (jarjestajasivu-sopimukset-data oppilaitostunnus)
+             testidata (oppilaitossivu-sopimukset-data "0000000-0" oppilaitostunnus)
              testitutkinto_nimi (:nimi_fi (first (:tutkinnot testidata)))
              vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 1])
              vanhentuva-sopnro (:sopimusnumero vanhentuva-sopimus)
              ei-vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 0])
              ei-vanhentuva-sopnro (:sopimusnumero ei-vanhentuva-sopimus)]
          (with-data testidata
-           (testing "pitäisi näyttaa listoissa uudet ja vanhat järjestäjän sopimukset"
+           (testing "pitäisi näyttaa listoissa uudet ja vanhat oppilaitoksen sopimukset"
              (aseta-jarjestamissopimus-paattyneeksi vanhentuva-sopimus)
              ;; Kun
-             (avaa (jarjestajasivu oppilaitostunnus))
+             (avaa (oppilaitossivu oppilaitostunnus))
              (w/click nayta-vanhat-selector)
              ;; Niin
              (is (= #{[ei-vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " tulevaisuudessa-kayttoliittyman-muodossa)]}
-                    (sopimuslista "sopimusten-listaus.nykyiset-sopimukset")))
+                    (sopimuslista ".nykyiset-sopimukset")))
              (is (= #{[vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " menneisyydessa-kayttoliittyman-muodossa)]}
-                    (sopimuslista "vanhojen-sopimusten-listaus.vanhat-sopimukset"))))))))
+                    (sopimuslista ".vanhat-sopimukset"))))))))

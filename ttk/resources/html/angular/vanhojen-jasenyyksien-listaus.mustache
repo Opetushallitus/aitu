@@ -1,6 +1,6 @@
 {{=[[ ]]=}}
 [[#i18n.yleiset]]
-<span ng-if="jasenet.length > 0">
+<div ng-if="jasenet.length > 0">
   <p ng-if="salliPiilotus"><a class="ajax-link show-more" href="" ng-click="toggleNaytaVanhat()">{{naytaVanhatJasenyydet ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
 
   <div ng-show="naytaVanhatJasenyydet || !salliPiilotus">
@@ -14,5 +14,5 @@
       piilota-jarjesto="piilotaJarjesto">
     </jasenyyksien-listaus>
   </div>
-</span>
+</div>
 [[/i18n.yleiset]]

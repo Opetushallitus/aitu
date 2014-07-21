@@ -34,7 +34,8 @@
   [[:sopimusnumero present? :pakollinen]
    [:sopimusnumero (validoi-uniikki-sopimusnumero sopimus) :ei-uniikki]
    [:toimikunta present? :pakollinen]
-   [:oppilaitos present? :pakollinen]
+   [:koulutustoimija present? :pakollinen]
+   [:tutkintotilaisuuksista_vastaava_oppilaitos present? :pakollinen]
    [:alkupvm #(not (nil? %)) :pakollinen]
    [:alkupvm (validoi-alkupvm-sama-tai-ennen-loppupvm (:loppupvm sopimus)) :virheellinen-voimassaolon-alkupvm]])
 
@@ -56,30 +57,31 @@
     not))
 
 (c/defroutes reitit
-  (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta oppilaitos tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin]
+  (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
       (let [sopimus (merge {:sopimusnumero sopimusnumero
                             :toimikunta tkunta
                             :sopijatoimikunta (paljas-tai-kentan-arvo sopijatoimikunta :tkunta)
-                            :oppilaitos (paljas-tai-kentan-arvo oppilaitos :oppilaitoskoodi)
+                            :koulutustoimija (paljas-tai-kentan-arvo koulutustoimija :ytunnus)
                             :tutkintotilaisuuksista_vastaava_oppilaitos (paljas-tai-kentan-arvo tutkintotilaisuuksista_vastaava_oppilaitos :oppilaitoskoodi)
                             :alkupvm (if alkupvm (parse-iso-date alkupvm) nil)
                             :loppupvm (if loppupvm (parse-iso-date loppupvm) nil)
                             :vastuuhenkilo vastuuhenkilo
                             :puhelin puhelin
-                            :sahkoposti sahkoposti}
+                            :sahkoposti sahkoposti
+                            :voimassa voimassa}
                            (when jarjestamissopimusid {:jarjestamissopimusid jarjestamissopimusid}))]
         (validoi sopimus (luo-sopimuksen-luonnille-validointisaannot sopimus) ((i18n/tekstit) :validointi)
                  (let [uusi-sopimus (arkisto/lisaa! sopimus)]
                    (json-response uusi-sopimus)))))
 
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :put "/:jarjestamissopimusid" [jarjestamissopimusid sopimusnumero alkupvm loppupvm oppilaitos tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
+  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :put "/:jarjestamissopimusid" [jarjestamissopimusid sopimusnumero alkupvm loppupvm koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
     (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
         (let [sopimus {:jarjestamissopimusid jarjestamissopimus_id_int
                        :sopimusnumero sopimusnumero
                        :alkupvm (when alkupvm (parse-iso-date alkupvm))
                        :loppupvm (when loppupvm (parse-iso-date loppupvm))
-                       :oppilaitos  (paljas-tai-kentan-arvo oppilaitos :oppilaitoskoodi)
+                       :koulutustoimija  (paljas-tai-kentan-arvo koulutustoimija :ytunnus)
                        :tutkintotilaisuuksista_vastaava_oppilaitos (paljas-tai-kentan-arvo tutkintotilaisuuksista_vastaava_oppilaitos :oppilaitoskoodi)
                        :toimikunta (paljas-tai-kentan-arvo toimikunta :tkunta)
                        :vastuuhenkilo vastuuhenkilo

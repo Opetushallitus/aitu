@@ -109,12 +109,13 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('sopimustenListaus', function(){
     return {
       restrict: 'E',
+      replace: true,
       scope : {
         sopimukset : '=',
         naytaTutkinnot : '=',
         naytaPerusteSarake : '=',
         otsikko : '=',
-        piilotaJarjestajat : '='
+        piilotaKoulutustoimijat : '='
       },
       templateUrl : 'template/sopimusten-listaus',
       link: function(scope) {}
@@ -123,11 +124,12 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('vanhojenSopimustenListaus', function(){
     return {
       restrict: 'E',
+      replace: true,
       scope : {
         sopimukset : '=',
         naytaTutkinnot : '=',
         otsikko : '=',
-        piilotaJarjestajat : '='
+        piilotaKoulutustoimijat : '='
       },
       templateUrl : 'template/vanhojen-sopimusten-listaus',
       link: function(scope) {
@@ -624,6 +626,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('jasenyyksienListaus', function(){
     return {
       restrict: 'E',
+      replace: true,
       scope : {
         jasenet : '=',
         naytaToimikunta : '=',
@@ -650,6 +653,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('vanhojenJasenyyksienListaus', function(){
     return {
       restrict: 'E',
+      replace: true,
       scope : {
         jasenet : '=',
         naytaToimikunta : '=',

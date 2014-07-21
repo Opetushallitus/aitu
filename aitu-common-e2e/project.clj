@@ -12,10 +12,15 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(defproject solita/opetushallitus-aitu-e2e "1.8.0-SNAPSHOT"
+(defproject solita/opetushallitus-aitu-e2e "1.12.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [clj-webdriver "0.6.1"]
-                 [clj-http "0.7.6"]
-                 [cheshire "5.2.0"]
-                 [com.paulhammant/ngwebdriver "0.9.1"]
-                 [clj-time "0.6.0"]])
+                 [clj-webdriver "0.6.1" :exclusions [org.seleniumhq.selenium/selenium-java
+                                                     org.seleniumhq.selenium/selenium-server
+                                                     org.seleniumhq.selenium/selenium-remote-driver]]
+                 [org.seleniumhq.selenium/selenium-java "2.42.2"]
+                 [org.seleniumhq.selenium/selenium-server "2.42.2"]
+                 [org.seleniumhq.selenium/selenium-remote-driver "2.42.2"]
+                 [clj-http "0.9.2"]
+                 [cheshire "5.3.1"]
+                 [com.paulhammant/ngwebdriver "0.9.1" :exclusions [org.seleniumhq.selenium/selenium-java]]
+                 [clj-time "0.7.0"]])

@@ -15,7 +15,7 @@
 (ns aitu.integraatio.sql.jarjestamissopimus-arkisto-test
   (:import java.io.File
            org.apache.commons.io.FileUtils)
-  (:require [clojure.test :refer [deftest testing is are use-fixtures]]
+  (:require [clojure.test :refer :all]
             [clojure.walk :refer [postwalk]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [aitu.toimiala.jarjestamissopimus :refer :all]
@@ -28,7 +28,8 @@
                      sopimus-ja-tutkinto
                      sopimus-ja-tutkinto-ja-osaamisala
                      tutkintoversio]]
-            [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]))
+            [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
+            [aitu.auditlog :as auditlog]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -38,18 +39,28 @@
   {:post [(jarjestamissopimus? %)]}
   {:toimikunta "TKUN"
    :sopijatoimikunta "TKUN"
-   :oppilaitos "OP1"
+   :koulutustoimija "KT1"
+   :tutkintotilaisuuksista_vastaava_oppilaitos "OP1"
    :alkupvm (parse-local-date (formatters :year-month-day) "2013-02-01")
    :loppupvm (parse-local-date (formatters :year-month-day) "2099-02-01")
    :sopimusnumero "1234"})
 
 (defn lisaa-testidata! []
+  (sql/exec-raw (str "insert into koulutustoimija("
+                     "ytunnus,"
+                     "nimi_fi"
+                     ")values("
+                     "'KT1',"
+                     "'Koulutustoimijan nimi'"
+                     ")"))
   (sql/exec-raw (str "insert into oppilaitos("
                      "oppilaitoskoodi,"
-                     "nimi"
+                     "nimi,"
+                     "koulutustoimija"
                      ")values("
                      "'OP1',"
-                     "'Oppilaitoksen nimi'"
+                     "'Oppilaitoksen nimi',"
+                     "'KT1'"
                      ")"))
   (sql/exec-raw (str "insert into tutkintotoimikunta("
                      "tkunta,"
@@ -107,6 +118,20 @@
         sopimuksen-tutkintotunnus (-> sopimus :sopimus_ja_tutkinto (first) :tutkintoversio :tutkintotunnus)]
       (is (= sopimuksen-tutkintojen-lkm 1))
       (is (= sopimuksen-tutkintotunnus "34567"))))
+
+(deftest ^:integraatio paivita-tutkinnot!-auditlog-test
+  (testing "paivita-tutkinnot! kirjaa sopimuksen ja tutkinnot auditlogiin"
+    (lisaa-koulutus-ja-opintoala!)
+    (lisaa-tutkinto! {})
+    (doseq [id [1 2 3]]
+      (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+    (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+    (let [log (atom [])]
+      (with-redefs [auditlog/sopimuksen-tutkinnot-operaatio! #(swap! log conj %&)]
+        (arkisto/paivita-tutkinnot! 99 [{:tutkintoversio_id 1}
+                                        {:tutkintoversio_id 2}
+                                        {:tutkintoversio_id 3}])
+        (is (= [:paivitys 99 #{1 2 3}] (first @log)))))))
 
 (deftest ^:integraatio lisaa-ja-poista-suunnitelma-sopimuksen-tutkinnolle!
   "Lisää järjestämissuunnitelman sopimuksen tutkinnolle"
@@ -180,14 +205,18 @@ tietorakenteen osia."
             (-> (hae-taydellinen-sopimus (:jarjestamissopimusid sopimus))
               :sopimus_ja_tutkinto
               seq->vec),
-            ;; uudet-sopimus-tutkinto-liitokset:ssa opintoalan OA1 on poistettu
+            ;; uudet-sopimus-tutkinto-liitokset:ssa opintoala OA1 on poistettu
             ;; tutkinnosta TU1 ja lisätty tutkintoon TU2
+            oa1? #(= (:nimi_fi %) "OA1")
             oa1
-            (-> sopimus-tutkinto-liitokset
-              (get 0) :sopimus_ja_tutkinto_ja_osaamisala last),
+            (->> sopimus-tutkinto-liitokset
+              (mapcat :sopimus_ja_tutkinto_ja_osaamisala)
+              (filter oa1?)
+              first),
             uudet-sopimus-tutkinto-liitokset
             (-> sopimus-tutkinto-liitokset
-              (update-in [0 :sopimus_ja_tutkinto_ja_osaamisala] butlast)
+              (update-in [0 :sopimus_ja_tutkinto_ja_osaamisala]
+                         (partial remove oa1?))
               (update-in [1 :sopimus_ja_tutkinto_ja_osaamisala] conj oa1))]
         ;; Kun
         (arkisto/paivita! sopimus uudet-sopimus-tutkinto-liitokset)
@@ -195,3 +224,69 @@ tietorakenteen osia."
         (is (= (sopimuksen-tutkintojen-osaamisalat sopimus)
                {"TU1" #{"OA2"}
                 "TU2" #{"OA1" "OA3"}}))))))
+
+(deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-tutkintoversio-id-test
+  (lisaa-koulutus-ja-opintoala!)
+  (lisaa-tutkinto! {})
+  (doseq [id [1 2 3]]
+    (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+  (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
+  (is (= #{1 2 3} (set (map :tutkintoversio (arkisto/hae-sopimuksen-tutkinnot 99))))))
+
+(deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-tutkintoversio-map-test
+  (lisaa-koulutus-ja-opintoala!)
+  (lisaa-tutkinto! {})
+  (doseq [id [1 2 3]]
+    (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+  (arkisto/lisaa-tutkinnot-sopimukselle! 99 [{:tutkintoversio 1
+                                              :kieli "fi"}
+                                             {:tutkintoversio 2
+                                              :kieli "2k"}
+                                             {:tutkintoversio 3
+                                              :kieli "sv"}])
+  (is (= #{{:tutkintoversio 1
+            :kieli "fi"}
+           {:tutkintoversio 2
+            :kieli "2k"}
+           {:tutkintoversio 3
+            :kieli "sv"}}
+         (->> (arkisto/hae-sopimuksen-tutkinnot 99)
+           (map #(select-keys % [:tutkintoversio :kieli]))
+           set))))
+
+(deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-auditlog-test
+  (testing "lisaa-tutkinnot-sopimukselle! kirjaa sopimuksen ja tutkinnot auditlogiin"
+    (lisaa-koulutus-ja-opintoala!)
+    (lisaa-tutkinto! {})
+    (doseq [id [1 2 3]]
+      (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+    (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+    (let [log (atom [])]
+      (with-redefs [auditlog/sopimuksen-tutkinnot-operaatio! #(swap! log conj %&)]
+        (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
+        (is (= [[:lisays 99 [1 2 3]]] @log))))))
+
+(deftest ^:integraatio poista-tutkinnot-sopimukselta!-tutkintoversio-id-test
+  (lisaa-koulutus-ja-opintoala!)
+  (lisaa-tutkinto! {})
+  (doseq [id [1 2 3]]
+    (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+  (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
+  (arkisto/poista-tutkinnot-sopimukselta! 99 [2 3])
+  (is (= #{1} (set (map :tutkintoversio (arkisto/hae-sopimuksen-tutkinnot 99))))))
+
+(deftest ^:integraatio poista-tutkinnot-sopimukselta!-auditlog-test
+  (testing "lisaa-tutkinnot-sopimukselle! kirjaa sopimuksen ja tutkinnot auditlogiin"
+    (lisaa-koulutus-ja-opintoala!)
+    (lisaa-tutkinto! {})
+    (doseq [id [1 2 3]]
+      (lisaa-tutkintoversio! {:tutkintoversio_id id}))
+    (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
+    (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
+    (let [log (atom [])]
+      (with-redefs [auditlog/sopimuksen-tutkinnot-operaatio! #(swap! log conj %&)]
+        (arkisto/poista-tutkinnot-sopimukselta! 99 [1 2 3])
+        (is (= [[:poisto 99 [1 2 3]]] @log))))))

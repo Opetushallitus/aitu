@@ -2,10 +2,10 @@
 [[#i18n.yleiset]]
 [[#i18n.toimikunta]]
 <h1>
+  <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimikuntaa" ng-click="muokkaa()"></auth-toiminto>
   {{toimikunta.nimi | lokalisoi:toimikunta:'nimi'}}
   <span ng-show="toimikunta.voimassa === false">([[ei-voimassa]])</span>
-  <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimikuntaa" ng-click="muokkaa()"></auth-toiminto>
-  <ohje tunniste="toimikunta"></ohje>
+<ohje tunniste="toimikunta"></ohje>
 </h1>
 
 <section class="info-section">
@@ -46,27 +46,29 @@
   </form>
 </section>
 
-<span ng-hide="muokkausTila">
-  <div class="list-controls">
-    <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimialaa" ng-click="muokkaaToimialaa()"></auth-toiminto>
+<div ng-hide="muokkausTila">
+  <div>
+    <div class="list-controls">
+        <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimialaa" ng-click="muokkaaToimialaa()"></auth-toiminto>
+    </div>
+    <h2>[[tutkintotoimikunnan-toimiala]]</h2>
+    <table jarjestettava-taulukko="toimikunta.nayttotutkinto" jarjestetty-data="tutkintoJarjestetty">
+      <thead>
+      <tr>
+        <th jarjestettava-sarake="opintoala_nimi" jarjestely-fn="orderByLokalisoitu" oletus-jarjestely>[[opintoala]]</th>
+        <th jarjestettava-sarake="nimi" jarjestely-fn="orderByLokalisoitu">[[nayttotutkinto]]</th>
+        <th>[[osaamisala]]</th>
+      </tr>
+      </thead>
+      <tr ng-repeat="tutkinto in tutkintoJarjestetty">
+        <td>{{tutkinto.opintoala_nimi | lokalisoi:tutkinto:'opintoala_nimi'}}</td>
+        <td><a href="#/tutkinto/{{tutkinto.tutkintotunnus}}">{{tutkinto.tutkintotunnus}} {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a></td>
+        <td></td>
+      </tr>
+    </table>
   </div>
-  <h2>[[tutkintotoimikunnan-toimiala]]</h2>
-  <table jarjestettava-taulukko="toimikunta.nayttotutkinto" jarjestetty-data="tutkintoJarjestetty">
-    <thead>
-    <tr>
-      <th jarjestettava-sarake="opintoala_nimi" jarjestely-fn="orderByLokalisoitu" oletus-jarjestely>[[opintoala]]</th>
-      <th jarjestettava-sarake="nimi" jarjestely-fn="orderByLokalisoitu">[[nayttotutkinto]]</th>
-      <th>[[osaamisala]]</th>
-    </tr>
-    </thead>
-    <tr ng-repeat="tutkinto in tutkintoJarjestetty">
-      <td>{{tutkinto.opintoala_nimi | lokalisoi:tutkinto:'opintoala_nimi'}}</td>
-      <td><a href="#/tutkinto/{{tutkinto.tutkintotunnus}}">{{tutkinto.tutkintotunnus}} {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a></td>
-      <td></td>
-    </tr>
-  </table>
 
-  <span ng-show="toimikunta.voimassa">
+  <div ng-show="toimikunta.voimassa">
     <div class="list-controls">
       <auth-toiminto auth-nappi oikeus="toimikuntajasen_yllapito" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-jasenia" ng-click="muokkaaJasenia()"></auth-toiminto>
     </div>
@@ -76,29 +78,37 @@
                           nayta-sahkoposti="true"
                           piilota-kesto="true">
     </jasenyyksien-listaus>
-  </span>
-  <vanhojen-jasenyyksien-listaus class="aiemmat-jasenyydet"
-                                 otsikko="toimikunta.voimassa ? '[[aiemmat-jasenet]]' : '[[jasenet]]'"
-                                 jasenet="entisetJasenet"
-                                 salli-piilotus="toimikunta.voimassa">
-  </vanhojen-jasenyyksien-listaus>
-
-
-  <div class="list-controls">
-    <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="sopimus_lisays" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon add-icon lisaa-sopimus" ng-click="siirrySopimuksenLuontiin()"></auth-toiminto>
   </div>
-  <sopimusten-listaus class="nykyiset-sopimukset"
-                      otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
-                      sopimukset="nykyisetSopimukset"
-                      nayta-tutkinnot="true">
-  </sopimusten-listaus>
 
-  <vanhojen-sopimusten-listaus class="vanhat-sopimukset"
-                               otsikko="toimikunta.voimassa ? '[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]' : '[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
-                               sopimukset="entisetSopimukset"
-                               nayta-tutkinnot="true">
-  </vanhojen-sopimusten-listaus>
+  <div>
+    <vanhojen-jasenyyksien-listaus class="aiemmat-jasenyydet"
+                                   otsikko="toimikunta.voimassa ? '[[aiemmat-jasenet]]' : '[[jasenet]]'"
+                                   jasenet="entisetJasenet"
+                                   salli-piilotus="toimikunta.voimassa">
+    </vanhojen-jasenyyksien-listaus>
+  </div>
 
-</span>
+  <div>
+    <div class="list-controls">
+      <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="sopimus_lisays" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon add-icon lisaa-sopimus" ng-click="siirrySopimuksenLuontiin()"></auth-toiminto>
+    </div>
+    <sopimusten-listaus class="nykyiset-sopimukset"
+                        otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
+                        sopimukset="nykyisetSopimukset"
+                        nayta-tutkinnot="true">
+    </sopimusten-listaus>
+  </div>
+
+  <div>
+    <vanhojen-sopimusten-listaus class="vanhat-sopimukset"
+                                 otsikko="toimikunta.voimassa ? '[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]' : '[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
+                                 sopimukset="entisetSopimukset"
+                                 nayta-tutkinnot="true">
+    </vanhojen-sopimusten-listaus>
+  </div>
+  <div>
+    <a class="liite-linkki" ng-href="[[base-url]]/api/ttk/{{toimikunta.tkunta}}/sopimukset" target="_blank">[[lataa-toimikunnan-sopimukset]]</a>
+  </div>
+</div>
 [[/i18n.toimikunta]]
 [[/i18n.yleiset]]

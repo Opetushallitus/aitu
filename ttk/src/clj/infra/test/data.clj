@@ -29,6 +29,7 @@
              "jarjestamissopimus"
              "toimipaikka"
              "oppilaitos"
+             "koulutustoimija"
              "jasenyys"
              "toimikunta_ja_tutkinto"
              "tutkinnonosa"

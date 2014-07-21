@@ -17,6 +17,7 @@
             [clojure.set :refer [subset?]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data]]))
 
 (def toimikuntalista "/fi/#/search-toimikunta")

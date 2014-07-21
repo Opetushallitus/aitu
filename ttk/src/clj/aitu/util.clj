@@ -22,7 +22,8 @@
             [clojure.set :refer [union]]
             [clojure.walk :refer [keywordize-keys postwalk]]
             [clojure.tools.logging :as log]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [clojure-csv.core :refer [write-csv]]))
 
 ;; http://clojuredocs.org/clojure_contrib/clojure.contrib.map-utils/deep-merge-with
 (defn deep-merge-with
@@ -156,7 +157,9 @@
 (defn some-value [pred coll]
   (first (filter pred coll)))
 
-(defn map-by [f coll]
+(defn map-by
+  "Kuten group-by, mutta jättää vain viimeisen täsmäävän alkion"
+  [f coll]
   (into {} (for [item coll
                  :let [k (f item)]
                  :when (not (nil? k))]
@@ -217,3 +220,22 @@
                (map? v) [k (kaikki-optional v)]
                :else [k v]))))
 
+(defn keyword-vertailu
+  "vertaa avaimia halutun järjestys-taulukon mukaisesti, tuntemattomat avaimet loppuun"
+  [jarjestys a b]
+  (compare [(.indexOf (reverse jarjestys) b) b]
+           [(.indexOf (reverse jarjestys) a) a]))
+
+(defn jarjesta-avaimet
+  "Järjestää mapin taulukkona annetun järjestyksen mukaiseksi"
+  [m jarjestys]
+  (into (sorted-map-by #(keyword-vertailu jarjestys %1 %2)) m))
+
+(defn otsikot-ja-sarakkeet-jarjestykseen [m kenttien-jarjestys]
+  (into [(for [[k _] (jarjesta-avaimet (first m) kenttien-jarjestys)] (name k))]
+        (for [rivi m]
+          (for [[_ v] (jarjesta-avaimet rivi kenttien-jarjestys)]
+            (str v)))))
+
+(defn muodosta-csv [data kenttien-jarjestys]
+  (write-csv (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys) :delimiter \;))

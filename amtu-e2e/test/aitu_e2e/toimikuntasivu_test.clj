@@ -16,6 +16,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data
                                         aseta-toimikunta-paattyneeksi]]
             [clojure.set :refer [subset?]]))
@@ -48,11 +49,11 @@
                                  (.column "sopimusJaTutkinto.tutkintoversio.nimi")))))
 
 (defn klikkaa-taulukon-sarakkeen-otsikkoa [taulukko sarake]
-  (w/click {:css (str "jasenyyksien-listaus.nykyiset-jasenyydet table[jarjestettava-taulukko=\"" taulukko "\"] th[jarjestettava-sarake=\"" sarake "\"]")})
+  (w/click {:css (str ".nykyiset-jasenyydet table[jarjestettava-taulukko=\"" taulukko "\"] th[jarjestettava-sarake=\"" sarake "\"]")})
   (odota-angular-pyyntoa))
 
 (defn jasenien-nimet []
-  (map w/text (w/find-elements {:css "jasenyyksien-listaus.nykyiset-jasenyydet tbody td:nth-child(2)"})))
+  (map w/text (w/find-elements {:css ".nykyiset-jasenyydet tbody td:nth-child(2)"})))
 
 (def toimikuntasivu-testidata
   {:toimikunnat [{:nimi_fi "Ilmastointialan tutkintotoimikunta"
@@ -79,7 +80,10 @@
               :henkilo {:henkiloid 999}
               :edustus "asiantuntija"
               :rooli "asiantuntija"}]
+   :koulutustoimijat [{:ytunnus "0000000-0"
+                       :nimi_fi "Ankkalinnan kaupunki"}]
    :oppilaitokset [{:oppilaitoskoodi "12345"
+                    :koulutustoimija "0000000-0"
                     :nimi "Ankkalinnan aikuiskoulutuskeskus"}]
    :koulutusalat [{:selite_fi "Tekniikan ja liikenteen ala"
                    :koodi "KA1"}]
@@ -94,7 +98,12 @@
                             :jarjestamissopimusid 1230
                             :toimikunta "ILMA"
                             :sopijatoimikunta "ILMA"
-                            :oppilaitos "12345"}]
+                            :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
+                            :koulutustoimija "0000000-0"
+                            ;; Sopimuksen täytyy olla voimassa, muuten
+                            ;; tutkintojen lisäys ei onnistu.
+                            :alkupvm "2014-07-03"
+                            :loppupvm "2099-01-01"}]
    :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
                           :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]})
 
@@ -210,3 +219,18 @@
           (is (= (sivun-otsikko) "ILMASTOINTIALAN TUTKINTOTOIMIKUNTA (EI VOIMASSA)")))
         (testing "Sivulla ei näy muokkaustoiminnallisuuksia"
           (is (= (count (filter w/displayed? (w/find-elements {:css "button.edit-icon button.add-icon"}))) 0)))))))
+
+(defn sopimukset-linkki []
+  (w/attribute (w/find-element {:css "a.liite-linkki"}) "href"))
+
+;; Tiedostojen lataaminen ei onnistu IE:llä, koska IE ei näytä WebDriverille
+;; HTTPOnly-evästeitä (istuntoeväste mukaan lukien).
+(deftest ^:no-ie toimikuntasivu-sopimukset-download-test
+  (testing "toimikuntasivu sopimusten download linkki"
+    (with-webdriver
+      (with-data toimikuntasivu-testidata
+        (avaa (toimikuntasivu "98/11/543"))
+        (is (= (lataa-tiedosto-webdriverin-istunnossa (sopimukset-linkki))
+               (clojure.string/join "\n" ["sopimusnumero;tutkinto_nimi_fi;tutkinto_nimi_sv;peruste;koulutustoimija_nimi_fi;koulutustoimija_nimi_sv;alkupvm;loppupvm"
+                                          "123;Ilmastointialan tutkinto;Tutkinto (sv)1;;Ankkalinnan kaupunki;Koulutustoimija 1;2014-07-03;2099-01-01"
+                                          ""])))))))

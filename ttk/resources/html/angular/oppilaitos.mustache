@@ -1,46 +1,49 @@
 {{=[[ ]]=}}
-[[#i18n.jarjestajat]]
-<h1>{{jarjestaja.nimi}}</h1>
+[[#i18n.oppilaitokset]]
+<h1>{{oppilaitos.nimi}}</h1>
 
 <section class="info-section">
   <fieldset>
     <label>[[oppilaitoskoodi]]</label>
-    <p>{{jarjestaja.oppilaitoskoodi}}</p>
+    <p>{{oppilaitos.oppilaitoskoodi}}</p>
   </fieldset>
   <fieldset>
     <label>[[i18n.yleiset.kielisyys]]</label>
-    <p><enum-arvo nimi="kieli" arvo="jarjestaja.kieli"></enum-arvo></p>
+    <p><enum-arvo nimi="kieli" arvo="oppilaitos.kieli"></enum-arvo></p>
   </fieldset>
   <fieldset>
     <label>[[i18n.yleiset.sahkoposti]]</label>
-    <p><a href="mailto:{{jarjestaja.sahkoposti}}">{{jarjestaja.sahkoposti}}</a></p>
+    <p><a href="mailto:{{oppilaitos.sahkoposti}}">{{oppilaitos.sahkoposti}}</a></p>
   </fieldset>
   <fieldset>
     <label>[[i18n.yleiset.puhelin]]</label>
-    <p>{{jarjestaja.puhelin}}</p>
+    <p>{{oppilaitos.puhelin}}</p>
   </fieldset>
   <fieldset>
     <label>[[i18n.yleiset.osoite]]</label>
-    <div>{{jarjestaja.osoite}}</div>
-    <div>{{jarjestaja.postinumero}} {{jarjestaja.postitoimipaikka}}</div>
+    <div>{{oppilaitos.osoite}}</div>
+    <div>{{oppilaitos.postinumero}} {{oppilaitos.postitoimipaikka}}</div>
   </fieldset>
   <fieldset>
     <label>[[i18n.yleiset.www-osoite]]</label>
-    <p><a href="{{jarjestaja.www_osoite}}">{{jarjestaja.www_osoite}}</a></p>
+    <p><a href="{{oppilaitos.www_osoite}}">{{oppilaitos.www_osoite}}</a></p>
   </fieldset>
+  <fieldset>
+    <label>[[koulutustoimija]]</label>
+    <p><a href="#/koulutustoimija/{{oppilaitos.koulutustoimija.ytunnus}}/tiedot">{{oppilaitos.koulutustoimija.nimi | lokalisoi:oppilaitos.koulutustoimija:'nimi'}}</a></p>
 </section>
 
 <sopimusten-listaus class="nykyiset-sopimukset"
                     otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
                     sopimukset="sopimukset.nykyiset"
                     nayta-tutkinnot="true"
-                    piilota-jarjestajat="true" >
+                    piilota-koulutustoimijat="true" >
 </sopimusten-listaus>
 
 <vanhojen-sopimusten-listaus class="vanhat-sopimukset"
                              otsikko="'[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]'"
                              sopimukset="sopimukset.vanhat"
                              nayta-tutkinnot="true"
-                             piilota-jarjestajat="true">
+                             piilota-koulutustoimijat="true">
 </vanhojen-sopimusten-listaus>
-[[/i18n.jarjestajat]]
+[[/i18n.oppilaitokset]]

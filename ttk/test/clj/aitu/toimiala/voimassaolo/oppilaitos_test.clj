@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.toimiala.voimassaolo.toimikunta-test
+(ns aitu.toimiala.voimassaolo.oppilaitos-test
   (:require [clojure.test :refer [deftest testing is are]]
             [aitu.toimiala.voimassaolo.oppilaitos :refer :all]))
 

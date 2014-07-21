@@ -12,12 +12,14 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('ttk', ['aitulocale',
+angular.module('ttk', ['angular-loading-bar',
+                       'aitulocale',
                        'kayttooikeudet',
                        'henkilot',
                        'toimikunnat',
                        'tutkinnot',
-                       'jarjestajat',
+                       'oppilaitokset',
+                       'koulutustoimijat',
                        'sopimukset',
                        'filters',
                        'directives',
@@ -128,13 +130,11 @@ angular.module('ttk', ['aitulocale',
     requestTimeout : 120000 //2min timeout kaikille pyynnöille
   })
 
-  .provider(
-    '$exceptionHandler',
-    {
-      $get: function( virheLogitus ) {
+  .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.latencyThreshold = 100;
+    cfpLoadingBarProvider.includeSpinner = false;
+  }])
 
-        return( virheLogitus );
-
-      }
-    }
-  );
+  .factory('$exceptionHandler', ['virheLogitus', function(virheLogitus) {
+    return virheLogitus;
+  }]);

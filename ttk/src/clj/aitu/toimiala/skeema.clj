@@ -96,6 +96,22 @@
 
 (declare SopimusJaTutkinto)
 
+(defmodel KoulutustoimijaLinkki {:nimi_fi s/Str
+                                 :nimi_sv s/Str
+                                 :ytunnus s/Str})
+
+(defmodel KoulutustoimijanTiedot (merge KoulutustoimijaLinkki
+                                        {:postinumero (s/maybe s/Str)
+                                         :osoite (s/maybe s/Str)
+                                         :postitoimipaikka (s/maybe s/Str)
+                                         :puhelin (s/maybe s/Str)
+                                         :www_osoite (s/maybe s/Str)
+                                         :sahkoposti (s/maybe s/Str)}))
+
+(defmodel Koulutustoimija (merge KoulutustoimijanTiedot AuditTiedot))
+
+(defmodel KoulutustoimijaLista (assoc Koulutustoimija :sopimusten_maara s/Int))
+
 (defmodel OppilaitosLinkki {:nimi s/Str
                             :oppilaitoskoodi s/Str})
 
@@ -107,9 +123,12 @@
                                       :www_osoite (s/maybe s/Str)
                                       :postitoimipaikka (s/maybe s/Str)
                                       :kieli (s/maybe Kieli)
-                                      :sahkoposti (s/maybe s/Str)}))
+                                      :sahkoposti (s/maybe s/Str)
+                                      :koulutustoimija s/Str}))
 
 (defmodel OppilaitosTiedot (merge OppilaitoksenTiedot AuditTiedot))
+
+(defmodel OppilaitosLista (assoc OppilaitosTiedot :sopimusten_maara s/Int))
 
 (defmodel JarjestamissopimusTiedot (merge {:jarjestamissopimusid s/Int
                                            :alkupvm (s/maybe org.joda.time.LocalDate)
@@ -120,7 +139,7 @@
                                            (s/optional-key :poistettu) Boolean
                                            :toimikunta s/Str
                                            (s/optional-key :sopijatoimikunta) s/Str
-                                           :oppilaitos s/Str
+                                           :koulutustoimija s/Str
                                            :tutkintotilaisuuksista_vastaava_oppilaitos (s/maybe s/Str)
                                            (s/optional-key :vastuuhenkilo) (s/maybe s/Str)
                                            (s/optional-key :puhelin) (s/maybe s/Str)
@@ -131,7 +150,7 @@
                                    :jarjestamissuunnitelma_filename s/Str})
 
 (defmodel SopimuksenLiiteLinkki {:sopimuksen_liite_id s/Int
-                            :sopimuksen_liite_filename s/Str})
+                                 :sopimuksen_liite_filename s/Str})
 
 (defmodel TutkintoversioTiedot (merge {:peruste (s/maybe s/Str)
                                        :voimassa_alkupvm org.joda.time.LocalDate
@@ -204,10 +223,9 @@
                                    (optional-keys AuditTiedot)))
 
 (defmodel Jarjestamissopimus (merge JarjestamissopimusTiedot
-                                    {:oppilaitos OppilaitosTiedot
+                                    {:koulutustoimija Koulutustoimija
                                      :tutkintotilaisuuksista_vastaava_oppilaitos (s/maybe OppilaitosTiedot)
                                      (s/optional-key :sopimus_ja_tutkinto) [SopimusJaTutkinto]}))
-
 
 (defmodel TutkinnonTiedot {:tutkintotunnus s/Str
                            :opintoala s/Str
@@ -254,7 +272,13 @@
 (defmodel OppilaitosLaajatTiedot (merge OppilaitoksenTiedot
                                         AuditTiedot
                                         {:jarjestamissopimus [JarjestamissopimusJaToimikunnat]
-                                         :voimassa Boolean}))
+                                         :voimassa Boolean
+                                         :koulutustoimija KoulutustoimijaLinkki}))
+
+(defmodel KoulutustoimijaLaajatTiedot (merge KoulutustoimijanTiedot
+                                             AuditTiedot
+                                             {:jarjestamissopimus [JarjestamissopimusJaToimikunnat]
+                                              :oppilaitokset [OppilaitosLinkki]}))
 
 (defmodel Lokalisoitu
   {:fi s/Str

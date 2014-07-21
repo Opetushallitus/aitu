@@ -19,10 +19,12 @@
 
 (deftest jarjestamissopimus-validointi []
    (is (jarjestamissopimus? {:sopimusnumero "12345"
-                             :oppilaitos "2013/01/001"
+                             :koulutustoimija "9999999-9"
+                             :tutkintotilaisuuksista_vastaava_oppilaitos "2013/01/001"
                              :toimikunta "TTK1"
                              :alkupvm (time/now)}))
    (is (not (jarjestamissopimus? {; sopimusnumero puuttuu
+                                  :koulutustoimija "9999999-9"
                                   :oppilaitos "2013/01/001"
                                   :toimikunta "TTK1"
                                   :alkupvm (time/now)}))))

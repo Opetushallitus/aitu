@@ -57,29 +57,39 @@
   (sql/delete toimipaikka
     (sql/where {:toimipaikkakoodi toimipaikkakoodi})))
 
-(defn hae-kaikki
-  "Hakee kaikki oppilaitokset"
+(defn hae-kaikki-julkiset-tiedot
+  "Hakee kaikkien oppilaitokset julkiset tiedot"
   []
   (sql/select oppilaitos
     (sql/fields :oppilaitoskoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
-                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue)
+                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue :koulutustoimija
+                (sql/raw "(select count(*) from jarjestamissopimus where tutkintotilaisuuksista_vastaava_oppilaitos = oppilaitoskoodi and voimassa) as sopimusten_maara"))
     (sql/order :nimi)))
 
-(defn hae-kaikki-toimipaikat []
+(defn hae-kaikki
+  "Hakee kaikkien oppilaitosten kaikki tiedot"
+  []
+  (sql/select oppilaitos))
+
+(defn hae-kaikki-toimipaikat-julkiset-tiedot []
   (sql/select toimipaikka
     (sql/fields :toimipaikkakoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
                 :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :oppilaitos)
     (sql/order :nimi)))
 
+(defn hae-kaikki-toimipaikat []
+  (sql/select toimipaikka))
+
 (defn hae-alalla
   "Hakee kaikki tietyn alan oppilaitokset. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
   [ala]
   (if (clojure.string/blank? ala)
-    (hae-kaikki)
+    (hae-kaikki-julkiset-tiedot)
     (let [termi (str "%" ala "%")]
       (map sql-timestamp->joda-datetime
            (sql/exec-raw [(str "select oppilaitoskoodi, nimi, kieli, muutettu_kayttaja, luotu_kayttaja, muutettuaika, luotuaika, "
-                               "sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite, alue "
+                               "sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite, alue, koulutustoimija, "
+                               "(select count(*) from jarjestamissopimus where tutkintotilaisuuksista_vastaava_oppilaitos = oppilaitoskoodi and voimassa) as sopimusten_maara "
                                "from oppilaitos ol "
                                "where exists (select 1 from jarjestamissopimus js "
                                "              join sopimus_ja_tutkinto st on js.jarjestamissopimusid = st.jarjestamissopimusid "
@@ -89,7 +99,7 @@
                                "              left join tutkinto_ja_tutkinnonosa tjt on tv.tutkintoversio_id = tjt.tutkintoversio "
                                "              left join tutkinnonosa tos on tjt.tutkinnonosa = tos.tutkinnonosa_id "
                                "              left join osaamisala osala on tv.tutkintoversio_id = osala.tutkintoversio "
-                               "              where js.oppilaitos = ol.oppilaitoskoodi "
+                               "              where js.tutkintotilaisuuksista_vastaava_oppilaitos = ol.oppilaitoskoodi "
                                "                    and (oa.selite_fi ilike ? "
                                "                         or oa.selite_sv ilike ? "
                                "                         or osala.nimi_fi ilike ? "
@@ -130,10 +140,10 @@
   (let [oppilaitokset (sql/select oppilaitos
                         (sql/fields :oppilaitoskoodi :nimi :sahkoposti
                                     :osoite :postinumero :postitoimipaikka))
-        sopimukset (group-by :oppilaitos (sopimus-arkisto/hae-kaikki-osoitepalvelulle))]
+        sopimukset (group-by :tutkintotilaisuuksista_vastaava_oppilaitos (sopimus-arkisto/hae-kaikki-osoitepalvelulle))]
     (for [oppilaitos oppilaitokset
           :let [oppilaitoksen-sopimukset (some->> (get sopimukset (:oppilaitoskoodi oppilaitos))
-                                           (map #(dissoc % :oppilaitos)))]
+                                           (map #(dissoc % :oppilaitos :tutkintotilaisuuksista_vastaava_oppilaitos :koulutustoimija)))]
           :when oppilaitoksen-sopimukset]
       (-> oppilaitos
         rajaa-oppilaitoksen-kentat

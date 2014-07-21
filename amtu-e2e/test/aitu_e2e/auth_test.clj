@@ -1,6 +1,7 @@
 (ns aitu-e2e.auth-test
   (:require [clojure.test :refer [deftest is testing]]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data with-cleaned-data]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.toimikuntasivu-test :refer [toimikuntasivu
@@ -208,3 +209,23 @@
           etusivu
           "T-800"
           (is (not (w/exists? {:css "#current-user>li a[ng-click=\"valitse()\"]"}))))))))
+
+(defn kirjaudu-ulos-toisessa-ikkunassa []
+  (let [paaikkuna (w/window)
+        _ (w/execute-script (str "window.open('" @cas-url "/logout')"))
+        cas-ikkuna (first (disj (set (w/windows))
+                                paaikkuna))]
+    (w/switch-to-window cas-ikkuna)
+    (w/close)
+    (w/switch-to-window paaikkuna)))
+
+(defn navigoi-tutkinnot-sivulle []
+  (w/click {:text "Tutkinnot"}))
+
+(deftest ^:cas ajax-uudelleenohjaus-test
+  (testing "Käyttäjä, jonka istunto on suljettu, ohjataan sisäänkirjautumiseen AJAX-pyynnön yhteydessä"
+    (with-webdriver
+      (avaa etusivu)
+      (kirjaudu-ulos-toisessa-ikkunassa)
+      (navigoi-tutkinnot-sivulle)
+      (odota-kunnes (casissa?)))))

@@ -17,6 +17,7 @@
             [aitu.infra.henkilo-arkisto :as henkilo-arkisto]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
+            [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
             [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.toimiala.tutkinto :refer [tutkinto? tutkintoversio?]]
             [aitu.toimiala.skeema :refer [SisaltaaToimikunnanTiedot HenkilonTiedot]]
@@ -147,24 +148,39 @@
   (-> (merge default-jasen jasen)
     toimikunta-arkisto/lisaa-jasen!))
 
-(defn lisaa-oppilaitos! []
+(defn lisaa-koulutustoimija! []
+  (let [koulutustoimija {:ytunnus "KT1"
+                         :nimi_fi "Koulutustoimija"}]
+    (doto koulutustoimija
+      koulutustoimija-arkisto/lisaa!)))
+
+(defn lisaa-oppilaitos! [koulutustoimija]
   (let [oppilaitos {:oppilaitoskoodi "ABC12"
-                    :nimi "Oppilaitos"}]
-    (oppilaitos-arkisto/lisaa! oppilaitos)
-    oppilaitos))
+                    :nimi "Oppilaitos"
+                    :koulutustoimija (:ytunnus koulutustoimija)}]
+    (doto oppilaitos
+      oppilaitos-arkisto/lisaa!)))
 
 (defn lisaa-jarjestamissopimus!
-  ([oppilaitos]
+  ([koulutustoimija oppilaitos jarjestamissopimus]
     (let [toimikunta (lisaa-toimikunta!)]
       (jarjestamissopimus-arkisto/lisaa!
-        {:jarjestamissopimusid 1
-         :sopimusnumero "ABCDEF01234567890"
-         :alkupvm (time/date-time 2011 1 1)
-         :oppilaitos (:oppilaitoskoodi oppilaitos)
-         :toimikunta (:tkunta toimikunta)
-         :sopijatoimikunta (:tkunta toimikunta)})))
+        (merge {:jarjestamissopimusid 1
+                :sopimusnumero "ABCDEF01234567890"
+                :alkupvm (time/date-time 2011 1 1)
+                :koulutustoimija (:ytunnus koulutustoimija)
+                :tutkintotilaisuuksista_vastaava_oppilaitos (:oppilaitoskoodi oppilaitos)
+                :toimikunta (:tkunta toimikunta)
+                :sopijatoimikunta (:tkunta toimikunta)}
+               jarjestamissopimus))))
+  ([koulutustoimija oppilaitos]
+    (lisaa-jarjestamissopimus! koulutustoimija oppilaitos {}))
+  ([jarjestamissopimus]
+    (let [koulutustoimija (lisaa-koulutustoimija!)
+          oppilaitos (lisaa-oppilaitos! koulutustoimija)]
+      (lisaa-jarjestamissopimus! koulutustoimija oppilaitos jarjestamissopimus)))
   ([]
-    (lisaa-jarjestamissopimus! (lisaa-oppilaitos!))))
+    (lisaa-jarjestamissopimus! {})))
 
 (defn lisaa-osaamisala! [osaamisalatunnus]
   (sql/insert osaamisala
@@ -194,8 +210,9 @@
 
 (defn lisaa-osaamisaloja-koskeva-sopimus! [tutkinto->osaamisalat]
   (lisaa-koulutus-ja-opintoala!) ; lisaa-tutkinto! tarvitsee tämän
-  (let [oppilaitos (lisaa-oppilaitos!)
-        sopimus (lisaa-jarjestamissopimus! oppilaitos)
+  (let [koulutustoimija (lisaa-koulutustoimija!)
+        oppilaitos (lisaa-oppilaitos! koulutustoimija)
+        sopimus (lisaa-jarjestamissopimus! koulutustoimija oppilaitos)
         {:keys [toimipaikkakoodi]} (lisaa-toimipaikka! oppilaitos)
         sopimus-tutkinto-liitokset
         (for [[tutkintotunnus osaamisalat] tutkinto->osaamisalat]

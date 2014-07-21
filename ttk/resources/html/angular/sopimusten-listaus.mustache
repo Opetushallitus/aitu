@@ -1,28 +1,29 @@
 {{=[[ ]]=}}
 [[#i18n.jarjestamissopimus]]
-<h2>{{otsikko}}</h2>
-<table jarjestettava-taulukko="sopimukset" jarjestetty-data="sopimuksetJarjestetty">
-  <thead>
-  <tr>
-    <th jarjestettava-sarake="sopimusnumero" oletus-jarjestely>[[sopimusnumero]]</th>
-    <th ng-show="naytaTutkinnot">[[tutkinnot]]</th>
-    <th ng-show="naytaPerusteSarake">[[tutkinnonperusteiden-diaarinumero]]</th>
-    <th jarjestettava-sarake="oppilaitos.nimi" ng-hide="piilotaJarjestajat">[[oppilaitos]]</th>
-    <th jarjestettava-sarake="alkupvm" jarjestely-fn="orderByDate">[[voimassaolo]]</th>
-  </tr>
-  </thead>
-  <tr ng-repeat="sopimus in sopimuksetJarjestetty">
-    <td><auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA']" oikeus="sopimustiedot_luku" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot">{{sopimus.sopimusnumero}}</auth-toiminto></td>
-    <td ng-show="naytaTutkinnot">
-      <div class="sopimus-ja-tutkinto-rivi" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto">
-        <a href="#/tutkinto/{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">{{sopimusJaTutkinto.tutkintoversio.nimi |lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}}</a>
-        <span class="perusteen-diaarinumero">{{sopimusJaTutkinto.tutkintoversio.peruste}}</span>
-      </div>
-    </td>
-    <td ng-show="naytaPerusteSarake"><div ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto">{{sopimusJaTutkinto.tutkintoversio.peruste}}</div></td>
-    <td ng-hide="piilotaJarjestajat"><a href="#/jarjestaja/{{sopimus.oppilaitos.oppilaitoskoodi}}/tiedot">{{sopimus.oppilaitos.nimi}}</a></td>
-    <td>{{sopimus.alkupvm | date:'dd.MM.yyyy'}} – {{sopimus.loppupvm | date:'dd.MM.yyyy'}}</td>
-  </tr>
-</table>
-
+<div>
+  <h2>{{otsikko}}</h2>
+  <table jarjestettava-taulukko="sopimukset" jarjestetty-data="sopimuksetJarjestetty">
+    <thead>
+    <tr>
+      <th jarjestettava-sarake="sopimusnumero" oletus-jarjestely>[[sopimusnumero]]</th>
+      <th ng-show="naytaTutkinnot">[[tutkinnot]]</th>
+      <th ng-show="naytaPerusteSarake">[[tutkinnonperusteiden-diaarinumero]]</th>
+      <th jarjestettava-sarake="koulutustoimija.nimi" ng-hide="piilotaKoulutustoimijat">[[koulutustoimija]]</th>
+      <th jarjestettava-sarake="alkupvm" jarjestely-fn="orderByDate">[[voimassaolo]]</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="sopimus in sopimuksetJarjestetty">
+      <td><auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA']" oikeus="sopimustiedot_luku" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot">{{sopimus.sopimusnumero}}</auth-toiminto></td>
+      <td ng-show="naytaTutkinnot">
+        <div class="sopimus-ja-tutkinto-rivi" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto">
+          <a href="#/tutkinto/{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">{{sopimusJaTutkinto.tutkintoversio.nimi |lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}}</a>
+          <span class="perusteen-diaarinumero">{{sopimusJaTutkinto.tutkintoversio.peruste}}</span>
+        </div>
+      </td>
+      <td ng-show="naytaPerusteSarake"><div ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto">{{sopimusJaTutkinto.tutkintoversio.peruste}}</div></td>
+      <td ng-hide="piilotaKoulutustoimijat"><a href="#/koulutustoimija/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi |lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></td>
+      <td>{{sopimus.alkupvm | date:'dd.MM.yyyy'}} – {{sopimus.loppupvm | date:'dd.MM.yyyy'}}</td>
+    </tr>
+  </table>
+</div>
 [[/i18n.jarjestamissopimus]]

@@ -18,6 +18,7 @@
             [aitu-e2e.toimikuntasivu-test :refer [toimikuntasivu]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data with-cleaned-data]]))
 
 (defn avaa-sopimuksen-luontisivu-toimikunnalle [diaarinumero]
@@ -42,7 +43,7 @@
           (syota-kenttaan "sopimus.sopimusnumero" "8742")
           (syota-pvm "sopimus.alkupvm" "24.03.1980")
           (syota-pvm "sopimus.loppupvm" "01.01.2199")
-          (valitse-select2-optio "sopimus.oppilaitos" "oppilaitoskoodi", "Hanhivaaran urheiluopisto")
+          (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (odota-angular-pyyntoa)
           (tallenna)
@@ -53,7 +54,7 @@
           (is (= (elementin-teksti "sopimus.alkupvm") "24.03.1980 - 01.01.2199"))
           (is (= (elementin-teksti "sopimus.sopijatoimikunta.nimi") "Testialan tutkintotoimikunta (2013)"))
           (is (= (elementin-teksti "sopimus.toimikunta.nimi") "Testialan tutkintotoimikunta (2013)"))
-          (is (= (elementin-teksti "sopimus.oppilaitos.nimi") "Hanhivaaran urheiluopisto"))
+          (is (= (elementin-teksti "sopimus.koulutustoimija.nimi") "Hanhivaaran kaupunki"))
           (is (= (elementin-teksti "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi") "Hanhivaaran urheiluopisto")))))
     (testing
       "luonti ei onnistu, jos sopimusnumero on käytössä"
@@ -63,7 +64,8 @@
           (syota-kenttaan "sopimus.sopimusnumero" "123")
           (syota-pvm "sopimus.alkupvm" "24.03.1980")
           (syota-pvm "sopimus.loppupvm" "01.01.2199")
-          (valitse-select2-optio "sopimus.oppilaitos" "oppilaitoskoodi", "Hanhivaaran urheiluopisto")
+          (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
+          (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (odota-angular-pyyntoa)
           (tallenna)
           (is (= (viestin-teksti) "Järjestämissopimuksen luonti ei onnistunut"))
@@ -82,7 +84,8 @@
           (syota-pvm "sopimus.alkupvm" "24.03.1980")
           (syota-pvm "sopimus.loppupvm" "01.01.2199")
           (valitse-select2-optio "sopimus.toimikunta" "tkunta", "Toinen toimikunta")
-          (valitse-select2-optio "sopimus.oppilaitos" "oppilaitoskoodi", "Hanhivaaran urheiluopisto")
+          (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
+          (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (odota-angular-pyyntoa)
           (tallenna)
           (is (= (viestin-teksti) "Järjestämissopimuksen luonti onnistui"))

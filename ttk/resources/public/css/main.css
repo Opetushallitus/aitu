@@ -1042,9 +1042,10 @@ ul.pagination li:first-child + li + li + li a:after {
 
 /* line 65, ../../private/sass/yhteiset/_search.scss */
 .list-controls {
-  float: right;
+  float: left;
+  margin-top: -3px;
+  margin-right: 9px;
   *zoom: 1;
-  margin-top: 24px;
 }
 /* line 21, ../../private/sass/yhteiset/_mixins.scss */
 .list-controls:before, .list-controls:after {
@@ -1055,13 +1056,13 @@ ul.pagination li:first-child + li + li + li a:after {
 .list-controls:after {
   clear: both;
 }
-/* line 66, ../../private/sass/yhteiset/_search.scss */
+/* line 70, ../../private/sass/yhteiset/_search.scss */
 .list-controls button {
   float: left;
   vertical-align: middle;
 }
 
-/* line 69, ../../private/sass/yhteiset/_search.scss */
+/* line 73, ../../private/sass/yhteiset/_search.scss */
 .loader {
   background: white url("../img/ajax-loader.gif") center top no-repeat;
   margin-left: auto;
@@ -1073,14 +1074,14 @@ ul.pagination li:first-child + li + li + li a:after {
   top: 150px;
 }
 
-/* line 76, ../../private/sass/yhteiset/_search.scss */
+/* line 80, ../../private/sass/yhteiset/_search.scss */
 .loader-error {
   text-align: center;
   position: relative;
   top: 150px;
 }
 
-/* line 82, ../../private/sass/yhteiset/_search.scss */
+/* line 86, ../../private/sass/yhteiset/_search.scss */
 button.luo-uusi {
   float: right;
 }

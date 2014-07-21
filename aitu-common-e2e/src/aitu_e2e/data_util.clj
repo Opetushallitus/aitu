@@ -129,13 +129,21 @@
                                     :delete-fn #(str "/api/test/ttk/" (:toimikunta %) "/tutkinto/" (:tutkintotunnus %))
                                     :default (repeat {})})
 
+(def koulutustoimija-tiedot {:post-fn (constantly "/api/test/koulutustoimija/")
+                             :delete-fn #(str "/api/test/koulutustoimija/" (:ytunnus %))
+                             :default (for [i (iterate inc 1)]
+                                        {:ytunnus (str (- i))
+                                         :nimi_fi (str "Koulutustoimija " i)
+                                         :nimi_sv (str "Koulutustoimija " i)})})
+
 (def oppilaitos-tiedot {:post-fn (constantly "/api/test/oppilaitos/")
                         :delete-fn #(str "/api/test/oppilaitos/" (:oppilaitoskoodi %))
                         :default (for [i (iterate inc 1)]
                                    {:oppilaitoskoodi (str (- i))
                                     :nimi (str "Oppilaitos " i)
                                     :alue "etelasuomi"
-                                    :kieli "1"})})
+                                    :kieli "1"
+                                    :koulutustoimija (str (- i))})})
 
 (def toimipaikka-tiedot {:post-fn #(str "/api/test/oppilaitos/toimipaikka/" (:oppilaitos %))
                          :delete-fn #(str "/api/test/oppilaitos/toimipaikka/" (:toimipaikkakoodi %))
@@ -146,7 +154,8 @@
                                 :delete-fn #(str "/api/test/jarjestamissopimus/" (:jarjestamissopimusid %))
                                 :default (for [i (iterate inc 1)]
                                            {:alkupvm menneisyydessa
-                                            :loppupvm tulevaisuudessa})})
+                                            :loppupvm tulevaisuudessa
+                                            :voimassa true})})
 
 (def jarjestamissuunnitelma-tiedot {:post-fn #(str "/api/test/jarjestamissopimus/" (:jarjestamissopimusid %) "/suunnitelma")
                                 :delete-fn #(str "/api/test/jarjestamissopimus/" (:jarjestamissopimusid %) "/suunnitelma")
@@ -193,6 +202,7 @@
                     :tutkintoversiot tutkintoversio-tiedot
                     :osaamisalat osaamisala-tiedot
                     :toimikunta_ja_tutkinto toimikunta-ja-tutkinto-tiedot
+                    :koulutustoimijat koulutustoimija-tiedot
                     :oppilaitokset oppilaitos-tiedot
                     :toimipaikat toimipaikka-tiedot
                     :jarjestamissopimukset jarjestamissopimus-tiedot
@@ -249,7 +259,7 @@
 (def ^:private taulut
   [:jarjestot :henkilot :toimikunnat :jasenet :koulutusalat :opintoalat :tutkintotyypit
    :perusteet :tutkinnot :tutkintoversiot :tutkinnonosat :osaamisalat :toimikunta_ja_tutkinto
-   :oppilaitokset :toimipaikat :jarjestamissopimukset :sopimus_ja_tutkinto :jarjestamissuunnitelmat
+   :koulutustoimijat :oppilaitokset :toimipaikat :jarjestamissopimukset :sopimus_ja_tutkinto :jarjestamissuunnitelmat
    :tiedote])
 
 (defn ^:private taydenna-data

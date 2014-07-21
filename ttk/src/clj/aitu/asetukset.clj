@@ -36,6 +36,7 @@
                      :password s/Str
                      :maximum-pool-size s/Int
                      :minimum-pool-size s/Int}
+                :session-timeout s/Int
                 :cas-auth-server {:url s/Str
                                   :unsafe-https Boolean
                                   :enabled Boolean}
@@ -75,6 +76,7 @@
                               :password "ttk"
                               :maximum-pool-size 15
                               :minimum-pool-size 3}
+                         :session-timeout (* 8 60 60)
                          :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
                                            :unsafe-https false
                                            :enabled true}

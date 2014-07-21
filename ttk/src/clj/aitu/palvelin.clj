@@ -25,9 +25,12 @@
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.session.memory :refer [memory-store]]
             [ring.middleware.content-type :refer [wrap-content-type]]
+            [ring.middleware.x-headers :refer [wrap-frame-options]]
+            [ring.middleware.session-timeout :refer [wrap-idle-session-timeout]]
             [clojure.tools.logging :as log]
             [cheshire.generate :as json-gen]
             schema.core
+            [stencil.core :as s]
 
             aitu.integraatio.sql.korma
 
@@ -42,7 +45,8 @@
              :refer [*current-user-authmap* yllapitaja?]]
             [aitu.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
-            [aitu.infra.eraajo :as eraajo]))
+            [aitu.infra.eraajo :as eraajo]
+            [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]))
 
 (schema.core/set-fn-validation! true)
 
@@ -83,9 +87,14 @@
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
-(defn kaynnista-eraajon-ajastimet! [ldap-auth-server-asetukset]
-  (let [kop (kop/tee-kayttooikeuspalvelu ldap-auth-server-asetukset)]
-    (eraajo/kaynnista-ajastimet! kop)))
+(defn kaynnista-eraajon-ajastimet! [asetukset]
+  (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
+    (eraajo/kaynnista-ajastimet! kop (:organisaatiopalvelu asetukset))))
+
+(defn timeout-response [asetukset]
+  {:status 403
+   :headers {"Content-Type" "text/html"}
+   :body (s/render-file "html/sessio-vanhentunut" {:service-url (get-in asetukset [:server :base-url])})})
 
 (defn kaynnista! [oletus-asetukset]
   (try
@@ -93,7 +102,7 @@
           _ (konfiguroi-lokitus asetukset)
           _ (log/info "Käynnistetään Aitu" @build-id)
           _ (aitu.integraatio.sql.korma/luo-db (:db asetukset))
-          upload-limit 100000000 ; max file upload (and general HTTP body) size in bytes
+          upload-limit (* 10 1024 1024) ; max file upload (and general HTTP body) size in bytes
           session-store (memory-store)
           _ (require 'aitu.reitit)
           reitit ((eval 'aitu.reitit/reitit) asetukset)
@@ -105,6 +114,8 @@
                       (i18n/wrap-locale
                         :ei-redirectia #"/api.*"
                         :base-url (-> asetukset :server :base-url))
+                      (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
+                                                  :timeout-response (timeout-response asetukset)})
                       auth/wrap-sessionuser
                       log-request-wrapper
                       (auth-middleware asetukset)
@@ -112,6 +123,7 @@
                       wrap-params
                       (wrap-resource "public")
                       wrap-content-type
+                      (wrap-frame-options :sameorigin)
                       (wrap-session {:store session-store
                                      :cookie-attrs {:http-only true
                                                     :path (service-path(get-in asetukset [:server :base-url]))
@@ -129,9 +141,10 @@
           (.writeString json-generator (.toString c "dd.MM.yyyy"))))
       (when (or (not (:development-mode asetukset))
                 (:eraajo asetukset))
-        (kaynnista-eraajon-ajastimet! (:ldap-auth-server asetukset)))
+        (kaynnista-eraajon-ajastimet! asetukset))
       (log/info "Kehitysmoodi päällä:" (kehitysmoodi? asetukset))
       (log/info "Palvelin käynnistetty:" (service-url asetukset))
+      (.start (Thread. sopimusten-voimassaolo/paivita-sopimusten-voimassaolo!))
       {:sammuta sammuta
        :asetukset asetukset})
   (catch Throwable t

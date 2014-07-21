@@ -81,7 +81,8 @@ module.exports = function (grunt) {
               'bower_components/stacktrace/stacktrace.js',
               'bower_components/jquery-placeholder/jquery.placeholder.min.js',
               'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-              'bower_components/ngUpload/ng-upload.js'],
+              'bower_components/ngUpload/ng-upload.js',
+              'bower_components/angular-loading-bar/build/loading-bar.min.js'],
         dest: '<%= yeoman.app %>/vendor/bower-components.js'
       }
     },
@@ -103,6 +104,7 @@ module.exports = function (grunt) {
                'jquery/dist/jquery.min.map',
                'select2/*.{png,gif}',
                'select2/select2.css',
+               'angular-loading-bar/build/loading-bar.css',
                'modernizr/modernizr.js'],
         dest: '<%= yeoman.app %>/vendor',
         flatten : true

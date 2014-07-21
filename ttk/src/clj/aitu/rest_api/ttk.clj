@@ -13,17 +13,14 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.ttk
-  (:require [compojure.core :refer [PUT POST defroutes]]
+  (:require [compojure.core :refer [GET PUT POST defroutes]]
             schema.core
-            [cheshire.core :as cheshire]
-            [clj-time.core :as time]
-            [clj-time.format :as timef]
-            [clj-time.coerce :as time-coerce]
             [aitu.infra.ttk-arkisto :as arkisto]
             [aitu.rest-api.http-util
              :refer [validoi validoi-entity-saannoilla
                      luo-validoinnin-virhevastaus cachable-json-response
-                     json-response parse-iso-date sallittu-jos]]
+                     json-response parse-iso-date sallittu-jos
+                     textfile-download-response]]
             [valip.predicates :refer [present?]]
             [aitu.infra.i18n :as i18n]
             [aitu.infra.validaatio :as val]
@@ -31,8 +28,8 @@
             [aitu.toimiala.skeema :refer :all]
             [aitu.rest-api.http-util :refer [cachable-json-response]]
             [aitu.compojure-util :as cu]
-            [korma.db :as db]
-            [compojure.api.sweet :refer :all]))
+            [compojure.api.sweet :refer :all]
+            [aitu.util :refer [muodosta-csv]]))
 
 (defn salli-toimikunnan-paivitys? [diaarinumero]
   (some->
@@ -88,6 +85,17 @@
   (doseq [jasenyys jasenyydet]
     (arkisto/paivita-tai-poista-jasenyys! diaarinumero jasenyys))
   {:status 200})
+
+(def sopimuskenttien-jarjestys
+  [:sopimusnumero :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
+
+(defroutes raportti-reitit
+  (GET ["/:tkunta/sopimukset"] [tkunta]
+    (cu/autorisoitu-transaktio :toimikunta_haku nil
+      (let [sopimukset-csv (muodosta-csv (arkisto/hae-sopimukset tkunta) sopimuskenttien-jarjestys)
+            filename "sopimukset.csv"
+            content-type "text/csv"]
+        (textfile-download-response sopimukset-csv filename content-type)))))
 
 (defroutes private-reitit
   (PUT ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet]

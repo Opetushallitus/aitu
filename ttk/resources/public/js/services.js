@@ -195,8 +195,6 @@ angular.module('services', ['ngResource', 'ngCookies'])
   .factory('virheLogitus', ['$log', '$window', 'virheLogitusApi', function($log, $window, virheLogitusApi) {
     $window.jsErrors = []; //e2e testit keräävät virheet tästä
 
-    var viimeisinPoikkeus;
-
     function log( poikkeus, aiheuttaja ) {
       var jsErrorsMessage = poikkeus.message + ' (aiheuttanut "' + aiheuttaja + '")';
 

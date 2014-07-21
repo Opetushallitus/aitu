@@ -20,13 +20,18 @@
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
+             [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.integraatio.sql.jarjestamissopimus :as sopimus-kaytava]
              [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
              [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
+             [aitu.toimiala.voimassaolo.jarjestamissopimus :as voimassaolo]
              [aitu.toimiala.voimassaolo.saanto.osoitepalvelu-jarjestamissopimus :as osoitepalvelu-voimassaolo]
              [clj-time.core :as time]
              [aitu.auditlog :as auditlog])
   (:use [aitu.integraatio.sql.korma]))
+
+(defn ^:private aseta-oppilaitos-kentta [sopimus]
+  (assoc sopimus :oppilaitos (:tutkintotilaisuuksista_vastaava_oppilaitos sopimus)))
 
 (defn ^:test-api poista!
   "Poistaa järjestämissopimuksen."
@@ -42,13 +47,33 @@
   (sql/delete jarjestamissopimus
     (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
 
+(defn ^:integration-api aseta-sopimuksen-voimassaolo!
+  [jarjestamissopimusid voimassa]
+  (sql/update jarjestamissopimus
+    (sql/set-fields {:voimassa voimassa})
+    (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
+
+(declare hae-kaikki hae-ja-liita-tutkinnonosiin-asti)
+
+(defn ^:integration-api paivita-sopimusten-voimassaolo!
+  []
+  (doseq [{:keys [jarjestamissopimusid voimassa]} (hae-kaikki)]
+    (aseta-sopimuksen-voimassaolo! jarjestamissopimusid voimassa)))
+
+(defn ^:integration-api paivita-sopimuksen-voimassaolo!
+  "Päivittää annetulla id:llä olevan sopimuksen voimassaolotiedon"
+  [jarjestamissopimusid]
+  (let [sopimus (voimassaolo/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo
+                  (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid))]
+    (aseta-sopimuksen-voimassaolo! jarjestamissopimusid (:voimassa sopimus))))
+
 (defn merkitse-sopimus-poistetuksi!
   "Asettaa sopimukselle poistettu -flagin"
   [jarjestamissopimusid]
 
   (let [sopimus (sopimus-kaytava/hae jarjestamissopimusid)
-      sopimusid (:jarjestamissopimusid sopimus)
-      diaarinumero (:sopimusnumero sopimus)]
+        sopimusid (:jarjestamissopimusid sopimus)
+        diaarinumero (:sopimusnumero sopimus)]
     (auditlog/jarjestamissopimus-poisto! sopimusid diaarinumero))
 
   (sql/update jarjestamissopimus
@@ -64,7 +89,7 @@
   {:pre [(domain/jarjestamissopimus? sopimus)]}
 
   (let [sopimus (sql/insert jarjestamissopimus
-                 (sql/values sopimus))
+                  (sql/values (aseta-oppilaitos-kentta sopimus)))
         sopimusid (:jarjestamissopimusid sopimus)
         diaarinumero (:sopimusnumero sopimus)]
     (auditlog/jarjestamissopimus-lisays! sopimusid diaarinumero)
@@ -126,11 +151,10 @@
   "Päivittää sopimuksen tiedot"
   [sopimus sopimuksen_tutkinnot]
   {:pre [(domain/jarjestamissopimus? sopimus)]}
-
   (auditlog/jarjestamissopimus-paivitys! (:jarjestamissopimusid sopimus)
     (:sopimusnumero sopimus))
   (sql/update jarjestamissopimus
-    (sql/set-fields sopimus)
+    (sql/set-fields (aseta-oppilaitos-kentta sopimus))
     (sql/where {:jarjestamissopimusid (:jarjestamissopimusid sopimus)}))
   (doseq [sopimus_ja_tutkinto sopimuksen_tutkinnot]
     (let [jarjestamissopimusid (:jarjestamissopimusid sopimus)
@@ -144,14 +168,15 @@
           (paivita-sopimuksen-osaamisalat! sopimus_ja_tutkinto sopimus_ja_tutkinto_id))
         (throw (Exception. (str "Sopimuksen tutkintojen paivitys ei ole sallittu."
                                 "jarjestamissopimusid: " jarjestamissopimusid
-                                " sopimus_ja_tutkinto_id: " sopimus_ja_tutkinto_id)))))))
+                                " sopimus_ja_tutkinto_id: " sopimus_ja_tutkinto_id))))))
+  (paivita-sopimuksen-voimassaolo! (:jarjestamissopimusid sopimus)))
 
 (defn ^:private liita-perustiedot-sopimukseen
   [jarjestamissopimus]
   (some-> jarjestamissopimus
       (update-in [:toimikunta] toimikunta-kaytava/hae)
       (update-in [:sopijatoimikunta] toimikunta-kaytava/hae)
-      (update-in [:oppilaitos] oppilaitos-kaytava/hae)
+      (update-in [:koulutustoimija] koulutustoimija-kaytava/hae)
       (update-in [:tutkintotilaisuuksista_vastaava_oppilaitos] oppilaitos-kaytava/hae)
       (update-in [:muutettu_kayttaja] kayttaja-arkisto/hae)
       (update-in [:luotu_kayttaja] kayttaja-arkisto/hae)))
@@ -173,8 +198,8 @@
 (defn liita-oppilaitoksen-toimipaikat
   "Liittää toimipaikat oppilaitokselle"
   [jarjestamissopimus]
-  (let [oppilaitoskoodi (get-in jarjestamissopimus [:oppilaitos :oppilaitoskoodi])]
-    (assoc-in jarjestamissopimus [:oppilaitos :toimipaikka] (oppilaitos-kaytava/hae-oppilaitoksen-toimipaikat oppilaitoskoodi))))
+  (let [oppilaitoskoodi (get-in jarjestamissopimus [:tutkintotilaisuuksista_vastaava_oppilaitos :oppilaitoskoodi])]
+    (assoc-in jarjestamissopimus [:tutkintotilaisuuksista_vastaava_oppilaitos :toimipaikka] (oppilaitos-kaytava/hae-oppilaitoksen-toimipaikat oppilaitoskoodi))))
 
 (defn ^:private rajaa-tutkinnon-kentat
   "Valitsee sopimuksen tutkinnoista osoitepalvelun tarvitsemat kentät"
@@ -185,6 +210,14 @@
                                     [:sahkoposti :sahkoposti_vastuuhenkilo]
                                     [:vastuuhenkilo_vara :varavastuuhenkilo]
                                     [:sahkoposti_vara :sahkoposti_varavastuuhenkilo]]))
+
+(defn hae-kaikki
+  []
+  (->> (sql/select jarjestamissopimus
+         (sql/where {:poistettu false}))
+    (map liita-perustiedot-sopimukseen)
+    (map liita-tutkinnot-sopimukseen)
+    (map voimassaolo/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo)))
 
 (defn hae-kaikki-osoitepalvelulle
   "Hakee kaikki järjestämissopimukset ja niihin liittyvät tutkinnot osoitepalvelua varten"
@@ -202,7 +235,8 @@
                                            :toimikunta
                                            :vastuuhenkilo
                                            :sahkoposti
-                                           :oppilaitos])
+                                           :tutkintotilaisuuksista_vastaava_oppilaitos
+                                           :koulutustoimija])
                   (update-in [:toimikunta] :tkunta)
                   (update-in [:tutkinnot] #(map rajaa-tutkinnon-kentat %))))))
 
@@ -235,6 +269,13 @@
     (mapv liita-perustiedot-sopimukseen)
     (mapv liita-tutkinnot-sopimukseen)))
 
+(defn hae-koulutustoimijan-sopimukset
+  "Hakee koulutustoimijan järjestämissopimukset ja liittää niihin tarvittavat tiedot"
+  [y-tunnus]
+  (->> (sopimus-kaytava/hae-koulutustoimijan-sopimukset y-tunnus)
+    (mapv liita-perustiedot-sopimukseen)
+    (mapv liita-tutkinnot-sopimukseen)))
+
 (defn uniikki-sopimusnumero? [sopimusnumero jarjestamissopimusid]
   (-> (sql/select jarjestamissopimus
         (sql/where {:sopimusnumero sopimusnumero
@@ -242,10 +283,10 @@
       (count)
       (= 0)))
 
-(defn ^:private poista-tutkinnot-sopimukselta!
+(defn poista-tutkinnot-sopimukselta!
   "Poistaa tutkintoja järjestämissopimukselta asettamalla poistettu = true"
   [jarjestamissopimusid tutkintoversiot]
-  (auditlog/sopimuksen-tutkinnot-operaatio! :poisto jarjestamissopimusid (map :tutkintoversio tutkintoversiot))
+  (auditlog/sopimuksen-tutkinnot-operaatio! :poisto jarjestamissopimusid tutkintoversiot)
   (doseq [tutkintoversio tutkintoversiot]
     (sql/update sopimus-ja-tutkinto
       (sql/set-fields {:poistettu true})
@@ -271,17 +312,20 @@
 (defn lisaa-tutkinnot-sopimukselle!
   "Lisää tutkinnot sopimukselle"
   [jarjestamissopimusid tutkintoversiot]
-  (auditlog/sopimuksen-tutkinnot-operaatio! :lisays jarjestamissopimusid (map :tutkintoversio tutkintoversiot))
-  (let [sopimus-tutkinto-liitokset
-        (doall
-          (for [tutkintoversio tutkintoversiot]
-            (sql/insert sopimus-ja-tutkinto
-              (sql/values {:jarjestamissopimusid jarjestamissopimusid :tutkintoversio tutkintoversio}))))]
-    ;; Triggeröidään muutos myös sopimustaulussa että muokkaajan tiedot tallentuvat myös sinne
-    (sql/update jarjestamissopimus
-      (sql/set-fields {:muutettuaika (time/now)})
-      (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
-    sopimus-tutkinto-liitokset))
+  (let [tutkintoversiot (map #(if (map? %) % {:tutkintoversio %})
+                             tutkintoversiot)]
+    (auditlog/sopimuksen-tutkinnot-operaatio! :lisays jarjestamissopimusid (map :tutkintoversio tutkintoversiot))
+    (let [sopimus-tutkinto-liitokset
+          (doall
+            (for [tutkintoversio tutkintoversiot]
+              (sql/insert sopimus-ja-tutkinto
+                (sql/values (assoc tutkintoversio
+                                   :jarjestamissopimusid jarjestamissopimusid)))))]
+      ;; Triggeröidään muutos myös sopimustaulussa että muokkaajan tiedot tallentuvat myös sinne
+      (sql/update jarjestamissopimus
+        (sql/set-fields {:muutettuaika (time/now)})
+        (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
+      sopimus-tutkinto-liitokset)))
 
 (defn hae-sopimuksen-tutkinnot
   "Hakee tutkinnot sopimukselle"
@@ -299,7 +343,8 @@
         lisattavat (clojure.set/difference uudet-tutkintoversiot vanhat-tutkintoversiot)]
     (auditlog/sopimuksen-tutkinnot-operaatio! :paivitys jarjestamissopimusid uudet-tutkintoversiot)
     (poista-tutkinnot-sopimukselta! jarjestamissopimusid poistettavat)
-    (lisaa-tutkinnot-sopimukselle! jarjestamissopimusid lisattavat)))
+    (lisaa-tutkinnot-sopimukselle! jarjestamissopimusid lisattavat)
+    (paivita-sopimuksen-voimassaolo! jarjestamissopimusid)))
 
 (defn lisaa-suunnitelma-tutkinnolle!
   "Lisää järjestämissuunnitelman tutkinnolle"

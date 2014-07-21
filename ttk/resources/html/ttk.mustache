@@ -2,9 +2,6 @@
 <!DOCTYPE html>
 <html ng-app="ttk">
 <head>
-  <script>var ttkBaseUrl = "[[base-url]]";</script>
-  <script>var aituI18n = [[& i18n-json]];</script>
-  <script>var aituLogoutUrl = '[[logout-url]]';</script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>[[i18n.tutkintotoimikuntarekisteri]]</title>
@@ -13,7 +10,11 @@
   <link rel="stylesheet" href="[[base-url]]/css/normalize.css">
   <link rel="stylesheet" href="[[base-url]]/css/main.css">
   <link rel="stylesheet" href="[[base-url]]/vendor/select2.css">
+  <link rel="stylesheet" href="[[base-url]]/vendor/loading-bar.css">
   <script src="[[base-url]]/vendor/modernizr.js"></script>
+  <script>var ttkBaseUrl = "[[base-url]]";</script>
+  <script>var aituI18n = [[& i18n-json]];</script>
+  <script>var aituLogoutUrl = '[[logout-url]]';</script>
 </head>
 <body ng-controller="AituController">
 <div>
@@ -38,7 +39,8 @@
         <li><a href="#/search-tutkinto">[[tutkinnot]]</a></li>
         <li><a href="#/search-toimikunta">[[toimikunnat]]</a></li>
         <li><a href="#/henkilot">[[henkilot]]</a></li>
-        <li><a href="#/search-jarjestaja">[[tutkinnon-jarjestajat]]</a></li>
+        <li><a href="#/search-koulutustoimija">[[koulutustoimijat]]</a></li>
+        <li><a href="#/search-oppilaitos">[[oppilaitokset]]</a></li>
         [[#ominaisuus.proto]]
         <li><a href="#/search">[[raportit]]</a></li>
         [[/ominaisuus.proto]]
@@ -82,7 +84,8 @@
 <script src="[[base-url]]/js/henkilot.js"></script>
 <script src="[[base-url]]/js/toimikunnat.js"></script>
 <script src="[[base-url]]/js/tutkinnot.js"></script>
-<script src="[[base-url]]/js/jarjestajat.js"></script>
+<script src="[[base-url]]/js/oppilaitokset.js"></script>
+<script src="[[base-url]]/js/koulutustoimijat.js"></script>
 <script src="[[base-url]]/js/sopimukset.js"></script>
 <script src="[[base-url]]/js/directives.js"></script>
 <script src="[[base-url]]/js/filters.js"></script>

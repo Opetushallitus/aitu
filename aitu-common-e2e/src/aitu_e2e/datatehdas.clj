@@ -25,19 +25,30 @@
   ([] (tunnusgeneraattori identity)))
 
 (def uusi-sopimusnumero! (tunnusgeneraattori str))
+(def uusi-ytunnus! (tunnusgeneraattori str))
 (def uusi-oppilaitostunnus! (tunnusgeneraattori str))
 (def uusi-toimikuntatunnus! (tunnusgeneraattori #(str "TTK" %)))
 
-(defn setup-oppilaitos
-  ([koodi nimi]
-    {:oppilaitoskoodi koodi
-     :nimi nimi})
-  ([koodi]
-    (setup-oppilaitos koodi "Ruikonperän multakurkkuopisto"))
-  ([] (setup-oppilaitos (uusi-oppilaitostunnus!))))
+(defn setup-koulutustoimija
+  ([y-tunnus nimi]
+    {:ytunnus y-tunnus
+     :nimi_fi nimi})
+  ([y-tunnus]
+    (setup-koulutustoimija y-tunnus "Ruikonperän koulutuskuntayhtymä"))
+  ([]
+    (setup-koulutustoimija (uusi-ytunnus!))))
 
-(defn oppilaitos-nimella [nimi]
-  (setup-oppilaitos (uusi-oppilaitostunnus!) nimi))
+(defn setup-oppilaitos
+  ([koodi nimi koulutustoimija]
+    {:oppilaitoskoodi koodi
+     :nimi nimi
+     :koulutustoimija koulutustoimija})
+  ([koodi koulutustoimija]
+    (setup-oppilaitos koodi "Ruikonperän multakurkkuopisto" koulutustoimija))
+  ([koulutustoimija] (setup-oppilaitos (uusi-oppilaitostunnus!) koulutustoimija)))
+
+(defn oppilaitos-nimella [nimi koulutustoimija]
+  (setup-oppilaitos (uusi-oppilaitostunnus!) nimi koulutustoimija))
 
 (defn setup-opintoala
   [koodi nimi]
@@ -65,29 +76,32 @@
     (setup-opintoala "OPI" opintoala-nimi)))
 
 (defn setup-voimassaoleva-jarjestamissopimus
-  ([sopimusnumero oppilaitos toimikunta tutkintoversio]
+  ([sopimusnumero koulutustoimija oppilaitos toimikunta tutkintoversio]
     (let [jarjestamissopimusid (Integer/parseInt sopimusnumero)
           oppilaitostunnus (get oppilaitos :oppilaitoskoodi oppilaitos)
           toimikuntatunnus (get toimikunta :tkunta toimikunta)
+          y-tunnus (get koulutustoimija :ytunnus koulutustoimija)
           tutkintoversio-id (get tutkintoversio :tutkintoversio_id tutkintoversio)]
       {:jarjestamissopimukset
        {:toimikunta toimikuntatunnus
         :sopijatoimikunta toimikuntatunnus
-        :oppilaitos oppilaitostunnus
+        :koulutustoimija y-tunnus
+        :tutkintotilaisuuksista_vastaava_oppilaitos oppilaitostunnus
         :jarjestamissopimusid jarjestamissopimusid
         :sopimusnumero sopimusnumero
         :alkupvm menneisyydessa
-        :loppupvm tulevaisuudessa}
+        :loppupvm tulevaisuudessa
+        :voimassa true}
        :sopimus_ja_tutkinto
        {:jarjestamissopimusid jarjestamissopimusid
         :sopimus_ja_tutkinto [{:tutkintoversio_id tutkintoversio-id}]}}))
-  ([oppilaitostunnus toimikuntatunnus tutkintoversio]
-    (setup-voimassaoleva-jarjestamissopimus (uusi-sopimusnumero!) oppilaitostunnus toimikuntatunnus tutkintoversio)))
+  ([y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio]
+    (setup-voimassaoleva-jarjestamissopimus (uusi-sopimusnumero!) y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)))
 
-(defn setup-lakannut-jarjestamissopimus [sopimusnumero oppilaitostunnus toimikuntatunnus tutkintoversio]
-  (assoc-in
-    (setup-voimassaoleva-jarjestamissopimus sopimusnumero oppilaitostunnus toimikuntatunnus tutkintoversio)
-    [:jarjestamissopimukset :loppupvm] menneisyydessa))
+(defn setup-lakannut-jarjestamissopimus [sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio]
+  (-> (setup-voimassaoleva-jarjestamissopimus sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)
+    (assoc-in [:jarjestamissopimukset :loppupvm] menneisyydessa)
+    (assoc-in [:jarjestamissopimukset :voimassa] false)))
 
 
 (defn setup-toimikunta
@@ -159,12 +173,14 @@
 (defn tutkinnot-oletus-testidata []
   (let [toimikunnat (assoc-in (setup-toimikunta) [:toimikunnat 0 :nimi_fi] "Tutkinnon toimikunnan nimi")
         tutkinnot (luo-tutkintoja-opintoalaan 25 "OA1")
-        ensimmainen_oppilaitos (setup-oppilaitos)
-        toinen_oppilaitos (setup-oppilaitos (uusi-oppilaitostunnus!) "Toinen oppilaitos")
+        ensimmainen_koulutustoimija (setup-koulutustoimija)
+        toinen_koulutustoimija (setup-koulutustoimija)
+        ensimmainen_oppilaitos (setup-oppilaitos (:ytunnus ensimmainen_koulutustoimija))
+        toinen_oppilaitos (setup-oppilaitos (uusi-oppilaitostunnus!) "Toinen oppilaitos" (:ytunnus toinen_koulutustoimija))
         toimikunta (:tkunta (get-in toimikunnat [:toimikunnat 0]))
         tutkinto (get-in (vec tutkinnot) [0 :tutkintotunnus])
-        ensimmainen_sopimus (setup-voimassaoleva-jarjestamissopimus "12345" (:oppilaitoskoodi ensimmainen_oppilaitos) toimikunta -1)
-        toinen_sopimus (setup-voimassaoleva-jarjestamissopimus "23456" (:oppilaitoskoodi toinen_oppilaitos) toimikunta -1)
+        ensimmainen_sopimus (setup-voimassaoleva-jarjestamissopimus "12345" (:ytunnus ensimmainen_koulutustoimija) (:oppilaitoskoodi ensimmainen_oppilaitos) toimikunta -1)
+        toinen_sopimus (setup-voimassaoleva-jarjestamissopimus "23456" (:ytunnus toinen_koulutustoimija) (:oppilaitoskoodi toinen_oppilaitos) toimikunta -1)
         muu-testidata {:koulutusalat [{:koodi "KA1"
                                        :selite_fi "Koulutusalan nimi"}]
                        :opintoalat [{:koodi "OA1"
@@ -179,5 +195,6 @@
     (merge
       muu-testidata
       toimikunnat
+      {:koulutustoimijat [ensimmainen_koulutustoimija toinen_koulutustoimija]}
       {:oppilaitokset [ensimmainen_oppilaitos toinen_oppilaitos]}
       (merge-datamaps ensimmainen_sopimus toinen_sopimus))))

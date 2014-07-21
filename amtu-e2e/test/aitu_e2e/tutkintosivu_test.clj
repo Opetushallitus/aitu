@@ -16,6 +16,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data]]
             [aitu-e2e.datatehdas :as dt]))
 
@@ -37,9 +38,11 @@
   (testing "tutkintosivu"
     (with-webdriver
       ;; Oletetaan, että
-      (let [oppilaitos (dt/setup-oppilaitos)
+      (let [koulutustoimija (dt/setup-koulutustoimija)
+            oppilaitos (dt/setup-oppilaitos (:ytunnus koulutustoimija))
             oppilaitostunnus (:oppilaitoskoodi oppilaitos)
-            js (dt/setup-voimassaoleva-jarjestamissopimus "123" oppilaitostunnus "ILMA" 1)
+            y-tunnus (:ytunnus koulutustoimija)
+            js (dt/setup-voimassaoleva-jarjestamissopimus "123" y-tunnus oppilaitostunnus "ILMA" 1)
             toimikunta-map (dt/setup-toimikunta "ILMA")]
         (with-data (merge toimikunta-map {:koulutusalat [{:selite_fi "Tekniikan ja liikenteen ala"
                                                 :koodi "KA1"}]
@@ -62,6 +65,7 @@
                                                    :koodistoversio 2
                                                    :tutkintotunnus "TU1"}]
                                 :oppilaitokset [oppilaitos]
+                                :koulutustoimijat [koulutustoimija]
                                 :jarjestamissopimukset [(:jarjestamissopimukset js)]
                                 :sopimus_ja_tutkinto [(:sopimus_ja_tutkinto js)]})
           ;; Kun

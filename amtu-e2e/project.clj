@@ -14,12 +14,7 @@
 
 (defproject aitu-e2e "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [clj-webdriver "0.6.1"]
-                 [clj-http "0.7.6"]
-                 [cheshire "5.2.0"]
-                 [com.paulhammant/ngwebdriver "0.9.1"]
-                 [clj-time "0.6.0"]
-                 [solita/opetushallitus-aitu-e2e "1.7.0"]]
+                 [solita/opetushallitus-aitu-e2e "1.11.0"]]
   :plugins [[test2junit "1.0.1"]]
 
   :test-selectors {:ie (complement (some-fn :no-ie :ie-epastabiili))

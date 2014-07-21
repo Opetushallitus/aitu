@@ -17,6 +17,7 @@
     "jquery-waypoints": "2.0.4",
     "stacktrace": "0.6.0",
     "jquery-placeholder": "2.0.7",
-    "ngUpload": "0.5.11"
+    "ngUpload": "0.5.11",
+    "angular-loading-bar": "~0.4.3"
   }
 }

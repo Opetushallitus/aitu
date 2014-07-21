@@ -16,6 +16,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data
                                         menneisyydessa
                                         tulevaisuudessa
@@ -25,7 +26,9 @@
 
 (def jarjestamissopimussivu-data
   {:toimikunnat [{:tkunta "TTK1"}]
-   :oppilaitokset [{:oppilaitoskoodi "12345"}]
+   :koulutustoimijat [{:ytunnus "0000000-0"}]
+   :oppilaitokset [{:oppilaitoskoodi "12345"
+                    :koulutustoimija "0000000-0"}]
    :koulutusalat [{:koodi "KA1"}]
    :opintoalat [{:koodi "OA1"
                  :koulutusala "KA1"}]
@@ -37,7 +40,8 @@
                             :sopimusnumero "123"
                             :toimikunta "TTK1"
                             :sopijatoimikunta "TTK1"
-                            :oppilaitos "12345"
+                            :koulutustoimija "0000000-0"
+                            :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
                             :alkupvm menneisyydessa}]
    :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
                           :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]})

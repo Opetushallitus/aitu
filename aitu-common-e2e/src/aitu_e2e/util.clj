@@ -25,6 +25,7 @@
            org.openqa.selenium.firefox.FirefoxDriver
            org.openqa.selenium.TimeoutException)
   (:require [clojure.test :refer [is]]
+            [clojure.string :as string]
             [clj-webdriver.taxi :as w]
             [clj-webdriver.driver :refer [init-driver]]))
 
@@ -34,20 +35,44 @@
 (defmacro odota-kunnes [& body]
   `(w/wait-until (fn [] ~@body) 20000))
 
+(def ^:dynamic *dialogit-kaytossa?* false)
+
+(defmacro dialogit-kaytossa [& body]
+  `(binding [*dialogit-kaytossa?* true]
+     ~@body))
+
+(declare dialogi-nakyvissa?)
+
 (defn odota-sivun-latautumista []
-  (let [ready-state (atom nil)]
-    (try
-      (odota-kunnes (= (reset! ready-state
-                               (w/execute-script "return document.readyState"))
-                       "complete"))
-      (catch TimeoutException e
-        (println (str "document.readyState == '" @ready-state "'"))
-        (throw e)))))
+  ;; OS X / FF 30 / WebDriver 2.42.2 -yhdistelmällä JavaScriptin suorittaminen
+  ;; ei toimi, jos dialogi on näkyvissä. Oletetaan, että sivu on latautunut, jos
+  ;; joku skripti on ehtinyt näyttää dialogin.
+  ;;
+  ;; Dialogien tarkastaminen on hidasta (> 2 s), joten tehdään se vain, jos
+  ;; testataan dialogeja näyttävää koodia.
+  (when (or (not *dialogit-kaytossa?*)
+            (not (dialogi-nakyvissa?)))
+    (let [ready-state (atom nil)]
+      (try
+        (odota-kunnes (= (reset! ready-state
+                                 (w/execute-script "return document.readyState"))
+                         "complete"))
+        (catch TimeoutException e
+          (println (str "document.readyState == '" @ready-state "'"))
+          (throw e))))))
 
 (defn odota-angular-pyyntoa []
-  (odota-sivun-latautumista)
-  (WaitForAngularRequestsToFinish/waitForAngularRequestsToFinish
-    (:webdriver w/*driver*)))
+  ;; OS X / FF 30 / WebDriver 2.42.2 -yhdistelmällä JavaScriptin suorittaminen
+  ;; ei toimi, jos dialogi on näkyvissä. Oletetaan, että Angular on valmis, jos
+  ;; joku skripti on ehtinyt näyttää dialogin.
+  ;;
+  ;; Dialogien tarkastaminen on hidasta (> 2 s), joten tehdään se vain, jos
+  ;; testataan dialogeja näyttävää koodia.
+  (when (or (not *dialogit-kaytossa?*)
+            (not (dialogi-nakyvissa?)))
+    (odota-sivun-latautumista)
+    (WaitForAngularRequestsToFinish/waitForAngularRequestsToFinish
+      (:webdriver w/*driver*))))
 
 (defn luo-webdriver! []
   (let [remote_url (System/getenv "REMOTE_URL")
@@ -67,16 +92,28 @@
     (-> driver :webdriver .manage .timeouts (.setScriptTimeout 30 TimeUnit/SECONDS))))
 
 (defn puhdista-selain []
+  ;; Siirrytään about:blank -sivulle kahdesti, koska ensimmäinen siirtymä
+  ;; saattaa siirtymisen sijasta avata selaimen varmistusdialogin. Tämä tilanne
+  ;; tunnistetaan siitä, että toinen siirtymä heittää UnhandledAlertExceptionin,
+  ;; jolloin kuitataan dialogi, jotta siirtymä saadaan suoritettua loppuun.
+  ;;
+  ;; Toinen vaihtoehto olisi tarkistaa dialogin näkyvyys eksplisiittisesti ennen
+  ;; ensimmäistä siirtymää, mutta tarkistus kestää > 2 s, joten tämä tapa on
+  ;; nopeampi.
   (w/to "about:blank")
+  (try
+    (w/to "about:blank")
+    (catch UnhandledAlertException _
+      (-> w/*driver* :webdriver .switchTo .alert .accept)))
   (odota-sivun-latautumista))
 
-(defn tarkista-js-virheet [f]
+(defn tarkasta-js-virheet [f]
   (let [tulos (f)
-        js-virheet (try
-                     (w/execute-script "return window.jsErrors")
-                     (catch UnhandledAlertException _
-                       (-> w/*driver* :webdriver .switchTo .alert .accept)
-                       (w/execute-script "return window.jsErrors")))]
+        _ (when *dialogit-kaytossa?*
+            (try
+              (-> w/*driver* :webdriver .switchTo .alert .dismiss)
+              (catch NoAlertPresentException _)))
+        js-virheet (w/execute-script "return window.jsErrors")]
     (is (empty? js-virheet))
     (w/execute-script "window.jsErrors = []")
     tulos))
@@ -92,17 +129,14 @@
 (defn with-webdriver* [f]
   (if (bound? #'*ng*)
     (do
-      (try
-        (puhdista-selain)
-        (catch UnhandledAlertException _
-          (-> w/*driver* :webdriver .switchTo .alert .accept)))
-      (-> (tarkista-js-virheet f)
+      (puhdista-selain)
+      (-> (tarkasta-js-virheet f)
           (tarkista-otsikkotekstit)))
     (do
       (luo-webdriver!)
       (try
         (binding [*ng* (ByAngular. (:webdriver w/*driver*))]
-          (-> (tarkista-js-virheet f)
+          (-> (tarkasta-js-virheet f)
               (tarkista-otsikkotekstit)))
         (finally
           (w/quit))))))
@@ -115,55 +149,57 @@
            "http://192.168.50.1:8080")
        polku))
 
-(defn cas-url []
-  (or (System/getenv "CAS_URL")
-      "https://localhost:9443/cas-server-webapp-3.5.2"))
+(defn casissa? []
+  (= (w/title) "CAS – Central Authentication Service"))
+
+(def cas-url (atom nil))
 
 (defn cas-kirjautuminen [kayttaja]
+  {:pre [(casissa?)]}
+  (reset! cas-url (string/replace (w/current-url) #"(.*)/login.*" "$1"))
   (w/quick-fill-submit {"#username" kayttaja}
                        {"#password" kayttaja}
                        {"#password" w/submit}))
 
 (defn cas-uloskirjautuminen []
-  (let [logout-url (str (cas-url) "/logout")]
-    (w/to logout-url)
-    (try
-      (odota-kunnes (= (w/current-url) logout-url))
-      (catch TimeoutException e
-        (println (str "Odotettiin selaimen siirtyvän CAS logout -sivulle, mutta url oli '" (w/current-url) "'"))
-        (throw e)))))
-
-(defn avaa
-  ([polku] (avaa aitu-url polku default-user))
-  ([osoite-fn polku] (avaa osoite-fn polku default-user))
-  ([osoite-fn polku kayttaja]
-    (let [url (osoite-fn polku)
-          cas-url (cas-url)]
-      (w/to url)
+  ;; cas-url asetetaan sisäänkirjautumisen yhteydessä. Jos ei olla kirjauduttu
+  ;; sisään, ei tarvitse kirjautua uloskaan.
+  (when @cas-url
+    (let [logout-url (str @cas-url "/logout")]
+      (w/to logout-url)
       (try
-        (odota-kunnes (or (= (w/current-url) url)
-                          (re-find (re-pattern cas-url) (w/current-url))))
+        (odota-kunnes (= (w/current-url) logout-url))
         (catch TimeoutException e
-          (println (str "Odotettiin selaimen siirtyvän URLiin '" url "' tai '" cas-url "'"
-                        ", mutta sen URL oli '" (w/current-url) "'"))
+          (println (str "Odotettiin selaimen siirtyvän CAS logout -sivulle, mutta url oli '" (w/current-url) "'"))
           (throw e)))
-      (when (not= (w/current-url) url)
+      (reset! cas-url nil))))
+
+(defn avaa-url
+  ([url]
+    (avaa-url url default-user))
+  ([url kayttaja]
+    (w/to url)
+    (try
+      (odota-kunnes (or (= (w/current-url) url) (casissa?)))
+      (catch TimeoutException e
+        (println (str "Odotettiin selaimen siirtyvän URLiin '" url "'"
+                      ", mutta sen URL oli '" (w/current-url) "'"))
+        (throw e)))
+    (if (casissa?)
+      (do
         (cas-kirjautuminen kayttaja)
-        (avaa osoite-fn polku kayttaja))
+        (recur url kayttaja))
       (odota-angular-pyyntoa))))
 
-(defn avaa-kayttajana* [polku kayttaja f]
+(defn avaa-url-kayttajana* [url kayttaja f]
   (cas-uloskirjautuminen)
-  (avaa aitu-url polku kayttaja)
+  (avaa-url url kayttaja)
   (f)
   (cas-uloskirjautuminen))
 
-(defmacro avaa-kayttajana [polku kayttaja & body]
-  `(avaa-kayttajana* ~polku ~kayttaja (fn [] ~@body)))
-
-(defn avaa-uudelleenladaten [polku]
+(defn avaa-url-uudelleenladaten [url]
   (puhdista-selain)
-  (avaa polku))
+  (avaa-url url))
 
 (defn sivun-otsikko []
   (w/text "h1"))
@@ -234,12 +270,17 @@
     (w/clear selector)
     (w/input-text selector pvm)))
 
-(defn dialogi-nakyvissa? [teksti-re]
-  (try
-    (let [alert (-> w/*driver* :webdriver .switchTo .alert)]
-      (boolean (re-find teksti-re (.getText alert))))
-    (catch NoAlertPresentException _
-      false)))
+(defn dialogi-nakyvissa?
+  ([]
+    (dialogi-nakyvissa? nil))
+  ([teksti-re]
+    (try
+      (let [alert (-> w/*driver* :webdriver .switchTo .alert)]
+        (if teksti-re
+          (boolean (re-find teksti-re (.getText alert)))
+          true))
+      (catch NoAlertPresentException _
+        false))))
 
 (defn peruutan-dialogin []
   (-> w/*driver* :webdriver .switchTo .alert .dismiss)

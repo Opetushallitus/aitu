@@ -17,12 +17,21 @@
             [korma.core :as sql])
   (:use [aitu.integraatio.sql.korma]))
 
+(defn ^:private jarjestamissopimuksen-kentat
+  [query]
+  (sql/fields query
+              :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm :toimikunta
+              :sopijatoimikunta :tutkintotilaisuuksista_vastaava_oppilaitos
+              :vastuuhenkilo :puhelin :sahkoposti :koulutustoimija :poistettu
+              :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika))
+
 (defn hae
   "Hakee järjestämissopimus-taulun rivin jarjestamissopimusid:n perusteella"
   [jarjestamissopimusid]
   (first
     (sql/select
       jarjestamissopimus
+      (jarjestamissopimuksen-kentat)
       (sql/where {:jarjestamissopimusid jarjestamissopimusid
                   :poistettu false}))))
 
@@ -32,8 +41,8 @@
   (vec
     (sql/select
      jarjestamissopimus
-     (sql/fields :jarjestamissopimusid :sopimusnumero
-                  :alkupvm :loppupvm :oppilaitos :toimikunta)
+     (sql/fields :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm
+                 :koulutustoimija :tutkintotilaisuuksista_vastaava_oppilaitos :toimikunta)
      (sql/where {:toimikunta toimikunta
                  :poistettu false}))))
 
@@ -43,7 +52,17 @@
   (vec
     (sql/select
       jarjestamissopimus
-      (sql/where {:oppilaitos oppilaitoskoodi
+      (jarjestamissopimuksen-kentat)
+      (sql/where {:tutkintotilaisuuksista_vastaava_oppilaitos oppilaitoskoodi
+                  :poistettu false}))))
+
+(defn hae-koulutustoimijan-sopimukset
+  "Hakee koulutustoimijaan liittyvät järjestämissopimus-taulun rivit"
+  [y-tunnus]
+  (vec
+    (sql/select jarjestamissopimus
+      (jarjestamissopimuksen-kentat)
+      (sql/where {:koulutustoimija y-tunnus
                   :poistettu false}))))
 
 (defn hae-sopimus-ja-tutkinto-rivin-jarjestamissuunnitelmat

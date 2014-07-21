@@ -19,22 +19,25 @@
                  [http-kit "2.1.10"]
                  [compojure "1.1.5"]
                  [ring/ring-json "0.2.0"]
+                 [ring/ring-headers "0.1.0"]
+                 [ring/ring-session-timeout "0.1.0"]
                  [cheshire "5.2.0"]
                  [metosin/compojure-api "0.8.2"]
                  [metosin/ring-swagger-ui "2.0.10-1"]
+                 [clojure-csv/clojure-csv "2.0.1"]
 
                  [org.clojars.noidi/clj-cas-client
                   "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1"
                   :exclusions [ring]]
-                 [cas-single-sign-out "0.1.2"]
+                 [cas-single-sign-out "0.1.2"
+                  :exclusions [clj-cas-client]]
                  [org.clojars.pntblnk/clj-ldap "0.0.7"]
 
-                 [org.clojure/java.jdbc "0.3.0-alpha5"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
                  [korma "0.3.0-RC6"]
                  [clj-time "0.6.0"]
-                 
+
                  [org.clojure/tools.logging "0.2.6"]
                  [org.slf4j/slf4j-log4j12 "1.7.1"]
                  [log4j/log4j "1.2.17" :exclusions [javax.mail/mail

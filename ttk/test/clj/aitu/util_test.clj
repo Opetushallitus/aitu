@@ -127,3 +127,23 @@
          [:key1]               {:key1 :val1}
          [:key1 [:key2 :key3]] {:key1 :val1, :key3 :val2}
          [:key3 [:key4 :key5]] {})))
+
+(deftest keyword-vertailu-test
+  (let [jarjestys [:a :b :c]]
+    (testing "vertailee avaimet oikein, tuntemattomat avaimet viimeiseksi"
+      (are [tulos key1 key2] (= tulos (keyword-vertailu jarjestys key1 key2))
+           -1 :a :b
+           1 :b :a
+           0 :b :b
+           1 :c :a
+           -1 :a :x
+           -1 :c :x
+           1 :x :c
+           0 :x :x))))
+
+(deftest otsikot-ja-sarakkeet-jarjestykseen-test
+  (let [jarjestys [:b :c]]
+    (are [tulos data] (= tulos (otsikot-ja-sarakkeet-jarjestykseen data jarjestys))
+         [["b" "c"] ["b1" "c1"]] [{:c "c1" :b "b1"}]
+         [["b" "c"] ["b1" "c1"] ["b2" "c2"]] [{:c "c1" :b "b1"} {:c "c2" :b "b2"}]
+         [["b" "c" "a"] ["b1" "c1" "a1"]] [{:a "a1" :c "c1" :b "b1"}])))

@@ -24,7 +24,7 @@
     (sql/select
       oppilaitos
       (sql/fields :oppilaitoskoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
-                  :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue)
+                  :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue :koulutustoimija)
       (sql/where {:oppilaitoskoodi oppilaitoskoodi}))))
 
 (defn hae-oppilaitoksen-toimipaikat

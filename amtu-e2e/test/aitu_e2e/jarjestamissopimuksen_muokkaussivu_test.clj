@@ -16,8 +16,8 @@
   (:require [clojure.test :refer [deftest is testing]]
             [aitu-e2e.jarjestamissopimussivu-test :refer [sopimussivu jarjestamissopimus-data]]
             [clj-webdriver.taxi :as w]
-            [clj-http.client :as hc]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :as du]))
 
 (defn avaa-sopimuksen-muokkaussivu [jarjestamissopimusid]
@@ -136,7 +136,7 @@
           (avaa-sopimuksen-muokkaussivu 1230)
           (syota-pvm "sopimus.alkupvm" "24.03.1980")
           (syota-pvm "sopimus.loppupvm" "01.02.2199")
-          (valitse-select2-optio "sopimus.oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
+          (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus" "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (syota-kenttaan "sopimus.vastuuhenkilo" "Roope Ankka")
           (syota-kenttaan "sopimus.sahkoposti" "rankka@jokudomain.com")
@@ -161,7 +161,7 @@
           (avaa-tutkinnon-tiedot)
           (testing "Sopimuksen perustiedot tallettuvat oikein"
             (is (= (elementin-teksti "sopimus.alkupvm") "24.03.1980 - 01.02.2199"))
-            (is (= (elementin-teksti "sopimus.oppilaitos.nimi") "Hanhivaaran urheiluopisto"))
+            (is (= (elementin-teksti "sopimus.koulutustoimija.nimi") "Hanhivaaran kaupunki"))
             (is (= (elementin-teksti "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi") "Hanhivaaran urheiluopisto"))
             (is (= (elementin-teksti "sopimus.vastuuhenkilo") "Roope Ankka"))
             (is (= (elementin-teksti "sopimus.sahkoposti") "rankka@jokudomain.com"))
@@ -226,28 +226,31 @@
 
 (deftest jarjestamissuunnitelman-poistaminen-test
   (testing "Järjestämissuunnitelman poistaminen heittää confirm dialogin"
-    (with-webdriver
-      (du/with-data (jarjestamissopimus-data-with-suunnitelma)
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (is (= (filejen-lkm) 1))
-        (poista-suunnitelma)
-        (odota-poistodialogia))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (du/with-data (jarjestamissopimus-data-with-suunnitelma)
+          (avaa-sopimuksen-muokkaussivu 1230)
+          (is (= (filejen-lkm) 1))
+          (poista-suunnitelma)
+          (odota-poistodialogia)))))
   (testing "Järjestämissopimus poistuu hyväksymällä confirm"
     (with-webdriver
-      (du/with-data (jarjestamissopimus-data-with-suunnitelma)
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (poista-suunnitelma)
-        (odota-poistodialogia)
-        (hyvaksyn-dialogin)
-        (is (= (filejen-lkm) 0)))))
+      (dialogit-kaytossa
+        (du/with-data (jarjestamissopimus-data-with-suunnitelma)
+          (avaa-sopimuksen-muokkaussivu 1230)
+          (poista-suunnitelma)
+          (odota-poistodialogia)
+          (hyvaksyn-dialogin)
+          (is (= (filejen-lkm) 0))))))
   (testing "Järjestämissopimus ei poistu, jos peruuttaa confirmin"
     (with-webdriver
-      (du/with-data (jarjestamissopimus-data-with-suunnitelma)
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (poista-suunnitelma)
-        (odota-poistodialogia)
-        (peruutan-dialogin)
-        (is (= (filejen-lkm) 1))))))
+      (dialogit-kaytossa
+        (du/with-data (jarjestamissopimus-data-with-suunnitelma)
+          (avaa-sopimuksen-muokkaussivu 1230)
+          (poista-suunnitelma)
+          (odota-poistodialogia)
+          (peruutan-dialogin)
+          (is (= (filejen-lkm) 1)))))))
 
 (deftest sopimuksen-tutkintojen-osien-ja-osaamisalojen-muokkaus-test
   (testing "Radiobuttoneista on aluksi valittuna Kaikki osaamisalat ja tutkinnon osat"
@@ -327,10 +330,6 @@
                    (.repeater "suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat")
                    (.column "suunnitelma.jarjestamissuunnitelma_filename")))]
     (into {} (map (juxt w/text #(w/attribute % "href")) linkit))))
-
-(defn lataa-tiedosto-webdriverin-istunnossa [url]
-  (:body (hc/get url
-                 {:cookies {"ring-session" (w/cookie "ring-session")}})))
 
 (defn lisaa-suunnitelma-sopimukseen [nro polku]
   (avaa-sopimuksen-muokkaussivu nro)

@@ -18,6 +18,7 @@
   (:require [clojure.test :refer [deftest testing is]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
+            [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data]]
             [aitu-e2e.henkilosivu-test :refer [henkilosivu]]))
 
@@ -30,12 +31,7 @@
   (alan-muokata-tietoja))
 
 (defn navigoin-pois-sivulta-osoiterivia-kayttaen []
-  (try
-    (avaa-uudelleenladaten "/fi/#/")
-    ;; Jos dialogi on jo näkyvissä, tulee Angularin odottamisyrityksestä
-    ;; UnhandledAlertException, mutta se ei haittaa, koska meitä kiinnostaa vain
-    ;; dialogin ilmestyminen, eikä muun sivun stabiilius.
-    (catch UnhandledAlertException _)))
+  (w/to "about:blank"))
 
 (defn navigoin-pois-sivulta-navigointipalkkia-kayttaen []
   (w/click {:text "Tutkinnot"})
@@ -61,109 +57,118 @@
 
 (deftest ^:no-ie navigoi-pois-osoiterivia-kayttaen-test
   (testing "Selaimen varmistusdialogi ilmestyy, jos muokkaan tietoja ja navigoin pois sivulta osoiteriviä käyttäen"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        ;; Kun
-        (navigoin-pois-sivulta-osoiterivia-kayttaen)
-        ;; Niin
-        (is (selaimen-haluatko-poistua-dialogi-nakyvissa?))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          ;; Kun
+          (navigoin-pois-sivulta-osoiterivia-kayttaen)
+          ;; Niin
+          (is (selaimen-haluatko-poistua-dialogi-nakyvissa?)))))))
 
 (deftest tallenna-muutokset-ja-navigoi-pois-osoiterivia-kayttaen-test
   (testing "Selaimen varmistusdialogi ei ilmesty, jos tallennan muutokset ennen pois navigoimista"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        (tallenna)
-        ;; Kun
-        (navigoin-pois-sivulta-osoiterivia-kayttaen)
-        ;; Niin
-        (is (not (selaimen-haluatko-poistua-dialogi-nakyvissa?)))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          (tallenna)
+          ;; Kun
+          (navigoin-pois-sivulta-osoiterivia-kayttaen)
+          ;; Niin
+          (is (not (selaimen-haluatko-poistua-dialogi-nakyvissa?))))))))
 
 (deftest tallenna-muutokset-ja-navigoi-pois-navigointipalkkia-kayttaen-test
   (testing "Oma varmistusdialogi ei ilmesty, jos tallennan muutokset ennen pois navigoimista"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        (tallenna)
-        ;; Kun
-        (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
-        ;; Niin
-        (is (not (oma-haluatko-poistua-dialogi-nakyvissa?)))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          (tallenna)
+          ;; Kun
+          (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
+          ;; Niin
+          (is (not (oma-haluatko-poistua-dialogi-nakyvissa?))))))))
 
 (deftest navigoi-pois-navigointipalkkia-kayttaen-test
   (testing "Oma varmistusdialogi ilmestyy, jos muokkaan tietoja ja navigoin pois sivulta navigointipalkkia käyttäen"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        ;; Kun
-        (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
-        ;; Niin
-        (is (oma-haluatko-poistua-dialogi-nakyvissa?))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          ;; Kun
+          (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
+          ;; Niin
+          (is (oma-haluatko-poistua-dialogi-nakyvissa?)))))))
 
 (deftest peruuta-oma-varmistusdialogi-test
   (testing "Pysyn samalla sivulla, jos valitsen omasta varmistusdialogista 'peruuta'"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        (let [url (w/current-url)]
-          (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
-          ;; Kun
-          (peruutan-dialogin)
-          ;; Niin
-          (is (= (w/current-url) url)))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          (let [url (w/current-url)]
+            (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
+            ;; Kun
+            (peruutan-dialogin)
+            ;; Niin
+            (is (= (w/current-url) url))))))))
 
 (deftest hyvaksy-oma-varmistusdialogi-test
   (testing "Siirryn eri sivulle, jos valitsen omasta varmistusdialogista 'OK'"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        (let [url (w/current-url)]
-          (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
-          ;; Kun
-          (hyvaksyn-dialogin)
-          ;; Niin
-          (is (not= (w/current-url) url)))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          (let [url (w/current-url)]
+            (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
+            ;; Kun
+            (hyvaksyn-dialogin)
+            ;; Niin
+            (is (not= (w/current-url) url))))))))
 
 (deftest tallenna-muutokset-test
   (testing "Oma varmistusdialogi ei ilmesty, kun tallennan muutokset"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        ;; Kun
-        (tallenna)
-        ;; Niin
-        (is (not (oma-haluatko-poistua-dialogi-nakyvissa?)))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          ;; Kun
+          (tallenna)
+          ;; Niin
+          (is (not (oma-haluatko-poistua-dialogi-nakyvissa?))))))))
 
 (deftest muokkaa-uudelleen-ja-navigoi-pois-navigointipalkkia-kayttaen-test
   (testing "Oma varmistusdialogi ilmestyy, jos palaan muokkaamaan tietoja ennen pois navigoimista"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        (tallenna)
-        (alan-muokata-tietoja)
-        ;; Kun
-        (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
-        ;; Niin
-        (is (oma-haluatko-poistua-dialogi-nakyvissa?))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          (tallenna)
+          (alan-muokata-tietoja)
+          ;; Kun
+          (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
+          ;; Niin
+          (is (oma-haluatko-poistua-dialogi-nakyvissa?)))))))
 
 (deftest navigoi-pois-navigointipalkkia-ja-osoiterivia-kayttaen-test
   (testing "Selaimen varmistusdialogi ei ilmesty, jos navigoin pois navigointipalkilla ja sitten osoitepalkilla"
-    (with-webdriver
-      (with-henkilo
-        ;; Oletetaan, että
-        (olen-muokkaamassa-henkilon-tietoja)
-        (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
-        (hyvaksyn-dialogin)
-        ;; Kun
-        (navigoin-pois-sivulta-osoiterivia-kayttaen)
-        ;; Niin
-        (is (not (selaimen-haluatko-poistua-dialogi-nakyvissa?)))))))
+    (dialogit-kaytossa
+      (with-webdriver
+        (with-henkilo
+          ;; Oletetaan, että
+          (olen-muokkaamassa-henkilon-tietoja)
+          ;; Kun
+          (navigoin-pois-sivulta-navigointipalkkia-kayttaen)
+          (hyvaksyn-dialogin)
+          (navigoin-pois-sivulta-osoiterivia-kayttaen)
+          ;; Niin
+          (is (not (selaimen-haluatko-poistua-dialogi-nakyvissa?))))))))

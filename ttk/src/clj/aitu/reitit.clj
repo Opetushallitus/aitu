@@ -1,6 +1,5 @@
 (ns aitu.reitit
-  (:require
-            [cheshire.core :as json]
+  (:require [cheshire.core :as json]
             [stencil.core :as s]
             [stencil.loader :as sl]
             [clojure.tools.logging :as log]
@@ -23,6 +22,7 @@
             aitu.rest-api.db-validation
             aitu.rest-api.ttk
             aitu.rest-api.henkilo
+            aitu.rest-api.koulutustoimija
             aitu.rest-api.oppilaitos
             aitu.rest-api.tutkinto
             aitu.rest-api.toimikausi
@@ -43,6 +43,7 @@
             aitu.test-api.tutkinto
             aitu.test-api.tutkintoversio
             aitu.test-api.tutkintotyyppi
+            aitu.test-api.koulutustoimija
             aitu.test-api.peruste
             aitu.test-api.koulutusala
             aitu.test-api.opintoala
@@ -72,6 +73,7 @@
         (c/context "/api/test/koulutusala" [] aitu.test-api.koulutusala/reitit)
         (c/context "/api/test/opintoala" [] aitu.test-api.opintoala/reitit)
         (c/context "/api/test/peruste" [] aitu.test-api.peruste/reitit)
+        (c/context "/api/test/koulutustoimija" [] aitu.test-api.koulutustoimija/reitit)
         (c/context "/api/test/oppilaitos" [] aitu.test-api.oppilaitos/reitit)
         (c/context "/api/test/jarjestamissopimus" [] aitu.test-api.jarjestamissopimus/reitit)
         (c/context "/api/test/henkilo" [] aitu.test-api.henkilo/reitit)
@@ -86,6 +88,7 @@
       :title "AITU API"
       :description "AITUn julkinen rajapinta")
     (swaggered "AITU"
+      (c/context "/api/ttk" [] aitu.rest-api.ttk/raportti-reitit)
       (c/context "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
       (c/context "/api/henkilo" [] (wrap-tarkasta-csrf-token aitu.rest-api.henkilo/reitit))
       (c/context "/api/kayttaja" [] (wrap-tarkasta-csrf-token aitu.rest-api.kayttaja/reitit))
@@ -94,6 +97,7 @@
       (c/context "/api/tutkinto" [] (wrap-tarkasta-csrf-token aitu.rest-api.tutkinto/reitit))
       (c/context "/api/toimikausi" [] (wrap-tarkasta-csrf-token aitu.rest-api.toimikausi/reitit))
       (c/context "/api/oppilaitos" [] (wrap-tarkasta-csrf-token aitu.rest-api.oppilaitos/reitit))
+      (c/context "/api/koulutustoimija" [] (wrap-tarkasta-csrf-token aitu.rest-api.koulutustoimija/reitit))
       (c/context "/api/jarjestamissopimus" [] aitu.rest-api.jarjestamissopimus/liite-lataus-reitit)
       (c/context "/api/jarjestamissopimus" [] (wrap-tarkasta-csrf-token aitu.rest-api.jarjestamissopimus/reitit))
       (c/context "/api/tutkintorakenne" []  (wrap-tarkasta-csrf-token aitu.rest-api.tutkintorakenne/reitit))
