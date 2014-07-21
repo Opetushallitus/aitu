@@ -112,6 +112,7 @@
           _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
       (sallittu-jos
         (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
+        (sallittu-tiedostotyyppi? (:content-type file))
         (file-upload-response (arkisto/lisaa-suunnitelma-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))
 
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
@@ -131,6 +132,7 @@
           _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
       (sallittu-jos
         (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
+        (sallittu-tiedostotyyppi? (:content-type file))
         (file-upload-response (arkisto/lisaa-liite-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))
 
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]

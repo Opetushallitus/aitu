@@ -88,6 +88,18 @@
   ([data schema]
     (json-response (s/validate (s/maybe schema) data))))
 
+(def allowed-mimetypes
+  "Sallitut tiedostotyypit liitetiedostoille"
+  #{"application/pdf"
+    "image/gif" "image/jpeg" "image/png"
+    "text/plain" "text/rtf"
+    "application/vnd.ms-excel" "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    "application/msword" 
+    })
+
+(defn sallittu-tiedostotyyppi? [tyyppi] 
+  (contains? allowed-mimetypes tyyppi))
+    
 (defn file-download-response
   [data filename content-type]
   {:status 200
