@@ -20,6 +20,11 @@
             [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :as du]))
 
+(def esimerkki-liitetiedosto 
+  "Sallittu tiedostotyyppi sopimuksen liitteeksi"
+  (str (java.lang.System/getProperty "user.dir") "/grimlock_suunnitelma.jpg"))
+
+
 (defn avaa-sopimuksen-muokkaussivu [jarjestamissopimusid]
   (avaa (sopimussivu jarjestamissopimusid))
   (w/click "button[ng-click=\"muokkaa()\"]")
@@ -303,8 +308,6 @@
         (tallenna)
         (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut"))))))
 
-(def project-clj (str (java.lang.System/getProperty "user.dir") "/project.clj"))
-
 (defn aseta-liite [tyyppi polku]
   (w/send-keys {:css (str "div[liitetyyppi=\"" tyyppi "\"] input[type=\"file\"]")} polku)
   (odota-kunnes (-> (w/find-elements {:css (str "div[liitetyyppi=\"" tyyppi "\"] button[upload-submit]:not(.ng-hide)")}) (count) (> 0)))
@@ -344,18 +347,18 @@
   (testing "Lisätty järjestämissuunnitelma näkyy sopimuksen sivulla"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
-        (lisaa-suunnitelma-sopimukseen 1230 project-clj)
-        (is (= (map key (sopimuksen-suunnitelmat)) ["project.clj"]))))))
+        (lisaa-suunnitelma-sopimukseen 1230 esimerkki-liitetiedosto)
+        (is (= (map key (sopimuksen-suunnitelmat)) ["grimlock_suunnitelma.jpg"]))))))
 
 ;; Ks. yllä
 (deftest ^:no-ie jarjestamissuunnitelman-lataus-test
   (testing "Järjestämissuunnitelman lataus palauttaa alkuperäisen tiedoston sellaisenaan"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
-        (lisaa-suunnitelma-sopimukseen 1230 project-clj)
+        (lisaa-suunnitelma-sopimukseen 1230 esimerkki-liitetiedosto)
         (is (= (lataa-tiedosto-webdriverin-istunnossa
                  (val (first (sopimuksen-suunnitelmat))))
-               (slurp project-clj)))))))
+               (slurp esimerkki-liitetiedosto)))))))
 
 (defn lisaa-liite-sopimukseen [nro polku]
   (avaa-sopimuksen-muokkaussivu nro)
@@ -367,15 +370,15 @@
   (testing "Lisätty liite näkyy sopimuksen sivulla"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
-        (lisaa-liite-sopimukseen 1230 project-clj)
-        (is (= (map key (sopimuksen-liitteet)) ["project.clj"]))))))
+        (lisaa-liite-sopimukseen 1230 esimerkki-liitetiedosto)
+        (is (= (map key (sopimuksen-liitteet)) ["grimlock_suunnitelma.jpg"]))))))
 
 ;; Ks. yllä
 (deftest ^:no-ie liitteen-lataus-test
   (testing "Liitteen lataus palauttaa alkuperäisen tiedoston sellaisenaan"
     (with-webdriver
       (du/with-cleaned-data jarjestamissopimus-data
-        (lisaa-liite-sopimukseen 1230 project-clj)
+        (lisaa-liite-sopimukseen 1230 esimerkki-liitetiedosto)
         (is (= (lataa-tiedosto-webdriverin-istunnossa
                  (val (first (sopimuksen-liitteet))))
-               (slurp project-clj)))))))
+               (slurp esimerkki-liitetiedosto)))))))

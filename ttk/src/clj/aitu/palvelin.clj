@@ -96,6 +96,34 @@
    :headers {"Content-Type" "text/html"}
    :body (s/render-file "html/sessio-vanhentunut" {:service-url (get-in asetukset [:server :base-url])})})
 
+(defn app [asetukset]
+  (require 'aitu.reitit)
+  (let [session-store (memory-store)
+        reitit ((eval 'aitu.reitit/reitit) asetukset)]
+    (-> reitit
+    wrap-json-response
+    wrap-keyword-params
+    wrap-json-params
+    (i18n/wrap-locale
+      :ei-redirectia #"/api.*"
+      :base-url (-> asetukset :server :base-url))
+    (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
+                                :timeout-response (timeout-response asetukset)})
+    auth/wrap-sessionuser
+    log-request-wrapper
+    (auth-middleware asetukset)
+    wrap-multipart-params
+    wrap-params
+    (wrap-resource "public")
+    wrap-content-type
+    (wrap-frame-options :sameorigin)
+    (wrap-session {:store session-store
+                   :cookie-attrs {:http-only true
+                                  :path (service-path (get-in asetukset [:server :base-url]))
+                                  :secure (not (:development-mode asetukset))}})
+    (wrap-cas-single-sign-out session-store)
+    wrap-poikkeusten-logitus)))
+                      
 (defn kaynnista! [oletus-asetukset]
   (try
     (let [asetukset (lue-asetukset oletus-asetukset)
@@ -103,33 +131,8 @@
           _ (log/info "Käynnistetään Aitu" @build-id)
           _ (aitu.integraatio.sql.korma/luo-db (:db asetukset))
           upload-limit (* 10 1024 1024) ; max file upload (and general HTTP body) size in bytes
-          session-store (memory-store)
-          _ (require 'aitu.reitit)
-          reitit ((eval 'aitu.reitit/reitit) asetukset)
           sammuta (hs/run-server
-                    (-> reitit
-                      wrap-json-response
-                      wrap-keyword-params
-                      wrap-json-params
-                      (i18n/wrap-locale
-                        :ei-redirectia #"/api.*"
-                        :base-url (-> asetukset :server :base-url))
-                      (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
-                                                  :timeout-response (timeout-response asetukset)})
-                      auth/wrap-sessionuser
-                      log-request-wrapper
-                      (auth-middleware asetukset)
-                      wrap-multipart-params
-                      wrap-params
-                      (wrap-resource "public")
-                      wrap-content-type
-                      (wrap-frame-options :sameorigin)
-                      (wrap-session {:store session-store
-                                     :cookie-attrs {:http-only true
-                                                    :path (service-path(get-in asetukset [:server :base-url]))
-                                                    :secure (not (:development-mode asetukset))}})
-                      (wrap-cas-single-sign-out session-store)
-                      wrap-poikkeusten-logitus)
+                    (app asetukset)
                     {:port (get-in asetukset [:server :port])
                      :max-body upload-limit
                      :thread (get-in asetukset [:server :pool-size])})]

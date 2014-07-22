@@ -56,6 +56,7 @@
                  [clojurewerkz/quartzite "1.1.0"]
                  [org.clojure/data.zip "0.1.1"]
                  [robert/hooke "1.3.0"]
+                 [peridot "0.3.0"]
                  [prismatic/schema "0.2.0"]]
   :plugins [[lein-cljsbuild "0.3.2"]
             [lein-cloverage "1.0.2"]

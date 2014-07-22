@@ -450,6 +450,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         scope.tiedostoValittu = false;
         scope.reset = reset;
 
+        // http://stackoverflow.com/questions/651700/how-to-have-jquery-restrict-file-types-on-upload
         el.find('input[type=file]').change(function(event){
           var filename = event.target.value? _.last(event.target.value.split('\\')) : '';
 
@@ -457,17 +458,30 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
 
           scope.tiedostoValittu = filename.length > 0;
           el.find('input.valittu-tiedosto').val(filename);
-          scope.$apply();
+          
+          // Kts. palvelinpään http-util/allowed-mimetypes
+          var allowed_mime_types = ["application/pdf",
+                                    "image/gif", "image/jpeg", "image/png",
+                                    "text/plain", "text/rtf",
+                                    "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                    "application/msword"];
+          var file = this.files[0];
+          if (! _.contains(allowed_mime_types, file.type)) {
+        	  alert("Tiedostotyyppi ei kelpaa: " + file.type);
+          } else {
+        	  scope.$apply();
+          }
         });
 
         scope.uploadOk = function(r){
           reset();
           scope.uploadValmis(r, scope.liitetyyppi);
         };
-
+        
+        
         function reset() {
-          scope.tiedostoValittu = false;
-          el.find('form')[0].reset();
+        	scope.tiedostoValittu = false;
+        	el.find('form')[0].reset();
         }
       }
     };
