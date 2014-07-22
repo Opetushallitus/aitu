@@ -13,3 +13,5 @@ select j.jasenyys_id, h.etunimi, h.sukunimi
     where t.tkunta = j.toimikunta
       and (t.toimikausi_alku > j.alkupvm or t.toimikausi_loppu < j.loppupvm));
 
+-- OPH-764 Siirtymäaika on loppunut ennen tutkinnon voimassaolon päättymistä
+select * from tutkintoversio where siirtymaajan_loppupvm < voimassa_loppupvm;
