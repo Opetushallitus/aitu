@@ -36,8 +36,8 @@
        (assoc-in [:cas-auth-server :enabled] false)
        (assoc :development-mode true))
      file (clojure.java.io/file "test-resources/angband.zip")
-     crout (palvelin/app asetukset)
-     _ (korma/luo-db (:db asetukset))]
+     _ (korma/luo-db (:db asetukset))
+     crout (palvelin/app asetukset)]
       
     (let [response (->  (peridot/session  crout)
                      (mock-request "/api/jarjestamissopimus/38829/suunnitelma/3001"  :post {"file" file}))]
