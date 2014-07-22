@@ -39,15 +39,18 @@
   []
   (testdata/poista-testikayttaja! testikayttaja-oid))
 
-(defn alusta-korma! []
-  (let [dev-asetukset (assoc oletusasetukset :development-mode true)
-        asetukset (lue-asetukset dev-asetukset)
-        db-asetukset (merge-with #(or %2 %1)
-                                 (:db asetukset)
-                                 {:host (System/getenv "AMTU_DB_HOST")
-                                  :port (System/getenv "AMTU_DB_PORT")})]
-    (aitu.integraatio.sql.korma/luo-db db-asetukset)))
-
+(defn alusta-korma! 
+  ([asetukset] 
+    (let [db-asetukset (merge-with #(or %2 %1)
+                         (:db asetukset)
+                         {:host (System/getenv "AMTU_DB_HOST")
+                          :port (System/getenv "AMTU_DB_PORT")})]
+      (aitu.integraatio.sql.korma/luo-db db-asetukset)))
+    ([]
+    (let [dev-asetukset (assoc oletusasetukset :development-mode true)
+          asetukset (lue-asetukset dev-asetukset)]
+      (alusta-korma! asetukset))))
+ 
 (defn tietokanta-fixture-oid
   "Annettu käyttäjätunnus sidotaan Kormalle testifunktion ajaksi."
   [f oid uid]

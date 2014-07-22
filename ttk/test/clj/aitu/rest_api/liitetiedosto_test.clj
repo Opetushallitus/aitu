@@ -1,6 +1,6 @@
 (ns aitu.rest-api.liitetiedosto-test 
   (:require 
-    [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
+    [aitu.integraatio.sql.test-util :refer [tietokanta-fixture alusta-korma!]]
     [aitu.integraatio.sql.test-util :refer :all]
     [aitu.asetukset :refer [lue-asetukset oletusasetukset]]
     [aitu.palvelin :as palvelin]
@@ -36,7 +36,7 @@
        (assoc-in [:cas-auth-server :enabled] false)
        (assoc :development-mode true))
      file (clojure.java.io/file "test-resources/angband.zip")
-     _ (korma/luo-db (:db asetukset))
+     _ (alusta-korma! asetukset)
      crout (palvelin/app asetukset)]
       
     (let [response (->  (peridot/session  crout)
