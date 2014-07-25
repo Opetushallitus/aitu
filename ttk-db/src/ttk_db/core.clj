@@ -170,7 +170,7 @@
       ;; epäonnistuisi
       (try 
         (jdbc/with-connection {:datasource datasource}
-          (aseta-oikeudet-sovelluskayttajalle (:username options))
+          (aseta-oikeudet-sovelluskayttajille options)
           (when (:clear options)
             (luo-kayttajat! (:uservariable options)))
           (when (:testikayttajat options)
