@@ -32,7 +32,7 @@
             schema.core
             [stencil.core :as s]
 
-            aitu.integraatio.sql.korma
+            oph.korma.korma
 
             [aitu.infra.print-wrapper :refer [debug-request log-request-wrapper]]
             [aitu.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus build-id kehitysmoodi?]]
@@ -129,7 +129,7 @@
     (let [asetukset (lue-asetukset oletus-asetukset)
           _ (konfiguroi-lokitus asetukset)
           _ (log/info "Käynnistetään Aitu" @build-id)
-          _ (aitu.integraatio.sql.korma/luo-db (:db asetukset))
+          _ (oph.korma.korma/luo-db (:db asetukset))
           upload-limit (* 10 1024 1024) ; max file upload (and general HTTP body) size in bytes
           sammuta (hs/run-server
                     (app asetukset)

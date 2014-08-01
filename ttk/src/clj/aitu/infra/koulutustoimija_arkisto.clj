@@ -16,7 +16,9 @@
   (:require  [korma.core :as sql]
              [aitu.util :refer [sisaltaako-kentat? select-and-rename-keys]]
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
-             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto])
+             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
+             [oph.korma.korma :refer :all]
+             )
   (:use [aitu.integraatio.sql.korma]))
 
 (defn ^:integration-api lisaa!

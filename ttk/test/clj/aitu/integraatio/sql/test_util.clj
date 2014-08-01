@@ -45,7 +45,7 @@
                          (:db asetukset)
                          {:host (System/getenv "AMTU_DB_HOST")
                           :port (System/getenv "AMTU_DB_PORT")})]
-      (aitu.integraatio.sql.korma/luo-db db-asetukset)))
+      (oph.korma.korma/luo-db db-asetukset)))
     ([]
     (let [dev-asetukset (assoc oletusasetukset :development-mode true)
           asetukset (lue-asetukset dev-asetukset)]

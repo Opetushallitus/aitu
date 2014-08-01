@@ -22,7 +22,9 @@
             [aitu.util :refer [sisaltaako-kentat? select-and-rename-keys]]
             [schema.macros :as sm]
             [aitu.auditlog :as auditlog]
-            [clojure.set :refer [rename-keys]])
+            [clojure.set :refer [rename-keys]]
+            [oph.korma.korma :refer  :all ]
+            )
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-toimikunnan-diaarinumero
