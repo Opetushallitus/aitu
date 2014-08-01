@@ -14,7 +14,8 @@
 
 (ns aitu.infra.koulutustoimija-arkisto
   (:require  [korma.core :as sql]
-             [aitu.util :refer [sisaltaako-kentat? select-and-rename-keys]]
+             [aitu.util :refer [select-and-rename-keys]]
+             [oph.common.util.util :refer [sisaltaako-kentat?]]
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
              [oph.korma.korma :refer :all]

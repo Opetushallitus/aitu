@@ -18,7 +18,7 @@
             [schema.macros :as sm]
             [aitu.toimiala.henkilo :refer :all]
             [aitu.toimiala.skeema :refer [HenkiloTaiTiedot Henkilo]]
-            [aitu.util :refer [sisaltaako-kentat?]]
+            [oph.common.util.util :refer [sisaltaako-kentat?]]
             [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
             [aitu.auditlog :as auditlog])
   (:use [aitu.integraatio.sql.korma]))

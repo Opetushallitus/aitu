@@ -36,7 +36,7 @@
 
             [aitu.infra.print-wrapper :refer [debug-request log-request-wrapper]]
             [aitu.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus build-id kehitysmoodi?]]
-            [aitu.infra.i18n :as i18n]
+            [oph.common.infra.i18n :as i18n]
             [aitu.infra.auth-wrapper :as auth]
             [clj-cas-client.core :refer [cas]]
             [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]

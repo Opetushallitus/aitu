@@ -19,7 +19,7 @@
             [oph.korma.korma-auth :as auth]
             [oph.korma.korma-auth :as ka]
             [aitu.integraatio.sql.test-data-util :as data]
-            [aitu.infra.i18n :as i18n]
+            [oph.common.infra.i18n :as i18n]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture testikayttaja-oid tietokanta-fixture-oid testi-locale alusta-korma!]]
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))

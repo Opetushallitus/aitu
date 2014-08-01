@@ -16,7 +16,7 @@
   (:require [clojure.tools.logging :as log]
             compojure.core
             [korma.db :as db]
-            [aitu.util :refer [retrying]]
+            [oph.common.util.util :refer [retrying]]
             [aitu.toimiala.kayttajaoikeudet :as auth-map]
             [compojure.api.sweet :as c]))
 

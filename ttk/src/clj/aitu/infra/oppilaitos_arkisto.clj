@@ -17,7 +17,8 @@
              [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
              [aitu.toimiala.oppilaitos :as toimiala]
-             [aitu.util :refer [sisaltaako-kentat? select-and-rename-keys]]
+             [aitu.util :refer [select-and-rename-keys]]
+             [oph.common.util.util :refer [sisaltaako-kentat?]]
              [oph.korma.korma :refer :all]
              )
   (:use [aitu.integraatio.sql.korma]))

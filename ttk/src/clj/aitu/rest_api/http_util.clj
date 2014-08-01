@@ -18,7 +18,7 @@
     [valip.core :refer [validate]]
     [clj-time.format :refer [formatter formatters parse unparse parse-local-date with-locale]]
     [clj-time.coerce :refer [from-date to-date]]
-    [aitu.util :refer [uusin-muokkausaika]]
+    [oph.common.util.util :refer [uusin-muokkausaika]]
     [schema.core :as s]))
 
 (def ^:private http-date-format

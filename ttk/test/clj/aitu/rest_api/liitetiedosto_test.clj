@@ -7,7 +7,7 @@
     [peridot.core :as peridot]
     [oph.korma.korma-auth :as ka]
     [oph.korma.korma-auth :as auth]
-    [aitu.infra.i18n :as i18n]
+    [oph.common.infra.i18n :as i18n]
     [aitu.integraatio.sql.korma :as korma]
     [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
     [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]

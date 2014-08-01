@@ -14,16 +14,17 @@
 
 (ns aitu.integraatio.sql.i18n-enum-test
   (:require [clojure.test :refer :all]
-            [aitu.infra.i18n :as i18n]
-            [korma.core :as sql]
-            [aitu.integraatio.sql.test-util :refer [tietokanta-fixture testi-locale]]))
+    [oph.common.infra.i18n :as oph-i18n]
+    [aitu.infra.i18n :as i18n]
+    [korma.core :as sql]
+    [aitu.integraatio.sql.test-util :refer [tietokanta-fixture testi-locale]]))
 
 (use-fixtures :each tietokanta-fixture)
 
 (defn enum-arvot
   "Palauttaa lokalisaatiosta kaikki tekstit enum avaimen alta"
   []
-  (:enum (binding [i18n/*locale* testi-locale]
+  (:enum (binding [oph-i18n/*locale* testi-locale]
            (i18n/tekstit))))
 
 (defn enum-keyword->nimi

@@ -16,7 +16,7 @@
   (:import java.util.Locale)
   (:require [korma.core :as sql]
             [korma.db :as db]
-            [aitu.infra.i18n :as i18n]
+            [oph.common.infra.i18n :as i18n]
             [oph.korma.korma-auth :as ka]
             [infra.test.data :as testdata]
             [aitu.asetukset :refer [lue-asetukset oletusasetukset]]

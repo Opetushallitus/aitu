@@ -23,3 +23,4 @@
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/haku/" [termi :as req]
     (cachable-json-response req (arkisto/hae-termilla termi))))
+ 

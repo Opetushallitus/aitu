@@ -13,9 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.integraatio.organisaatiopalvelu
-  (:require [aitu.util :refer [get-json-from-url map-by diff-maps some-value]]
-            [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
+  (:require [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
             [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
+            [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value]]
             [clojure.tools.logging :as log]))
 
 (defn hae-kaikki [url]

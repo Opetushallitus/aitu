@@ -17,11 +17,11 @@
             clojure.set
             [clojure.tools.logging :as log]
             aitu.log
-            [aitu.util :refer [pisteavaimet->puu
+            [oph.common.util.util :refer [pisteavaimet->puu
                               deep-merge
                               deep-update-vals
-                              paths
-                              kaikki-optional]]
+                              paths]]
+            [aitu.util :refer [kaikki-optional]]
             [schema.core :as s]
             [schema.coerce :as sc])
   (:import [org.apache.log4j PropertyConfigurator]))

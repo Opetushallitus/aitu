@@ -47,7 +47,7 @@
 (defn luo-db [db-asetukset]
   (korma.db/default-connection
     (korma.db/create-db {:make-pool? false
-                         :delimiters ""
+; TODO: aipalissa on nämä delimiterit, mutta ei toimi aitussa. Miksi? Korma?                         :delimiters ""
                          :datasource (bonecp-datasource db-asetukset)})))
 
 (defn convert-instances-of [c f m]

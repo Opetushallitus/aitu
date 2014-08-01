@@ -20,7 +20,7 @@
             [aitu.rest-api.http-util :refer :all]
             [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.skeema :as skeema]
-            [aitu.util :refer [uusin-muokkausaika]]
+            [oph.common.util.util :refer [uusin-muokkausaika]]
             [valip.predicates :refer [present? max-length]]
             [ring.util.response :refer [response]]
             [aitu.compojure-util :as cu]

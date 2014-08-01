@@ -155,9 +155,13 @@
 (defn some-value [pred coll]
   (first (filter pred coll)))
 
-(defn map-by [f coll]
-  (into {} (for [item coll]
-             [(f item) item])))
+(defn map-by
+  "Kuten group-by, mutta jättää vain viimeisen täsmäävän alkion"
+  [f coll]
+  (into {} (for [item coll
+                 :let [k (f item)]
+                 :when (not (nil? k))]
+             [k item])))
 
 (defn retrying* [expected-throwable attempts f]
   {:pre [(isa? expected-throwable Throwable)

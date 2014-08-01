@@ -18,7 +18,7 @@
             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
             [aitu.infra.opintoala-arkisto :as opintoala-arkisto]
             [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
-            [aitu.util :refer [sisaltaako-kentat?]])
+            [oph.common.util.util :refer [sisaltaako-kentat?]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn ^:test-api tyhjenna!

@@ -18,6 +18,7 @@
             [aitu.infra.koulutusala-arkisto :as koulutusala-arkisto]
             [aitu.infra.opintoala-arkisto :as opintoala-arkisto]
             [clojure.set :refer [intersection difference rename-keys]]
+            [oph.common.util.util :refer :all]
             [aitu.util :refer :all]))
 
 ;; Tässä nimiavaruudessa viitataan "koodi"-sanalla koodistopalvelun palauttamaan tietorakenteeseen.

@@ -9,7 +9,7 @@
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.opintoala-arkisto :as opintoala-arkisto]
             [aitu.infra.koulutusala-arkisto :as koulutusala-arkisto]
-            [aitu.util :refer [map-by]]
+            [oph.common.util.util :refer [map-by]]
             [korma.db :as db]))
 
 (defn uusi [[tutkintotunnus muutos]]

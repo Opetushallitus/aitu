@@ -15,7 +15,7 @@
 (ns aitu.infra.jarjesto-arkisto
   (:require  korma.db
              [korma.core :as sql]
-             [aitu.util :refer [sisaltaako-kentat?]])
+             [oph.common.util.util :refer [sisaltaako-kentat?]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-kaikki []

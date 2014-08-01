@@ -15,7 +15,7 @@
 (ns aitu.infra.i18n-test
   (:import java.util.Locale)
   (:require [clojure.test :refer [deftest testing is are]]
-            [aitu.infra.i18n :refer :all]))
+            [oph.common.infra.i18n :refer :all]))
 
 (deftest kielikoodi-ja-uri-test
   (are [uri tulos] (= (kielikoodi-ja-uri {:uri uri}) tulos)

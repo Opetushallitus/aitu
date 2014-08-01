@@ -18,7 +18,7 @@
             [clojure.tools.logging :as log]
             [aitu.integraatio.sql.korma :as taulut]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
-            [aitu.util :refer [sisaltaako-kentat?]]
+            [oph.common.util.util :refer [sisaltaako-kentat?]]
             [oph.korma.korma-auth :refer [*current-user-uid*
                                           *current-user-oid*
                                           integraatiokayttaja]]))
