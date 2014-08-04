@@ -1258,3 +1258,66 @@ angular.module('ngUpload', [])
  * License: MIT
  */
 !function(){"use strict";angular.module("angular-loading-bar",["cfp.loadingBarInterceptor"]),angular.module("chieffancypants.loadingBar",["cfp.loadingBarInterceptor"]),angular.module("cfp.loadingBarInterceptor",["cfp.loadingBar"]).config(["$httpProvider",function(a){var b=["$q","$cacheFactory","$timeout","$rootScope","cfpLoadingBar",function(b,c,d,e,f){function g(){d.cancel(i),f.complete(),k=0,j=0}function h(b){var d,e=a.defaults;if("GET"!==b.method||b.cache===!1)return b.cached=!1,!1;d=b.cache===!0&&void 0===e.cache?c.get("$http"):void 0!==e.cache?e.cache:b.cache;var f=void 0!==d?void 0!==d.get(b.url):!1;return void 0!==b.cached&&f!==b.cached?b.cached:(b.cached=f,f)}var i,j=0,k=0,l=f.latencyThreshold;return{request:function(a){return a.ignoreLoadingBar||h(a)||(e.$broadcast("cfpLoadingBar:loading",{url:a.url}),0===j&&(i=d(function(){f.start()},l)),j++,f.set(k/j)),a},response:function(a){return a.config.ignoreLoadingBar||h(a.config)||(k++,e.$broadcast("cfpLoadingBar:loaded",{url:a.config.url}),k>=j?g():f.set(k/j)),a},responseError:function(a){return a.config.ignoreLoadingBar||h(a.config)||(k++,e.$broadcast("cfpLoadingBar:loaded",{url:a.config.url}),k>=j?g():f.set(k/j)),b.reject(a)}}}];a.interceptors.push(b)}]),angular.module("cfp.loadingBar",[]).provider("cfpLoadingBar",function(){this.includeSpinner=!0,this.includeBar=!0,this.latencyThreshold=100,this.startSize=.02,this.parentSelector="body",this.$get=["$document","$timeout","$animate","$rootScope",function(a,b,c,d){function e(){var e=a.find(l);b.cancel(k),p||(d.$broadcast("cfpLoadingBar:started"),p=!0,s&&c.enter(m,e),r&&c.enter(o,e),f(t))}function f(a){if(p){var c=100*a+"%";n.css("width",c),q=a,b.cancel(j),j=b(function(){g()},250)}}function g(){if(!(h()>=1)){var a=0,b=h();a=b>=0&&.25>b?(3*Math.random()+3)/100:b>=.25&&.65>b?3*Math.random()/100:b>=.65&&.9>b?2*Math.random()/100:b>=.9&&.99>b?.005:0;var c=h()+a;f(c)}}function h(){return q}function i(){d.$broadcast("cfpLoadingBar:completed"),f(1),k=b(function(){c.leave(m,function(){q=0,p=!1}),c.leave(o)},500)}var j,k,l=this.parentSelector,m=angular.element('<div id="loading-bar"><div class="bar"><div class="peg"></div></div></div>'),n=m.find("div").eq(0),o=angular.element('<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>'),p=!1,q=0,r=this.includeSpinner,s=this.includeBar,t=this.startSize;return{start:e,set:f,status:h,inc:g,complete:i,includeSpinner:this.includeSpinner,latencyThreshold:this.latencyThreshold,parentSelector:this.parentSelector,startSize:this.startSize}}]})}();
+// Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
+//
+// This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+// soon as they will be approved by the European Commission - subsequent versions
+// of the EUPL (the "Licence");
+//
+// You may not use this work except in compliance with the Licence.
+// You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// European Union Public Licence for more details.
+
+'use strict';
+
+// Aitun services.js:stä.
+angular.module('yhteiset.palvelut.virheLogitus', [])
+
+  .factory('virheLogitusApi', ['$log', '$window', '$injector', function($log, $window, $injector){
+    return {
+      lahetaPalvelimelle : function(poikkeus, aiheuttaja){
+
+        var cookies = $injector.get('$cookies'); //Run time injektio circular depencencyn välttämiseksi
+
+        try {
+          var virheviesti = poikkeus.toString();
+          var stackTrace = printStackTrace({ e: poikkeus });
+
+          $.ajax({
+            type: 'POST',
+            url: ttkBaseUrl + '/api/jslog/virhe',
+            contentType: 'application/json',
+            headers : {'x-xsrf-token' : cookies['XSRF-TOKEN']},
+            data: angular.toJson({
+              virheenUrl: $window.location.href,
+              userAgent : navigator.userAgent,
+              virheviesti: virheviesti,
+              stackTrace: stackTrace,
+              cause: (aiheuttaja || '')
+            })
+          });
+        } catch ( virhe ) {
+          $log.log( virhe );
+        }
+      }
+    };
+  }])
+
+  .factory('virheLogitus', ['$log', '$window', 'virheLogitusApi', function($log, $window, virheLogitusApi) {
+    $window.jsErrors = []; //e2e testit keräävät virheet tästä
+
+    function log( poikkeus, aiheuttaja ) {
+      var jsErrorsMessage = poikkeus.message + ' (aiheuttanut "' + aiheuttaja + '")';
+
+      $window.jsErrors.push(jsErrorsMessage);
+
+      $log.error.apply( $log, arguments );
+      virheLogitusApi.lahetaPalvelimelle(poikkeus, aiheuttaja);
+    }
+
+    return log;
+  }]);
