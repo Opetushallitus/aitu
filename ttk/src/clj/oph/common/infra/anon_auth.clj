@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.infra.anon-auth
+(ns oph.common.infra.anon-auth
   "Testitarkoituksia varten anonyymi-autentikaatiofiltteri, joka emuloi CAS-autentikaatiota"
   (:require [oph.korma.korma-auth :as ka]
             [clojure.tools.logging :as log]))
@@ -37,3 +37,4 @@
 ;     body
 ;     (oph.cas.util.DevelopmentSSLAuthUtil/swapSSLConfig old-config)
 ;
+

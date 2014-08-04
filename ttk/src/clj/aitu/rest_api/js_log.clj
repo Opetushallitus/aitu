@@ -15,32 +15,8 @@
 (ns aitu.rest_api.js-log
   (:require [compojure.core :as c]
             [aitu.compojure-util :as cu]
-            [clojure.string :as str]
-            [clojure.tools.logging :as log]))
-
-;   "max length of message strings from the client side"
-(def
-  maxlength 1000)
-
-(defn sanitize
-  "replaces linefeeds with blanks and limits the length"
-  [s]
-  {:pre [clojure.core/string?]}
-  (let [ln (min (.length s) maxlength)]
-    (-> s
-      (str/replace "\n" "!")
-      (str/replace "\r" "!")
-      (.substring 0 ln))))
+            [oph.rest_api.js-log :refer :all]))
 
 (c/defroutes reitit
   (cu/defapi :logitus nil :post "/virhe" [virheenUrl userAgent virheviesti stackTrace cause]
-    (let [rivinvaihto "\n"]
-      (log/info (str rivinvaihto
-                     "--- Javascript virhe ---" rivinvaihto
-                     "Virheen url: " (sanitize virheenUrl) rivinvaihto
-                     "User agent string: " (sanitize userAgent) rivinvaihto
-                     "Virheviesti: " (sanitize virheviesti) rivinvaihto
-                     "Stacktrace: " (sanitize stackTrace) rivinvaihto
-                     "Aiheuttaja: " (sanitize cause) rivinvaihto
-                     "------------------------")))
-    {:status 200}))
+    (logita virheenUrl userAgent virheviesti stackTrace cause)))

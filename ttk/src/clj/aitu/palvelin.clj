@@ -40,7 +40,7 @@
             [aitu.infra.auth-wrapper :as auth]
             [clj-cas-client.core :refer [cas]]
             [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
-            [aitu.infra.anon-auth :as anon-auth]
+            [oph.common.infra.anon-auth :as anon-auth]
             [aitu.toimiala.kayttajaoikeudet
              :refer [*current-user-authmap* yllapitaja?]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]

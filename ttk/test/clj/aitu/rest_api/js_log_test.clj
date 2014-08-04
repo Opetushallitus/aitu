@@ -1,6 +1,6 @@
 (ns aitu.rest-api.js-log-test
   (:require [clojure.test :refer [deftest testing is]]
-            [aitu.rest_api.js-log :as js-log]))
+            [oph.rest_api.js-log :as js-log]))
 
 (deftest test-linefeeds
   (is (= "a!!b" (js-log/sanitize "a\n\rb")))
