@@ -82,7 +82,8 @@ module.exports = function (grunt) {
               'bower_components/jquery-placeholder/jquery.placeholder.min.js',
               'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
               'bower_components/ngUpload/ng-upload.js',
-              'bower_components/angular-loading-bar/build/loading-bar.min.js'],
+              'bower_components/angular-loading-bar/build/loading-bar.min.js',
+              'bower_components/aituaipaljs/src/js/yhteiset/palvelut/virheLogitus.js'],
         dest: '<%= yeoman.app %>/vendor/bower-components.js'
       }
     },

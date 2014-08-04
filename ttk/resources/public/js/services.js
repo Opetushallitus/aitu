@@ -162,51 +162,6 @@ angular.module('services', ['ngResource', 'ngCookies'])
     }
   }])
 
-  .factory('virheLogitusApi', ['$log', '$window', '$injector', function($log, $window, $injector){
-    return {
-      lahetaPalvelimelle : function(poikkeus, aiheuttaja){
-
-        var cookies = $injector.get('$cookies'); //Run time injektio circular depencencyn välttämiseksi
-
-        try {
-          var virheviesti = poikkeus.toString();
-          var stackTrace = printStackTrace({ e: poikkeus });
-
-          $.ajax({
-            type: 'POST',
-            url: ttkBaseUrl + '/api/jslog/virhe',
-            contentType: 'application/json',
-            headers : {'x-xsrf-token' : cookies['XSRF-TOKEN']},
-            data: angular.toJson({
-              virheenUrl: $window.location.href,
-              userAgent : navigator.userAgent,
-              virheviesti: virheviesti,
-              stackTrace: stackTrace,
-              cause: (aiheuttaja || '')
-            })
-          });
-        } catch ( virhe ) {
-          $log.log( virhe );
-        }
-      }
-    };
-  }])
-
-  .factory('virheLogitus', ['$log', '$window', 'virheLogitusApi', function($log, $window, virheLogitusApi) {
-    $window.jsErrors = []; //e2e testit keräävät virheet tästä
-
-    function log( poikkeus, aiheuttaja ) {
-      var jsErrorsMessage = poikkeus.message + ' (aiheuttanut "' + aiheuttaja + '")';
-
-      $window.jsErrors.push(jsErrorsMessage);
-
-      $log.error.apply( $log, arguments );
-      virheLogitusApi.lahetaPalvelimelle(poikkeus, aiheuttaja);
-    }
-
-    return log;
-  }])
-
   .factory('boolValues', ['i18n',  function(i18n){
     return [{value: true, name: i18n['yleinen']['kylla']}, {value: false, name: i18n['yleinen']['ei']}];
   }])

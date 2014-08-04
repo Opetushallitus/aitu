@@ -23,7 +23,7 @@ describe('Services: virheLogitusTest', function () {
 
     lahetaPalvelimelleSpy = jasmine.createSpy();
 
-    module('services');
+    module('yhteiset.palvelut.virheLogitus');
     module(function($provide){
       $provide.provider('$exceptionHandler', {
         $get: function( virheLogitus ) {
