@@ -50,7 +50,7 @@ cd dev-scripts
 
 Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Java-virtuaalikoneen ja [leiningen](http://leiningen.org/) työkalun.
 
-Tiedostossa ttk/LUEMINUT.txt on ohjeita kehitystyöhön enemmän.
+Tiedostossa ttk/README.md on ohjeita kehitystyöhön enemmän.
 
 
 
