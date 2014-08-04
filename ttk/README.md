@@ -29,7 +29,7 @@ seuraavasti.
   1. Valitse valikosta File -> New -> Project... (nimenomaan pelkkä Project,
      eikä esim. Java Project tai Clojure project) ja syötä uuden projektin
      sijainniksi Git-reposi ttk-alihakemisto (sama hakemisto, jossa tämä
-     LUEMINUT.txt on)
+     README.md on)
 
   2. Klikkaa projektia Package Explorer -näkymässä oikealla napilla ja valitse
      Configure -> Convert to Leiningen project

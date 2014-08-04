@@ -13,6 +13,7 @@
 // European Union Public Licence for more details.
 
 angular.module('ttk', ['angular-loading-bar',
+                       'yhteiset.palvelut.virheLogitus',
                        'aitulocale',
                        'kayttooikeudet',
                        'henkilot',
