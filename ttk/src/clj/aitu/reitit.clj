@@ -16,7 +16,7 @@
             [aitu.infra.status :refer [status]]
             [aitu.asetukset :refer [build-id kehitysmoodi?]]
             [aitu.toimiala.skeema :refer :all]
-            [aitu.rest-api.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [json-response]]
             [aitu.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
 
             aitu.rest-api.db-validation

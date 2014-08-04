@@ -15,15 +15,14 @@
 (ns aitu.rest-api.jarjestamissopimus
   (:require [compojure.core :as c]
             [korma.db :as db]
-            [aitu.rest-api.http-util :refer [parse-iso-date json-response sallittu-jos tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin]]
+            [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response sallittu-jos]]
+            [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]
-            [aitu.rest-api.http-util :refer :all]
             [valip.predicates :refer [present?]]
             [aitu.toimiala.skeema :as skeema]
             [aitu.compojure-util :as cu]
             [aitu.infra.validaatio :refer [validoi-alkupvm-sama-tai-ennen-loppupvm]]
-            [aitu.rest-api.http-util :refer :all]
             [aitu.toimiala.jarjestamissopimus :as jarjestamissopimus]))
 
 (defn validoi-uniikki-sopimusnumero [sopimus]

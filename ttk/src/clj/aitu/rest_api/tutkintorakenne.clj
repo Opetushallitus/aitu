@@ -17,7 +17,7 @@
             [cheshire.core :as cheshire]
             [aitu.infra.tutkintorakenne-arkisto :as arkisto]
             [aitu.compojure-util :as cu]
-            [aitu.rest-api.http-util :refer [cachable-json-response json-response]]
+            [oph.common.util.http-util :refer [cachable-json-response json-response]]
             [korma.db :as db]))
 
 (c/defroutes reitit

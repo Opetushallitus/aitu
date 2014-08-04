@@ -17,7 +17,7 @@
   (:require [compojure.core :as c]
             [cheshire.core :as cheshire]
             [aitu.infra.peruste-arkisto :as arkisto]
-            [aitu.rest-api.http-util :refer [parse-iso-date]]
+            [oph.common.util.http-util :refer [parse-iso-date]]
             [korma.db :as db]))
 
 (c/defroutes reitit

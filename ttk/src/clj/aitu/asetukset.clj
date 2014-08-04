@@ -16,7 +16,7 @@
   (:require [clojure.java.io :refer [file resource]]
             clojure.set
             [clojure.tools.logging :as log]
-            aitu.log
+            oph.log
             [oph.common.util.util :refer [pisteavaimet->puu
                               deep-merge
                               deep-update-vals
@@ -103,7 +103,7 @@
 (defn konfiguroi-lokitus
   "Konfiguroidaan log4j asetukset tiedostosta joka määritellään asetuksissa."
   [asetukset]
-  (aitu.log/lisaa-uid-ja-requestid-hook)
+  (oph.log/lisaa-uid-ja-requestid-hook)
   (let [filepath (:properties-file (:log4j asetukset))
         refresh (:refresh-interval (:log4j asetukset))
         log4j-configfile (file filepath)

@@ -21,7 +21,7 @@
                                                     liita-kayttajan-henkilo-oikeudet]]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aitu.infra.kayttajaoikeudet-arkisto :as ko-arkisto]
-            [aitu.rest-api.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [json-response]]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.compojure-util :as cu]
             [korma.db :as db]))

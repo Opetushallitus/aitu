@@ -16,17 +16,15 @@
   (:require [compojure.core :refer [GET PUT POST defroutes]]
             schema.core
             [aitu.infra.ttk-arkisto :as arkisto]
-            [aitu.rest-api.http-util
-             :refer [validoi validoi-entity-saannoilla
-                     luo-validoinnin-virhevastaus cachable-json-response
-                     json-response parse-iso-date sallittu-jos
-                     textfile-download-response]]
+            [aitu.rest-api.http-util :refer [textfile-download-response]]
             [valip.predicates :refer [present?]]
             [aitu.infra.i18n :as i18n]
             [aitu.infra.validaatio :as val]
             [aitu.toimiala.toimikunta :as toimikunta]
             [aitu.toimiala.skeema :refer :all]
-            [aitu.rest-api.http-util :refer [cachable-json-response]]
+            [oph.common.util.http-util :refer [validoi validoi-entity-saannoilla
+                     luo-validoinnin-virhevastaus cachable-json-response
+                     json-response parse-iso-date sallittu-jos cachable-json-response]]
             [aitu.compojure-util :as cu]
             [compojure.api.sweet :refer :all]
             [aitu.util :refer [muodosta-csv]]))

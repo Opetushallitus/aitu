@@ -15,7 +15,7 @@
 (ns aitu.rest-api.enum
   (:require [compojure.core :as c]
             [aitu.infra.enum-arkisto :as arkisto]
-            [aitu.rest-api.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [json-response]]
             [aitu.compojure-util :as cu]
             [korma.db :as db]))
 

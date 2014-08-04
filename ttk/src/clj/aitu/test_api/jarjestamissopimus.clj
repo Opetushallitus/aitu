@@ -17,7 +17,7 @@
   (:require [compojure.core :as c]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [korma.db :as db]
-            [aitu.rest-api.http-util :refer [parse-iso-date]]))
+            [oph.common.util.http-util :refer [parse-iso-date]]))
 
 (c/defroutes reitit
   (c/DELETE "/:jarjestamissopimusid" [jarjestamissopimusid]

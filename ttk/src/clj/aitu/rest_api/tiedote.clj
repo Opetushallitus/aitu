@@ -15,7 +15,7 @@
 (ns aitu.rest-api.tiedote
   (:require [compojure.core :as c]
             [aitu.infra.tiedote-arkisto :as arkisto]
-            [aitu.rest-api.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [json-response]]
             [aitu.compojure-util :as cu]
             [cheshire.core :as cheshire]
             [korma.db :as db]))

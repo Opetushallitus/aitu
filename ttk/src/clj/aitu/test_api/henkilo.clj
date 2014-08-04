@@ -17,7 +17,7 @@
   (:require [compojure.core :as c]
             [cheshire.core :as cheshire]
             [aitu.infra.henkilo-arkisto :as arkisto]
-            [aitu.rest-api.http-util :refer [validoi]]
+            [oph.common.util.http-util :refer [validoi]]
             [valip.predicates :refer [present?]]
             [korma.db :as db]
             [aitu.toimiala.skeema :as skeema]

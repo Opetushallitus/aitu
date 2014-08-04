@@ -19,7 +19,7 @@
             [aitu.compojure-util :as cu]
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]
-            [aitu.rest-api.http-util :refer [cachable-json-response json-response]]
+            [oph.common.util.http-util :refer [cachable-json-response json-response]]
             [aitu.toimiala.skeema :refer :all]))
 
 (c/defroutes reitit

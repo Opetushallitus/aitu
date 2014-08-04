@@ -34,7 +34,7 @@
 
             oph.korma.korma
 
-            [aitu.infra.print-wrapper :refer [debug-request log-request-wrapper]]
+            [oph.common.infra.print-wrapper :refer [debug-request log-request-wrapper]]
             [aitu.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus build-id kehitysmoodi?]]
             [oph.common.infra.i18n :as i18n]
             [aitu.infra.auth-wrapper :as auth]
@@ -43,7 +43,7 @@
             [aitu.infra.anon-auth :as anon-auth]
             [aitu.toimiala.kayttajaoikeudet
              :refer [*current-user-authmap* yllapitaja?]]
-            [aitu.poikkeus :refer [wrap-poikkeusten-logitus]]
+            [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
             [aitu.infra.eraajo :as eraajo]
             [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]))

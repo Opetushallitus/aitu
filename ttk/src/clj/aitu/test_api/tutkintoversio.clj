@@ -16,7 +16,7 @@
   "Testien tarvitsemat REST-rajapinnat jos niitä on. Näitä ei tarvita normaalista käyttöliittymästä koskaan"
   (:require [compojure.core :as c]
             [clj-time.coerce :as time-coerce]
-            [aitu.rest-api.http-util :refer [parse-iso-date]]
+            [oph.common.util.http-util :refer [parse-iso-date]]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [korma.db :as db]))
 

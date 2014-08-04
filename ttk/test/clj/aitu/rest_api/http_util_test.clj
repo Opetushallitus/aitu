@@ -15,7 +15,7 @@
 (ns aitu.rest-api.http-util-test
   (:require [clojure.test :refer [deftest testing is]]
             [cheshire.core :as json]
-            [aitu.rest-api.http-util :refer :all]))
+            [oph.common.util.http-util :refer :all]))
 
 (deftest validointi-test
   (testing "validoi*"

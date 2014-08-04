@@ -19,7 +19,7 @@
             [aitu.toimiala.tutkinto :as tutkinto]
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
             [aitu.compojure-util :as cu]
-            [aitu.rest-api.http-util :refer [cachable-json-response json-response]]
+            [oph.common.util.http-util :refer [cachable-json-response json-response]]
             [korma.db :as db]))
 
 (c/defroutes reitit

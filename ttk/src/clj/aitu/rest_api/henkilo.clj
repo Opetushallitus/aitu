@@ -17,6 +17,7 @@
             [cheshire.core :as cheshire]
             [aitu.infra.henkilo-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]
+            [oph.common.util.http-util :refer :all]
             [aitu.rest-api.http-util :refer :all]
             [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.skeema :as skeema]

@@ -16,7 +16,7 @@
   (:require [compojure.core :as c]
             [cheshire.core :as cheshire]
             [aitu.infra.opintoala-arkisto :as arkisto]
-            [aitu.rest-api.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [json-response]]
             [aitu.compojure-util :as cu]
             [korma.db :as db]))
 

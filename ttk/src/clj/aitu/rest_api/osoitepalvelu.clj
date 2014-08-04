@@ -4,7 +4,7 @@
             [compojure.api.sweet :refer :all]
             [aitu.toimiala.skeema :refer :all]
             [aitu.compojure-util :as cu]
-            [aitu.rest-api.http-util :refer [json-response]]))
+            [oph.common.util.http-util :refer [json-response]]))
 
 (defroutes* reitit
   (GET* "/" []
