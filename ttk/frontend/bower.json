@@ -19,6 +19,6 @@
     "jquery-placeholder": "2.0.7",
     "ngUpload": "0.5.11",
     "angular-loading-bar": "~0.4.3",
-    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.1"
+    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.2"
   }
 }
