@@ -36,5 +36,5 @@
       (catch Throwable t
         (log/error t (.getMessage t))
         {:status 500
-         :headers {"Content-Type" "text/plain"}
+         :headers {"Content-Type" "text/plain; charset=utf-8"}
          :body (throwable->simplestring t)}))))
