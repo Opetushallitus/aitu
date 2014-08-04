@@ -1,4 +1,4 @@
-(ns aitu.rest-api.js-log-test
+(ns oph.rest-api.js-log-test
   (:require [clojure.test :refer [deftest testing is]]
             [oph.rest_api.js-log :as js-log]))
 

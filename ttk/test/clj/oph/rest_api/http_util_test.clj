@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.rest-api.http-util-test
+(ns oph.rest-api.http-util-test
   (:require [clojure.test :refer [deftest testing is]]
             [cheshire.core :as json]
             [oph.common.util.http-util :refer :all]))

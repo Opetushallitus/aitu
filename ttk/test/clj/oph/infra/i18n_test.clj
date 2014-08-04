@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.infra.i18n-test
+(ns oph.infra.i18n-test
   (:import java.util.Locale)
   (:require [clojure.test :refer [deftest testing is are]]
             [oph.common.infra.i18n :refer :all]))
