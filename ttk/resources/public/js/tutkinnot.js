@@ -21,7 +21,7 @@ angular.module('tutkinnot', ['ngRoute'])
   })
 
   .factory('TutkintoResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/tutkinto/:tutkintotunnus', {'tutkintotunnus': '@tutkintotunnus'}, {
+    return $resource(ophBaseUrl + '/api/tutkinto/:tutkintotunnus', {'tutkintotunnus': '@tutkintotunnus'}, {
       get: {
         method: 'GET',
         params: {nocache: function() { return Date.now(); } },
@@ -35,7 +35,7 @@ angular.module('tutkinnot', ['ngRoute'])
   }])
 
   .factory('TutkintorakenneResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/tutkintorakenne', {}, {
+    return $resource(ophBaseUrl + '/api/tutkintorakenne', {}, {
       query: {
         method: 'GET',
         params: {nocache: function() { return Date.now(); } },

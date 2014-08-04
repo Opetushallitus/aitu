@@ -14,4 +14,4 @@
 
 'use strict';
 
-var ttkBaseUrl = 'ttkBaseUrl';
+var ophBaseUrl = 'ophBaseUrl';

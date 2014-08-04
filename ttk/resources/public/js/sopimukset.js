@@ -61,7 +61,7 @@
     })
 
     .factory('sopimusResource', ['$resource', '$routeParams', function($resource, $routeParams) {
-      return $resource(ttkBaseUrl + '/api/jarjestamissopimus/:jarjestamissopimusid', {'jarjestamissopimusid': '@jarjestamissopimusid', 'toimikunta': '@toimikunta.tkunta'}, {
+      return $resource(ophBaseUrl + '/api/jarjestamissopimus/:jarjestamissopimusid', {'jarjestamissopimusid': '@jarjestamissopimusid', 'toimikunta': '@toimikunta.tkunta'}, {
         get: {
           method: 'GET',
           params: {
@@ -82,7 +82,7 @@
           },
           id: 'sopimuksen-luonti',
           i18n: 'jarjestamissopimus',
-          url: ttkBaseUrl + '/api/jarjestamissopimus/:toimikunta'
+          url: ophBaseUrl + '/api/jarjestamissopimus/:toimikunta'
         },
         delete : {
           method: 'DELETE',
@@ -93,13 +93,13 @@
           method: 'POST',
           id: 'sopimuksen-tutkintojen-muokkaus',
           i18n : 'jarjestamissopimus|tutkintojen-muokkaus',
-          url : ttkBaseUrl + '/api/jarjestamissopimus/:jarjestamissopimusid/tutkinnot'
+          url : ophBaseUrl + '/api/jarjestamissopimus/:jarjestamissopimusid/tutkinnot'
         }
       });
     }])
 
     .factory('jarjestamissuunnitelmaResource', ['$resource', '$routeParams', function($resource) {
-      return $resource(ttkBaseUrl + '/api/jarjestamissopimus/:sopimus_id/:liitetyyppi/:id', {}, {
+      return $resource(ophBaseUrl + '/api/jarjestamissopimus/:sopimus_id/:liitetyyppi/:id', {}, {
         delete: {
           method: 'DELETE'
         }

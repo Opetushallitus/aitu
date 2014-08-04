@@ -15,7 +15,7 @@
 angular.module('resources', ['ngRoute'])
 
   .factory('EnumResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/enum/:enum', {'enum': '@enum'}, {
+    return $resource(ophBaseUrl + '/api/enum/:enum', {'enum': '@enum'}, {
       get: {
         method: 'GET',
         isArray: true,
@@ -25,7 +25,7 @@ angular.module('resources', ['ngRoute'])
   }])
 
   .factory('toimikuntaResource', ['$resource', '$routeParams', function($resource, $routeParams) {
-    return $resource(ttkBaseUrl + '/api/ttk/:diaarinumero', {'diaarinumero': '@diaarinumero', 'tkunta' : '@tkunta'}, {
+    return $resource(ophBaseUrl + '/api/ttk/:diaarinumero', {'diaarinumero': '@diaarinumero', 'tkunta' : '@tkunta'}, {
       get: {
         method: 'GET',
         params: {
@@ -43,13 +43,13 @@ angular.module('resources', ['ngRoute'])
         method: 'POST',
         id: 'toimikunnan-tutkintojen-muokkaus',
         i18n : 'toimikunta|tutkintojen-muokkaus',
-        url : ttkBaseUrl + '/api/ttk/:tkunta/tutkinnot'
+        url : ophBaseUrl + '/api/ttk/:tkunta/tutkinnot'
       }
     });
   }])
 
   .factory('toimikuntaHakuResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/ttk/', {}, {
+    return $resource(ophBaseUrl + '/api/ttk/', {}, {
       query: {
         method: 'GET',
         isArray: true,
@@ -59,7 +59,7 @@ angular.module('resources', ['ngRoute'])
   }])
 
   .factory('ToimikuntaJasenetResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/ttk/:diaarinumero/jasenet', {'diaarinumero': '@diaarinumero'}, {
+    return $resource(ophBaseUrl + '/api/ttk/:diaarinumero/jasenet', {'diaarinumero': '@diaarinumero'}, {
       update: {
         method: 'PUT',
         id:"muokkaa-toimikunnan-jasenia",
@@ -69,20 +69,20 @@ angular.module('resources', ['ngRoute'])
   }])
 
   .factory('henkiloVelhoResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/ttk/:diaarinumero/jasenet', {'diaarinumero': '@diaarinumero'}, {
+    return $resource(ophBaseUrl + '/api/ttk/:diaarinumero/jasenet', {'diaarinumero': '@diaarinumero'}, {
       saveJasen : {
         method: 'POST',
         id:"uusi-toimikunnan-jasen",
         i18n : "toimikunta-jasenet"
       },
       saveHenkilo : {
-        url: ttkBaseUrl + '/api/henkilo/',
+        url: ophBaseUrl + '/api/henkilo/',
         method: 'POST',
         id:"uusi-henkilo",
         i18n : 'henkilo'
       },
       get : {
-        url: ttkBaseUrl + '/api/henkilo/nimi/:etunimi/:sukunimi',
+        url: ophBaseUrl + '/api/henkilo/nimi/:etunimi/:sukunimi',
         method: 'GET',
         isArray: true,
         id:"hae-henkilo-toimikunnan-jaseneksi"

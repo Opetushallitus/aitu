@@ -15,7 +15,7 @@
 angular.module('ohjeet', [])
 
   .factory('ohjeetResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/ohje/:ohjetunniste', {'ohjetunniste': '@ohjetunniste'}, {
+    return $resource(ophBaseUrl + '/api/ohje/:ohjetunniste', {'ohjetunniste': '@ohjetunniste'}, {
       get: {
         method: 'GET',
         params: {nocache: function() { return Date.now(); } }

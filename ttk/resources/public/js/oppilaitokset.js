@@ -21,7 +21,7 @@ angular.module('oppilaitokset', ['ngRoute'])
   })
 
   .factory('OppilaitosResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/oppilaitos/:oppilaitoskoodi', {'oppilaitoskoodi': '@oppilaitoskoodi'}, {
+    return $resource(ophBaseUrl + '/api/oppilaitos/:oppilaitoskoodi', {'oppilaitoskoodi': '@oppilaitoskoodi'}, {
       query: {
         method: 'GET',
         isArray: true,
@@ -35,7 +35,7 @@ angular.module('oppilaitokset', ['ngRoute'])
   }])
 
   .factory('OppilaitosHakuResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/oppilaitos/haku/ala', {}, {
+    return $resource(ophBaseUrl + '/api/oppilaitos/haku/ala', {}, {
       query: {
         method: 'GET',
         isArray: true,

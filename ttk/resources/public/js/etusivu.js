@@ -15,7 +15,7 @@
 angular.module('etusivu', [])
 
   .factory('tiedoteResource', ['$resource', 'i18n', function($resource, i18n) {
-    return $resource(ttkBaseUrl + '/api/tiedote', {}, {
+    return $resource(ophBaseUrl + '/api/tiedote', {}, {
       get: {
         method: 'GET',
         params: { nocache: function() { return Date.now(); }},
@@ -35,7 +35,7 @@ angular.module('etusivu', [])
   }])
 
   .factory('hakuResource', ['$resource', 'i18n', function($resource, i18n) {
-    return $resource(ttkBaseUrl + '/api/haku/:tunnus', {'tunnus': '@tunnus'}, {
+    return $resource(ophBaseUrl + '/api/haku/:tunnus', {'tunnus': '@tunnus'}, {
       get: {
         method: 'GET',
         i18n: 'etusivu'

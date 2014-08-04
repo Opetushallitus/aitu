@@ -1,7 +1,7 @@
 angular.module('kayttooikeudet', ['ngResource'])
 
   .factory('kayttooikeudet', ['$resource', 'apiCallInterceptor', function($resource, apiCallInterceptor) {
-    var resource = $resource(ttkBaseUrl + '/api/kayttaja', null, {
+    var resource = $resource(ophBaseUrl + '/api/kayttaja', null, {
       get: {
         method: 'GET',
         params: { nocache: function() { return Date.now(); }},

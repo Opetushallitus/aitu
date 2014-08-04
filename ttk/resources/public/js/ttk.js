@@ -91,12 +91,12 @@ angular.module('ttk', ['angular-loading-bar',
     return $resource(null, null, {
       impersonoi: {
         method: 'POST',
-        url: ttkBaseUrl + '/api/kayttaja/impersonoi',
+        url: ophBaseUrl + '/api/kayttaja/impersonoi',
         id:"impersonoi"
       },
       lopeta: {
         method: 'POST',
-        url: ttkBaseUrl + '/api/kayttaja/lopeta-impersonointi',
+        url: ophBaseUrl + '/api/kayttaja/lopeta-impersonointi',
         id:"impersonoi-lopetus"
       }
     });
@@ -117,12 +117,12 @@ angular.module('ttk', ['angular-loading-bar',
     };
     $scope.impersonoi = function() {
       impersonaatioResource.impersonoi({oid: $scope.impersonoitava.oid}, function() {
-        $window.location = ttkBaseUrl;
+        $window.location = ophBaseUrl;
       });
     };
     $scope.lopetaImpersonointi = function() {
       impersonaatioResource.lopeta(null, function() {
-        $window.location = ttkBaseUrl;
+        $window.location = ophBaseUrl;
       });
     };
   }])
