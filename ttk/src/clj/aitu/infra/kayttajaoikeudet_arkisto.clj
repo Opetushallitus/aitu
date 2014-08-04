@@ -16,6 +16,7 @@
   (:require [korma.db :as db]
             [korma.core :as sql]
             [clojure.tools.logging :as log]
+            [oph.korma.korma-auth :as ka]
             [oph.korma.korma-auth :refer [*current-user-oid*]]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.toimiala.kayttajaoikeudet :as ko])
@@ -62,6 +63,7 @@
          :jarjestamissopimus (set (flatten (map :jarjestamissopimus jasenyys)))})))
   ([] "Hakee sisäänkirjautuneen käyttäjän oikeudet"
     (db/transaction
-      (assert (realized? *current-user-oid*) "Ongelma sisäänkirjautumisessa. uid -> oid mappays epäonnistui.")
-      (hae-oikeudet @*current-user-oid*))))
+      (let [userid ka/*current-user-uid*]
+        (assert (realized? *current-user-oid*) (str "Ongelma sisäänkirjautumisessa. Käyttäjätunnuksella " userid " ei ole käyttöoikeuksia. (uid -> oid epäonnistui)."))
+        (hae-oikeudet @*current-user-oid*)))))
 
