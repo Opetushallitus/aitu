@@ -1289,7 +1289,7 @@ angular.module('yhteiset.palvelut.virheLogitus', [])
 
           $.ajax({
             type: 'POST',
-            url: ttkBaseUrl + '/api/jslog/virhe',
+            url: ophBaseUrl + '/api/jslog/virhe',
             contentType: 'application/json',
             headers : {'x-xsrf-token' : cookies['XSRF-TOKEN']},
             data: angular.toJson({

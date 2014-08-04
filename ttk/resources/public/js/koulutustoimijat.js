@@ -21,7 +21,7 @@ angular.module('koulutustoimijat', ['ngRoute'])
   })
 
   .factory('KoulutustoimijaResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/koulutustoimija/:ytunnus', {'ytunnus': '@ytunnus'}, {
+    return $resource(ophBaseUrl + '/api/koulutustoimija/:ytunnus', {'ytunnus': '@ytunnus'}, {
       query: {
         method: 'GET',
         isArray: true,
@@ -35,7 +35,7 @@ angular.module('koulutustoimijat', ['ngRoute'])
   }])
 
   .factory('KoulutustoimijaHakuResource', ['$resource', function($resource) {
-    return $resource(ttkBaseUrl + '/api/koulutustoimija/haku/ala', {}, {
+    return $resource(ophBaseUrl + '/api/koulutustoimija/haku/ala', {}, {
       query: {
         method: 'GET',
         isArray: true,

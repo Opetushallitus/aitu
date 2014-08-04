@@ -35,7 +35,7 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
   })
 
   .factory('henkiloResource', ['$resource', 'i18n', function($resource, i18n) {
-    return $resource(ttkBaseUrl + '/api/henkilo/:henkiloid', {'henkiloid': '@henkiloid'}, {
+    return $resource(ophBaseUrl + '/api/henkilo/:henkiloid', {'henkiloid': '@henkiloid'}, {
       get: {
         method: 'GET',
         params: { nocache: function() { return Date.now(); }},
