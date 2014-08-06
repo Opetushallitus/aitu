@@ -19,7 +19,7 @@
     [oph.korma.korma :refer [defentity defalias]]
     [aitu.infra.i18n :as i18n]
     [korma.core :as sql]))
- 
+
 (declare toimikausi henkilo tutkintotoimikunta jasenyys
          nayttotutkinto opintoala koulutusala jarjestamissopimus
          sopimus-ja-tutkinto sopimus-ja-tutkinto-ja-tutkinnonosa
@@ -27,8 +27,8 @@
          toimikunta-ja-tutkinto tutkintotyyppi peruste jarjesto
          keskusjarjesto tutkinnonosa osaamisala jarjestamissuunnitelma
          toimipaikka tutkintoversio uusin-versio tutkinto-ja-tutkinnonosa
-         sopimuksen-liite koulutustoimija)
- 
+         sopimuksen-liite koulutustoimija organisaatiomuutos)
+
 (sql/defentity toimikausi
   (sql/pk :toimikausi_id))
 
@@ -239,4 +239,14 @@
   (sql/pk :ohjetunniste))
 
 (defentity haku)
- 
+
+(defentity organisaatiomuutos
+  (sql/pk :organisaatiomuutos_id)
+  (sql/prepare #(update-in % [:tyyppi] name))
+  (sql/transform #(update-in % [:tyyppi] keyword))
+  (sql/belongs-to koulutustoimija
+    {:fk :koulutustoimija})
+  (sql/belongs-to oppilaitos
+    {:fk :oppilaitos})
+  (sql/belongs-to toimipaikka
+    {:fk :toimipaikka}))

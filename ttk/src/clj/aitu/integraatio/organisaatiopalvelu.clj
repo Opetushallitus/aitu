@@ -15,6 +15,8 @@
 (ns aitu.integraatio.organisaatiopalvelu
   (:require [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
             [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
+            [aitu.infra.organisaatiomuutos-arkisto :as organisaatiomuutos-arkisto]
+            [clj-time.core :as time]
             [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value]]
             [clojure.tools.logging :as log]))
 
@@ -146,7 +148,8 @@
       (cond
         (nil? vanha-kt) (do
                           (log/info "Uusi koulutustoimija: " (:ytunnus uusi-kt))
-                          (koulutustoimija-arkisto/lisaa! uusi-kt))
+                          (koulutustoimija-arkisto/lisaa! uusi-kt)
+                          (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :koulutustoimija y-tunnus))
         (not= vanha-kt uusi-kt) (do
                                   (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
                                   (koulutustoimija-arkisto/paivita! uusi-kt))))))
@@ -165,7 +168,8 @@
       (cond
         (nil? vanha-oppilaitos) (do
                                   (log/info "Uusi oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
-                                  (oppilaitos-arkisto/lisaa! uusi-oppilaitos))
+                                  (oppilaitos-arkisto/lisaa! uusi-oppilaitos)
+                                  (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :oppilaitos oppilaitoskoodi))
         (not= vanha-oppilaitos uusi-oppilaitos) (do
                                                   (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
                                                   (oppilaitos-arkisto/paivita! uusi-oppilaitos))))))
@@ -186,7 +190,8 @@
       (cond
         (nil? vanha-toimipaikka) (do
                                    (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
-                                   (oppilaitos-arkisto/lisaa-toimipaikka! uusi-toimipaikka))
+                                   (oppilaitos-arkisto/lisaa-toimipaikka! uusi-toimipaikka)
+                                   (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :toimipaikka toimipaikkakoodi))
         (not= vanha-toimipaikka uusi-toimipaikka) (do
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
