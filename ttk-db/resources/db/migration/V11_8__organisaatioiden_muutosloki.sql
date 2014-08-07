@@ -6,4 +6,17 @@ create table organisaatiomuutos (
   toimipaikka varchar(7) references toimipaikka(toimipaikkakoodi),
   tyyppi varchar(20),
   paivamaara date,
+  tehty date,
+  luotuaika timestamptz not null,
+  muutettuaika timestamptz not null,
+  luotu_kayttaja varchar(80) references kayttaja(oid) not null,
+  muutettu_kayttaja varchar(80) references kayttaja (oid) not null,
   check (koulutustoimija is not null or oppilaitos is not null or toimipaikka is not null));
+
+
+create trigger organisaatiomuutos_update before update on organisaatiomuutos for each row execute procedure update_stamp();
+create trigger organisaatiomuutosl_insert before insert on organisaatiomuutos for each row execute procedure update_created();
+create trigger organisaatiomuutosm_insert before insert on organisaatiomuutos for each row execute procedure update_stamp();
+create trigger organisaatiomuutos_mu_update before update on organisaatiomuutos for each row execute procedure update_modifier();
+create trigger organisaatiomuutos_cu_insert before insert on organisaatiomuutos for each row execute procedure update_creator();
+create trigger organisaatiomuutos_mu_insert before insert on organisaatiomuutos for each row execute procedure update_modifier();
