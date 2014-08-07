@@ -17,6 +17,7 @@
            org.joda.time.LocalDate)
   (:require  korma.db
     [oph.korma.korma :refer [defentity defalias]]
+    [aitu.util :refer [update-in-if-exists]]
     [aitu.infra.i18n :as i18n]
     [korma.core :as sql]))
 
@@ -242,8 +243,8 @@
 
 (defentity organisaatiomuutos
   (sql/pk :organisaatiomuutos_id)
-  (sql/prepare #(update-in % [:tyyppi] name))
-  (sql/transform #(update-in % [:tyyppi] keyword))
+  (sql/prepare #(update-in-if-exists % [:tyyppi] name))
+  (sql/transform #(update-in-if-exists % [:tyyppi] keyword))
   (sql/belongs-to koulutustoimija
     {:fk :koulutustoimija})
   (sql/belongs-to oppilaitos

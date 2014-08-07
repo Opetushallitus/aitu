@@ -14,7 +14,11 @@
 
 (ns aitu.infra.organisaatiomuutos-arkisto
   (:require [korma.core :as sql]
-            [oph.korma.korma :refer :all])
+            [oph.korma.korma :refer :all]
+            [aitu.util :refer [update-in-if-exists select-and-rename-keys]]
+            [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
+            [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
+            [clj-time.core :as time])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn lisaa-organisaatiomuutos! [tyyppi paivamaara & {:keys [koulutustoimija oppilaitos toimipaikka]}]
@@ -24,3 +28,54 @@
                  :koulutustoimija koulutustoimija
                  :oppilaitos oppilaitos
                  :toimipaikka toimipaikka})))
+
+(defn ^:private erottele-organisaatiot
+  "Erottaa organisaatiomuutoksesta organisaatioiden nimet ja tunnukset omiin mappeihinsa"
+  [organisaatiomuutos]
+  (let [koulutustoimija (when (:koulutustoimija organisaatiomuutos)
+                          (select-and-rename-keys organisaatiomuutos [[:koulutustoimija :ytunnus] [:koulutustoimija_nimi_fi :nimi_fi] [:koulutustoimija_nimi_sv :nimi_sv]]))
+        oppilaitos (when (:oppilaitos organisaatiomuutos)
+                     (select-and-rename-keys organisaatiomuutos [[:oppilaitos :oppilaitoskoodi] [:oppilaitos_nimi :nimi]]))
+        toimipaikka (when (:toimipaikka organisaatiomuutos)
+                      (select-and-rename-keys organisaatiomuutos [[:toimipaikka :toimipaikkakoodi] [:toimipaikka_nimi :nimi]]))]
+    (merge organisaatiomuutos
+           {:koulutustoimija koulutustoimija
+            :oppilaitos oppilaitos
+            :toimipaikka toimipaikka})))
+
+(defn hae-kaikki []
+  (-> (sql/select organisaatiomuutos
+        (sql/with koulutustoimija
+          (sql/fields [:nimi_fi :koulutustoimija_nimi_fi]
+                      [:nimi_sv :koulutustoimija_nimi_sv]))
+        (sql/with oppilaitos
+          (sql/fields [:nimi :oppilaitos_nimi]))
+        (sql/with toimipaikka
+          (sql/fields [:nimi :toimipaikka_nimi]))
+        (sql/order :paivamaara)
+        (sql/order :koulutustoimija)
+        (sql/order :oppilaitos)
+        (sql/order :toimipaikka)))
+  (map erottele-organisaatiot))
+
+(defn hae-tekemattomat []
+  (->>
+    (sql/select organisaatiomuutos
+      (sql/with koulutustoimija
+        (sql/fields [:nimi_fi :koulutustoimija_nimi_fi]
+                    [:nimi_sv :koulutustoimija_nimi_sv]))
+      (sql/with oppilaitos
+        (sql/fields [:nimi :oppilaitos_nimi]))
+      (sql/with toimipaikka
+        (sql/fields [:nimi :toimipaikka_nimi]))
+      (sql/where (= :tehty nil))
+      (sql/order :paivamaara)
+      (sql/order :koulutustoimija)
+      (sql/order :oppilaitos)
+      (sql/order :toimipaikka))
+    (map erottele-organisaatiot)))
+
+(defn merkitse-tehdyksi [organisaatiomuutosid]
+  (sql/update organisaatiomuutos
+    (sql/set-fields {:tehty (time/today)})
+    (sql/where {:organisaatiomuutos_id organisaatiomuutosid})))

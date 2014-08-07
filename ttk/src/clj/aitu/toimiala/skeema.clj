@@ -126,6 +126,10 @@
                                       :sahkoposti (s/maybe s/Str)
                                       :koulutustoimija s/Str}))
 
+(defmodel ToimipaikkaLinkki {:nimi_fi s/Str
+                             :nimi_sv s/Str
+                             :toimipaikkakoodi s/Str})
+
 (defmodel OppilaitosTiedot (merge OppilaitoksenTiedot AuditTiedot))
 
 (defmodel OppilaitosLista (assoc OppilaitosTiedot :sopimusten_maara s/Int))
@@ -331,3 +335,14 @@
 (defmodel Osoitepalvelu
   {:toimikunnat [Osoitepalvelu-Toimikunta]
    :oppilaitokset [Osoitepalvelu-Oppilaitos]})
+
+(defmodel Organisaatiomuutos
+  (merge {:organisaatiomuutosid s/Int
+          :koulutustoimija (s/maybe KoulutustoimijaLinkki)
+          :oppilaitos (s/maybe OppilaitosLinkki)
+          :toimipaikka (s/maybe ToimipaikkaLinkki)
+          :tehty (s/maybe org.joda.time.LocalDate)
+          :paivamaara org.joda.time.LocalDate
+          :tyyppi s/Keyword}
+         AuditTiedot)
+  )
