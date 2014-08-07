@@ -106,7 +106,8 @@
     :status sallittu-yllapitajalle
     :ohje_muokkaus sallittu-yllapitajalle
     :etusivu_haku sallittu-yllapitajalle
-    :impersonointi sallittu-yllapitajalle})
+    :impersonointi sallittu-yllapitajalle
+    :organisaatiomuutos sallittu-yllapitajalle})
 
 ;; Kuten yllä, arvot eivät saa olla funktio-olioita.
 (def kayttajatoiminnot
