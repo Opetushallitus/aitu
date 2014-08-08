@@ -11,8 +11,7 @@ read -p "Alustetaanko tietokantapalvelin [K/e]? " db
 cd $repo_path/vagrant
 
 if [[ $cas == [Kk]* ]] || [[ $cas == "" ]]; then
-  vagrant destroy -f auth
-  vagrant up auth
+  $repo_path/dev-scripts/init-cas.sh
 fi
 
 if [[ $db == [Kk]* ]] || [[ $db == "" ]]; then
