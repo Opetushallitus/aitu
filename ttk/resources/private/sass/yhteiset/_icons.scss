@@ -105,6 +105,13 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
   background-position: 0 -1250px;
 }
 
+@mixin delete-icon-white {
+  @include icon-images;
+  width: 16px;
+  height: 16px;
+  background-position: 0 -400px;
+}
+
 @mixin add-icon {
   @include icon-images;
   @include icon-hover(-1200px);

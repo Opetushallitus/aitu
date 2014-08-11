@@ -1,0 +1,15 @@
+{{=[[ ]]=}}
+
+[[#i18n.organisaatiomuutos]]
+
+<div class="organisaatiomuutos" ng-repeat="muutos in organisaatiomuutokset">
+  <span class="pvm">{{muutos.paivamaara | date:'dd.MM.yyyy'}} | <enum-arvo nimi="organisaatiomuutostyyppi" arvo="muutos.tyyppi"></enum-arvo></span>
+  <span class="merkitse-tehdyksi oikealle" ng-click="merkitseTehdyksi($index, muutos.organisaatiomuutos_id)">[[merkitse-tehdyksi]]</span>
+  <h3 ng-if="muutos.tyyppi == 'uusi'">[[uusi-organisaatio]]</h3>
+
+  <a ng-if="muutos.koulutustoimija" ng-href="#/koulutustoimija/{{muutos.koulutustoimija.ytunnus}}/tiedot">{{muutos.koulutustoimija.nimi | lokalisoi:muutos.koulutustoimija:'nimi'}}</a>
+  <a ng-if="muutos.oppilaitos" ng-href="#/oppilaitos/{{muutos.oppilaitos.oppilaitoskoodi}}">{{muutos.oppilaitos.nimi}}</a>
+  <a ng-if="muutos.toimipaikka" ng-href="#/toimipaikka/{{muutos.toimipaikka.toimipaikkakoodi}}">{{muutos.toimipaikka.nimi}}</a>
+</div>
+
+[[/i18n.organisaatiomuutos]]

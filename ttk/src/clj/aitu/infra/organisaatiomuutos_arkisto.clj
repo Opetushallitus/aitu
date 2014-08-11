@@ -75,6 +75,11 @@
       (sql/order :toimipaikka))
     (map erottele-organisaatiot)))
 
+(defn tekemattomien-maara []
+  (first (sql/select organisaatiomuutos
+           (sql/aggregate (count :*) :maara)
+           (sql/where (= :tehty nil)))))
+
 (defn merkitse-tehdyksi [organisaatiomuutosid]
   (sql/update organisaatiomuutos
     (sql/set-fields {:tehty (time/today)})

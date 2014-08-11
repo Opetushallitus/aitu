@@ -119,7 +119,7 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
 /* Ikonimääritykset */
 /* Näitä luokkia voidaan käyttää kun halutaan ikoni erilliseen dom-elementtiinsä.
 Esim: <div class="icon user-icon"></div> */
-/* line 218, ../../private/sass/yhteiset/_icons.scss */
+/* line 225, ../../private/sass/yhteiset/_icons.scss */
 .icon.user-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 17px;
@@ -130,7 +130,7 @@ Esim: <div class="icon user-icon"></div> */
 .no-svg .icon.user-icon {
   background-image: url("../img/oph-icon-sprite.png");
 }
-/* line 221, ../../private/sass/yhteiset/_icons.scss */
+/* line 228, ../../private/sass/yhteiset/_icons.scss */
 .icon.edit-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 22px;
@@ -145,7 +145,7 @@ Esim: <div class="icon user-icon"></div> */
 .icon.edit-icon:hover {
   background-position: 0 -800px;
 }
-/* line 224, ../../private/sass/yhteiset/_icons.scss */
+/* line 231, ../../private/sass/yhteiset/_icons.scss */
 .icon.add-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 18px;
@@ -160,7 +160,7 @@ Esim: <div class="icon user-icon"></div> */
 .icon.add-icon:hover {
   background-position: 0 -1200px;
 }
-/* line 227, ../../private/sass/yhteiset/_icons.scss */
+/* line 234, ../../private/sass/yhteiset/_icons.scss */
 .icon.delete-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 16px;
@@ -175,7 +175,7 @@ Esim: <div class="icon user-icon"></div> */
 .icon.delete-icon:hover {
   background-position: 0 -1300px;
 }
-/* line 230, ../../private/sass/yhteiset/_icons.scss */
+/* line 237, ../../private/sass/yhteiset/_icons.scss */
 .icon.calendar-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 18px;
@@ -190,7 +190,7 @@ Esim: <div class="icon user-icon"></div> */
 .icon.calendar-icon:hover {
   background-position: 0 -1100px;
 }
-/* line 233, ../../private/sass/yhteiset/_icons.scss */
+/* line 240, ../../private/sass/yhteiset/_icons.scss */
 .icon.remove-icon-small {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 12px;
@@ -201,7 +201,7 @@ Esim: <div class="icon user-icon"></div> */
 .no-svg .icon.remove-icon-small {
   background-image: url("../img/oph-icon-sprite.png");
 }
-/* line 236, ../../private/sass/yhteiset/_icons.scss */
+/* line 243, ../../private/sass/yhteiset/_icons.scss */
 .icon.expand-icon-small {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
@@ -212,7 +212,7 @@ Esim: <div class="icon user-icon"></div> */
 .no-svg .icon.expand-icon-small {
   background-image: url("../img/oph-icon-sprite.png");
 }
-/* line 239, ../../private/sass/yhteiset/_icons.scss */
+/* line 246, ../../private/sass/yhteiset/_icons.scss */
 .icon.expand-icon-small-white {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
@@ -223,7 +223,7 @@ Esim: <div class="icon user-icon"></div> */
 .no-svg .icon.expand-icon-small-white {
   background-image: url("../img/oph-icon-sprite.png");
 }
-/* line 242, ../../private/sass/yhteiset/_icons.scss */
+/* line 249, ../../private/sass/yhteiset/_icons.scss */
 .icon.collapse-icon-small {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
@@ -234,7 +234,7 @@ Esim: <div class="icon user-icon"></div> */
 .no-svg .icon.collapse-icon-small {
   background-image: url("../img/oph-icon-sprite.png");
 }
-/* line 245, ../../private/sass/yhteiset/_icons.scss */
+/* line 252, ../../private/sass/yhteiset/_icons.scss */
 .icon.logout-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 17px;
@@ -247,7 +247,7 @@ Esim: <div class="icon user-icon"></div> */
 }
 
 /* Nappi jossa ikoni oikeassa reunassa */
-/* line 251, ../../private/sass/yhteiset/_icons.scss */
+/* line 258, ../../private/sass/yhteiset/_icons.scss */
 button.button-with-icon {
   padding-right: 50px;
 }
@@ -2075,4 +2075,46 @@ ul.valitut-tutkinnot li a:after {
 /* line 6, ../../private/sass/yhteiset/_icons.scss */
 .no-svg .valitut-tutkinnot-otsikko:before {
   background-image: url("../img/oph-icon-sprite.png");
+}
+
+/* line 1, ../../private/sass/views/_organisaatiomuutos.scss */
+.merkitse-tehdyksi {
+  color: white;
+  cursor: pointer;
+  background-color: #107ea2;
+  display: block;
+  padding: 3px 100px 3px 10px;
+  float: right;
+}
+/* line 16, ../../private/sass/yhteiset/_icons.scss */
+.merkitse-tehdyksi:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 16px;
+  height: 16px;
+  background-position: 0 -400px;
+  content: "";
+  position: absolute;
+  margin-top: 6px;
+  margin-left: 72px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+/* line 6, ../../private/sass/yhteiset/_icons.scss */
+.no-svg .merkitse-tehdyksi:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+/* line 11, ../../private/sass/views/_organisaatiomuutos.scss */
+.organisaatiomuutos {
+  border-top: 1px solid #b3b3b3;
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+/* line 13, ../../private/sass/views/_organisaatiomuutos.scss */
+.organisaatiomuutos:first-child {
+  border: none;
+}
+/* line 16, ../../private/sass/views/_organisaatiomuutos.scss */
+.organisaatiomuutos .pvm {
+  color: #b3b3b3;
 }

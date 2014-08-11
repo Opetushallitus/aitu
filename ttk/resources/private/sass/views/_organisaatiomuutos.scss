@@ -1,0 +1,19 @@
+.merkitse-tehdyksi {
+  @include icon-after(72px, 6px){@include delete-icon-white;};
+  color: $primary-action-text;
+  cursor: pointer;
+  background-color: $primary-color;
+  display: block;
+  padding: 3px 100px 3px 10px;
+  float:right;
+}
+
+.organisaatiomuutos {
+  border-top: 1px solid $lighter-gray;
+  &:first-child {border: none;}
+  padding-top:10px;
+  padding-bottom:20px;
+  .pvm {
+    color: $lighter-gray;
+  }
+}
