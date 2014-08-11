@@ -43,9 +43,10 @@ angular.module('etusivu', [])
     });
   }])
 
-  .controller('etusivuController', ['$scope',  '$rootScope', '$location', 'tiedoteResource', 'hakuResource', function($scope, $rootScope, $location, tiedoteResource, hakuResource) {
+  .controller('etusivuController', ['$scope',  '$rootScope', '$location', 'tiedoteResource', 'hakuResource', 'organisaatiomuutosResource', function($scope, $rootScope, $location, tiedoteResource, hakuResource, organisaatiomuutosResource) {
     $scope.tiedote = tiedoteResource.get();
     $scope.hakuehto = '';
+    $scope.muutostenMaara = organisaatiomuutosResource.maara();
 
     function siirryHakutulokseen(hakutulos) {
       if (hakutulos && hakutulos.url && hakutulos.tunnus) {
@@ -77,6 +78,10 @@ angular.module('etusivu', [])
     $scope.tiedoteOlemassa = function() {
       return !_.isUndefined($scope.tiedote.tiedoteid);
     };
+
+    $scope.muutoksiaOlemassa = function() {
+      return !_.isUndefined($scope.muutostenMaara.maara) && $scope.muutostenMaara.maara > 0;
+    }
 
     $scope.muokkaa = function() {
       $scope.muokkausTila = true;

@@ -25,8 +25,8 @@
 (c/defroutes reitit
   (cu/defapi :organisaatiomuutos nil :get "/" []
     (json-response (arkisto/hae-tekemattomat)))
+  (cu/defapi :organisaatiomuutos nil :get "/maara" []
+    (json-response (arkisto/tekemattomien-maara)))
   (cu/defapi :organisaatiomuutos nil :post "/:id/tehty" [id]
     (arkisto/merkitse-tehdyksi (Integer/parseInt id))
     {:status 200}))
-
-

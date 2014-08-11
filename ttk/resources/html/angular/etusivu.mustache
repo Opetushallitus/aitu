@@ -38,5 +38,9 @@
       <button ng-hide="!muokkausTila" ng-click="peruuta()" class="oikealle">[[peruuta]]</button>
     </span>
   </section>
+  <section class="organisaatiomuutos" ng-show="muutoksiaOlemassa() && [[yllapitaja]]">
+    <h1>[[organisaatiomuutokset]]</h1>
+    <a href="#/organisaatiomuutokset">{{muutostenMaara.maara}} [[organisaatiomuutoksia]]</a>
+  </section>
 [[/i18n.yleiset]]
 [[/i18n.etusivu]]
