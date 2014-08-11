@@ -21,7 +21,7 @@
             [clj-time.core :as time])
   (:use [aitu.integraatio.sql.korma]))
 
-(defn lisaa-organisaatiomuutos! [tyyppi paivamaara & {:keys [koulutustoimija oppilaitos toimipaikka]}]
+(defn ^:integration-api lisaa-organisaatiomuutos! [tyyppi paivamaara & {:keys [koulutustoimija oppilaitos toimipaikka]}]
   (sql/insert organisaatiomuutos
     (sql/values {:tyyppi tyyppi
                  :paivamaara paivamaara
