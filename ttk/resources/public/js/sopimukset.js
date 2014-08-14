@@ -104,20 +104,22 @@
           method: 'DELETE'
         }
       });
-
     }])
 
-    .controller('sopimuksenTiedotController', ['$scope', '$routeParams',  'sopimusResource', 'crudLocation', '$location', 'i18n',
-      function($scope, $routeParams, sopimusResource, crudLocation, $location, i18n){
+    .controller('sopimuksenTiedotController', ['$scope', '$routeParams', 'sopimusResource', 'crudLocation', '$location', '$anchorScroll', 'i18n',
+      function($scope, $routeParams, sopimusResource, crudLocation, $location, $anchorScroll, i18n){
+        $location.hash("");
+
         $scope.sopimus = sopimusResource.get();
 
         $scope.salliMuokkaus = function() {
           return !$scope.muokkausTila && $scope.sopimus.voimassa !== false;
         };
 
-        $scope.muokkaa = function() {
-          crudLocation.siirryMuokkaukseen($routeParams.id, '/sopimus');
+        $scope.muokkaa = function(hash) {
+          crudLocation.siirryMuokkaukseen($routeParams.id, '/sopimus', hash);
         };
+
         $scope.poista = function() {
           if(confirm(i18n.jarjestamissopimus['varmista-sopimuksen-poisto'])) {
             sopimusResource.delete({jarjestamissopimusid : $routeParams.id }, function(){

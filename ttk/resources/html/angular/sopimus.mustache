@@ -1,15 +1,15 @@
 {{=[[ ]]=}}
 [[#i18n]]
-<h1>
+<h1 id="sopimus">
   [[jarjestamissopimus.jarjestamissopimus]]
   <span ng-show="sopimus.voimassa === false">([[yleiset.ei-voimassa]])</span>
-  <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon edit-icon muokkaa-sopimusta" ng-click="muokkaa()"></auth-toiminto>
+  <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon edit-icon muokkaa-sopimusta" ng-click="muokkaa('sopimus')"></auth-toiminto>
   <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon delete-icon poista-sopimus" ng-click="poista()"></auth-toiminto>
   <ohje tunniste="sopimus"></ohje>
 </h1>
 [[/i18n]]
 [[#i18n.jarjestamissopimus]]
-<div ng-hide="muokkausTila">
+<div ng-hide="muokkausTila" class="sopimus">
   <div>
     <fieldset>
       <label>[[sopimusnumero]]</label>
@@ -51,7 +51,7 @@
   </div>
 </div>
 
-<div ng-show="muokkausTila">
+<div ng-show="muokkausTila" class="sopimusMuokkaus">
   <form name="sopimuksenMuokkausForm">
     <fieldset>
       <label class="pakollinen">[[sopimusnumero]]</label>
@@ -103,14 +103,20 @@
   </form>
 </div>
 
-<div class="list-controls">
-  <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon edit-icon muokkaa-tutkintoja" ng-click="muokkaaTutkintoja()"></auth-toiminto>
-</div>
-<h2>[[nayttotutkinnot]]</h2>
+
+<h2>[[nayttotutkinnot]]
+    <div class="list-controls">
+        <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon add-icon muokkaa-tutkintoja" ng-click="muokkaaTutkintoja()"></auth-toiminto>
+    </div>
+</h2>
+
 <p ng-hide="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0">[[sopimuksella-ei-tutkintoja]]</p>
 <div class="accordion-container">
   <div ng-show="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0" class="accordion" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto" oletuksena-auki="{{muokkausTila}}" accordion>
-    <div class="accordion-header">{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}} {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}} {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}}</div>
+    <div class="accordion-header" id="tutkinto{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">
+        {{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}} {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}} {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}}
+        <button ng-show="salliMuokkaus()" class="icon edit-icon" style="float: right; margin: 0 5px 5px 0; " ng-click="muokkaa('tutkinto'+sopimusJaTutkinto.tutkintoversio.tutkintotunnus)"></button>
+    </div>
     <div class="accordion-body">
       <fieldset>
         <label>[[tutkinnonperusteiden-diaarinumero]]</label>

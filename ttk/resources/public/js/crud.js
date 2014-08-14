@@ -14,9 +14,17 @@
 
 angular.module('crud', ['services','resources'])
 
-  .factory('crudLocation', ['$location', function($location) {
+  .factory('crudLocation', ['$location','$anchorScroll','$window','$timeout', function($location, $anchorScroll, $window,$timeout) {
     return {
-      siirryMuokkaukseen : function(id, basePath){$location.path(basePath + '/' + id + '/muokkaa');},
+      siirryMuokkaukseen : function(id, basePath, hash){
+        $location.path(basePath + '/' + id + '/muokkaa');
+        if(hash!=""){
+            $location.hash(hash);
+            $timeout(function() {
+              $anchorScroll();
+            }, 500);
+          }
+      },
       naytaTiedot : function(id, basePath){$location.path(basePath + '/' + id + '/tiedot');},
       naytaLista : function(basePath){$location.path(basePath  + '/');},
       luoUusi : function(basePath){$location.path(basePath  + '/' + 'uusi');}
