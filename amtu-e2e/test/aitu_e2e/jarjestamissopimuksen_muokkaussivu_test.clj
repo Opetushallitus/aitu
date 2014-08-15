@@ -20,14 +20,14 @@
             [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :as du]))
 
-(def esimerkki-liitetiedosto 
+(def esimerkki-liitetiedosto
   "Sallittu tiedostotyyppi sopimuksen liitteeksi"
   (str (java.lang.System/getProperty "user.dir") "/grimlock_suunnitelma.jpg"))
 
 
 (defn avaa-sopimuksen-muokkaussivu [jarjestamissopimusid]
   (avaa (sopimussivu jarjestamissopimusid))
-  (w/click "button[ng-click=\"muokkaa()\"]")
+  (w/click "button[ng-click=\"muokkaa('sopimus')\"]")
   (odota-angular-pyyntoa))
 
 (defn siirry-sopimuksen-muokkaussivulle [jarjestamissopimusid]
