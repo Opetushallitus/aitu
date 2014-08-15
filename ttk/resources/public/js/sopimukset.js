@@ -108,8 +108,6 @@
 
     .controller('sopimuksenTiedotController', ['$scope', '$routeParams', 'sopimusResource', 'crudLocation', '$location', '$anchorScroll', 'i18n',
       function($scope, $routeParams, sopimusResource, crudLocation, $location, $anchorScroll, i18n){
-        $location.hash("");
-
         $scope.sopimus = sopimusResource.get();
 
         $scope.salliMuokkaus = function() {
