@@ -63,7 +63,7 @@
                                  (.repeater "sopimus in sopimuksetJarjestetty")
                                  (.column "sopimus.sopimusnumero")))))
 
-(def nayta-vanhat-selector "a[ng-click=\"toggleNaytaVanhat()\"]")
+(def nayta-vanhat-selector "a.show-more")
 
 (def vanhojen-sopimusten-lista-selector ".vanhat-sopimukset>div")
 
