@@ -12,26 +12,31 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.rest-api.http-util)
- 
+(ns aitu.rest-api.http-util
+  (:import java.io.ByteArrayInputStream))
+
 (def allowed-mimetypes
   "Sallitut tiedostotyypit liitetiedostoille"
   #{"application/pdf"
     "image/gif" "image/jpeg" "image/png"
     "text/plain" "text/rtf"
     "application/vnd.ms-excel" "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    "application/msword" 
+    "application/msword"
     })
 
-(defn sallittu-tiedostotyyppi? [tyyppi] 
+(defn sallittu-tiedostotyyppi? [tyyppi]
   (contains? allowed-mimetypes tyyppi))
-    
+
 (defn textfile-download-response
-  [data filename content-type]
-  {:status 200
-   :body (str data)
-   :headers {"Content-type" content-type
-             "Content-Disposition" (str "attachment; filename=\"" filename "\"")}})
+  ([data filename content-type]
+    (textfile-download-response data filename content-type {}))
+  ([data filename content-type options]
+    {:status 200
+     :body (if-let [charset (:charset options)]
+             (ByteArrayInputStream. (.getBytes (str data) charset))
+             (str data))
+     :headers {"Content-Type" content-type
+               "Content-Disposition" (str "attachment; filename=\"" filename "\"")}}))
 
 (defn tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin [surrogaattiavaimeen_liittyva_entity_id entity_id]
   (if (= surrogaattiavaimeen_liittyva_entity_id entity_id)

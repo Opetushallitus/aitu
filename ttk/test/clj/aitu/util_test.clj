@@ -18,7 +18,7 @@
             [valip.predicates :refer [present?]]
             [clj-time.core :as time]
             [clojure.tools.logging :as log]))
- 
+
 (deftest update-in-if-exists-test
   (let [m {:key1 {:key2 1}}]
     (is (= (update-in-if-exists m [:key1 :key2] inc) {:key1 {:key2 2}}))
@@ -52,3 +52,4 @@
          [["b" "c"] ["b1" "c1"]] [{:c "c1" :b "b1"}]
          [["b" "c"] ["b1" "c1"] ["b2" "c2"]] [{:c "c1" :b "b1"} {:c "c2" :b "b2"}]
          [["b" "c" "a"] ["b1" "c1" "a1"]] [{:a "a1" :c "c1" :b "b1"}])))
+
