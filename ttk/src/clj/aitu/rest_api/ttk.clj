@@ -16,7 +16,7 @@
   (:require [compojure.core :refer [GET PUT POST defroutes]]
             schema.core
             [aitu.infra.ttk-arkisto :as arkisto]
-            [aitu.rest-api.http-util :refer [textfile-download-response]]
+            [aitu.rest-api.http-util :refer [csv-download-response]]
             [valip.predicates :refer [present?]]
             [aitu.infra.i18n :as i18n]
             [aitu.infra.validaatio :as val]
@@ -90,11 +90,9 @@
 (defroutes raportti-reitit
   (GET ["/:tkunta/sopimukset"] [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (let [sopimukset-csv (muodosta-csv (arkisto/hae-sopimukset tkunta) sopimuskenttien-jarjestys)
-            filename "sopimukset.csv"
-            content-type "text/csv"]
-        (textfile-download-response sopimukset-csv filename content-type
-                                    {:charset "CP1252"})))))
+      (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta)
+                                           sopimuskenttien-jarjestys)
+                             "sopimukset.csv"))))
 
 (defroutes private-reitit
   (PUT ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet]

@@ -38,6 +38,9 @@
      :headers {"Content-Type" content-type
                "Content-Disposition" (str "attachment; filename=\"" filename "\"")}}))
 
+(defn csv-download-response [data filename]
+  (textfile-download-response data filename "text/csv" {:charset "CP1252"}))
+
 (defn tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin [surrogaattiavaimeen_liittyva_entity_id entity_id]
   (if (= surrogaattiavaimeen_liittyva_entity_id entity_id)
     true
