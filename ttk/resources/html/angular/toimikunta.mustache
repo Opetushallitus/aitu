@@ -100,14 +100,15 @@
   </div>
 
   <div>
+    <a class="liite-linkki" ng-href="[[base-url]]/api/ttk/{{toimikunta.tkunta}}/sopimukset" target="_blank">[[lataa-toimikunnan-sopimukset]]</a>
+  </div>
+
+  <div>
     <vanhojen-sopimusten-listaus class="vanhat-sopimukset"
                                  otsikko="toimikunta.voimassa ? '[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]' : '[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
                                  sopimukset="entisetSopimukset"
                                  nayta-tutkinnot="true">
     </vanhojen-sopimusten-listaus>
-  </div>
-  <div>
-    <a class="liite-linkki" ng-href="[[base-url]]/api/ttk/{{toimikunta.tkunta}}/sopimukset" target="_blank">[[lataa-toimikunnan-sopimukset]]</a>
   </div>
 </div>
 [[/i18n.toimikunta]]
