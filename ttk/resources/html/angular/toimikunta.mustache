@@ -104,11 +104,18 @@
   </div>
 
   <div>
-    <vanhojen-sopimusten-listaus class="vanhat-sopimukset"
-                                 otsikko="toimikunta.voimassa ? '[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]' : '[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
-                                 sopimukset="entisetSopimukset"
-                                 nayta-tutkinnot="true">
-    </vanhojen-sopimusten-listaus>
+    <div class="vanhat-sopimukset">
+      <p><a class="ajax-link show-more" href="" ng-show="entisetSopimukset.length > 0" ng-click="naytaVanhatSopimukset = !naytaVanhatSopimukset">{{naytaVanhatSopimukset ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
+
+      <div ng-show="naytaVanhatSopimukset">
+        <sopimusten-listaus
+          otsikko="toimikunta.voimassa ? '[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]' : '[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
+          sopimukset="entisetSopimukset"
+          nayta-tutkinnot="true"
+          piilota-koulutustoimijat="piilotaKoulutustoimijat">
+        </sopimusten-listaus>
+      </div>
+    </div>
   </div>
 </div>
 [[/i18n.toimikunta]]
