@@ -92,7 +92,13 @@
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta)
                                            sopimuskenttien-jarjestys)
-                             "sopimukset.csv"))))
+                             "sopimukset.csv")))
+
+  (GET ["/:tkunta/aiemmat-sopimukset"] [tkunta]
+    (cu/autorisoitu-transaktio :toimikunta_haku nil
+      (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta {:voimassa false})
+                                           sopimuskenttien-jarjestys)
+                             "aiemmat-sopimukset.csv"))))
 
 (defroutes private-reitit
   (PUT ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet]
