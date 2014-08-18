@@ -93,7 +93,8 @@
       (let [sopimukset-csv (muodosta-csv (arkisto/hae-sopimukset tkunta) sopimuskenttien-jarjestys)
             filename "sopimukset.csv"
             content-type "text/csv"]
-        (textfile-download-response sopimukset-csv filename content-type)))))
+        (textfile-download-response sopimukset-csv filename content-type
+                                    {:charset "CP1252"})))))
 
 (defroutes private-reitit
   (PUT ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet]
