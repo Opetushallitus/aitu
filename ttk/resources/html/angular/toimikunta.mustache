@@ -66,6 +66,10 @@
     </table>
   </div>
 
+  <div>
+    <a id="toimiala-linkki" class="liite-linkki" ng-href="[[base-url]]/api/ttk/{{toimikunta.tkunta}}/toimiala" target="_blank">[[lataa-toimikunnan-toimiala]]</a>
+  </div>
+
   <div ng-show="toimikunta.voimassa">
     <div class="list-controls">
       <auth-toiminto auth-nappi oikeus="toimikuntajasen_yllapito" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-jasenia" ng-click="muokkaaJasenia()"></auth-toiminto>

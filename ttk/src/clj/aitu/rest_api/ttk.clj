@@ -16,6 +16,7 @@
   (:require [compojure.core :refer [GET PUT POST defroutes]]
             schema.core
             [aitu.infra.ttk-arkisto :as arkisto]
+            [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.rest-api.http-util :refer [csv-download-response]]
             [valip.predicates :refer [present?]]
             [aitu.infra.i18n :as i18n]
@@ -84,6 +85,8 @@
     (arkisto/paivita-tai-poista-jasenyys! diaarinumero jasenyys))
   {:status 200})
 
+(def toimialakenttien-jarjestys [:opintoala_fi :opintoala_sv :nayttotutkinto_fi :nayttotutkinto_sv])
+
 (def sopimuskenttien-jarjestys
   [:sopimusnumero :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
 
@@ -91,12 +94,16 @@
   [:sukunimi :etunimi :rooli :edustus :jarjesto_nimi_fi :jarjesto_nimi_sv :kielisyys :sahkoposti])
 
 (defroutes raportti-reitit
+  (GET ["/:tkunta/toimiala"] [tkunta]
+    (cu/autorisoitu-transaktio :toimikunta_haku nil
+      (csv-download-response (muodosta-csv (tutkinto-arkisto/hae-toimikunnan-toimiala tkunta)
+                                           toimialakenttien-jarjestys)
+                             "toimiala.csv")))
   (GET ["/:tkunta/sopimukset"] [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta)
                                            sopimuskenttien-jarjestys)
                              "sopimukset.csv")))
-
   (GET ["/:tkunta/aiemmat-sopimukset"] [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta {:voimassa false})

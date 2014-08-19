@@ -246,6 +246,18 @@
       (filter #(sisaltaako-kentat? % [:nimi_fi :nimi_sv] termi))
       (sort-by :termi))))
 
+(defn hae-toimikunnan-toimiala [tkunta]
+  (sql/select toimikunta-ja-tutkinto
+    (sql/with nayttotutkinto
+      (sql/with opintoala))
+    (sql/fields [:opintoala.selite_fi :opintoala_fi]
+                [:opintoala.selite_sv :opintoala_sv]
+                [:nayttotutkinto.nimi_fi :nayttotutkinto_fi]
+                [:nayttotutkinto.nimi_sv :nayttotutkinto_sv])
+    (sql/where {:toimikunta tkunta})
+    (sql/order :opintoala.selite_fi)
+    (sql/order :nayttotutkinto.nimi_fi)))
+
 (defn ^:test-api poista-tutkintoversio!
   "Poistaa tutkintoversion arkistosta"
   [tutkintoversio_id]
