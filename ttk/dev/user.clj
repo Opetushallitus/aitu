@@ -63,5 +63,6 @@
 
 (defmacro with-testikayttaja
   [& body]
-  (require '[oph.korma.korma-auth :as ka])
-  `(binding [(ns-resolve 'ka '*current-user-oid*) (ns-resolve 'ka 'default-test-user-oid)] ~@body))
+  `(binding [oph.korma.korma-auth/*current-user-oid* (atom oph.korma.korma-auth/default-test-user-oid)
+             oph.korma.korma-auth/*current-user-uid* oph.korma.korma-auth/default-test-user-uid]
+     ~@body))
