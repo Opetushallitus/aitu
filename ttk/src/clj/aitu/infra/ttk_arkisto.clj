@@ -307,3 +307,18 @@
                   [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi] [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv])
       (sql/where {:jarjestamissopimus.toimikunta tkunta
                   :voimassa (ehdot :voimassa true)}))))
+
+(defn hae-jasenet
+  "Hakee toimikunnan jäsenet"
+  ([tkunta]
+    (hae-jasenet tkunta {}))
+  ([tkunta ehdot]
+    (sql/select jasenyys
+      (sql/with henkilo
+        (sql/with jarjesto))
+      (sql/fields :henkilo.etunimi :henkilo.sukunimi :henkilo.sahkoposti [:henkilo.aidinkieli :kielisyys]
+                  :jasenyys.rooli :jasenyys.edustus [:jarjesto.nimi_fi :jarjesto_nimi_fi] [:jarjesto.nimi_sv :jarjesto_nimi_sv])
+      (sql/where {:toimikunta tkunta
+                  :loppupvm [(if (:voimassa ehdot true) >= <) (sql/sqlfn now)]})
+      (sql/order :henkilo.sukunimi)
+      (sql/order :henkilo.etunimi))))

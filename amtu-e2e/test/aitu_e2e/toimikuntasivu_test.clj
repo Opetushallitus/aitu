@@ -221,7 +221,7 @@
           (is (= (count (filter w/displayed? (w/find-elements {:css "button.edit-icon button.add-icon"}))) 0)))))))
 
 (defn sopimukset-linkki []
-  (w/attribute (w/find-element {:css "a.liite-linkki"}) "href"))
+  (w/attribute (w/find-element {:css "a#sopimukset-linkki"}) "href"))
 
 ;; Tiedostojen lataaminen ei onnistu IE:llä, koska IE ei näytä WebDriverille
 ;; HTTPOnly-evästeitä (istuntoeväste mukaan lukien).

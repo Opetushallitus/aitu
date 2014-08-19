@@ -87,6 +87,9 @@
 (def sopimuskenttien-jarjestys
   [:sopimusnumero :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
 
+(def jasenkenttien-jarjestys
+  [:sukunimi :etunimi :rooli :edustus :jarjesto_nimi_fi :jarjesto_nimi_sv :kielisyys :sahkoposti])
+
 (defroutes raportti-reitit
   (GET ["/:tkunta/sopimukset"] [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
@@ -98,7 +101,17 @@
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta {:voimassa false})
                                            sopimuskenttien-jarjestys)
-                             "aiemmat-sopimukset.csv"))))
+                             "aiemmat-sopimukset.csv")))
+  (GET ["/:tkunta/jasenet"] [tkunta]
+    (cu/autorisoitu-transaktio :toimikunta_haku nil
+      (csv-download-response (muodosta-csv (arkisto/hae-jasenet tkunta)
+                                           jasenkenttien-jarjestys)
+                             "jasenet.csv")))
+  (GET ["/:tkunta/aiemmat-jasenet"] [tkunta]
+    (cu/autorisoitu-transaktio :toimikunta_haku nil
+      (csv-download-response (muodosta-csv (arkisto/hae-jasenet tkunta {:voimassa false})
+                                           jasenkenttien-jarjestys)
+                             "aiemmat-jasenet.csv"))))
 
 (defroutes private-reitit
   (PUT ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet]
