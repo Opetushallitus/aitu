@@ -57,13 +57,11 @@
       <tr>
         <th jarjestettava-sarake="opintoala_nimi" jarjestely-fn="orderByLokalisoitu" oletus-jarjestely>[[opintoala]]</th>
         <th jarjestettava-sarake="nimi" jarjestely-fn="orderByLokalisoitu">[[nayttotutkinto]]</th>
-        <th>[[osaamisala]]</th>
       </tr>
       </thead>
       <tr ng-repeat="tutkinto in tutkintoJarjestetty">
         <td>{{tutkinto.opintoala_nimi | lokalisoi:tutkinto:'opintoala_nimi'}}</td>
         <td><a href="#/tutkinto/{{tutkinto.tutkintotunnus}}">{{tutkinto.tutkintotunnus}} {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a></td>
-        <td></td>
       </tr>
     </table>
   </div>
