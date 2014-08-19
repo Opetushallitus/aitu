@@ -25,7 +25,7 @@
             [aitu.auditlog :as auditlog]
             [clojure.set :refer [rename-keys]]
             [oph.korma.korma :refer  :all ]
-            )
+            [clojure.string :refer [blank?]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-toimikunnan-diaarinumero
@@ -72,19 +72,28 @@
 (defn hae-ehdoilla
   "Hakee kaikki tietystä tutkinnosta tai opintoalasta vastuussa olevat toimikunnat"
   [ehdot]
-  (map voimassaolo/taydenna-toimikunnan-voimassaolo
-      (sql/select tutkintotoimikunta
-        (sql/with toimikausi)
-        (sql/where (and
-                     (or (clojure.string/blank? (:tunnus ehdot))
-                         (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
-                                             (sql/with nayttotutkinto
-                                               (sql/with opintoala))
-                                             (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
-                                                             (or {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}
-                                                                 {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}))))))
-                     (or (= (:toimikausi ehdot) "kaikki")
-                         {:toimikausi.voimassa true}))))))
+  (let [nimi (str "%" (:nimi ehdot) "%")
+        toimikunnat (->> (sql/select tutkintotoimikunta
+                           (sql/with toimikausi)
+                           (sql/where (and
+                                        (or (blank? (:tunnus ehdot))
+                                            (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
+                                                                (sql/with nayttotutkinto
+                                                                  (sql/with opintoala))
+                                                                (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
+                                                                                (or {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}
+                                                                                    {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}))))))
+                                        (or (not= (:toimikausi ehdot) "nykyinen")
+                                            {:toimikausi.voimassa true})
+                                        (or (blank? (:nimi ehdot))
+                                            {:nimi_fi [ilike nimi]}
+                                            {:nimi_sv [ilike nimi]})
+                                        (or (blank? (:kielisyys ehdot))
+                                            {:kielisyys (:kielisyys ehdot)}))))
+                      (map voimassaolo/taydenna-toimikunnan-voimassaolo))]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) toimikunnat)
+      toimikunnat)))
 
 (defn hae-nykyiset
   "Hakee toimikunnat voimassa olevalta toimikaudelta"
