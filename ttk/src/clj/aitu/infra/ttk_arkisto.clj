@@ -71,27 +71,22 @@
 
 (defn hae-tutkinnolla
   "Hakee kaikki tietystä tutkinnosta tai opintoalasta vastuussa olevat toimikunnat"
-  [tutkinto nykyinen]
+  [termi nykyinen]
   (map voimassaolo/taydenna-toimikunnan-voimassaolo
-       (let [termi (str "%" tutkinto "%")]
-         (map (comp sql-date->joda-date sql-timestamp->joda-datetime)
-              ;; Ei käytä Kormaa, koska Korma ei salli joinien tekemistä pelkästään where-ehdon tekemiseen
-              ;; vaan pakottaa tekemään selectin jokaisesta joinatusta taulusta
-              (sql/exec-raw [(str "select ttk.*, tk.alkupvm, tk.loppupvm, tk.voimassa from tutkintotoimikunta ttk "
-                                  "join toimikausi tk on ttk.toimikausi_id = tk.toimikausi_id "
-                                  "where (exists (select 1 from toimikunta_ja_tutkinto tt "
-                                  "              join nayttotutkinto t on tt.tutkintotunnus = t.tutkintotunnus "
-                                  "              join opintoala oa on t.opintoala = oa.opintoala_tkkoodi "
-                                  "              where tt.toimikunta = ttk.tkunta "
-                                  "              and (t.nimi_fi ilike ? "
-                                  "                   or t.nimi_sv ilike ? "
-                                  "                   or oa.selite_fi ilike ? "
-                                  "                   or oa.selite_sv ilike ?)) "
-                                  "       or ? = '%%')"
-                                  (when (= nykyinen "nykyinen")
-                                    "and tk.voimassa "))
-                             (repeat 5 termi)]
-                            :results)))))
+       (sql/select tutkintotoimikunta
+         (sql/with toimikausi)
+         (sql/where (and
+                      (or (clojure.string/blank? termi)
+                          (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
+                                              (sql/with nayttotutkinto
+                                                (sql/with opintoala))
+                                              (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
+                                                              (or {:nayttotutkinto.nimi_fi termi}
+                                                                  {:nayttotutkinto.nimi_sv termi}
+                                                                  {:opintoala.selite_fi termi}
+                                                                  {:opintoala.selite_sv termi}))))))
+                      (or (= nykyinen "kaikki")
+                          {:toimikausi.voimassa true}))))))
 
 (defn hae-nykyiset
   "Hakee toimikunnat voimassa olevalta toimikaudelta"
