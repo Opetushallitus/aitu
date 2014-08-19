@@ -1,9 +1,9 @@
 {{=[[ ]]=}}
 [[#i18n.yleiset]]
 <div>
-  <p><a class="ajax-link show-more" href="" ng-show="sopimukset.length > 0" ng-click="toggleNaytaVanhat()">{{nautaVanhatSopimukset ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
+  <p><a class="ajax-link show-more" href="" ng-show="sopimukset.length > 0" ng-click="toggleNaytaVanhat()">{{naytaVanhatSopimukset ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
 
-  <div ng-show="nautaVanhatSopimukset">
+  <div ng-show="naytaVanhatSopimukset">
     <sopimusten-listaus
       otsikko="otsikko"
       sopimukset="sopimukset"

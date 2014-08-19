@@ -133,9 +133,9 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       },
       templateUrl : 'template/vanhojen-sopimusten-listaus',
       link: function(scope) {
-        scope.nautaVanhatSopimukset = false;
+        scope.naytaVanhatSopimukset = false;
         scope.toggleNaytaVanhat = function() {
-          scope.nautaVanhatSopimukset = !scope.nautaVanhatSopimukset;
+          scope.naytaVanhatSopimukset = !scope.nautaVanhatSopimukset;
         };
       }
     };
