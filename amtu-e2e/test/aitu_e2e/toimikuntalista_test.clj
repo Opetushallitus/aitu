@@ -105,12 +105,12 @@
         (testing "pitäisi näyttää lista toimikunnista joilla on tietyn opintoalan tutkinto vastuulla"
           (avaa toimikuntalista)
           (valitse-toimikausi)
-          (valitse-select2-optio "tutkintoHakuehto" "termi" "Opintoala 1")
+          (valitse-select2-optio "tutkintoHakuehto" "tunnus" "Opintoala 1")
           (odota-angular-pyyntoa)
           (is (= #{"Toimikunta 1 (2013)"} (nakyvat-toimikunnat))))
         (testing "pitäisi näyttää lista toimikunnista joilla on tietty tutkinto vastuulla"
           (avaa toimikuntalista)
           (valitse-toimikausi)
-          (valitse-select2-optio "tutkintoHakuehto" "termi" "Alan 2 tutkinto")
+          (valitse-select2-optio "tutkintoHakuehto" "tunnus" "Alan 2 tutkinto")
           (odota-angular-pyyntoa)
           (is (= #{"Toimikunta 2 (2013)"} (nakyvat-toimikunnat))))))))

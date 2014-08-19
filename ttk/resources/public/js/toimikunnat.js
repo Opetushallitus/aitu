@@ -55,13 +55,13 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
         kielisyys: []
       };
       $scope.tutkintoHakuehto = {
-        termi: ""
+        tunnus: ""
       };
       $scope.$watch('toimikuntaHakuehto.nimi', suodataToimikunnat);
       $scope.$watchCollection('toimikuntaHakuehto.kielisyys', suodataToimikunnat);
       $scope.$watchCollection('kaikkiToimikunnat', suodataToimikunnat);
       $scope.$watch('toimikuntaHakuehto.toimikausi', haeToimikunnat);
-      $scope.$watch('tutkintoHakuehto.termi', haeToimikunnat);
+      $scope.$watch('tutkintoHakuehto.tunnus', haeToimikunnat);
 
       haeToimikunnat();
 
@@ -72,7 +72,7 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       }
 
       function haeToimikunnat() {
-        $scope.kaikkiToimikunnat = toimikuntaHakuResource.query({toimikausi: $scope.toimikuntaHakuehto.toimikausi, termi: $scope.tutkintoHakuehto.termi});
+        $scope.kaikkiToimikunnat = toimikuntaHakuResource.query({toimikausi: $scope.toimikuntaHakuehto.toimikausi, tunnus: $scope.tutkintoHakuehto.tunnus});
       }
     }
   ])

@@ -100,13 +100,13 @@
   (arkisto/lisaa-tutkinto! {:toimikunta "T56789"
                             :tutkintotunnus "T2"})
   (testing "pitäisi löytää kaksi toimikuntaa tyhjällä haulla"
-    (is (= (count (arkisto/hae-ehdoilla {:termi "", :toimikausi "kaikki"})) 2)))
+    (is (= (count (arkisto/hae-ehdoilla {:tunnus "", :toimikausi "kaikki"})) 2)))
   (testing "pitäisi löytää toimikunta nykyiseltä toimikaudelta"
-    (is (= (map :tkunta (arkisto/hae-ehdoilla {:termi "", :toimikausi "nykyinen"})) ["T56789"])))
+    (is (= (map :tkunta (arkisto/hae-ehdoilla {:tunnus "", :toimikausi "nykyinen"})) ["T56789"])))
   (testing "pitäisi löytää toimikunta tutkinnon nimellä"
-    (is (= (map :tkunta (arkisto/hae-ehdoilla {:termi "tutkinto1", :toimikausi "kaikki"})) ["T12345"])))
+    (is (= (map :tkunta (arkisto/hae-ehdoilla {:tunnus "T1", :toimikausi "kaikki"})) ["T12345"])))
   (testing "pitäisi löytää toimikunta opintoalan nimellä"
-    (is (= (map :tkunta (arkisto/hae-ehdoilla {:termi "opintoala1", :toimikausi "kaikki"})) ["T12345"]))))
+    (is (= (map :tkunta (arkisto/hae-ehdoilla {:tunnus "OA1", :toimikausi "kaikki"})) ["T12345"]))))
 
 (deftest ^:integraatio hae-termilla-test
   []

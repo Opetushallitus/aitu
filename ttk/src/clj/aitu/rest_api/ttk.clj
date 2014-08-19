@@ -199,11 +199,11 @@
         {:status 200}))))
 
 (defroutes* reitit
-  (GET* "/" [termi toimikausi :as req]
+  (GET* "/" [tunnus toimikausi :as req]
     :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta tai opintoalasta"
     :return [Toimikunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (cachable-json-response req (arkisto/hae-ehdoilla {:termi termi
+      (cachable-json-response req (arkisto/hae-ehdoilla {:tunnus tunnus
                                                          :toimikausi toimikausi}))))
 
   (GET* ["/:diaarinumero" :diaarinumero #"[0-9/]+"] [diaarinumero]

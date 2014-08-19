@@ -76,15 +76,13 @@
       (sql/select tutkintotoimikunta
         (sql/with toimikausi)
         (sql/where (and
-                     (or (clojure.string/blank? (:termi ehdot))
+                     (or (clojure.string/blank? (:tunnus ehdot))
                          (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
                                              (sql/with nayttotutkinto
                                                (sql/with opintoala))
                                              (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
-                                                             (or {:nayttotutkinto.nimi_fi (:termi ehdot)}
-                                                                 {:nayttotutkinto.nimi_sv (:termi ehdot)}
-                                                                 {:opintoala.selite_fi (:termi ehdot)}
-                                                                 {:opintoala.selite_sv (:termi ehdot)}))))))
+                                                             (or {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}
+                                                                 {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}))))))
                      (or (= (:toimikausi ehdot) "kaikki")
                          {:toimikausi.voimassa true}))))))
 
