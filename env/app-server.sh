@@ -33,10 +33,6 @@ useradd -r -s /bin/false tomcat
 # ilman salasanaa
 echo 'aituadmin ALL = NOPASSWD: ALL' >> /etc/sudoers
 
-#init.d-skripti
-cp app-server/aitu-init.d.sh /etc/init.d/aitu
-chmod 755 /etc/init.d/aitu
-
 # Palvelimen asetukset
 cp app-server/ttk.properties $install_dir
 mkdir "$install_dir/resources"
