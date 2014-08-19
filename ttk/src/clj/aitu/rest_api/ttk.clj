@@ -203,7 +203,8 @@
     :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta tai opintoalasta"
     :return [Toimikunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (cachable-json-response req (arkisto/hae-tutkinnolla termi toimikausi))))
+      (cachable-json-response req (arkisto/hae-ehdoilla {:termi termi
+                                                         :toimikausi toimikausi}))))
 
   (GET* ["/:diaarinumero" :diaarinumero #"[0-9/]+"] [diaarinumero]
     :summary "Hakee toimikunnan diaarinumeron perusteella"

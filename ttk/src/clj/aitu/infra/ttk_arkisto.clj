@@ -69,24 +69,24 @@
        (sql/select tutkintotoimikunta
          (sql/with toimikausi))))
 
-(defn hae-tutkinnolla
+(defn hae-ehdoilla
   "Hakee kaikki tietystä tutkinnosta tai opintoalasta vastuussa olevat toimikunnat"
-  [termi nykyinen]
+  [ehdot]
   (map voimassaolo/taydenna-toimikunnan-voimassaolo
-       (sql/select tutkintotoimikunta
-         (sql/with toimikausi)
-         (sql/where (and
-                      (or (clojure.string/blank? termi)
-                          (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
-                                              (sql/with nayttotutkinto
-                                                (sql/with opintoala))
-                                              (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
-                                                              (or {:nayttotutkinto.nimi_fi termi}
-                                                                  {:nayttotutkinto.nimi_sv termi}
-                                                                  {:opintoala.selite_fi termi}
-                                                                  {:opintoala.selite_sv termi}))))))
-                      (or (= nykyinen "kaikki")
-                          {:toimikausi.voimassa true}))))))
+      (sql/select tutkintotoimikunta
+        (sql/with toimikausi)
+        (sql/where (and
+                     (or (clojure.string/blank? (:termi ehdot))
+                         (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
+                                             (sql/with nayttotutkinto
+                                               (sql/with opintoala))
+                                             (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
+                                                             (or {:nayttotutkinto.nimi_fi (:termi ehdot)}
+                                                                 {:nayttotutkinto.nimi_sv (:termi ehdot)}
+                                                                 {:opintoala.selite_fi (:termi ehdot)}
+                                                                 {:opintoala.selite_sv (:termi ehdot)}))))))
+                     (or (= (:toimikausi ehdot) "kaikki")
+                         {:toimikausi.voimassa true}))))))
 
 (defn hae-nykyiset
   "Hakee toimikunnat voimassa olevalta toimikaudelta"

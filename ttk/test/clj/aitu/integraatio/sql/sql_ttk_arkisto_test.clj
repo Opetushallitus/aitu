@@ -77,7 +77,7 @@
       (testing "päivitysen jälkeen rooli on muuttunut"
         (is (= (:rooli paivitettava-jasen) (:rooli paivitetty-jasen)))))))
 
-(deftest ^:integraatio hae-tutkinnolla-test
+(deftest ^:integraatio hae-ehdoilla-test
   []
   (lisaa-toimikunta! {:tkunta "T12345"
                       :tilikoodi "1234"
@@ -100,13 +100,13 @@
   (arkisto/lisaa-tutkinto! {:toimikunta "T56789"
                             :tutkintotunnus "T2"})
   (testing "pitäisi löytää kaksi toimikuntaa tyhjällä haulla"
-    (is (= (count (arkisto/hae-tutkinnolla "" "kaikki")) 2)))
+    (is (= (count (arkisto/hae-ehdoilla {:termi "", :toimikausi "kaikki"})) 2)))
   (testing "pitäisi löytää toimikunta nykyiseltä toimikaudelta"
-    (is (= (map :tkunta (arkisto/hae-tutkinnolla "" "nykyinen")) ["T56789"])))
+    (is (= (map :tkunta (arkisto/hae-ehdoilla {:termi "", :toimikausi "nykyinen"})) ["T56789"])))
   (testing "pitäisi löytää toimikunta tutkinnon nimellä"
-    (is (= (map :tkunta (arkisto/hae-tutkinnolla "tutkinto1" "kaikki")) ["T12345"])))
+    (is (= (map :tkunta (arkisto/hae-ehdoilla {:termi "tutkinto1", :toimikausi "kaikki"})) ["T12345"])))
   (testing "pitäisi löytää toimikunta opintoalan nimellä"
-    (is (= (map :tkunta (arkisto/hae-tutkinnolla "opintoala1" "kaikki")) ["T12345"]))))
+    (is (= (map :tkunta (arkisto/hae-ehdoilla {:termi "opintoala1", :toimikausi "kaikki"})) ["T12345"]))))
 
 (deftest ^:integraatio hae-termilla-test
   []
