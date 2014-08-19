@@ -63,8 +63,6 @@
                                  (.repeater "sopimus in sopimuksetJarjestetty")
                                  (.column "sopimus.sopimusnumero")))))
 
-(def nayta-vanhat-selector "a.show-more")
-
 (def vanhojen-sopimusten-lista-selector ".vanhat-sopimukset>div")
 
 (defn nykyisten-jarjestamissopimusten-lkm []
@@ -76,20 +74,6 @@
 (defn testaa [testattava-sivu testattava-sivu-fn]
   (testing testattava-sivu
     (with-webdriver
-      (with-data perustiedot
-        (testing "pitäisi näyttää yksi järjestämissopimus"
-          (avaa (testattava-sivu-fn))
-          (is (= (count (jarjestamissopimukset)) 1 ))
-          (is (= (first (jarjestamissopimukset)) "123" )))))
-    (with-webdriver
-      (testing "pitäisi näyttää 2 järjestämissopimusta"
-        (let [sopimus2 (dt/setup-voimassaoleva-jarjestamissopimus "1234" "0000000-0" "12345"  "ILMA" 1)]
-          (with-data (dt/merge-datamaps perustiedot sopimus2)
-            (avaa (testattava-sivu-fn))
-            (is (= (count (jarjestamissopimukset)) 2 ))
-            (is (= (first (jarjestamissopimukset)) "123"))
-            (is (= (last (jarjestamissopimukset)) "1234" ))))))
-    (with-webdriver
       (let [vanhentuva-sopimus (dt/setup-voimassaoleva-jarjestamissopimus "1234" "0000000-0" "12345"  "ILMA" 1)]
         (with-data (dt/merge-datamaps perustiedot vanhentuva-sopimus)
           (aseta-jarjestamissopimus-paattyneeksi (:jarjestamissopimukset vanhentuva-sopimus))
@@ -97,15 +81,6 @@
             (avaa (testattava-sivu-fn))
             (testing "Pitäisi näyttää järjestämissopimukset omissa taulukoissaan"
               (is (= (nykyisten-jarjestamissopimusten-lkm) 1))
-              (is (= (vanhojen-jarjestamissopimusten-lkm) 1)))
-            (testing "pitäisi näyttää vanhojen järjestämissopimusten avaus linkki"
-              (is (= (count (w/find-elements {:css nayta-vanhat-selector})) 1)))
-            (testing "vanhojen järjestämissopimusten lista on aluksi piilotettu"
-              (is (not (w/visible? (w/find-element {:css vanhojen-sopimusten-lista-selector})))))
-            (testing "klikkaamalla linkkiä, vanhojen järjestämissopimusten listan saa auki"
-              (w/click nayta-vanhat-selector)
-              (odota-angular-pyyntoa)
-              (is (w/visible? (w/find-element {:css vanhojen-sopimusten-lista-selector})))
               (is (= (vanhojen-jarjestamissopimusten-lkm) 1)))))))))
 
 (defn testaa-vanha-toimikunta[]
