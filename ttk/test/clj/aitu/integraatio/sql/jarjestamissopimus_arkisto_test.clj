@@ -279,7 +279,7 @@ tietorakenteen osia."
   (is (= #{1} (set (map :tutkintoversio (arkisto/hae-sopimuksen-tutkinnot 99))))))
 
 (deftest ^:integraatio poista-tutkinnot-sopimukselta!-auditlog-test
-  (testing "lisaa-tutkinnot-sopimukselle! kirjaa sopimuksen ja tutkinnot auditlogiin"
+  (testing "poista-tutkinnot-sopimukselta! kirjaa sopimuksen ja tutkinnot auditlogiin"
     (lisaa-koulutus-ja-opintoala!)
     (lisaa-tutkinto! {})
     (doseq [id [1 2 3]]
