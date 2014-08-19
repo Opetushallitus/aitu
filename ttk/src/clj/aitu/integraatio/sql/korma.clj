@@ -19,7 +19,8 @@
     [oph.korma.korma :refer [defentity defalias]]
     [aitu.util :refer [update-in-if-exists]]
     [aitu.infra.i18n :as i18n]
-    [korma.core :as sql]))
+    [korma.core :as sql]
+    [korma.sql.engine :as eng]))
 
 (declare toimikausi henkilo tutkintotoimikunta jasenyys
          nayttotutkinto opintoala koulutusala jarjestamissopimus
@@ -251,3 +252,8 @@
     {:fk :oppilaitos})
   (sql/belongs-to toimipaikka
     {:fk :toimipaikka}))
+
+(defn ilike
+  "Korma-funktio Postgresql:n ilike-vertailulle"
+  [k v]
+  (eng/infix k "ILIKE" v))
