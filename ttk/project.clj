@@ -46,10 +46,6 @@
                                                     com.sun.jmx/jmxri]]
 
                  [stencil "0.3.2"]
-                 ;; lein-cljsbuild lataa käännöksen ajaksi vanhemman version,
-                 ;; mistä seuraa ongelmia. Tällä pakotetaan käyttöön stencilin
-                 ;; vaatima versio.
-                 [org.clojure/core.cache "0.6.2"]
                  [slingshot "0.10.3"]
 
                  [com.cemerick/valip "0.3.2"]
@@ -58,8 +54,7 @@
                  [robert/hooke "1.3.0"]
                  [peridot "0.3.0"]
                  [prismatic/schema "0.2.0"]]
-  :plugins [[lein-cljsbuild "0.3.2"]
-            [lein-cloverage "1.0.2"]
+  :plugins [[lein-cloverage "1.0.2"]
             [test2junit "1.0.1"]
             [codox "0.6.6"]]
   :profiles {:dev {:source-paths ["dev"]
@@ -80,8 +75,4 @@
   :jar-name "ttk.jar"
   :uberjar-name "ttk-standalone.jar"
   :main aitu.palvelin
-  :repl-options {:init-ns user}
-  :cljsbuild {:builds [{:source-paths ["src/cljs"]
-                        :compiler {:output-to "resources/public/ttk-cljs.js"
-                                   :optimizations :whitespace
-                                   :pretty-print true}}]})
+  :repl-options {:init-ns user})
