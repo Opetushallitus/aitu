@@ -81,11 +81,15 @@
   </div>
 
   <div>
-    <vanhojen-jasenyyksien-listaus class="aiemmat-jasenyydet"
-                                   otsikko="toimikunta.voimassa ? '[[aiemmat-jasenet]]' : '[[jasenet]]'"
-                                   jasenet="entisetJasenet"
-                                   salli-piilotus="toimikunta.voimassa">
-    </vanhojen-jasenyyksien-listaus>
+    <div class="aiemmat-jasenyydet" ng-if="entisetJasenet.length > 0">
+      <p ng-show="toimikunta.voimassa"><a class="ajax-link show-more" href="" ng-click="naytaVanhatJasenyydet = !naytaVanhatJasenyydet">{{naytaVanhatJasenyydet ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
+      <div ng-show="naytaVanhatJasenyydet || !toimikunta.voimassa">
+        <jasenyyksien-listaus
+          otsikko="toimikunta.voimassa ? '[[aiemmat-jasenet]]' : '[[jasenet]]'"
+          jasenet="entisetJasenet">
+        </jasenyyksien-listaus>
+      </div>
+    </div>
   </div>
 
   <div>

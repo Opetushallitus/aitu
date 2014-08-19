@@ -113,6 +113,7 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       $scope.$watchCollection('toimikunta', eritteleVoimassaolonMukaan);
 
       $scope.naytaVanhatSopimukset = false;
+      $scope.naytaVanhatJasenyydet = false;
     }
   ])
 
