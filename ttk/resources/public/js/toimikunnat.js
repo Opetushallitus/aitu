@@ -74,6 +74,10 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       function haeToimikunnat() {
         $scope.kaikkiToimikunnat = toimikuntaHakuResource.query({toimikausi: $scope.toimikuntaHakuehto.toimikausi, tunnus: $scope.tutkintoHakuehto.tunnus});
       }
+
+      $scope.kielisyysParametri = function() {
+        return _.pluck($scope.toimikuntaHakuehto.kielisyys, "nimi").join(",");
+      }
     }
   ])
 

@@ -25,7 +25,7 @@
             [aitu.auditlog :as auditlog]
             [clojure.set :refer [rename-keys]]
             [oph.korma.korma :refer  :all ]
-            [clojure.string :refer [blank?]])
+            [clojure.string :refer [blank? split]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-toimikunnan-diaarinumero
@@ -73,6 +73,7 @@
   "Hakee kaikki tietystä tutkinnosta tai opintoalasta vastuussa olevat toimikunnat"
   [ehdot]
   (let [nimi (str "%" (:nimi ehdot) "%")
+        kielisyydet (split (:kielisyys ehdot "") #",")
         toimikunnat (->> (sql/select tutkintotoimikunta
                            (sql/with toimikausi)
                            (sql/where (and
@@ -89,7 +90,7 @@
                                             {:nimi_fi [ilike nimi]}
                                             {:nimi_sv [ilike nimi]})
                                         (or (blank? (:kielisyys ehdot))
-                                            {:kielisyys (:kielisyys ehdot)}))))
+                                            {:kielisyys [in kielisyydet]}))))
                       (map voimassaolo/taydenna-toimikunnan-voimassaolo))]
     (if (:avaimet ehdot)
       (map #(select-keys % (:avaimet ehdot)) toimikunnat)

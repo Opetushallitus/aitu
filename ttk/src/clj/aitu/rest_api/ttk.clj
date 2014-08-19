@@ -85,6 +85,8 @@
     (arkisto/paivita-tai-poista-jasenyys! diaarinumero jasenyys))
   {:status 200})
 
+(def toimikuntakenttien-jarjestys [:nimi_fi :nimi_sv :diaarinumero :tilikoodi :voimassa :kielisyys])
+
 (def toimialakenttien-jarjestys [:opintoala_fi :opintoala_sv :nayttotutkinto_fi :nayttotutkinto_sv])
 
 (def sopimuskenttien-jarjestys
@@ -94,6 +96,11 @@
   [:sukunimi :etunimi :rooli :edustus :jarjesto_nimi_fi :jarjesto_nimi_sv :kielisyys :sahkoposti])
 
 (defroutes raportti-reitit
+  (GET "/csv" req
+    (cu/autorisoitu-transaktio :toimikunta_haku nil
+      (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet toimikuntakenttien-jarjestys))
+                                           toimikuntakenttien-jarjestys)
+                             "toimikunnat.csv")))
   (GET "/:tkunta/toimiala" [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (tutkinto-arkisto/hae-toimikunnan-toimiala tkunta)
