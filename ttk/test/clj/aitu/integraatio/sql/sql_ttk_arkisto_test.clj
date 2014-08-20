@@ -21,7 +21,8 @@
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [clj-time.core :as time]
             [aitu.integraatio.sql.test-data-util :refer :all]
-            [aitu.test-timeutil :refer :all]))
+            [aitu.test-timeutil :refer :all]
+            aitu.integraatio.sql.korma))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -107,6 +108,102 @@
     (is (= (map :tkunta (arkisto/hae-ehdoilla {:tunnus "T1", :toimikausi "kaikki"})) ["T12345"])))
   (testing "pitäisi löytää toimikunta opintoalan nimellä"
     (is (= (map :tkunta (arkisto/hae-ehdoilla {:tunnus "OA1", :toimikausi "kaikki"})) ["T12345"]))))
+
+;; Ilman hakuehtoja hae-ehdoilla palauttaa kaikki toimikunnat
+(deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
+  (lisaa-toimikausi! {:toimikausi_id 3
+                      :voimassa false
+                      :alkupvm (time/local-date 1900 1 1)
+                      :loppupvm (time/local-date 1902 12 31)})
+  (lisaa-toimikausi! {:toimikausi_id 4
+                      :voimassa true
+                      :alkupvm (time/local-date 1903 1 1)
+                      :loppupvm (time/local-date 2099 12 31)})
+  (lisaa-toimikunta! {:tkunta "TK1"
+                      :toimikausi_id 3})
+  (lisaa-toimikunta! {:tkunta "TK2"
+                      :toimikausi_id 4})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {}))
+         ["TK1" "TK2"])))
+
+(deftest ^:integraatio hae-ehdoilla-jarjestaa-tulokset-suomenkielisen-nimen-mukaan
+  (lisaa-toimikunta! {:tkunta "TK1"
+                      :nimi_fi "foo"})
+  (lisaa-toimikunta! {:tkunta "TK2"
+                      :nimi_fi "xyz"})
+  (lisaa-toimikunta! {:tkunta "TK3"
+                      :nimi_fi "bar"})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {}))
+         ["TK3" "TK1" "TK2"])))
+
+(deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
+  (lisaa-toimikausi! {:toimikausi_id 3
+                      :voimassa false
+                      :alkupvm (time/local-date 1900 1 1)
+                      :loppupvm (time/local-date 1902 12 31)})
+  (lisaa-toimikausi! {:toimikausi_id 4
+                      :voimassa true
+                      :alkupvm (time/local-date 1903 1 1)
+                      :loppupvm (time/local-date 2099 12 31)})
+  (lisaa-toimikunta! {:tkunta "TK1"
+                      :toimikausi_id 3})
+  (lisaa-toimikunta! {:tkunta "TK2"
+                      :toimikausi_id 4})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "nykyinen"}))
+         ["TK2"])))
+
+(deftest ^:integraatio hae-ehdoilla-muu-toimikausi
+  (lisaa-toimikausi! {:toimikausi_id 3
+                      :voimassa false
+                      :alkupvm (time/local-date 1900 1 1)
+                      :loppupvm (time/local-date 1902 12 31)})
+  (lisaa-toimikausi! {:toimikausi_id 4
+                      :voimassa true
+                      :alkupvm (time/local-date 1903 1 1)
+                      :loppupvm (time/local-date 2099 12 31)})
+  (lisaa-toimikunta! {:tkunta "TK1"
+                      :toimikausi_id 3})
+  (lisaa-toimikunta! {:tkunta "TK2"
+                      :toimikausi_id 4})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "asdf"}))
+         ["TK1" "TK2"])))
+
+(deftest ^:integraatio hae-ehdoilla-nimi
+  (lisaa-toimikunta! {:tkunta "TK1"
+                      :nimi_fi "foo bar baz"})
+  (lisaa-toimikunta! {:tkunta "TK2"
+                      :nimi_sv "FÅÅ BAR BÅZ"})
+  (lisaa-toimikunta! {:tkunta "TK3"})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {:nimi "bar"}))
+         ["TK1" "TK2"])))
+
+(deftest ^:integraatio hae-ehdoilla-tyhja-nimi
+  (lisaa-toimikunta! {:tkunta "TK1"})
+  (lisaa-toimikunta! {:tkunta "TK2"})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {:nimi "     "}))
+         ["TK1" "TK2"])))
+
+(deftest ^:integraatio hae-ehdoilla-kielisyys
+  (lisaa-toimikunta! {:tkunta "TK1"
+                      :kielisyys "fi"})
+  (lisaa-toimikunta! {:tkunta "TK2"
+                      :kielisyys "2k"})
+  (lisaa-toimikunta! {:tkunta "TK3"
+                      :kielisyys "sv"})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "fi,sv"}))
+         ["TK1" "TK3"])))
+
+(deftest ^:integraatio hae-ehdoilla-tyhja-kielisyys
+  (lisaa-toimikunta! {:tkunta "TK1"})
+  (lisaa-toimikunta! {:tkunta "TK2"})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "     "}))
+         ["TK1" "TK2"])))
+
+(deftest ^:integraatio hae-ehdoilla-avaimet
+  (lisaa-toimikunta! {:nimi_fi "foo"
+                      :nimi_sv "bar"})
+  (is (= (arkisto/hae-ehdoilla {:avaimet [:nimi_fi :nimi_sv]})
+         [{:nimi_fi "foo", :nimi_sv "bar"}])))
 
 (deftest ^:integraatio hae-termilla-test
   []

@@ -31,7 +31,7 @@
          toimipaikka tutkintoversio uusin-versio tutkinto-ja-tutkinnonosa
          sopimuksen-liite koulutustoimija organisaatiomuutos)
 
-(sql/defentity toimikausi
+(defentity toimikausi
   (sql/pk :toimikausi_id))
 
 (defentity keskusjarjesto

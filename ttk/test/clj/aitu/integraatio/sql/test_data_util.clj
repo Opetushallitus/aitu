@@ -28,7 +28,7 @@
             [schema.macros :as sm]
             [aitu.test-timeutil :refer :all]
             [aitu.integraatio.sql.korma
-             :refer [osaamisala sopimus-ja-tutkinto]]))
+             :refer [osaamisala toimikausi]]))
 
 (defn default-tutkinto []
   {:post [(tutkinto? %)]}
@@ -226,3 +226,11 @@
                     osaamisala-idt)))]
     (jarjestamissopimus-arkisto/paivita! sopimus sopimus-tutkinto-liitokset)
     sopimus))
+
+(def default-toimikausi {:toimikausi_id 1
+                         :alkupvm (time/local-date 2011 1 1)
+                         :loppupvm (time/local-date 2211 1 1)
+                         :voimassa true})
+
+(defn lisaa-toimikausi! [t]
+  (sql/insert toimikausi (sql/values (merge default-toimikausi t))))

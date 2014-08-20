@@ -90,7 +90,8 @@
                                             {:nimi_fi [ilike nimi]}
                                             {:nimi_sv [ilike nimi]})
                                         (or (blank? (:kielisyys ehdot))
-                                            {:kielisyys [in kielisyydet]}))))
+                                            {:kielisyys [in kielisyydet]})))
+                           (sql/order :nimi_fi))
                       (map voimassaolo/taydenna-toimikunnan-voimassaolo))]
     (if (:avaimet ehdot)
       (map #(select-keys % (:avaimet ehdot)) toimikunnat)
