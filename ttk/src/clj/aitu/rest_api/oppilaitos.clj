@@ -42,8 +42,8 @@
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
       (json-response (oppilaitos/taydenna-oppilaitos (arkisto/hae oppilaitoskoodi)) OppilaitosLaajatTiedot)))
 
-  (GET* "/haku/ala" [termi :as req]
-    :summary "Hakee kaikki oppilaitokset joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan nimi sisältää annetun termin"
+  (GET* "/haku/ala" [tunnus :as req]
+    :summary "Hakee kaikki oppilaitokset joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
     :return [OppilaitosTiedot]
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (cachable-json-response req (arkisto/hae-alalla termi) [OppilaitosLista]))))
+      (cachable-json-response req (arkisto/hae-ehdoilla {:tunnus tunnus}) [OppilaitosLista]))))
