@@ -20,7 +20,17 @@
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]
             [oph.common.util.http-util :refer [cachable-json-response json-response]]
-            [aitu.toimiala.skeema :refer :all]))
+            [aitu.toimiala.skeema :refer :all]
+            [aitu.util :refer [muodosta-csv]]
+            [aitu.rest-api.http-util :refer [csv-download-response]]))
+
+(def koulutustoimijakenttien-jarjestys [:nimi_fi :nimi_sv :ytunnus :sopimusten_maara])
+
+(c/defroutes raportti-reitit
+  (cu/defapi :yleinen-rest-api nil :get "/csv" req
+    (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet koulutustoimijakenttien-jarjestys))
+                                         koulutustoimijakenttien-jarjestys)
+                           "koulutustoimijat.csv")))
 
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/" req
@@ -29,5 +39,5 @@
     (json-response (arkisto/hae-termilla termi) [KoulutustoimijaLinkki]))
   (cu/defapi :yleinen-rest-api nil :get "/:ytunnus" [ytunnus]
     (json-response (koulutustoimija/taydenna-koulutustoimija (arkisto/hae ytunnus)) KoulutustoimijaLaajatTiedot))
-  (cu/defapi :yleinen-rest-api nil :get "/haku/ala" [termi :as req]
-    (cachable-json-response req (arkisto/hae-alalla termi) [KoulutustoimijaLista])))
+  (cu/defapi :yleinen-rest-api nil :get "/haku/ala" [tunnus :as req]
+    (cachable-json-response req (arkisto/hae-ehdoilla {:tunnus tunnus}) [KoulutustoimijaLista])))

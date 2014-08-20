@@ -98,6 +98,7 @@
       (c/context "/api/tutkinto" [] (wrap-tarkasta-csrf-token aitu.rest-api.tutkinto/reitit))
       (c/context "/api/toimikausi" [] (wrap-tarkasta-csrf-token aitu.rest-api.toimikausi/reitit))
       (c/context "/api/oppilaitos" [] (wrap-tarkasta-csrf-token aitu.rest-api.oppilaitos/reitit))
+      (c/context "/api/koulutustoimija" [] aitu.rest-api.koulutustoimija/raportti-reitit)
       (c/context "/api/koulutustoimija" [] (wrap-tarkasta-csrf-token aitu.rest-api.koulutustoimija/reitit))
       (c/context "/api/jarjestamissopimus" [] aitu.rest-api.jarjestamissopimus/liite-lataus-reitit)
       (c/context "/api/jarjestamissopimus" [] (wrap-tarkasta-csrf-token aitu.rest-api.jarjestamissopimus/reitit))

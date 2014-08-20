@@ -232,13 +232,13 @@
   "Hakee listan kaikista opintoaloista, tutkinnoista, osaamisaloista ja tutkinnon osista annetun termin perusteella."
   [termi]
   (let [opintoalat (sql/select opintoala
-                     (sql/fields [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
+                     (sql/fields [:opintoala_tkkoodi :tunnus] [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
         osaamisalat (sql/select osaamisala
-                      (sql/fields :nimi_fi :nimi_sv))
+                      (sql/fields [:osaamisalatunnus :tunnus] :nimi_fi :nimi_sv))
         tutkinnonosat (sql/select tutkinnonosa
-                        (sql/fields :nimi_fi :nimi_sv))
+                        (sql/fields [:osatunnus :tunnus] :nimi_fi :nimi_sv))
         tutkinnot (sql/select nayttotutkinto
-                    (sql/fields :nimi_fi :nimi_sv))
+                    (sql/fields [:tutkintotunnus :tunnus] :nimi_fi :nimi_sv))
         kaikki (for [ala (concat opintoalat osaamisalat tutkinnonosat tutkinnot)]
                  (assoc ala :termi (:nimi_fi ala)))]
     (->> kaikki

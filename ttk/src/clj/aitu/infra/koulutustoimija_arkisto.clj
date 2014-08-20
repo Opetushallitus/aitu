@@ -19,7 +19,7 @@
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
              [oph.korma.korma :refer :all]
-             )
+             [clojure.string :refer [blank?]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn ^:integration-api lisaa!
@@ -67,39 +67,46 @@
         :when (sisaltaako-kentat? koulutustoimija [:nimi_fi :nimi_sv] termi)]
     (select-keys koulutustoimija [:ytunnus :nimi_fi :nimi_sv])))
 
-(defn hae-alalla
-  "Hakee kaikki tietyn alan koulutustoimijat. Ala sisältää opintoalan :tutkinnon :osaamisalan ja tutkinnon osan."
-  [ala]
-  (let [termi (str "%" ala "%")]
-    (sql/select koulutustoimija
-      (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite
-                  [(sql/subselect jarjestamissopimus
-                     (sql/aggregate (count :*) :count)
-                     (sql/where {:jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus
-                                 :jarjestamissopimus.voimassa true})) :sopimusten_maara])
-      (sql/where (or (clojure.string/blank? ala)
-                     (sql/sqlfn exists (sql/subselect jarjestamissopimus
-                                         (sql/join :inner sopimus-ja-tutkinto
-                                                   (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid))
-                                         (sql/join :inner tutkintoversio
-                                                   (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
-                                         (sql/join :inner nayttotutkinto
-                                                   (= :tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus))
-                                         (sql/join :left opintoala
-                                                   (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
-                                         (sql/join :left tutkinto-ja-tutkinnonosa
-                                                   (= :tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio))
-                                         (sql/join :left tutkinnonosa
-                                                   (= :tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id))
-                                         (sql/join :left osaamisala
-                                                   (= :tutkintoversio.tutkintoversio_id :osaamisala.tutkintoversio))
-                                         (sql/where (and {:jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus}
-                                                         (or {:opintoala.selite_fi [ilike termi]}
-                                                             {:opintoala.selite_sv [ilike termi]}
-                                                             {:osaamisala.nimi_fi [ilike termi]}
-                                                             {:osaamisala.nimi_sv [ilike termi]}
-                                                             {:tutkinnonosa.nimi_fi [ilike termi]}
-                                                             {:tutkinnonosa.nimi_sv [ilike termi]}
-                                                             {:nayttotutkinto.nimi_fi [ilike termi]}
-                                                             {:nayttotutkinto.nimi_sv [ilike termi]})))))))
-      (sql/order :ytunnus :ASC))))
+(defn hae-ehdoilla
+  "Hakee kaikki hakuehtoja vastaavat koulutustoimijat. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
+  [ehdot]
+  (let [nimi (str "%" (:nimi ehdot) "%")
+        sopimusten-maara-subselect (sql/subselect jarjestamissopimus
+                                     (sql/aggregate (count :*) :count)
+                                     (sql/where {:jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus
+                                                 :jarjestamissopimus.voimassa true}))
+        koulutustoimijat (sql/select koulutustoimija
+                           (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika :sahkoposti :puhelin :osoite
+                                       :postinumero :postitoimipaikka :www_osoite [sopimusten-maara-subselect :sopimusten_maara])
+                           (sql/where (and (or (blank? (:tunnus ehdot))
+                                               (sql/sqlfn exists (sql/subselect jarjestamissopimus
+                                                                   (sql/join :inner sopimus-ja-tutkinto
+                                                                             (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid))
+                                                                   (sql/join :inner tutkintoversio
+                                                                             (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
+                                                                   (sql/join :inner nayttotutkinto
+                                                                             (= :tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus))
+                                                                   (sql/join :left opintoala
+                                                                             (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
+                                                                   (sql/join :left tutkinto-ja-tutkinnonosa
+                                                                             (= :tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio))
+                                                                   (sql/join :left tutkinnonosa
+                                                                             (= :tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id))
+                                                                   (sql/join :left osaamisala
+                                                                             (= :tutkintoversio.tutkintoversio_id :osaamisala.tutkintoversio))
+                                                                   (sql/where (and {:jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus}
+                                                                                   (or {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}
+                                                                                       {:osaamisala.osaamisalatunnus (:tunnus ehdot)}
+                                                                                       {:tutkinnonosa.osatunnus (:tunnus ehdot)}
+                                                                                       {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}))))))
+                                           (or (blank? (:nimi ehdot))
+                                               {:nimi_fi [ilike nimi]}
+                                               {:nimi_sv [ilike nimi]})
+                                           (case (:sopimuksia ehdot)
+                                             "kylla" (> sopimusten-maara-subselect 0)
+                                             "ei" (= sopimusten-maara-subselect 0)
+                                             true)))
+                           (sql/order :nimi_fi :ASC))]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) koulutustoimijat)
+      koulutustoimijat)))
