@@ -1,6 +1,6 @@
 ;; Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
 ;;
-;; This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+;; This program is free software:  Licensed under the EUPL :Version 1.1 or - as
 ;; soon as they will be approved by the European Commission - subsequent versions
 ;; of the EUPL (the "Licence");
 ;;
@@ -68,32 +68,38 @@
     (select-keys koulutustoimija [:ytunnus :nimi_fi :nimi_sv])))
 
 (defn hae-alalla
-  "Hakee kaikki tietyn alan koulutustoimijat. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
+  "Hakee kaikki tietyn alan koulutustoimijat. Ala sisältää opintoalan :tutkinnon :osaamisalan ja tutkinnon osan."
   [ala]
-  (if (clojure.string/blank? ala)
-    (hae-julkiset-tiedot)
-    (let [termi (str "%" ala "%")]
-      (map sql-timestamp->joda-datetime
-           (sql/exec-raw [(str "select ytunnus, nimi_fi, nimi_sv, muutettu_kayttaja, luotu_kayttaja, muutettuaika, luotuaika, "
-                               "sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite, "
-                               "(select count(*) from jarjestamissopimus where koulutustoimija = ytunnus and voimassa) as sopimusten_maara "
-                               "from koulutustoimija kt "
-                               "where exists (select 1 from jarjestamissopimus js "
-                               "              join sopimus_ja_tutkinto st on js.jarjestamissopimusid = st.jarjestamissopimusid "
-                               "              join tutkintoversio tv on st.tutkintoversio = tv.tutkintoversio_id "
-                               "              join nayttotutkinto t on tv.tutkintotunnus = t.tutkintotunnus "
-                               "              left join opintoala oa on t.opintoala = oa.opintoala_tkkoodi "
-                               "              left join tutkinto_ja_tutkinnonosa tjt on tv.tutkintoversio_id = tjt.tutkintoversio "
-                               "              left join tutkinnonosa tos on tjt.tutkinnonosa = tos.tutkinnonosa_id "
-                               "              left join osaamisala osala on tv.tutkintoversio_id = osala.tutkintoversio "
-                               "              where js.koulutustoimija = kt.ytunnus "
-                               "                    and (oa.selite_fi ilike ? "
-                               "                         or oa.selite_sv ilike ? "
-                               "                         or osala.nimi_fi ilike ? "
-                               "                         or osala.nimi_sv ilike ? "
-                               "                         or tos.nimi_fi ilike ? "
-                               "                         or tos.nimi_sv ilike ?"
-                               "                         or t.nimi_fi ilike ?"
-                               "                         or t.nimi_sv ilike ?)) ")
-                          (repeat 8 termi)]
-                         :results)))))
+  (let [termi (str "%" ala "%")]
+    (sql/select koulutustoimija
+      (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite
+                  [(sql/subselect jarjestamissopimus
+                     (sql/aggregate (count :*) :count)
+                     (sql/where {:jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus
+                                 :jarjestamissopimus.voimassa true})) :sopimusten_maara])
+      (sql/where (or (clojure.string/blank? ala)
+                     (sql/sqlfn exists (sql/subselect jarjestamissopimus
+                                         (sql/join :inner sopimus-ja-tutkinto
+                                                   (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid))
+                                         (sql/join :inner tutkintoversio
+                                                   (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
+                                         (sql/join :inner nayttotutkinto
+                                                   (= :tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus))
+                                         (sql/join :left opintoala
+                                                   (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
+                                         (sql/join :left tutkinto-ja-tutkinnonosa
+                                                   (= :tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio))
+                                         (sql/join :left tutkinnonosa
+                                                   (= :tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id))
+                                         (sql/join :left osaamisala
+                                                   (= :tutkintoversio.tutkintoversio_id :osaamisala.tutkintoversio))
+                                         (sql/where (and {:jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus}
+                                                         (or {:opintoala.selite_fi [ilike termi]}
+                                                             {:opintoala.selite_sv [ilike termi]}
+                                                             {:osaamisala.nimi_fi [ilike termi]}
+                                                             {:osaamisala.nimi_sv [ilike termi]}
+                                                             {:tutkinnonosa.nimi_fi [ilike termi]}
+                                                             {:tutkinnonosa.nimi_sv [ilike termi]}
+                                                             {:nayttotutkinto.nimi_fi [ilike termi]}
+                                                             {:nayttotutkinto.nimi_sv [ilike termi]})))))))
+      (sql/order :ytunnus :ASC))))
