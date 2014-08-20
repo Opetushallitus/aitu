@@ -184,10 +184,10 @@
 
 (defn lisaa-osaamisala! [osaamisalatunnus]
   (sql/insert osaamisala
-    (sql/values (merge {:nimi_fi osaamisalatunnus
-                        :osaamisalatunnus osaamisalatunnus
-                        :voimassa_alkupvm (time/date-time 2011 1 1)
-                        :versio 1}))))
+    (sql/values {:nimi_fi osaamisalatunnus
+                 :osaamisalatunnus osaamisalatunnus
+                 :voimassa_alkupvm (time/date-time 2011 1 1)
+                 :versio 1})))
 
 (defn lisaa-toimipaikka! [oppilaitos]
   (oppilaitos-arkisto/lisaa-toimipaikka!
