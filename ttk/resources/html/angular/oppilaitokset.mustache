@@ -34,5 +34,9 @@
     <div class="table-cell">{{hakutulos.sopimusten_maara}}</div>
   </hakutulokset>
 </div>
+<div>
+  <a ng-href="[[base-url]]/api/oppilaitos/csv?nimi={{search.nimi}}&tunnus={{search.tunnus}}&sopimuksia={{search.sopimuksia}}"
+     id="oppilaitokset-linkki" class="liite-linkki" target="_blank">[[lataa-oppilaitokset]]</a>
+</div>
 
 [[/i18n.oppilaitokset]]

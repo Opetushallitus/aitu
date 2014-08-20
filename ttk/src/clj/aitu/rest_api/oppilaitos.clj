@@ -21,7 +21,17 @@
             [oph.common.util.http-util :refer [cachable-json-response json-response]]
             [aitu.toimiala.oppilaitos :as oppilaitos]
             [aitu.toimiala.skeema :refer :all]
-            [compojure.api.sweet :refer :all]))
+            [compojure.api.sweet :refer :all]
+            [aitu.util :refer [muodosta-csv]]
+            [aitu.rest-api.http-util :refer [csv-download-response]]))
+
+(def oppilaitoskenttien-jarjestys [:nimi :oppilaitoskoodi :sopimusten_maara])
+
+(c/defroutes raportti-reitit
+  (cu/defapi :yleinen-rest-api nil :get "/csv" req
+    (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet oppilaitoskenttien-jarjestys))
+                                         oppilaitoskenttien-jarjestys)
+                           "oppilaitokset.csv")))
 
 (defroutes* reitit
   (GET* "/" [:as req]
