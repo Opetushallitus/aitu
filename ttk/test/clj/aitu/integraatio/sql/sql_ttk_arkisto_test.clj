@@ -78,37 +78,6 @@
       (testing "päivitysen jälkeen rooli on muuttunut"
         (is (= (:rooli paivitettava-jasen) (:rooli paivitetty-jasen)))))))
 
-(deftest ^:integraatio hae-ehdoilla-test
-  []
-  (lisaa-toimikunta! {:tkunta "T12345"
-                      :tilikoodi "1234"
-                      :diaarinumero "2013/01/001"
-                      :toimikausi_id 1})
-  (lisaa-toimikunta! {:tkunta "T56789"
-                      :tilikoodi "5678"
-                      :diaarinumero "2013/01/002"
-                      :toimikausi_id 2})
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"} {:opintoalakoodi "OA1", :koulutusalakoodi "KA1", :selite_fi "opintoala1"})
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"} {:opintoalakoodi "OA2", :koulutusalakoodi "KA2", :selite_fi "opintoala2"})
-  (lisaa-tutkinto! {:tutkintotunnus "T1"
-                    :nimi_fi "tutkinto1"
-                    :opintoala "OA1"})
-  (lisaa-tutkinto! {:tutkintotunnus "T2"
-                    :nimi_fi "tutkinto2"
-                    :opintoala "OA2"})
-  (arkisto/lisaa-tutkinto! {:toimikunta "T12345"
-                            :tutkintotunnus "T1"})
-  (arkisto/lisaa-tutkinto! {:toimikunta "T56789"
-                            :tutkintotunnus "T2"})
-  (testing "pitäisi löytää kaksi toimikuntaa tyhjällä haulla"
-    (is (= (count (arkisto/hae-ehdoilla {:tunnus "", :toimikausi "kaikki"})) 2)))
-  (testing "pitäisi löytää toimikunta nykyiseltä toimikaudelta"
-    (is (= (map :tkunta (arkisto/hae-ehdoilla {:tunnus "", :toimikausi "nykyinen"})) ["T56789"])))
-  (testing "pitäisi löytää toimikunta tutkinnon nimellä"
-    (is (= (map :tkunta (arkisto/hae-ehdoilla {:tunnus "T1", :toimikausi "kaikki"})) ["T12345"])))
-  (testing "pitäisi löytää toimikunta opintoalan nimellä"
-    (is (= (map :tkunta (arkisto/hae-ehdoilla {:tunnus "OA1", :toimikausi "kaikki"})) ["T12345"]))))
-
 ;; Ilman hakuehtoja hae-ehdoilla palauttaa kaikki toimikunnat
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
   (lisaa-toimikausi! {:toimikausi_id 3
@@ -123,8 +92,8 @@
                       :toimikausi_id 3})
   (lisaa-toimikunta! {:tkunta "TK2"
                       :toimikausi_id 4})
-  (is (= (map :tkunta (arkisto/hae-ehdoilla {}))
-         ["TK1" "TK2"])))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {})))
+         #{"TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-jarjestaa-tulokset-suomenkielisen-nimen-mukaan
   (lisaa-toimikunta! {:tkunta "TK1"
@@ -165,8 +134,8 @@
                       :toimikausi_id 3})
   (lisaa-toimikunta! {:tkunta "TK2"
                       :toimikausi_id 4})
-  (is (= (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "asdf"}))
-         ["TK1" "TK2"])))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "asdf"})))
+         #{"TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
   (lisaa-toimikunta! {:tkunta "TK1"
@@ -174,14 +143,14 @@
   (lisaa-toimikunta! {:tkunta "TK2"
                       :nimi_sv "FÅÅ BAR BÅZ"})
   (lisaa-toimikunta! {:tkunta "TK3"})
-  (is (= (map :tkunta (arkisto/hae-ehdoilla {:nimi "bar"}))
-         ["TK1" "TK2"])))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:nimi "bar"})))
+         #{"TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-tyhja-nimi
   (lisaa-toimikunta! {:tkunta "TK1"})
   (lisaa-toimikunta! {:tkunta "TK2"})
-  (is (= (map :tkunta (arkisto/hae-ehdoilla {:nimi "     "}))
-         ["TK1" "TK2"])))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:nimi "     "})))
+         #{"TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-kielisyys
   (lisaa-toimikunta! {:tkunta "TK1"
@@ -190,20 +159,62 @@
                       :kielisyys "2k"})
   (lisaa-toimikunta! {:tkunta "TK3"
                       :kielisyys "sv"})
-  (is (= (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "fi,sv"}))
-         ["TK1" "TK3"])))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "fi,sv"})))
+         #{"TK1" "TK3"})))
 
 (deftest ^:integraatio hae-ehdoilla-tyhja-kielisyys
   (lisaa-toimikunta! {:tkunta "TK1"})
   (lisaa-toimikunta! {:tkunta "TK2"})
-  (is (= (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "     "}))
-         ["TK1" "TK2"])))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "     "})))
+         #{"TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-avaimet
   (lisaa-toimikunta! {:nimi_fi "foo"
                       :nimi_sv "bar"})
   (is (= (arkisto/hae-ehdoilla {:avaimet [:nimi_fi :nimi_sv]})
          [{:nimi_fi "foo", :nimi_sv "bar"}])))
+
+(deftest ^:integraatio hae-ehdoilla-opintoala
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
+                                {:opintoalakoodi "OA1"})
+  (lisaa-tutkinto! {:tutkintotunnus "T1"
+                    :opintoala "OA1"})
+  (lisaa-toimikunta! {:tkunta "TK1"})
+  (arkisto/lisaa-tutkinto! {:toimikunta "TK1"
+                            :tutkintotunnus "T1"})
+  (lisaa-tutkinto! {:tutkintotunnus "T2"
+                    :opintoala "OA1"})
+  (lisaa-toimikunta! {:tkunta "TK2"})
+  (arkisto/lisaa-tutkinto! {:toimikunta "TK2"
+                            :tutkintotunnus "T2"})
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
+                                {:opintoalakoodi "OA2"})
+  (lisaa-tutkinto! {:tutkintotunnus "T3"
+                    :opintoala "OA2"})
+  (lisaa-toimikunta! {:tkunta "TK3"})
+  (arkisto/lisaa-tutkinto! {:toimikunta "TK3"
+                            :tutkintotunnus "T3"})
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:tunnus "OA1"})))
+        #{"TK1" "TK2"})))
+
+(deftest ^:integraatio hae-ehdoilla-tutkinto
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
+                                {:opintoalakoodi "OA1"})
+  (lisaa-tutkinto! {:tutkintotunnus "T1"
+                    :opintoala "OA1"})
+  (lisaa-toimikunta! {:tkunta "TK1"})
+  (arkisto/lisaa-tutkinto! {:toimikunta "TK1"
+                            :tutkintotunnus "T1"})
+  (lisaa-toimikunta! {:tkunta "TK2"})
+  (arkisto/lisaa-tutkinto! {:toimikunta "TK2"
+                            :tutkintotunnus "T1"})
+  (lisaa-tutkinto! {:tutkintotunnus "T2"
+                    :opintoala "OA1"})
+  (lisaa-toimikunta! {:tkunta "TK3"})
+  (arkisto/lisaa-tutkinto! {:toimikunta "TK3"
+                            :tutkintotunnus "T2"})
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:tunnus "T1"})))
+        #{"TK1" "TK2"})))
 
 (deftest ^:integraatio hae-termilla-test
   []
