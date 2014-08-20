@@ -39,8 +39,8 @@
   []
   (testdata/poista-testikayttaja! testikayttaja-oid))
 
-(defn alusta-korma! 
-  ([asetukset] 
+(defn alusta-korma!
+  ([asetukset]
     (let [db-asetukset (merge-with #(or %2 %1)
                          (:db asetukset)
                          {:host (System/getenv "AMTU_DB_HOST")
@@ -50,7 +50,7 @@
     (let [dev-asetukset (assoc oletusasetukset :development-mode true)
           asetukset (lue-asetukset dev-asetukset)]
       (alusta-korma! asetukset))))
- 
+
 (defn tietokanta-fixture-oid
   "Annettu käyttäjätunnus sidotaan Kormalle testifunktion ajaksi."
   [f oid uid]
@@ -93,7 +93,7 @@
 (defn with-user-rights
   ([f]
    (with-user-rights {:roolitunnus (:kayttaja kayttajaroolit)
-                      :toimikunta #{(toimikunnan-jasenyys (:tkunta default-toimikunta) "sihteeri")
+                      :toimikunta #{(toimikunnan-jasenyys "T12345" "sihteeri")
                                     (toimikunnan-jasenyys "123" "sihteeri")}}
                      f))
   ([kayttaja-authmap f]

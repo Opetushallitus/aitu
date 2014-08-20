@@ -14,9 +14,9 @@
   (lisaa-henkilo! {:henkiloid -2})
   (lisaa-henkilo! {:henkiloid -3})
   (lisaa-henkilo! {:henkiloid -4})
-  (lisaa-toimikunta!)
-  (lisaa-jasen! {:toimikunta (:tkunta default-toimikunta) :henkiloid -1})
-  (lisaa-jasen! {:toimikunta (:tkunta default-toimikunta) :henkiloid -4 :loppupvm menneisyydessa}))
+  (lisaa-toimikunta! {:tkunta "T12345"})
+  (lisaa-jasen! {:toimikunta "T12345", :henkiloid -1})
+  (lisaa-jasen! {:toimikunta "T12345", :henkiloid -4, :loppupvm menneisyydessa}))
 
 (def yllapitaja-auth-map {:roolitunnus (:yllapitaja kayttajaroolit)})
 
@@ -24,7 +24,7 @@
 
 (defn kayttaja-auth-map
   ([]
-   (kayttaja-auth-map (toimikunnan-jasenyys (:tkunta default-toimikunta) "sihteeri")))
+   (kayttaja-auth-map (toimikunnan-jasenyys "T12345" "sihteeri")))
   ([jasenyys]
   {:henkiloid -3
    :roolitunnus (:kayttaja kayttajaroolit)
@@ -88,11 +88,11 @@
       #(henkilon-paivitys-ei-onnistu -2)))
   (testing "Toimikunnan muokkausjäsen ei voi päivittää toimikunnan toisen henkilön tietoja jos toimikunta ei ole voimassa"
     (with-user-rights
-      (kayttaja-auth-map (vanhentuneen-toimikunnan-jasenyys (:tkunta default-toimikunta) "sihteeri"))
+      (kayttaja-auth-map (vanhentuneen-toimikunnan-jasenyys "T12345" "sihteeri"))
       #(henkilon-paivitys-ei-onnistu -1)))
   (testing "Toimikunnan entinen muokkausjäsen voi päivittää toimikunnan toisen henkilön tietoja"
     (with-user-rights
-      (kayttaja-auth-map (voimassaolevan-toimikunnan-vanhentunut-jasenyys (:tkunta default-toimikunta) "sihteeri"))
+      (kayttaja-auth-map (voimassaolevan-toimikunnan-vanhentunut-jasenyys "T12345" "sihteeri"))
       #(henkilon-paivitys-ei-onnistu -1)))
   (testing "Toimikunnan muokkausjäsen ei voi päivittää toimikunnan entisen jäsenen tietoja"
     (with-user-rights

@@ -92,23 +92,25 @@
                       (:koulutusalakoodi koulutusala)
                       (:selite_fi opintoala)]]))))
 
-(def default-toimikunta
-  {:tkunta "T12345"
-   :diaarinumero "2013/01/001"
-   :nimi_fi "Testitoimikunnan nimi"
-   :nimi_sv "Testitoimikunnan nimi (sv)"
-   :tilikoodi "1234"
-   :toimiala "toimiala"
-   :toimikausi_id 2
-   :kielisyys "fi"
-   :sahkoposti "toimikunta@email.fi"
-   :toimikausi_alku (kuukausi-sitten)
-   :toimikausi_loppu (vuoden-kuluttua)})
+(let [seuraava-indeksi (atom 0)]
+  (defn default-toimikunta []
+    (let [i (swap! seuraava-indeksi inc)]
+      {:tkunta (str i)
+       :diaarinumero (str i)
+       :nimi_fi "Testitoimikunnan nimi"
+       :nimi_sv "Testitoimikunnan nimi (sv)"
+       :tilikoodi (str i)
+       :toimiala "toimiala"
+       :toimikausi_id 2
+       :kielisyys "fi"
+       :sahkoposti "toimikunta@email.fi"
+       :toimikausi_alku (kuukausi-sitten)
+       :toimikausi_loppu (vuoden-kuluttua)})))
 
 (sm/defn lisaa-toimikunta! :- SisaltaaToimikunnanTiedot
   ([] (lisaa-toimikunta! nil))
   ([toimikunta]
-    (doto (merge default-toimikunta toimikunta)
+    (doto (merge (default-toimikunta) toimikunta)
       toimikunta-arkisto/lisaa!)))
 
 (def default-henkilo {:etunimi "Taimi"
@@ -163,7 +165,7 @@
 
 (defn lisaa-jarjestamissopimus!
   ([koulutustoimija oppilaitos jarjestamissopimus]
-    (let [toimikunta (lisaa-toimikunta!)]
+    (let [toimikunta (lisaa-toimikunta! {:tkunta "T12345"})]
       (jarjestamissopimus-arkisto/lisaa!
         (merge {:jarjestamissopimusid 1
                 :sopimusnumero "ABCDEF01234567890"
