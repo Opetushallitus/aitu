@@ -89,7 +89,7 @@
         (testing "Pitäisi näyttää lista oppilaitoksista joilla on tietyn opintoalan tutkinto vastuulla"
           ;; Kun
           (avaa oppilaitoslista)
-          (valitse-select2-optio "search" "termi" "Sähköala")
+          (valitse-select2-optio "search" "tunnus" "Sähköala")
           (odota-angular-pyyntoa)
           ;; Niin
           (is (= (nakyvat-oppilaitokset) ["aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"])))))))
