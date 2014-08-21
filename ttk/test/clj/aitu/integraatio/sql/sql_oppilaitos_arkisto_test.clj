@@ -63,7 +63,7 @@
     (lisaa-oppilaitos! {:koulutustoimija "KT1"
                         :nimi "Oppilaitos1"})
     (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "kylla"
-                                                  :nimi "Oppilaitos1"}))
+                                                        :nimi "Oppilaitos1"}))
            ["OL1"]))))
 
 (deftest ^:integraatio hae-ehdoilla-ei-sopimuksia
@@ -75,7 +75,7 @@
                         :nimi "Oppilaitos1"
                         :oppilaitoskoodi "OL1"})
     (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "ei"
-                                                :nimi "Oppilaitos1"}))
+                                                        :nimi "Oppilaitos1"}))
            ["OL1"]))))
 
 (deftest ^:integraatio hae-ehdoilla-tutkinto
