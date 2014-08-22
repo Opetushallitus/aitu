@@ -68,9 +68,9 @@
              :body (cheshire/generate-string uusi-henkilo)}))))
 
   (cu/defapi :henkilo_haku nil :get "/" [toimikausi :as req]
-      (let [henkilot (if (= toimikausi "nykyinen")
-        (arkisto/hae-nykyiset)
-        (arkisto/hae-kaikki))
+    (let [henkilot (if (= toimikausi "nykyinen")
+                     (arkisto/hae-nykyiset)
+                     (arkisto/hae-kaikki))
           cache-muokattu (get-cache-date req)
           henkilot-muokattu (->
                               (uusin-muokkausaika
@@ -79,11 +79,11 @@
                                 [:toimikunnat :muutettuaika]
                                 [:toimikunnat :toimikunta_muutettuaika])
                               (.withMillisOfSecond 0))]
-        (if (> 0 (compare cache-muokattu henkilot-muokattu))
-          {:status 200
-           :body (cheshire/generate-string henkilot)
-           :headers (get-cache-headers henkilot-muokattu)}
-          {:status 304})))
+      (if (> 0 (compare cache-muokattu henkilot-muokattu))
+        {:status 200
+         :body (cheshire/generate-string henkilot)
+         :headers (get-cache-headers henkilot-muokattu)}
+        {:status 304})))
 
   (cu/defapi :henkilo_haku nil :get "/:henkiloid" [henkiloid]
     (json-response (henkilo/taydenna-henkilo (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid)))))

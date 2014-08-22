@@ -174,8 +174,11 @@
                                                :jasenyys_alku (:alkupvm j)
                                                :jasenyys_loppu (:loppupvm j)))
                                       [henkilo]))
-                                  yhdistetyt)]
-    (if (or (:toimikausi ehdot)
-            (:toimikunta ehdot))
-      (remove #(empty? (:jasenyydet %)) rivi-per-jasenyys)
-      rivi-per-jasenyys)))
+                                  yhdistetyt)
+        karsitut-rivit (if (or (:toimikausi ehdot)
+                               (:toimikunta ehdot))
+                         (remove #(empty? (:jasenyydet %)) rivi-per-jasenyys)
+                         rivi-per-jasenyys)]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) karsitut-rivit)
+      karsitut-rivit)))
