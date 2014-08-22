@@ -29,7 +29,8 @@
     (arkisto/lisaa! data/default-henkilo)
     (is (= (count (arkisto/hae-kaikki)) (inc arkisto-count)))))
 
-(deftest yhdista-henkilot-test
+;; Vaatii fixturen takia tietokannan, joten merkitään integraatiotestiksi
+(deftest ^:integraatio yhdista-henkilot-test
   (let [henkilot [{:henkiloid 1, :etunimi "eka"}
                   {:henkiloid 2, :etunimi "toka"}
                   {:henkiloid 3, :etunimi "kolmas"}]
