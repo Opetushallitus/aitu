@@ -164,10 +164,26 @@
          #{"nimi1" "nimi2"})))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
-  (let [henkilo-1 (lisaa-henkilo! {:henkiloid 1000
-                                   :etunimi "foo bar baz"})
-        henkilo-2 (lisaa-henkilo! {:henkiloid 1001
-                                   :sukunimi "FÅÅ BAR BAZ"})
-        henkilo-3 (lisaa-henkilo! {:henkiloid 1002})])
+  (lisaa-henkilo! {:henkiloid 1000
+                   :etunimi "foo bar baz"})
+  (lisaa-henkilo! {:henkiloid 1001
+                   :sukunimi "FÅÅ BAR BAZ"})
+  (lisaa-henkilo! {:henkiloid 1002})
   (is (= (set (map :henkiloid (arkisto/hae-ehdoilla {:nimi "bar"})))
          #{1000 1001})))
+
+(deftest ^:integraatio hae-ehdoilla-monta-jasenyytta
+  (let [toimikausi (lisaa-toimikausi! {:voimassa true
+                                       :alkupvm (time/local-date 1903 1 1)
+                                       :loppupvm (time/local-date 2099 12 31)})
+        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id toimikausi)
+                                         :nimi_fi "foo"})
+        toimikunta-2 (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id toimikausi)
+                                         :nimi_fi "bar"})
+        henkilo (lisaa-henkilo! {:etunimi "nimi1"})
+        _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-1)
+                         :henkiloid (:henkiloid henkilo)})
+        _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-2)
+                         :henkiloid (:henkiloid henkilo)})])
+  (is (= (set (map :toimikunta_fi (arkisto/hae-ehdoilla {})))
+         #{"foo" "bar"})))

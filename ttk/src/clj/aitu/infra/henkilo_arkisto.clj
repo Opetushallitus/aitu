@@ -163,8 +163,19 @@
 (defn hae-ehdoilla [ehdot]
   (let [henkilot (pg-hae-henkilot-ehdoilla ehdot)
         jasenyydet (pg-hae-jasenyydet-ehdoilla ehdot)
-        yhdistetyt (yhdista-henkilot-ja-jasenyydet henkilot jasenyydet)]
+        yhdistetyt (yhdista-henkilot-ja-jasenyydet henkilot jasenyydet)
+        rivi-per-jasenyys (mapcat (fn [h]
+                                    (if (seq (:jasenyydet h))
+                                      (for [j (:jasenyydet h)]
+                                        (assoc h
+                                               :toimikunta_fi (:nimi_fi j)
+                                               :toimikunta_sv (:nimi_sv j)
+                                               :rooli (:rooli j)
+                                               :jasenyys_alku (:alkupvm j)
+                                               :jasenyys_loppu (:loppupvm j)))
+                                      [henkilo]))
+                                  yhdistetyt)]
     (if (or (:toimikausi ehdot)
             (:toimikunta ehdot))
-      (remove #(empty? (:jasenyydet %)) yhdistetyt)
-      yhdistetyt)))
+      (remove #(empty? (:jasenyydet %)) rivi-per-jasenyys)
+      rivi-per-jasenyys)))

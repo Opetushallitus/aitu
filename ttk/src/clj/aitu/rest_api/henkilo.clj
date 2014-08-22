@@ -33,7 +33,7 @@
    [:sukunimi present? :pakollinen]
    [:postinumero (max-length 5) :liian-pitka]])
 
-(def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_nimi_fi :toimikunta_nimi_sv :rooli :toimikausi_alku :toimikausi_loppu :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka])
+(def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka])
 
 (c/defroutes raportti-reitit
   (cu/defapi :henkilo_haku nil :get "/csv" req
