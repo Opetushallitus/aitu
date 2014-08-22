@@ -173,7 +173,7 @@
                                                :rooli (:rooli j)
                                                :jasenyys_alku (:alkupvm j)
                                                :jasenyys_loppu (:loppupvm j)))
-                                      [henkilo]))
+                                      [h]))
                                   yhdistetyt)
         karsitut-rivit (if (or (:toimikausi ehdot)
                                (:toimikunta ehdot))
