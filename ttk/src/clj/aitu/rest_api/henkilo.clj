@@ -25,12 +25,21 @@
             [valip.predicates :refer [present? max-length]]
             [ring.util.response :refer [response]]
             [aitu.compojure-util :as cu]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [aitu.util :refer [muodosta-csv]]))
 
 (def henkilon-validointisaannot
   [[:etunimi present? :pakollinen]
    [:sukunimi present? :pakollinen]
    [:postinumero (max-length 5) :liian-pitka]])
+
+(def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_nimi_fi :toimikunta_nimi_sv :rooli :toimikausi_alku :toimikausi_loppu :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka])
+
+(c/defroutes raportti-reitit
+  (cu/defapi :henkilo_haku nil :get "/csv" req
+    (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet henkilokenttien-jarjestys))
+                                         henkilokenttien-jarjestys)
+                           "henkilot.csv")))
 
 (c/defroutes reitit
   (cu/defapi :henkilo_lisays nil :post "/"

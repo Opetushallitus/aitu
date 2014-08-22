@@ -91,6 +91,7 @@
     (swaggered "AITU"
       (c/context "/api/ttk" [] aitu.rest-api.ttk/raportti-reitit)
       (c/context "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
+      (c/context "/api/henkilo" [] aitu.rest-api.henkilo/raportti-reitit)
       (c/context "/api/henkilo" [] (wrap-tarkasta-csrf-token aitu.rest-api.henkilo/reitit))
       (c/context "/api/kayttaja" [] (wrap-tarkasta-csrf-token aitu.rest-api.kayttaja/reitit))
       (c/context "/api/koulutusala" [] (wrap-tarkasta-csrf-token aitu.rest-api.koulutusala/reitit))
