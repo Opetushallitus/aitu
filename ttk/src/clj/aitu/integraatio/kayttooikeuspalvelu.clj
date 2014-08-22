@@ -58,8 +58,8 @@
                              :etunimi etunimi
                              :sukunimi (or sukunimi "")
                              :rooli rooli})))
-                         (log/warn "Roolin" rooli "ryhmää" roolin-ryhma-dn
-                                   "ei löytynyt, ei lueta roolin käyttäjiä"))))))
+                      (log/warn "Roolin" rooli "ryhmää" roolin-ryhma-dn
+                                "ei löytynyt, ei lueta roolin käyttäjiä"))))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
   (fn []
