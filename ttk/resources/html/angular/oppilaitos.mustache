@@ -1,4 +1,5 @@
 {{=[[ ]]=}}
+[[#i18n.yleiset]]
 [[#i18n.oppilaitokset]]
 <h1>{{oppilaitos.nimi}}</h1>
 
@@ -39,11 +40,22 @@
                     nayta-tutkinnot="true"
                     piilota-koulutustoimijat="true" >
 </sopimusten-listaus>
+<div>
+  <a id="sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/jarjestamissopimus/csv?oppilaitos={{oppilaitos.oppilaitoskoodi}}" target="_blank">[[lataa-oppilaitoksen-sopimukset]]</a>
+</div>
+<div>
+  <p><a class="ajax-link show-more" href="" ng-show="sopimukset.vanhat.length > 0" ng-click="naytaVanhatSopimukset = !naytaVanhatSopimukset">{{naytaVanhatSopimukset ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
 
-<vanhojen-sopimusten-listaus class="vanhat-sopimukset"
-                             otsikko="'[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]'"
-                             sopimukset="sopimukset.vanhat"
-                             nayta-tutkinnot="true"
-                             piilota-koulutustoimijat="true">
-</vanhojen-sopimusten-listaus>
+  <div ng-show="naytaVanhatSopimukset">
+    <sopimusten-listaus
+      otsikko="'[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]'"
+      sopimukset="sopimukset.vanhat"
+      nayta-tutkinnot="true"
+      piilota-koulutustoimijat="true">
+    </sopimusten-listaus><div>
+      <a id="aiemmat-sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/jarjestamissopimus/csv?oppilaitos={{oppilaitos.oppilaitoskoodi}}&voimassa=false" target="_blank">[[lataa-oppilaitoksen-aiemmat-sopimukset]]</a>
+    </div>
+  </div>
+</div>
 [[/i18n.oppilaitokset]]
+[[/i18n.yleiset]]

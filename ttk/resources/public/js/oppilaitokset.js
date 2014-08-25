@@ -81,6 +81,6 @@ angular.module('oppilaitokset', ['ngRoute'])
         $scope.sopimukset.nykyiset = $filter('voimassaOlevat')(oppilaitos.jarjestamissopimus, true);
         $scope.sopimukset.vanhat = $filter('voimassaOlevat')(oppilaitos.jarjestamissopimus, false);
       });
-
+      $scope.naytaVanhatSopimukset = false;
     }
   ]);
