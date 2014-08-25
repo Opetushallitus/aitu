@@ -24,7 +24,7 @@
         (log/error "Virheellinen XSRF-TOKEN.")
         {:status 401}))))
 
-(defn aseta-csrf-token []
+(defn aseta-csrf-token [service-path]
   (let [random (java.util.Random.)
         token (java.util.UUID. (.nextLong random) (.nextLong random))] ;;Käytetään randomia, jotta entropian loppuminen ei aiheuta ongelmia.
-    (str "XSRF-TOKEN=" token "; Path=/;")))
+    (str "XSRF-TOKEN=" token "; Path=" service-path ";")))

@@ -14,7 +14,7 @@
             [aitu.toimiala.kayttajaoikeudet
              :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
             [aitu.infra.status :refer [status]]
-            [aitu.asetukset :refer [build-id kehitysmoodi?]]
+            [aitu.asetukset :refer [build-id kehitysmoodi? service-path]]
             [aitu.toimiala.skeema :refer :all]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
@@ -129,7 +129,7 @@
                                         :yllapitaja yllapitaja?})
        :status 200
        :headers {"Content-Type" "text/html"
-                 "Set-cookie" (aseta-csrf-token)}})
+                 "Set-cookie" (aseta-csrf-token (-> asetukset :server :base-url service-path))}})
     (cu/defapi :status nil :get "/status" []
       (s/render-file "html/status"
                      (assoc (status)
