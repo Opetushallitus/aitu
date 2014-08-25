@@ -106,16 +106,6 @@
       (csv-download-response (muodosta-csv (tutkinto-arkisto/hae-toimikunnan-toimiala tkunta)
                                            toimialakenttien-jarjestys)
                              "toimiala.csv")))
-  (GET "/:tkunta/sopimukset" [tkunta]
-    (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta)
-                                           sopimuskenttien-jarjestys)
-                             "sopimukset.csv")))
-  (GET "/:tkunta/aiemmat-sopimukset" [tkunta]
-    (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta {:voimassa false})
-                                           sopimuskenttien-jarjestys)
-                             "aiemmat-sopimukset.csv")))
   (GET "/:tkunta/jasenet" [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (arkisto/hae-jasenet tkunta)

@@ -294,24 +294,6 @@
       (sql/values {:toimikunta tkunta
                    :tutkintotunnus (:tutkintotunnus tutkinto)}))))
 
-(defn hae-sopimukset
-  "Hakee toimikunnan sopimukset"
-  ([tkunta]
-    (hae-sopimukset tkunta {}))
-  ([tkunta ehdot]
-    (sql/select :jarjestamissopimus
-      (sql/join :inner :sopimus_ja_tutkinto (and (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid)
-                                                 (= :sopimus_ja_tutkinto.poistettu false)))
-      (sql/join :inner :tutkintoversio (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
-      (sql/join :inner :nayttotutkinto (= :tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus))
-      (sql/join :left :koulutustoimija (= :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus))
-      (sql/fields :jarjestamissopimus.alkupvm :jarjestamissopimus.loppupvm :jarjestamissopimus.sopimusnumero
-                  [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
-                  :tutkintoversio.peruste
-                  [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi] [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv])
-      (sql/where {:jarjestamissopimus.toimikunta tkunta
-                  :voimassa (ehdot :voimassa true)}))))
-
 (defn hae-jasenet
   "Hakee toimikunnan jäsenet"
   ([tkunta]
