@@ -43,7 +43,7 @@
 <div>
   <a id="sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/jarjestamissopimus/csv?oppilaitos={{oppilaitos.oppilaitoskoodi}}" target="_blank">[[lataa-oppilaitoksen-sopimukset]]</a>
 </div>
-<div>
+<div class="vanhat-sopimukset">
   <p><a class="ajax-link show-more" href="" ng-show="sopimukset.vanhat.length > 0" ng-click="naytaVanhatSopimukset = !naytaVanhatSopimukset">{{naytaVanhatSopimukset ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
 
   <div ng-show="naytaVanhatSopimukset">

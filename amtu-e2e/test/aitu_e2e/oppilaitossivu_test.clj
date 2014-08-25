@@ -30,7 +30,7 @@
 
 (defn oppilaitossivu [id] (str "/fi/#/oppilaitos/" id "/tiedot"))
 
-(def nayta-vanhat-selector "a[ng-click=\"toggleNaytaVanhat()\"]")
+(def nayta-vanhat-selector "a[ng-click='naytaVanhatSopimukset = !naytaVanhatSopimukset']")
 
 (defn sopimuslista [lista]
   (into #{}
