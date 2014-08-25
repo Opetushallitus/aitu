@@ -16,7 +16,8 @@
   (:require [compojure.core :as c]
             [korma.db :as db]
             [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response sallittu-jos]]
-            [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin]]
+            [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin csv-download-response]]
+            [aitu.util :refer [muodosta-csv]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]
             [valip.predicates :refer [present?]]
@@ -54,6 +55,15 @@
     (jarjestamissopimus/taydenna-sopimus (arkisto/hae jarjestamissopimusid))
     :vanhentunut
     not))
+
+(def sopimuskenttien-jarjestys
+  [:sopimusnumero :toimikunta_nimi_fi :toimikunta_nimi_sv :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
+
+(c/defroutes raportti-reitit
+  (cu/defapi :yleinen-rest-api nil :get "/csv" req
+    (csv-download-response (muodosta-csv (arkisto/hae-sopimukset-csv (assoc (:params req) :avaimet sopimuskenttien-jarjestys))
+                                           sopimuskenttien-jarjestys)
+                             "sopimukset.csv")))
 
 (c/defroutes reitit
   (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
@@ -108,7 +118,7 @@
 
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
     (sallittu-jos (sallittu-tiedostotyyppi? (:content-type file))
-    
+
       (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
             sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
             jarjestamissopimusid_sopimus_ja_tutkinto (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int)
@@ -129,12 +139,12 @@
 
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/liite/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
     (sallittu-jos (sallittu-tiedostotyyppi? (:content-type file))
-    
+
       (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
         sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
         jarjestamissopimusid_sopimus_ja_tutkinto (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int)
         _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
-      
+
         (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
           (file-upload-response (arkisto/lisaa-liite-tutkinnolle! sopimus_ja_tutkinto_id_int file))))))
 
