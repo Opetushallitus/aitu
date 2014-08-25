@@ -97,6 +97,7 @@ angular.module('tutkinnot', ['ngRoute'])
           $scope.sopimukset.vanhat = [];
         }
       });
+      $scope.naytaVanhatTutkinnot = false;
     }]
   )
 
