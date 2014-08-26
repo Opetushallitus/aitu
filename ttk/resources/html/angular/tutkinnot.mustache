@@ -21,6 +21,10 @@
     <div class="table-cell"><a href="#/tutkinto/{{hakutulos.tutkintotunnus}}">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
     <div class="table-cell">{{hakutulos.opintoala_nimi | lokalisoi:hakutulos:'opintoala_nimi'}}</div>
   </hakutulokset>
+  <div>
+    <a ng-href="[[base-url]]/api/tutkinto/csv?nimi={{tutkintoHakuehto.nimi}}&voimassaolo={{tutkintoHakuehto.voimassaolo}}"
+       id="tutkinnot-linkki" class="liite-linkki" target="_blank">[[lataa-tutkinnot]]</a>
+  </div>
 </div>
 
 [[/i18n.tutkinnot]]
