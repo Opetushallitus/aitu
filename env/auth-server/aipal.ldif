@@ -1,0 +1,117 @@
+dn: uid=T-X,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: T-X
+employeeNumber: OID.T-X
+givenName: Krista
+sn: Vastuukäyttäjä
+cn: Krista
+
+dn: uid=8086,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: 8086
+employeeNumber: OID.8086
+givenName: Pertti
+sn: Kompura
+cn: Pertti
+
+dn: uid=T-H,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: T-H
+employeeNumber: OID.T-H
+givenName: Pirjo
+sn: Oppilaitos-Käyttäjä
+cn: Pirjo
+
+dn: uid=68000,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: 68000
+employeeNumber: OID.68000
+givenName: Mirka
+sn: Otorola
+cn: Mirka
+
+dn: uid=T-700,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: T-700
+employeeNumber: OID.T-700
+givenName: Uolevi
+sn: Katselija
+cn: Uolevi
+
+dn: uid=T-101,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: T-101
+employeeNumber: OID.T-101
+givenName: Aarno
+sn: Oppilaitos-Katselija
+cn: Aarno
+
+dn: uid=6502,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: 6502
+employeeNumber: OID.6502
+givenName: Carl
+sn: Mosse
+cn: Carl
+
+dn: uid=T-850,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: T-850
+employeeNumber: OID.T-850
+givenName: Marjatta
+sn: Toimikunta-Katselija
+cn: Marjatta
+
+dn: cn=APP_AIPAL_READ_UPDATE_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
+objectclass: groupOfUniqueNames
+objectclass: top
+cn: APP_AIPAL_READ_UPDATE_1.2.246.562.10.2013121312395140176502
+uniqueMember: uid=T-X,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=T-H,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=8086,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=68000,ou=People,dc=opintopolku,dc=fi
+
+dn: cn=APP_AIPAL_CRUD_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
+objectclass: groupOfUniqueNames
+objectclass: top
+cn: APP_AIPAL_CRUD_1.2.246.562.10.2013121312395140176502
+uniqueMember: uid=T-1001,ou=People,dc=opintopolku,dc=fi
+
+dn: cn=APP_AIPAL_READ_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
+objectclass: groupOfUniqueNames
+objectclass: top
+cn: APP_AIPAL_READ_1.2.246.562.10.2013121312395140176502
+uniqueMember: uid=T-800,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=T-700,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=T-101,ou=People,dc=opintopolku,dc=fi
+uniqueMember: uid=6502,ou=People,dc=opintopolku,dc=fi
+
+dn: cn=APP_AIPAL_READ_1.2.246.562.10.59113820717,ou=Groups,dc=opintopolku,dc=fi
+objectclass: groupOfUniqueNames
+objectclass: top
+cn: APP_AIPAL_READ_1.2.246.562.10.59113820717
+uniqueMember: uid=T-850,ou=People,dc=opintopolku,dc=fi

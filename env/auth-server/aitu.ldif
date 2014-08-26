@@ -22,9 +22,9 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: aitunpaakayttaja
 employeeNumber: OID.aitunpaakayttaja
-givenName: Paakayttaja
-sn: USER
-cn: ROOT
+givenName: Pekka
+sn: Pääkäyttäjä
+cn: Pekka
 
 dn: uid=aitunkayttaja,ou=People,dc=opintopolku,dc=fi
 objectclass: top
@@ -33,9 +33,9 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: aitunkayttaja
 employeeNumber: OID.aitunkayttaja
-givenName: Kayttaja
-sn: USER
-cn: ROOT
+givenName: Kalle
+sn: Käyttäjä
+cn: Kalle
 
 dn: uid=T-800,ou=People,dc=opintopolku,dc=fi
 objectclass: top
@@ -44,9 +44,9 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: T-800
 employeeNumber: OID.T-800
-givenName: Arska Raaka
-sn: USER
-cn: ROOT
+givenName: Arska
+sn: Raaka
+cn: Arska
 
 dn: uid=T-1001,ou=People,dc=opintopolku,dc=fi
 objectclass: top
@@ -55,9 +55,9 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: T-1001
 employeeNumber: OID.T-1001
-givenName: Ivan Ivanovits
-sn: USER
-cn: ROOT
+givenName: Ivan
+sn: Ivanovits
+cn: Ivan
 
 dn: uid=osoitepalvelu,ou=People,dc=opintopolku,dc=fi
 objectclass: top
@@ -66,8 +66,8 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: osoitepalvelu
 employeeNumber: OID.osoitepalvelu
-sn: USER
-cn: ROOT
+sn: osoitepalvelu
+cn: osoitepalvelu
 
 dn: cn=APP_AITU_READ_UPDATE_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames

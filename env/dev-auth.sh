@@ -37,3 +37,6 @@ until ldapmodify -h localhost -p 389 -D "cn=aituserv,ou=People,dc=opintopolku,dc
   echo "Waiting for LDAP server..."
   sleep 10
 done
+
+# load AIPAL ldif
+ldapmodify -h localhost -p 389 -D "cn=aituserv,ou=People,dc=opintopolku,dc=fi" -w salasana -a -f /env/auth-server/aipal.ldif
