@@ -72,3 +72,26 @@
                           :siirtymaajan_loppupvm (time/local-date 1901 1 1)})
   (is (= (set (map :tutkintotunnus (arkisto/hae-ehdoilla {:voimassa "kaikki"})))
          #{"T1" "T2"})))
+
+(deftest ^:integraatio hae-ehdoilla-nimi
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA"}
+                                {:opintoalakoodi "OA"})
+  (lisaa-tutkinto! {:tutkintotunnus "T1"
+                    :nimi_fi "foo bar baz"
+                    :opintoala "OA"
+                    :uusin_versio_id 1})
+  (lisaa-tutkintoversio! {:tutkintoversio_id 1
+                          :tutkintotunnus "T1"})
+  (lisaa-tutkinto! {:tutkintotunnus "T2"
+                    :nimi_sv "FÅÅ BAR BÅZ"
+                    :opintoala "OA"
+                    :uusin_versio_id 2})
+  (lisaa-tutkintoversio! {:tutkintoversio_id 2
+                          :tutkintotunnus "T2"})
+  (lisaa-tutkinto! {:tutkintotunnus "T3"
+                    :opintoala "OA"
+                    :uusin_versio_id 3})
+  (lisaa-tutkintoversio! {:tutkintoversio_id 3
+                          :tutkintotunnus "T3"})
+  (is (= (set (map :tutkintotunnus (arkisto/hae-ehdoilla {:nimi "bar"})))
+         #{"T1" "T2"})))
