@@ -95,3 +95,15 @@
                           :tutkintotunnus "T3"})
   (is (= (set (map :tutkintotunnus (arkisto/hae-ehdoilla {:nimi "bar"})))
          #{"T1" "T2"})))
+
+(deftest ^:integraatio hae-ehdoilla-avaimet
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA"}
+                                {:opintoalakoodi "OA"})
+  (lisaa-tutkinto! {:tutkintotunnus "T1"
+                    :nimi_fi "foo bar baz"
+                    :opintoala "OA"
+                    :uusin_versio_id 1})
+  (lisaa-tutkintoversio! {:tutkintoversio_id 1
+                          :tutkintotunnus "T1"})
+  (is (= (arkisto/hae-ehdoilla {:avaimet [:tutkintotunnus]})
+         [{:tutkintotunnus "T1"}])))
