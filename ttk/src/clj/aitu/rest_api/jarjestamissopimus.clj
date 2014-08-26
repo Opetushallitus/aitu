@@ -60,10 +60,13 @@
   [:sopimusnumero :toimikunta_nimi_fi :toimikunta_nimi_sv :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
 
 (c/defroutes raportti-reitit
-  (cu/defapi :yleinen-rest-api nil :get "/csv" req
-    (csv-download-response (muodosta-csv (arkisto/hae-sopimukset-csv (assoc (:params req) :avaimet sopimuskenttien-jarjestys))
+  (cu/defapi :yleinen-rest-api nil :get "/csv" [voimassa :as req]
+    (let [voimassa (not= voimassa "false")]
+      (csv-download-response (muodosta-csv (arkisto/hae-sopimukset-csv (assoc (:params req)
+                                                                              :avaimet sopimuskenttien-jarjestys
+                                                                              :voimassa voimassa))
                                            sopimuskenttien-jarjestys)
-                             "sopimukset.csv")))
+                             "sopimukset.csv"))))
 
 (c/defroutes reitit
   (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
