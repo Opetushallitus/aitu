@@ -87,7 +87,7 @@
 
 (def toimikuntakenttien-jarjestys [:nimi_fi :nimi_sv :diaarinumero :tilikoodi :voimassa :kielisyys])
 
-(def toimialakenttien-jarjestys [:opintoala_fi :opintoala_sv :nayttotutkinto_fi :nayttotutkinto_sv])
+(def toimialakenttien-jarjestys [:opintoala_fi :opintoala_sv :tutkinto_fi :tutkinto_sv])
 
 (def sopimuskenttien-jarjestys
   [:sopimusnumero :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])

@@ -57,7 +57,7 @@
     not))
 
 (def sopimuskenttien-jarjestys
-  [:sopimusnumero :toimikunta_nimi_fi :toimikunta_nimi_sv :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
+  [:sopimusnumero :toimikunta_fi :toimikunta_sv :tutkinto_fi :tutkinto_sv :peruste :koulutustoimija_fi :koulutustoimija_sv :alkupvm :loppupvm])
 
 (c/defroutes raportti-reitit
   (cu/defapi :yleinen-rest-api nil :get "/csv" [voimassa :as req]

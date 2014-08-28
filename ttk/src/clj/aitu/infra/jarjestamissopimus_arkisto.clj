@@ -482,10 +482,10 @@
     (sql/join :inner :tutkintotoimikunta (= :jarjestamissopimus.toimikunta :tutkintotoimikunta.tkunta))
     (sql/join :left :koulutustoimija (= :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus))
     (sql/fields :jarjestamissopimus.alkupvm :jarjestamissopimus.loppupvm :jarjestamissopimus.sopimusnumero
-                [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv]
                 :tutkintoversio.peruste
-                [:tutkintotoimikunta.nimi_fi :toimikunta_nimi_fi] [:tutkintotoimikunta.nimi_sv :toimikunta_nimi_sv]
-                [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi] [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv])
+                [:tutkintotoimikunta.nimi_fi :toimikunta_fi] [:tutkintotoimikunta.nimi_sv :toimikunta_sv]
+                [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv])
     (sql/where (merge {:jarjestamissopimus.voimassa voimassa}
                       (when toimikunta {:jarjestamissopimus.toimikunta toimikunta})
                       (when koulutustoimija {:jarjestamissopimus.koulutustoimija koulutustoimija})

@@ -253,8 +253,8 @@
       (sql/with opintoala))
     (sql/fields [:opintoala.selite_fi :opintoala_fi]
                 [:opintoala.selite_sv :opintoala_sv]
-                [:nayttotutkinto.nimi_fi :nayttotutkinto_fi]
-                [:nayttotutkinto.nimi_sv :nayttotutkinto_sv])
+                [:nayttotutkinto.nimi_fi :tutkinto_fi]
+                [:nayttotutkinto.nimi_sv :tutkinto_sv])
     (sql/where {:toimikunta tkunta})
     (sql/order :opintoala.selite_fi)
     (sql/order :nayttotutkinto.nimi_fi)))
