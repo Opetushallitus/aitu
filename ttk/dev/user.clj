@@ -63,6 +63,7 @@
 
 (defmacro with-testikayttaja
   [& body]
-  `(binding [oph.korma.korma-auth/*current-user-oid* (atom oph.korma.korma-auth/default-test-user-oid)
+  `(binding [oph.korma.korma-auth/*current-user-oid* (promise)
              oph.korma.korma-auth/*current-user-uid* oph.korma.korma-auth/default-test-user-uid]
+     (deliver oph.korma.korma-auth/*current-user-oid* oph.korma.korma-auth/default-test-user-oid)
      ~@body))
