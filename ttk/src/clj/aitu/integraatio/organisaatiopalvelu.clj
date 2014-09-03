@@ -149,8 +149,7 @@
         (nil? vanha-kt) (do
                           (log/info "Uusi koulutustoimija: " (:ytunnus uusi-kt))
                           (koulutustoimija-arkisto/lisaa! uusi-kt)
-                          ;; TODO: takaisin käyttöön kun integraatio on asennettu tuotantoon
-                          #_(organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :koulutustoimija y-tunnus))
+                          (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :koulutustoimija y-tunnus))
         (not= vanha-kt uusi-kt) (do
                                   (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
                                   (koulutustoimija-arkisto/paivita! uusi-kt))))))
@@ -170,8 +169,7 @@
         (nil? vanha-oppilaitos) (do
                                   (log/info "Uusi oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
                                   (oppilaitos-arkisto/lisaa! uusi-oppilaitos)
-                                  ;; TODO: takaisin käyttöön kun integraatio on asennettu tuotantoon
-                                  #_(organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :oppilaitos oppilaitoskoodi))
+                                  (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :oppilaitos oppilaitoskoodi))
         (not= vanha-oppilaitos uusi-oppilaitos) (do
                                                   (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
                                                   (oppilaitos-arkisto/paivita! uusi-oppilaitos))))))
@@ -193,8 +191,7 @@
         (nil? vanha-toimipaikka) (do
                                    (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                    (oppilaitos-arkisto/lisaa-toimipaikka! uusi-toimipaikka)
-                                   ;; TODO: takaisin käyttöön kun integraatio on asennettu tuotantoon
-                                   #_(organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :toimipaikka toimipaikkakoodi))
+                                   (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :toimipaikka toimipaikkakoodi))
         (not= vanha-toimipaikka uusi-toimipaikka) (do
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
