@@ -26,13 +26,10 @@
 
 (defn luo-testidata
   []
-  (sql/exec-raw (str "insert into oppilaitos("
-                  "oppilaitoskoodi,"
-                  "nimi"
-                  ")values("
-                  "'OP1',"
-                  "'Testioppilaitoksen nimi'"
-                  ")")))
+  (lisaa-koulutustoimija! {:ytunnus "KT1"})
+  (lisaa-oppilaitos! {:koulutustoimija "KT1"
+                      :oppilaitoskoodi "OP1"
+                      :nimi "Testioppilaitoksen nimi"}))
 
 (defn aseta-sopimuksen-toimikunta-vanhentuneeksi
   []
@@ -137,13 +134,14 @@
       (is (> osumia osumia-alussa)))))
 
 (deftest ^:integraatio hae-oppilaitoskoodilla-test
-  (let [oppilaitos {:oppilaitoskoodi "12345" :nimi "Oppilaitos O"}
+  (lisaa-koulutustoimija! {:ytunnus "KT1"})
+  (let [oppilaitos {:oppilaitoskoodi "12345"
+                    :nimi "Oppilaitos O"
+                    :koulutustoimija "KT1"}
         _ (arkisto/lisaa! oppilaitos)]
     (testing "Oppilaitos löytyy haettaessa oppilaitoskoodilla"
-      ;; kun
-      (let [haettu-oppilaitos (select-keys (hae-ja-taydenna "12345") [:oppilaitoskoodi :nimi])]
-        ;; niin
-        (is (= haettu-oppilaitos oppilaitos))))))
+      (is (= (select-keys (hae-ja-taydenna "12345") [:oppilaitoskoodi :nimi])
+             {:oppilaitoskoodi "12345", :nimi "Oppilaitos O"})))))
 
 (deftest ^:integraatio hae-oppilaitos-test
   (jarjestamissopimus-arkisto-test/lisaa-testidata!)
