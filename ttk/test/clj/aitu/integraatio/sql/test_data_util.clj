@@ -150,36 +150,55 @@
   (-> (merge default-jasen jasen)
     toimikunta-arkisto/lisaa-jasen!))
 
-(defn lisaa-koulutustoimija! []
-  (let [koulutustoimija {:ytunnus "KT1"
-                         :nimi_fi "Koulutustoimija"}]
-    (doto koulutustoimija
+(let [seuraava-indeksi (atom 0)]
+  (defn default-koulutustoimija []
+    (let [i (swap! seuraava-indeksi inc)]
+      {:ytunnus (str i)
+       :nimi_fi "Testikoulutustoimijan nimi"
+       :nimi_sv "Testikoulutustoimijan nimi (sv)"
+       :sahkoposti "koulutustoimija@email.fi"})))
+
+(defn lisaa-koulutustoimija!
+  ([] (lisaa-koulutustoimija! nil))
+  ([koulutustoimija]
+    (doto (merge (default-koulutustoimija) koulutustoimija)
       koulutustoimija-arkisto/lisaa!)))
 
-(defn lisaa-oppilaitos! [koulutustoimija]
-  (let [oppilaitos {:oppilaitoskoodi "ABC12"
-                    :nimi "Oppilaitos"
-                    :koulutustoimija (:ytunnus koulutustoimija)}]
-    (doto oppilaitos
-      oppilaitos-arkisto/lisaa!)))
+(let [seuraava-indeksi (atom 0)]
+  (defn default-oppilaitos []
+    (let [i (swap! seuraava-indeksi inc)]
+      {:oppilaitoskoodi (str i)
+       :nimi "Testioppilaitoksen nimi"
+       :sahkoposti "oppilaitos@email.fi"})))
+
+(defn lisaa-oppilaitos! [oppilaitos]
+  (doto (merge (default-oppilaitos) oppilaitos)
+    oppilaitos-arkisto/lisaa!))
+
+(let [seuraava-indeksi (atom 0)]
+  (defn default-jarjestamissopimus []
+    (let [i (swap! seuraava-indeksi inc)]
+      {:jarjestamissopimusid i
+       :sopimusnumero (str "ABCDEF01234567890" i)
+       :alkupvm (time/date-time 2011 1 1)
+       :voimassa true})))
 
 (defn lisaa-jarjestamissopimus!
+  ([koulutustoimija oppilaitos toimikunta jarjestamissopimus]
+    (jarjestamissopimus-arkisto/lisaa!
+      (merge (default-jarjestamissopimus)
+             {:koulutustoimija (:ytunnus koulutustoimija)
+              :tutkintotilaisuuksista_vastaava_oppilaitos (:oppilaitoskoodi oppilaitos)
+              :toimikunta (:tkunta toimikunta)
+              :sopijatoimikunta (:tkunta toimikunta)}
+             jarjestamissopimus)))
   ([koulutustoimija oppilaitos jarjestamissopimus]
-    (let [toimikunta (lisaa-toimikunta! {:tkunta "T12345"})]
-      (jarjestamissopimus-arkisto/lisaa!
-        (merge {:jarjestamissopimusid 1
-                :sopimusnumero "ABCDEF01234567890"
-                :alkupvm (time/date-time 2011 1 1)
-                :koulutustoimija (:ytunnus koulutustoimija)
-                :tutkintotilaisuuksista_vastaava_oppilaitos (:oppilaitoskoodi oppilaitos)
-                :toimikunta (:tkunta toimikunta)
-                :sopijatoimikunta (:tkunta toimikunta)}
-               jarjestamissopimus))))
+    (lisaa-jarjestamissopimus! koulutustoimija oppilaitos (lisaa-toimikunta!) jarjestamissopimus))
   ([koulutustoimija oppilaitos]
     (lisaa-jarjestamissopimus! koulutustoimija oppilaitos {}))
   ([jarjestamissopimus]
     (let [koulutustoimija (lisaa-koulutustoimija!)
-          oppilaitos (lisaa-oppilaitos! koulutustoimija)]
+          oppilaitos (lisaa-oppilaitos! {:koulutustoimija (:ytunnus koulutustoimija)})]
       (lisaa-jarjestamissopimus! koulutustoimija oppilaitos jarjestamissopimus)))
   ([]
     (lisaa-jarjestamissopimus! {})))
@@ -213,7 +232,7 @@
 (defn lisaa-osaamisaloja-koskeva-sopimus! [tutkinto->osaamisalat]
   (lisaa-koulutus-ja-opintoala!) ; lisaa-tutkinto! tarvitsee tämän
   (let [koulutustoimija (lisaa-koulutustoimija!)
-        oppilaitos (lisaa-oppilaitos! koulutustoimija)
+        oppilaitos (lisaa-oppilaitos! {:koulutustoimija (:ytunnus koulutustoimija)})
         sopimus (lisaa-jarjestamissopimus! koulutustoimija oppilaitos)
         {:keys [toimipaikkakoodi]} (lisaa-toimipaikka! oppilaitos)
         sopimus-tutkinto-liitokset
@@ -227,10 +246,12 @@
     (jarjestamissopimus-arkisto/paivita! sopimus sopimus-tutkinto-liitokset)
     sopimus))
 
-(def default-toimikausi {:toimikausi_id 1
-                         :alkupvm (time/local-date 2011 1 1)
-                         :loppupvm (time/local-date 2211 1 1)
-                         :voimassa true})
+(def default-toimikausi (let [seuraava-indeksi (atom 0)]
+                          (fn []
+                            {:toimikausi_id (+ 1000 (swap! seuraava-indeksi inc))
+                             :alkupvm (time/local-date 2011 1 1)
+                             :loppupvm (time/local-date 2211 1 1)
+                             :voimassa true})))
 
 (defn lisaa-toimikausi! [t]
-  (sql/insert toimikausi (sql/values (merge default-toimikausi t))))
+  (sql/insert toimikausi (sql/values (merge (default-toimikausi) t))))

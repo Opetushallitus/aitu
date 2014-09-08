@@ -14,7 +14,7 @@
             [aitu.toimiala.kayttajaoikeudet
              :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
             [aitu.infra.status :refer [status]]
-            [aitu.asetukset :refer [build-id kehitysmoodi?]]
+            [aitu.asetukset :refer [build-id kehitysmoodi? service-path]]
             [aitu.toimiala.skeema :refer :all]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
@@ -91,16 +91,19 @@
     (swaggered "AITU"
       (c/context "/api/ttk" [] aitu.rest-api.ttk/raportti-reitit)
       (c/context "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
+      (c/context "/api/henkilo" [] aitu.rest-api.henkilo/raportti-reitit)
       (c/context "/api/henkilo" [] (wrap-tarkasta-csrf-token aitu.rest-api.henkilo/reitit))
       (c/context "/api/kayttaja" [] (wrap-tarkasta-csrf-token aitu.rest-api.kayttaja/reitit))
       (c/context "/api/koulutusala" [] (wrap-tarkasta-csrf-token aitu.rest-api.koulutusala/reitit))
       (c/context "/api/opintoala" [] (wrap-tarkasta-csrf-token aitu.rest-api.opintoala/reitit))
+      (c/context "/api/tutkinto" [] aitu.rest-api.tutkinto/raportti-reitit)
       (c/context "/api/tutkinto" [] (wrap-tarkasta-csrf-token aitu.rest-api.tutkinto/reitit))
       (c/context "/api/toimikausi" [] (wrap-tarkasta-csrf-token aitu.rest-api.toimikausi/reitit))
       (c/context "/api/oppilaitos" [] aitu.rest-api.oppilaitos/raportti-reitit)
       (c/context "/api/oppilaitos" [] (wrap-tarkasta-csrf-token aitu.rest-api.oppilaitos/reitit))
       (c/context "/api/koulutustoimija" [] aitu.rest-api.koulutustoimija/raportti-reitit)
       (c/context "/api/koulutustoimija" [] (wrap-tarkasta-csrf-token aitu.rest-api.koulutustoimija/reitit))
+      (c/context "/api/jarjestamissopimus" [] aitu.rest-api.jarjestamissopimus/raportti-reitit)
       (c/context "/api/jarjestamissopimus" [] aitu.rest-api.jarjestamissopimus/liite-lataus-reitit)
       (c/context "/api/jarjestamissopimus" [] (wrap-tarkasta-csrf-token aitu.rest-api.jarjestamissopimus/reitit))
       (c/context "/api/tutkintorakenne" []  (wrap-tarkasta-csrf-token aitu.rest-api.tutkintorakenne/reitit))
@@ -128,7 +131,7 @@
                                         :yllapitaja yllapitaja?})
        :status 200
        :headers {"Content-Type" "text/html"
-                 "Set-cookie" (aseta-csrf-token)}})
+                 "Set-cookie" (aseta-csrf-token (-> asetukset :server :base-url service-path))}})
     (cu/defapi :status nil :get "/status" []
       (s/render-file "html/status"
                      (assoc (status)

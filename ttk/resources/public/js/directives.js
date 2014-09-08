@@ -121,25 +121,6 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       link: function(scope) {}
     };
   })
-  .directive('vanhojenSopimustenListaus', function(){
-    return {
-      restrict: 'E',
-      replace: true,
-      scope : {
-        sopimukset : '=',
-        naytaTutkinnot : '=',
-        otsikko : '=',
-        piilotaKoulutustoimijat : '='
-      },
-      templateUrl : 'template/vanhojen-sopimusten-listaus',
-      link: function(scope) {
-        scope.naytaVanhatSopimukset = false;
-        scope.toggleNaytaVanhat = function() {
-          scope.naytaVanhatSopimukset = !scope.nautaVanhatSopimukset;
-        };
-      }
-    };
-  })
   .directive('enumValikko', ['i18n', 'EnumResource', '$compile', function (i18n, EnumResource, $compile) {
 
     var template = '<select ng-model="arvo" ng-required="pakollinen" ng-options="arvo.nimi as arvo.label for arvo in arvot">';

@@ -35,7 +35,7 @@
             oph.korma.korma
 
             [oph.common.infra.print-wrapper :refer [debug-request log-request-wrapper]]
-            [aitu.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus build-id kehitysmoodi?]]
+            [aitu.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus build-id kehitysmoodi? service-path]]
             [oph.common.infra.i18n :as i18n]
             [aitu.infra.auth-wrapper :as auth]
             [clj-cas-client.core :refer [cas]]
@@ -60,10 +60,6 @@
       (empty? base-url) (str "http://localhost:" port "/")
       (.endsWith base-url "/") base-url
       :else (str base-url "/"))))
-
-(defn service-path [base-url]
-  (let [path (drop 3 (clojure.string/split base-url #"/"))]
-    (str "/" (clojure.string/join "/" path))))
 
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
@@ -123,7 +119,7 @@
                                   :secure (not (:development-mode asetukset))}})
     (wrap-cas-single-sign-out session-store)
     wrap-poikkeusten-logitus)))
-                      
+
 (defn kaynnista! [oletus-asetukset]
   (try
     (let [asetukset (lue-asetukset oletus-asetukset)

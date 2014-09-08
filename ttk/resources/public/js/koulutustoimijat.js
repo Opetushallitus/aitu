@@ -81,5 +81,7 @@ angular.module('koulutustoimijat', ['ngRoute'])
         $scope.sopimukset.nykyiset = $filter('voimassaOlevat')(koulutustoimija.jarjestamissopimus, true);
         $scope.sopimukset.vanhat = $filter('voimassaOlevat')(koulutustoimija.jarjestamissopimus, false);
       });
+
+      $scope.naytaVanhatSopimukset = false;
     }
   ]);

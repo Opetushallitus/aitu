@@ -136,3 +136,7 @@
       (tulkitse-asetukset)
       (deep-merge oletukset)
       (coerce-asetukset))))
+
+(defn service-path [base-url]
+  (let [path (drop 3 (clojure.string/split base-url #"/"))]
+    (str "/" (clojure.string/join "/" path))))

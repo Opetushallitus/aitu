@@ -112,7 +112,7 @@
   </div>
 
   <div>
-    <a id="sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/ttk/{{toimikunta.tkunta}}/sopimukset" target="_blank">[[lataa-toimikunnan-sopimukset]]</a>
+    <a id="sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/jarjestamissopimus/csv?toimikunta={{toimikunta.tkunta}}" target="_blank">[[lataa-toimikunnan-sopimukset]]</a>
   </div>
 
   <div>
@@ -128,7 +128,7 @@
         </sopimusten-listaus>
 
         <div>
-          <a id="aiemmat-sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/ttk/{{toimikunta.tkunta}}/aiemmat-sopimukset" target="_blank">[[lataa-toimikunnan-aiemmat-sopimukset]]</a>
+          <a id="aiemmat-sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/jarjestamissopimus/csv?toimikunta={{toimikunta.tkunta}}&voimassa=false" target="_blank">[[lataa-toimikunnan-aiemmat-sopimukset]]</a>
         </div>
       </div>
     </div>

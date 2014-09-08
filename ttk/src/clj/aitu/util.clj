@@ -24,7 +24,7 @@
             [clojure.tools.logging :as log]
             [schema.core :as s]
             [clojure-csv.core :refer [write-csv]]))
- 
+
 (defn update-in-if-exists [m [k & ks] f & args]
   (if (and (map? m) (contains? m k))
     (if ks
@@ -72,10 +72,55 @@
   (into (sorted-map-by #(keyword-vertailu jarjestys %1 %2)) m))
 
 (defn otsikot-ja-sarakkeet-jarjestykseen [m kenttien-jarjestys]
-  (into [(for [[k _] (jarjesta-avaimet (first m) kenttien-jarjestys)] (name k))]
+  (into [(for [[k _] (jarjesta-avaimet (first m) kenttien-jarjestys)] k)]
         (for [rivi m]
           (for [[_ v] (jarjesta-avaimet rivi kenttien-jarjestys)]
             (str v)))))
 
+(def sarakkeiden-otsikot {:alkupvm "Alkupäivämäärä"
+                          :diaarinumero "Diaarinumero"
+                          :edustus "Edustus"
+                          :etunimi "Etunimi"
+                          :jarjesto_nimi_fi "Järjestö suomeksi"
+                          :jarjesto_nimi_sv "Järjestö ruotsiksi"
+                          :jasenyys_alku "Jäsenyyden alku"
+                          :jasenyys_loppu "Jäsenyyden loppu"
+                          :kielisyys "Kielisyys"
+                          :koulutustoimija_fi "Koulutustoimija suomeksi"
+                          :koulutustoimija_sv "Koulutustoimija ruotsiksi"
+                          :loppupvm "Loppupäivämäärä"
+                          :nimi "Nimi"
+                          :nimi_fi "Nimi suomeksi"
+                          :nimi_sv "Nimi ruotsiksi"
+                          :opintoala_fi "Opintoala suomeksi"
+                          :opintoala_sv "Opintoala ruotsiksi"
+                          :oppilaitoskoodi "Oppilaitoskoodi"
+                          :osoite "Osoite"
+                          :peruste "Tutkinnon peruste"
+                          :postinumero "Postinumero"
+                          :postitoimipaikka "Postitoimipaikka"
+                          :puhelin "Puhelinnumero"
+                          :rooli "Rooli"
+                          :sahkoposti "Sähköposti"
+                          :sopimusnumero "Sopimusnumero"
+                          :sopimusten_maara "Sopimusten määrä"
+                          :sukunimi "Sukunimi"
+                          :tilikoodi "Tilikoodi"
+                          :toimikunta_fi "Toimikunta suomeksi"
+                          :toimikunta_sv "Toimikunta ruotsiksi"
+                          :tutkinto_fi "Tutkinto suomeksi"
+                          :tutkinto_sv "Tutkinto ruotsiksi"
+                          :tutkintotunnus "Tutkintotunnus"
+                          :voimassa "Voimassa"
+                          :ytunnus "Y-tunnus"})
+
 (defn muodosta-csv [data kenttien-jarjestys]
-  (write-csv (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys) :delimiter \;))
+  (write-csv (let [[otsikko-avaimet & arvot] (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys)]
+               (into [(for [oa otsikko-avaimet]
+                        (or (sarakkeiden-otsikot oa)
+                            (do
+                              (log/error (str "CSV-tiedoston sarakkeen otsikkoa ei löytynyt avaimella "
+                                              "'" (name oa) "'"))
+                              (name oa))))]
+                     arvot))
+             :delimiter \;))

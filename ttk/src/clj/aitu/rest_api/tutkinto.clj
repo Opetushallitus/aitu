@@ -19,8 +19,21 @@
             [aitu.toimiala.tutkinto :as tutkinto]
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
             [aitu.compojure-util :as cu]
+            [aitu.rest-api.http-util :refer [csv-download-response]]
+            [aitu.util :refer [muodosta-csv]]
             [oph.common.util.http-util :refer [cachable-json-response json-response]]
             [korma.db :as db]))
+
+(def tutkintokenttien-jarjestys [:tutkintotunnus :nimi_fi :nimi_sv :opintoala_fi :opintoala_sv])
+
+(c/defroutes raportti-reitit
+  (c/GET "/csv" req
+    (cu/autorisoitu-transaktio :yleinen-rest-api nil
+      (csv-download-response
+        (muodosta-csv (arkisto/hae-ehdoilla
+                        (assoc (:params req) :avaimet tutkintokenttien-jarjestys))
+                      tutkintokenttien-jarjestys)
+        "tutkinnot.csv"))))
 
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/" [:as req]

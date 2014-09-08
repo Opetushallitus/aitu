@@ -49,7 +49,20 @@
 (deftest otsikot-ja-sarakkeet-jarjestykseen-test
   (let [jarjestys [:b :c]]
     (are [tulos data] (= tulos (otsikot-ja-sarakkeet-jarjestykseen data jarjestys))
-         [["b" "c"] ["b1" "c1"]] [{:c "c1" :b "b1"}]
-         [["b" "c"] ["b1" "c1"] ["b2" "c2"]] [{:c "c1" :b "b1"} {:c "c2" :b "b2"}]
-         [["b" "c" "a"] ["b1" "c1" "a1"]] [{:a "a1" :c "c1" :b "b1"}])))
+         [[:b :c] ["b1" "c1"]] [{:c "c1" :b "b1"}]
+         [[:b :c] ["b1" "c1"] ["b2" "c2"]] [{:c "c1" :b "b1"} {:c "c2" :b "b2"}]
+         [[:b :c :a] ["b1" "c1" "a1"]] [{:a "a1" :c "c1" :b "b1"}])))
+
+(deftest muodosta-csv-kayttaa-sarakkeiden-selvakielisia-otsikoita
+  (is (= (muodosta-csv [{:nimi_fi "foo", :nimi_sv "fåå"}] [:nimi_fi :nimi_sv])
+         "Nimi suomeksi;Nimi ruotsiksi\nfoo;fåå\n")))
+
+(deftest muodosta-csv-logittaa-virheen-jos-otsikkoa-ei-loydy
+  (let [log (atom [])]
+    (with-redefs [log/log* (fn [_ level _ message]
+                             (swap! log conj [level message]))]
+      (muodosta-csv [{:nimi_fi "foo", :asdf "asdf"}] [:nimi_fi :asdf])
+      (is (= (count @log) 1))
+      (is (= (first (first @log)) :error))
+      (is (re-matches #".*asdf.*" (second (first @log)))))))
 

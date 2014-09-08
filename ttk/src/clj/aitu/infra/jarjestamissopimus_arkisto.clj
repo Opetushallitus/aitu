@@ -470,3 +470,24 @@
       (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
     first
     :toimikunta))
+
+(defn hae-sopimukset-csv
+  "Hakee toimikunnan sopimukset"
+  [{:keys [toimikunta koulutustoimija oppilaitos tutkinto voimassa]}]
+  (sql/select :jarjestamissopimus
+    (sql/join :inner :sopimus_ja_tutkinto (and (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid)
+                                               (= :sopimus_ja_tutkinto.poistettu false)))
+    (sql/join :inner :tutkintoversio (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
+    (sql/join :inner :nayttotutkinto (= :tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus))
+    (sql/join :inner :tutkintotoimikunta (= :jarjestamissopimus.toimikunta :tutkintotoimikunta.tkunta))
+    (sql/join :left :koulutustoimija (= :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus))
+    (sql/fields :jarjestamissopimus.alkupvm :jarjestamissopimus.loppupvm :jarjestamissopimus.sopimusnumero
+                [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv]
+                :tutkintoversio.peruste
+                [:tutkintotoimikunta.nimi_fi :toimikunta_fi] [:tutkintotoimikunta.nimi_sv :toimikunta_sv]
+                [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv])
+    (sql/where (merge {:jarjestamissopimus.voimassa voimassa}
+                      (when toimikunta {:jarjestamissopimus.toimikunta toimikunta})
+                      (when koulutustoimija {:jarjestamissopimus.koulutustoimija koulutustoimija})
+                      (when oppilaitos {:jarjestamissopimus.tutkintotilaisuuksista_vastaava_oppilaitos oppilaitos})
+                      (when tutkinto {:nayttotutkinto.tutkintotunnus tutkinto})))))

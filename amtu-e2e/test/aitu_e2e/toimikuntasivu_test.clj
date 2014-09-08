@@ -57,6 +57,7 @@
 
 (def toimikuntasivu-testidata
   {:toimikunnat [{:nimi_fi "Ilmastointialan tutkintotoimikunta"
+                  :nimi_sv "Ilmastointialan tutkintotoimikunta (sv)"
                   :diaarinumero "98/11/543"
                   :toimiala "Toimiala 1"
                   :tilikoodi "9876"
@@ -230,7 +231,4 @@
     (with-webdriver
       (with-data toimikuntasivu-testidata
         (avaa (toimikuntasivu "98/11/543"))
-        (is (= (lataa-tiedosto-webdriverin-istunnossa (sopimukset-linkki))
-               (clojure.string/join "\n" ["sopimusnumero;tutkinto_nimi_fi;tutkinto_nimi_sv;peruste;koulutustoimija_nimi_fi;koulutustoimija_nimi_sv;alkupvm;loppupvm"
-                                          "123;Ilmastointialan tutkinto;Tutkinto (sv)1;;Ankkalinnan kaupunki;Koulutustoimija 1;2014-07-03;2099-01-01"
-                                          ""])))))))
+        (is (re-find #"Ilmastointialan tutkintotoimikunta;Ilmastointialan tutkintotoimikunta \(sv\)" (lataa-tiedosto-webdriverin-istunnossa (sopimukset-linkki))))))))

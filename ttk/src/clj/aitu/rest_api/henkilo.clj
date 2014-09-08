@@ -25,12 +25,21 @@
             [valip.predicates :refer [present? max-length]]
             [ring.util.response :refer [response]]
             [aitu.compojure-util :as cu]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [aitu.util :refer [muodosta-csv]]))
 
 (def henkilon-validointisaannot
   [[:etunimi present? :pakollinen]
    [:sukunimi present? :pakollinen]
    [:postinumero (max-length 5) :liian-pitka]])
+
+(def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka])
+
+(c/defroutes raportti-reitit
+  (cu/defapi :henkilo_haku nil :get "/csv" req
+    (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet henkilokenttien-jarjestys))
+                                         henkilokenttien-jarjestys)
+                           "henkilot.csv")))
 
 (c/defroutes reitit
   (cu/defapi :henkilo_lisays nil :post "/"
@@ -59,9 +68,9 @@
              :body (cheshire/generate-string uusi-henkilo)}))))
 
   (cu/defapi :henkilo_haku nil :get "/" [toimikausi :as req]
-      (let [henkilot (if (= toimikausi "nykyinen")
-        (arkisto/hae-nykyiset)
-        (arkisto/hae-kaikki))
+    (let [henkilot (if (= toimikausi "nykyinen")
+                     (arkisto/hae-nykyiset)
+                     (arkisto/hae-kaikki))
           cache-muokattu (get-cache-date req)
           henkilot-muokattu (->
                               (uusin-muokkausaika
@@ -70,11 +79,11 @@
                                 [:toimikunnat :muutettuaika]
                                 [:toimikunnat :toimikunta_muutettuaika])
                               (.withMillisOfSecond 0))]
-        (if (> 0 (compare cache-muokattu henkilot-muokattu))
-          {:status 200
-           :body (cheshire/generate-string henkilot)
-           :headers (get-cache-headers henkilot-muokattu)}
-          {:status 304})))
+      (if (> 0 (compare cache-muokattu henkilot-muokattu))
+        {:status 200
+         :body (cheshire/generate-string henkilot)
+         :headers (get-cache-headers henkilot-muokattu)}
+        {:status 304})))
 
   (cu/defapi :henkilo_haku nil :get "/:henkiloid" [henkiloid]
     (json-response (henkilo/taydenna-henkilo (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid)))))

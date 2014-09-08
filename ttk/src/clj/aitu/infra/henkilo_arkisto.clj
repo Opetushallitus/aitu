@@ -20,7 +20,8 @@
             [aitu.toimiala.skeema :refer [HenkiloTaiTiedot Henkilo]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
-            [aitu.auditlog :as auditlog])
+            [aitu.auditlog :as auditlog]
+            [clojure.string :refer [blank?]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn ^:test-api tyhjenna!
@@ -37,46 +38,42 @@
     (auditlog/henkilo-operaatio! :lisays (:henkiloid luotu-henkilo))
     luotu-henkilo))
 
-(defn ^:private pg-hae-jasenyydet
-  []
-  (sql/select jasenyys
-    (sql/fields :alkupvm :loppupvm :muutettuaika :henkiloid :rooli)
-    (sql/with tutkintotoimikunta
-      (sql/fields
-        :nimi_fi
-        :nimi_sv
-        :diaarinumero
-        :toimikausi_alku
-        :toimikausi_loppu
-        [:muutettuaika :toimikunta_muutettuaika]))))
+(defn ^:private pg-hae-jasenyydet-ehdoilla
+  [ehdot]
+  (let [toimikunta (str "%" (:toimikunta ehdot) "%")]
+    (sql/select jasenyys
+      (sql/fields :alkupvm :loppupvm :muutettuaika :henkiloid :rooli)
+      (sql/with tutkintotoimikunta
+        (sql/with toimikausi)
+        (sql/fields
+          :nimi_fi
+          :nimi_sv
+          :diaarinumero
+          :toimikausi_alku
+          :toimikausi_loppu
+          [:muutettuaika :toimikunta_muutettuaika])
+        (sql/where (and
+                     (or (not= (:toimikausi ehdot) "nykyinen")
+                         {:toimikausi.voimassa true})
+                     (or (blank? (:toimikunta ehdot))
+                         {:tutkintotoimikunta.nimi_fi [ilike toimikunta]}
+                         {:tutkintotoimikunta.nimi_sv [ilike toimikunta]})))))))
 
-(defn ^:private pg-hae-nykyisten-toimikuntien-jasenet
- []
- (sql/select jasenyys
-   (sql/fields :alkupvm :loppupvm :muutettuaika :henkiloid :rooli)
-   (sql/with tutkintotoimikunta
-     (sql/with toimikausi
-       (sql/fields :voimassa))
-     (sql/where {:toimikausi.voimassa true})
-     (sql/fields
-        :nimi_fi
-        :nimi_sv
-       :diaarinumero
-       :toimikausi_alku
-       :toimikausi_loppu
-       [:muutettuaika :toimikunta_muutettuaika]))))
-
-(defn ^:private pg-hae-henkilot
-  []
-  (->
-    (sql/select henkilo
-      (sql/with jarjesto
-        (sql/fields [:nimi_fi :jarjesto_nimi_fi]
-                    [:nimi_sv :jarjesto_nimi_sv]
-                    [:keskusjarjestotieto :keskusjarjesto])
-        (sql/with keskusjarjesto
-          (sql/fields [:nimi_fi :keskusjarjesto_nimi]))))
-    piilota-salaiset))
+(defn ^:private pg-hae-henkilot-ehdoilla
+  [ehdot]
+  (let [nimi (str "%" (:nimi ehdot) "%")]
+    (->
+      (sql/select henkilo
+        (sql/with jarjesto
+          (sql/fields [:nimi_fi :jarjesto_nimi_fi]
+                      [:nimi_sv :jarjesto_nimi_sv]
+                      [:keskusjarjestotieto :keskusjarjesto])
+          (sql/with keskusjarjesto
+            (sql/fields [:nimi_fi :keskusjarjesto_nimi]))
+          (sql/where (or (blank? (:nimi ehdot))
+                         {:henkilo.etunimi [ilike nimi]}
+                         {:henkilo.sukunimi [ilike nimi]}))))
+      piilota-salaiset)))
 
 (defn yhdista-henkilot-ja-jasenyydet
   [henkilot jasenyydet]
@@ -90,15 +87,15 @@
 (defn hae-kaikki
   "Hakee kaikki henkilöt."
   []
-  (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot)
-                                  (pg-hae-jasenyydet)))
+  (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot-ehdoilla {})
+                                  (pg-hae-jasenyydet-ehdoilla {:toimikausi "kaikki"})))
 
 (defn hae-nykyiset
   "Hakee kaikki henkilöt nykyisen toimikauden toimikunnista"
   []
   (let [yhdistetyt-henkilot
-        (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot)
-                                        (pg-hae-nykyisten-toimikuntien-jasenet))]
+        (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot-ehdoilla {})
+                                        (pg-hae-jasenyydet-ehdoilla {:toimikausi "nykyinen"}))]
     (remove #(empty? (:jasenyydet %)) yhdistetyt-henkilot)))
 
 (defn hae
@@ -162,3 +159,26 @@
         :when (sisaltaako-kentat? henkilo [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi henkilo) " " (:sukunimi henkilo))
      :osat henkilo}))
+
+(defn hae-ehdoilla [ehdot]
+  (let [henkilot (pg-hae-henkilot-ehdoilla ehdot)
+        jasenyydet (pg-hae-jasenyydet-ehdoilla ehdot)
+        yhdistetyt (yhdista-henkilot-ja-jasenyydet henkilot jasenyydet)
+        rivi-per-jasenyys (mapcat (fn [h]
+                                    (if (seq (:jasenyydet h))
+                                      (for [j (:jasenyydet h)]
+                                        (assoc h
+                                               :toimikunta_fi (:nimi_fi j)
+                                               :toimikunta_sv (:nimi_sv j)
+                                               :rooli (:rooli j)
+                                               :jasenyys_alku (:alkupvm j)
+                                               :jasenyys_loppu (:loppupvm j)))
+                                      [h]))
+                                  yhdistetyt)
+        karsitut-rivit (if (or (:toimikausi ehdot)
+                               (:toimikunta ehdot))
+                         (remove #(empty? (:jasenyydet %)) rivi-per-jasenyys)
+                         rivi-per-jasenyys)]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) karsitut-rivit)
+      karsitut-rivit)))

@@ -1,4 +1,5 @@
 {{=[[ ]]=}}
+[[#i18n.yleiset]]
 [[#i18n.tutkinto]]
 <h1>{{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}} - {{tutkinto.tutkintotunnus}}</h1>
 
@@ -46,12 +47,25 @@
                     sopimukset="sopimukset.nykyiset"
                     nayta-peruste-sarake="true">
 </sopimusten-listaus>
+<div>
+  <a id="sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/jarjestamissopimus/csv?tutkinto={{tutkinto.tutkintotunnus}}" target="_blank">[[lataa-tutkinnon-sopimukset]]</a>
+</div>
 
-<vanhojen-sopimusten-listaus class="vanhat-sopimukset"
-                             otsikko="'[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]'"
-                             sopimukset="sopimukset.vanhat"
-                             nayta-peruste-sarake="true">
-</vanhojen-sopimusten-listaus>
+<div class="vanhat-sopimukset">
+  <p><a class="ajax-link show-more" href="" ng-show="sopimukset.vanhat.length > 0" ng-click="naytaVanhatSopimukset = !naytaVanhatSopimukset">{{naytaVanhatSopimukset ? '[[piilota-aiemmat]]' : '[[nayta-aiemmat]]'}}</a></p>
+
+  <div ng-show="naytaVanhatSopimukset">
+    <sopimusten-listaus
+      otsikko="'[[i18n.jarjestamissopimus.aiemmat-jarjestamissopimukset]]'"
+      sopimukset="sopimukset.vanhat"
+      nayta-tutkinnot="false"
+      piilota-koulutustoimijat="false">
+    </sopimusten-listaus>
+    <div>
+      <a id="aiemmat-sopimukset-linkki" class="liite-linkki" ng-href="[[base-url]]/api/jarjestamissopimus/csv?tutkinto={{tutkinto.tutkintotunnus}}&voimassa=false" target="_blank">[[lataa-tutkinnon-aiemmat-sopimukset]]</a>
+    </div>
+  </div>
+</div>
 
 <h2>[[vanhat-toimikunnat]]</h2>
 <table>
@@ -67,3 +81,4 @@
   </tr>
 </table>
 [[/i18n.tutkinto]]
+[[/i18n.yleiset]]

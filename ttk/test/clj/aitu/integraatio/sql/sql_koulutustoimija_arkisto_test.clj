@@ -18,6 +18,7 @@
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
             [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
+            [aitu.integraatio.sql.test-data-util :refer :all]
             [aitu.integraatio.sql.jarjestamissopimus-arkisto-test :as jarjestamissopimus-arkisto-test]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]))
 
@@ -40,6 +41,82 @@
 (defn hae-ja-taydenna
   [y-tunnus]
   (koulutustoimija/taydenna-koulutustoimija (arkisto/hae y-tunnus)))
+
+(deftest ^:integraatio hae-ehdoilla-nimi
+  (lisaa-koulutustoimija! {:ytunnus "KT1"
+                           :nimi_fi "foo bar baz"})
+  (lisaa-koulutustoimija! {:ytunnus "KT2"
+                           :nimi_sv "FÅÅ BAR BAZ"})
+  (lisaa-koulutustoimija!)
+  (is (= (set (map :ytunnus (arkisto/hae-ehdoilla {:nimi "bar"})))
+         #{"KT1" "KT2"})))
+
+(deftest ^:integraatio hae-ehdoilla-sopimuksia
+  (lisaa-koulutustoimija! {:nimi_fi "KT"})
+  (let [kt (lisaa-koulutustoimija! {:ytunnus "KT1"
+                                    :nimi_fi "KT"})
+        ol (lisaa-oppilaitos! {:koulutustoimija "KT1"})]
+    (lisaa-jarjestamissopimus! kt ol)
+    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:sopimuksia "kylla"
+                                                :nimi "KT"}))
+           ["KT1"]))))
+
+(deftest ^:integraatio hae-ehdoilla-ei-sopimuksia
+  (lisaa-koulutustoimija! {:ytunnus "KT2"
+                           :nimi_fi "KT"})
+  (let [kt (lisaa-koulutustoimija! {:ytunnus "KT1"
+                                    :nimi_fi "KT"})
+        ol (lisaa-oppilaitos! {:koulutustoimija "KT1"})]
+    (lisaa-jarjestamissopimus! kt ol)
+    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:sopimuksia "ei"
+                                                :nimi "KT"}))
+           ["KT2"]))))
+
+(deftest ^:integraatio hae-ehdoilla-tutkinto
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
+                                {:opintoalakoodi "OA1"})
+  (lisaa-tutkinto! {:opintoala "OA1"
+                    :tutkintotunnus "T1"})
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
+                                {:opintoalakoodi "OA2"})
+  (lisaa-tutkinto! {:opintoala "OA2"
+                    :tutkintotunnus "T2"})
+  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
+        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"})
+        sop1 (lisaa-jarjestamissopimus! kt1 o1)
+        tv1 (lisaa-tutkintoversio! {:tutkintotunnus "T1"})
+        _ (lisaa-tutkinto-sopimukselle! sop1 (:tutkintoversio_id tv1))
+
+        kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
+        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
+        sop2 (lisaa-jarjestamissopimus! kt2 o2)
+        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "T2"})
+        _ (lisaa-tutkinto-sopimukselle! sop2 (:tutkintoversio_id tv2))]
+    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1"}))
+           ["KT1"]))))
+
+(deftest ^:integraatio hae-ehdoilla-opintoala
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
+                                {:opintoalakoodi "OA1"})
+  (lisaa-tutkinto! {:opintoala "OA1"
+                    :tutkintotunnus "T1"})
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
+                                {:opintoalakoodi "OA2"})
+  (lisaa-tutkinto! {:opintoala "OA2"
+                    :tutkintotunnus "T2"})
+  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
+        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"})
+        sop1 (lisaa-jarjestamissopimus! kt1 o1)
+        tv1 (lisaa-tutkintoversio! {:tutkintotunnus "T1"})
+        _ (lisaa-tutkinto-sopimukselle! sop1 (:tutkintoversio_id tv1))
+
+        kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
+        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
+        sop2 (lisaa-jarjestamissopimus! kt2 o2)
+        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "T2"})
+        _ (lisaa-tutkinto-sopimukselle! sop2 (:tutkintoversio_id tv2))]
+    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "OA1"}))
+           ["KT1"]))))
 
 (deftest ^:integraatio hae-termilla-test
   (let [termi "Koulutustoimijan nimi"

@@ -87,7 +87,7 @@
 
 (def toimikuntakenttien-jarjestys [:nimi_fi :nimi_sv :diaarinumero :tilikoodi :voimassa :kielisyys])
 
-(def toimialakenttien-jarjestys [:opintoala_fi :opintoala_sv :nayttotutkinto_fi :nayttotutkinto_sv])
+(def toimialakenttien-jarjestys [:opintoala_fi :opintoala_sv :tutkinto_fi :tutkinto_sv])
 
 (def sopimuskenttien-jarjestys
   [:sopimusnumero :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
@@ -106,16 +106,6 @@
       (csv-download-response (muodosta-csv (tutkinto-arkisto/hae-toimikunnan-toimiala tkunta)
                                            toimialakenttien-jarjestys)
                              "toimiala.csv")))
-  (GET "/:tkunta/sopimukset" [tkunta]
-    (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta)
-                                           sopimuskenttien-jarjestys)
-                             "sopimukset.csv")))
-  (GET "/:tkunta/aiemmat-sopimukset" [tkunta]
-    (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (csv-download-response (muodosta-csv (arkisto/hae-sopimukset tkunta {:voimassa false})
-                                           sopimuskenttien-jarjestys)
-                             "aiemmat-sopimukset.csv")))
   (GET "/:tkunta/jasenet" [tkunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (arkisto/hae-jasenet tkunta)

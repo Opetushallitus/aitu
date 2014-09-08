@@ -18,7 +18,9 @@
             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
             [aitu.infra.opintoala-arkisto :as opintoala-arkisto]
             [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
-            [oph.common.util.util :refer [sisaltaako-kentat?]])
+            [oph.common.util.util :refer [sisaltaako-kentat?]]
+            [clojure.string :refer [blank?]]
+            [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn ^:test-api tyhjenna!
@@ -251,11 +253,28 @@
       (sql/with opintoala))
     (sql/fields [:opintoala.selite_fi :opintoala_fi]
                 [:opintoala.selite_sv :opintoala_sv]
-                [:nayttotutkinto.nimi_fi :nayttotutkinto_fi]
-                [:nayttotutkinto.nimi_sv :nayttotutkinto_sv])
+                [:nayttotutkinto.nimi_fi :tutkinto_fi]
+                [:nayttotutkinto.nimi_sv :tutkinto_sv])
     (sql/where {:toimikunta tkunta})
     (sql/order :opintoala.selite_fi)
     (sql/order :nayttotutkinto.nimi_fi)))
+
+(defn hae-ehdoilla [ehdot]
+  (let [nimi (str "%" (:nimi ehdot) "%")
+        tutkinnot (map voimassaolo/taydenna-tutkinnon-voimassaolo
+                       (sql/select nayttotutkinto
+                         (sql/with uusin-versio)
+                         (sql/with opintoala
+                           (sql/fields [:selite_fi :opintoala_fi] [:selite_sv :opintoala_sv]))
+                         (sql/where (or (blank? (:nimi ehdot))
+                                        {:nimi_fi [ilike nimi]}
+                                        {:nimi_sv [ilike nimi]}))))
+        palautettavat-tutkinnot (if (not= "kaikki" (:voimassa ehdot))
+                                  (filter :voimassa tutkinnot)
+                                  tutkinnot)]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) palautettavat-tutkinnot)
+      palautettavat-tutkinnot)))
 
 (defn ^:test-api poista-tutkintoversio!
   "Poistaa tutkintoversion arkistosta"
