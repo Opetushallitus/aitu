@@ -128,7 +128,7 @@
 
 (defn generoi-oid->y-tunnus [koulutustoimijakoodit oppilaitoskoodit]
   (loop [oid->ytunnus (into {} (for [kt koulutustoimijakoodit]
-                                 [(:oid kt) (:ytunnus kt)]))
+                                 [(:oid kt) (y-tunnus kt)]))
          oppilaitoskoodit oppilaitoskoodit]
     (if (seq oppilaitoskoodit)
       (recur (into oid->ytunnus (for [o oppilaitoskoodit
@@ -159,7 +159,7 @@
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
     (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit
-            :when (contains? oid->ytunnus (:parentOid koodi))
+            :when (oid->ytunnus (:parentOid koodi))
             :let [oppilaitoskoodi (:oppilaitosKoodi koodi)
                   koulutustoimija (oid->ytunnus (:parentOid koodi))
                   vanha-oppilaitos (oppilaitoksen-kentat (get oppilaitokset oppilaitoskoodi))
@@ -175,13 +175,15 @@
                                                   (oppilaitos-arkisto/paivita! uusi-oppilaitos))))))
 
 
-(defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit]
+(defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit koulutustoimijakoodit]
   (let [oid->oppilaitostunnus (into {} (for [o oppilaitoskoodit]
                                          [(:oid o) (:oppilaitosKoodi o)]))
+        oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
         toimipaikat (->> (oppilaitos-arkisto/hae-kaikki-toimipaikat)
                       (map-by :toimipaikkakoodi))]
     (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit
-            :when (contains? oid->oppilaitostunnus (:parentOid koodi))
+            :when (and (oid->oppilaitostunnus (:parentOid koodi))
+                       (oid->ytunnus (:parentOid koodi)))
             :let [toimipaikkakoodi (:toimipistekoodi koodi)
                   oppilaitos (oid->oppilaitostunnus (:parentOid koodi))
                   vanha-toimipaikka (toimipaikan-kentat (get toimipaikat toimipaikkakoodi))
@@ -207,4 +209,4 @@
         toimipaikkakoodit (:toimipaikka koodit)]
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
-    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit)))
+    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit koulutustoimijakoodit)))
