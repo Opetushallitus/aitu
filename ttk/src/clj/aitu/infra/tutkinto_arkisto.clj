@@ -279,18 +279,25 @@
 (defn hae-raportti [ehdot]
   (let [tutkinnot (sql/select :tutkintoversio
                     (sql/join :inner :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+                    (sql/join :inner :toimikunta_ja_tutkinto (= :toimikunta_ja_tutkinto.tutkintotunnus :nayttotutkinto.tutkintotunnus))
+                    (sql/join :inner :tutkintotoimikunta (= :tutkintotoimikunta.tkunta :toimikunta_ja_tutkinto.toimikunta))
+                    (sql/join :inner :toimikausi (= :toimikausi.toimikausi_id :tutkintotoimikunta.toimikausi_id))
                     (sql/join :left :sopimus_ja_tutkinto (and (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id)
                                                               (= :sopimus_ja_tutkinto.poistettu false)))
                     (sql/join :left :jarjestamissopimus (and (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid)
+                                                             (= :jarjestamissopimus.toimikunta :tutkintotoimikunta.tkunta)
                                                              (= :jarjestamissopimus.voimassa true)))
                     (sql/fields :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :nayttotutkinto.tutkintotaso
                                 [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
-                                :tutkintoversio.peruste :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija :jarjestamissopimus.toimikunta)
+                                :tutkintoversio.peruste :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija
+                                :tutkintotoimikunta.tkunta :tutkintotoimikunta.toimikausi_alku :tutkintotoimikunta.toimikausi_loppu)
                     (sql/aggregate (count :jarjestamissopimus.koulutustoimija) :lukumaara)
                     (sql/group :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :tutkintoversio.peruste
-                               :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija :jarjestamissopimus.toimikunta)
+                               :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija :tutkintotoimikunta.tkunta)
+                    (sql/order :tutkintotoimikunta.toimikausi_loppu :desc)
                     (sql/order :nayttotutkinto.opintoala)
-                    (sql/order :nayttotutkinto.nimi_fi))]
+                    (sql/order :nayttotutkinto.nimi_fi)
+                    (sql/order :jarjestamissopimus.koulutustoimija))]
     (if (:avaimet ehdot)
       (map #(select-keys % (:avaimet ehdot)) tutkinnot)
       tutkinnot)))

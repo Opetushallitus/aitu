@@ -26,7 +26,8 @@
 
 (def tutkintokenttien-jarjestys [:tutkintotunnus :nimi_fi :nimi_sv :opintoala_fi :opintoala_sv])
 
-(def raporttikenttien-jarjestys [:opintoala :tutkintotunnus :tutkintotaso :tutkinto_fi :tutkinto_sv :peruste :kieli :koulutustoimija :toimikunta :lukumaara])
+(def raporttikenttien-jarjestys [:opintoala :tutkintotunnus :tutkintotaso :tutkinto_fi :tutkinto_sv :peruste :kieli
+                                 :koulutustoimija :toimikunta :toimikausi_alku :toimikausi_loppu :lukumaara])
 
 (c/defroutes raportti-reitit
   (c/GET "/csv" req

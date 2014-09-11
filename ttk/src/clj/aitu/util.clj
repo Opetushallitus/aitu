@@ -112,7 +112,14 @@
                           :tutkinto_sv "Tutkinto ruotsiksi"
                           :tutkintotunnus "Tutkintotunnus"
                           :voimassa "Voimassa"
-                          :ytunnus "Y-tunnus"})
+                          :ytunnus "Y-tunnus"
+                          :lukumaara "Lukumäärä"
+                          :tutkintotaso "Tutkintotaso"
+                          :kieli "Kieli"
+                          :opintoala "Opintoala"
+                          :koulutustoimija "Koulutustoimija"
+                          :toimikausi_alku "Toimikausi alkupvm"
+                          :toimikausi_loppu "Toimikausi loppupvm"})
 
 (defn muodosta-csv [data kenttien-jarjestys]
   (write-csv (let [[otsikko-avaimet & arvot] (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys)]
