@@ -276,6 +276,25 @@
       (map #(select-keys % (:avaimet ehdot)) palautettavat-tutkinnot)
       palautettavat-tutkinnot)))
 
+(defn hae-raportti [ehdot]
+  (let [tutkinnot (sql/select :tutkintoversio
+                    (sql/join :inner :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+                    (sql/join :left :sopimus_ja_tutkinto (and (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id)
+                                                              (= :sopimus_ja_tutkinto.poistettu false)))
+                    (sql/join :left :jarjestamissopimus (and (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid)
+                                                             (= :jarjestamissopimus.voimassa true)))
+                    (sql/fields :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :nayttotutkinto.tutkintotaso
+                                [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
+                                :tutkintoversio.peruste :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija :jarjestamissopimus.toimikunta)
+                    (sql/aggregate (count :jarjestamissopimus.koulutustoimija) :lukumaara)
+                    (sql/group :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :tutkintoversio.peruste
+                               :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija :jarjestamissopimus.toimikunta)
+                    (sql/order :nayttotutkinto.opintoala)
+                    (sql/order :nayttotutkinto.nimi_fi))]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) tutkinnot)
+      tutkinnot)))
+
 (defn ^:test-api poista-tutkintoversio!
   "Poistaa tutkintoversion arkistosta"
   [tutkintoversio_id]
