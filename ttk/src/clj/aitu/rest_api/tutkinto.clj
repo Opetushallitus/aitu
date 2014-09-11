@@ -26,6 +26,8 @@
 
 (def tutkintokenttien-jarjestys [:tutkintotunnus :nimi_fi :nimi_sv :opintoala_fi :opintoala_sv])
 
+(def raporttikenttien-jarjestys [:opintoala :tutkintotunnus :tutkintotaso :tutkinto_fi :tutkinto_sv :peruste :kieli :koulutustoimija :toimikunta :lukumaara])
+
 (c/defroutes raportti-reitit
   (c/GET "/csv" req
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
@@ -33,7 +35,13 @@
         (muodosta-csv (arkisto/hae-ehdoilla
                         (assoc (:params req) :avaimet tutkintokenttien-jarjestys))
                       tutkintokenttien-jarjestys)
-        "tutkinnot.csv"))))
+        "tutkinnot.csv")))
+  (c/GET "/raportti" req
+    (cu/autorisoitu-transaktio :raportti nil
+      (csv-download-response
+        (muodosta-csv (arkisto/hae-raportti (assoc (:params req) :avaimet raporttikenttien-jarjestys))
+                       raporttikenttien-jarjestys)
+        "nayttotutkinnot_raportti.csv"))))
 
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/" [:as req]
