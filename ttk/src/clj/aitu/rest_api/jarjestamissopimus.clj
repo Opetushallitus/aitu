@@ -72,10 +72,10 @@
                                            rajattujen-sopimuskenttien-jarjestys)
                              "sopimukset.csv")))
   (cu/defapi :yleinen-rest-api nil :get "/raportti" req
-    (csv-download-response (muodosta-csv (arkisto/hae-sopimukset-csv {:voimassa true
-                                                                      :avaimet kaikkien-sopimuskenttien-jarjestys})
-                                         kaikkien-sopimuskenttien-jarjestys)
-                           "sopimukset.csv")))
+    (let [raportti (sort-by (juxt :koulutustoimija_fi :toimikunta_fi) (arkisto/hae-sopimukset-csv {:voimassa true
+                                                                                                   :avaimet kaikkien-sopimuskenttien-jarjestys}))]
+      (csv-download-response (muodosta-csv raportti kaikkien-sopimuskenttien-jarjestys)
+                             "sopimukset.csv"))))
 
 (c/defroutes reitit
   (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
