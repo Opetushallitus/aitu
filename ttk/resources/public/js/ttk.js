@@ -32,7 +32,8 @@ angular.module('ttk', ['angular-loading-bar',
                        'ngUpload',
                        'etusivu',
                        'ohjeet',
-                       'organisaatiomuutokset'])
+                       'organisaatiomuutokset',
+                       'raportit'])
 
   .config(['$routeProvider', '$httpProvider', 'asetukset', function($routeProvider, $httpProvider, asetukset) {
     $routeProvider.

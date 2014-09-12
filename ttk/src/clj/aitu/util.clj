@@ -85,6 +85,7 @@
                           :jarjesto_nimi_sv "Järjestö ruotsiksi"
                           :jasenyys_alku "Jäsenyyden alku"
                           :jasenyys_loppu "Jäsenyyden loppu"
+                          :kieli "Kieli"
                           :kielisyys "Kielisyys"
                           :koulutustoimija_fi "Koulutustoimija suomeksi"
                           :koulutustoimija_sv "Koulutustoimija ruotsiksi"
@@ -94,6 +95,7 @@
                           :nimi_sv "Nimi ruotsiksi"
                           :opintoala_fi "Opintoala suomeksi"
                           :opintoala_sv "Opintoala ruotsiksi"
+                          :oppilaitos "Oppilaitos"
                           :oppilaitoskoodi "Oppilaitoskoodi"
                           :osoite "Osoite"
                           :peruste "Tutkinnon peruste"
@@ -102,6 +104,7 @@
                           :puhelin "Puhelinnumero"
                           :rooli "Rooli"
                           :sahkoposti "Sähköposti"
+                          :siirtymaajan_loppupvm "Siirtymäajan loppupäivämäärä"
                           :sopimusnumero "Sopimusnumero"
                           :sopimusten_maara "Sopimusten määrä"
                           :sukunimi "Sukunimi"
@@ -111,8 +114,18 @@
                           :tutkinto_fi "Tutkinto suomeksi"
                           :tutkinto_sv "Tutkinto ruotsiksi"
                           :tutkintotunnus "Tutkintotunnus"
+                          :vastuuhenkilo "Vastuuhenkilö"
+                          :vastuuhenkilo_sahkoposti "Vastuuhenkilön sähköposti"
+                          :vastuuhenkilo_puhelin "Vastuuhenkilön puhelinnumero"
                           :voimassa "Voimassa"
-                          :ytunnus "Y-tunnus"})
+                          :ytunnus "Y-tunnus"
+                          :lukumaara "Lukumäärä"
+                          :tutkintotaso "Tutkintotaso"
+                          :opintoala "Opintoala"
+                          :koulutustoimija "Koulutustoimija"
+                          :toimikausi_alku "Toimikausi alkupvm"
+                          :toimikausi_loppu "Toimikausi loppupvm"
+                          :toimikunta "Toimikunta"})
 
 (defn muodosta-csv [data kenttien-jarjestys]
   (write-csv (let [[otsikko-avaimet & arvot] (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys)]

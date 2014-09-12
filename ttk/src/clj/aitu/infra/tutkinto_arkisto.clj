@@ -276,6 +276,36 @@
       (map #(select-keys % (:avaimet ehdot)) palautettavat-tutkinnot)
       palautettavat-tutkinnot)))
 
+(defn hae-raportti [ehdot]
+  (let [tutkinnot (sql/select :tutkintoversio
+                    (sql/join :inner :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+                    (sql/join :inner :toimikunta_ja_tutkinto (= :toimikunta_ja_tutkinto.tutkintotunnus :nayttotutkinto.tutkintotunnus))
+                    (sql/join :inner :tutkintotoimikunta (= :tutkintotoimikunta.tkunta :toimikunta_ja_tutkinto.toimikunta))
+                    (sql/join :inner :toimikausi (= :toimikausi.toimikausi_id :tutkintotoimikunta.toimikausi_id))
+                    (sql/join :left [(sql/subselect :jarjestamissopimus
+                                       (sql/join :inner :sopimus_ja_tutkinto (and (= :sopimus_ja_tutkinto.jarjestamissopimusid :jarjestamissopimus.jarjestamissopimusid)
+                                                                                  (= :sopimus_ja_tutkinto.poistettu false)))
+                                       (sql/fields :sopimus_ja_tutkinto.tutkintoversio :jarjestamissopimus.toimikunta
+                                                   :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija
+                                                   :jarjestamissopimus.voimassa)) :sopimus]
+                              (and (= :sopimus.tutkintoversio :tutkintoversio.tutkintoversio_id)
+                                   (= :sopimus.toimikunta :tutkintotoimikunta.tkunta)
+                                   (= :sopimus.voimassa true)))
+                    (sql/fields :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :nayttotutkinto.tutkintotaso
+                                [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
+                                :tutkintoversio.peruste :sopimus.kieli :sopimus.koulutustoimija
+                                [:tutkintotoimikunta.diaarinumero :toimikunta] :tutkintotoimikunta.toimikausi_alku :tutkintotoimikunta.toimikausi_loppu)
+                    (sql/aggregate (count :sopimus.koulutustoimija) :lukumaara)
+                    (sql/group :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :tutkintoversio.peruste
+                               :sopimus.kieli :sopimus.koulutustoimija :tutkintotoimikunta.tkunta)
+                    (sql/order :tutkintotoimikunta.toimikausi_loppu :desc)
+                    (sql/order :nayttotutkinto.opintoala)
+                    (sql/order :nayttotutkinto.nimi_fi)
+                    (sql/order :sopimus.koulutustoimija))]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) tutkinnot)
+      tutkinnot)))
+
 (defn ^:test-api poista-tutkintoversio!
   "Poistaa tutkintoversion arkistosta"
   [tutkintoversio_id]

@@ -56,16 +56,25 @@
     :vanhentunut
     not))
 
-(def sopimuskenttien-jarjestys
+(def rajattujen-sopimuskenttien-jarjestys
   [:sopimusnumero :toimikunta_fi :toimikunta_sv :tutkinto_fi :tutkinto_sv :peruste :koulutustoimija_fi :koulutustoimija_sv :alkupvm :loppupvm])
+
+(def kaikkien-sopimuskenttien-jarjestys
+  [:koulutustoimija_fi :koulutustoimija_sv :toimikunta_fi :toimikunta_sv :sopimusnumero :alkupvm :loppupvm :tutkinto_fi :tutkinto_sv :peruste :siirtymaajan_loppupvm
+   :oppilaitos :kieli :vastuuhenkilo :vastuuhenkilo_sahkoposti :vastuuhenkilo_puhelin])
 
 (c/defroutes raportti-reitit
   (cu/defapi :yleinen-rest-api nil :get "/csv" [voimassa :as req]
     (let [voimassa (not= voimassa "false")]
       (csv-download-response (muodosta-csv (arkisto/hae-sopimukset-csv (assoc (:params req)
-                                                                              :avaimet sopimuskenttien-jarjestys
+                                                                              :avaimet rajattujen-sopimuskenttien-jarjestys
                                                                               :voimassa voimassa))
-                                           sopimuskenttien-jarjestys)
+                                           rajattujen-sopimuskenttien-jarjestys)
+                             "sopimukset.csv")))
+  (cu/defapi :yleinen-rest-api nil :get "/raportti" req
+    (let [raportti (sort-by (juxt :koulutustoimija_fi :toimikunta_fi) (arkisto/hae-sopimukset-csv {:voimassa true
+                                                                                                   :avaimet kaikkien-sopimuskenttien-jarjestys}))]
+      (csv-download-response (muodosta-csv raportti kaikkien-sopimuskenttien-jarjestys)
                              "sopimukset.csv"))))
 
 (c/defroutes reitit

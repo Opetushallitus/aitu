@@ -159,6 +159,8 @@
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
     (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit
+            ;; Poistetaan oppilaitokset joille ei löydy koulutustoimijaa
+            ;; Oppilaitoksella on oltava koulutustoimija
             :when (oid->ytunnus (:parentOid koodi))
             :let [oppilaitoskoodi (:oppilaitosKoodi koodi)
                   koulutustoimija (oid->ytunnus (:parentOid koodi))
@@ -182,6 +184,8 @@
         toimipaikat (->> (oppilaitos-arkisto/hae-kaikki-toimipaikat)
                       (map-by :toimipaikkakoodi))]
     (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit
+            ;; Poistetaan toimipaikat joille ei löydy oppilaitosta tai koulutustoimijaa
+            ;; Oppilaitoksella on oltava koulutustoimija, toimipaikalla on oltava oppilaitos
             :when (and (oid->oppilaitostunnus (:parentOid koodi))
                        (oid->ytunnus (:parentOid koodi)))
             :let [toimipaikkakoodi (:toimipistekoodi koodi)

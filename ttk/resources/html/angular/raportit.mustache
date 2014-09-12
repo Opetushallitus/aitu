@@ -1,0 +1,12 @@
+{{=[[ ]]=}}
+[[#i18n.raportit]]
+<h1>[[raportit]]</h1>
+
+<form>
+  <fieldset class="search-field">
+    <label>[[valitse-raportti]]</label>
+    <select ng-model="raportti" ng-options="raportti.nimi for raportti in raportit"></select>
+  </fieldset>
+  <a ng-href="[[base-url]]/api/{{raportti.api}}/raportti" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+</form>
+[[/i18n.raportit]]
