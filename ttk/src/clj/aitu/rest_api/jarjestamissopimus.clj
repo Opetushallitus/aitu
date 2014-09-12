@@ -71,7 +71,7 @@
                                                                               :voimassa voimassa))
                                            rajattujen-sopimuskenttien-jarjestys)
                              "sopimukset.csv")))
-  (cu/defapi :yleinen-rest-api nil :get "/kaikki-sopimukset-csv" req
+  (cu/defapi :yleinen-rest-api nil :get "/raportti" req
     (csv-download-response (muodosta-csv (arkisto/hae-sopimukset-csv {:voimassa true
                                                                       :avaimet kaikkien-sopimuskenttien-jarjestys})
                                          kaikkien-sopimuskenttien-jarjestys)

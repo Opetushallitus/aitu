@@ -121,7 +121,6 @@
                           :ytunnus "Y-tunnus"
                           :lukumaara "Lukumäärä"
                           :tutkintotaso "Tutkintotaso"
-                          :kieli "Kieli"
                           :opintoala "Opintoala"
                           :koulutustoimija "Koulutustoimija"
                           :toimikausi_alku "Toimikausi alkupvm"

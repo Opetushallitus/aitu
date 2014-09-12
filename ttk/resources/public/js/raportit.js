@@ -22,7 +22,8 @@ angular.module('raportit', ['ngRoute'])
   .controller('RaportitController', ['$scope', 'i18n',
     function($scope, i18n) {
       $scope.raportit = [
-        {nimi: i18n.raportit.nayttotutkinnot, api: 'tutkinto'}
+        {nimi: i18n.raportit.nayttotutkinnot, api: 'tutkinto'},
+        {nimi: i18n.raportit.jarjestamissopimukset, api: 'jarjestamissopimus'}
       ];
       $scope.raportti = $scope.raportit[0];
     }
