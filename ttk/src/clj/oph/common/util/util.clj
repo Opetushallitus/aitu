@@ -13,7 +13,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns oph.common.util.util 
+(ns oph.common.util.util
   "Yleisiä apufunktioita."
   (:require [cheshire.core :as cheshire]
             [clj-time.core :as time]
@@ -162,6 +162,11 @@
                  :let [k (f item)]
                  :when (not (nil? k))]
              [k item])))
+
+(defn map-values [f m]
+  "Applies f to each value in m and returns the resulting map"
+  (into {} (for [[k v] m]
+             [k (f v)])))
 
 (defn retrying* [expected-throwable attempts f]
   {:pre [(isa? expected-throwable Throwable)

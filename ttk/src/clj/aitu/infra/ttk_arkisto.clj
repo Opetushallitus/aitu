@@ -313,37 +313,65 @@
 (defn ^:private laske-kielisyydet [toimikunnat]
   (let [kielisyydet (frequencies (map :kielisyys toimikunnat))]
     (concat (for [kieli ["fi" "sv" "2k" "se"]]
-              (or (kielisyydet kieli) 0))
+              (get kielisyydet kieli 0))
             [(count toimikunnat)])))
+
+(defn ^:private laske-sukupuolet [toimikunnat])
 
 (def ^:private tyhja-rivi [[]])
 
 (defn ^:private kielisyydet-toimikausittain [toimikunnat-toimikausittain toimikaudet]
   (concat [["Toimikausi" "suomenkielinen" "ruotsinkielinen" "kaksikielinen" "saamenkielinen" "yhteensä"]]
-          (for [[toimikausi-id ttkt] toimikunnat-toimikausittain
+          (for [[toimikausi-id toimikunnat] toimikunnat-toimikausittain
                 :let [toimikausi (get toimikaudet toimikausi-id)]]
-            (cons (str (:alkupvm toimikausi) " - " (:loppupvm toimikausi)) (laske-kielisyydet ttkt)))
+            (cons (str (:alkupvm toimikausi) " - " (:loppupvm toimikausi)) (laske-kielisyydet toimikunnat)))
           [(cons "Yhteensä" (laske-kielisyydet toimikunnat))]))
 
 (defn ^:private kielisyydet-opintoaloittain [toimikunnat-opintoaloittain]
   (concat [["Opintoala" "suomenkielinen" "ruotsinkielinen" "kaksikielinen" "saamenkielinen" "yhteensä"]]
-          (for [[opintoala ttkt] toimikunnat-opintoaloittain]
-            (cons opintoala (laske-kielisyydet ttkt)))
+          (for [[opintoala toimikunnat] toimikunnat-opintoaloittain]
+            (cons opintoala (laske-kielisyydet toimikunnat)))
           [(cons "Yhteensä" (laske-kielisyydet (filter :voimassa toimikunnat)))]))
 
+(defn ^:private jasenyydet-toimikunnittain [toimikunnat]
+  (concat [["Toimikunta" "mies" "nainen" "yhteensä"]]
+          (for [toimikunta toimikunnat
+                :let [jasenet (:jasenet toimikunta)
+                      miehet (get jasenet "mies" 0)
+                      naiset (get jasenet "nainen" 0)]]
+            [(:nimi_fi toimikunta) miehet naiset (+ miehet naiset)])
+          (let [jasenet (apply merge-with + (map :jasenet toimikunnat))
+                miehet (get jasenet "mies" 0)
+                naiset (get jasenet "nainen" 0)]
+            [["Yhteensä" miehet naiset (+ miehet naiset)]])))
+
+(defn tutkinnot-toimikunnittain [toimikunnat]
+  (concat [["Toimikunta" "tutkintoja"]]
+          (for [toimikunta toimikunnat]
+            [(:nimi_fi toimikunta) (count (:tutkinnot toimikunta))])
+          [["Yhteensä" (count (apply concat (map :tutkinnot toimikunnat)))]]))
+
 (defn ^:private hae-tilastot-toimikunnista []
-  (let [toimikunta->opintoalat (apply merge-with clojure.set/union (for [{:keys [toimikunta selite_fi]} (sql/select sopimus-ja-tutkinto
-                                                                                                          (sql/with jarjestamissopimus)
-                                                                                                          (sql/with tutkintoversio
-                                                                                                            (sql/with nayttotutkinto
-                                                                                                              (sql/with opintoala)))
-                                                                                                          (sql/fields :opintoala.selite_fi :jarjestamissopimus.toimikunta))]
+  (let [toimikunta->opintoalat (apply merge-with clojure.set/union (for [{:keys [toimikunta selite_fi]} (sql/select toimikunta-ja-tutkinto
+                                                                                                          (sql/with nayttotutkinto
+                                                                                                            (sql/with opintoala))
+                                                                                                          (sql/fields :toimikunta :opintoala.selite_fi))]
                                                                      {toimikunta #{selite_fi}}))
+        toimikunta->tutkinnot (apply merge-with clojure.set/union (for [{:keys [toimikunta nimi_fi]} (sql/select toimikunta-ja-tutkinto
+                                                                                                        (sql/with nayttotutkinto)
+                                                                                                        (sql/fields :toimikunta :nayttotutkinto.nimi_fi))]
+                                                                    {toimikunta #{nimi_fi}}))
+        toimikunta->jasenet (map-values (comp frequencies #(map :sukupuoli %))
+                                        (group-by :toimikunta (sql/select jasenyys
+                                                                (sql/with henkilo)
+                                                                (sql/fields :toimikunta :henkilo.sukupuoli))))
         toimikunnat (->>
                       (sql/select tutkintotoimikunta
                         (sql/with toimikausi)
                         (sql/fields :toimikausi.voimassa :diaarinumero :nimi_fi :nimi_sv :kielisyys :toimikausi_id :tkunta))
-                      (map #(assoc % :opintoalat (toimikunta->opintoalat (:tkunta %)))))
+                      (map #(assoc % :opintoalat (toimikunta->opintoalat (:tkunta %))
+                                     :tutkinnot (toimikunta->tutkinnot (:tkunta %))
+                                     :jasenet (toimikunta->jasenet (:tkunta %)))))
 
         toimikaudet (map-by :toimikausi_id (sql/select toimikausi))
         toimikausittain (group-by :toimikausi_id toimikunnat)
@@ -353,7 +381,11 @@
                                                    {opintoala [toimikunta]}))]
     (concat (kielisyydet-toimikausittain toimikausittain toimikaudet)
             tyhja-rivi
-            (kielisyydet-opintoaloittain opintoaloittain))))
+            (kielisyydet-opintoaloittain opintoaloittain)
+            tyhja-rivi
+            (jasenyydet-toimikunnittain toimikunnat)
+            tyhja-rivi
+            (tutkinnot-toimikunnittain toimikunnat))))
 
 (defn hae-tilastot []
   )
