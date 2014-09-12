@@ -25,6 +25,7 @@
             [aitu.auditlog :as auditlog]
             [clojure.set :refer [rename-keys]]
             [oph.korma.korma :refer  :all ]
+            [oph.common.util.util :refer :all]
             [clojure.string :refer [blank? split]])
   (:use [aitu.integraatio.sql.korma]))
 
@@ -308,3 +309,51 @@
                   :loppupvm [(if (:voimassa ehdot true) >= <) (sql/sqlfn now)]})
       (sql/order :henkilo.sukunimi)
       (sql/order :henkilo.etunimi))))
+
+(defn ^:private laske-kielisyydet [toimikunnat]
+  (let [kielisyydet (frequencies (map :kielisyys toimikunnat))]
+    (concat (for [kieli ["fi" "sv" "2k" "se"]]
+              (or (kielisyydet kieli) 0))
+            [(count toimikunnat)])))
+
+(def ^:private tyhja-rivi [[]])
+
+(defn ^:private kielisyydet-toimikausittain [toimikunnat-toimikausittain toimikaudet]
+  (concat [["Toimikausi" "suomenkielinen" "ruotsinkielinen" "kaksikielinen" "saamenkielinen" "yhteensä"]]
+          (for [[toimikausi-id ttkt] toimikunnat-toimikausittain
+                :let [toimikausi (get toimikaudet toimikausi-id)]]
+            (cons (str (:alkupvm toimikausi) " - " (:loppupvm toimikausi)) (laske-kielisyydet ttkt)))
+          [(cons "Yhteensä" (laske-kielisyydet toimikunnat))]))
+
+(defn ^:private kielisyydet-opintoaloittain [toimikunnat-opintoaloittain]
+  (concat [["Opintoala" "suomenkielinen" "ruotsinkielinen" "kaksikielinen" "saamenkielinen" "yhteensä"]]
+          (for [[opintoala ttkt] toimikunnat-opintoaloittain]
+            (cons opintoala (laske-kielisyydet ttkt)))
+          [(cons "Yhteensä" (laske-kielisyydet (filter :voimassa toimikunnat)))]))
+
+(defn ^:private hae-tilastot-toimikunnista []
+  (let [toimikunta->opintoalat (apply merge-with clojure.set/union (for [{:keys [toimikunta selite_fi]} (sql/select sopimus-ja-tutkinto
+                                                                                                          (sql/with jarjestamissopimus)
+                                                                                                          (sql/with tutkintoversio
+                                                                                                            (sql/with nayttotutkinto
+                                                                                                              (sql/with opintoala)))
+                                                                                                          (sql/fields :opintoala.selite_fi :jarjestamissopimus.toimikunta))]
+                                                                     {toimikunta #{selite_fi}}))
+        toimikunnat (->>
+                      (sql/select tutkintotoimikunta
+                        (sql/with toimikausi)
+                        (sql/fields :toimikausi.voimassa :diaarinumero :nimi_fi :nimi_sv :kielisyys :toimikausi_id :tkunta))
+                      (map #(assoc % :opintoalat (toimikunta->opintoalat (:tkunta %)))))
+
+        toimikaudet (map-by :toimikausi_id (sql/select toimikausi))
+        toimikausittain (group-by :toimikausi_id toimikunnat)
+        opintoaloittain (apply merge-with concat (for [toimikunta toimikunnat
+                                                       :when (:voimassa toimikunta)
+                                                       opintoala (:opintoalat toimikunta)]
+                                                   {opintoala [toimikunta]}))]
+    (concat (kielisyydet-toimikausittain toimikausittain toimikaudet)
+            tyhja-rivi
+            (kielisyydet-opintoaloittain opintoaloittain))))
+
+(defn hae-tilastot []
+  )
