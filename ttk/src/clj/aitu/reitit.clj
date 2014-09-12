@@ -4,6 +4,7 @@
             [stencil.loader :as sl]
             [clojure.tools.logging :as log]
             [compojure.core :as c]
+            [compojure.route :as r]
             schema.core
             [aitu.compojure-util :as cu]
             [clojure.pprint :refer [pprint]]
@@ -140,4 +141,5 @@
                                            (assoc-in [:db :password] "*****")
                                            (assoc-in [:ldap-auth-server :password] "*****")
                                            pprint))
-                            :build-id @build-id)))))
+                            :build-id @build-id)))
+    (r/not-found "Not found")))
