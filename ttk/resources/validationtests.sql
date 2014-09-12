@@ -15,3 +15,12 @@ select j.jasenyys_id, h.etunimi, h.sukunimi
 
 -- OPH-764 Siirtymäaika on loppunut ennen tutkinnon voimassaolon päättymistä
 select * from tutkintoversio where siirtymaajan_loppupvm < voimassa_loppupvm;
+
+-- OPH-836 tutkintoja joita ei ole kohdistettu toimikunnalle
+select nt.tutkintotunnus,nt.nimi_fi,nt.luotuaika, tv.voimassa_loppupvm, tv.hyvaksytty
+  from nayttotutkinto nt 
+  inner join tutkintoversio tv on tv.tutkintotunnus = nt.tutkintotunnus 
+  where not exists (select 1 from toimikunta_ja_tutkinto tt where tt.tutkintotunnus = nt.tutkintotunnus)
+  and tv.voimassa_loppupvm > CURRENT_DATE 
+  and tv.hyvaksytty = 't';
+  
