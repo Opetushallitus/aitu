@@ -1,4 +1,4 @@
-;; Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
+;; Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
 ;;
 ;; This program is free software:  Licensed under the EUPL, Version 1.1 or - as
 ;; soon as they will be approved by the European Commission - subsequent versions
@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(defproject solita/opetushallitus-aitu-e2e "0.12.0"
+(defproject solita/opetushallitus-aitu-e2e "0.13.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [clj-webdriver "0.6.1" :exclusions [org.seleniumhq.selenium/selenium-java
                                                      org.seleniumhq.selenium/selenium-server
