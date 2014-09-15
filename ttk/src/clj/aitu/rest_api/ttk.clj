@@ -96,6 +96,10 @@
   [:sukunimi :etunimi :rooli :edustus :jarjesto_nimi_fi :jarjesto_nimi_sv :kielisyys :sahkoposti])
 
 (defroutes raportti-reitit
+  (GET "/raportti" req
+    (cu/autorisoitu-transaktio :raportti nil
+      (csv-download-response (arkisto/hae-tilastot-toimikunnista)
+                             "toimikunnat.csv")))
   (GET "/csv" req
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet toimikuntakenttien-jarjestys))

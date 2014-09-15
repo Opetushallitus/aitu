@@ -26,7 +26,8 @@
             [clojure.set :refer [rename-keys]]
             [oph.korma.korma :refer  :all ]
             [oph.common.util.util :refer :all]
-            [clojure.string :refer [blank? split]])
+            [clojure.string :refer [blank? split]]
+            [clojure-csv.core :refer [write-csv]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-toimikunnan-diaarinumero
@@ -325,17 +326,17 @@
           (for [[toimikausi-id toimikunnat] toimikunnat-toimikausittain
                 :let [toimikausi (get toimikaudet toimikausi-id)]]
             (cons (str (:alkupvm toimikausi) " - " (:loppupvm toimikausi)) (laske-kielisyydet toimikunnat)))
-          [(cons "Yhteensä" (laske-kielisyydet toimikunnat))]))
+          [(cons "Yhteensä" (laske-kielisyydet toimikunnat-toimikausittain))]))
 
 (defn ^:private kielisyydet-opintoaloittain [toimikunnat-opintoaloittain]
   (concat [["Opintoala" "suomenkielinen" "ruotsinkielinen" "kaksikielinen" "saamenkielinen" "yhteensä"]]
-          (for [[opintoala toimikunnat] toimikunnat-opintoaloittain]
+          (for [[opintoala toimikunnat] (sort-by key toimikunnat-opintoaloittain)]
             (cons opintoala (laske-kielisyydet toimikunnat)))
-          [(cons "Yhteensä" (laske-kielisyydet (filter :voimassa toimikunnat)))]))
+          [(cons "Yhteensä" (laske-kielisyydet (filter :voimassa toimikunnat-opintoaloittain)))]))
 
 (defn ^:private jasenyydet-toimikunnittain [toimikunnat]
   (concat [["Toimikunta" "mies" "nainen" "yhteensä"]]
-          (for [toimikunta toimikunnat
+          (for [toimikunta (sort-by :nimi_fi toimikunnat)
                 :let [jasenet (:jasenet toimikunta)
                       miehet (get jasenet "mies" 0)
                       naiset (get jasenet "nainen" 0)]]
@@ -347,11 +348,17 @@
 
 (defn tutkinnot-toimikunnittain [toimikunnat]
   (concat [["Toimikunta" "tutkintoja"]]
-          (for [toimikunta toimikunnat]
+          (for [toimikunta (sort-by :nimi_fi toimikunnat)]
             [(:nimi_fi toimikunta) (count (:tutkinnot toimikunta))])
           [["Yhteensä" (count (apply concat (map :tutkinnot toimikunnat)))]]))
 
-(defn ^:private hae-tilastot-toimikunnista []
+(defn sopimukset-tutkinnoittain [tutkinnot]
+  (concat [["Tutkinto" "sopimuksia"]]
+          (for [[nimi sopimuksia] (sort-by key tutkinnot)]
+            [nimi sopimuksia])
+          [["Yhteensä" (reduce + 0 (vals tutkinnot))]]))
+
+(defn hae-tilastot-toimikunnista []
   (let [toimikunta->opintoalat (apply merge-with clojure.set/union (for [{:keys [toimikunta selite_fi]} (sql/select toimikunta-ja-tutkinto
                                                                                                           (sql/with nayttotutkinto
                                                                                                             (sql/with opintoala))
@@ -378,14 +385,27 @@
         opintoaloittain (apply merge-with concat (for [toimikunta toimikunnat
                                                        :when (:voimassa toimikunta)
                                                        opintoala (:opintoalat toimikunta)]
-                                                   {opintoala [toimikunta]}))]
-    (concat (kielisyydet-toimikausittain toimikausittain toimikaudet)
-            tyhja-rivi
-            (kielisyydet-opintoaloittain opintoaloittain)
-            tyhja-rivi
-            (jasenyydet-toimikunnittain toimikunnat)
-            tyhja-rivi
-            (tutkinnot-toimikunnittain toimikunnat))))
-
-(defn hae-tilastot []
-  )
+                                                   {opintoala [toimikunta]}))
+        tutkinnot (into {} (for [{:keys [nimi_fi sopimukset]} (sql/select sopimus-ja-tutkinto
+                                                                (sql/with tutkintoversio
+                                                                  (sql/with nayttotutkinto))
+                                                                (sql/with jarjestamissopimus)
+                                                                (sql/where {:jarjestamissopimus.voimassa true})
+                                                                (sql/fields :nayttotutkinto.nimi_fi)
+                                                                (sql/aggregate (count :*) :sopimukset :nayttotutkinto.nimi_fi))]
+                             [nimi_fi sopimukset]))
+        raportti (->>
+                   (concat (kielisyydet-toimikausittain toimikausittain toimikaudet)
+                           tyhja-rivi
+                           (kielisyydet-opintoaloittain opintoaloittain)
+                           tyhja-rivi
+                           (jasenyydet-toimikunnittain toimikunnat)
+                           tyhja-rivi
+                           (tutkinnot-toimikunnittain toimikunnat)
+                           tyhja-rivi
+                           (sopimukset-tutkinnoittain tutkinnot))
+                   (clojure.walk/postwalk (fn [x]
+                                            (if (number? x)
+                                              (str x)
+                                              x))))]
+    (write-csv raportti :delimiter \;)))
