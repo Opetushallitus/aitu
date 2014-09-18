@@ -150,7 +150,7 @@
        polku))
 
 (defn casissa? []
-  (= (w/title) "CAS – Central Authentication Service"))
+  (.startsWith (w/title) "CAS"))
 
 (def cas-url (atom nil))
 
