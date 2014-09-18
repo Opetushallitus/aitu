@@ -83,7 +83,10 @@
                          (DesiredCapabilities.))
                        (.setCapability
                          CapabilityType/UNEXPECTED_ALERT_BEHAVIOUR
-                         UnexpectedAlertBehaviour/IGNORE))
+                         UnexpectedAlertBehaviour/IGNORE)
+                       (.setCapability
+                         CapabilityType/ACCEPT_SSL_CERTS
+                         true))
         driver (init-driver
                  (if remote_url
                     (RemoteWebDriver. (java.net.URL. remote_url) capabilities)
