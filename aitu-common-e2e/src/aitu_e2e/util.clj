@@ -92,6 +92,7 @@
                     (RemoteWebDriver. (java.net.URL. remote_url) capabilities)
                     (FirefoxDriver. capabilities)))]
     (w/set-driver! driver)
+    (w/implicit-wait 3000)
     (-> driver :webdriver .manage .timeouts (.setScriptTimeout 30 TimeUnit/SECONDS))))
 
 (defn puhdista-selain []
@@ -121,26 +122,16 @@
     (w/execute-script "window.jsErrors = []")
     tulos))
 
-(defn tarkista-otsikkotekstit [tulos]
-  (let [tarkistettavat-elementit ["h1" "h2" "h3" "label" "th" ".table-header .table-cell"]
-        tarkistukset (for [elementti tarkistettavat-elementit]
-                       {:elementti elementti :tyhjia (count (filter w/displayed? (w/find-elements {:css (str elementti ":empty:not(.select2-offscreen)")})))})]
-
-    (is (every? #(= (:tyhjia %) 0) tarkistukset)))
-  tulos)
-
 (defn with-webdriver* [f]
   (if (bound? #'*ng*)
     (do
       (puhdista-selain)
-      (-> (tarkasta-js-virheet f)
-          (tarkista-otsikkotekstit)))
+      (tarkasta-js-virheet f))
     (do
       (luo-webdriver!)
       (try
         (binding [*ng* (ByAngular. (:webdriver w/*driver*))]
-          (-> (tarkasta-js-virheet f)
-              (tarkista-otsikkotekstit)))
+          (tarkasta-js-virheet f))
         (finally
           (w/quit))))))
 
