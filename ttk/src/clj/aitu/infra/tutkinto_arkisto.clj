@@ -279,29 +279,32 @@
 (defn hae-raportti [ehdot]
   (let [tutkinnot (sql/select :tutkintoversio
                     (sql/join :inner :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+                    (sql/join :inner :opintoala (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
                     (sql/join :inner :toimikunta_ja_tutkinto (= :toimikunta_ja_tutkinto.tutkintotunnus :nayttotutkinto.tutkintotunnus))
                     (sql/join :inner :tutkintotoimikunta (= :tutkintotoimikunta.tkunta :toimikunta_ja_tutkinto.toimikunta))
                     (sql/join :inner :toimikausi (= :toimikausi.toimikausi_id :tutkintotoimikunta.toimikausi_id))
                     (sql/join :left [(sql/subselect :jarjestamissopimus
                                        (sql/join :inner :sopimus_ja_tutkinto (and (= :sopimus_ja_tutkinto.jarjestamissopimusid :jarjestamissopimus.jarjestamissopimusid)
                                                                                   (= :sopimus_ja_tutkinto.poistettu false)))
+                                       (sql/join :inner :koulutustoimija (= :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus))
                                        (sql/fields :sopimus_ja_tutkinto.tutkintoversio :jarjestamissopimus.toimikunta
-                                                   :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija
-                                                   :jarjestamissopimus.voimassa)) :sopimus]
+                                                   :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus
+                                                   [:koulutustoimija.nimi_fi :koulutustoimija_fi] :jarjestamissopimus.voimassa)) :sopimus]
                               (and (= :sopimus.tutkintoversio :tutkintoversio.tutkintoversio_id)
                                    (= :sopimus.toimikunta :tutkintotoimikunta.tkunta)
                                    (= :sopimus.voimassa true)))
-                    (sql/fields :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :nayttotutkinto.tutkintotaso
+                    (sql/fields [:nayttotutkinto.opintoala :opintoalatunnus] [:opintoala.selite_fi :opintoala_fi]
+                                :nayttotutkinto.tutkintotunnus :nayttotutkinto.tutkintotaso
                                 [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
-                                :tutkintoversio.peruste :sopimus.kieli :sopimus.koulutustoimija
+                                :tutkintoversio.peruste :sopimus.kieli :sopimus.ytunnus :sopimus.koulutustoimija_fi
                                 [:tutkintotoimikunta.diaarinumero :toimikunta] :tutkintotoimikunta.toimikausi_alku :tutkintotoimikunta.toimikausi_loppu)
                     (sql/aggregate (count :sopimus.koulutustoimija) :lukumaara)
                     (sql/group :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :tutkintoversio.peruste
-                               :sopimus.kieli :sopimus.koulutustoimija :tutkintotoimikunta.tkunta)
+                               :sopimus.kieli :sopimus.koulutustoimija_fi :tutkintotoimikunta.tkunta :opintoala.selite_fi :sopimus.ytunnus)
                     (sql/order :tutkintotoimikunta.toimikausi_loppu :desc)
                     (sql/order :nayttotutkinto.opintoala)
                     (sql/order :nayttotutkinto.nimi_fi)
-                    (sql/order :sopimus.koulutustoimija))]
+                    (sql/order :sopimus.koulutustoimija_fi))]
     (if (:avaimet ehdot)
       (map #(select-keys % (:avaimet ehdot)) tutkinnot)
       tutkinnot)))
