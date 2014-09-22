@@ -85,7 +85,7 @@
     (arkisto/paivita-tai-poista-jasenyys! diaarinumero jasenyys))
   {:status 200})
 
-(def toimikuntakenttien-jarjestys [:nimi_fi :nimi_sv :diaarinumero :tilikoodi :voimassa :kielisyys])
+(def toimikuntakenttien-jarjestys [:nimi_fi :nimi_sv :diaarinumero :tilikoodi :voimassa :kielisyys :sahkoposti])
 
 (def toimialakenttien-jarjestys [:opintoala_fi :opintoala_sv :tutkinto_fi :tutkinto_sv])
 
