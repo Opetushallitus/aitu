@@ -77,7 +77,8 @@
           (for [[_ v] (jarjesta-avaimet rivi kenttien-jarjestys)]
             (str v)))))
 
-(def sarakkeiden-otsikot {:alkupvm "Alkupäivämäärä"
+(def sarakkeiden-otsikot {:aidinkieli "Äidinkieli"
+                          :alkupvm "Alkupäivämäärä"
                           :diaarinumero "Diaarinumero"
                           :edustus "Edustus"
                           :etunimi "Etunimi"
@@ -97,6 +98,7 @@
                           :opintoala_sv "Opintoala ruotsiksi"
                           :oppilaitos "Oppilaitos"
                           :oppilaitoskoodi "Oppilaitoskoodi"
+                          :organisaatio "Organisaatio"
                           :osoite "Osoite"
                           :peruste "Tutkinnon peruste"
                           :postinumero "Postinumero"
