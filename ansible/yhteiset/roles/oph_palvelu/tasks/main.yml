@@ -93,12 +93,12 @@
 
 - include: migraatioskripti.yml
   dest: "{{ asennushakemisto }}/migrate-install-{{ palvelu }}.sh"
-  migraation_argumentit: "{{ migraation_argumentit_asennuksen_jalkeen|default(migraation_argumentit) }}"
+  migraation_argumentit_templatelle: "{{ migraation_argumentit_asennuksen_jalkeen|default(migraation_argumentit) }}"
   when: migraatio_jar_palvelimella is defined
 
 - include: migraatioskripti.yml
   dest: "{{ asennushakemisto }}/migrate-dump-{{ palvelu }}.sh"
-  migraation_argumentit: "{{ migraation_argumentit_dumpin_jalkeen|default(migraation_argumentit) }}"
+  migraation_argumentit_templatelle: "{{ migraation_argumentit_dumpin_jalkeen|default(migraation_argumentit) }}"
   when: migraatio_jar_palvelimella is defined
 
 - name: Päivitä palvelun init.d-skripti
