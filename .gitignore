@@ -3,3 +3,5 @@ node_modules
 bower_components
 ansible/aitu_vagrant/salasanat/
 .settings
+.idea/
+*.iml
