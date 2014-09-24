@@ -392,16 +392,19 @@
                                      :tutkinnot (toimikunta->tutkinnot (:tkunta %))
                                      :jasenet (toimikunta->jasenet (:tkunta %)))))
         opintoaloittain (apply merge-with concat (for [toimikunta toimikunnat
-                                                       :when (:voimassa toimikunta)
                                                        opintoala (:opintoalat toimikunta)]
                                                    {opintoala [toimikunta]}))
-        tutkinnot (into {} (for [{:keys [nimi_fi sopimukset]} (sql/select sopimus-ja-tutkinto
-                                                                (sql/with tutkintoversio
-                                                                  (sql/with nayttotutkinto))
-                                                                (sql/with jarjestamissopimus)
-                                                                (sql/where {:jarjestamissopimus.voimassa true})
+        tutkinnot (into {} (for [{:keys [nimi_fi sopimukset]} (sql/select nayttotutkinto
+                                                                (sql/join :inner tutkintoversio
+                                                                          (= :nayttotutkinto.uusin_versio_id :tutkintoversio.tutkintoversio_id))
+                                                                (sql/join :left [(sql/subselect sopimus-ja-tutkinto
+                                                                                   (sql/join :inner jarjestamissopimus
+                                                                                             (and (= :sopimus_ja_tutkinto.jarjestamissopimusid :jarjestamissopimus.jarjestamissopimusid)
+                                                                                                  (= :jarjestamissopimus.voimassa true)))
+                                                                                   (sql/fields :sopimus_ja_tutkinto.tutkintoversio :jarjestamissopimus.jarjestamissopimusid)) :sopimus]
+                                                                          (= :sopimus.tutkintoversio :tutkintoversio.tutkintoversio_id))
                                                                 (sql/fields :nayttotutkinto.nimi_fi)
-                                                                (sql/aggregate (count :*) :sopimukset :nayttotutkinto.nimi_fi))]
+                                                                (sql/aggregate (count :sopimus.jarjestamissopimusid) :sopimukset :nayttotutkinto.nimi_fi))]
                              [nimi_fi sopimukset]))
         raportti (concat (tilastot-toimikunnittain toimikunnat)
                          tyhja-rivi
