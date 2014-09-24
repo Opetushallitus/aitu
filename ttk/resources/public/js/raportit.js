@@ -12,20 +12,24 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('raportit', ['ngRoute'])
+angular.module('raportit', ['ngRoute', 'resources'])
 
   .config(function($routeProvider) {
     $routeProvider.
       when('/raportit', {controller:'RaportitController', templateUrl:'template/raportit'});
   })
 
-  .controller('RaportitController', ['$scope', 'i18n',
-    function($scope, i18n) {
+  .controller('RaportitController', ['$scope', 'i18n', 'ToimikausiResource',
+    function($scope, i18n, ToimikausiResource) {
+      ToimikausiResource.query().$promise.then(function(toimikaudet) {
+        $scope.toimikaudet = toimikaudet;
+        $scope.tilasto_toimikausi = _(toimikaudet).filter('voimassa').pluck('toimikausi_id').first();
+      });
       $scope.raportit = [
-        {nimi: i18n.raportit.nayttotutkinnot, api: 'tutkinto/raportti'},
-        {nimi: i18n.raportit.jarjestamissopimukset, api: 'jarjestamissopimus/raportti'},
-        {nimi: i18n.raportit.tilastotietoa, api: 'ttk/tilastoraportti?toimikausi_id=2'},
-        {nimi: i18n.raportit.tutkintotoimikunnat, api: 'ttk/raportti'}
+        {id: 'nayttotutkinnot', nimi: i18n.raportit.nayttotutkinnot},
+        {id: 'jarjestamissopimukset', nimi: i18n.raportit.jarjestamissopimukset},
+        {id: 'tilastotietoa', nimi: i18n.raportit.tilastotietoa},
+        {id: 'tutkintotoimikunnat', nimi: i18n.raportit.tutkintotoimikunnat}
       ];
       $scope.raportti = $scope.raportit[0];
     }

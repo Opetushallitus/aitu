@@ -88,4 +88,13 @@ angular.module('resources', ['ngRoute'])
         id:"hae-henkilo-toimikunnan-jaseneksi"
       }
     });
+  }])
+
+  .factory('ToimikausiResource', ['$resource', function($resource) {
+    return $resource(ophBaseUrl + '/api/toimikausi', {}, {
+      query: {
+        method: 'GET',
+        isArray: true,
+        id: 'toimikausilistaus'
+      }});
   }]);
