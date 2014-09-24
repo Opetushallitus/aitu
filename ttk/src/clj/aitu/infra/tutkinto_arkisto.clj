@@ -288,7 +288,7 @@
                                                                                   (= :sopimus_ja_tutkinto.poistettu false)))
                                        (sql/join :inner :koulutustoimija (= :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus))
                                        (sql/fields :sopimus_ja_tutkinto.tutkintoversio :jarjestamissopimus.toimikunta
-                                                   :sopimus_ja_tutkinto.kieli :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus
+                                                   :sopimus_ja_tutkinto.kieli :koulutustoimija.ytunnus
                                                    [:koulutustoimija.nimi_fi :koulutustoimija_fi] :jarjestamissopimus.voimassa)) :sopimus]
                               (and (= :sopimus.tutkintoversio :tutkintoversio.tutkintoversio_id)
                                    (= :sopimus.toimikunta :tutkintotoimikunta.tkunta)
@@ -298,7 +298,7 @@
                                 [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
                                 :tutkintoversio.peruste :sopimus.kieli :sopimus.ytunnus :sopimus.koulutustoimija_fi
                                 [:tutkintotoimikunta.diaarinumero :toimikunta] :tutkintotoimikunta.toimikausi_alku :tutkintotoimikunta.toimikausi_loppu)
-                    (sql/aggregate (count :sopimus.koulutustoimija) :lukumaara)
+                    (sql/aggregate (count :sopimus.ytunnus) :lukumaara)
                     (sql/group :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :tutkintoversio.peruste
                                :sopimus.kieli :sopimus.koulutustoimija_fi :tutkintotoimikunta.tkunta :opintoala.selite_fi :sopimus.ytunnus)
                     (sql/order :tutkintotoimikunta.toimikausi_loppu :desc)
