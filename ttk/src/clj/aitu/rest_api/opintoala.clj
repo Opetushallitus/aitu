@@ -21,6 +21,8 @@
             [korma.db :as db]))
 
 (c/defroutes reitit
+  (cu/defapi :yleinen-rest-api nil :get "/haku" [termi]
+    (json-response (arkisto/hae-termilla termi)))
   (cu/defapi :yleinen-rest-api nil :get "/" []
     (json-response (arkisto/hae-kaikki)))
   (cu/defapi :yleinen-rest-api nil :get "/:koodi" [koodi]

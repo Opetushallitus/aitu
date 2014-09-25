@@ -56,3 +56,14 @@
         koulutusala (koulutusala-arkisto/hae (:koulutusala_tkkoodi opintoala))]
     (some-> opintoala
             (assoc :koulutusala koulutusala))))
+
+(defn hae-termilla
+  "Hakee opintoalat joiden nimestä löytyy annettu termi"
+  [termi]
+  (let [nimi (str "%" termi "%")]
+    (sql/select opintoala
+      (sql/where (and
+                   {:voimassa_loppupvm [>= (sql/sqlfn now)]}
+                   (or {:selite_fi [ilike nimi]}
+                       {:selite_sv [ilike nimi]})))
+      (sql/fields :opintoala_tkkoodi :selite_fi :selite_sv))))

@@ -307,6 +307,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
     }
   }])
   .directive('hakuValitsin', ['i18n', 'kieli', 'modelPromise', function(i18n, kieli, modelPromise) {
+
     return {
       restrict: 'E',
       replace: true,
@@ -329,7 +330,6 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         // vaihtuessa. Tämän vuoksi ei voida antaa Angular-scopessa olevaa
         // modelia suoraan Select2:lle, vaan annetaan sille eri olio, ja
         // pidetään watcheilla niiden id- ja text-kentät synkassa.
-
         $scope.$watch('selection', function(value){
           if(value && value[modelIdProp]) {
             $scope.model = $scope.model || {};
@@ -374,11 +374,11 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
             return obj;
           }
         }
-
         $scope.options = {
           width: '100%',
           minimumInputLength : 1,
           allowClear : true,
+          multiple : $scope.monivalinta,
           ajax: {
             url : $scope.url,
             dataType: 'json',
@@ -398,6 +398,73 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
           formatSelection : function(object) {
             return lokalisoituTeksti(object, modelTextProp);
           },
+          id : function(object) {
+            return object[modelIdProp];
+          },
+          formatNoMatches: function () {
+            return i18n.yleiset['ei-tuloksia'];
+          },
+          formatInputTooShort: function () {
+            return i18n.yleiset['anna-hakuehto'];
+          },
+          formatSearching: function () {
+            return i18n.yleiset['etsitaan'];
+          },
+          initSelection : function () {}
+        };
+      }
+    };
+  }])
+
+  .directive('hakuMonivalitsin', ['i18n', 'kieli', 'modelPromise', function(i18n, kieli, modelPromise) {
+
+    return {
+      restrict: 'E',
+      replace: true,
+      scope : {
+        otsikko : '@',
+        url : '@',
+        model : '=',
+        modelIdProperty : '@',
+        modelTextProperty : '@',
+        pakollinen : '='
+      },
+      templateUrl : 'template/haku-monivalitsin',
+      controller : function($scope) {
+        var modelIdProp = $scope.modelIdProperty;
+        var modelTextProp = $scope.modelTextProperty;
+
+        function lokalisoituTeksti(obj) {
+          var teksti = '';
+
+          if(_.has(obj, modelTextProp)) {
+            teksti = obj[modelTextProp];
+          } else {
+            teksti = obj[modelTextProp + '_' + kieli];
+          }
+          return teksti;
+        }
+
+        $scope.options = {
+          width: '100%',
+          minimumInputLength : 1,
+          allowClear : true,
+          multiple : true,
+          ajax: {
+            url : $scope.url,
+            dataType: 'json',
+            quietMillis: 500,
+            data: function (term) {
+              return {
+                termi: term // search term
+              };
+            },
+            results: function (data) {
+              return {results: data};
+            }
+          },
+          formatResult : lokalisoituTeksti,
+          formatSelection : lokalisoituTeksti,
           id : function(object) {
             return object[modelIdProp];
           },

@@ -21,15 +21,23 @@ angular.module('raportit', ['ngRoute', 'resources'])
 
   .controller('RaportitController', ['$scope', 'i18n', 'ToimikausiResource',
     function($scope, i18n, ToimikausiResource) {
+      $scope.jasenet = {
+        rooli: [],
+        edustus: [],
+        jarjesto: [],
+        yhteystiedot:false
+      };
       ToimikausiResource.query().$promise.then(function(toimikaudet) {
         $scope.toimikaudet = toimikaudet;
         $scope.tilasto_toimikausi = _(toimikaudet).filter('voimassa').pluck('toimikausi_id').first();
+        $scope.jasenet.toimikausi = _(toimikaudet).filter('voimassa').pluck('toimikausi_id').first();
       });
       $scope.raportit = [
         {id: 'nayttotutkinnot', nimi: i18n.raportit.nayttotutkinnot},
         {id: 'jarjestamissopimukset', nimi: i18n.raportit.jarjestamissopimukset},
         {id: 'tilastotietoa', nimi: i18n.raportit.tilastotietoa},
-        {id: 'tutkintotoimikunnat', nimi: i18n.raportit.tutkintotoimikunnat}
+        {id: 'tutkintotoimikunnat', nimi: i18n.raportit.tutkintotoimikunnat},
+        {id: 'jasenet', nimi: i18n.raportit.jasenet}
       ];
       $scope.raportti = $scope.raportit[0];
     }

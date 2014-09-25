@@ -413,27 +413,33 @@
                          (sopimukset-tutkinnoittain tutkinnot))]
     (write-csv (muuta-kaikki-stringeiksi raportti) :delimiter \;)))
 
-(defn ^:private hae-jasenyydet-ehdoilla [{:keys [nykyinen-toimikausi rooli edustus jarjesto kieli yhteystiedot]}]
-  (group-by :toimikausi_id (->
-                             (sql/select* jasenyys)
-                             (sql/with henkilo
-                               (sql/join {:table :jarjesto} (= :henkilo.jarjesto :jarjesto.jarjestoid)))
-                             (sql/with tutkintotoimikunta)
-                             (sql/where (and {:alkupvm [<= (sql/sqlfn now)]}
-                                             (or {:loppupvm [>= (sql/sqlfn now)]}
-                                                 {:loppupvm nil})))
-                             (sql/order :henkilo.sukunimi)
-                             (sql/order :henkilo.etunimi)
-                             (sql/fields [:tutkintotoimikunta.nimi_fi :toimikunta] :tutkintotoimikunta.toimikausi_id
-                                         :henkilo.etunimi :henkilo.sukunimi :rooli :edustus :henkilo.aidinkieli [:jarjesto.nimi_fi :jarjesto])
-                             (cond->
-                               (seq rooli)         (sql/where {:rooli [in rooli]})
-                               (seq edustus)       (sql/where {:edustus [in edustus]})
-                               (seq jarjesto)      (sql/where {:henkilo.jarjesto [in jarjesto]})
-                               (seq kieli)         (sql/where {:henkilo.aidinkieli [in kieli]})
-                               nykyinen-toimikausi (sql/where {:toimikausi.voimassa true})
-                               yhteystiedot        (sql/fields :henkilo.sahkoposti :henkilo.puhelin :henkilo.osoite :henkilo.postinumero :henkilo.postitoimipaikka))
-                             sql/exec)))
+(defn hae-jasenyydet-ehdoilla [{:keys [toimikausi rooli edustus jarjesto kieli yhteystiedot opintoala]}]
+  (->
+    (sql/select* jasenyys)
+    (sql/with henkilo
+      (sql/join :left {:table :jarjesto} (= :henkilo.jarjesto :jarjesto.jarjestoid)))
+    (sql/with tutkintotoimikunta
+      (sql/join :inner {:table :toimikausi} (= :tutkintotoimikunta.toimikausi_id :toimikausi.toimikausi_id)))
+    (sql/where (or {:toimikausi.voimassa false}
+                   (and {:alkupvm [<= (sql/sqlfn now)]}
+                        (or {:loppupvm [>= (sql/sqlfn now)]}
+                            {:loppupvm nil}))))
+    (sql/order :henkilo.sukunimi)
+    (sql/order :henkilo.etunimi)
+    (sql/fields [:tutkintotoimikunta.nimi_fi :toimikunta] :henkilo.etunimi :henkilo.sukunimi :rooli :edustus :henkilo.aidinkieli [:jarjesto.nimi_fi :jarjesto])
+    (cond->
+      (seq rooli)     (sql/where {:rooli [in rooli]})
+      (seq edustus)   (sql/where {:edustus [in edustus]})
+      (seq jarjesto)  (sql/where (or {:henkilo.jarjesto [in jarjesto]}
+                                     {:jarjesto.keskusjarjestoid [in jarjesto]}))
+      (seq kieli)     (sql/where {:henkilo.aidinkieli [in kieli]})
+      (seq opintoala) (sql/where (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
+                                                     (sql/with nayttotutkinto)
+                                                     (sql/where {:toimikunta :tutkintotoimikunta.tkunta
+                                                                 :nayttotutkinto.opintoala [in opintoala]}))))
+      toimikausi      (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi})
+      yhteystiedot    (sql/fields :henkilo.organisaatio :henkilo.sahkoposti :henkilo.puhelin :henkilo.osoite :henkilo.postinumero :henkilo.postitoimipaikka))
+    sql/exec))
 
 (defn ^:private henkilo->rivi [henkilo]
   ((juxt :sukunimi :etunimi :toimikunta :rooli :edustus :aidinkieli :jarjesto

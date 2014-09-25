@@ -28,7 +28,7 @@
                      json-response parse-iso-date sallittu-jos cachable-json-response]]
             [aitu.compojure-util :as cu]
             [compojure.api.sweet :refer :all]
-            [aitu.util :refer [muodosta-csv]]))
+            [aitu.util :refer [muodosta-csv ->vector]]))
 
 (defn salli-toimikunnan-paivitys? [diaarinumero]
   (some->
@@ -95,11 +95,26 @@
 (def jasenkenttien-jarjestys
   [:sukunimi :etunimi :rooli :edustus :jarjesto_nimi_fi :jarjesto_nimi_sv :kielisyys :sahkoposti])
 
+(def jasenraporttikenttien-jarjestys
+  [:sukunimi :etunimi :toimikunta :rooli :edustus :aidinkieli :jarjesto
+   :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka])
+
 (defroutes raportti-reitit
-  (GET "/tilastoraportti" [toimikausi_id]
+  (GET "/tilastoraportti" [toimikausi]
     (cu/autorisoitu-transaktio :raportti nil
-      (csv-download-response (arkisto/hae-tilastot-toimikunnista (Integer/parseInt toimikausi_id))
+      (csv-download-response (arkisto/hae-tilastot-toimikunnista (Integer/parseInt toimikausi))
                              "toimikunnat.csv")))
+  (GET "/jasenraportti" [toimikausi rooli edustus jarjesto kieli yhteystiedot opintoala]
+    (let [hakuehdot {:toimikausi (Integer/parseInt toimikausi)
+                     :rooli (->vector rooli)
+                     :edustus (->vector edustus)
+                     :jarjesto (map #(Integer/parseInt %) (->vector jarjesto))
+                     :kieli (->vector kieli)
+                     :yhteystiedot (Boolean/parseBoolean yhteystiedot)
+                     :opintoala (->vector opintoala)}]
+      (cu/autorisoitu-transaktio :raportti nil
+        (csv-download-response (muodosta-csv (arkisto/hae-jasenyydet-ehdoilla hakuehdot) jasenraporttikenttien-jarjestys)
+                               "jasenet.csv"))))
   (GET "/raportti" req
     (cu/autorisoitu-transaktio :raportti nil
       (csv-download-response (arkisto/hae-toimikuntaraportti (:params req))

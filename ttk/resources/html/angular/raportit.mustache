@@ -9,22 +9,73 @@
     <select ng-model="raportti" ng-options="raportti.nimi for raportti in raportit"></select>
   </fieldset>
 
-  <fieldset ng-show="raportti.id === 'nayttotutkinnot'">
-  	<a ng-href="[[base-url]]/api/tutkinto/raportti" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
-  </fieldset>
+  <div ng-show="raportti.id === 'nayttotutkinnot'">
+    <a ng-href="[[base-url]]/api/tutkinto/raportti" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+  </div>
 
-  <fieldset ng-show="raportti.id === 'jarjestamissopimukset'">
-  	<a ng-href="[[base-url]]/api/jarjestamissopimus/raportti" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
-  </fieldset>
+  <div ng-show="raportti.id === 'jarjestamissopimukset'">
+    <a ng-href="[[base-url]]/api/jarjestamissopimus/raportti" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+  </div>
 
-  <fieldset ng-show="raportti.id === 'tilastotietoa'">
-  	<label>[[toimikausi]]</label><select ng-model="tilasto_toimikausi" ng-options="toimikausi.toimikausi_id as toimikausi.alkupvm + ' - ' + toimikausi.loppupvm for toimikausi in toimikaudet"></select>
-  	<a ng-href="[[base-url]]/api/ttk/tilastoraportti?toimikausi_id={{tilasto_toimikausi}}" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
-  </fieldset>
+  <div ng-show="raportti.id === 'tilastotietoa'">
+    <fieldset>
+      <label>[[toimikausi]]</label>
+      <select ng-model="tilasto_toimikausi" ng-options="toimikausi.toimikausi_id as toimikausi.alkupvm + ' - ' + toimikausi.loppupvm for toimikausi in toimikaudet"></select>
+    </fieldset>
+    <div>
+      <a ng-href="[[base-url]]/api/ttk/tilastoraportti?toimikausi={{tilasto_toimikausi}}" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+    </div>
+  </div>
 
-  <fieldset ng-show="raportti.id === 'tutkintotoimikunnat'">
-  	<a ng-href="[[base-url]]/api/ttk/raportti" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
-  </fieldset>
+  <div ng-show="raportti.id === 'tutkintotoimikunnat'">
+    <a ng-href="[[base-url]]/api/ttk/raportti" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+  </div>
+
+  <div ng-show="raportti.id === 'jasenet'">
+    <div>
+      <fieldset>
+        <label>[[toimikausi]]</label>
+        <select ng-model="jasenet.toimikausi" ng-options="toimikausi.toimikausi_id as toimikausi.alkupvm + ' - ' + toimikausi.loppupvm for toimikausi in toimikaudet"></select>
+      </fieldset>
+    </div>
+    <div>
+      <enum-monivalinta nimi="rooli" otsikko="[[rooli]]" arvot="jasenet.rooli"></enum-monivalinta>
+    </div>
+    <div>
+      <enum-monivalinta nimi="edustus" otsikko="[[edustus]]" arvot="jasenet.edustus"></enum-monivalinta>
+    </div>
+    <div>
+      <enum-monivalinta nimi="kieli" otsikko="[[kielisyys]]" arvot="jasenet.kieli"></enum-monivalinta>
+    </div>
+    <div>
+      <haku-monivalitsin
+        otsikko="[[jarjesto]] / [[keskusjarjesto]]"
+        url="[[base-url]]/api/jarjesto/haku/"
+        model="jasenet.jarjesto"
+        model-id-property="jarjesto"
+        model-text-property="jarjesto_nimi">
+      </haku-monivalitsin>
+    </div>
+    <div>
+      <haku-monivalitsin
+        otsikko="[[opintoala]]"
+        url="[[base-url]]/api/opintoala/haku"
+        model="jasenet.opintoala"
+        model-id-property="opintoala_tkkoodi"
+        model-text-property="selite">
+      </haku-monivalitsin>
+    </div>
+    <div>
+      <fieldset>
+        <label>[[nayta-yhteystiedot]]</label>
+        <input type="checkbox" ng-model="jasenet.yhteystiedot"></input>
+      </fieldset>
+    </div>
+    <div>
+      <a ng-href="[[base-url]]/api/ttk/jasenraportti?toimikausi={{jasenet.toimikausi}}&{{jasenet.rooli|parametrit:'nimi':'rooli'}}&{{jasenet.edustus|parametrit:'nimi':'edustus'}}&{{jasenet.jarjesto|parametrit:'jarjesto':'jarjesto'}}&{{jasenet.kieli|parametrit:'nimi':'kieli'}}&yhteystiedot={{jasenet.yhteystiedot}}&{{jasenet.opintoala|parametrit:'opintoala_tkkoodi':'opintoala'}}"
+         class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+    </div>
+  </div>
 
 </form>
 [[/i18n.raportit]]
