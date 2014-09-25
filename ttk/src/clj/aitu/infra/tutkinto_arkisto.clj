@@ -297,10 +297,11 @@
                                 :nayttotutkinto.tutkintotunnus :nayttotutkinto.tutkintotaso
                                 [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
                                 :tutkintoversio.peruste :sopimus.kieli :sopimus.ytunnus :sopimus.koulutustoimija_fi
-                                [:tutkintotoimikunta.diaarinumero :toimikunta] :tutkintotoimikunta.toimikausi_alku :tutkintotoimikunta.toimikausi_loppu)
+                                [:tutkintotoimikunta.diaarinumero :toimikunta] [:tutkintotoimikunta.nimi_fi :toimikunta_fi]
+                                :tutkintotoimikunta.toimikausi_alku :tutkintotoimikunta.toimikausi_loppu)
                     (sql/aggregate (count :sopimus.ytunnus) :lukumaara)
                     (sql/group :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :tutkintoversio.peruste
-                               :sopimus.kieli :sopimus.koulutustoimija_fi :tutkintotoimikunta.tkunta :opintoala.selite_fi :sopimus.ytunnus)
+                               :sopimus.kieli :sopimus.koulutustoimija_fi :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.tkunta :opintoala.selite_fi :sopimus.ytunnus)
                     (sql/order :tutkintotoimikunta.toimikausi_loppu :desc)
                     (sql/order :nayttotutkinto.opintoala)
                     (sql/order :nayttotutkinto.nimi_fi)
