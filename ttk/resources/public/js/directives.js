@@ -306,7 +306,8 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       return (model && model.$promise) || $q.when(model);
     }
   }])
-  .directive('hakuValitsin', ['i18n', 'kieli', 'modelPromise', function(i18n, kieli, modelPromise) {
+
+  .directive('hakuValitsin', ['i18n', 'kieli', function(i18n, kieli, modelPromise) {
 
     return {
       restrict: 'E',
@@ -317,119 +318,10 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         model : '=',
         modelIdProperty : '@',
         modelTextProperty : '@',
-        searchPropertyMap : '@',
-        pakollinen : '='
+        pakollinen : '=',
+        monivalinta : '='
       },
       templateUrl : 'template/haku-valitsin',
-      controller : function($scope) {
-        var modelIdProp = $scope.modelIdProperty;
-        var modelTextProp = $scope.modelTextProperty;
-        var searchPropertyMap = $scope.$eval($scope.searchPropertyMap);
-
-        // Select2 hävittää saamastaan model-oliosta kenttiä valinnan
-        // vaihtuessa. Tämän vuoksi ei voida antaa Angular-scopessa olevaa
-        // modelia suoraan Select2:lle, vaan annetaan sille eri olio, ja
-        // pidetään watcheilla niiden id- ja text-kentät synkassa.
-        $scope.$watch('selection', function(value){
-          if(value && value[modelIdProp]) {
-            $scope.model = $scope.model || {};
-            _.assign($scope.model, value);
-          } else if (value === '') {
-            //Kun tyhjennetään select2 inputti.
-            delete $scope.model[modelIdProp];
-          }});
-
-        // Jostain syystä watch ei huomaa, kun Angular resourcen promise
-        // valmistuu ja täyttää puuttuvat kentät modeliin. Kierretään ongelma
-        // odottamalla promisea eksplisiittisesti. Direktiivin model voi olla
-        // myös tavallinen olio, joten haetaan modelille promise
-        // modelPromise-funktiolla (ks. yllä).
-        $scope.$watch('model', function(value) {
-          modelPromise(value).then(function(){
-            if (value && value[modelIdProp]) {
-              $scope.selection = $scope.selection ? $scope.selection : {};
-              $scope.selection[modelIdProp] = value[modelIdProp];
-              $scope.selection[modelTextProp] = lokalisoituTeksti(value, modelTextProp);
-            }
-          })
-        });
-
-        function lokalisoituTeksti(obj, textProp) {
-          var teksti = '';
-
-          if(_.has(obj, textProp)) {
-            teksti = obj[textProp];
-          } else {
-            teksti = obj[textProp + '_' + kieli];
-          }
-          return teksti;
-        }
-
-        function mapSearchResult(obj) {
-          if (searchPropertyMap) {
-            return _.transform(searchPropertyMap, function (result, toKey, fromKey) {
-              result[toKey] = obj[fromKey];
-            });
-          } else {
-            return obj;
-          }
-        }
-        $scope.options = {
-          width: '100%',
-          minimumInputLength : 1,
-          allowClear : true,
-          multiple : $scope.monivalinta,
-          ajax: {
-            url : $scope.url,
-            dataType: 'json',
-            quietMillis: 500,
-            data: function (term) {
-              return {
-                termi: term // search term
-              };
-            },
-            results: function (data) {
-              return {results: _.map(data, mapSearchResult)};
-            }
-          },
-          formatResult : function(object) {
-            return lokalisoituTeksti(object, modelTextProp);
-          },
-          formatSelection : function(object) {
-            return lokalisoituTeksti(object, modelTextProp);
-          },
-          id : function(object) {
-            return object[modelIdProp];
-          },
-          formatNoMatches: function () {
-            return i18n.yleiset['ei-tuloksia'];
-          },
-          formatInputTooShort: function () {
-            return i18n.yleiset['anna-hakuehto'];
-          },
-          formatSearching: function () {
-            return i18n.yleiset['etsitaan'];
-          },
-          initSelection : function () {}
-        };
-      }
-    };
-  }])
-
-  .directive('hakuMonivalitsin', ['i18n', 'kieli', 'modelPromise', function(i18n, kieli, modelPromise) {
-
-    return {
-      restrict: 'E',
-      replace: true,
-      scope : {
-        otsikko : '@',
-        url : '@',
-        model : '=',
-        modelIdProperty : '@',
-        modelTextProperty : '@',
-        pakollinen : '='
-      },
-      templateUrl : 'template/haku-monivalitsin',
       controller : function($scope) {
         var modelIdProp = $scope.modelIdProperty;
         var modelTextProp = $scope.modelTextProperty;
@@ -449,7 +341,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
           width: '100%',
           minimumInputLength : 1,
           allowClear : true,
-          multiple : true,
+          multiple : $scope.monivalinta,
           ajax: {
             url : $scope.url,
             dataType: 'json',
