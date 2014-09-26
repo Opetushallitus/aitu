@@ -72,13 +72,13 @@
   <fieldset ng-hide="muokkausTila">
     <label ng-hide="jasen.henkilo.keskusjarjesto">[[jarjesto]]</label>
     <label ng-hide="!jasen.henkilo.keskusjarjesto">[[keskusjarjesto]]</label>
-    <p>{{jasen.henkilo.jarjesto_nimi | lokalisoi:jasen.henkilo:'jarjesto_nimi'}}</p>
+    <p>{{jasen.henkilo.jarjesto.jarjesto_nimi | lokalisoi:jasen.henkilo.jarjesto:'jarjesto_nimi'}}</p>
   </fieldset>
   <haku-valitsin
     ng-show="muokkausTila"
     otsikko="[[jarjesto]] / [[keskusjarjesto]]"
     url="[[base-url]]/api/jarjesto/haku/"
-    model="jasen.henkilo"
+    model="jasen.henkilo.jarjesto"
     model-id-property="jarjesto"
     model-text-property="jarjesto_nimi">
   </haku-valitsin>

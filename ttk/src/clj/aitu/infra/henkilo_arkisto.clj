@@ -107,6 +107,11 @@
     piilota-salaiset
     first))
 
+(defn ^:private eriyta-jarjesto
+  "Eriyttää henkilön järjestötiedon omaan mappiin"
+  [henkilo]
+  (assoc henkilo :jarjesto (select-keys henkilo [:jarjesto :jarjesto_nimi_fi :jarjesto_nimi_sv])))
+
 (defn hae-hlo-ja-ttk
   "Hakee henkilön ja toimikuntien jäsenyystiedot id:n perusteella"
   [id]
@@ -123,6 +128,7 @@
       (sql/where {:henkiloid id}))
     piilota-salaiset
     first
+    eriyta-jarjesto
     (update-in [:jasenyys] #(for [jasen %] (assoc jasen :ttk (toimikunta-kaytava/hae (:toimikunta jasen)))))))
 
 (sm/defn paivita!

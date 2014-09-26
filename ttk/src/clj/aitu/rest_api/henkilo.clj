@@ -59,7 +59,7 @@
                         :osoite_julkinen osoite_julkinen
                         :postinumero postinumero
                         :postitoimipaikka postitoimipaikka
-                        :jarjesto jarjesto
+                        :jarjesto (:jarjesto jarjesto)
                         :lisatiedot lisatiedot
                         :nayttomestari nayttomestari}]
         (validoi henkilodto henkilon-validointisaannot ((i18n/tekstit) :validointi)
@@ -112,7 +112,7 @@
                         :osoite_julkinen osoite_julkinen
                         :postinumero postinumero
                         :postitoimipaikka postitoimipaikka
-                        :jarjesto jarjesto
+                        :jarjesto (:jarjesto jarjesto)
                         :lisatiedot lisatiedot
                         :nayttomestari nayttomestari}]
         (validoi henkilodto henkilon-validointisaannot ((i18n/tekstit) :validointi)
