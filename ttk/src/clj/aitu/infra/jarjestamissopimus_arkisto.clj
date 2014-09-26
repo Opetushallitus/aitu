@@ -492,7 +492,7 @@
                 (sql/fields :jarjestamissopimus.alkupvm :jarjestamissopimus.loppupvm :jarjestamissopimus.sopimusnumero
                             :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv]
                             [(sql/raw "case when tutkintoversio.siirtymaajan_loppupvm = '2199-01-01' then null else tutkintoversio.siirtymaajan_loppupvm end") :siirtymaajan_loppupvm]
-                            [:tutkintotoimikunta.nimi_fi :toimikunta_fi] [:tutkintotoimikunta.nimi_sv :toimikunta_sv]
+                            :tutkintotoimikunta.diaarinumero [:tutkintotoimikunta.nimi_fi :toimikunta_fi] [:tutkintotoimikunta.nimi_sv :toimikunta_sv]
                             [:opintoala.opintoala_tkkoodi :opintoalatunnus] [:opintoala.selite_fi :opintoala_fi] [:opintoala.selite_sv :opintoala_sv]
                             :nayttotutkinto.tutkintotunnus [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv] :tutkintoversio.peruste
                             :oppilaitos.oppilaitoskoodi [:oppilaitos.nimi :oppilaitos] :sopimus_ja_tutkinto.vastuuhenkilo
