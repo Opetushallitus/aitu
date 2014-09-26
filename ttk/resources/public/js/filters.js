@@ -250,10 +250,8 @@ angular.module('filters', [] )
 
   .filter('parametrit', [function() {
     return function(input, property, kentta) {
-      if(input && input.length > 0) {
-        return kentta + "=" + _.pluck(input, property).join("&" + kentta + "=");
-      } else {
-        return "";
-      }
+      return _(input).map(function(item) {
+        return kentta + "=" + item[property];
+      }).join("&");
     }
   }]);
