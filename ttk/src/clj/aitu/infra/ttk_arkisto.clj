@@ -441,36 +441,6 @@
       yhteystiedot    (sql/fields :henkilo.organisaatio :henkilo.sahkoposti :henkilo.puhelin :henkilo.osoite :henkilo.postinumero :henkilo.postitoimipaikka))
     sql/exec))
 
-(defn ^:private henkilo->rivi [henkilo]
-  ((juxt :sukunimi :etunimi :toimikunta :rooli :edustus :aidinkieli :jarjesto
-         :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka)
-    henkilo))
-
-(defn ^:private henkilot->rivit [toimikausi henkilot]
-  (concat [[(str "Toimikausi " (:alkupvm toimikausi) " - " (:loppupvm toimikausi))]]
-          (map henkilo->rivi henkilot)
-          tyhja-rivi))
-
-(defn ^:private toimikunta->rivi [toimikunta]
-  ((juxt :nimi_fi :nimi_sv :diaarinumero :tilikoodi) toimikunta))
-
-(defn ^:private toimikunnat->rivit [toimikausi toimikunnat]
-  (concat [[(str "Toimikausi " (:alkupvm toimikausi) " - " (:loppupvm toimikausi))]]
-          (map toimikunta->rivi toimikunnat)
-          tyhja-rivi))
-
-(defn ^:private sopimus->rivit [sopimus]
-  (for [sopimus-ja-tutkinto (sort-by (comp :nimi_fi :tutkintoversio) (:sopimus_ja_tutkinto sopimus))
-        :let [tutkinto (:tutkintoversio sopimus-ja-tutkinto)]]
-    [(get-in sopimus [:koulutustoimija :nimi_fi]) (get-in sopimus [:tutkintotilaisuuksista_vastaava_oppilaitos :nimi])
-     (:nimi_fi tutkinto) (:peruste tutkinto) (:sopimusnumero sopimus) (:loppupvm sopimus)
-     (:vastuuhenkilo tutkinto) (:sahkoposti tutkinto) (:puhelin tutkinto) (:nayttomestari tutkinto)]))
-
-(defn sopimukset->rivit [toimikausi sopimukset]
-  (concat [[(str "Toimikausi " (:alkupvm toimikausi) " - " (:loppupvm toimikausi))]]
-          (mapcat sopimus->rivit sopimukset)
-          tyhja-rivi))
-
 (defn hae-toimikuntaraportti [{:keys [toimikausi opintoala kieli]}]
   (->
     (sql/select* toimikunta-ja-tutkinto)
