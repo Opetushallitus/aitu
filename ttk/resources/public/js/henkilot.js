@@ -125,7 +125,7 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
         }
       }
       $scope.jasen = { henkilo: {} };
-      $scope.search = {};
+      $scope.search = { henkilo: {} };
       $scope.voimassaAlkaen = new Date(new Date().setHours(0,0,0,0));
       $scope.jasen.toimikunta = $routeParams.id ? toimikuntaResource.get({"diaarinumero": $routeParams.id}) : {};
       $scope.lisaaJasen = function(jasen) {
@@ -146,10 +146,10 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
         edellinenLokaatio();
       };
       $scope.haeHenkilotJaSiirrySeuraavaan = function() {
-        var henkiloValittu = ($scope.search.osat !== undefined);
+        var henkiloValittu = ($scope.search.henkilo.osat !== undefined);
         if(henkiloValittu) {
           $scope.henkilot = henkiloVelhoResource.get(
-            {etunimi: $scope.search.osat.etunimi, sukunimi: $scope.search.osat.sukunimi},
+            {etunimi: $scope.search.henkilo.osat.etunimi, sukunimi: $scope.search.henkilo.osat.sukunimi},
             siirrySeuraavaan);
         } else {
           siirrySeuraavaan();

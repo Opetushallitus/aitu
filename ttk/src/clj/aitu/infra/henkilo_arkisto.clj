@@ -148,11 +148,12 @@
 (defn hae-hlo-nimella
   "Hakee henkilöitä nimellä"
   [etunimi sukunimi]
-  (->
+  (->>
     (sql/select henkilo
       (sql/where {:etunimi etunimi
                   :sukunimi sukunimi}))
-    piilota-salaiset))
+    piilota-salaiset
+    (map eriyta-jarjesto)))
 
 (defn hae-hlo-nimen-osalla
   "Hakee henkilöitä nimen osalla"
