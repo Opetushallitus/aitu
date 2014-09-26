@@ -93,7 +93,7 @@
   [:sopimusnumero :tutkinto_nimi_fi :tutkinto_nimi_sv :peruste :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :alkupvm :loppupvm])
 
 (def jasenkenttien-jarjestys
-  [:sukunimi :etunimi :rooli :edustus :jarjesto_nimi_fi :jarjesto_nimi_sv :kielisyys :sahkoposti])
+  [:sukunimi :etunimi :rooli :edustus :jarjesto_nimi_fi :jarjesto_nimi_sv :kielisyys :sahkoposti :puhelin :organisaatio :postinumero :postitoimipaikka])
 
 (def jasenraporttikenttien-jarjestys
   [:sukunimi :etunimi :toimikunta :rooli :edustus :aidinkieli :jarjesto

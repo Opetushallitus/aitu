@@ -308,7 +308,8 @@
       (sql/with henkilo
         (sql/with jarjesto))
       (sql/fields :henkilo.etunimi :henkilo.sukunimi :henkilo.sahkoposti [:henkilo.aidinkieli :kielisyys]
-                  :jasenyys.rooli :jasenyys.edustus [:jarjesto.nimi_fi :jarjesto_nimi_fi] [:jarjesto.nimi_sv :jarjesto_nimi_sv])
+                  :jasenyys.rooli :jasenyys.edustus [:jarjesto.nimi_fi :jarjesto_nimi_fi] [:jarjesto.nimi_sv :jarjesto_nimi_sv]
+                  :henkilo.organisaatio :henkilo.osoite :henkilo.postitoimipaikka :henkilo.postinumero)
       (sql/where {:toimikunta tkunta
                   :loppupvm [(if (:voimassa ehdot true) >= <) (sql/sqlfn now)]})
       (sql/order :henkilo.sukunimi)
