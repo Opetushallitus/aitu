@@ -28,7 +28,28 @@
   </div>
 
   <div ng-show="raportti.id === 'tutkintotoimikunnat'">
-    <a ng-href="[[base-url]]/api/ttk/raportti" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+    <div>
+      <fieldset>
+        <label>[[toimikausi]]</label>
+        <select ng-model="toimikunnat.toimikausi" ng-options="toimikausi.toimikausi_id as toimikausi.alkupvm + ' - ' + toimikausi.loppupvm for toimikausi in toimikaudet"></select>
+      </fieldset>
+    </div>
+    <div>
+      <enum-monivalinta nimi="kieli" otsikko="[[kielisyys]]" arvot="toimikunnat.kieli"></enum-monivalinta>
+    </div>
+    <div>
+      <haku-monivalitsin
+        otsikko="[[opintoala]]"
+        url="[[base-url]]/api/opintoala/haku"
+        model="toimikunnat.opintoala"
+        model-id-property="opintoala_tkkoodi"
+        model-text-property="selite">
+      </haku-monivalitsin>
+    </div>
+    <div>
+      <a ng-href="[[base-url]]/api/ttk/raportti?toimikausi={{toimikunnat.toimikausi}}&{{toimikunnat.opintoala|parametrit:'opintoala_tkkoodi':'opintoala'}}&{{toimikunnat.kieli|parametrit:'nimi':'kieli'}}"
+         class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+    </div>
   </div>
 
   <div ng-show="raportti.id === 'jasenet'">

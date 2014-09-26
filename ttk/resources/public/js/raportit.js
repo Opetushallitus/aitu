@@ -22,15 +22,15 @@ angular.module('raportit', ['ngRoute', 'resources'])
   .controller('RaportitController', ['$scope', 'i18n', 'ToimikausiResource',
     function($scope, i18n, ToimikausiResource) {
       $scope.jasenet = {
-        rooli: [],
-        edustus: [],
-        jarjesto: [],
         yhteystiedot:false
       };
+      $scope.toimikunnat = {};
       ToimikausiResource.query().$promise.then(function(toimikaudet) {
         $scope.toimikaudet = toimikaudet;
-        $scope.tilasto_toimikausi = _(toimikaudet).filter('voimassa').pluck('toimikausi_id').first();
-        $scope.jasenet.toimikausi = _(toimikaudet).filter('voimassa').pluck('toimikausi_id').first();
+        var voimassaoleva_toimikausi = _(toimikaudet).filter('voimassa').pluck('toimikausi_id').first();
+        $scope.tilasto_toimikausi = voimassaoleva_toimikausi;
+        $scope.jasenet.toimikausi = voimassaoleva_toimikausi;
+        $scope.toimikunnat.toimikausi = voimassaoleva_toimikausi;
       });
       $scope.raportit = [
         {id: 'nayttotutkinnot', nimi: i18n.raportit.nayttotutkinnot},

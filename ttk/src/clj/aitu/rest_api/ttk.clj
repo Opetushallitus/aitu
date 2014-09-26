@@ -99,6 +99,9 @@
   [:sukunimi :etunimi :toimikunta :rooli :edustus :aidinkieli :jarjesto
    :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka])
 
+(def raporttikenttien-jarjestys [:diaarinumero :toimikunta_fi :toimikunta_sv :tilikoodi :kielisyys
+                                 :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv])
+
 (defroutes raportti-reitit
   (GET "/tilastoraportti" [toimikausi]
     (cu/autorisoitu-transaktio :raportti nil
@@ -115,10 +118,13 @@
       (cu/autorisoitu-transaktio :raportti nil
         (csv-download-response (muodosta-csv (arkisto/hae-jasenyydet-ehdoilla hakuehdot) jasenraporttikenttien-jarjestys)
                                "jasenet.csv"))))
-  (GET "/raportti" req
-    (cu/autorisoitu-transaktio :raportti nil
-      (csv-download-response (arkisto/hae-toimikuntaraportti (:params req))
-                             "toimikunnat.csv")))
+  (GET "/raportti" [toimikausi kieli opintoala]
+    (let [hakuehdot {:toimikausi (Integer/parseInt toimikausi)
+                     :kieli (->vector kieli)
+                     :opintoala (->vector opintoala)}]
+      (cu/autorisoitu-transaktio :raportti nil
+        (csv-download-response (muodosta-csv (arkisto/hae-toimikuntaraportti hakuehdot) raporttikenttien-jarjestys)
+                               "toimikunnat.csv"))))
   (GET "/csv" req
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet toimikuntakenttien-jarjestys))

@@ -124,6 +124,7 @@
                           :lukumaara "Lukumäärä"
                           :tutkintotaso "Tutkintotaso"
                           :opintoala "Opintoala"
+                          :opintoalatunnus "Opintoalatunnus"
                           :koulutustoimija "Koulutustoimija"
                           :toimikausi_alku "Toimikausi alkupvm"
                           :toimikausi_loppu "Toimikausi loppupvm"

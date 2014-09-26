@@ -471,28 +471,21 @@
           (mapcat sopimus->rivit sopimukset)
           tyhja-rivi))
 
-(defn hae-toimikuntaraportti [{:keys [nykyinen-toimikausi jasenet] :as hakuehdot}]
-  (let [jasenet true
-        toimikaudet (if nykyinen-toimikausi
-                      (filter :voimassa (toimikausi-arkisto/hae-kaikki))
-                      (toimikausi-arkisto/hae-kaikki))
-        toimikunnat (group-by :toimikausi_id (if nykyinen-toimikausi
-                                               (hae-nykyiset)
-                                               (hae-kaikki)))
-        jasenyydet (hae-jasenyydet-ehdoilla hakuehdot)
-        sopimukset (group-by (comp :toimikausi_id :toimikunta) (sopimus-arkisto/hae-kaikki))
-        raportti (concat [["Toimikunnat"]]
-                         (apply concat (for [toimikausi toimikaudet
-                                             :let [toimikausi-id (:toimikausi_id toimikausi)]]
-                                         (toimikunnat->rivit toimikausi (sort-by :nimi_fi (get toimikunnat toimikausi-id)))))
-                         (when jasenet
-                           (apply concat
-                                  [["Jäsenet"]]
-                                  (for [toimikausi toimikaudet
-                                        :let [toimikausi-id (:toimikausi_id toimikausi)]]
-                                    (henkilot->rivit toimikausi (get jasenyydet toimikausi-id)))))
-                         [["Sopimukset"]]
-                         (apply concat (for [toimikausi toimikaudet
-                                             :let [toimikausi-id (:toimikausi_id toimikausi)]]
-                                         (sopimukset->rivit toimikausi (sort-by (comp :nimi_fi :koulutustoimija) (get sopimukset toimikausi-id))))))]
-    (write-csv (muuta-kaikki-stringeiksi raportti) :delimiter \;)))
+(defn hae-toimikuntaraportti [{:keys [toimikausi opintoala kieli]}]
+  (->
+    (sql/select* toimikunta-ja-tutkinto)
+    (sql/join :inner {:table :tutkintotoimikunta} (= :toimikunta :tutkintotoimikunta.tkunta))
+    (sql/join :inner {:table :nayttotutkinto} (= :tutkintotunnus :nayttotutkinto.tutkintotunnus))
+    (sql/join :inner {:table :opintoala} (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
+    (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi})
+    (cond->
+      (seq opintoala) (sql/where {:nayttotutkinto.opintoala [in opintoala]})
+      (seq kieli)     (sql/where {:tutkintotoimikunta.kielisyys [in kieli]}))
+    (sql/fields :tutkintotoimikunta.diaarinumero [:tutkintotoimikunta.nimi_fi :toimikunta_fi] [:tutkintotoimikunta.nimi_sv :toimikunta_sv]
+                :tutkintotoimikunta.tilikoodi :tutkintotoimikunta.kielisyys :nayttotutkinto.tutkintotunnus
+                [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
+                [:opintoala.opintoala_tkkoodi :opintoalatunnus] [:opintoala.selite_fi :opintoala_fi] [:opintoala.selite_sv :opintoala_sv])
+    (sql/order :tutkintotoimikunta.nimi_fi)
+    (sql/order :opintoala.selite_fi)
+    (sql/order :nayttotutkinto.nimi_fi)
+    sql/exec))
