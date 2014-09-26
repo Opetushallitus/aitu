@@ -17,7 +17,7 @@
             [korma.db :as db]
             [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response sallittu-jos]]
             [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin csv-download-response]]
-            [aitu.util :refer [muodosta-csv]]
+            [aitu.util :refer [muodosta-csv ->vector]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]
             [valip.predicates :refer [present?]]
@@ -60,8 +60,9 @@
   [:sopimusnumero :toimikunta_fi :toimikunta_sv :tutkinto_fi :tutkinto_sv :peruste :koulutustoimija_fi :koulutustoimija_sv :alkupvm :loppupvm])
 
 (def kaikkien-sopimuskenttien-jarjestys
-  [:koulutustoimija_fi :koulutustoimija_sv :toimikunta_fi :toimikunta_sv :sopimusnumero :alkupvm :loppupvm :tutkinto_fi :tutkinto_sv :peruste :siirtymaajan_loppupvm
-   :oppilaitos :kieli :vastuuhenkilo :vastuuhenkilo_sahkoposti :vastuuhenkilo_puhelin])
+  [:ytunnus :koulutustoimija_fi :koulutustoimija_sv :toimikunta_fi :toimikunta_sv :sopimusnumero :alkupvm :loppupvm
+   :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv :peruste :siirtymaajan_loppupvm :osaamisalat
+   :oppilaitoskoodi :oppilaitos :kieli :vastuuhenkilo :vastuuhenkilo_sahkoposti :vastuuhenkilo_puhelin])
 
 (c/defroutes raportti-reitit
   (cu/defapi :yleinen-rest-api nil :get "/csv" [voimassa :as req]
@@ -71,11 +72,13 @@
                                                                               :voimassa voimassa))
                                            rajattujen-sopimuskenttien-jarjestys)
                              "sopimukset.csv")))
-  (cu/defapi :yleinen-rest-api nil :get "/raportti" req
-    (let [raportti (sort-by (juxt :koulutustoimija_fi :toimikunta_fi) (arkisto/hae-sopimukset-csv {:voimassa true
-                                                                                                   :avaimet kaikkien-sopimuskenttien-jarjestys}))]
-      (csv-download-response (muodosta-csv raportti kaikkien-sopimuskenttien-jarjestys)
-                             "sopimukset.csv"))))
+  (cu/defapi :yleinen-rest-api nil :get "/raportti" [toimikausi opintoala]
+    (let [hakuehdot {:toimikausi (Integer/parseInt toimikausi)
+                     :opintoala (->vector opintoala)
+                     :avaimet kaikkien-sopimuskenttien-jarjestys}
+          raportti (sort-by (juxt :koulutustoimija_fi :toimikunta_fi) (arkisto/hae-sopimukset-csv hakuehdot))]
+     (csv-download-response (muodosta-csv raportti kaikkien-sopimuskenttien-jarjestys)
+                            "sopimukset.csv"))))
 
 (c/defroutes reitit
   (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]

@@ -99,6 +99,7 @@
                           :oppilaitos "Oppilaitos"
                           :oppilaitoskoodi "Oppilaitoskoodi"
                           :organisaatio "Organisaatio"
+                          :osaamisalat "Osaamisalat"
                           :osoite "Osoite"
                           :peruste "Tutkinnon peruste"
                           :postinumero "Postinumero"

@@ -24,11 +24,14 @@ angular.module('raportit', ['ngRoute', 'resources'])
       $scope.jasenet = {
         yhteystiedot:false
       };
+      $scope.sopimukset = {};
+      $scope.tilastot = {};
       $scope.toimikunnat = {};
       ToimikausiResource.query().$promise.then(function(toimikaudet) {
         $scope.toimikaudet = toimikaudet;
         var voimassaoleva_toimikausi = _(toimikaudet).filter('voimassa').pluck('toimikausi_id').first();
-        $scope.tilasto_toimikausi = voimassaoleva_toimikausi;
+        $scope.tilastot.toimikausi = voimassaoleva_toimikausi;
+        $scope.sopimukset.toimikausi = voimassaoleva_toimikausi;
         $scope.jasenet.toimikausi = voimassaoleva_toimikausi;
         $scope.toimikunnat.toimikausi = voimassaoleva_toimikausi;
       });
