@@ -57,7 +57,8 @@
     not))
 
 (def rajattujen-sopimuskenttien-jarjestys
-  [:sopimusnumero :toimikunta_fi :toimikunta_sv :tutkinto_fi :tutkinto_sv :peruste :koulutustoimija_fi :koulutustoimija_sv :alkupvm :loppupvm])
+  [:sopimusnumero :toimikunta_fi :toimikunta_sv :tutkinto_fi :tutkinto_sv :peruste :koulutustoimija_fi :koulutustoimija_sv :alkupvm :loppupvm
+   :vastuuhenkilo :vastuuhenkilo_sahkoposti :vastuuhenkilo_puhelin])
 
 (def kaikkien-sopimuskenttien-jarjestys
   [:ytunnus :koulutustoimija_fi :koulutustoimija_sv :diaarinumero :toimikunta_fi :toimikunta_sv :sopimusnumero :alkupvm :loppupvm
