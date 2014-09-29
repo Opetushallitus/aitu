@@ -35,14 +35,14 @@
   (odota-angular-pyyntoa))
 
 (defn poista-jarjestovalinta []
-  (w/click {:css "fieldset[model=\"jasen.henkilo\"][model-id-property=\"jarjesto\"] abbr.select2-search-choice-close"})
+  (w/click {:css "fieldset[model=\"jasen.henkilo.jarjesto\"][model-id-property=\"jarjesto\"] abbr.select2-search-choice-close"})
   (odota-angular-pyyntoa))
 
 (defn jarjeston-nimi []
-  (elementin-teksti "jasen.henkilo.jarjesto_nimi"))
+  (elementin-teksti "jasen.henkilo.jarjesto.jarjesto_nimi"))
 
 (defn valitse-jarjesto [jarjeston-nimi]
-  (valitse-select2-optio "jasen.henkilo" "jarjesto" jarjeston-nimi))
+  (valitse-select2-optio "jasen.henkilo.jarjesto" "jarjesto" jarjeston-nimi))
 
 (deftest ^:no-ie henkilosivu-test
   (testing "henkilösivu"

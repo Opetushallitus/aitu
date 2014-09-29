@@ -58,7 +58,7 @@
       {:oppilaitokset [oppilaitos1 oppilaitos2 oppilaitos-ilman-sopimusta]
        :koulutustoimijat [koulutustoimija1 koulutustoimija2 koulutustoimija-ilman-sopimusta]})))
 
-(deftest tutkintolista-test []
+(deftest oppilaitoslista-test []
   (with-webdriver
     (testing "oppilaitoslista"
       ;; Oletetaan, että
@@ -89,7 +89,7 @@
         (testing "Pitäisi näyttää lista oppilaitoksista joilla on tietyn opintoalan tutkinto vastuulla"
           ;; Kun
           (avaa oppilaitoslista)
-          (valitse-select2-optio "search" "tunnus" "Sähköala")
+          (valitse-select2-optio "search.ala" "tunnus" "Sähköala")
           (odota-angular-pyyntoa)
           ;; Niin
           (is (= (nakyvat-oppilaitokset) ["aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"])))))))

@@ -68,7 +68,7 @@
         (testing "Pitäisi näyttää lista koulutustoimijoista joilla on tietyn opintoalan tutkinto vastuulla"
           ;; Kun
           (avaa koulutustoimijalista)
-          (valitse-select2-optio "search" "tunnus" "Sähköala")
+          (valitse-select2-optio "search.ala" "tunnus" "Sähköala")
           (odota-angular-pyyntoa)
           ;; Niin
           (is (= (nakyvat-koulutustoimijat) ["aaAnkkalinnan kaupunki" "aaHanhivaaran kaupunki"])))))))
