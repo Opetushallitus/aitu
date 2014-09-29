@@ -49,10 +49,10 @@ angular.module('koulutustoimijat', ['ngRoute'])
       $scope.i18n = i18n;
       $scope.kaikkiKoulutustoimijat = [];
       $scope.koulutustoimijat = [];
-      $scope.search = {nimi: "", tunnus: "", sopimuksia: "kylla"};
+      $scope.search = {nimi: "", ala: {tunnus: ""}, sopimuksia: "kylla"};
       $scope.$watch('search.nimi', suodataKoulutustoimijat);
       $scope.$watch('search.sopimuksia', suodataKoulutustoimijat);
-      $scope.$watch('search.tunnus', haeKoulutustoimijat);
+      $scope.$watch('search.ala', haeKoulutustoimijat);
       $scope.$watchCollection('kaikkiKoulutustoimijat', suodataKoulutustoimijat);
 
       haeKoulutustoimijat();
@@ -64,7 +64,7 @@ angular.module('koulutustoimijat', ['ngRoute'])
       }
 
       function haeKoulutustoimijat() {
-        $scope.kaikkiKoulutustoimijat = KoulutustoimijaHakuResource.query({tunnus: $scope.search.tunnus});
+        $scope.kaikkiKoulutustoimijat = KoulutustoimijaHakuResource.query({tunnus: $scope.search.ala && $scope.search.ala.tunnus});
       }
     }
   ])
