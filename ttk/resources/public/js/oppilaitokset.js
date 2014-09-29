@@ -49,10 +49,10 @@ angular.module('oppilaitokset', ['ngRoute'])
       $scope.i18n = i18n;
       $scope.kaikkiOppilaitokset = [];
       $scope.oppilaitokset = [];
-      $scope.search = {nimi: "", tunnus: "", sopimuksia: "kylla"};
+      $scope.search = {nimi: "", ala: {tunnus: ""}, sopimuksia: "kylla"};
       $scope.$watch('search.nimi', suodataOppilaitokset);
       $scope.$watch('search.sopimuksia', suodataOppilaitokset);
-      $scope.$watch('search.tunnus', haeOppilaitokset);
+      $scope.$watch('search.ala', haeOppilaitokset);
       $scope.$watchCollection('kaikkiOppilaitokset', suodataOppilaitokset);
 
       haeOppilaitokset();
@@ -64,7 +64,7 @@ angular.module('oppilaitokset', ['ngRoute'])
       }
 
       function haeOppilaitokset() {
-        $scope.kaikkiOppilaitokset = OppilaitosHakuResource.query({tunnus: $scope.search.tunnus});
+        $scope.kaikkiOppilaitokset = OppilaitosHakuResource.query({tunnus: $scope.search.ala && $scope.search.ala.tunnus});
       }
     }
   ])
