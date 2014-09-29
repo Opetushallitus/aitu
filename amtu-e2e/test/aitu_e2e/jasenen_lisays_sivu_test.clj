@@ -48,7 +48,7 @@
   (w/click {:css "button[ng-click=\"siirrySeuraavaan()\"]"})
   (odota-angular-pyyntoa))
 (defn hae-henkilo [nimi]
-  (valitse-select2-optio "search" "osat" nimi)
+  (valitse-select2-optio "search.henkilo" "osat" nimi)
   (odota-angular-pyyntoa)
   (paina-nappia))
 (defn paina-lisaa-jasen-nappia []
