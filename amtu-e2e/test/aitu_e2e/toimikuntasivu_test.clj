@@ -209,7 +209,7 @@
             (klikkaa-taulukon-sarakkeen-otsikkoa "jasenet" "rooli") ;;Roolin nimet: jäsen, pysyvä asiantuntija
             (is (= (vec (jasenien-nimet)) ["Aku Ankka" "Pelle Peloton"])))))))
 
-(deftest ei-voimassaoleva-toimikuntasivu-test
+(deftest ^:no-ie ei-voimassaoleva-toimikuntasivu-test
   (testing "toimikuntasivu - ei voimassa"
     (with-webdriver
       (with-data toimikuntasivu-testidata
