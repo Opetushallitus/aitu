@@ -266,7 +266,6 @@
   "Hakee oppilaitoksen järjestämissopimukset ja liittää niihin tarvittavat tiedot"
   [oppilaitoskoodi]
   (->> (sopimus-kaytava/hae-oppilaitoksen-sopimukset oppilaitoskoodi)
-    (mapv liita-perustiedot-sopimukseen)
     (mapv liita-tutkinnot-sopimukseen)))
 
 (defn hae-koulutustoimijan-sopimukset

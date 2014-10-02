@@ -36,5 +36,4 @@
   [toimikunta]
   (some-> toimikunta
           toimikunta/taydenna-toimikunnan-voimassaolo
-          taydenna-toimikunnan-jarjestamissopimukset
           taydenna-toimikunnan-jasenyyksien-voimassaolo))

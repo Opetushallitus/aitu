@@ -50,7 +50,7 @@
     :summary "Hakee oppilaitoksen oppilaitoskoodilla"
     :return OppilaitosLaajatTiedot
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (json-response (oppilaitos/taydenna-oppilaitos (arkisto/hae oppilaitoskoodi)) OppilaitosLaajatTiedot)))
+      (json-response (arkisto/hae oppilaitoskoodi))))
 
   (GET* "/haku/ala" [tunnus :as req]
     :summary "Hakee kaikki oppilaitokset joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
