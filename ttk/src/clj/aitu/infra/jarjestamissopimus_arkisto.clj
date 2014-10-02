@@ -184,7 +184,7 @@
 (defn ^:private liita-tutkinnot-sopimukseen
   [jarjestamissopimus]
   (let [id (:jarjestamissopimusid jarjestamissopimus)
-        sopimus-ja-tutkinto-rivit (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimukseen-liittyvat id)]
+        sopimus-ja-tutkinto-rivit (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimuksen-tutkinnot id)]
     (some-> jarjestamissopimus
       (assoc :sopimus_ja_tutkinto sopimus-ja-tutkinto-rivit))))
 
@@ -273,8 +273,7 @@
   "Hakee koulutustoimijan järjestämissopimukset ja liittää niihin tarvittavat tiedot"
   [y-tunnus]
   (->> (sopimus-kaytava/hae-koulutustoimijan-sopimukset y-tunnus)
-    (mapv liita-perustiedot-sopimukseen)
-    (mapv liita-tutkinnot-sopimukseen)))
+   (mapv liita-tutkinnot-sopimukseen)))
 
 (defn uniikki-sopimusnumero? [sopimusnumero jarjestamissopimusid]
   (-> (sql/select jarjestamissopimus

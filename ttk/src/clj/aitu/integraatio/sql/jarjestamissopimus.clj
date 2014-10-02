@@ -23,7 +23,7 @@
               :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm :toimikunta
               :sopijatoimikunta :tutkintotilaisuuksista_vastaava_oppilaitos
               :vastuuhenkilo :puhelin :sahkoposti :koulutustoimija :poistettu
-              :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika))
+              :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika :voimassa))
 
 (defn hae
   "Hakee järjestämissopimus-taulun rivin jarjestamissopimusid:n perusteella"

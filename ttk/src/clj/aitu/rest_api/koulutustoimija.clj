@@ -38,6 +38,6 @@
   (cu/defapi :yleinen-rest-api nil :get "/haku" [termi :as req]
     (json-response (arkisto/hae-termilla termi) [KoulutustoimijaLinkki]))
   (cu/defapi :yleinen-rest-api nil :get "/:ytunnus" [ytunnus]
-    (json-response (koulutustoimija/taydenna-koulutustoimija (arkisto/hae ytunnus)) KoulutustoimijaLaajatTiedot))
+    (json-response (arkisto/hae ytunnus)))
   (cu/defapi :yleinen-rest-api nil :get "/haku/ala" [tunnus :as req]
     (cachable-json-response req (arkisto/hae-ehdoilla {:tunnus tunnus}) [KoulutustoimijaLista])))
