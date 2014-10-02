@@ -63,8 +63,6 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       $scope.$watch('toimikuntaHakuehto.toimikausi', haeToimikunnat);
       $scope.$watch('tutkintoHakuehto.tunnus', haeToimikunnat);
 
-      haeToimikunnat();
-
       function suodataToimikunnat() {
         var filteredNimella = $filter('suomiJaRuotsi')($scope.kaikkiToimikunnat, 'nimi', $scope.toimikuntaHakuehto.nimi);
         var filteredKielisyydella = $filter('kielisyys')(filteredNimella, 'kielisyys', $scope.toimikuntaHakuehto.kielisyys);
