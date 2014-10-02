@@ -40,7 +40,9 @@
                                     (sql/with tutkintoversio
                                       (sql/with nayttotutkinto))
                                     (sql/where {:jarjestamissopimusid jarjestamissopimusid})
-                                    (sql/fields :tutkintoversio.peruste :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv))]
+                                    (sql/fields :tutkintoversio.peruste :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv
+                                                :tutkintoversio.voimassa_alkupvm :tutkintoversio.voimassa_loppupvm
+                                                :tutkintoversio.siirtymaajan_loppupvm))]
     (for [rivi sopimus-ja-tutkinto-rivit]
       {:tutkintoversio rivi})))
 
