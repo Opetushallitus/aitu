@@ -55,8 +55,6 @@ angular.module('koulutustoimijat', ['ngRoute'])
       $scope.$watch('search.ala', haeKoulutustoimijat);
       $scope.$watchCollection('kaikkiKoulutustoimijat', suodataKoulutustoimijat);
 
-      haeKoulutustoimijat();
-
       function suodataKoulutustoimijat() {
         var filteredNimella = $filter('suomiJaRuotsi')($scope.kaikkiKoulutustoimijat, 'nimi', $scope.search.nimi);
         var filteredSopimuksilla = $filter('sopimukset')(filteredNimella, $scope.search.sopimuksia);
