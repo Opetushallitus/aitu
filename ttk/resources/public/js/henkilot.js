@@ -75,8 +75,6 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
 
       $scope.haeHenkilot = haeHenkilot;
 
-      haeHenkilot();
-
       function suodataHenkilot() {
         var filteredNimella = $filter('kokonimi')($scope.kaikkiHenkilot, $scope.search.nimi);
         var filteredToimikunnalla = $filter('henkilonToimikunta')(filteredNimella, $scope.search.toimikunta);
