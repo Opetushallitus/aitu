@@ -55,8 +55,6 @@ angular.module('oppilaitokset', ['ngRoute'])
       $scope.$watch('search.ala', haeOppilaitokset);
       $scope.$watchCollection('kaikkiOppilaitokset', suodataOppilaitokset);
 
-      haeOppilaitokset();
-
       function suodataOppilaitokset() {
         var filteredNimella = $filter('filter')($scope.kaikkiOppilaitokset, {nimi: $scope.search.nimi});
         var filteredSopimuksilla = $filter('sopimukset')(filteredNimella, $scope.search.sopimuksia);
