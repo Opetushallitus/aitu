@@ -55,7 +55,7 @@
                  [peridot "0.3.0"]
                  [prismatic/schema "0.2.0"]]
   :plugins [[lein-cloverage "1.0.2"]
-            [test2junit "1.0.1"]
+            [test2junit "1.1.0"]
             [codox "0.6.6"]]
   :profiles {:dev {:source-paths ["dev"]
                    :resource-paths ["test-resources"]
