@@ -142,15 +142,3 @@
     (testing "Oppilaitos löytyy haettaessa oppilaitoskoodilla"
       (is (= (select-keys (hae-ja-taydenna "12345") [:oppilaitoskoodi :nimi])
              {:oppilaitoskoodi "12345", :nimi "Oppilaitos O"})))))
-
-(deftest ^:integraatio hae-oppilaitos-test
-  (jarjestamissopimus-arkisto-test/lisaa-testidata!)
-  (let [jarjestamissopimusid (:jarjestamissopimusid (jarjestamissopimus-arkisto/lisaa! (jarjestamissopimus-arkisto-test/arbitrary-sopimus)))
-        _ (jarjestamissopimus-arkisto/lisaa-tutkinnot-sopimukselle! jarjestamissopimusid [12345, 23456])]
-    (testing "Oppilaitoksen järjestämissopimus on voimassa kun toimikunta, sopimus ja sopimuksen tutkinnot ovat voimassa"
-      (let [oppilaitos (hae-ja-taydenna "OP1")]
-        (is (-> oppilaitos :jarjestamissopimus first :voimassa))))
-    (testing "Oppilaitoksen järjestämissopimus ei ole voimassa, jos toimikunta ei ole voimassa"
-      (aseta-sopimuksen-toimikunta-vanhentuneeksi)
-      (let [oppilaitos (hae-ja-taydenna "OP1")]
-        (is (false? (-> oppilaitos :jarjestamissopimus first :voimassa)))))))

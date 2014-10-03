@@ -134,15 +134,3 @@
       (let [haettu-koulutustoimija (select-keys (hae-ja-taydenna "1111111-1") [:ytunnus :nimi_fi])]
         ;; niin
         (is (= koulutustoimija haettu-koulutustoimija))))))
-
-(deftest ^:integraatio hae-oppilaitos-test
-  (jarjestamissopimus-arkisto-test/lisaa-testidata!)
-  (let [jarjestamissopimusid (:jarjestamissopimusid (jarjestamissopimus-arkisto/lisaa! (jarjestamissopimus-arkisto-test/arbitrary-sopimus)))]
-    (jarjestamissopimus-arkisto/lisaa-tutkinnot-sopimukselle! jarjestamissopimusid [12345 23456])
-    (testing "Koulutustoimijan järjestämissopimus on voimassa kun toimikunta, sopimus ja sopimuksen tutkinnot ovat voimassa"
-      (let [koulutustoimija (hae-ja-taydenna "KT1")]
-        (is (-> koulutustoimija :jarjestamissopimus first :voimassa))))
-    (testing "Koulutustoimijan järjestämissopimus ei ole voimassa, jos toimikunta ei ole voimassa"
-      (aseta-sopimuksen-toimikunta-vanhentuneeksi)
-      (let [koulutustoimija (hae-ja-taydenna "KT1")]
-        (is (false? (-> koulutustoimija :jarjestamissopimus first :voimassa)))))))
