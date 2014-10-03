@@ -30,10 +30,5 @@
          "täydentää toimikunnan"
          (is (true? (:toimikunta-taydennetty (taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo toimikunta))))))
      (testing
-       "täydentää järjestämissopimukset"
-       (let [toimikunta {:jarjestamissopimus [{} {}]}
-             taydennetyt-sopimukset (:jarjestamissopimus (taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo toimikunta))]
-         (is (every? true? (map :sopimus-taydennetty taydennetyt-sopimukset)))))
-     (testing
        "ei muuta nil-arvoa"
        (is (nil? (taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo nil)))))))
