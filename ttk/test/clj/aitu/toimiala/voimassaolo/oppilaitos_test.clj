@@ -21,19 +21,11 @@
    "täydennä oppilaitoksen ja liittyvien tietojen voimassaolo:"
    (with-redefs [aitu.toimiala.voimassaolo.saanto.oppilaitos/taydenna-oppilaitoksen-voimassaolo
                  (fn [oppilaitos] (merge oppilaitos
-                                         {:oppilaitos-taydennetty true}))
-                 aitu.toimiala.voimassaolo.jarjestamissopimus/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo
-                 (fn [sopimus] (merge sopimus
-                                      {:sopimus-taydennetty true}))]
+                                         {:oppilaitos-taydennetty true}))]
      (let [oppilaitos {}]
        (testing
          "täydentää oppilaitoksen"
          (is (true? (:oppilaitos-taydennetty (taydenna-oppilaitoksen-ja-liittyvien-tietojen-voimassaolo oppilaitos))))))
-     (testing
-       "täydentää järjestämissopimukset"
-       (let [oppilaitos {:jarjestamissopimus [{} {}]}
-             taydennetyt-sopimukset (:jarjestamissopimus (taydenna-oppilaitoksen-ja-liittyvien-tietojen-voimassaolo oppilaitos))]
-         (is (every? true? (map :sopimus-taydennetty taydennetyt-sopimukset)))))
      (testing
        "ei muuta nil-arvoa"
        (is (nil? (taydenna-oppilaitoksen-ja-liittyvien-tietojen-voimassaolo nil)))))))
