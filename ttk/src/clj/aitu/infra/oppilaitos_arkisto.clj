@@ -119,8 +119,8 @@
                                                                                                             {:tutkinnonosa.osatunnus (:tunnus ehdot)}
                                                                                                             {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}))))))
                           (not (blank? (:nimi ehdot))) (sql/where {:nimi [ilike nimi]})
-                          (= (:sopimuksia ehdot) "kylla") (sql/having (> (count :jarjestamissopimus.jarjestamissopimusid) 0))
-                          (= (:sopimuksia ehdot) "ei") (sql/having (= (count :jarjestamissopimus.jarjestamissopimusid) 0)))
+                          (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
+                          (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0)))
                         (sql/order :nimi :ASC)
                         sql/exec)]
     (if (:avaimet ehdot)
