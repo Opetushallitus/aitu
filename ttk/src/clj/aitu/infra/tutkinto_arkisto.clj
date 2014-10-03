@@ -184,7 +184,7 @@
   [sopimus-ja-tutkinto]
   (let [{:keys [jarjestamissopimusid]} sopimus-ja-tutkinto]
     (-> sopimus-ja-tutkinto
-      (assoc :jarjestamissopimus (sopimus-arkisto/hae jarjestamissopimusid)))))
+      (assoc :jarjestamissopimus (sopimus-arkisto/hae-rajatut-tiedot jarjestamissopimusid)))))
 
 (defn liita-sopimus-ja-tutkinto-riveihin
   [rivit]

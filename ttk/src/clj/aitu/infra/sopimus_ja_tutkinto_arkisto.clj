@@ -39,12 +39,15 @@
   (let [sopimus-ja-tutkinto-rivit (sql/select sopimus-ja-tutkinto
                                     (sql/with tutkintoversio
                                       (sql/with nayttotutkinto))
-                                    (sql/where {:jarjestamissopimusid jarjestamissopimusid})
+                                    (sql/where {:jarjestamissopimusid jarjestamissopimusid
+                                                :poistettu false})
                                     (sql/fields :tutkintoversio.peruste :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv
                                                 :tutkintoversio.voimassa_alkupvm :tutkintoversio.voimassa_loppupvm
-                                                :tutkintoversio.siirtymaajan_loppupvm))]
+                                                :tutkintoversio.siirtymaajan_loppupvm :nayttotutkinto.tutkintotunnus
+                                                :sopimus_ja_tutkinto.sopimus_ja_tutkinto_id))]
     (for [rivi sopimus-ja-tutkinto-rivit]
-      {:tutkintoversio rivi})))
+      {:sopimus_ja_tutkinto_id (:sopimus_ja_tutkinto_id rivi)
+       :tutkintoversio (dissoc rivi :sopimus_ja_tutkinto_id)})))
 
 (defn hae-jarjestamissopimukseen-liittyvat
   "Hakee järjestämissopimukseen liittyvät sopimus-ja-tutkinto-tiedot"

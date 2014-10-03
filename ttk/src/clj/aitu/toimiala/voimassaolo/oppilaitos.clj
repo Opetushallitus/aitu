@@ -24,5 +24,4 @@
   "Täydentää oppilaitoksen ja siihen liittyvien tietojen voimassaolon"
   [oppilaitos]
   (some-> oppilaitos
-          taydenna-oppilaitoksen-jarjestamissopimukset
           oppilaitos/taydenna-oppilaitoksen-voimassaolo))

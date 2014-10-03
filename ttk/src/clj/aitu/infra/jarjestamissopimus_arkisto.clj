@@ -184,6 +184,13 @@
 (defn ^:private liita-tutkinnot-sopimukseen
   [jarjestamissopimus]
   (let [id (:jarjestamissopimusid jarjestamissopimus)
+        sopimus-ja-tutkinto-rivit (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimukseen-liittyvat id)]
+    (some-> jarjestamissopimus
+      (assoc :sopimus_ja_tutkinto sopimus-ja-tutkinto-rivit))))
+
+(defn ^:private liita-tutkinnot-sopimukseen-rajatut-tiedot
+  [jarjestamissopimus]
+  (let [id (:jarjestamissopimusid jarjestamissopimus)
         sopimus-ja-tutkinto-rivit (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimuksen-tutkinnot id)]
     (some-> jarjestamissopimus
       (assoc :sopimus_ja_tutkinto sopimus-ja-tutkinto-rivit))))
@@ -247,6 +254,13 @@
     liita-perustiedot-sopimukseen
     liita-tutkinnot-sopimukseen))
 
+(defn hae-rajatut-tiedot
+  "Hakee järjestämissopimuksen ja siihen liittyvät tiedot"
+  [jarjestamissopimusid]
+  (-> (sopimus-kaytava/hae jarjestamissopimusid)
+    liita-perustiedot-sopimukseen
+    liita-tutkinnot-sopimukseen-rajatut-tiedot))
+
 (defn hae-ja-liita-tutkinnonosiin-asti
   "Hakee järjestämissopimuksen ja siihen liittyvät tiedot tutkinnonosiin asti"
   [jarjestamissopimusid]
@@ -260,19 +274,19 @@
   [toimikunta]
   (->> (sopimus-kaytava/hae-toimikunnan-sopimukset toimikunta)
     (mapv liita-perustiedot-sopimukseen)
-    (mapv liita-tutkinnot-sopimukseen)))
+    (mapv liita-tutkinnot-sopimukseen-rajatut-tiedot)))
 
 (defn hae-oppilaitoksen-sopimukset
   "Hakee oppilaitoksen järjestämissopimukset ja liittää niihin tarvittavat tiedot"
   [oppilaitoskoodi]
   (->> (sopimus-kaytava/hae-oppilaitoksen-sopimukset oppilaitoskoodi)
-    (mapv liita-tutkinnot-sopimukseen)))
+    (mapv liita-tutkinnot-sopimukseen-rajatut-tiedot)))
 
 (defn hae-koulutustoimijan-sopimukset
   "Hakee koulutustoimijan järjestämissopimukset ja liittää niihin tarvittavat tiedot"
   [y-tunnus]
   (->> (sopimus-kaytava/hae-koulutustoimijan-sopimukset y-tunnus)
-   (mapv liita-tutkinnot-sopimukseen)))
+   (mapv liita-tutkinnot-sopimukseen-rajatut-tiedot)))
 
 (defn uniikki-sopimusnumero? [sopimusnumero jarjestamissopimusid]
   (-> (sql/select jarjestamissopimus
