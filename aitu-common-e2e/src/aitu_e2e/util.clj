@@ -242,7 +242,7 @@
       (> -1))))
 
 (defn valitse-select2-optio
-  "Valitsee ensimmäisen option hakuehto listalta"
+  "Valitsee ensimmäisen option hakuvalitsimen listalta"
   [malli tunnistekentta hakuehto ]
   (let [select2-container-selector (str "fieldset"
                                         "[model=\"" malli "\"]"
@@ -254,6 +254,17 @@
   (w/input-text "#select2-drop input" hakuehto)
   (odota-kunnes (-> (w/find-elements {:css "#select2-drop input.select2-active"}) (count) (= 0)))
   (w/click "#select2-drop .select2-results li:first-child"))
+
+(defn valitse-puhdas-select2-optio
+  "Valitsee ensimmäisen option select2-listalta"
+  [malli hakuehto]
+  (w/execute-script (str "$('select[ng-model=\"" malli "\"]').data('select2').open()"))
+  (odota-kunnes (-> (w/find-elements {:css "#select2-drop input.select2-input"}) (count) (> 0)))
+  (w/clear "#select2-drop input")
+  (w/input-text "#select2-drop input" hakuehto)
+  (odota-kunnes (-> (w/find-elements {:css "#select2-drop input.select2-active"}) (count) (= 0)))
+  (w/click "#select2-drop .select2-results li.select2-result-selectable"))
+
 
 (defn syota-kenttaan [ng-model-nimi arvo]
   (tyhjenna-input ng-model-nimi)
