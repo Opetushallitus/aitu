@@ -251,7 +251,11 @@ angular.module('filters', [] )
   .filter('parametrit', [function() {
     return function(input, property, kentta) {
       return _(input).map(function(item) {
-        return kentta + "=" + item[property];
+        if(property) {
+          return kentta + "=" + item[property];
+        } else {
+          return kentta + "=" + item;
+        }
       }).join("&");
     }
   }]);

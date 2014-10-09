@@ -98,14 +98,15 @@
       </haku-valitsin>
     </div>
     <div>
-      <haku-valitsin
-        monivalinta="true"
-        otsikko="[[opintoala]]"
-        url="[[base-url]]/api/opintoala/haku"
-        model="jasenet.opintoala"
-        model-id-property="opintoala_tkkoodi"
-        model-text-property="selite">
-      </haku-valitsin>
+      <fieldset class="select2-fieldset">
+        <label>[[opintoala]]</label>
+        <select ui-select2="select2Options" ng-model="jasenet.opintoala" multiple="multiple">
+          <option></option>
+          <optgroup ng-repeat="koulutusala in koulutusalat" label="{{koulutusala.koulutusala_tkkoodi}}. {{koulutusala.koulutusala_nimi | lokalisoi:koulutusala:'koulutusala_nimi'}}">
+            <option ng-repeat="opintoala in koulutusala.opintoalat | orderBy:opintoalaOrder" value="{{opintoala.opintoala_tkkoodi}}">{{opintoala.opintoala_nimi | lokalisoi:opintoala:'opintoala_nimi'}}</option>
+          </optgroup>
+        </select>
+      </fieldset>
     </div>
     <div>
       <fieldset>
@@ -114,7 +115,7 @@
       </fieldset>
     </div>
     <div>
-      <a ng-href="[[base-url]]/api/ttk/jasenraportti?toimikausi={{jasenet.toimikausi}}&{{jasenet.rooli|parametrit:'nimi':'rooli'}}&{{jasenet.edustus|parametrit:'nimi':'edustus'}}&{{jasenet.jarjesto|parametrit:'jarjesto':'jarjesto'}}&{{jasenet.kieli|parametrit:'nimi':'kieli'}}&yhteystiedot={{jasenet.yhteystiedot}}&{{jasenet.opintoala|parametrit:'opintoala_tkkoodi':'opintoala'}}"
+      <a ng-href="[[base-url]]/api/ttk/jasenraportti?toimikausi={{jasenet.toimikausi}}&{{jasenet.rooli|parametrit:'nimi':'rooli'}}&{{jasenet.edustus|parametrit:'nimi':'edustus'}}&{{jasenet.jarjesto|parametrit:'jarjesto':'jarjesto'}}&{{jasenet.kieli|parametrit:'nimi':'kieli'}}&yhteystiedot={{jasenet.yhteystiedot}}&{{jasenet.opintoala|parametrit:'':'opintoala'}}"
          class="liite-linkki" target="_blank">[[hae-raportti]]</a>
     </div>
   </div>

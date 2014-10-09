@@ -49,6 +49,21 @@
   []
   (sql/select koulutusala))
 
+(defn hae-koulutusalat-ja-opintoalat
+  "Hakee koulutusalat ja niiden opintoalat"
+  []
+  (let [opintoalat (sql/select opintoala
+                     (sql/join :inner :koulutusala (= :opintoala.koulutusala_tkkoodi :koulutusala.koulutusala_tkkoodi))
+                     (sql/fields :opintoala_tkkoodi :opintoala.koulutusala_tkkoodi
+                                 [:opintoala.selite_fi :opintoala_nimi_fi] [:opintoala.selite_sv :opintoala_nimi_sv]
+                                 [:koulutusala.selite_fi :koulutusala_nimi_fi] [:koulutusala.selite_sv :koulutusala_nimi_sv])
+                     (sql/where {:voimassa_alkupvm [<= (sql/raw "current_date")]
+                                 :voimassa_loppupvm [>= (sql/raw "current_date")]}))
+        opintoalat-koulutusaloittain (group-by #(select-keys % [:koulutusala_tkkoodi :koulutusala_nimi_fi :koulutusala_nimi_sv]) opintoalat)]
+    (sort-by :koulutusala_tkkoodi (for [[koulutusala opintoalat] opintoalat-koulutusaloittain
+                                        :let [opintoalat (map #(select-keys % [:opintoala_tkkoodi :opintoala_nimi_fi :opintoala_nimi_sv]) opintoalat)]]
+                                    (assoc koulutusala :opintoalat opintoalat)))))
+
 (defn hae
   "Hakee koulutusalan koodin perusteella"
   [koodi]
