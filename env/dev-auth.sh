@@ -24,6 +24,7 @@ cp /env/auth-server/cas-server-webapp-3.5.2.war /home/tomcat/apache-tomcat-7.0.4
 chown -R tomcat:tomcat *
 
 service tomcat start
+chkconfig --level 3 tomcat on
 
 #ldap install
 
