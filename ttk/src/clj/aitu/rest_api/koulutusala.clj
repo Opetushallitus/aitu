@@ -21,9 +21,5 @@
             [korma.db :as db]))
 
 (c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" req
-    (cachable-json-response req (arkisto/hae-kaikki)))
   (cu/defapi :yleinen-rest-api nil :get "/opintoalat" req
-    (cachable-json-response req (arkisto/hae-koulutusalat-ja-opintoalat)))
-  (cu/defapi :yleinen-rest-api nil :get "/:koodi" [koodi :as req]
-    (cachable-json-response req (arkisto/hae koodi))))
+    (cachable-json-response req (arkisto/hae-koulutusalat-ja-opintoalat))))
