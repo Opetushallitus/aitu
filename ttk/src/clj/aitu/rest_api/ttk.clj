@@ -96,7 +96,7 @@
   [:sukunimi :etunimi :rooli :edustus :jarjesto_nimi_fi :jarjesto_nimi_sv :kielisyys :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka])
 
 (def jasenraporttikenttien-jarjestys
-  [:sukunimi :etunimi :toimikunta :rooli :edustus :aidinkieli :jarjesto
+  [:sukunimi :etunimi :toimikunta :tilikoodi :rooli :edustus :aidinkieli :jarjesto
    :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka])
 
 (def raporttikenttien-jarjestys [:diaarinumero :toimikunta_fi :toimikunta_sv :tilikoodi :kielisyys

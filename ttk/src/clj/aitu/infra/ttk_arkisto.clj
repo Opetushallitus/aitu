@@ -427,7 +427,9 @@
                             {:loppupvm nil}))))
     (sql/order :henkilo.sukunimi)
     (sql/order :henkilo.etunimi)
-    (sql/fields [:tutkintotoimikunta.nimi_fi :toimikunta] :henkilo.etunimi :henkilo.sukunimi :rooli :edustus :henkilo.aidinkieli [:jarjesto.nimi_fi :jarjesto])
+    (sql/fields [:tutkintotoimikunta.nimi_fi :toimikunta] :tutkintotoimikunta.tilikoodi
+                :henkilo.etunimi :henkilo.sukunimi :rooli :edustus :henkilo.aidinkieli
+                [:jarjesto.nimi_fi :jarjesto])
     (cond->
       (seq rooli)     (sql/where {:rooli [in rooli]})
       (seq edustus)   (sql/where {:edustus [in edustus]})
