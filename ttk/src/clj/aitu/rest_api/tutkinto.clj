@@ -27,7 +27,7 @@
 (def tutkintokenttien-jarjestys [:tutkintotunnus :nimi_fi :nimi_sv :peruste :opintoala_fi :opintoala_sv])
 
 (def raporttikenttien-jarjestys [:opintoalatunnus :opintoala_fi :tutkintotunnus :tutkinto_fi :tutkinto_sv :tutkintotaso
-                                 :peruste :kieli :ytunnus :koulutustoimija_fi :toimikunta :toimikunta_fi :toimikausi_alku :toimikausi_loppu
+                                 :peruste :kieli :ytunnus :koulutustoimija_fi :toimikunta :toimikunta_fi :tilikoodi :toimikausi_alku :toimikausi_loppu
                                  :lukumaara])
 
 (c/defroutes raportti-reitit

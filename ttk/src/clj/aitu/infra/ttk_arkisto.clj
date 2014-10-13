@@ -341,12 +341,12 @@
                      [miehet naiset (+ miehet naiset)]))]))
 
 (defn ^:private tilastot-toimikunnittain [toimikunnat]
-  (concat [["Toimikunta" "Miesjäsenet" "Naisjäsenet" "Jäsenet yhteensä" "Tutkintoja"]]
+  (concat [["Toimikunta" "Tilikoodi" "Miesjäsenet" "Naisjäsenet" "Jäsenet yhteensä" "Tutkintoja"]]
           (for [toimikunta (sort-by :nimi_fi toimikunnat)
                 :let [jasenet (:jasenet toimikunta)
                       miehet (get jasenet "mies" 0)
                       naiset (get jasenet "nainen" 0)]]
-            [(:nimi_fi toimikunta) miehet naiset (+ miehet naiset) (count (:tutkinnot toimikunta))])
+            [(:nimi_fi toimikunta) (:tilikoodi toimikunta) miehet naiset (+ miehet naiset) (count (:tutkinnot toimikunta))])
           (let [jasenet (apply merge-with + (map :jasenet toimikunnat))
                 miehet (get jasenet "mies" 0)
                 naiset (get jasenet "nainen" 0)]
@@ -387,7 +387,7 @@
         toimikunnat (->>
                       (sql/select tutkintotoimikunta
                         (sql/with toimikausi)
-                        (sql/fields :toimikausi.voimassa :diaarinumero :nimi_fi :nimi_sv :kielisyys :toimikausi_id :tkunta)
+                        (sql/fields :toimikausi.voimassa :diaarinumero :tilikoodi :nimi_fi :nimi_sv :kielisyys :toimikausi_id :tkunta)
                         (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi-id}))
                       (map #(assoc % :opintoalat (toimikunta->opintoalat (:tkunta %))
                                      :tutkinnot (toimikunta->tutkinnot (:tkunta %))
