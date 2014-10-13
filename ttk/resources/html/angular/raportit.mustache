@@ -21,17 +21,18 @@
       </fieldset>
     </div>
     <div>
-      <haku-valitsin
-        monivalinta="true"
-        otsikko="[[opintoala]]"
-        url="[[base-url]]/api/opintoala/haku"
-        model="sopimukset.opintoala"
-        model-id-property="opintoala_tkkoodi"
-        model-text-property="selite">
-      </haku-valitsin>
+      <fieldset class="select2-fieldset">
+        <label>[[opintoala]]</label>
+        <select ui-select2="select2Options" ng-model="sopimukset.opintoala" multiple="multiple">
+          <option></option>
+          <optgroup ng-repeat="koulutusala in koulutusalat" label="{{koulutusala.koulutusala_tkkoodi}}. {{koulutusala.koulutusala_nimi | lokalisoi:koulutusala:'koulutusala_nimi'}}">
+            <option ng-repeat="opintoala in koulutusala.opintoalat | orderBy:opintoalaOrder" value="{{opintoala.opintoala_tkkoodi}}">{{opintoala.opintoala_nimi | lokalisoi:opintoala:'opintoala_nimi'}}</option>
+          </optgroup>
+        </select>
+      </fieldset>
     </div>
     <div>
-    <a ng-href="[[base-url]]/api/jarjestamissopimus/raportti?toimikausi={{sopimukset.toimikausi}}&{{sopimukset.opintoala|parametrit:'opintoala_tkkoodi':'opintoala'}}" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
+    <a ng-href="[[base-url]]/api/jarjestamissopimus/raportti?toimikausi={{sopimukset.toimikausi}}&{{sopimukset.opintoala|parametrit:'':'opintoala'}}" class="liite-linkki" target="_blank">[[hae-raportti]]</a>
     </div>
   </div>
 
@@ -56,17 +57,18 @@
       <enum-monivalinta nimi="kieli" otsikko="[[kielisyys]]" arvot="toimikunnat.kieli"></enum-monivalinta>
     </div>
     <div>
-      <haku-valitsin
-        monivalinta="true"
-        otsikko="[[opintoala]]"
-        url="[[base-url]]/api/opintoala/haku"
-        model="toimikunnat.opintoala"
-        model-id-property="opintoala_tkkoodi"
-        model-text-property="selite">
-      </haku-valitsin>
+      <fieldset class="select2-fieldset">
+        <label>[[opintoala]]</label>
+        <select ui-select2="select2Options" ng-model="toimikunnat.opintoala" multiple="multiple">
+          <option></option>
+          <optgroup ng-repeat="koulutusala in koulutusalat" label="{{koulutusala.koulutusala_tkkoodi}}. {{koulutusala.koulutusala_nimi | lokalisoi:koulutusala:'koulutusala_nimi'}}">
+            <option ng-repeat="opintoala in koulutusala.opintoalat | orderBy:opintoalaOrder" value="{{opintoala.opintoala_tkkoodi}}">{{opintoala.opintoala_nimi | lokalisoi:opintoala:'opintoala_nimi'}}</option>
+          </optgroup>
+        </select>
+      </fieldset>
     </div>
     <div>
-      <a ng-href="[[base-url]]/api/ttk/raportti?toimikausi={{toimikunnat.toimikausi}}&{{toimikunnat.opintoala|parametrit:'opintoala_tkkoodi':'opintoala'}}&{{toimikunnat.kieli|parametrit:'nimi':'kieli'}}"
+      <a ng-href="[[base-url]]/api/ttk/raportti?toimikausi={{toimikunnat.toimikausi}}&{{toimikunnat.opintoala|parametrit:'':'opintoala'}}&{{toimikunnat.kieli|parametrit:'nimi':'kieli'}}"
          class="liite-linkki" target="_blank">[[hae-raportti]]</a>
     </div>
   </div>

@@ -34,9 +34,13 @@ angular.module('raportit', ['ngRoute', 'resources'])
         yhteystiedot:false,
         opintoala: []
       };
-      $scope.sopimukset = {};
+      $scope.sopimukset = {
+        opintoala: []
+      };
       $scope.tilastot = {};
-      $scope.toimikunnat = {};
+      $scope.toimikunnat = {
+        opintoala: []
+      };
 
       $scope.select2Options = {
         allowClear: true
