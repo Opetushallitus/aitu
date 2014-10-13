@@ -111,6 +111,7 @@
 
 (defn toimikunta-nimella [nimi]
   {:nimi_fi nimi
+   :nimi_sv nimi
    :tkunta (uusi-toimikuntatunnus!)
    :toimikausi 2})
 

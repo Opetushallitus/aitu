@@ -49,7 +49,9 @@
                      :default (for [i (iterate inc 1)]
                                 {:henkiloid (- i)
                                  :etunimi (str "etu" i)
-                                 :sukunimi (str "suku" i)})})
+                                 :sukunimi (str "suku" i)
+                                 :aidinkieli "fi"
+                                 :sukupuoli "mies"})})
 
 (def toimikunta-tiedot {:post-fn (constantly "/api/ttk")
                         :delete-fn #(str "/api/test/ttk/" (:tkunta %))
