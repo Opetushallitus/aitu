@@ -202,6 +202,8 @@
           ;; Kun
           (kirjoita-tietokenttaan "jasen.henkilo.etunimi" "Roope")
           (kirjoita-tietokenttaan "jasen.henkilo.sukunimi" "Setä")
+          (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
+          (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (paina-lisaa-henkilo-nappia)
           (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
           (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})

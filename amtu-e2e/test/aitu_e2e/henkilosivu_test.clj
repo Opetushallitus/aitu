@@ -110,6 +110,8 @@
           (paina-jatka-nappia)
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.etunimi" "Sihto")
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.sukunimi" "Amakuutio")
+          (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
+          (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (odota-angular-pyyntoa)
           (jatka-jasenyyden-luontiin)
           ;;Niin
@@ -124,6 +126,8 @@
           (paina-jatka-nappia)
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.etunimi" "Sihto")
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.sukunimi" "Amakuutio")
+          (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
+          (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (odota-angular-pyyntoa)
           (jatka-jasenyyden-luontiin)
           ;;Niin
@@ -138,6 +142,8 @@
           (paina-jatka-nappia)
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.etunimi" "Sihto")
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.sukunimi" "Amakuutio")
+          (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
+          (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.postinumero" "123456")
           (odota-angular-pyyntoa)
           (jatka-jasenyyden-luontiin)

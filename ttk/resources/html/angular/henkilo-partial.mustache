@@ -19,13 +19,13 @@
 </section>
 <section class="info-section">
   <fieldset>
-    <label>[[sukupuoli]]</label>
-    <enum-valikko ng-hide="!muokkausTila" nimi="sukupuoli" arvo="jasen.henkilo.sukupuoli"></enum-valikko>
+    <label class="pakollinen">[[sukupuoli]]</label>
+    <enum-valikko pakollinen="true" ng-hide="!muokkausTila" nimi="sukupuoli" arvo="jasen.henkilo.sukupuoli"></enum-valikko>
     <p ng-hide="muokkausTila"><enum-arvo nimi="sukupuoli" arvo="jasen.henkilo.sukupuoli"></enum-arvo></p>
   </fieldset>
   <fieldset>
-    <label>[[kielisyys]]</label>
-    <enum-valikko ng-hide="!muokkausTila" nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-valikko>
+    <label class="pakollinen">[[kielisyys]]</label>
+    <enum-valikko pakollinen="true" ng-hide="!muokkausTila" nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-valikko>
     <p ng-hide="muokkausTila"><enum-arvo nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-arvo></p>
   </fieldset>
 </section>
