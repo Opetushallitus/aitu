@@ -131,6 +131,20 @@
                           :toimikausi_loppu "Toimikausi loppupvm"
                           :toimikunta "Toimikunta"})
 
+(defn csv-rivi-soluiksi [csv-rivi]
+  (string/split csv-rivi #"\;(?=([^\"]*\"[^\"]*\")*(?![^\"]*\"))"))
+
+(defn pakota-numerokentat-csv-stringsoluiksi [csvdata]
+  (str
+    (string/join "\n"
+                (for [rivi (string/split-lines csvdata)]
+                  (string/join ";"
+                               (for [solu (csv-rivi-soluiksi rivi)]
+                                 (if (re-matches #"[0-9]+" solu)
+                                   (str "=\"" solu "\"")
+                                   solu)))))
+    "\n"))
+
 (defn muodosta-csv [data kenttien-jarjestys]
   (write-csv (let [[otsikko-avaimet & arvot] (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys)]
                (into [(for [oa otsikko-avaimet]

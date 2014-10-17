@@ -66,3 +66,19 @@
       (is (= (first (first @log)) :error))
       (is (re-matches #".*asdf.*" (second (first @log)))))))
 
+(deftest numerokenttien-etunollien-pakotus-test
+  (testing "laittaa vain numerokenttiin etunollapakotuksen"
+    (= (pakota-numerokentat-csv-stringsoluiksi "Nimi;Numero\nfoo123;0123456789\n")
+       "Nimi;Numero\nfoo123;=\"0123456789\"\n")))
+
+(deftest csv-rivi-soluiksi-test
+  (testing "pilkkominen katkaisee solut oikeasta kohtaa"
+    (let [csv1 "A;\"B\";\"A\"\"B\""
+          csv2 "\";\";\"1\"\"2\";\"1;2\""
+          csv3 "\"\n\";\"12\n34\";\"12\n34;56\";;1234"]
+      (= (csv-rivi-soluiksi csv1)
+         ["A" "\"B\"" "A\"\"B"])
+      (= (csv-rivi-soluiksi csv2)
+         ["\";\"" "\"1\"\"2" "\"1;2\""])
+      (= (csv-rivi-soluiksi csv3)
+         ["\"\n\"" "\"12\n34\"" "12\n34;56\"" "" "1234"]))))
