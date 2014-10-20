@@ -73,12 +73,17 @@
 
 (deftest csv-rivi-soluiksi-test
   (testing "pilkkominen katkaisee solut oikeasta kohtaa"
-    (let [csv1 "A;\"B\";\"A\"\"B\""
-          csv2 "\";\";\"1\"\"2\";\"1;2\""
-          csv3 "\"\n\";\"12\n34\";\"12\n34;56\";;1234"]
-      (= (csv-rivi-soluiksi csv1)
-         ["A" "\"B\"" "A\"\"B"])
-      (= (csv-rivi-soluiksi csv2)
-         ["\";\"" "\"1\"\"2" "\"1;2\""])
-      (= (csv-rivi-soluiksi csv3)
-         ["\"\n\"" "\"12\n34\"" "12\n34;56\"" "" "1234"]))))
+    (= (csv-rivi-soluiksi "A;\"B\";\"A\"\"B\"")
+       ["A"
+        "\"B\""
+        "A\"\"B"])
+    (= (csv-rivi-soluiksi "\";\";\"1\"\"2\";\"1;2\"")
+       ["\";\""
+        "\"1\"\"2"
+        "\"1;2\""])
+    (= (csv-rivi-soluiksi "\"\n\";\"12\n34\";\"12\n34;56\";;1234")
+       ["\"\n\""
+        "\"12\n34\""
+        "12\n34;56\""
+        ""
+        "1234"])))
