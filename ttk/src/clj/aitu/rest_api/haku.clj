@@ -19,5 +19,6 @@
             [aitu.compojure-util :as cu]))
 
 (c/defroutes reitit
+  ; Regex hoitaa tässä SQL-injektion. Arkisto-koodissa ei ole sanitointia.
   (cu/defapi :etusivu_haku nil :get ["/:tunnus" :tunnus #"[0-9/]+"] [tunnus]
     (json-response (or (arkisto/hae-tunnuksella-ensimmainen tunnus) {}))))

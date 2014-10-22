@@ -18,24 +18,32 @@
   (:use [aitu.integraatio.sql.korma]))
 
 (def hakutiedot [{:url "/toimikunta/*/tiedot"
-                  :kentta "diaarinumero"
+                  :url-kentta "diaarinumero"
+                  :haku-kentta "diaarinumero"
+                  :taulu "tutkintotoimikunta"}
+                 {:url "/toimikunta/*/tiedot"
+                  :url-kentta "diaarinumero"
+                  :haku-kentta "tilikoodi"
                   :taulu "tutkintotoimikunta"}
                  {:url "/sopimus/*/tiedot"
-                  :kentta "sopimusnumero"
+                  :url-kentta "trim(to_char(jarjestamissopimusid, '9999999'))"
+                  :haku-kentta "sopimusnumero"
                   :taulu "jarjestamissopimus"}
                  {:url "/jarjestaja/*/tiedot"
-                  :kentta "oppilaitoskoodi"
+                  :url-kentta "oppilaitoskoodi"
+                  :haku-kentta "oppilaitoskoodi"
                   :taulu "oppilaitos"}
                  {:url "/tutkinto/*"
-                  :kentta "tutkintotunnus"
+                  :url-kentta "tutkintotunnus"
+                  :haku-kentta "tutkintotunnus"
                   :taulu "nayttotutkinto"}])
 
 (defn muodosta-select-lause
   "muodostaa select lauseen yhdelle taululle"
   [hakutieto tunnus]
-  (str "select " (:kentta hakutieto) " as tunnus, '" (:url hakutieto) "' as url"
+  (str "select " (:url-kentta hakutieto) " as tunnus, '" (:url hakutieto) "' as url"
        " from " (:taulu hakutieto)
-       " where " (:kentta hakutieto) " = '" tunnus "'"))
+       " where " (:haku-kentta hakutieto) " = '" tunnus "'"))
 
 (defn muodosta-haku
   "yhdistää hakutiedot yhdeksi kyselyksi union all:lla"
