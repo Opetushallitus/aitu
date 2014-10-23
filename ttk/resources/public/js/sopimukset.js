@@ -159,7 +159,13 @@
 
     .controller('jarjestamissuunnitelmaController', ['$scope', '$routeParams', 'jarjestamissuunnitelmaResource', 'i18n', function($scope, $routeParams, resource, i18n){
       $scope.uploadValmis = function(r, liitetyyppi) {
-        $scope.sopimusJaTutkinto[liitetyyppi].push(r);
+        if(r.result === "failed") {
+          alert(i18n.yleiset['virus-havaittu']);
+        } else if(r.result === "error") {
+          alert(i18n.yleiset['virusskannaus-yhteysvirhe']);
+        } else {
+          $scope.sopimusJaTutkinto[liitetyyppi].push(r);
+        } 
       };
 
       $scope.poistaSuunnitelma = function() {
