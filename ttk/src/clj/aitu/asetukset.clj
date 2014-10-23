@@ -26,6 +26,8 @@
             [schema.coerce :as sc])
   (:import [org.apache.log4j PropertyConfigurator]))
 
+(def asetukset (promise))
+
 (def Asetukset {:server {:port s/Int
                          :base-url s/Str
                          :pool-size s/Int}
@@ -36,6 +38,8 @@
                      :password s/Str
                      :maximum-pool-size s/Int
                      :minimum-pool-size s/Int}
+                :clamav {:host s/Str
+                         :port s/Int}
                 :session-timeout s/Int
                 :cas-auth-server {:url s/Str
                                   :unsafe-https Boolean
@@ -76,6 +80,8 @@
                               :password "ttk"
                               :maximum-pool-size 15
                               :minimum-pool-size 3}
+                         :clamav {:host "localhost"
+                                  :port 8080}
                          :session-timeout (* 8 60 60)
                          :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
                                            :unsafe-https false

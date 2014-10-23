@@ -31,6 +31,7 @@
             [cheshire.generate :as json-gen]
             schema.core
             [stencil.core :as s]
+            [compojure.core :as c]
 
             oph.korma.korma
 
@@ -45,6 +46,7 @@
              :refer [*current-user-authmap* yllapitaja?]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
+            [aitu.integraatio.clamav :as clamav]
             [aitu.infra.eraajo :as eraajo]
             [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]))
 
@@ -92,6 +94,19 @@
    :headers {"Content-Type" "text/html"}
    :body (s/render-file "html/sessio-vanhentunut" {:service-url (get-in asetukset [:server :base-url])})})
 
+(defn clamav-mock
+  "Lisää development-modessa handleriin routen, joka emuloi ClamAV:ta"
+  [handler asetukset]
+  (let [eicar-string "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"]
+    (if (:development-mode asetukset)
+      (c/routes
+        (c/POST "/scan" req (let [file (slurp (get-in req [:params "file" :tempfile]) :encoding "ASCII")]
+                              (if (= file eicar-string)
+                                clamav/found-reply
+                                clamav/ok-reply)))
+        handler)
+      handler)))
+
 (defn app [asetukset]
   (require 'aitu.reitit)
   (let [session-store (memory-store)
@@ -101,13 +116,14 @@
     wrap-keyword-params
     wrap-json-params
     (i18n/wrap-locale
-      :ei-redirectia #"/api.*"
+      :ei-redirectia #"/api.*|/scan.*"
       :base-url (-> asetukset :server :base-url))
     (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
                                 :timeout-response (timeout-response asetukset)})
     auth/wrap-sessionuser
     log-request-wrapper
     (auth-middleware asetukset)
+    (clamav-mock asetukset)
     wrap-multipart-params
     wrap-params
     (wrap-resource "public")
@@ -123,6 +139,7 @@
 (defn kaynnista! [oletus-asetukset]
   (try
     (let [asetukset (lue-asetukset oletus-asetukset)
+          _ (deliver aitu.asetukset/asetukset asetukset)
           _ (konfiguroi-lokitus asetukset)
           _ (log/info "Käynnistetään Aitu" @build-id)
           _ (oph.korma.korma/luo-db (:db asetukset))

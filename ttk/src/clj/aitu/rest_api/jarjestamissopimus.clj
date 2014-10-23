@@ -16,7 +16,7 @@
   (:require [compojure.core :as c]
             [korma.db :as db]
             [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response sallittu-jos]]
-            [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin csv-download-response]]
+            [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin csv-download-response jos-lapaisee-virustarkistuksen]]
             [aitu.util :refer [muodosta-csv ->vector]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]
@@ -134,14 +134,14 @@
 
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
     (sallittu-jos (sallittu-tiedostotyyppi? (:content-type file))
+      (jos-lapaisee-virustarkistuksen file
+        (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+              sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
+              jarjestamissopimusid_sopimus_ja_tutkinto (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int)
+              _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
 
-      (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
-            sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
-            jarjestamissopimusid_sopimus_ja_tutkinto (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int)
-            _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
-
-        (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
-          (file-upload-response (arkisto/lisaa-suunnitelma-tutkinnolle! sopimus_ja_tutkinto_id_int file))))))
+          (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
+            (file-upload-response (arkisto/lisaa-suunnitelma-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))))
 
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
@@ -155,14 +155,14 @@
 
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/liite/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
     (sallittu-jos (sallittu-tiedostotyyppi? (:content-type file))
+      (jos-lapaisee-virustarkistuksen file
+        (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
+              sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
+              jarjestamissopimusid_sopimus_ja_tutkinto (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int)
+              _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
 
-      (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
-        sopimus_ja_tutkinto_id_int (Integer/parseInt sopimus_ja_tutkinto)
-        jarjestamissopimusid_sopimus_ja_tutkinto (arkisto/hae-jarjestamissopimusid-sopimuksen-tutkinnolle sopimus_ja_tutkinto_id_int)
-        _ (tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jarjestamissopimusid_sopimus_ja_tutkinto jarjestamissopimusid_int)]
-
-        (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
-          (file-upload-response (arkisto/lisaa-liite-tutkinnolle! sopimus_ja_tutkinto_id_int file))))))
+          (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
+            (file-upload-response (arkisto/lisaa-liite-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))))
 
   (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)

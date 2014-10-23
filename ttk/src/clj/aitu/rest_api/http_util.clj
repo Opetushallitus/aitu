@@ -13,6 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.http-util
+  (:require [aitu.integraatio.clamav :as clamav])
   (:import java.io.ByteArrayInputStream))
 
 (def allowed-mimetypes
@@ -45,3 +46,9 @@
   (if (= surrogaattiavaimeen_liittyva_entity_id entity_id)
     true
     (throw (Exception. "Surrogaattiavain ei liity entiteettiin jota yritettiin päivittää."))))
+
+(defmacro jos-lapaisee-virustarkistuksen [tiedosto & body]
+  `(case (clamav/tarkista-tiedosto (:filename ~tiedosto) (:tempfile ~tiedosto))
+     :passed (do ~@body)
+     :failed {:status 200, :body {:result :failed}}
+     :error {:status 200, :body {:result :error}}))
