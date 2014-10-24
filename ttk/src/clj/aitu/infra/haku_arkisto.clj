@@ -29,7 +29,7 @@
                   :url-kentta "trim(to_char(jarjestamissopimusid, '9999999'))"
                   :haku-kentta "sopimusnumero"
                   :taulu "jarjestamissopimus"}
-                 {:url "/jarjestaja/*/tiedot"
+                 {:url "/oppilaitos/*/tiedot"
                   :url-kentta "oppilaitoskoodi"
                   :haku-kentta "oppilaitoskoodi"
                   :taulu "oppilaitos"}
