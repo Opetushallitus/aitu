@@ -16,6 +16,7 @@
   (:require  [korma.core :as sql]
              [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
+             [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.toimiala.oppilaitos :as toimiala]
              [aitu.util :refer [select-and-rename-keys]]
              [oph.common.util.util :refer [sisaltaako-kentat?]]
@@ -140,7 +141,8 @@
   (let [oppilaitos (oppilaitos-kaytava/hae oppilaitoskoodi)
         jarjestamissopimukset (sopimus-arkisto/hae-oppilaitoksen-sopimukset oppilaitoskoodi)]
     (some-> oppilaitos
-            (assoc :jarjestamissopimus jarjestamissopimukset))))
+            (assoc :jarjestamissopimus jarjestamissopimukset)
+            (update-in [:koulutustoimija] koulutustoimija-kaytava/hae))))
 
 (defn rajaa-oppilaitoksen-kentat
   "Valitsee oppilaitoksen tiedoista osoitepalvelun tarvitsemat kentät"
