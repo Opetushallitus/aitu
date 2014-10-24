@@ -181,6 +181,4 @@
           (get-in jarjestamissopimus-data [:jarjestamissopimukset 0]))
         (avaa (sopimussivu 1230))
         (testing "Otsikon perässä on teksti (ei voimassa)"
-          (is (= (sivun-otsikko) "JÄRJESTÄMISSOPIMUS (EI VOIMASSA)")))
-        (testing "Sivulla ei näy muokkaustoiminnallisuuksia"
-          (is (= (count (w/find-elements {:css "button.edit-icon:not(.ng-hide), button.add-icon:not(.ng-hide)"})) 0)))))))
+          (is (= (sivun-otsikko) "JÄRJESTÄMISSOPIMUS (EI VOIMASSA)")))))))
