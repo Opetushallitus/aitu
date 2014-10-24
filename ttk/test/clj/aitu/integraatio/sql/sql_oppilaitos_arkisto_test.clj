@@ -1,3 +1,4 @@
+
 ;; Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
 ;;
 ;; This program is free software:  Licensed under the EUPL, Version 1.1 or - as
@@ -19,8 +20,7 @@
             [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [aitu.integraatio.sql.test-data-util :refer :all]
-            [aitu.integraatio.sql.jarjestamissopimus-arkisto-test :as jarjestamissopimus-arkisto-test]
-            [aitu.toimiala.oppilaitos :as oppilaitos]))
+            [aitu.integraatio.sql.jarjestamissopimus-arkisto-test :as jarjestamissopimus-arkisto-test]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -34,10 +34,6 @@
 (defn aseta-sopimuksen-toimikunta-vanhentuneeksi
   []
   (sql/exec-raw (str "update tutkintotoimikunta set toimikausi_loppu='2000-12-01' where tkunta='TKUN'")))
-
-(defn hae-ja-taydenna
-  [oppilaitoskoodi]
-  (oppilaitos/taydenna-oppilaitos (arkisto/hae oppilaitoskoodi)))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
   (lisaa-koulutustoimija! {:ytunnus "KT1"})
@@ -140,5 +136,5 @@
                     :koulutustoimija "KT1"}
         _ (arkisto/lisaa! oppilaitos)]
     (testing "Oppilaitos löytyy haettaessa oppilaitoskoodilla"
-      (is (= (select-keys (hae-ja-taydenna "12345") [:oppilaitoskoodi :nimi])
+      (is (= (select-keys (arkisto/hae "12345") [:oppilaitoskoodi :nimi])
              {:oppilaitoskoodi "12345", :nimi "Oppilaitos O"})))))

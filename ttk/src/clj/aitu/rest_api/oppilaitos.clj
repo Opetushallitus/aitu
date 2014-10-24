@@ -19,7 +19,6 @@
             [aitu.compojure-util :as cu]
             [aitu.infra.oppilaitos-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-json-response json-response]]
-            [aitu.toimiala.oppilaitos :as oppilaitos]
             [aitu.toimiala.skeema :refer :all]
             [compojure.api.sweet :refer :all]
             [aitu.util :refer [muodosta-csv]]
