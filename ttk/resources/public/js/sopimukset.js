@@ -111,7 +111,7 @@
         $scope.sopimus = sopimusResource.get();
 
         $scope.salliMuokkaus = function() {
-          return !$scope.muokkausTila && $scope.sopimus.voimassa !== false;
+          return !$scope.muokkausTila;
         };
 
         $scope.muokkaa = function(hash) {
@@ -165,7 +165,7 @@
           alert(i18n.yleiset['virusskannaus-yhteysvirhe']);
         } else {
           $scope.sopimusJaTutkinto[liitetyyppi].push(r);
-        } 
+        }
       };
 
       $scope.poistaSuunnitelma = function() {
