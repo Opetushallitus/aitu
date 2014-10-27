@@ -51,6 +51,10 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354101' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354101') where tutkintotunnus = '354101';
 
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '15/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '039996' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='039996' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '039996') where tutkintotunnus = '039996';
+
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '26/011/2006' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '355201' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='355201' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '355201') where tutkintotunnus = '355201';
@@ -227,10 +231,6 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='334104' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '334104') where tutkintotunnus = '334104';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '10/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '334115' and versio = 1;
-update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='334115' and versio=1;
-update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '334115') where tutkintotunnus = '334115';
-
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '17/011/2005' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '357105' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='357105' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '357105') where tutkintotunnus = '357105';
@@ -254,6 +254,10 @@ update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutki
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '29/011/2006' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '384111' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='384111' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '384111') where tutkintotunnus = '384111';
+
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '32/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '327109' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='327109' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '327109') where tutkintotunnus = '327109';
 
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '10/011/2013' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '364201' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='364201' and versio=1;
@@ -310,6 +314,10 @@ update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutki
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '46/011/2003' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354103' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354103' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354103') where tutkintotunnus = '354103';
+
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '7/011/2008' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '039998' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='039998' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '039998') where tutkintotunnus = '039998';
 
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '31/011/2005' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '357502' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='357502' and versio=1;
@@ -443,6 +451,10 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='387104' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '387104') where tutkintotunnus = '387104';
 
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '21/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354313' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354313' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354313') where tutkintotunnus = '354313';
+
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '5/011/2005' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '355413' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='355413' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '355413') where tutkintotunnus = '355413';
@@ -458,6 +470,14 @@ update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutki
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '49/011/2012' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354104' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354104' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354104') where tutkintotunnus = '354104';
+
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '9/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '039999' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='039999' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '039999') where tutkintotunnus = '039999';
+
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '97/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '357503' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='357503' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '357503') where tutkintotunnus = '357503';
 
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '8/011/2013' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '367304' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='367304' and versio=1;
@@ -523,9 +543,13 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='387501' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '387501') where tutkintotunnus = '387501';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '58/011/2000' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '384113' and versio = 1;
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '33/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '384113' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='384113' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '384113') where tutkintotunnus = '384113';
+
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '36/011/2008' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354710' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354710' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354710') where tutkintotunnus = '354710';
 
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '5/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '352301' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='352301' and versio=1;
@@ -631,6 +655,10 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='357108' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '357108') where tutkintotunnus = '357108';
 
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '31/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '324109' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='324109' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '324109') where tutkintotunnus = '324109';
+
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '17/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '371101' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='371101' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '371101') where tutkintotunnus = '371101';
@@ -687,7 +715,7 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='364204' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '364204') where tutkintotunnus = '364204';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '16/011/2004' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354403' and versio = 1;
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '98/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354403' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354403' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354403') where tutkintotunnus = '354403';
 
@@ -706,6 +734,10 @@ update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutki
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '24/011/2007' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '364105' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='364105' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '364105') where tutkintotunnus = '364105';
+
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '34/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '387106' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='387106' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '387106') where tutkintotunnus = '387106';
 
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '21/011/2011' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354205' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354205' and versio=1;
@@ -726,6 +758,10 @@ update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutki
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '47/011/2004' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '358506' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='358506' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '358506') where tutkintotunnus = '358506';
+
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '22/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '357307' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='357307' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '357307') where tutkintotunnus = '357307';
 
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '65/011/2002' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '334108' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='334108' and versio=1;
@@ -774,6 +810,10 @@ update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutki
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '3/011/2008' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '364304' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='364304' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '364304') where tutkintotunnus = '364304';
+
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '96/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354503' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354503' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354503') where tutkintotunnus = '354503';
 
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '32/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '321602' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='321602' and versio=1;
@@ -967,10 +1007,6 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='384106' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '384106') where tutkintotunnus = '384106';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '36/011/2008' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354703' and versio = 1;
-update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354703' and versio=1;
-update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354703') where tutkintotunnus = '354703';
-
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '16/011/2011' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '367903' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='367903' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '367903') where tutkintotunnus = '367903';
@@ -1007,7 +1043,7 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354109' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354109') where tutkintotunnus = '354109';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '30/011/2007' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '355209' and versio = 1;
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '25/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '355209' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='355209' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '355209') where tutkintotunnus = '355209';
 
@@ -1151,7 +1187,7 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354409' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354409') where tutkintotunnus = '354409';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '41/0112004' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '357709' and versio = 1;
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '100/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '357709' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='357709' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '357709') where tutkintotunnus = '357709';
 
@@ -1219,25 +1255,9 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='351805' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '351805') where tutkintotunnus = '351805';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '20/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '38411' and versio = 1;
-update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='38411' and versio=1;
-update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '38411') where tutkintotunnus = '38411';
-
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '15/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '39996' and versio = 1;
-update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='39996' and versio=1;
-update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '39996') where tutkintotunnus = '39996';
-
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '32/011/2009' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '381408' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='381408' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '381408') where tutkintotunnus = '381408';
-
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '7/011/2008' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '39998' and versio = 1;
-update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='39998' and versio=1;
-update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '39998') where tutkintotunnus = '39998';
-
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '9/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '39999' and versio = 1;
-update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='39999' and versio=1;
-update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '39999') where tutkintotunnus = '39999';
 
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '41/011/2013' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '337110' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='337110' and versio=1;
@@ -1343,7 +1363,7 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='358103' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '358103') where tutkintotunnus = '358103';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '36/011/2004' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '337104' and versio = 1;
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '24/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '337104' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='337104' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '337104') where tutkintotunnus = '337104';
 
@@ -1371,7 +1391,7 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='367101' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '367101') where tutkintotunnus = '367101';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '2/011/2005' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '358411' and versio = 1;
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '99/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '358411' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='358411' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '358411') where tutkintotunnus = '358411';
 
@@ -1399,6 +1419,10 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='327128' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '327128') where tutkintotunnus = '327128';
 
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '20/011/2010' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '038411' and versio = 1;
+update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='038411' and versio=1;
+update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '038411') where tutkintotunnus = '038411';
+
 insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '21/011/2013' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '354111' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='354111' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '354111') where tutkintotunnus = '354111';
@@ -1415,7 +1439,7 @@ insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyv
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='355101' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '355101') where tutkintotunnus = '355101';
 
-insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '33/011/2006' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '367201' and versio = 1;
+insert into tutkintoversio (tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm, voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto)   select tutkintotunnus, 2 as versio, koodistoversio, '35/011/2014' as peruste, hyvaksytty, (select DATE 'yesterday'), voimassa_loppupvm, siirtymaajan_loppupvm, jarjestyskoodistoversio, osajarjestyskoodisto from tutkintoversio     where tutkintotunnus = '367201' and versio = 1;
 update tutkintoversio set voimassa_loppupvm = (select DATE 'yesterday') where tutkintotunnus='367201' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 2 and tutkintotunnus = '367201') where tutkintotunnus = '367201';
 
