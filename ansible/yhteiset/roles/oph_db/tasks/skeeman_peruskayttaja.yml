@@ -21,9 +21,9 @@
   command: psql -c 'GRANT SELECT ON ALL TABLES IN SCHEMA {{ skeema }} TO {{ skeeman_peruskayttaja }}' {{ tietokanta }}
 
 - name: Anna UPDATE/INSERT-oikeudet tauluihin
-  command: psql -c 'GRANT UPDATE, INSERT ON TABLE {{ update_insert_oikeudet }} TO {{ skeeman_peruskayttaja }}' {{ tietokanta }}
-  when: update_insert_oikeudet is defined
+  command: psql -c 'GRANT UPDATE, INSERT ON TABLE vastaaja,vastaus,jatkovastaus TO {{ skeeman_peruskayttaja }}' {{ tietokanta }}
+  when: tee_aipalvastaus_grantit is defined
 
 - name: Anna USAGE-oikeudet sequenceihin
-  command: psql -c 'GRANT USAGE ON SEQUENCE {{ sequence_oikeudet }} TO {{ skeeman_peruskayttaja }}' {{ tietokanta }}
-  when: sequence_oikeudet is defined
+  command: psql -c 'GRANT USAGE ON SEQUENCE vastaaja_vastaajaid_seq,vastaus_vastausid_seq,jatkovastaus_jatkovastausid_seq TO {{ skeeman_peruskayttaja }}' {{ tietokanta }}
+  when: tee_aipalvastaus_grantit is defined
