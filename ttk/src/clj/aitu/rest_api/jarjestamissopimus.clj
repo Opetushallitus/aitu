@@ -24,7 +24,8 @@
             [aitu.toimiala.skeema :as skeema]
             [aitu.compojure-util :as cu]
             [aitu.infra.validaatio :refer [validoi-alkupvm-sama-tai-ennen-loppupvm]]
-            [aitu.toimiala.jarjestamissopimus :as jarjestamissopimus]))
+            [aitu.toimiala.jarjestamissopimus :as jarjestamissopimus]
+            [aitu.toimiala.voimassaolo.saanto.jarjestamissopimus :as voimassaolo]))
 
 (defn validoi-uniikki-sopimusnumero [sopimus]
   (fn [sopimusnumero]
@@ -53,6 +54,7 @@
   [jarjestamissopimusid]
   (some->
     (jarjestamissopimus/taydenna-sopimus (arkisto/hae jarjestamissopimusid))
+    voimassaolo/taydenna-sopimuksen-voimassaolo
     :vanhentunut
     not))
 

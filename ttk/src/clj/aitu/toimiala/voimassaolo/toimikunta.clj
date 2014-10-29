@@ -21,7 +21,7 @@
 
 (defn taydenna-toimikunnan-jarjestamissopimukset
   [toimikunta]
-  (update-in toimikunta [:jarjestamissopimus] #(mapv sopimus-paivitys/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo %)))
+  (update-in toimikunta [:jarjestamissopimus] #(mapv sopimus-paivitys/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo %)))
 
 (defn taydenna-jasenyyksien-voimassaolo
   [jasenyydet toimikunta-voimassa]

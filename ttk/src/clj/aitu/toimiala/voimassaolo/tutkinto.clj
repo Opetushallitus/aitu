@@ -20,7 +20,7 @@
 
 (defn taydenna-sopimus-ja-tutkinto-rivi
   [sopimus-ja-tutkinto]
-  (update-in sopimus-ja-tutkinto [:jarjestamissopimus] sopimus-paivitys/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo))
+  (update-in sopimus-ja-tutkinto [:jarjestamissopimus] sopimus-paivitys/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo))
 
 (defn taydenna-tutkinnon-sopimus-ja-tutkinto-rivit
   [tutkinto]

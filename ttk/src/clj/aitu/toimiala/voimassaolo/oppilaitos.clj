@@ -18,7 +18,7 @@
 
 (defn ^:private taydenna-oppilaitoksen-jarjestamissopimukset
   [oppilaitos]
-  (update-in oppilaitos [:jarjestamissopimus] #(mapv sopimus-paivitys/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo %)))
+  (update-in oppilaitos [:jarjestamissopimus] #(mapv sopimus-paivitys/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo %)))
 
 (defn taydenna-oppilaitoksen-ja-liittyvien-tietojen-voimassaolo
   "Täydentää oppilaitoksen ja siihen liittyvien tietojen voimassaolon"

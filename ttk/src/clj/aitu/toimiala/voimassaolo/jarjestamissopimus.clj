@@ -22,10 +22,9 @@
   [sopimus-ja-tutkinto]
   (update-in sopimus-ja-tutkinto [:tutkintoversio] tutkinto/taydenna-tutkinnon-voimassaolo))
 
-(defn taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo
+(defn taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
   "Täydentää järjestämissopimuksen ja siihen liittyvien tietojen voimassaolon"
   [jarjestamissopimus]
   (some-> jarjestamissopimus
           (update-in [:sopimus_ja_tutkinto] #(mapv taydenna-sopimus-ja-tutkinto-rivi %))
-          (update-in [:toimikunta] toimikunta/taydenna-toimikunnan-voimassaolo)
-          sopimus/taydenna-sopimuksen-voimassaolo))
+          (update-in [:toimikunta] toimikunta/taydenna-toimikunnan-voimassaolo)))
