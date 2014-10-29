@@ -22,7 +22,7 @@
    (with-redefs [aitu.toimiala.voimassaolo.saanto.toimikunta/taydenna-toimikunnan-voimassaolo
                  (fn [toimikunta] (merge toimikunta
                                          {:toimikunta-taydennetty true}))
-                 aitu.toimiala.voimassaolo.jarjestamissopimus/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo
+                 aitu.toimiala.voimassaolo.jarjestamissopimus/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
                  (fn [sopimus] (merge sopimus
                                       {:sopimus-taydennetty true}))]
      (let [toimikunta {}]

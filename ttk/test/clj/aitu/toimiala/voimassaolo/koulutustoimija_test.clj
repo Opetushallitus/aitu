@@ -19,7 +19,7 @@
 (deftest voimassaolo-koulutustoimija-test
  (testing
    "täydennä koulutustoimijan ja liittyvien tietojen voimassaolo:"
-   (with-redefs [aitu.toimiala.voimassaolo.jarjestamissopimus/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo
+   (with-redefs [aitu.toimiala.voimassaolo.jarjestamissopimus/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
                  (fn [sopimus] (assoc sopimus :sopimus-taydennetty true))]
      (testing
        "täydentää järjestämissopimukset"

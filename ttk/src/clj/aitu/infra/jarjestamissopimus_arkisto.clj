@@ -25,6 +25,7 @@
              [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
              [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
              [aitu.toimiala.voimassaolo.jarjestamissopimus :as voimassaolo]
+             [aitu.toimiala.voimassaolo.saanto.jarjestamissopimus :as voimassaolo-saanto]
              [aitu.toimiala.voimassaolo.saanto.osoitepalvelu-jarjestamissopimus :as osoitepalvelu-voimassaolo]
              [clj-time.core :as time]
              [aitu.auditlog :as auditlog])
@@ -63,8 +64,9 @@
 (defn ^:integration-api paivita-sopimuksen-voimassaolo!
   "Päivittää annetulla id:llä olevan sopimuksen voimassaolotiedon"
   [jarjestamissopimusid]
-  (let [sopimus (voimassaolo/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo
-                  (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid))]
+  (let [sopimus (voimassaolo-saanto/taydenna-sopimuksen-voimassaolo
+                  (voimassaolo/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
+                    (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid)))]
     (aseta-sopimuksen-voimassaolo! jarjestamissopimusid (:voimassa sopimus))))
 
 (defn merkitse-sopimus-poistetuksi!
@@ -93,6 +95,7 @@
         sopimusid (:jarjestamissopimusid sopimus)
         diaarinumero (:sopimusnumero sopimus)]
     (auditlog/jarjestamissopimus-lisays! sopimusid diaarinumero)
+    (paivita-sopimuksen-voimassaolo! sopimusid)
     sopimus))
 
 (defn ^:private paivita-sopimuksen-tutkinnon-osat!
@@ -224,7 +227,8 @@
          (sql/where {:poistettu false}))
     (map liita-perustiedot-sopimukseen)
     (map liita-tutkinnot-sopimukseen)
-    (map voimassaolo/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo)))
+    (map voimassaolo/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo)
+    (map voimassaolo-saanto/taydenna-sopimuksen-voimassaolo)))
 
 (defn hae-kaikki-osoitepalvelulle
   "Hakee kaikki järjestämissopimukset ja niihin liittyvät tutkinnot osoitepalvelua varten"

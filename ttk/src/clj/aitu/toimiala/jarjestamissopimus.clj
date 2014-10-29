@@ -30,5 +30,5 @@
   "Täydentää jarjestamissopimuksen tiedot, kuten voimassaolo"
   [sopimus]
   (some-> sopimus
-    voimassaolo/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo
+    voimassaolo/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
     (update-in [:sopimus_ja_tutkinto] #(map liita-tutkinnon-nimi-ja-tunnus %))))

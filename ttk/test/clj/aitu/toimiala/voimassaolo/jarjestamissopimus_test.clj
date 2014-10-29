@@ -22,9 +22,7 @@
     (with-redefs [aitu.toimiala.voimassaolo.saanto.tutkinto/taydenna-tutkinnon-voimassaolo
                   (fn [tutkinto] (assoc tutkinto :tutkinto-taydennetty true))
                   aitu.toimiala.voimassaolo.saanto.toimikunta/taydenna-toimikunnan-voimassaolo
-                  (fn [toimikunta] (assoc toimikunta :toimikunta-taydennetty true))
-                  aitu.toimiala.voimassaolo.saanto.jarjestamissopimus/taydenna-sopimuksen-voimassaolo
-                  (fn [sopimus] (assoc sopimus :sopimus-taydennetty true))]
+                  (fn [toimikunta] (assoc toimikunta :toimikunta-taydennetty true))]
       (testing
         "täydentää sopimuksen tutkinnot"
         (let [sopimus {:sopimus_ja_tutkinto [{:tutkinto {}}
@@ -32,16 +30,12 @@
                        :toimikunta {}}
               taydennetyt-tutkinnot (map :tutkintoversio
                                         (:sopimus_ja_tutkinto
-                                          (taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo sopimus)))]
+                                          (taydenna-sopimukseen-liittyvien-tietojen-voimassaolo sopimus)))]
           (is (every? true? (map :tutkinto-taydennetty taydennetyt-tutkinnot)))))
       (testing
         "täydentää sopimuksen toimikunnan"
         (let [sopimus {:toimikunta {}}]
-          (is (true? (:toimikunta-taydennetty (:toimikunta (taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo sopimus)))))))
-      (testing
-        "täydentää sopimuksen voimassaolon"
-        (let [sopimus {}]
-          (is (true? (:sopimus-taydennetty (taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo sopimus))))))
+          (is (true? (:toimikunta-taydennetty (:toimikunta (taydenna-sopimukseen-liittyvien-tietojen-voimassaolo sopimus)))))))
       (testing
         "ei muuta nil-arvoa"
-        (is (nil? (taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo nil)))))))
+        (is (nil? (taydenna-sopimukseen-liittyvien-tietojen-voimassaolo nil)))))))

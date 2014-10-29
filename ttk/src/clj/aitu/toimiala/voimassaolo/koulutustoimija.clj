@@ -17,7 +17,7 @@
 
 (defn ^:private taydenna-koulutustoimijan-jarjestamissopimukset
   [koulutustoimija]
-  (update-in koulutustoimija [:jarjestamissopimus] #(mapv sopimus-paivitys/taydenna-sopimuksen-ja-liittyvien-tietojen-voimassaolo %)))
+  (update-in koulutustoimija [:jarjestamissopimus] #(mapv sopimus-paivitys/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo %)))
 
 (defn taydenna-koulutustoimijan-ja-liittyvien-tietojen-voimassaolo
   "Täydentää koulutustoimijan ja siihen liittyvien tietojen voimassaolon"
