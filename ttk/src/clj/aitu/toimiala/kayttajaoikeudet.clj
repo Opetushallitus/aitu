@@ -125,11 +125,11 @@
     :impersonointi-lopetus sallittu-impersonoidulle})
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
-  (let [id (int-arvo sopimusid)
-        sopimus (jarjestamissopimus-arkisto/hae id)
-        voimassa? (:voimassa sopimus)]
-    (or (yllapitaja?)     
-      (and voimassa? (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta id))))))
+  (let [id (int-arvo sopimusid)]
+    (or (yllapitaja?)
+      (let [sopimus (jarjestamissopimus-arkisto/hae id)
+            voimassa? (:voimassa sopimus)]
+        (and voimassa? (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta id)))))))
 
 
 (def sopimustoiminnot
