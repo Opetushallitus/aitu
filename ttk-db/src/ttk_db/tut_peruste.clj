@@ -21,3 +21,13 @@
       (println)
       )))
 
+(defn generoi-sql-peruutus []
+  (println "set session aitu.kayttaja='INTEGRAATIO';")
+  (println)
+  (doseq [tutv tut-perusteet ]
+    (let [tutkinto (first tutv)
+          diaarinumero (:peruste-diaari (second tutv))]
+      (println (str "update tutkintoversio set voimassa_loppupvm = (select voimassa_loppupvm from tutkintoversio t2 where tutkintotunnus='" tutkinto "' and versio=2) where tutkintotunnus='" tutkinto "' and versio=1;"))
+      (println (str "update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 1 and tutkintotunnus = '" tutkinto "') where tutkintotunnus = '" tutkinto "';"))
+      (println)
+      )))
