@@ -124,8 +124,16 @@
     :osoitepalvelu-api osoitepalvelu-kayttaja?
     :impersonointi-lopetus sallittu-impersonoidulle})
 
+(defn sopimuksen-muokkaus-sallittu? [sopimusid]
+  (let [id (int-arvo sopimusid)
+        sopimus (jarjestamissopimus-arkisto/hae id)
+        voimassa? (:voimassa sopimus)]
+    (or (yllapitaja?)     
+      (and voimassa? (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta id))))))
+
+
 (def sopimustoiminnot
-  `{:sopimustiedot_paivitys #(or (yllapitaja?) (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
+  `{:sopimustiedot_paivitys sopimuksen-muokkaus-sallittu?
     :sopimustiedot_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
     :suunnitelma_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
     :sopimuksen_liite_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))})
