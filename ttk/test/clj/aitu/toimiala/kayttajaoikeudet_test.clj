@@ -59,7 +59,7 @@
   (let [yllapitaja {:oid "l" :roolitunnus (:yllapitaja kayttajaroolit)}
        kayttaja (kayttaja-map)
        oph-katselija {:roolitunnus (:oph-katselija kayttajaroolit)}
-       konteksti "fooid"]
+       konteksti "123456"]
     (testing "Vain ylläpitäjä saa tehdä ylläpitotoimintoja"
       (doseq [oikeus (keys yllapitotoiminnot)]
         (is (saako-tehda? yllapitaja oikeus konteksti))
