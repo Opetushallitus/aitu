@@ -1,5 +1,9 @@
 
 set session aitu.kayttaja='INTEGRAATIO';
+
+update sopimus_ja_tutkinto set tutkintoversio = t1.tutkintoversio_id
+from tutkintoversio t1 join tutkintoversio t2 on t1.tutkintotunnus = t2.tutkintotunnus and t1.versio = 1 and t2.versio = 2
+where sopimus_ja_tutkinto.tutkintoversio = t2.tutkintoversio_id;
  
 update tutkintoversio set voimassa_loppupvm = (select voimassa_loppupvm from tutkintoversio t2 where tutkintotunnus='324104' and versio=2) where tutkintotunnus='324104' and versio=1;
 update nayttotutkinto set uusin_versio_id = (select tutkintoversio_id from tutkintoversio where versio = 1 and tutkintotunnus = '324104') where tutkintotunnus = '324104';
