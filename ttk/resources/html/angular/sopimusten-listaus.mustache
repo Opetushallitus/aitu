@@ -8,7 +8,7 @@
       <th jarjestettava-sarake="sopimusnumero" oletus-jarjestely>[[sopimusnumero]]</th>
       <th ng-show="naytaTutkinnot">[[tutkinnot]]</th>
       <th ng-show="naytaPerusteSarake">[[tutkinnonperusteiden-diaarinumero]]</th>
-      <th jarjestettava-sarake="koulutustoimija.nimi" ng-hide="piilotaKoulutustoimijat">[[koulutustoimija]]</th>
+      <th jarjestettava-sarake="koulutustoimija.nimi" jarjestely-fn="orderByLokalisoitu" ng-hide="piilotaKoulutustoimijat">[[koulutustoimija]]</th>
       <th jarjestettava-sarake="alkupvm" jarjestely-fn="orderByDate">[[voimassaolo]]</th>
     </tr>
     </thead>
