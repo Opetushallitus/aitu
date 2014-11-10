@@ -128,7 +128,9 @@
 
 (defn get-json-from-url
   [url]
-  (-> @(http/get url)
+  (->
+    (http/get url {:timeout 300000})
+    (deref 300000 nil) ;; Jos HTTP-kirjaston työsäie kaatuu, promisea ei ikinä deliverata ja deref jää odottamaan ikuisesti
     :body
     cheshire/parse-string
     keywordize-keys))
