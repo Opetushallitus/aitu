@@ -20,10 +20,13 @@
             [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value]]
             [clojure.tools.logging :as log]))
 
+(defn halutut-kentat [koodi]
+  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit]))
+
 (defn hae-kaikki [url]
   (let [oids (get-json-from-url url)]
     (for [oid oids]
-      (get-json-from-url (str url oid)))))
+      (halutut-kentat (get-json-from-url (str url oid))))))
 
 
 ;; Koodistopalvelun oppilaitostyyppikoodistosta
