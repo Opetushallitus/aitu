@@ -33,8 +33,13 @@
     (assert (not (nil? auth-fn)) (str "Toimintoa ei ole määritelty:  " toiminto))
     (log/info (str "auth-check " auth-fn " context param " (or konteksti "N/A")))
     `(do
-       (assert (~auth-fn ~@(when konteksti [konteksti])))
-       ~@body)))
+       (if (~auth-fn ~@(when konteksti [konteksti]))
+         (do
+           ~@body)
+         (do 
+           (log/error "Käyttöoikeudet eivät riitä. Toiminto estetty.")
+           (throw (RuntimeException. "Käyttöoikeudet eivät riitä.")))))))
+
 
 (defmacro autorisoitu-transaktio
   "Tarkastaa käyttöoikeudet ja hallitsee tietokanta-transaktion"
