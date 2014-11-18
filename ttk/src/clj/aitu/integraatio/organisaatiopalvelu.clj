@@ -21,7 +21,7 @@
             [clojure.tools.logging :as log]))
 
 (defn halutut-kentat [koodi]
-  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit]))
+  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid]))
 
 (defn hae-kaikki [url]
   (let [oids (get-json-from-url url)]
@@ -135,9 +135,9 @@
          oppilaitoskoodit oppilaitoskoodit]
     (if (seq oppilaitoskoodit)
       (recur (into oid->ytunnus (for [o oppilaitoskoodit
-                                      :when (contains? oid->ytunnus (:parentOid o))]
-                                  [(:oid o) (oid->ytunnus (:parentOid o))]))
-             (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
+                                     :when (contains? oid->ytunnus (:parentOid o))]
+                                 [(:oid o) (oid->ytunnus (:parentOid o))]))
+            (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
       oid->ytunnus)))
 
 (defn ^:private paivita-koulutustoimijat! [koodit]
