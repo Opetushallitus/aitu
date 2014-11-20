@@ -26,6 +26,7 @@
            org.openqa.selenium.TimeoutException)
   (:require [clojure.test :refer [is]]
             [clojure.string :as string]
+            [clj-time.local :as ctime-local]
             [clj-webdriver.taxi :as w]
             [clj-webdriver.driver :refer [init-driver]]))
 
@@ -122,16 +123,25 @@
     (w/execute-script "window.jsErrors = []")
     tulos))
 
+(defn aja-testit-ja-tarkasta-virheet* [f]
+  (try
+    (tarkasta-js-virheet f)
+    (catch Throwable e
+      (w/take-screenshot w/*driver* :file (str "screenshot-"
+                                               (ctime-local/local-now)
+                                               ".png"))
+      (throw e))))
+
 (defn with-webdriver* [f]
   (if (bound? #'*ng*)
     (do
       (puhdista-selain)
-      (tarkasta-js-virheet f))
+      (aja-testit-ja-tarkasta-virheet* f))
     (do
       (luo-webdriver!)
       (try
         (binding [*ng* (ByAngular. (:webdriver w/*driver*))]
-          (tarkasta-js-virheet f))
+          (aja-testit-ja-tarkasta-virheet* f))
         (finally
           (w/quit))))))
 
