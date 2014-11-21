@@ -26,7 +26,9 @@
            org.openqa.selenium.TimeoutException)
   (:require [clojure.test :refer [is]]
             [clojure.string :as string]
-            [clj-time.local :as ctime-local]
+            clj-time.core
+            clj-time.format
+            clj-time.local
             [clj-webdriver.taxi :as w]
             [clj-webdriver.driver :refer [init-driver]]))
 
@@ -123,13 +125,13 @@
     (w/execute-script "window.jsErrors = []")
     tulos))
 
+(declare ota-kuva-tiedostoon)
+
 (defn aja-testit-ja-tarkasta-virheet* [f]
   (try
     (tarkasta-js-virheet f)
     (catch Throwable e
-      (w/take-screenshot w/*driver* :file (str "screenshot-"
-                                               (ctime-local/local-now)
-                                               ".png"))
+      (ota-kuva-tiedostoon)
       (throw e))))
 
 (defn with-webdriver* [f]
@@ -341,3 +343,13 @@
   (w/click "button[ng-click=\"tallenna()\"]")
   (odota-dialogia #"")
   (hyvaksy-dialogi))
+
+(defn luo-aikaleima-tiedostonimea-varten
+  []
+  (clj-time.format/unparse
+    (.withZone (clj-time.format/formatter "yyyyMMdd'T'HHmmssSSS") (clj-time.core/default-time-zone))
+    (clj-time.local/local-now)))
+
+(defn ota-kuva-tiedostoon
+  []
+  (w/take-screenshot w/*driver* :file (str "screenshot-" (luo-aikaleima-tiedostonimea-varten) ".png")))
