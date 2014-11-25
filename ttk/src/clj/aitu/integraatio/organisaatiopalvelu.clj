@@ -133,12 +133,12 @@
   (loop [oid->ytunnus (into {} (for [kt koulutustoimijakoodit]
                                  [(:oid kt) (y-tunnus kt)]))
          oppilaitoskoodit oppilaitoskoodit]
-    (if (seq oppilaitoskoodit)
-      (recur (into oid->ytunnus (for [o oppilaitoskoodit
-                                     :when (contains? oid->ytunnus (:parentOid o))]
-                                 [(:oid o) (oid->ytunnus (:parentOid o))]))
-            (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
-      oid->ytunnus)))
+    (let [uudet (for [o oppilaitoskoodit
+                      :when (contains? oid->ytunnus (:parentOid o))]
+                  [(:oid o) (oid->ytunnus (:parentOid o))])]
+      (if (seq uudet)
+        (recur (into oid->ytunnus uudet) (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
+        oid->ytunnus))))
 
 (defn ^:private paivita-koulutustoimijat! [koodit]
   (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki)
