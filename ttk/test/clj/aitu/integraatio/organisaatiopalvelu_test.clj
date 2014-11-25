@@ -31,3 +31,22 @@
              {"1" "0000000-0"
               "2" "0000000-0"
               "3" "0000000-0"})))))
+
+(deftest generoi-oid->ytunnus-ohitetaan-oppilaitos-ilman-parenttia-test
+  ;; Oppilaitos ilman parenttia
+  (let [koulutustoimijakoodit [{:ytunnus "0000000-0"
+                                :oid "1"}]
+        oppilaitoskoodit [{:oppilaitoskoodi "12345"
+                           :oid "2"
+                           :parentOid "1"}
+                          {:oppilaitoskoodi "123123"
+                           :oid "3"
+                           :parentOid "123123"}
+                          {:oppilaitoskoodi "23456"
+                           :oid "4"
+                           :parentOid "1"}]]
+    (testing "Oppilaitos ilman parenttia ohitetaan"
+      (is (= (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
+             {"1" "0000000-0"
+              "2" "0000000-0"
+              "4" "0000000-0"})))))
