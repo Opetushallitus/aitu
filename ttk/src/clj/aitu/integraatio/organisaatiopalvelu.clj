@@ -138,7 +138,10 @@
                   [(:oid o) (oid->ytunnus (:parentOid o))])]
       (if (seq uudet)
         (recur (into oid->ytunnus uudet) (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
-        oid->ytunnus))))
+        (do
+          (doseq [oppilaitos oppilaitoskoodit]
+            (log/warn "Oppilaitos ilman parenttia:" (:oppilaitoskoodi oppilaitos)))
+          oid->ytunnus)))))
 
 (defn ^:private paivita-koulutustoimijat! [koodit]
   (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki)
