@@ -108,7 +108,8 @@
     :etusivu_haku sallittu-yllapitajalle
     :impersonointi sallittu-yllapitajalle
     :organisaatiomuutos sallittu-yllapitajalle
-    :raportti sallittu-yllapitajalle})
+    :raportti sallittu-yllapitajalle
+    :aipal sallittu-yllapitajalle})
 
 ;; Kuten yllä, arvot eivät saa olla funktio-olioita.
 (def kayttajatoiminnot

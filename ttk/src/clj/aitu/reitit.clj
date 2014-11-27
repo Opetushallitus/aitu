@@ -40,6 +40,7 @@
             aitu.rest-api.haku
             aitu.rest-api.organisaatiomuutos
             aitu.rest-api.osoitepalvelu
+            aitu.rest-api.aipal
 
             aitu.test-api.ttk
             aitu.test-api.tutkinto
@@ -116,7 +117,8 @@
       (c/context "/api/haku" [] (wrap-tarkasta-csrf-token aitu.rest-api.haku/reitit))
       (c/context "/api/osoitepalvelu" [] aitu.rest-api.osoitepalvelu/reitit)
       (c/context "/api/db-validation" [] aitu.rest-api.db-validation/reitit)
-      (c/context "/api/organisaatiomuutos" [] aitu.rest-api.organisaatiomuutos/reitit))
+      (c/context "/api/organisaatiomuutos" [] aitu.rest-api.organisaatiomuutos/reitit)
+      (c/context "/api/aipal" [] aitu.rest-api.aipal/reitit))
     (testapi asetukset)
     (c/GET "/template/:nimi" [nimi]
       (angular-template nimi asetukset))

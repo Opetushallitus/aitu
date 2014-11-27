@@ -17,6 +17,7 @@
   (:require  korma.db
              [korma.core :as sql]
              [aitu.util :refer [select-and-rename-keys]]
+             [oph.common.util.util :refer [map-values]]
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
@@ -229,6 +230,17 @@
     (map liita-tutkinnot-sopimukseen)
     (map voimassaolo/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo)
     (map voimassaolo-saanto/taydenna-sopimuksen-voimassaolo)))
+
+(defn hae-tutkinnot-koulutustoimijoittain
+  "Hakee koulutustoimijoittain listan tutkinnoista joihin koulutustoimijalla on voimassaoleva sopimus"
+  []
+  (->> (sql/select sopimus-ja-tutkinto
+         (sql/with jarjestamissopimus)
+         (sql/with tutkintoversio)
+         (sql/fields :tutkintoversio.tutkintotunnus :jarjestamissopimus.koulutustoimija)
+         (sql/where {:jarjestamissopimus.voimassa true}))
+    (group-by :koulutustoimija)
+    (map-values (comp set (partial map :tutkintotunnus)))))
 
 (defn hae-kaikki-osoitepalvelulle
   "Hakee kaikki järjestämissopimukset ja niihin liittyvät tutkinnot osoitepalvelua varten"
