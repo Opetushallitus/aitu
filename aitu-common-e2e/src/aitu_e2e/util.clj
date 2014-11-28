@@ -135,21 +135,21 @@
       (throw e))))
 
 (defn yrita-puhdistaa-selain []
-  (aja-ja-ota-kuva-epaonnistumisesta (puhdista-selain)))
+  (aja-ja-ota-kuva-epaonnistumisesta (fn [] puhdista-selain)))
 
-(defn aja-testit-ja-tarkasta-virheet* [f]
-  (aja-ja-ota-kuva-epaonnistumisesta (tarkasta-js-virheet f)))
+(defn aja-testit-ja-tarkasta-virheet [f]
+  (aja-ja-ota-kuva-epaonnistumisesta (fn [] (tarkasta-js-virheet f))))
 
 (defn with-webdriver* [f]
   (if (bound? #'*ng*)
     (do
       (yrita-puhdistaa-selain)
-      (aja-testit-ja-tarkasta-virheet* f))
+      (aja-testit-ja-tarkasta-virheet f))
     (do
       (luo-webdriver!)
       (try
         (binding [*ng* (ByAngular. (:webdriver w/*driver*))]
-          (aja-testit-ja-tarkasta-virheet* f))
+          (aja-testit-ja-tarkasta-virheet f))
         (finally
           (w/quit))))))
 
