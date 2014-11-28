@@ -85,7 +85,7 @@
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
-(defn kaynnista-eraajon-ajastimet! [asetukset]
+(defn ^:integration-api kaynnista-eraajon-ajastimet! [asetukset]
   (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
     (eraajo/kaynnista-ajastimet! kop (:organisaatiopalvelu asetukset))))
 
@@ -136,7 +136,7 @@
     (wrap-cas-single-sign-out session-store)
     wrap-poikkeusten-logitus)))
 
-(defn kaynnista! [oletus-asetukset]
+(defn ^:integration-api kaynnista! [oletus-asetukset]
   (try
     (let [asetukset (lue-asetukset oletus-asetukset)
           _ (deliver aitu.asetukset/asetukset asetukset)

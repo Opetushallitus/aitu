@@ -28,7 +28,7 @@
            aitu.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
            aitu.infra.eraajo.sopimusten_voimassaolo.PaivitaSopimustenVoimassaoloJob))
 
-(defn kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
+(defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
   (qs/initialize)
   (log/info "Poistetaan vanhat jobit ennen uudelleenkäynnistystä")

@@ -8,7 +8,7 @@
              :refer [*current-user-uid* *current-user-oid* jarjestelmakayttaja]]
             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]))
 
-(defn paivita-sopimusten-voimassaolo! []
+(defn ^:integration-api paivita-sopimusten-voimassaolo! []
   (log/info "Päivitetään sopimusten voimassaolotieto")
   (binding [*current-user-oid* (promise)
             *current-user-uid* jarjestelmakayttaja]

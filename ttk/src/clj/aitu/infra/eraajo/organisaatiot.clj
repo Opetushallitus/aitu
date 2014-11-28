@@ -21,7 +21,7 @@
              :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
             [aitu.integraatio.organisaatiopalvelu :as org]))
 
-(defn paivita-organisaatiot! [asetukset]
+(defn ^:integration-api paivita-organisaatiot! [asetukset]
   (binding [*current-user-uid* integraatiokayttaja
             ;; Tietokantayhteyden avaus asettaa *current-user-oid*-promisen
             ;; arvon. Kun käsitellään HTTP-pyyntöä, auth-wrapper luo tämän

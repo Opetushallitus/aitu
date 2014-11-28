@@ -25,7 +25,7 @@
           _ (log/debug "authorized user " (:username req))]
       (ring-handler req))))
 
-(defn enable-development-mode!
+(defn ^:test-api enable-development-mode!
   []
   (log/info "!! Muutetaan JVM:n käyttämää SSL validointia testitarkoituksia varten!!")
   (let [old-config (oph.cas.util.DevelopmentSSLAuthUtil/enableUntrustedSSL)]

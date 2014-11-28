@@ -47,12 +47,12 @@
              "kayttaja"
              "tiedote"])
 
-(defn tyhjenna-testidata!
+(defn ^:test-api tyhjenna-testidata!
   [oid]
   (doseq [taulu taulut]
     (sql/exec-raw (str "delete from " taulu " where luotu_kayttaja = '" oid "'"))))
 
-(defn luo-testikayttaja!
+(defn ^:test-api luo-testikayttaja!
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
   (binding [ka/*current-user-uid* ka/jarjestelmakayttaja
             ka/*current-user-oid* (promise)]
@@ -71,6 +71,6 @@
   ([testikayttaja-oid testikayttaja-uid]
     (luo-testikayttaja! testikayttaja-oid testikayttaja-uid (:yllapitaja kayttajaroolit))))
 
-(defn poista-testikayttaja!
+(defn ^:test-api poista-testikayttaja!
   [testikayttaja-oid]
   (sql/exec-raw (str "delete from kayttaja where oid = '" testikayttaja-oid "'")))

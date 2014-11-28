@@ -115,6 +115,9 @@
       (println "! AUDITLOG kutsu puuttuu: " (nth muoto 1))
       (str (nth muoto 1)))))
 
+(deftest audit-log-kutsut-ovat-olemassa
+  (is (empty? (vastaavat-muodot "src/clj" audit-log-kutsu-puuttuu? :ohita ["src/clj/aitu/auditlog.clj"]))))
+
 (deftest js-debug-test
   (is (empty? (vastaavat-rivit "resources/public/js"
                                #".*\.js"

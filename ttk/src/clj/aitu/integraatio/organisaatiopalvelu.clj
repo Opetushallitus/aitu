@@ -143,7 +143,7 @@
             (log/warn "Oppilaitos ilman parenttia:" (:oppilaitoskoodi oppilaitos)))
           oid->ytunnus)))))
 
-(defn ^:private paivita-koulutustoimijat! [koodit]
+(defn ^:integration-api ^:private paivita-koulutustoimijat! [koodit]
   (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki)
                            (map-by :ytunnus))]
     (doseq [koodi (vals (map-by y-tunnus koodit)) ;; Poistetaan duplikaatit
@@ -160,7 +160,7 @@
                                   (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
                                   (koulutustoimija-arkisto/paivita! uusi-kt))))))
 
-(defn ^:private paivita-oppilaitokset! [koodit koulutustoimijakoodit]
+(defn ^:integration-api ^:private paivita-oppilaitokset! [koodit koulutustoimijakoodit]
   (let [oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit koodit)
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
@@ -183,7 +183,7 @@
                                                   (oppilaitos-arkisto/paivita! uusi-oppilaitos))))))
 
 
-(defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit koulutustoimijakoodit]
+(defn ^:integration-api ^:private paivita-toimipaikat! [koodit oppilaitoskoodit koulutustoimijakoodit]
   (let [oid->oppilaitostunnus (into {} (for [o oppilaitoskoodit]
                                          [(:oid o) (:oppilaitosKoodi o)]))
         oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
@@ -208,7 +208,7 @@
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
 
-(defn paivita-organisaatiot!
+(defn ^:integration-api paivita-organisaatiot!
   [asetukset]
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
   (let [kaikki-koodit (hae-kaikki (get asetukset "url"))

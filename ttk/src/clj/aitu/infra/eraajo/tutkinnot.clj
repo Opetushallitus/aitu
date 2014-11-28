@@ -30,12 +30,12 @@
     (merge {:tutkintotunnus tutkintotunnus}
           (uudet-arvot muutos))))
 
-(defn tallenna-uudet-opintoalat! [opintoalat]
+(defn ^:integration-api tallenna-uudet-opintoalat! [opintoalat]
   (doseq [ala opintoalat]
     (log/info "Lisätään opintoala " (:opintoala_tkkoodi ala))
     (opintoala-arkisto/lisaa! ala)))
 
-(defn tallenna-muuttuneet-opintoalat! [opintoalat]
+(defn ^:integration-api tallenna-muuttuneet-opintoalat! [opintoalat]
   (doseq [ala opintoalat]
     (log/info "Päivitetään opintoala " (:opintoala_tkkoodi ala) ", muutokset: " (dissoc ala :opintoala_tkkoodi))
     (opintoala-arkisto/paivita! ala)))
@@ -44,7 +44,7 @@
   (clojure.set/rename-keys ala {:nimi_fi :selite_fi
                                 :nimi_sv :selite_sv}))
 
-(defn tallenna-opintoalat! [opintoalat]
+(defn ^:integration-api tallenna-opintoalat! [opintoalat]
   (let [uudet (for [[alakoodi ala] opintoalat
                     :when (and (vector? ala) (first ala))]
                 (nimi->selite (first ala)))
@@ -54,17 +54,17 @@
     (tallenna-uudet-opintoalat! uudet)
     (tallenna-muuttuneet-opintoalat! muuttuneet)))
 
-(defn tallenna-uudet-koulutusalat! [koulutusalat]
+(defn ^:integration-api tallenna-uudet-koulutusalat! [koulutusalat]
   (doseq [ala koulutusalat]
     (log/info "Lisätään koulutusala " (:koulutusala_tkkoodi ala))
     (koulutusala-arkisto/lisaa! ala)))
 
-(defn tallenna-muuttuneet-koulutusalat! [koulutusalat]
+(defn ^:integration-api tallenna-muuttuneet-koulutusalat! [koulutusalat]
   (doseq [ala koulutusalat]
     (log/info "Päivitetään koulutusala " (:koulutusala_tkkoodi ala) ", muutokset: " (dissoc ala :koulutusala_tkkoodi))
     (koulutusala-arkisto/paivita! ala)))
 
-(defn tallenna-koulutusalat! [koulutusalat]
+(defn ^:integration-api tallenna-koulutusalat! [koulutusalat]
   (let [uudet (for [[alakoodi ala] koulutusalat
                     :when (and (vector? ala) (first ala))]
                 (nimi->selite (first ala)))
@@ -74,21 +74,21 @@
     (tallenna-uudet-koulutusalat! uudet)
     (tallenna-muuttuneet-koulutusalat! muuttuneet)))
 
-(defn tallenna-uudet-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
+(defn ^:integration-api tallenna-uudet-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
   (doseq [{:keys [jarjestysnumero tutkinnonosa]} tutkinnonosat]
     (log/info "Lisätään tutkinnonosa " (:osatunnus tutkinnonosa))
     (tutkinto-arkisto/lisaa-tutkinnon-osa! tutkintoversio-id
                                            jarjestysnumero
                                            (assoc tutkinnonosa :versio 1))))
 
-(defn tallenna-muuttuneet-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
+(defn ^:integration-api tallenna-muuttuneet-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
   (doseq [{:keys [jarjestysnumero tutkinnonosa]} tutkinnonosat]
     (log/info "Päivitetään tutkinnonosa " (:osatunnus tutkinnonosa) ", muutokset: " (dissoc tutkinnonosa :osatunnus))
     (tutkinto-arkisto/paivita-tutkinnon-osa! tutkintoversio-id
                                              jarjestysnumero
                                              tutkinnonosa)))
 
-(defn tallenna-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
+(defn ^:integration-api tallenna-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
   (let [uudet (for [osa tutkinnonosat
                     :when (vector? (:tutkinnonosa osa))]
                 (update-in osa [:tutkinnonosa] first))
@@ -98,25 +98,25 @@
     (tallenna-uudet-tutkinnonosat! tutkintoversio-id uudet)
     (tallenna-muuttuneet-tutkinnonosat! tutkintoversio-id muuttuneet)))
 
-(defn tallenna-uudet-osaamisalat! [tutkintoversio-id osaamisalat]
+(defn ^:integration-api tallenna-uudet-osaamisalat! [tutkintoversio-id osaamisalat]
   (doseq [osaamisala osaamisalat]
     (log/info "Lisätään osaamisala " (:osaamisalatunnus osaamisala))
     (tutkinto-arkisto/lisaa-osaamisala! (assoc osaamisala
                                                :versio 1
                                                :tutkintoversio tutkintoversio-id))))
 
-(defn tallenna-muuttuneet-osaamisalat! [tutkintoversio-id osaamisalat]
+(defn ^:integration-api tallenna-muuttuneet-osaamisalat! [tutkintoversio-id osaamisalat]
   (doseq [osaamisala osaamisalat]
     (log/info "Päivitetään osaamisala " (:osaamisalatunnus osaamisala) ", muutokset: " (dissoc osaamisala :osaamisalatunnus))
     (tutkinto-arkisto/paivita-osaamisala! (assoc osaamisala :tutkintoversio tutkintoversio-id))))
 
-(defn tallenna-osaamisalat! [tutkintoversio-id osaamisalat]
+(defn ^:integration-api tallenna-osaamisalat! [tutkintoversio-id osaamisalat]
   (let [uudet (keep uusi osaamisalat)
         muuttuneet (keep muuttunut osaamisalat)]
     (tallenna-uudet-osaamisalat! tutkintoversio-id uudet)
     (tallenna-muuttuneet-osaamisalat! tutkintoversio-id muuttuneet)))
 
-(defn paivita-tutkinto! [koodistoasetukset tutkinto]
+(defn ^:integration-api paivita-tutkinto! [koodistoasetukset tutkinto]
   (when (:jarjestyskoodistoversio tutkinto)
     (let [vanha-tutkintoversio (tutkinto-arkisto/hae-tutkinto (:tutkintotunnus tutkinto))
           jarjestyskoodisto (koodisto/hae-koodisto koodistoasetukset (:osajarjestyskoodisto vanha-tutkintoversio) (:jarjestyskoodistoversio vanha-tutkintoversio))]
@@ -133,7 +133,7 @@
           (tutkinto-arkisto/paivita-tutkintoversio! (assoc versiotiedot :tutkintoversio_id tutkintoversio-id)))))
     (tutkinto-arkisto/paivita-tutkinto! (dissoc tutkinto :osaamisalat :tutkinnonosat))))
 
-(defn paivita-tutkinnot! [koodistoasetukset tutkintomuutokset]
+(defn ^:integration-api paivita-tutkinnot! [koodistoasetukset tutkintomuutokset]
   (let [opintoalat (set (map :opintoala_tkkoodi (opintoala-arkisto/hae-kaikki)))
         {:keys [tutkinnot osaamisalat tutkinnonosat]} tutkintomuutokset]
     (doseq [t (keep uusi tutkinnot)
@@ -158,7 +158,7 @@
         (tallenna-osaamisalat! tutkintoversio-id osaamisalat)
         (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)))))
 
-(defn paivita-tutkinnot-koodistopalvelusta! [asetukset]
+(defn ^:integration-api paivita-tutkinnot-koodistopalvelusta! [asetukset]
   (try
     (db/transaction
       (log/info "Aloitetaan tutkintojen päivitys koodistopalvelusta")

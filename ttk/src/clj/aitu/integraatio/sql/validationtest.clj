@@ -4,7 +4,7 @@
             [korma.core :as sql]
             [clojure.tools.logging :as log]))
 
-(defn load-validation-queries! [filepath]
+(defn ^:integration-api load-validation-queries! [filepath]
   (let [r (io/resource filepath)]
     (with-open [istream (.openStream  r)]
       (solita.util.validationtest.SmokeTestSqlReader/readAll istream))))
@@ -12,7 +12,7 @@
 (def default-query-list
   (delay (load-validation-queries! "validationtests.sql")))
 
-(defn run-queries! [query-list]
+(defn ^:integration-api run-queries! [query-list]
     (log/info "Ajetaan tietokannan validointitestit: " (count query-list) " kappaletta")
     (into [] (doall (for [query query-list]
                       (let [tulos {:title (.getQueryTitle query)
