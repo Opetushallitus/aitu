@@ -127,17 +127,23 @@
 
 (declare ota-kuva-tiedostoon)
 
-(defn aja-testit-ja-tarkasta-virheet* [f]
+(defn aja-ja-ota-kuva-epaonnistumisesta [f]
   (try
-    (tarkasta-js-virheet f)
+    (f)
     (catch Throwable e
       (ota-kuva-tiedostoon)
       (throw e))))
 
+(defn yrita-puhdistaa-selain []
+  (aja-ja-ota-kuva-epaonnistumisesta (puhdista-selain)))
+
+(defn aja-testit-ja-tarkasta-virheet* [f]
+  (aja-ja-ota-kuva-epaonnistumisesta (tarkasta-js-virheet f)))
+
 (defn with-webdriver* [f]
   (if (bound? #'*ng*)
     (do
-      (puhdista-selain)
+      (yrita-puhdistaa-selain)
       (aja-testit-ja-tarkasta-virheet* f))
     (do
       (luo-webdriver!)
