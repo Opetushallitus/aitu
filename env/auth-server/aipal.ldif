@@ -86,40 +86,40 @@ givenName: Marjatta
 sn: Toimikunta-Katselija
 cn: Marjatta
 
-dn: cn=APP_AIPAL_AIPAL_CRUD2_1.2.246.777.888.9999999999,ou=Groups,dc=opintopolku,dc=fi
+dn: cn=APP_AIPAL_KTVASTUUKAYTTAJA_1.2.246.777.888.9999999999,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
-cn: APP_AIPAL_AIPAL_CRUD2_1.2.246.777.888.9999999999
+cn: APP_AIPAL_KTVASTUUKAYTTAJA_1.2.246.777.888.9999999999
 uniqueMember: uid=T-X,ou=People,dc=opintopolku,dc=fi
 
-dn: cn=APP_AIPAL_AIPAL_READ_1.2.246.777.888.9999999999,ou=Groups,dc=opintopolku,dc=fi
+dn: cn=APP_AIPAL_KTKATSELIJA_1.2.246.777.888.9999999999,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
-cn: APP_AIPAL_AIPAL_READ_1.2.246.777.888.9999999999
+cn: APP_AIPAL_KTKATSELIJA_1.2.246.777.888.9999999999
 uniqueMember: uid=T-101,ou=People,dc=opintopolku,dc=fi
 
-dn: cn=APP_AIPAL_AIPAL_RU_1.2.246.777.888.9999999999,ou=Groups,dc=opintopolku,dc=fi
+dn: cn=APP_AIPAL_KTKAYTTAJA_1.2.246.777.888.9999999999,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
-cn: APP_AIPAL_AIPAL_RU_1.2.246.777.888.9999999999
+cn: APP_AIPAL_KTKAYTTAJA_1.2.246.777.888.9999999999
 uniqueMember: uid=T-H,ou=People,dc=opintopolku,dc=fi
 
-dn: cn=APP_AIPAL_AIPAL_CRUD_1.2.246.562.10.00000000001,ou=Groups,dc=opintopolku,dc=fi
+dn: cn=APP_AIPAL_OPHPAAKAYTTAJA_1.2.246.562.10.00000000001,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
-cn: APP_AIPAL_AIPAL_CRUD_1.2.246.562.10.00000000001
+cn: APP_AIPAL_OPHPAAKAYTTAJA_1.2.246.562.10.00000000001
 uniqueMember: uid=T-1001,ou=People,dc=opintopolku,dc=fi
 
-dn: cn=APP_AIPAL_AIPAL_READ_1.2.246.562.10.9999999999,ou=Groups,dc=opintopolku,dc=fi
+dn: cn=APP_AIPAL_YLKATSELIJA_1.2.246.562.10.9999999999,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
-cn: APP_AIPAL_AIPAL_READ_1.2.246.562.10.9999999999
+cn: APP_AIPAL_YLKATSELIJA_1.2.246.562.10.9999999999
 uniqueMember: uid=T-800,ou=People,dc=opintopolku,dc=fi
 uniqueMember: uid=T-700,ou=People,dc=opintopolku,dc=fi
 uniqueMember: uid=6502,ou=People,dc=opintopolku,dc=fi
 
-dn: cn=APP_AIPAL_AIPAL_READ_1.2.246.562.10.59113820717,ou=Groups,dc=opintopolku,dc=fi
+dn: cn=APP_AIPAL_TKTKATSELIJA_1.2.246.562.10.59113820717,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
-cn: APP_AIPAL_AIPAL_READ_1.2.246.562.10.59113820717
+cn: APP_AIPAL_TKTKATSELIJA_1.2.246.562.10.59113820717
 uniqueMember: uid=T-850,ou=People,dc=opintopolku,dc=fi
