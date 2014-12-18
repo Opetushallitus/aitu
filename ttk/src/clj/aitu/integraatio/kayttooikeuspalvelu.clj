@@ -49,9 +49,9 @@
                                            kayttaja-dnt)]
                         (doall
                           (for [kayttaja-dn kayttaja-dnt
-                                :let [kayttaja (ldap/get yhteys kayttaja-dn)
-                                      _ (assert kayttaja)
-                                      [etunimi toinennimi] (s/split (:cn kayttaja) #" ")
+                                :let [kayttaja (ldap/get yhteys kayttaja-dn)]
+                                :when kayttaja
+                                :let [[etunimi toinennimi] (s/split (:cn kayttaja) #" ")
                                       sukunimi (:sn kayttaja)]]
                             {:oid (:employeeNumber kayttaja)
                              :uid (:uid kayttaja)
