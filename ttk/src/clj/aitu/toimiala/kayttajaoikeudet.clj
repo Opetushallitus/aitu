@@ -81,6 +81,13 @@
       (or (= roolitunnus (:osoitepalvelu kayttajaroolit))
           (= roolitunnus (:yllapitaja kayttajaroolit))))))
 
+(defn aipal-kayttaja?
+  ([x] (aipal-kayttaja?))
+  ([]
+    (let [roolitunnus (:roolitunnus *current-user-authmap*)]
+      (or (= roolitunnus (:aipal kayttajaroolit))
+          (= roolitunnus (:yllapitaja kayttajaroolit))))))
+
 (def sallittu-kaikille (constantly true))
 
 (defn sallittu-yllapitajalle [& _] (yllapitaja?))
@@ -108,8 +115,7 @@
     :etusivu_haku sallittu-yllapitajalle
     :impersonointi sallittu-yllapitajalle
     :organisaatiomuutos sallittu-yllapitajalle
-    :raportti sallittu-yllapitajalle
-    :aipal sallittu-yllapitajalle})
+    :raportti sallittu-yllapitajalle})
 
 ;; Kuten yllä, arvot eivät saa olla funktio-olioita.
 (def kayttajatoiminnot
@@ -123,6 +129,7 @@
     :henkilo_haku aitu-kayttaja?
     :yleinen-rest-api sallittu-kaikille
     :osoitepalvelu-api osoitepalvelu-kayttaja?
+    :aipal aipal-kayttaja?
     :impersonointi-lopetus sallittu-impersonoidulle})
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]

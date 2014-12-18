@@ -69,6 +69,16 @@ employeeNumber: OID.osoitepalvelu
 sn: osoitepalvelu
 cn: osoitepalvelu
 
+dn: uid=readaituaipal,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: readaituaipal
+employeeNumber: OID.readaituaipal
+sn: readaituaipal
+cn: readaituaipal
+
 dn: cn=APP_AITU_READ_UPDATE_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames
 objectclass: top
@@ -90,3 +100,9 @@ objectclass: groupOfUniqueNames
 objectclass: top
 cn: APP_AITU_OSOITEPALVELU_1.2.246.562.10.2013121312395140176502
 uniqueMember: uid=osoitepalvelu,ou=People,dc=opintopolku,dc=fi
+
+dn: cn=APP_AITU_AIPALREAD_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
+objectclass: groupOfUniqueNames
+objectclass: top
+cn: APP_AITU_AIPALREAD_1.2.246.562.10.2013121312395140176502
+uniqueMember: uid=readaituaipal,ou=People,dc=opintopolku,dc=fi
