@@ -29,7 +29,8 @@
    (:kayttaja kayttajaroolit) [(aitu-ryhma-cn toimikunnat-organisaatio "READ_UPDATE")
                                (aitu-ryhma-cn aitu-organisaatio "READ_UPDATE")]
    (:osoitepalvelu kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "OSOITEPALVELU")]
-   (:oph-katselija kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "READ")]})
+   (:oph-katselija kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "READ")]
+   (:aipal kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "AIPALREAD")]})
 
 
 (defn ryhma-dn [ryhma-cn]

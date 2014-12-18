@@ -18,4 +18,5 @@
 (def kayttajaroolit {:yllapitaja "YLLAPITAJA"
                      :kayttaja "KAYTTAJA"
                      :osoitepalvelu "OSOITEPALVELU"
-                     :oph-katselija "OPH-KATSELIJA"})
+                     :oph-katselija "OPH-KATSELIJA"
+                     :aipal "AIPAL"})
