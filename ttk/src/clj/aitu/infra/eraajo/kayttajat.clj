@@ -25,7 +25,7 @@
 
 ;; Roolit siinä järjestyksessä missä ne pitää hakea käyttöoikeuspalvelusta.
 ;; Jos käyttäjällä on useampi rooli, viimeisimpänä määritelty jää voimaan.
-(def roolit-jarjestyksessa [:kayttaja :oph-katselija :osoitepalvelu :yllapitaja :aipal])
+(def roolit-jarjestyksessa [:kayttaja :oph-katselija :osoitepalvelu :aipal :yllapitaja])
 (assert (= (set roolit-jarjestyksessa) (set (keys kayttajaroolit))))
 
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
