@@ -121,8 +121,9 @@
     (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
                                 :timeout-response (timeout-response asetukset)})
     auth/wrap-sessionuser
-    log-request-wrapper
     (auth-middleware asetukset)
+    log-request-wrapper
+    
     (clamav-mock asetukset)
     wrap-multipart-params
     wrap-params
