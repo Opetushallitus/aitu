@@ -19,7 +19,7 @@
             [clj-time.core :as time]
             [clj-time.format :as time-format]
             [clojure.string :as string]
-            [org.httpkit.client :as http]
+            [clj-http.client :as http]
             [clojure.set :refer [union]]
             [clojure.walk :refer [keywordize-keys]]
             [clojure.tools.logging :as log]))
@@ -127,13 +127,14 @@
                   [new-v old-v])])))
 
 (defn get-json-from-url
-  [url]
-  (->
-    (http/get url {:timeout 300000})
-    (deref 300000 nil) ;; Jos HTTP-kirjaston työsäie kaatuu, promisea ei ikinä deliverata ja deref jää odottamaan ikuisesti
-    :body
-    cheshire/parse-string
-    keywordize-keys))
+  ([url]
+    (get-json-from-url url {}))
+  ([url options]
+    (->
+      (http/get url options)
+      :body
+      cheshire/parse-string
+      keywordize-keys)))
 
 (defn uusin-muokkausaika
   "Palauttaa uusimman muokkausajan annetuista arvoista.

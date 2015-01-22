@@ -253,6 +253,9 @@
   (sql/belongs-to toimipaikka
     {:fk :toimipaikka}))
 
+(defentity organisaatiopalvelu_log
+  (sql/pk :id))
+
 (defn ilike
   "Korma-funktio Postgresql:n ilike-vertailulle"
   [k v]
