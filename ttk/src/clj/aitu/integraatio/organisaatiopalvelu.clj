@@ -225,20 +225,20 @@
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
-  (let [viimeisin-paivitys (organisaatiopalvelu-arkisto/hae-viimeisin-paivitys)
-        _ (when viimeisin-paivitys
-            (log/info "Edellinen päivitys:" (str viimeisin-paivitys)))
-        url (get asetukset "url")
-        nyt (time/now)
-        koodit (if viimeisin-paivitys
-                 (hae-muuttuneet url viimeisin-paivitys)
-                 (hae-kaikki url))
-        koodit-tyypeittain (group-by tyyppi koodit)
-        _ (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
-        koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
-        oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
-        toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
-    (db/transaction
+  (db/transaction
+    (let [viimeisin-paivitys (organisaatiopalvelu-arkisto/hae-viimeisin-paivitys)
+          _ (when viimeisin-paivitys
+              (log/info "Edellinen päivitys:" (str viimeisin-paivitys)))
+          url (get asetukset "url")
+          nyt (time/now)
+          koodit (if viimeisin-paivitys
+                   (hae-muuttuneet url viimeisin-paivitys)
+                   (hae-kaikki url))
+          koodit-tyypeittain (group-by tyyppi koodit)
+          _ (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
+          koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
+          oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
+          toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
       (paivita-koulutustoimijat! koulutustoimijakoodit)
       (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
       (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit koulutustoimijakoodit)

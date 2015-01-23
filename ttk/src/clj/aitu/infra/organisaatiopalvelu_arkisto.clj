@@ -22,7 +22,7 @@
   (:paivitetty
     (first
       (sql/select organisaatiopalvelu_log
-        (sql/order :id :desc)
+        (sql/order :paivitetty :desc)
         (sql/limit 1)
         (sql/fields :paivitetty)))))
 
