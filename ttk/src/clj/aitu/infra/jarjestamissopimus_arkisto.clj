@@ -242,6 +242,20 @@
     (group-by :koulutustoimija)
     (map-values (comp set (partial map :tutkintotunnus)))))
 
+(defn hae-tutkinnot-koulutustoimijoittain-jarjestamissopimusten-voimassaolon-kanssa
+  []
+  (let [sopimukset-ja-tutkinnot (sql/select sopimus-ja-tutkinto
+                                  (sql/with jarjestamissopimus)
+                                  (sql/with tutkintoversio)
+                                  (sql/fields :tutkintoversio.tutkintotunnus :jarjestamissopimus.koulutustoimija )
+                                  (sql/aggregate (min :jarjestamissopimus.alkupvm) :alkupvm :tutkintoversio.tutkintotunnus :jarjestamissopimus.koulutustoimija)
+                                  (sql/aggregate (max :jarjestamissopimus.loppupvm) :loppupvm :tutkintoversio.tutkintotunnus :jarjestamissopimus.koulutustoimija)
+                                  (sql/where {:jarjestamissopimus.voimassa true})
+                                  (sql/group :tutkintoversio.tutkintotunnus :jarjestamissopimus.koulutustoimija))
+        koulutustoimija->tutkinnot (group-by :koulutustoimija sopimukset-ja-tutkinnot)]
+    koulutustoimija->tutkinnot
+    (map-values #(map (fn [m] (dissoc m :koulutustoimija)) %) koulutustoimija->tutkinnot)))
+
 (defn hae-kaikki-osoitepalvelulle
   "Hakee kaikki järjestämissopimukset ja niihin liittyvät tutkinnot osoitepalvelua varten"
   []

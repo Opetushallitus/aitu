@@ -20,5 +20,8 @@
             [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
+  ; vanha API - voidaan poistaa kun kaikissa ympäristöissä on uusi API käytössä
   (cu/defapi :aipal nil :get  "/sopimukset" []
-    (json-response (jarjestamissopimus-arkisto/hae-tutkinnot-koulutustoimijoittain))))
+    (json-response (jarjestamissopimus-arkisto/hae-tutkinnot-koulutustoimijoittain)))
+  (cu/defapi :aipal nil :get "/sopimukset/v2" []
+    (json-response (jarjestamissopimus-arkisto/hae-tutkinnot-koulutustoimijoittain-jarjestamissopimusten-voimassaolon-kanssa))))
