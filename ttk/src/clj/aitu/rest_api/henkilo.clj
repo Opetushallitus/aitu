@@ -31,7 +31,8 @@
 (def henkilon-validointisaannot
   [[:etunimi present? :pakollinen]
    [:sukunimi present? :pakollinen]
-   [:postinumero (max-length 5) :liian-pitka]])
+   [:postinumero (max-length 5) :liian-pitka]
+   [:kayttaja_oid (complement arkisto/kayttaja-liitetty-henkiloon?) :kayttaja-kaytossa]])
 
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
@@ -44,9 +45,10 @@
 
 (c/defroutes reitit
   (cu/defapi :henkilo_lisays nil :post "/"
-    [sukunimi etunimi organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin
+    [sukunimi etunimi organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja_oid
      osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
-      (let [henkilodto {:etunimi etunimi
+      (let [henkilodto {:kayttaja_oid kayttaja_oid
+                        :etunimi etunimi
                         :sukunimi sukunimi
                         :organisaatio organisaatio
                         :aidinkieli aidinkieli
@@ -96,9 +98,10 @@
       (json-response (arkisto/hae-hlo-nimen-osalla termi)))
 
   (cu/defapi :henkilo_paivitys henkiloid :put "/:henkiloid"
-    [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin
+    [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja_oid
      osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
       (let [henkilodto {:henkiloid (Integer/parseInt henkiloid)
+                        :kayttaja_oid kayttaja_oid
                         :etunimi etunimi
                         :sukunimi sukunimi
                         :organisaatio organisaatio
