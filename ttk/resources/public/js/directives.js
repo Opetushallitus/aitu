@@ -398,7 +398,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
 
           scope.tiedostoValittu = filename.length > 0;
           el.find('input.valittu-tiedosto').val(filename);
-          
+
           // Kts. palvelinpään http-util/allowed-mimetypes
           var allowed_mime_types = ["application/pdf",
                                     "image/gif", "image/jpeg", "image/png",
@@ -417,8 +417,8 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
           reset();
           scope.uploadValmis(r, scope.liitetyyppi);
         };
-        
-        
+
+
         function reset() {
         	scope.tiedostoValittu = false;
         	el.find('form')[0].reset();
@@ -529,6 +529,8 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         return 'template/auth-linkki';
       } else if(attrs.authNappi !== undefined) {
         return 'template/auth-nappi';
+      } else if(attrs.authBlokki !== undefined) {
+        return 'template/auth-blokki';
       }
     }
 
