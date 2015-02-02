@@ -60,9 +60,15 @@
   ([req vseq schema]
     (cachable-json-response req (s/validate schema vseq))))
 
+(defn korvaa-virheteksti [virhetekstit virhe]
+  (let [[virhe & parametrit ] (if (keyword? virhe)
+                                [virhe]
+                                virhe)]
+    (apply format (virhetekstit virhe (name virhe)) parametrit)))
+
 (defn korvaa-virhetekstit [valip-errors virhetekstit]
   (into {} (for [[kentta virheet] valip-errors]
-             [kentta (map #(virhetekstit % %) virheet)])))
+             [kentta (map (partial korvaa-virheteksti virhetekstit) virheet)])))
 
 (defn json-response
   ([data]
@@ -73,7 +79,7 @@
        :headers {"Content-Type" "application/json"}}))
   ([data schema]
     (json-response (s/validate (s/maybe schema) data))))
- 
+
 (defn file-download-response
   [data filename content-type]
   {:status 200
@@ -117,4 +123,3 @@
 (defn json-response-nocache
   [data]
   (assoc-in (json-response data 0) [:headers "Cache-control"] "max-age=0"))
- 

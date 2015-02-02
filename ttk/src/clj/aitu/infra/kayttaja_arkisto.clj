@@ -35,6 +35,11 @@
     (boolean (seq (sql/select taulut/henkilo
                     (sql/where {:kayttaja_oid oid}))))))
 
+(defn hae-kayttajaan-liitetty-henkilo
+  [oid]
+  (first (sql/select taulut/henkilo
+           (sql/where {:kayttaja_oid oid}))))
+
 (defn hae
   "Hakee käyttäjätunnuksen perusteella."
   [oid]

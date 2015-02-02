@@ -29,15 +29,18 @@
             [schema.core :as s]
             [aitu.util :refer [muodosta-csv]]))
 
+(defn ^:private henkilon-nimi [henkilo]
+  (str (:sukunimi henkilo) ", " (:etunimi henkilo)))
+
 (defn henkilon-validointisaannot
   ([]
-    (henkilon-validointisaannot nil))
-  ([henkiloid]
+    (henkilon-validointisaannot nil nil))
+  ([henkiloid kayttaja-oid]
     [[:etunimi present? :pakollinen]
      [:sukunimi present? :pakollinen]
      [:postinumero (max-length 5) :liian-pitka]
      [:kayttaja_oid #(or (kayttaja-arkisto/kayttaja-liitetty-henkiloon? henkiloid %)
-                         (not (kayttaja-arkisto/kayttaja-liitetty-johonkin-henkiloon? %))) :kayttaja-kaytossa]]))
+                         (not (kayttaja-arkisto/kayttaja-liitetty-johonkin-henkiloon? %))) [:kayttaja-kaytossa (henkilon-nimi (kayttaja-arkisto/hae-kayttajaan-liitetty-henkilo kayttaja-oid))]]]))
 
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
@@ -106,8 +109,9 @@
     [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
      osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
       (let [id (Integer/parseInt henkiloid)
+            kayttaja-oid (:oid kayttaja)
             henkilodto {:henkiloid id
-                        :kayttaja_oid (:oid kayttaja)
+                        :kayttaja_oid kayttaja-oid
                         :etunimi etunimi
                         :sukunimi sukunimi
                         :organisaatio organisaatio
@@ -124,7 +128,7 @@
                         :jarjesto (:jarjesto jarjesto)
                         :lisatiedot lisatiedot
                         :nayttomestari nayttomestari}]
-        (validoi henkilodto (henkilon-validointisaannot id) ((i18n/tekstit) :validointi)
+        (validoi henkilodto (henkilon-validointisaannot id kayttaja-oid) ((i18n/tekstit) :validointi)
           (s/validate skeema/Henkilo henkilodto)
           (arkisto/paivita! henkilodto)
           (json-response henkilodto)))))
