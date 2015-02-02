@@ -28,6 +28,20 @@
     <enum-valikko pakollinen="true" ng-hide="!muokkausTila" nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-valikko>
     <p ng-hide="muokkausTila"><enum-arvo nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-arvo></p>
   </fieldset>
+  <fieldset ng-hide="muokkausTila">
+    <label>[[tunnus]]</label>
+    <p>{{jasen.henkilo.kayttaja.uid}}</p>
+  </fieldset>
+  <auth-toiminto auth-blokki sallitut-roolit="['YLLAPITAJA']">
+    <haku-valitsin
+      ng-show="muokkausTila"
+      otsikko="[[tunnus]]"
+      url="[[base-url]]/api/kayttaja/toimikuntakayttajat"
+      model="jasen.henkilo.kayttaja"
+      model-id-property="oid"
+      model-text-property="uid">
+    </haku-valitsin>
+  </auth-toiminto>
 </section>
 
 <section class="info-section">

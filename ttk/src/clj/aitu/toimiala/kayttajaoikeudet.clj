@@ -109,6 +109,7 @@
     :toimikunta_paivitys sallittu-yllapitajalle
     :henkilo_lisays  sallittu-yllapitajalle
     :toimikuntajasen_yllapito sallittu-yllapitajalle
+    :toimikuntakayttaja-listaus sallittu-yllapitajalle
     :tiedote_muokkaus sallittu-yllapitajalle
     :status sallittu-yllapitajalle
     :ohje_muokkaus sallittu-yllapitajalle

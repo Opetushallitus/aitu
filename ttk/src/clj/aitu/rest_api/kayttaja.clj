@@ -38,6 +38,9 @@
   (cu/defapi :impersonointi nil :get "/impersonoitava" [termi]
     (json-response (arkisto/hae-impersonoitava-termilla termi)))
 
+  (cu/defapi :toimikuntakayttaja-listaus nil :get "/toimikuntakayttajat" [termi]
+    (json-response (arkisto/hae-toimikuntakayttajat-termilla termi)))
+
   (cu/defapi :kayttajan_tiedot nil :get "/" []
              (let [oikeudet (ko-arkisto/hae-oikeudet)
                    roolitunnus (:roolitunnus oikeudet)]

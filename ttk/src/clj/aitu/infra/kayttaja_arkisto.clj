@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [clojure.tools.logging :as log]
-            [aitu.integraatio.sql.korma :as taulut]
+            [aitu.integraatio.sql.korma :as taulut :refer [ilike]]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [oph.korma.korma-auth :refer [*current-user-uid*
@@ -65,3 +65,14 @@
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
+
+(defn hae-toimikuntakayttajat-termilla
+  "Hakee toimikuntakäyttäjiä termillä uid:stä"
+  [termi]
+  (sql/select taulut/kayttaja
+    (sql/fields :oid :uid :etunimi :sukunimi)
+    (sql/where {:rooli "KAYTTAJA"
+                :uid [ilike (str \% termi \%)]})
+    (sql/order :sukunimi)
+    (sql/order :etunimi)
+    (sql/order :uid)))

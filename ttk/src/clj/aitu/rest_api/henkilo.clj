@@ -45,9 +45,9 @@
 
 (c/defroutes reitit
   (cu/defapi :henkilo_lisays nil :post "/"
-    [sukunimi etunimi organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja_oid
+    [sukunimi etunimi organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
      osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
-      (let [henkilodto {:kayttaja_oid kayttaja_oid
+      (let [henkilodto {:kayttaja_oid (:oid kayttaja)
                         :etunimi etunimi
                         :sukunimi sukunimi
                         :organisaatio organisaatio
@@ -98,10 +98,10 @@
       (json-response (arkisto/hae-hlo-nimen-osalla termi)))
 
   (cu/defapi :henkilo_paivitys henkiloid :put "/:henkiloid"
-    [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja_oid
+    [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
      osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
       (let [henkilodto {:henkiloid (Integer/parseInt henkiloid)
-                        :kayttaja_oid kayttaja_oid
+                        :kayttaja_oid (:oid kayttaja)
                         :etunimi etunimi
                         :sukunimi sukunimi
                         :organisaatio organisaatio

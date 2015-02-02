@@ -17,7 +17,8 @@
             [schema.macros :as sm]
             [aitu.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :as toimikunta-saanto]
-            [aitu.toimiala.voimassaolo.saanto.jasenyys :as jasenyys-saanto])
+            [aitu.toimiala.voimassaolo.saanto.jasenyys :as jasenyys-saanto]
+            [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto])
   (:import org.joda.time.DateTime))
 
 (defn poista-salaiset-henkilolta
@@ -49,9 +50,18 @@
     (update-in [:ttk] toimikunta-saanto/taydenna-toimikunnan-voimassaolo)
     (#(jasenyys-saanto/taydenna-jasenyyden-voimassaolo % (get-in % [:ttk :voimassa])))))
 
+(defn liita-kayttaja
+  "Liittää henkilön tietoihin henkilöön liitetyn käyttäjän tiedot"
+  [henkilo]
+  (let [kayttaja (kayttaja-arkisto/hae (:kayttaja_oid henkilo))]
+    (-> henkilo
+      (dissoc :kayttaja_oid)
+      (assoc :kayttaja kayttaja))))
+
 (sm/defn taydenna-henkilo :- SisaltaaHenkilonTiedot
   "Täydentää henkilon tiedot, kuten jäsenyyksien ja toimikuntien voimassaolo"
   [henkilo :- SisaltaaHenkilonTiedot]
   (some-> henkilo
-          (update-in [:jasenyys] #(map taydenna-jasenyys %))))
+         (update-in [:jasenyys] #(map taydenna-jasenyys %))
+         liita-kayttaja))
 
