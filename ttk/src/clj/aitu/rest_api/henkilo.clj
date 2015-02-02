@@ -15,6 +15,7 @@
 (ns aitu.rest-api.henkilo
   (:require [compojure.core :as c]
             [cheshire.core :as cheshire]
+            [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.infra.henkilo-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]
             [oph.common.util.http-util :refer :all]
@@ -28,11 +29,15 @@
             [schema.core :as s]
             [aitu.util :refer [muodosta-csv]]))
 
-(def henkilon-validointisaannot
-  [[:etunimi present? :pakollinen]
-   [:sukunimi present? :pakollinen]
-   [:postinumero (max-length 5) :liian-pitka]
-   [:kayttaja_oid (complement arkisto/kayttaja-liitetty-henkiloon?) :kayttaja-kaytossa]])
+(defn henkilon-validointisaannot
+  ([]
+    (henkilon-validointisaannot nil))
+  ([henkiloid]
+    [[:etunimi present? :pakollinen]
+     [:sukunimi present? :pakollinen]
+     [:postinumero (max-length 5) :liian-pitka]
+     [:kayttaja_oid #(or (kayttaja-arkisto/kayttaja-liitetty-henkiloon? henkiloid %)
+                         (not (kayttaja-arkisto/kayttaja-liitetty-johonkin-henkiloon? %))) :kayttaja-kaytossa]]))
 
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
@@ -64,7 +69,7 @@
                         :jarjesto (:jarjesto jarjesto)
                         :lisatiedot lisatiedot
                         :nayttomestari nayttomestari}]
-        (validoi henkilodto henkilon-validointisaannot ((i18n/tekstit) :validointi)
+        (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
           (s/validate skeema/HenkilonTiedot henkilodto)
           (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
             {:status 200
@@ -97,10 +102,11 @@
   (cu/defapi :henkilo_haku nil :get "/nimi/" [termi]
       (json-response (arkisto/hae-hlo-nimen-osalla termi)))
 
-  (cu/defapi :henkilo_paivitys henkiloid :put "/:henkiloid"
+  (cu/defapi :henkilo_paivitys {:henkiloid henkiloid, :kayttaja (:oid kayttaja)} :put "/:henkiloid"
     [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
      osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
-      (let [henkilodto {:henkiloid (Integer/parseInt henkiloid)
+      (let [id (Integer/parseInt henkiloid)
+            henkilodto {:henkiloid id
                         :kayttaja_oid (:oid kayttaja)
                         :etunimi etunimi
                         :sukunimi sukunimi
@@ -118,7 +124,7 @@
                         :jarjesto (:jarjesto jarjesto)
                         :lisatiedot lisatiedot
                         :nayttomestari nayttomestari}]
-        (validoi henkilodto henkilon-validointisaannot ((i18n/tekstit) :validointi)
+        (validoi henkilodto (henkilon-validointisaannot id) ((i18n/tekstit) :validointi)
           (s/validate skeema/Henkilo henkilodto)
           (arkisto/paivita! henkilodto)
           (json-response henkilodto)))))

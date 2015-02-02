@@ -24,12 +24,6 @@
             [clojure.string :refer [blank?]])
   (:use [aitu.integraatio.sql.korma]))
 
-(defn kayttaja-liitetty-henkiloon?
-  [oid]
-  (when oid
-    (boolean (seq (sql/select henkilo
-                    (sql/where {:kayttaja_oid oid}))))))
-
 (defn ^:test-api tyhjenna!
   "Tyhjentää arkiston."
   []

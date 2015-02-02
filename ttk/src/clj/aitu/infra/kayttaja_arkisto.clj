@@ -23,6 +23,18 @@
                                           *current-user-oid*
                                           integraatiokayttaja]]))
 
+(defn kayttaja-liitetty-henkiloon?
+  [henkiloid oid]
+  (= oid (:kayttaja_oid (first (sql/select taulut/henkilo
+                                 (sql/where {:henkiloid henkiloid})
+                                 (sql/fields :kayttaja_oid))))))
+
+(defn kayttaja-liitetty-johonkin-henkiloon?
+  [oid]
+  (when oid
+    (boolean (seq (sql/select taulut/henkilo
+                    (sql/where {:kayttaja_oid oid}))))))
+
 (defn hae
   "Hakee käyttäjätunnuksen perusteella."
   [oid]

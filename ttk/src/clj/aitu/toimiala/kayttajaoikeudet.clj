@@ -16,12 +16,20 @@
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=56984327"
   (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.infra.ttk-arkisto :as ttk-arkisto]
+            [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :refer [toimikunta-vanhentunut?]]
             [aitu.toimiala.voimassaolo.saanto.jasenyys :refer [taydenna-jasenyyden-voimassaolo]]
-            [aitu.toimiala.kayttajaroolit :refer :all]))
+            [aitu.toimiala.kayttajaroolit :refer :all]
+            [clojure.tools.logging :as log]))
 
 (def ^:dynamic *current-user-authmap*)
 (def ^:dynamic *impersonoitu-oid* nil)
+
+(defn int-arvo [arvo]
+  {:post [(integer? %)]}
+  (if (= (type arvo) String)
+    (Integer/parseInt arvo)
+    arvo))
 
 (def toimikunnan-muokkaus-roolit #{"puheenjohtaja",
                                    "varapuheenjohtaja",
@@ -61,10 +69,16 @@
     (some toimikunnan-muokkaus-roolit roolit)))
   ([toimikuntaid] (toimikunnan-muokkausoikeus? *current-user-authmap* toimikuntaid)))
 
+(defn omien-tietojen-muokkausoikeus?
+  [kayttaja-map henkiloid kayttaja-oid]
+  (and (= (:henkiloid *current-user-authmap*) henkiloid)
+       (kayttaja-arkisto/kayttaja-liitetty-henkiloon? (int-arvo henkiloid) kayttaja-oid)))
+
 (defn henkilon-muokkausoikeus-toimikunnan-kautta?
-  [kayttaja-map henkiloid]
+  [kayttaja-map henkiloid kayttaja-oid]
   (let [henkilon-toimikunnat (filter jasenyys-voimassa? (ttk-arkisto/hae-toimikuntien-jasenyydet henkiloid))]
-    (some #(toimikunnan-muokkausoikeus? kayttaja-map (:toimikunta %)) henkilon-toimikunnat)))
+    (and (some #(toimikunnan-muokkausoikeus? kayttaja-map (:toimikunta %)) henkilon-toimikunnat)
+         (kayttaja-arkisto/kayttaja-liitetty-henkiloon? henkiloid kayttaja-oid))))
 
 (defn aitu-kayttaja?
   ([x] (aitu-kayttaja?))
@@ -94,12 +108,6 @@
 
 (defn sallittu-impersonoidulle [& _]
   (or (yllapitaja?) (not= *impersonoitu-oid* nil)))
-
-(defn int-arvo [arvo]
-  {:post [(integer? %)]}
-  (if (= (type arvo) String)
-    (Integer/parseInt arvo)
-    arvo))
 
 ;; Tämän mapin arvoja käytetään makron `aitu.compojure-util/defapi-with-auth`
 ;; muodostamassa koodissa, joten ne eivät saa olla funktio-olioita
@@ -152,7 +160,9 @@
   `{:sopimus_lisays  #(or (yllapitaja?) (toimikunnan-muokkausoikeus? %))})
 
 (def henkilotoiminnot
-  `{:henkilo_paivitys #(or (yllapitaja?) (= (:henkiloid *current-user-authmap*) %) (henkilon-muokkausoikeus-toimikunnan-kautta? *current-user-authmap* (int-arvo %)))})
+  `{:henkilo_paivitys #(or (yllapitaja?)
+                           (omien-tietojen-muokkausoikeus? *current-user-authmap* (:henkiloid %) (:kayttaja %))
+                           (henkilon-muokkausoikeus-toimikunnan-kautta? *current-user-authmap* (int-arvo (:henkiloid %)) (:kayttaja %)))})
 
 (def toiminnot (conj yllapitotoiminnot kayttajatoiminnot toimikuntatoiminnot sopimustoiminnot henkilotoiminnot))
 

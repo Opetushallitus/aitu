@@ -31,7 +31,7 @@
    :toimikunta #{jasenyys}}))
 
 (defn autorisoi-henkilon-paivitys [henkiloid]
-  (cu/autorisoi :henkilo_paivitys henkiloid true))
+  (cu/autorisoi :henkilo_paivitys {:henkiloid henkiloid} true))
 
 (defn henkilon-paivitys-onnistuu [henkiloid]
   (is (autorisoi-henkilon-paivitys henkiloid)))
