@@ -48,6 +48,8 @@
                  [stencil "0.3.2"]
                  [slingshot "0.10.3"]
 
+                 [org.apache.pdfbox/pdfbox "1.8.8"]
+
                  [com.cemerick/valip "0.3.2"]
                  [clojurewerkz/quartzite "1.1.0"]
                  [org.clojure/data.zip "0.1.1"]
