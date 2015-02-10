@@ -2,7 +2,7 @@
   (:import (org.apache.pdfbox.pdmodel PDPage
                                       PDDocument)
            org.apache.pdfbox.pdmodel.edit.PDPageContentStream
-           org.apache.pdfbox.pdmodel.font.PDType1Font
+           org.apache.pdfbox.pdmodel.font.PDTrueTypeFont
            org.apache.pdfbox.util.LayerUtility
            java.awt.geom.AffineTransform
            java.io.ByteArrayOutputStream)
@@ -45,11 +45,13 @@
         ylareuna (.getUpperRightY sivukoko)
         sivu (PDPage. sivukoko)]
     (.addPage dokumentti sivu)
-    (with-open [sisalto (PDPageContentStream. dokumentti sivu)]
-      (.setFont sisalto PDType1Font/HELVETICA 12)
-      (lisaa-logo dokumentti sivu ylareuna)
-      (when (:otsikko osat) (lisaa-otsikkotekstit sisalto (:otsikko osat) ylareuna))
-      (when (:teksti osat) (lisaa-tekstit sisalto (:teksti osat) ylareuna)))))
+    (with-open [sisalto (PDPageContentStream. dokumentti sivu)
+                fonttitiedosto (io/input-stream (io/file (io/resource "pdf-sisalto/ebgaramond/EBGaramond-Regular.ttf")))]
+      (let [fontti (PDTrueTypeFont/loadTTF dokumentti fonttitiedosto)]
+        (.setFont sisalto fontti 12)
+        (lisaa-logo dokumentti sivu ylareuna)
+        (when (:otsikko osat) (lisaa-otsikkotekstit sisalto (:otsikko osat) ylareuna))
+        (when (:teksti osat) (lisaa-tekstit sisalto (:teksti osat) ylareuna))))))
 
 (defn muodosta-pdf
   [osat]
