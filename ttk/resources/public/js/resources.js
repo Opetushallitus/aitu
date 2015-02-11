@@ -39,6 +39,12 @@ angular.module('resources', ['ngRoute'])
         id:"toimikunnan-tietojen-muokkaus",
         i18n : 'toimikunta'
       },
+      save: {
+        url: ophBaseUrl + '/api/ttk/',
+        method: 'POST',
+        id: 'toimikunnan-tallennus',
+        i18n : 'toimikunta'
+      },
       tutkinnot: {
         method: 'POST',
         id: 'toimikunnan-tutkintojen-muokkaus',

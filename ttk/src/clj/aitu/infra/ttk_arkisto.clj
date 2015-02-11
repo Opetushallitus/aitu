@@ -61,7 +61,7 @@
 
 (sm/defn lisaa!
   "Lisää toimikunnan arkistoon."
-  [toimikunta :- skeema/ToimikunnanTiedot]
+  [toimikunta :- skeema/UusiToimikunta]
   (auditlog/tutkintotoimikunta-operaatio! :lisays (:tkunta toimikunta) (:diaarinumero toimikunta))
   (sql/insert tutkintotoimikunta
     (sql/values toimikunta)))

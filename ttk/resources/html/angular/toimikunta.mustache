@@ -10,13 +10,20 @@
 
 <section class="info-section">
   <form name="toimikuntaForm">
-    <fieldset>
-      <label>[[diaarinumero]]</label>
-      <p>{{toimikunta.diaarinumero}}</p>
+    <fieldset ng-hide="!luontiTila">
+      <label ng-class="{pakollinen : luontiTila}">[[nimi]]</label>
+      <input type="text" ng-required="true" ng-model="toimikunta.nimi_fi" placeholder="[[suomeksi]]">
+      <input type="text" ng-required="true" ng-model="toimikunta.nimi_sv" placeholder="[[ruotsiksi]]">
     </fieldset>
     <fieldset>
-      <label>[[tilikoodi]]</label>
-      <p>{{toimikunta.tilikoodi}}</p>
+      <label ng-class="{pakollinen : luontiTila}">[[diaarinumero]]</label>
+      <p ng-hide="luontiTila">{{toimikunta.diaarinumero}}</p>
+      <input type="text" ng-pattern="/^[0-9/]+$/" ng-required="true" ng-model="toimikunta.diaarinumero" ng-hide="!luontiTila" maxlength="20">
+    </fieldset>
+    <fieldset>
+      <label ng-class="{pakollinen : luontiTila}">[[tilikoodi]]</label>
+      <p ng-hide="luontiTila">{{toimikunta.tilikoodi}}</p>
+      <input type="text" ng-model="toimikunta.tilikoodi" ng-hide="!luontiTila" maxlength="4">
     </fieldset>
     <fieldset>
       <label>[[sahkoposti]]</label>
@@ -31,9 +38,14 @@
     <luotu model="toimikunta"></luotu>
     <muutettu model="toimikunta"></muutettu>
     <div>
-      <label>[[toimikausi]]</label>
+      <label ng-class="{pakollinen : luontiTila}">[[toimikausi]]</label>
       <p ng-hide="muokkausTila">{{toimikunta.toimikausi_alku | date:'dd.MM.yyyy'}} – {{toimikunta.toimikausi_loppu | date:'dd.MM.yyyy'}}</p>
       <div ng-hide="!muokkausTila">
+        <fieldset ng-hide="!luontiTila">
+          <label></label>
+          <select ng-model="toimikunta.toimikausi" ng-options="toimikausi.toimikausi_id as (toimikausi.alkupvm | date:'dd.MM.yyyy') + ' – ' + (toimikausi.loppupvm | date:'dd.MM.yyyy') for toimikausi in toimikaudet">
+          </select>
+        </fieldset>
         <pvm-valitsin pakollinen="true" valittu-pvm="toimikunta.toimikausi_alku" min-pvm="toimikunta.alkupvm" max-pvm="toimikunta.loppupvm" otsikko="[[toimikausi_alku]]"></pvm-valitsin>
         <pvm-valitsin pakollinen="true" valittu-pvm="toimikunta.toimikausi_loppu" min-pvm="toimikunta.alkupvm" max-pvm="toimikunta.loppupvm" otsikko="[[toimikausi_loppu]]"></pvm-valitsin>
       </div>

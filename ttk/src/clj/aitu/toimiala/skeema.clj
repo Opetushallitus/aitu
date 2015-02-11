@@ -259,6 +259,10 @@
                              (s/optional-key :vanhentunut) Boolean
                              :kielisyys Kieli})
 
+(defmodel UusiToimikunta (-> ToimikunnanTiedot
+                           (dissoc ToimikunnanTiedot :tkunta)
+                           (assoc (s/optional-key :tkunta) s/Str)))
+
 (defmodel SisaltaaToimikunnanTiedot (assoc ToimikunnanTiedot s/Keyword s/Any))
 
 (defmodel Toimikunta (merge ToimikunnanTiedot AuditTiedot))

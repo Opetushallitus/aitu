@@ -24,10 +24,22 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       };
     }
 
+    function uusiControllerConfig() {
+      return {
+        basePath : '/toimikunta',
+        modelProperty : 'toimikunta',
+        modelIdProperty : 'diaarinumero',
+        tutkinnotProperty : 'nayttotutkinto',
+        luontiTila : true
+      };
+    }
+
     var resolve = {resource : 'toimikuntaResource', config : controllerConfig };
+    var uusiResolve = {resource : 'toimikuntaResource', config : uusiControllerConfig };
 
     $routeProvider.
       when('/search-toimikunta', {controller:'ToimikunnatController', templateUrl:'template/toimikunnat'}).
+      when('/toimikunta/uusi', {controller:'UusiToimikuntaController', resolve: uusiResolve, templateUrl:'template/toimikunta'}).
       when('/toimikunta/:id*\/jasenet', {controller:'ToimikuntaJasenetController', templateUrl:'template/jasenet'}).
       when('/toimikunta/:id*\/jasenet/uusi', {controller:'HenkiloVelhoController', templateUrl:'template/jasen'}).
       when('/toimikunta/:id*\/muokkaa', {controller:'crudController', resolve : resolve, templateUrl:'template/toimikunta'}).
@@ -78,6 +90,29 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       }
     }
   ])
+
+  .controller('UusiToimikuntaController', ['$scope', 'toimikuntaResource', 'ToimikausiResource', 'ToimikuntaUtil', 'varmistaPoistuminen', 'crudLocation',
+    function($scope, toimikuntaResource, ToimikausiResource, ToimikuntaUtil, varmistaPoistuminen, crudLocation) {
+      $scope.toimikunta = {
+        'toimiala': 'Valtakunnallinen',
+        'toimikausi_id': null
+      };
+      ToimikausiResource.query({}, function(toimikaudet) {
+        $scope.toimikaudet = toimikaudet;
+        $scope.toimikunta["toimikausi"] = _.first(toimikaudet)["toimikausi_id"];
+      });
+      $scope.muokkausTila = true;
+      $scope.luontiTila = true;
+      $scope.tallenna = function() {
+        toimikuntaResource.save($scope.toimikunta, function(response) {
+          crudLocation.naytaTiedot(response['diaarinumero'], '/toimikunta');
+        });
+      }
+      $scope.peruuta = function() {
+        varmistaPoistuminen.kysyVarmistusPoistuttaessa();
+        ToimikuntaUtil.palaaToimikuntaan($routeParams.id);
+      }
+    }])
 
   .controller('ToimikuntaController', ['$scope', '$routeParams', 'toimikuntaResource', 'ToimikuntaUtil', '$filter', 'crudLocation',
     function($scope, $routeParams, toimikuntaResource, ToimikuntaUtil, $filter, crudLocation) {

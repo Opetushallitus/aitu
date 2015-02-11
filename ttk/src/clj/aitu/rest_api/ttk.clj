@@ -186,17 +186,18 @@
 
   (POST "/" [tkunta diaarinumero nimi_fi nimi_sv tilikoodi toimiala toimikausi toimikausi_alku toimikausi_loppu kielisyys sahkoposti]
     (cu/autorisoitu-transaktio :toimikunta_luonti nil
-      (arkisto/lisaa! {:tkunta tkunta
-                       :diaarinumero diaarinumero
-                       :nimi_fi nimi_fi
-                       :nimi_sv nimi_sv
-                       :tilikoodi tilikoodi
-                       :toimiala toimiala
-                       :toimikausi_id toimikausi
-                       :kielisyys kielisyys
-                       :toimikausi_alku (parse-iso-date toimikausi_alku)
-                       :toimikausi_loppu (parse-iso-date toimikausi_loppu)
-                       :sahkoposti sahkoposti})
+      (arkisto/lisaa! (merge {:diaarinumero diaarinumero
+                              :nimi_fi nimi_fi
+                              :nimi_sv nimi_sv
+                              :tilikoodi tilikoodi
+                              :toimiala (or toimiala "Valtakunnallinen")
+                              :toimikausi_id toimikausi
+                              :kielisyys kielisyys
+                              :toimikausi_alku (parse-iso-date toimikausi_alku)
+                              :toimikausi_loppu (parse-iso-date toimikausi_loppu)
+                              :sahkoposti sahkoposti}
+                             (when tkunta
+                               {:tkunta tkunta})))
       {:status 200}))
 
   (POST ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero henkilo rooli alkupvm loppupvm edustus]
