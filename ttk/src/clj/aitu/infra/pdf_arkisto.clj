@@ -8,26 +8,75 @@
            java.io.ByteArrayOutputStream)
   (:require [clojure.java.io :as io]))
 
-(defn lisaa-otsikkotekstit
-  [sisalto otsikko ylareuna]
-  (.beginText sisalto)
-  (.moveTextPositionByAmount sisalto (+ 57 262) (- ylareuna (+ 12 28)))
-  (when (:teksti otsikko) (.drawString sisalto (:teksti otsikko)))
-  (.moveTextPositionByAmount sisalto 0 (- (* 2 1.5 12)))
-  (when (:paivays otsikko) (.drawString sisalto (:paivays otsikko)))
-  (.moveTextPositionByAmount sisalto 135 0)
-  (when (:dnro otsikko) (.drawString sisalto (:dnro otsikko)))
-  (.endText sisalto))
+(def sivukoko (PDPage/PAGE_SIZE_A4))
+(def ylamarginaali (- (.getUpperRightY sivukoko) 28))
+(def ensimmainen-rivi (- ylamarginaali 12))
+(def vasen-marginaali 57.0)
+(def footer-tila 70.0)
 
-(defn lisaa-tekstit
-  [sisalto teksti ylareuna]
-  (.beginText sisalto)
-  (.moveTextPositionByAmount sisalto 57 (- ylareuna (+ 12 100)))
-  (when (:vastaanottaja teksti) (.drawString sisalto (:vastaanottaja teksti)))
-  (.endText sisalto))
+(defn muodosta-header
+  "Header on aina vakiomuotoinen ja esiintyy vain dokumentin ensimmäisellä sivulla"
+  [otsikko]
+  [{:sivu 1
+    :x (+ 57 262)
+    :y ensimmainen-rivi
+    :teksti (:teksti otsikko)}
+   {:sivu 1
+    :x 0
+    :y (- (* 3 12))
+    :teksti (:paivays otsikko)}
+   {:sivu 1
+    :x 135
+    :y 0
+    :teksti (:dnro otsikko)}
+   ;; lopuksi headerin marginaali
+   {:sivu 1
+    :x 0
+    :y (- (* 3 12))}])
+
+(defn laske-koordinaatti
+  [key elementti]
+  (reduce + (map key elementti)))
+
+(defn lisaa-elementti
+  "lisää elementin taulukkoon"
+  [coll uusi-elementti]
+  (if (not-empty coll)
+    (concat coll
+      (let [last (last coll)
+            viimeinen-sivu (filter #(= (:sivu last) (:sivu %)) coll)
+            viimeisen-sivun-alareuna (laske-koordinaatti :y viimeinen-sivu)
+            viimeinen-x-positio (laske-koordinaatti :x viimeinen-sivu)
+            elementin-korkeus (- ylamarginaali (laske-koordinaatti :y uusi-elementti))
+            mahtuu-sivulle (< footer-tila (- viimeisen-sivun-alareuna elementin-korkeus))
+            uusi-elementti (vec (map #(assoc % :sivu (if mahtuu-sivulle
+                                                       (:sivu last)
+                                                       (+ (:sivu last) 1))) uusi-elementti))]
+        (if mahtuu-sivulle
+          (-> (assoc-in uusi-elementti [0 :x] (- (:x (first uusi-elementti)) viimeinen-x-positio))
+            (assoc-in [0 :y] (- (:y (first uusi-elementti)) ylamarginaali)))
+          uusi-elementti)))
+    uusi-elementti))
+
+(defn rivita-teksti
+  [sisalto ensimmainen-siityma]
+  (assoc-in
+    (vec (for [rivi (clojure.string/split-lines sisalto)]
+           {:x 0
+            :y -12
+            :teksti rivi}))
+    [0 :x] ensimmainen-siityma))
+
+(defn muodosta-tekstit
+  [sisalto fontti]
+  (flatten
+    [{:x 57
+      :y ensimmainen-rivi
+      :teksti (-> sisalto :sisalto :otsikko)}
+     (rivita-teksti (-> sisalto :sisalto :asiasisalto) 128)]))
 
 (defn lisaa-logo
-  [dokumentti sivu ylareuna]
+  [dokumentti sivu]
   (with-open [pdf (io/input-stream (io/file (io/resource "pdf-sisalto/oph-logo.pdf")))
               logo-dokumentti (PDDocument/load pdf)]
     (let [layer (LayerUtility. dokumentti)
@@ -36,27 +85,39 @@
           korkeus (.getHeight koko)
           skaalaus (/ 50 korkeus)
           skaalattu-korkeus (* skaalaus korkeus)
+          ylareuna (.getUpperRightY sivukoko)
           aft (AffineTransform. skaalaus 0.0 0.0 skaalaus 57.0 (- ylareuna (+ 28 skaalattu-korkeus))) ]
       (.appendFormAsLayer layer sivu logo aft "OPH-LOGO"))))
 
 (defn muodosta-osat
-  [dokumentti osat]
-  (let [sivukoko (PDPage/PAGE_SIZE_A4)
-        ylareuna (.getUpperRightY sivukoko)
-        sivu (PDPage. sivukoko)]
-    (.addPage dokumentti sivu)
-    (with-open [sisalto (PDPageContentStream. dokumentti sivu)
-                fonttitiedosto (io/input-stream (io/file (io/resource "pdf-sisalto/ebgaramond/EBGaramond-Regular.ttf")))]
-      (let [fontti (PDTrueTypeFont/loadTTF dokumentti fonttitiedosto)]
-        (.setFont sisalto fontti 12)
-        (lisaa-logo dokumentti sivu ylareuna)
-        (when (:otsikko osat) (lisaa-otsikkotekstit sisalto (:otsikko osat) ylareuna))
-        (when (:teksti osat) (lisaa-tekstit sisalto (:teksti osat) ylareuna))))))
+  [fontti osat]
+  (-> (muodosta-header (:otsikko osat))
+    (lisaa-elementti (muodosta-tekstit (:teksti osat) fontti))))
+
+(defn kirjoita-sisalto
+  "Kirjoittaa valmiiksi sivutetun ja rivitetyn sisällön PDPage sivuihin ja palauttaa sivut"
+  [dokumentti fontti sivutettu-sisalto]
+  (for [[sivunumero sivun-rivit] (group-by :sivu sivutettu-sisalto)]
+    (let [pdfsivu (PDPage. sivukoko)]
+      (with-open [pdstream (PDPageContentStream. dokumentti pdfsivu)]
+        (.setFont pdstream fontti 12)
+        (when (= 1 sivunumero) (lisaa-logo dokumentti pdfsivu))
+        (.beginText pdstream)
+        (doseq [rivi sivun-rivit]
+          (.moveTextPositionByAmount pdstream (:x rivi) (:y rivi))
+          (when (:teksti rivi) (.drawString pdstream (:teksti rivi))))
+        (.endText pdstream))
+      pdfsivu)))
 
 (defn muodosta-pdf
   [osat]
-  (with-open [dokumentti (PDDocument.)]
-    (let [output (ByteArrayOutputStream.)]
-      (muodosta-osat dokumentti osat)
+  (with-open [dokumentti (PDDocument.)
+              fonttitiedosto (io/input-stream (io/file (io/resource "pdf-sisalto/ebgaramond/EBGaramond-Regular.ttf")))]
+    (let [output (ByteArrayOutputStream.)
+          fontti (PDTrueTypeFont/loadTTF dokumentti fonttitiedosto)
+          sivutettu-sisalto (muodosta-osat fontti osat)
+          sivut (kirjoita-sisalto dokumentti fontti sivutettu-sisalto)]
+      (doseq [sivu sivut]
+        (.addPage dokumentti sivu))
       (.save dokumentti output)
       output)))
