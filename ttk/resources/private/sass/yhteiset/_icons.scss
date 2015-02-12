@@ -112,19 +112,19 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
   background-position: 0 -400px;
 }
 
+@mixin add-icon-white {
+  @include icon-images;
+  width: 16px;
+  height: 16px;
+  background-position: 0 -450px;
+}
+
 @mixin add-icon {
   @include icon-images;
   @include icon-hover(-1200px);
   width: 18px;
   height: 18px;
   background-position: 0 -1150px;
-}
-
-@mixin add-icon-white {
-  @include icon-images;
-  width: 20px;
-  height: 20px;
-  background-position: 0 -100px;
 }
 
 @mixin calendar-icon {
@@ -255,10 +255,17 @@ Esim: <div class="icon user-icon"></div> */
 }
 
 /* Nappi jossa ikoni oikeassa reunassa */
-button.button-with-icon {
+button.button-with-icon,
+a.button.button-with-icon{
   padding-right: 50px;
+  &.add-icon-white {
+    @include icon-after(10px, 2px){@include add-icon-white;};
+  }
   &.add-user-icon {
     @include icon-after(10px, 2px){@include add-user-icon;};
   }
 }
+
+
+
 

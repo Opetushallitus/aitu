@@ -247,12 +247,33 @@ Esim: <div class="icon user-icon"></div> */
 }
 
 /* Nappi jossa ikoni oikeassa reunassa */
-/* line 258, ../../private/sass/yhteiset/_icons.scss */
-button.button-with-icon {
+/* line 259, ../../private/sass/yhteiset/_icons.scss */
+button.button-with-icon,
+a.button.button-with-icon {
   padding-right: 50px;
 }
 /* line 16, ../../private/sass/yhteiset/_icons.scss */
-button.button-with-icon.add-user-icon:after {
+button.button-with-icon.add-icon-white:after,
+a.button.button-with-icon.add-icon-white:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 16px;
+  height: 16px;
+  background-position: 0 -450px;
+  content: "";
+  position: absolute;
+  margin-top: 2px;
+  margin-left: 10px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+/* line 6, ../../private/sass/yhteiset/_icons.scss */
+.no-svg button.button-with-icon.add-icon-white:after, .no-svg
+a.button.button-with-icon.add-icon-white:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+/* line 16, ../../private/sass/yhteiset/_icons.scss */
+button.button-with-icon.add-user-icon:after,
+a.button.button-with-icon.add-user-icon:after {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 26px;
   height: 16px;
@@ -265,7 +286,8 @@ button.button-with-icon.add-user-icon:after {
   background-repeat: no-repeat;
 }
 /* line 6, ../../private/sass/yhteiset/_icons.scss */
-.no-svg button.button-with-icon.add-user-icon:after {
+.no-svg button.button-with-icon.add-user-icon:after, .no-svg
+a.button.button-with-icon.add-user-icon:after {
   background-image: url("../img/oph-icon-sprite.png");
 }
 

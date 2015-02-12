@@ -53,12 +53,13 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       siirryJasenenLisaykseen: function(diaarinumero) { $location.path('/toimikunta/' + diaarinumero + '/jasenet/uusi'); },
       siirrySopimuksenLuontiin: function(diaarinumero) { $location.url('/sopimus/uusi?toimikunta=' + diaarinumero); },
       palaaToimikuntaan: function(diaarinumero) { $location.path('/toimikunta/' + diaarinumero + '/tiedot'); },
-      muokkaaToimialaa: function(diaarinumero) { $location.path('/toimikunta/' + diaarinumero + '/tutkinnot'); }
+      muokkaaToimialaa: function(diaarinumero) { $location.path('/toimikunta/' + diaarinumero + '/tutkinnot'); },
+      siirryToimikunnanLuontiin: function() { $location.path('/toimikunta/uusi'); }
     };
   }])
 
-  .controller('ToimikunnatController', ['$scope', 'toimikuntaHakuResource', '$filter',
-    function($scope, toimikuntaHakuResource, $filter) {
+  .controller('ToimikunnatController', ['$scope', 'toimikuntaHakuResource', '$filter', 'ToimikuntaUtil',
+    function($scope, toimikuntaHakuResource, $filter, ToimikuntaUtil) {
       $scope.kaikkiToimikunnat = [];
       $scope.toimikunnat = [];
       $scope.toimikuntaHakuehto = {
@@ -88,6 +89,8 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       $scope.kielisyysParametri = function() {
         return _.pluck($scope.toimikuntaHakuehto.kielisyys, "nimi").join(",");
       }
+
+      $scope.luoUusi = ToimikuntaUtil.siirryToimikunnanLuontiin;
     }
   ])
 
