@@ -132,7 +132,7 @@
 (defn kirjoita-sisalto
   "Kirjoittaa valmiiksi sivutetun ja rivitetyn sisällön PDPage sivuihin ja palauttaa sivut"
   [dokumentti fontti sivutettu-sisalto footer]
-  (for [[sivunumero sivun-rivit] (group-by :sivu sivutettu-sisalto)]
+  (for [[sivunumero sivun-rivit] (sort-by key (group-by :sivu sivutettu-sisalto))]
     (let [pdfsivu (PDPage. sivukoko)]
       (with-open [pdstream (PDPageContentStream. dokumentti pdfsivu)]
         (.setFont pdstream fontti 12)
