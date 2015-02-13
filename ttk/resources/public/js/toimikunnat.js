@@ -24,22 +24,11 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       };
     }
 
-    function uusiControllerConfig() {
-      return {
-        basePath : '/toimikunta',
-        modelProperty : 'toimikunta',
-        modelIdProperty : 'diaarinumero',
-        tutkinnotProperty : 'nayttotutkinto',
-        luontiTila : true
-      };
-    }
-
     var resolve = {resource : 'toimikuntaResource', config : controllerConfig };
-    var uusiResolve = {resource : 'toimikuntaResource', config : uusiControllerConfig };
 
     $routeProvider.
       when('/search-toimikunta', {controller:'ToimikunnatController', templateUrl:'template/toimikunnat'}).
-      when('/toimikunta/uusi', {controller:'UusiToimikuntaController', resolve: uusiResolve, templateUrl:'template/toimikunta'}).
+      when('/toimikunta/uusi', {controller:'UusiToimikuntaController', templateUrl:'template/toimikunta'}).
       when('/toimikunta/:id*\/jasenet', {controller:'ToimikuntaJasenetController', templateUrl:'template/jasenet'}).
       when('/toimikunta/:id*\/jasenet/uusi', {controller:'HenkiloVelhoController', templateUrl:'template/jasen'}).
       when('/toimikunta/:id*\/muokkaa', {controller:'crudController', resolve : resolve, templateUrl:'template/toimikunta'}).
@@ -94,15 +83,17 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
     }
   ])
 
-  .controller('UusiToimikuntaController', ['$scope', 'toimikuntaResource', 'ToimikausiResource', 'ToimikuntaUtil', 'varmistaPoistuminen', 'crudLocation',
-    function($scope, toimikuntaResource, ToimikausiResource, ToimikuntaUtil, varmistaPoistuminen, crudLocation) {
+  .controller('UusiToimikuntaController', ['$scope', '$location', 'toimikuntaResource', 'ToimikausiResource', 'varmistaPoistuminen', 'crudLocation',
+    function($scope, $location, toimikuntaResource, ToimikausiResource, varmistaPoistuminen, crudLocation) {
       $scope.toimikunta = {
         'toimiala': 'Valtakunnallinen',
         'toimikausi_id': null
       };
       ToimikausiResource.query({}, function(toimikaudet) {
         $scope.toimikaudet = toimikaudet;
-        $scope.toimikunta["toimikausi"] = _.first(toimikaudet)["toimikausi_id"];
+        $scope.toimikunta['toimikausi'] = _.first(toimikaudet)['toimikausi_id'];
+        $scope.toimikunta['toimikausi_alku'] = _.first(toimikaudet)['alkupvm'];
+        $scope.toimikunta['toimikausi_loppu'] = _.first(toimikaudet)['loppupvm'];
       });
       $scope.muokkausTila = true;
       $scope.luontiTila = true;
@@ -113,7 +104,7 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       }
       $scope.peruuta = function() {
         varmistaPoistuminen.kysyVarmistusPoistuttaessa();
-        ToimikuntaUtil.palaaToimikuntaan($routeParams.id);
+        $location.path('/search-toimikunta');
       }
     }])
 
