@@ -83,14 +83,14 @@
     (yhdista-sanat sanat fontti fonttikoko vapaa-tila)))
 
 (defn rivita-teksti
-  [sisalto ensimmainen-siityma fontti fonttikoko vapaa-tila]
+  [sisalto ensimmainen-siirtyma fontti fonttikoko vapaa-tila]
   (assoc-in
     (vec (for [teksti (clojure.string/split-lines sisalto)
                rivi (jaa-tekstirivi teksti fontti fonttikoko vapaa-tila)]
            {:x 0
             :y (- fonttikoko)
             :teksti rivi}))
-    [0 :x] ensimmainen-siityma))
+    [0 :x] ensimmainen-siirtyma))
 
 (defn muodosta-tekstit
   [sisalto fontti]
