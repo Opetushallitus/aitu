@@ -118,18 +118,30 @@
   (-> (muodosta-header (:otsikko osat))
     (lisaa-elementti (muodosta-tekstit (:teksti osat) fontti))))
 
+(defn muodosta-footer
+  "Footer tulee jokaiselle sivulle. Oletuksena että suhteellinen lähtöpositio on oikea"
+  [fontti osat]
+  (rivita-teksti (-> osat :footer :teksti) 0 fontti 8 (- (.getWidth sivukoko) vasen-marginaali oikea-marginaali)))
+
+(defn kirjoita-rivit
+  [pdstream rivit]
+  (doseq [rivi rivit]
+    (.moveTextPositionByAmount pdstream (:x rivi) (:y rivi))
+    (when (:teksti rivi) (.drawString pdstream (:teksti rivi)))))
+
 (defn kirjoita-sisalto
   "Kirjoittaa valmiiksi sivutetun ja rivitetyn sisällön PDPage sivuihin ja palauttaa sivut"
-  [dokumentti fontti sivutettu-sisalto]
+  [dokumentti fontti sivutettu-sisalto footer]
   (for [[sivunumero sivun-rivit] (group-by :sivu sivutettu-sisalto)]
     (let [pdfsivu (PDPage. sivukoko)]
       (with-open [pdstream (PDPageContentStream. dokumentti pdfsivu)]
         (.setFont pdstream fontti 12)
         (when (= 1 sivunumero) (lisaa-logo dokumentti pdfsivu))
         (.beginText pdstream)
-        (doseq [rivi sivun-rivit]
-          (.moveTextPositionByAmount pdstream (:x rivi) (:y rivi))
-          (when (:teksti rivi) (.drawString pdstream (:teksti rivi))))
+        (kirjoita-rivit pdstream sivun-rivit)
+        (.moveTextPositionByAmount pdstream (- vasen-marginaali (laske-koordinaatti :x sivun-rivit)) (- (- footer-tila 8) (laske-koordinaatti :y sivun-rivit))) ; siirrytään footerin alkuun
+        (.setFont pdstream fontti 8)
+        (kirjoita-rivit pdstream footer)
         (.endText pdstream))
       pdfsivu)))
 
@@ -140,7 +152,8 @@
     (let [output (ByteArrayOutputStream.)
           fontti (PDTrueTypeFont/loadTTF dokumentti fonttitiedosto)
           sivutettu-sisalto (muodosta-osat fontti osat)
-          sivut (kirjoita-sisalto dokumentti fontti sivutettu-sisalto)]
+          footer (muodosta-footer fontti osat)
+          sivut (kirjoita-sisalto dokumentti fontti sivutettu-sisalto footer)]
       (doseq [sivu sivut]
         (.addPage dokumentti sivu))
       (.save dokumentti output)
