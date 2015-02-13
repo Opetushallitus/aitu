@@ -18,21 +18,17 @@
 (defn muodosta-header
   "Header on aina vakiomuotoinen ja esiintyy vain dokumentin ensimmäisellä sivulla"
   [otsikko]
-  [{:sivu 1
-    :x (+ vasen-marginaali 262)
+  [{:x (+ vasen-marginaali 262)
     :y ensimmainen-rivi
     :teksti (:teksti otsikko)}
-   {:sivu 1
-    :x 0
+   {:x 0
     :y (- (* 3 12))
     :teksti (:paivays otsikko)}
-   {:sivu 1
-    :x 135
+   {:x 135
     :y 0
     :teksti (:dnro otsikko)}
    ;; lopuksi headerin marginaali
-   {:sivu 1
-    :x 0
+   {:x 0
     :y (- (* 3 12))}])
 
 (defn laske-koordinaatti
@@ -44,20 +40,20 @@
   [coll uusi-elementti]
   (if (not-empty coll)
     (concat coll
-      (let [last (last coll)
-            viimeinen-sivu (filter #(= (:sivu last) (:sivu %)) coll)
+      (let [sivunumero (:sivu (last coll))
+            viimeinen-sivu (filter #(= sivunumero (:sivu %)) coll)
             viimeisen-sivun-alareuna (laske-koordinaatti :y viimeinen-sivu)
             viimeinen-x-positio (laske-koordinaatti :x viimeinen-sivu)
             elementin-korkeus (- ylamarginaali (laske-koordinaatti :y uusi-elementti))
             mahtuu-sivulle (< footer-tila (- viimeisen-sivun-alareuna elementin-korkeus))
             uusi-elementti (vec (map #(assoc % :sivu (if mahtuu-sivulle
-                                                       (:sivu last)
-                                                       (+ (:sivu last) 1))) uusi-elementti))]
+                                                       sivunumero
+                                                       (+ sivunumero 1))) uusi-elementti))]
         (if mahtuu-sivulle
           (-> (assoc-in uusi-elementti [0 :x] (- (:x (first uusi-elementti)) viimeinen-x-positio))
             (assoc-in [0 :y] (- (:y (first uusi-elementti)) ylamarginaali)))
           uusi-elementti)))
-    uusi-elementti))
+    (map #(assoc % :sivu 1) uusi-elementti)))
 
 (defn tekstin-pituus
   [fontti fonttikoko teksti]
@@ -115,8 +111,9 @@
 
 (defn muodosta-osat
   [fontti osat]
-  (-> (muodosta-header (:otsikko osat))
-    (lisaa-elementti (muodosta-tekstit (:teksti osat) fontti))))
+  (reduce lisaa-elementti []
+          [(muodosta-header (:otsikko osat))
+           (muodosta-tekstit (:teksti osat) fontti)]))
 
 (defn muodosta-footer
   "Footer tulee jokaiselle sivulle. Oletuksena että suhteellinen lähtöpositio on oikea"
@@ -135,14 +132,15 @@
   (for [[sivunumero sivun-rivit] (sort-by key (group-by :sivu sivutettu-sisalto))]
     (let [pdfsivu (PDPage. sivukoko)]
       (with-open [pdstream (PDPageContentStream. dokumentti pdfsivu)]
-        (.setFont pdstream fontti 12)
         (when (= 1 sivunumero) (lisaa-logo dokumentti pdfsivu))
-        (.beginText pdstream)
-        (kirjoita-rivit pdstream sivun-rivit)
-        (.moveTextPositionByAmount pdstream (- vasen-marginaali (laske-koordinaatti :x sivun-rivit)) (- (- footer-tila 8) (laske-koordinaatti :y sivun-rivit))) ; siirrytään footerin alkuun
-        (.setFont pdstream fontti 8)
-        (kirjoita-rivit pdstream footer)
-        (.endText pdstream))
+        (doto pdstream
+          (.setFont fontti 12)
+          (.beginText)
+          (kirjoita-rivit sivun-rivit)
+          (.moveTextPositionByAmount (- vasen-marginaali (laske-koordinaatti :x sivun-rivit)) (- (- footer-tila 8) (laske-koordinaatti :y sivun-rivit))) ; siirrytään footerin alkuun
+          (.setFont fontti 8)
+          (kirjoita-rivit footer)
+          (.endText)))
       pdfsivu)))
 
 (defn muodosta-pdf
