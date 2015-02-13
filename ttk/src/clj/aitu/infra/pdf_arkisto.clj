@@ -12,6 +12,7 @@
 (def ylamarginaali (- (.getUpperRightY sivukoko) 28))
 (def ensimmainen-rivi (- ylamarginaali 12))
 (def vasen-marginaali 57.0)
+(def oikea-marginaali 50.0)
 (def footer-tila 70.0)
 
 (defn muodosta-header
@@ -58,10 +59,34 @@
           uusi-elementti)))
     uusi-elementti))
 
+(defn tekstin-pituus
+  [fontti fonttikoko teksti]
+  (* (/ (.getStringWidth fontti teksti) 1000) fonttikoko))
+
+(defn yhdista-sanat
+  "yhdistää peräkkäisiä sanoja pidemmiksi merkkijonoiksi niin että annetulla fontilla merkkijono mahtuu vapaaseen tilaan."
+  [sanat fontti fonttikoko vapaa-tila]
+  (loop [yhdistetty (first sanat)
+         loput (next sanat)]
+    (cond
+      (and loput
+           (> vapaa-tila (+ (tekstin-pituus fontti fonttikoko yhdistetty) (tekstin-pituus fontti fonttikoko (first loput)))))
+        (recur (str yhdistetty (first loput)) (next loput))
+      loput
+        (cons yhdistetty (yhdista-sanat loput fontti fonttikoko vapaa-tila))
+      :else
+        (list yhdistetty))))
+
+(defn jaa-tekstirivi
+  [teksti fontti fonttikoko vapaa-tila]
+  (let [sanat (clojure.string/split teksti #"(?<=[^a-zåäöA-ZÅÄÖ_0-9])")]
+    (yhdista-sanat sanat fontti fonttikoko vapaa-tila)))
+
 (defn rivita-teksti
-  [sisalto ensimmainen-siityma]
+  [sisalto ensimmainen-siityma fontti fonttikoko vapaa-tila]
   (assoc-in
-    (vec (for [rivi (clojure.string/split-lines sisalto)]
+    (vec (for [teksti (clojure.string/split-lines sisalto)
+               rivi (jaa-tekstirivi teksti fontti fonttikoko vapaa-tila)]
            {:x 0
             :y -12
             :teksti rivi}))
@@ -70,10 +95,10 @@
 (defn muodosta-tekstit
   [sisalto fontti]
   (flatten
-    [{:x 57
+    [{:x vasen-marginaali
       :y ensimmainen-rivi
       :teksti (-> sisalto :sisalto :otsikko)}
-     (rivita-teksti (-> sisalto :sisalto :asiasisalto) 128)]))
+     (rivita-teksti (-> sisalto :sisalto :asiasisalto) 128 fontti 12 (- (.getWidth sivukoko) vasen-marginaali 128 oikea-marginaali))]))
 
 (defn lisaa-logo
   [dokumentti sivu]
