@@ -19,7 +19,7 @@
   "Header on aina vakiomuotoinen ja esiintyy vain dokumentin ensimmäisellä sivulla"
   [otsikko]
   [{:sivu 1
-    :x (+ 57 262)
+    :x (+ vasen-marginaali 262)
     :y ensimmainen-rivi
     :teksti (:teksti otsikko)}
    {:sivu 1
@@ -88,7 +88,7 @@
     (vec (for [teksti (clojure.string/split-lines sisalto)
                rivi (jaa-tekstirivi teksti fontti fonttikoko vapaa-tila)]
            {:x 0
-            :y -12
+            :y (- fonttikoko)
             :teksti rivi}))
     [0 :x] ensimmainen-siityma))
 
@@ -106,12 +106,11 @@
               logo-dokumentti (PDDocument/load pdf)]
     (let [layer (LayerUtility. dokumentti)
           logo (.importPageAsForm layer logo-dokumentti 0)
-          koko (.getBBox logo)
-          korkeus (.getHeight koko)
+          korkeus (.getHeight (.getBBox logo))
           skaalaus (/ 50 korkeus)
           skaalattu-korkeus (* skaalaus korkeus)
           ylareuna (.getUpperRightY sivukoko)
-          aft (AffineTransform. skaalaus 0.0 0.0 skaalaus 57.0 (- ylareuna (+ 28 skaalattu-korkeus))) ]
+          aft (AffineTransform. skaalaus 0.0 0.0 skaalaus vasen-marginaali (- ylareuna (+ 28 skaalattu-korkeus))) ]
       (.appendFormAsLayer layer sivu logo aft "OPH-LOGO"))))
 
 (defn muodosta-osat
