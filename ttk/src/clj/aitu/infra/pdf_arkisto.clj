@@ -137,10 +137,11 @@
           (.setFont fontti 12)
           (.beginText)
           (kirjoita-rivit sivun-rivit)
-          (.moveTextPositionByAmount (- vasen-marginaali (laske-koordinaatti :x sivun-rivit)) (- (- footer-tila 8) (laske-koordinaatti :y sivun-rivit))) ; siirrytään footerin alkuun
+          (.moveTextPositionByAmount (- vasen-marginaali (laske-koordinaatti :x sivun-rivit)) (- footer-tila (laske-koordinaatti :y sivun-rivit))) ; siirrytään footerin alkuun
           (.setFont fontti 8)
           (kirjoita-rivit footer)
-          (.endText)))
+          (.endText)
+          (.drawLine vasen-marginaali footer-tila (- (.getWidth sivukoko) oikea-marginaali) footer-tila)))
       pdfsivu)))
 
 (defn muodosta-pdf
