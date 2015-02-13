@@ -49,6 +49,7 @@
                  [slingshot "0.10.3"]
 
                  [org.apache.pdfbox/pdfbox "1.8.8"]
+                 [javax.servlet/servlet-api "2.5"]
 
                  [com.cemerick/valip "0.3.2"]
                  [clojurewerkz/quartzite "1.1.0"]
