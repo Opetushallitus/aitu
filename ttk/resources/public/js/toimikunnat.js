@@ -113,6 +113,14 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       $scope.toimikunta = toimikuntaResource.get({"diaarinumero": $routeParams.id});
       $scope.nykyisetJasenet = [];
       $scope.entisetJasenet = [];
+      $scope.tulostaPaatosModal = false;
+
+      $scope.showTulostaPaatosModal = function () {
+        $scope.tulostaPaatosModal = true;
+      };
+      $scope.hideTulostaPaatosModal = function () {
+        $scope.tulostaPaatosModal = false;
+      };
 
       $scope.salliMuokkaus = function() {
         return !$scope.muokkausTila && $scope.toimikunta.voimassa !== false;

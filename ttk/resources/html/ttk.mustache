@@ -46,7 +46,8 @@
       [[/i18n.navigaatio]]
     </div>
   </nav>
-  <div class="impersonointi-haku ng-hide" ng-show="valitseHenkilo">
+
+  <div class="modal-window impersonointi-haku ng-hide" ng-show="valitseHenkilo">
     <button class="icon delete-icon sulje" ng-click="piilota()"></button>
     <form name="impersonoiForm">
       <haku-valitsin
@@ -60,6 +61,8 @@
       <tallenna formi-validi="impersonoiForm.$valid" ng-click="impersonoi()" teksti="'[[valitse-kayttaja]]'"></tallenna>
     </form>
   </div>
+  <div class="modal-backdrop" ng-show="valitseHenkilo"></div>
+
   [[/i18n.impersonointi]]
   <div id="content" class="app-wrapper">
     <api-metodi-palaute></api-metodi-palaute>

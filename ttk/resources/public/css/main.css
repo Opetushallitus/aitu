@@ -1108,9 +1108,24 @@ ul.pagination li:first-child + li + li + li a:after {
   top: 150px;
 }
 
-/* line 86, ../../private/sass/yhteiset/_search.scss */
-button.luo-uusi {
+/* line 87, ../../private/sass/yhteiset/_search.scss */
+button.luo-uusi,
+.float-right {
   float: right;
+}
+
+/* line 89, ../../private/sass/yhteiset/_search.scss */
+.clear {
+  *zoom: 1;
+}
+/* line 21, ../../private/sass/yhteiset/_mixins.scss */
+.clear:before, .clear:after {
+  content: "";
+  display: table;
+}
+/* line 25, ../../private/sass/yhteiset/_mixins.scss */
+.clear:after {
+  clear: both;
 }
 
 /* line 1, ../../private/sass/yhteiset/_fileupload.scss */
@@ -1691,30 +1706,55 @@ div.api-method-feedback > div.error {
 }
 
 /* line 1, ../../private/sass/partials/_impersonointi.scss */
-.impersonointi-haku {
+.modal-window {
+  z-index: 100;
   -moz-box-shadow: 2px 2px 8px -1px gray;
   -webkit-box-shadow: 2px 2px 8px -1px gray;
   box-shadow: 2px 2px 8px -1px gray;
-  z-index: 10;
   position: absolute;
   border: 2px solid #4d4d4d;
   background-color: white;
-  min-height: 160px;
-  padding: 5px 10px;
-  margin-left: -250px;
+  padding: 15px;
+  padding-right: 25px;
   left: 50%;
   top: 100px;
-  width: 500px;
 }
-/* line 17, ../../private/sass/partials/_impersonointi.scss */
-.impersonointi-haku button.sulje {
+/* line 12, ../../private/sass/partials/_impersonointi.scss */
+.modal-window button.sulje {
   position: absolute;
   right: 4px;
   top: 0px;
 }
-/* line 22, ../../private/sass/partials/_impersonointi.scss */
-.impersonointi-haku fieldset {
+/* line 18, ../../private/sass/partials/_impersonointi.scss */
+.modal-window fieldset {
   width: 100%;
+}
+
+/* line 23, ../../private/sass/partials/_impersonointi.scss */
+.impersonointi-haku {
+  min-height: 160px;
+  margin-left: -250px;
+  width: 500px;
+}
+
+/* line 31, ../../private/sass/partials/_impersonointi.scss */
+.tulosta-paatos {
+  min-height: 70%;
+  margin-left: -40%;
+  width: 80%;
+}
+
+/* line 39, ../../private/sass/partials/_impersonointi.scss */
+.modal-backdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  opacity: .6;
+  content: "";
+  z-index: 99;
 }
 
 /* NÄKYMÄT
