@@ -3,9 +3,10 @@
 [[#i18n.toimikunta]]
 <h1>
   <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimikuntaa" ng-click="muokkaa()"></auth-toiminto>
-  {{toimikunta.nimi | lokalisoi:toimikunta:'nimi'}}
+  <span ng-show="!luontiTila">{{toimikunta.nimi | lokalisoi:toimikunta:'nimi'}}</span>
+  <span ng-show="luontiTila">[[luo-uusi]]</span>
   <span ng-show="toimikunta.voimassa === false">([[ei-voimassa]])</span>
-<ohje tunniste="toimikunta"></ohje>
+  <ohje tunniste="toimikunta"></ohje>
 </h1>
 
 <section class="info-section">
@@ -13,6 +14,7 @@
     <fieldset ng-hide="!luontiTila">
       <label ng-class="{pakollinen : luontiTila}">[[nimi]]</label>
       <input type="text" ng-required="true" ng-model="toimikunta.nimi_fi" placeholder="[[suomeksi]]">
+      <br /><br />
       <input type="text" ng-required="true" ng-model="toimikunta.nimi_sv" placeholder="[[ruotsiksi]]">
     </fieldset>
     <fieldset>
