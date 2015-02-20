@@ -30,7 +30,7 @@
     :y 0
     :teksti (:dnro otsikko)}
    ;; lopuksi headerin marginaali
-   {:x 0
+   {:x (- 0 262 135)
     :y (- (* 3 12))}])
 
 (defn laske-koordinaatti
@@ -39,23 +39,25 @@
 
 (defn lisaa-elementti
   "lisää elementin taulukkoon"
-  [coll uusi-elementti]
-  (if (not-empty coll)
-    (concat coll
-      (let [sivunumero (:sivu (last coll))
-            viimeinen-sivu (filter #(= sivunumero (:sivu %)) coll)
-            viimeisen-sivun-alareuna (laske-koordinaatti :y viimeinen-sivu)
-            viimeinen-x-positio (laske-koordinaatti :x viimeinen-sivu)
-            elementin-korkeus (- ylamarginaali (laske-koordinaatti :y uusi-elementti))
-            mahtuu-sivulle (< footer-tila (- viimeisen-sivun-alareuna elementin-korkeus))
-            uusi-elementti (vec (map #(assoc % :sivu (if mahtuu-sivulle
-                                                       sivunumero
-                                                       (+ sivunumero 1))) uusi-elementti))]
-        (if mahtuu-sivulle
-          (-> (assoc-in uusi-elementti [0 :x] (- (:x (first uusi-elementti)) viimeinen-x-positio))
-            (assoc-in [0 :y] (- (:y (first uusi-elementti)) ylamarginaali)))
-          uusi-elementti)))
-    (map #(assoc % :sivu 1) uusi-elementti)))
+  [v uusi-elementti]
+  (if (seq v)
+    (conj v
+          (let [sivunumero (:sivu (peek v))
+                viimeinen-sivu (filter #(= sivunumero (:sivu %)) v)
+                viimeisen-sivun-alareuna (laske-koordinaatti :y viimeinen-sivu)
+                viimeinen-x-positio (laske-koordinaatti :x viimeinen-sivu)
+                sivunumero (or sivunumero 1)
+                elementin-korkeus (:y uusi-elementti)
+                mahtuu-sivulle (< footer-tila (- viimeisen-sivun-alareuna elementin-korkeus))
+                uusi-elementti (assoc uusi-elementti :sivu (if mahtuu-sivulle
+                                                             sivunumero
+                                                             (inc sivunumero)))]
+            (if mahtuu-sivulle
+              uusi-elementti
+              (-> uusi-elementti
+                (update-in [:x] + vasen-marginaali)
+                (update-in [:y] + ylamarginaali)))))
+    [(assoc uusi-elementti :sivu 1)]))
 
 (defn tekstin-pituus
   [fontti fonttikoko teksti]
@@ -130,12 +132,6 @@
                   :bold true})
                (clojure.string/split-lines otsikko)))
 
-(defn muodosta-tekstit
-  [sisalto fontti bold-fontti]
-  (flatten
-    [(muodosta-otsikko (-> sisalto :sisalto :otsikko))
-     (rivita-teksti (-> sisalto :sisalto :asiasisalto) fontti bold-fontti 12)]))
-
 (defn lisaa-logo
   [dokumentti sivu]
   (with-open [pdf (io/input-stream (io/file (io/resource "pdf-sisalto/oph-logo.pdf")))
@@ -152,13 +148,14 @@
 (defn muodosta-osat
   [fontti bold-fontti osat]
   (reduce lisaa-elementti []
-          [(muodosta-header (:otsikko osat))
-           (muodosta-tekstit (:teksti osat) fontti bold-fontti)]))
+         (concat
+           (muodosta-header (:otsikko osat))
+           (rivita-teksti (:teksti osat) fontti bold-fontti 12))))
 
 (defn muodosta-footer
   "Footer tulee jokaiselle sivulle. Oletuksena että suhteellinen lähtöpositio on oikea"
   [fontti bold-fontti osat]
-  (rivita-teksti (-> osat :footer :teksti) fontti bold-fontti 8))
+  (rivita-teksti (:footer osat) fontti bold-fontti 8))
 
 (defn kirjoita-rivit
   [pdstream rivit koko fontti bold-fontti]
