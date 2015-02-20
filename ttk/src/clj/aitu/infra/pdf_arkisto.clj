@@ -80,44 +80,42 @@
   (let [sanat (clojure.string/split teksti #"(?<=\s)")]
     (yhdista-sanat sanat fontti fonttikoko vapaa-tila)))
 
+(defn pura-muotoilut
+  [teksti]
+  {:bold (= \* (first teksti))
+   :underline (= \_ (first teksti))
+   :teksti (some-> teksti
+             (clojure.string/replace #"^[*_]" "")
+             (clojure.string/replace #"[*_]$" ""))})
+
 (defn rivita-kappale
-  [ensimmainen-siirtyma fontti bold-fontti fonttikoko vapaa-tila teksti]
-  (let [[otsikko sisalto] (if (.contains teksti "\t")
-                            (clojure.string/split teksti #"\t")
-                            [nil teksti])
-        bold? (= \* (first sisalto))
-        underline? (= \_ (first sisalto))
-        fonttikoko (if bold?
-                     (- fonttikoko 2)
-                     fonttikoko)
-        fontti (if bold?
-                 bold-fontti
-                 fontti)
-        sisalto (-> sisalto
-                  (clojure.string/replace #"^[*_]" "")
-                  (clojure.string/replace #"[*_]$" ""))]
-    (apply vector
-           {:x (- ensimmainen-siirtyma)
-            :y (- fonttikoko)
-            :bold true
-            :underline false
-            :teksti otsikko}
-           (-> (vec (for [rivi (jaa-tekstirivi sisalto fontti fonttikoko vapaa-tila)]
-                      {:x 0
-                       :y (- fonttikoko)
-                       :teksti rivi
-                       :bold bold?
-                       :underline underline?}))
-             (update-in [0 :x] + ensimmainen-siirtyma)
-             (update-in [0 :y] + fonttikoko)))))
+  [fontti bold-fontti fonttikoko teksti]
+  (let [osat (map pura-muotoilut (clojure.string/split teksti #"\t"))]
+    (-> (apply (comp vec concat)
+               (for [[tab osa] (map-indexed vector osat)
+                     :let [vapaa-tila (- (.getWidth sivukoko)
+                                         vasen-marginaali
+                                         (* tab sisennys)
+                                         oikea-marginaali)
+                           fontti (if (:bold osa)
+                                    bold-fontti
+                                    fontti)]]
+                 (-> (vec (for [rivi (jaa-tekstirivi (:teksti osa) fontti fonttikoko vapaa-tila)]
+                            (merge osa
+                                   {:x 0
+                                    :y (- fonttikoko)
+                                    :teksti rivi})))
+                   (update-in [0 :x] + (* tab sisennys))
+                   (update-in [0 :y] + fonttikoko)
+                   (conj {:x (- (* tab sisennys))
+                          :y 0}))))
+      (update-in [0 :y] - fonttikoko))))
 
 (defn rivita-teksti
-  [sisalto ensimmainen-siirtyma fontti bold-fontti fonttikoko vapaa-tila]
-  (update-in
-    (apply (comp vec concat)
-           (map (partial rivita-kappale ensimmainen-siirtyma fontti bold-fontti fonttikoko vapaa-tila)
-                (clojure.string/split-lines sisalto)))
-    [0 :x] + ensimmainen-siirtyma))
+  [sisalto fontti bold-fontti fonttikoko]
+  (apply concat
+         (map (partial rivita-kappale fontti bold-fontti fonttikoko)
+              (clojure.string/split-lines sisalto))))
 
 (defn muodosta-otsikko
   [otsikko]
@@ -136,8 +134,7 @@
   [sisalto fontti bold-fontti]
   (flatten
     [(muodosta-otsikko (-> sisalto :sisalto :otsikko))
-     (rivita-teksti (-> sisalto :sisalto :asiasisalto) sisennys fontti bold-fontti
-                    12 (- (.getWidth sivukoko) vasen-marginaali sisennys oikea-marginaali))]))
+     (rivita-teksti (-> sisalto :sisalto :asiasisalto) fontti bold-fontti 12)]))
 
 (defn lisaa-logo
   [dokumentti sivu]
@@ -161,7 +158,7 @@
 (defn muodosta-footer
   "Footer tulee jokaiselle sivulle. Oletuksena että suhteellinen lähtöpositio on oikea"
   [fontti bold-fontti osat]
-  (rivita-teksti (-> osat :footer :teksti) 0 fontti bold-fontti 8 (- (.getWidth sivukoko) vasen-marginaali oikea-marginaali)))
+  (rivita-teksti (-> osat :footer :teksti) fontti bold-fontti 8))
 
 (defn kirjoita-rivit
   [pdstream rivit koko fontti bold-fontti]
