@@ -18,38 +18,31 @@
 
 (deftest lisaa-elementti-test
   (testing "Ensimmäiseen elementtiin tulee sivunumero"
-    (let [uusi-elementti [{:x 1 :y 2}]]
+    (let [uusi-elementti {:x 1 :y 2}]
       (is (= (lisaa-elementti [] uusi-elementti)
              [{:x 1 :y 2 :sivu 1}]))))
 
   (testing "Kun uusi elementti mahtuu sivulle niin tulee samalle sivulle kun edellinen"
     (let [edellinen [{:sivu 1 :x 0 :y ensimmainen-rivi}]
-          uusi-elementti [{:x 0 :y ensimmainen-rivi}]
+          uusi-elementti {:x 0 :y -12}
           elementit (lisaa-elementti edellinen uusi-elementti)]
       (is (= (count elementit) 2))
       (is (every? #(= 1 (:sivu %)) elementit))))
 
   (testing "Kun uusi elementti ei mahdu sivulle niin se tulee seuraavalle sivulle"
     (let [edellinen [{:sivu 1 :x 0 :y footer-tila}]
-          uusi-elementti [{:x 0 :y ensimmainen-rivi}]
+          uusi-elementti {:x 0 :y -12}
           elementit (lisaa-elementti edellinen uusi-elementti)]
       (is (= (count elementit) 2))
       (is (= (-> elementit last)
-             {:sivu 2 :x 0 :y ensimmainen-rivi}))))
+             {:sivu 2 :x vasen-marginaali :y ensimmainen-rivi}))))
 
   (testing "Kun uusi elementti ei mahdu sivulle niin se tulee seuraavalle sivulle"
     (let [edellinen [{:sivu 1 :x 0 :y footer-tila}]
-          uusi-elementti [{:x 0 :y ensimmainen-rivi}]
+          uusi-elementti {:x 0 :y -12}
           elementit (lisaa-elementti edellinen uusi-elementti)]
       (is (= (-> elementit first :sivu) 1))
-      (is (= (-> elementit last :sivu) 2))))
-
-  (testing "Kun uusi elementti mahtuu sivulle niin koordinaatit muutetaan siirtymiksi suhteessa aikaisempaan elementtiin"
-    (let [edellinen [{:sivu 1 :x 70 :y ensimmainen-rivi}]
-          uusi-elementti [{:x 50.5 :y ensimmainen-rivi}]
-          lisatty-elementti (last (lisaa-elementti edellinen uusi-elementti))]
-      (is (= (:x lisatty-elementti) -19.5))
-      (is (= (:y lisatty-elementti) -12.0)))))
+      (is (= (-> elementit last :sivu) 2)))))
 
 (deftest yhdista-sanat-test
   (with-redefs [aitu.infra.pdf-arkisto/tekstin-pituus (fn [fontti fonttikoko teksti] (count teksti))]
