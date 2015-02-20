@@ -165,7 +165,7 @@
   (doseq [rivi rivit]
     (.moveTextPositionByAmount pdstream (:x rivi) (:y rivi))
     (if (:bold rivi)
-      (.setFont pdstream bold-fontti (- koko 2))
+      (.setFont pdstream bold-fontti (- koko 1))
       (.setFont pdstream fontti koko))
     (when (:teksti rivi) (.drawString pdstream (:teksti rivi)))))
 
@@ -191,7 +191,7 @@
               fonttitiedosto (io/input-stream (io/file (io/resource "pdf-sisalto/ebgaramond/EBGaramond-Regular.ttf")))]
     (let [output (ByteArrayOutputStream.)
           fontti (PDTrueTypeFont/loadTTF dokumentti fonttitiedosto)
-          bold-fontti PDType1Font/HELVETICA_BOLD
+          bold-fontti PDType1Font/TIMES_BOLD
           sivutettu-sisalto (muodosta-osat fontti bold-fontti osat)
           footer (muodosta-footer fontti bold-fontti osat)
           sivut (kirjoita-sisalto dokumentti fontti bold-fontti sivutettu-sisalto footer)]
