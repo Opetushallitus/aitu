@@ -48,7 +48,7 @@
                 viimeinen-x-positio (laske-koordinaatti :x viimeinen-sivu)
                 sivunumero (or sivunumero 1)
                 elementin-korkeus (:y uusi-elementti)
-                mahtuu-sivulle (< footer-tila (- viimeisen-sivun-alareuna elementin-korkeus))
+                mahtuu-sivulle (< footer-tila (+ viimeisen-sivun-alareuna elementin-korkeus))
                 uusi-elementti (assoc uusi-elementti :sivu (if mahtuu-sivulle
                                                              sivunumero
                                                              (inc sivunumero)))]
