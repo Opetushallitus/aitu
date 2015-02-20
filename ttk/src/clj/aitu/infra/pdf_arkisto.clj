@@ -2,7 +2,8 @@
   (:import (org.apache.pdfbox.pdmodel PDPage
                                       PDDocument)
            org.apache.pdfbox.pdmodel.edit.PDPageContentStream
-           org.apache.pdfbox.pdmodel.font.PDTrueTypeFont
+           (org.apache.pdfbox.pdmodel.font PDTrueTypeFont
+                                           PDType1Font)
            org.apache.pdfbox.util.LayerUtility
            java.awt.geom.AffineTransform
            java.io.ByteArrayOutputStream)
@@ -13,6 +14,7 @@
 (def ensimmainen-rivi (- ylamarginaali 12))
 (def vasen-marginaali 57.0)
 (def oikea-marginaali 50.0)
+(def sisennys 128.0)
 (def footer-tila 70.0)
 
 (defn muodosta-header
@@ -75,26 +77,67 @@
 
 (defn jaa-tekstirivi
   [teksti fontti fonttikoko vapaa-tila]
-  (let [sanat (clojure.string/split teksti #"(?<=[^a-zåäöA-ZÅÄÖ_0-9])")]
+  (let [sanat (clojure.string/split teksti #"(?<=\s)")]
     (yhdista-sanat sanat fontti fonttikoko vapaa-tila)))
 
-(defn rivita-teksti
-  [sisalto ensimmainen-siirtyma fontti fonttikoko vapaa-tila]
-  (assoc-in
-    (vec (for [teksti (clojure.string/split-lines sisalto)
-               rivi (jaa-tekstirivi teksti fontti fonttikoko vapaa-tila)]
-           {:x 0
+(defn rivita-kappale
+  [ensimmainen-siirtyma fontti bold-fontti fonttikoko vapaa-tila teksti]
+  (let [[otsikko sisalto] (if (.contains teksti "\t")
+                            (clojure.string/split teksti #"\t")
+                            [nil teksti])
+        bold? (= \* (first sisalto))
+        underline? (= \_ (first sisalto))
+        fonttikoko (if bold?
+                     (- fonttikoko 2)
+                     fonttikoko)
+        fontti (if bold?
+                 bold-fontti
+                 fontti)
+        sisalto (-> sisalto
+                  (clojure.string/replace #"^[*_]" "")
+                  (clojure.string/replace #"[*_]$" ""))]
+    (apply vector
+           {:x (- ensimmainen-siirtyma)
             :y (- fonttikoko)
-            :teksti rivi}))
-    [0 :x] ensimmainen-siirtyma))
+            :bold true
+            :underline false
+            :teksti otsikko}
+           (-> (vec (for [rivi (jaa-tekstirivi sisalto fontti fonttikoko vapaa-tila)]
+                      {:x 0
+                       :y (- fonttikoko)
+                       :teksti rivi
+                       :bold bold?
+                       :underline underline?}))
+             (update-in [0 :x] + ensimmainen-siirtyma)
+             (update-in [0 :y] + fonttikoko)))))
+
+(defn rivita-teksti
+  [sisalto ensimmainen-siirtyma fontti bold-fontti fonttikoko vapaa-tila]
+  (update-in
+    (apply (comp vec concat)
+           (map (partial rivita-kappale ensimmainen-siirtyma fontti bold-fontti fonttikoko vapaa-tila)
+                (clojure.string/split-lines sisalto)))
+    [0 :x] + ensimmainen-siirtyma))
+
+(defn muodosta-otsikko
+  [otsikko]
+  (map-indexed (fn [i rivi]
+                 {:x (if (zero? i)
+                       vasen-marginaali
+                       0)
+                  :y (if (zero? i)
+                       ensimmainen-rivi
+                       -12)
+                  :teksti rivi
+                  :bold true})
+               (clojure.string/split-lines otsikko)))
 
 (defn muodosta-tekstit
-  [sisalto fontti]
+  [sisalto fontti bold-fontti]
   (flatten
-    [{:x vasen-marginaali
-      :y ensimmainen-rivi
-      :teksti (-> sisalto :sisalto :otsikko)}
-     (rivita-teksti (-> sisalto :sisalto :asiasisalto) 128 fontti 12 (- (.getWidth sivukoko) vasen-marginaali 128 oikea-marginaali))]))
+    [(muodosta-otsikko (-> sisalto :sisalto :otsikko))
+     (rivita-teksti (-> sisalto :sisalto :asiasisalto) sisennys fontti bold-fontti
+                    12 (- (.getWidth sivukoko) vasen-marginaali sisennys oikea-marginaali))]))
 
 (defn lisaa-logo
   [dokumentti sivu]
@@ -110,36 +153,37 @@
       (.appendFormAsLayer layer sivu logo aft "OPH-LOGO"))))
 
 (defn muodosta-osat
-  [fontti osat]
+  [fontti bold-fontti osat]
   (reduce lisaa-elementti []
           [(muodosta-header (:otsikko osat))
-           (muodosta-tekstit (:teksti osat) fontti)]))
+           (muodosta-tekstit (:teksti osat) fontti bold-fontti)]))
 
 (defn muodosta-footer
   "Footer tulee jokaiselle sivulle. Oletuksena että suhteellinen lähtöpositio on oikea"
-  [fontti osat]
-  (rivita-teksti (-> osat :footer :teksti) 0 fontti 8 (- (.getWidth sivukoko) vasen-marginaali oikea-marginaali)))
+  [fontti bold-fontti osat]
+  (rivita-teksti (-> osat :footer :teksti) 0 fontti bold-fontti 8 (- (.getWidth sivukoko) vasen-marginaali oikea-marginaali)))
 
 (defn kirjoita-rivit
-  [pdstream rivit]
+  [pdstream rivit koko fontti bold-fontti]
   (doseq [rivi rivit]
     (.moveTextPositionByAmount pdstream (:x rivi) (:y rivi))
+    (if (:bold rivi)
+      (.setFont pdstream bold-fontti (- koko 2))
+      (.setFont pdstream fontti koko))
     (when (:teksti rivi) (.drawString pdstream (:teksti rivi)))))
 
 (defn kirjoita-sisalto
   "Kirjoittaa valmiiksi sivutetun ja rivitetyn sisällön PDPage sivuihin ja palauttaa sivut"
-  [dokumentti fontti sivutettu-sisalto footer]
+  [dokumentti fontti bold-fontti sivutettu-sisalto footer]
   (for [[sivunumero sivun-rivit] (sort-by key (group-by :sivu sivutettu-sisalto))]
     (let [pdfsivu (PDPage. sivukoko)]
       (with-open [pdstream (PDPageContentStream. dokumentti pdfsivu)]
         (when (= 1 sivunumero) (lisaa-logo dokumentti pdfsivu))
         (doto pdstream
-          (.setFont fontti 12)
           (.beginText)
-          (kirjoita-rivit sivun-rivit)
+          (kirjoita-rivit sivun-rivit 12 fontti bold-fontti)
           (.moveTextPositionByAmount (- vasen-marginaali (laske-koordinaatti :x sivun-rivit)) (- footer-tila (laske-koordinaatti :y sivun-rivit))) ; siirrytään footerin alkuun
-          (.setFont fontti 8)
-          (kirjoita-rivit footer)
+          (kirjoita-rivit footer 8 fontti bold-fontti)
           (.endText)
           (.drawLine vasen-marginaali footer-tila (- (.getWidth sivukoko) oikea-marginaali) footer-tila)))
       pdfsivu)))
@@ -150,9 +194,10 @@
               fonttitiedosto (io/input-stream (io/file (io/resource "pdf-sisalto/ebgaramond/EBGaramond-Regular.ttf")))]
     (let [output (ByteArrayOutputStream.)
           fontti (PDTrueTypeFont/loadTTF dokumentti fonttitiedosto)
-          sivutettu-sisalto (muodosta-osat fontti osat)
-          footer (muodosta-footer fontti osat)
-          sivut (kirjoita-sisalto dokumentti fontti sivutettu-sisalto footer)]
+          bold-fontti PDType1Font/HELVETICA_BOLD
+          sivutettu-sisalto (muodosta-osat fontti bold-fontti osat)
+          footer (muodosta-footer fontti bold-fontti osat)
+          sivut (kirjoita-sisalto dokumentti fontti bold-fontti sivutettu-sisalto footer)]
       (doseq [sivu sivut]
         (.addPage dokumentti sivu))
       (.save dokumentti output)
