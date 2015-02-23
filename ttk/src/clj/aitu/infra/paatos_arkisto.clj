@@ -39,15 +39,15 @@
                            (sort-by (juxt :sukunimi :etunimi))
                            (map muotoile-jasen)
                            (group-by :edustus))
-        jasenet (filter #(seq (:jasen %))
+        jasenet (filter (comp seq :jasen)
                         [{:edustus "Työnantajien edustajat"
                           :jasen (edustus->jasenet "tyonantaja")}
-                        {:edustus "Työntekijöiden edustajat"
-                         :jasen (edustus->jasenet "tyontekija")}
-                        {:edustus "Opettajien edustajat"
-                         :jasen (edustus->jasenet "opettaja")}
-                        {:edustus "Muut edustajat"
-                         :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])
+                         {:edustus "Työntekijöiden edustajat"
+                          :jasen (edustus->jasenet "tyontekija")}
+                         {:edustus "Opettajien edustajat"
+                          :jasen (edustus->jasenet "opettaja")}
+                         {:edustus "Muut edustajat"
+                          :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])
         toimiala (for [tutkinto (:nayttotutkinto toimikunta)]
                    (select-keys tutkinto [:nimi_fi]))]
     (luo-paatos {:teksti "PÄÄTÖS"
@@ -66,15 +66,15 @@
                            (sort-by (juxt :sukunimi :etunimi))
                            (map muotoile-jasen)
                            (group-by :edustus))
-        jasenet (filter #(seq (:jasen %))
-                        [{:edustus "Työnantajien edustajat"
+        jasenet (filter (comp seq :jasen)
+                        [{:edustus "Työnantajien edustaja"
                           :jasen (edustus->jasenet "tyonantaja")}
-                        {:edustus "Työntekijöiden edustajat"
-                         :jasen (edustus->jasenet "tyontekija")}
-                        {:edustus "Opettajien edustajat"
-                         :jasen (edustus->jasenet "opettaja")}
-                        {:edustus "Muut edustajat"
-                         :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])]
+                         {:edustus "Työntekijöiden edustaja"
+                          :jasen (edustus->jasenet "tyontekija")}
+                         {:edustus "Opettajien edustaja"
+                          :jasen (edustus->jasenet "opettaja")}
+                         {:edustus "Muu edustaja"
+                          :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])]
     (luo-paatos {:teksti "PÄÄTÖS"
                  :paivays (:paivays data)
                  :diaarinumero diaarinumero}
