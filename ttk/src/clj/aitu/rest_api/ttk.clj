@@ -118,6 +118,20 @@
             pdf (paatos-arkisto/luo-asettamispaatos diaarinumero data)]
         (if lataa
           (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
+          (pdf-response pdf)))))
+  (POST ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+    (cu/autorisoitu-transaktio :paatos nil
+      (let [data {:paivays paivays
+                  :esittelija {:asema (s/split-lines esittelijan_asema)
+                               :nimi esittelija}
+                  :hyvaksyja {:asema (s/split-lines hyvaksyjan_asema)
+                              :nimi hyvaksyja}
+                  :jakelu (s/split-lines jakelu)
+                  :tiedoksi (s/split-lines tiedoksi)
+                  :jasenet jasenet}
+            pdf (paatos-arkisto/luo-taydennyspaatos diaarinumero data)]
+        (if lataa
+          (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf))))))
 
 (defroutes raportti-reitit

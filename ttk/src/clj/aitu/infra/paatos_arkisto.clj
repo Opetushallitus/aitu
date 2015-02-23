@@ -13,7 +13,8 @@
 
 (defn luo-paatos [header pohja data]
   (let [pohja-file (case pohja
-                     :asettamispaatos "pdf-sisalto/mustache/asettamispaatos.mustache")
+                     :asettamispaatos "pdf-sisalto/mustache/asettamispaatos.mustache"
+                     :taydennyspaatos "pdf-sisalto/mustache/taydennyspaatos.mustache")
         pohja-string (slurp (io/resource pohja-file))
         footer-string (slurp (io/resource "pdf-sisalto/mustache/footer.mustache"))]
     (pdf-arkisto/muodosta-pdf {:otsikko header
@@ -56,3 +57,26 @@
                 (assoc data :toimikunta (assoc toimikunta :jasen jasenet
                                                           :kieli (muotoile-kieli (:kielisyys toimikunta))
                                                           :toimiala toimiala)))))
+
+(defn luo-taydennyspaatos [diaarinumero data]
+  (let [toimikunta (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
+                                           [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
+        jasenet (map ttk-arkisto/hae-jasen-ja-henkilo (:jasenet data))
+        edustus->jasenet (->> jasenet
+                           (sort-by (juxt :sukunimi :etunimi))
+                           (map muotoile-jasen)
+                           (group-by :edustus))
+        jasenet (filter #(seq (:jasen %))
+                        [{:edustus "Työnantajien edustajat"
+                          :jasen (edustus->jasenet "tyonantaja")}
+                        {:edustus "Työntekijöiden edustajat"
+                         :jasen (edustus->jasenet "tyontekija")}
+                        {:edustus "Opettajien edustajat"
+                         :jasen (edustus->jasenet "opettaja")}
+                        {:edustus "Muut edustajat"
+                         :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])]
+    (luo-paatos {:teksti "PÄÄTÖS"
+                 :paivays (:paivays data)
+                 :diaarinumero diaarinumero}
+                :taydennyspaatos
+                (assoc data :toimikunta (assoc toimikunta :jasen jasenet)))))

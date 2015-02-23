@@ -26,7 +26,7 @@
             [clojure-csv.core :refer [write-csv]]))
 
 (defn update-in-if-exists [m [k & ks] f & args]
-  (if (and (map? m) (contains? m k))
+  (if (and (associative? m) (contains? m k))
     (if ks
       (assoc m k (apply update-in-if-exists (get m k) ks f args))
       (assoc m k (apply f (get m k) args)))

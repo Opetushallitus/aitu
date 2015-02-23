@@ -213,6 +213,18 @@
     (sql/select jasenyys
       (sql/where {:jasenyys_id jasenyysid}))))
 
+(defn hae-jasen-ja-henkilo
+  "Hakee toimikunnan jäsenen henkilötietoineen jasenyysid:n perusteella"
+  [jasenyysid]
+  (first
+    (sql/select jasenyys
+      (sql/fields :alkupvm :loppupvm :rooli :edustus :jasenyys_id :henkiloid)
+      (sql/with henkilo
+        (sql/fields :etunimi :sukunimi :sahkoposti :sahkoposti_julkinen :aidinkieli)
+        (sql/with jarjesto
+          (sql/fields [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv])))
+      (sql/where {:jasenyys_id jasenyysid}))))
+
 (defn ^:private poista-jasenyys!
   [tkunta jasenyys_id]
   (auditlog/jasenyys-operaatio! :poisto tkunta jasenyys_id)

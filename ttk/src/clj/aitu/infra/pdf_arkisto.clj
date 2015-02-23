@@ -8,7 +8,8 @@
            java.awt.geom.AffineTransform
            (java.io ByteArrayOutputStream
                     ByteArrayInputStream))
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [aitu.util :refer [update-in-if-exists]]))
 
 (def sivukoko (PDPage/PAGE_SIZE_A4))
 (def ylamarginaali (- (.getUpperRightY sivukoko) 28))
@@ -105,14 +106,14 @@
                                     fontti)]]
                  (-> (vec (for [rivi (jaa-tekstirivi (:teksti osa) fontti fonttikoko vapaa-tila)]
                             (merge osa
-                                   {:x 0
-                                    :y (- fonttikoko)
-                                    :teksti rivi})))
+                                  {:x 0
+                                   :y (- fonttikoko)
+                                   :teksti rivi})))
                    (update-in [0 :x] + (* tab sisennys))
                    (update-in [0 :y] + fonttikoko)
                    (conj {:x (- (* tab sisennys))
                           :y 0}))))
-      (update-in [0 :y] - fonttikoko))))
+      (update-in-if-exists [0 :y] - fonttikoko))))
 
 (defn rivita-teksti
   [sisalto fontti bold-fontti fonttikoko]
