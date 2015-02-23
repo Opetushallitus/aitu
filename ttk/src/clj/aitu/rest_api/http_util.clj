@@ -42,6 +42,14 @@
 (defn csv-download-response [data filename]
   (textfile-download-response data filename "text/csv" {:charset "CP1252"}))
 
+(defn pdf-response
+  ([data]
+    {:status 200
+     :body data
+     :headers {"Content-Type" "application/pdf"}})
+  ([data filename]
+    (assoc-in (pdf-response data) [:headers "Content-Disposition"] (str "attachment; filename=\"" filename "\""))))
+
 (defn tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin [surrogaattiavaimeen_liittyva_entity_id entity_id]
   (if (= surrogaattiavaimeen_liittyva_entity_id entity_id)
     true
