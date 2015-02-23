@@ -1,0 +1,33 @@
+*{{toimikunta.nimi_fi}}*
+*{{toimikunta.nimi_sv}}*
+
+
+	Opetushallitus on päättänyt ammatillisesta aikuiskoulutuksesta annetun lain (631/1998) 7 §:n ja ammatillisesta aikuiskoulutuksesta annetun asetuksen (812/1998) 2 §:n nojalla muuttaa toimikaudeksi {{toimikunta.alkupvm}} - {{toimikunta.loppupvm}} asetetun tutkintotoimikunnan kokoonpanoa seuraavasti:
+
+{{#toimikunta.jasen}}	*{{edustus}} ({{korvattu}} tilalle)*
+
+{{#jasen}}
+	*{{nimi}}*
+	{{jarjesto}}
+
+{{/jasen}}
+{{/toimikunta.jasen}}
+
+
+
+
+
+{{#esittelija.asema}}
+	{{.}}{{/esittelija.asema}}	{{esittelija.nimi}}
+
+
+{{#hyvaksyja.asema}}
+	{{.}}{{/hyvaksyja.asema}}	{{hyvaksyja.nimi}}
+
+
+
+JAKELU{{#jakelu}}	{{.}}
+{{/jakelu}}
+
+TIEDOKSI{{#tiedoksi}}	{{.}}
+{{/tiedoksi}}

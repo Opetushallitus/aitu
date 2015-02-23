@@ -14,7 +14,8 @@
 (defn luo-paatos [header pohja data]
   (let [pohja-file (case pohja
                      :asettamispaatos "pdf-sisalto/mustache/asettamispaatos.mustache"
-                     :taydennyspaatos "pdf-sisalto/mustache/taydennyspaatos.mustache")
+                     :taydennyspaatos "pdf-sisalto/mustache/taydennyspaatos.mustache"
+                     :muutospaatos "pdf-sisalto/mustache/muutospaatos.mustache")
         pohja-string (slurp (io/resource pohja-file))
         footer-string (slurp (io/resource "pdf-sisalto/mustache/footer.mustache"))]
     (pdf-arkisto/muodosta-pdf {:otsikko header
@@ -79,4 +80,27 @@
                  :paivays (:paivays data)
                  :diaarinumero diaarinumero}
                 :taydennyspaatos
+                (assoc data :toimikunta (assoc toimikunta :jasen jasenet)))))
+
+(defn luo-muutospaatos [diaarinumero data]
+  (let [toimikunta (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
+                                           [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
+        jasenet (map ttk-arkisto/hae-jasen-ja-henkilo (:jasenet data))
+        edustus->jasenet (->> jasenet
+                           (sort-by (juxt :sukunimi :etunimi))
+                           (map muotoile-jasen)
+                           (group-by :edustus))
+        jasenet (filter (comp seq :jasen)
+                        [{:edustus "Työnantajien edustaja"
+                          :jasen (edustus->jasenet "tyonantaja")}
+                         {:edustus "Työntekijöiden edustaja"
+                          :jasen (edustus->jasenet "tyontekija")}
+                         {:edustus "Opettajien edustaja"
+                          :jasen (edustus->jasenet "opettaja")}
+                         {:edustus "Muu edustaja"
+                          :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])]
+    (luo-paatos {:teksti "PÄÄTÖS"
+                 :paivays (:paivays data)
+                 :diaarinumero diaarinumero}
+                :muutospaatos
                 (assoc data :toimikunta (assoc toimikunta :jasen jasenet)))))
