@@ -6,7 +6,8 @@
                                            PDType1Font)
            org.apache.pdfbox.util.LayerUtility
            java.awt.geom.AffineTransform
-           java.io.ByteArrayOutputStream)
+           (java.io ByteArrayOutputStream
+                    ByteArrayInputStream))
   (:require [clojure.java.io :as io]))
 
 (def sivukoko (PDPage/PAGE_SIZE_A4))
@@ -195,4 +196,4 @@
       (doseq [sivu sivut]
         (.addPage dokumentti sivu))
       (.save dokumentti output)
-      output)))
+      (ByteArrayInputStream. (.toByteArray output)))))
