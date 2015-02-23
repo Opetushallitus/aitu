@@ -9,7 +9,7 @@
 
 (defn tallenna-pdf [filename pdf]
   (with-open [out (io/output-stream (io/as-file filename))]
-    (.writeTo pdf out)))
+    (io/copy pdf out)))
 
 (defn luo-paatos [header pohja data]
   (let [pohja-file (case pohja
@@ -22,7 +22,8 @@
 
 (defn ^:private muotoile-jasen [jasen]
   {:nimi (str (:etunimi jasen) " " (:sukunimi jasen))
-   :jarjesto (:jarjesto_nimi_fi jasen)})
+   :jarjesto (:jarjesto_nimi_fi jasen)
+   :edustus (:edustus jasen)})
 
 (def ^:private muotoile-kieli
   {"fi" "suomi"
@@ -33,16 +34,19 @@
   (let [toimikunta (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
                                            [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]
                                             :tilikoodi :kielisyys [:toimiala :toimialue] :nayttotutkinto :jasenyys])
-        edustus->jasenet (group-by :edustus (sort-by (juxt :sukunimi :etunimi) (:jasenyys toimikunta)))
+        edustus->jasenet (->> (:jasenyys toimikunta)
+                           (sort-by (juxt :sukunimi :etunimi))
+                           (map muotoile-jasen)
+                           (group-by :edustus))
         jasenet (filter #(seq (:jasen %))
                         [{:edustus "Työnantajien edustajat"
-                          :jasen (map muotoile-jasen (edustus->jasenet "tyonantaja"))}
+                          :jasen (edustus->jasenet "tyonantaja")}
                         {:edustus "Työntekijöiden edustajat"
-                         :jasen (map muotoile-jasen (edustus->jasenet "tyontekija"))}
+                         :jasen (edustus->jasenet "tyontekija")}
                         {:edustus "Opettajien edustajat"
-                         :jasen (map muotoile-jasen (edustus->jasenet "opettaja"))}
+                         :jasen (edustus->jasenet "opettaja")}
                         {:edustus "Muut edustajat"
-                         :jasen (map muotoile-jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"]))}])
+                         :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])
         toimiala (for [tutkinto (:nayttotutkinto toimikunta)]
                    (select-keys tutkinto [:nimi_fi]))]
     (luo-paatos {:teksti "PÄÄTÖS"
