@@ -150,8 +150,67 @@
 </div>
 
 <div class="modal-window tulosta-paatos ng-hide" ng-show="tulostaPaatosModal">
-  <div class="backdrop"></div>
   <button class="icon delete-icon sulje" ng-click="hideTulostaPaatosModal()"></button>
+  <h2>Tulosta asettamispäätös</h2>
+  <hr>
+  <form name="tulostapaatosForm">
+    <fieldset>
+      Valitse päätöksen kieli <br />
+      <label>
+        <input type="radio" name="paatos_kieli" value="fi">
+        Suomi
+
+      </label>
+      <label>
+        <input type="radio" name="paatos_kieli" value="sv">
+        Ruotsi
+      </label>
+    </fieldset>
+
+    <div>
+      <pvm-valitsin pakollinen="true" valittu-pvm="toimikunta.toimikausi_alku" min-pvm="toimikunta.alkupvm" otsikko="Päätöspäivämäärä"></pvm-valitsin>
+    </div>
+
+    <fieldset>
+      <label>Päätösteksti</label>
+      <textarea></textarea>
+    </fieldset>
+
+    <section class="info-section">
+      <fieldset>
+        <label class="pakollinen">Päättäjä</label>
+        <input ng-required="true" type="text">
+      </fieldset>
+      <fieldset>
+        <label class="pakollinen">Virkanimike</label>
+        <input ng-required="true" type="text">
+      </fieldset>
+    </section>
+
+    <section class="info-section">
+      <fieldset>
+        <label class="pakollinen">Esittelijä</label>
+        <input ng-required="true" type="text">
+      </fieldset>
+      <fieldset>
+        <label class="pakollinen">Virkanimike</label>
+        <input ng-required="true" type="text">
+      </fieldset>
+    </section>
+
+    <section class="info-section">
+      <fieldset>
+        <label class="pakollinen">Jakelu</label>
+        <textarea></textarea>
+      </fieldset>
+      <fieldset>
+        <label class="pakollinen">Tiedoksi</label>
+        <textarea></textarea>
+      </fieldset>
+    </section>
+
+    <tallenna formi-validi="tulostapaatosForm.$valid" ng-click="esikatselePaatos()" teksti="'Esikatsele'"></tallenna>
+  </form>
 </div>
 <div class="modal-backdrop" ng-show="tulostaPaatosModal">
 
