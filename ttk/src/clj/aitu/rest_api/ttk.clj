@@ -17,7 +17,8 @@
             schema.core
             [aitu.infra.ttk-arkisto :as arkisto]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
-            [aitu.rest-api.http-util :refer [csv-download-response]]
+            [aitu.infra.paatos-arkisto :as paatos-arkisto]
+            [aitu.rest-api.http-util :refer [csv-download-response pdf-response]]
             [valip.predicates :refer [present?]]
             [aitu.infra.i18n :as i18n]
             [aitu.infra.validaatio :as val]
@@ -28,7 +29,8 @@
                      json-response parse-iso-date sallittu-jos cachable-json-response]]
             [aitu.compojure-util :as cu]
             [compojure.api.sweet :refer :all]
-            [aitu.util :refer [muodosta-csv ->vector]]))
+            [aitu.util :refer [muodosta-csv ->vector]]
+            [clojure.string :as s]))
 
 (defn salli-toimikunnan-paivitys? [diaarinumero]
   (some->
@@ -101,6 +103,22 @@
 
 (def raporttikenttien-jarjestys [:diaarinumero :toimikunta_fi :toimikunta_sv :tilikoodi :kielisyys
                                  :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv])
+
+(defroutes paatos-reitit
+  (POST ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi kokoonkutsuja lataa]
+    (cu/autorisoitu-transaktio :paatos nil
+      (let [data {:paivays paivays
+                  :esittelija {:asema (s/split-lines esittelijan_asema)
+                               :nimi esittelija}
+                  :hyvaksyja {:asema (s/split-lines hyvaksyjan_asema)
+                              :nimi hyvaksyja}
+                  :jakelu (s/split-lines jakelu)
+                  :tiedoksi (s/split-lines tiedoksi)
+                  :kokoonkutsuja kokoonkutsuja}
+            pdf (paatos-arkisto/luo-asettamispaatos diaarinumero data)]
+        (if lataa
+          (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
+          (pdf-response pdf))))))
 
 (defroutes raportti-reitit
   (GET "/tilastoraportti" [toimikausi]
@@ -245,4 +263,5 @@
     :return [Toimikunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (cachable-json-response req (arkisto/hae-termilla (:termi params)))))
-  private-reitit)
+  private-reitit
+  paatos-reitit)
