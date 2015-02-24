@@ -133,7 +133,7 @@
         (if lataa
           (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (POST ["/:diaarinumero/muutospatos" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+  (POST ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
