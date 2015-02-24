@@ -24,6 +24,7 @@
             [aitu.infra.validaatio :as val]
             [aitu.toimiala.toimikunta :as toimikunta]
             [aitu.toimiala.skeema :refer :all]
+            [aitu.asetukset :refer [asetukset]]
             [oph.common.util.http-util :refer [validoi validoi-entity-saannoilla
                      luo-validoinnin-virhevastaus cachable-json-response
                      json-response parse-iso-date sallittu-jos cachable-json-response]]
@@ -105,6 +106,9 @@
                                  :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv])
 
 (defroutes paatos-reitit
+  (GET "/paatospohja-oletukset" []
+    (cu/autorisoitu-transaktio :paatos nil
+      (json-response (:paatospohja-oletukset @asetukset))))
   (POST ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi kokoonkutsuja lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays

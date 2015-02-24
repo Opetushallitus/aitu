@@ -28,6 +28,14 @@
 
 (def asetukset (promise))
 
+(def ^:private paatospohja {:esittelija {:asema s/Str
+                                         :nimi s/Str}
+                            :hyvaksyja {:asema s/Str
+                                        :nimi s/Str}
+                            :jakelu s/Str
+                            :tiedoksi s/Str
+                            (s/optional-key :jarjestaytyminen) s/Str})
+
 (def Asetukset {:server {:port s/Int
                          :base-url s/Str
                          :pool-size s/Int}
@@ -54,7 +62,13 @@
                 :development-mode Boolean
                 :ominaisuus {:proto Boolean}
                 :log4j {:properties-file s/Str
-                        :refresh-interval s/Int}})
+                        :refresh-interval s/Int}
+                :paatospohja-oletukset {:esittelija {:asema s/Str
+                                                     :nimi s/Str}
+                                        :hyvaksyja {:asema s/Str
+                                                    :nimi s/Str}
+                                        :jakelu s/Str
+                                        :jarjestaytyminen s/Str}})
 
 (defn string->boolean [x]
   (case x
@@ -96,7 +110,12 @@
                          :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
                          :ominaisuus {:proto false}
                          :log4j {:properties-file "resources/log4j.properties" :refresh-interval 3000} ; päivitä log4j asetukset kerran kolmessa sekunnissa dynaamisesti
-                         }))
+                         :paatospohja-oletukset {:esittelija {:asema ""
+                                                              :nimi ""}
+                                                 :hyvaksyja {:asema ""
+                                                             :nimi ""}
+                                                 :jakelu ""
+                                                 :jarjestaytyminen ""}}))
 
 (def build-id (delay (if-let [r (resource "build-id.txt")]
                        (.trim (slurp r))
