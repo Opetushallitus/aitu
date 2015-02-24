@@ -20,18 +20,8 @@
       <label>[[voimassa]]</label>
       <p>{{sopimus.alkupvm | voimassaoloAika: sopimus.loppupvm}}</p>
     </fieldset>
-    <fieldset>
-      <label>[[yhteyshenkilo]]</label>
-      <div>{{sopimus.vastuuhenkilo}}</div>
-      <div><a href="mailto:{{sopimus.sahkoposti}}">{{sopimus.sahkoposti}}</a></div>
-      <div>{{sopimus.puhelin}}</div>
-    </fieldset>
   </div>
   <div>
-    <fieldset>
-      <label>[[sopijatoimikunta]]</label>
-      <a href="#/toimikunta/{{sopimus.sopijatoimikunta.diaarinumero}}/tiedot">{{sopimus.sopijatoimikunta.nimi | nimivuosi:sopimus.sopijatoimikunta:'nimi':'toimikausi_alku'}}</a>
-    </fieldset>
     <fieldset>
       <label>[[nykyinen-toimikunta]]</label>
       <a href="#/toimikunta/{{sopimus.toimikunta.diaarinumero}}/tiedot">{{sopimus.toimikunta.nimi | nimivuosi:sopimus.toimikunta:'nimi':'toimikausi_alku'}}</a>
@@ -43,9 +33,24 @@
   </div>
   <div>
     <fieldset>
+      <label>[[sopijatoimikunta]]</label>
+      <a href="#/toimikunta/{{sopimus.sopijatoimikunta.diaarinumero}}/tiedot">{{sopimus.sopijatoimikunta.nimi | nimivuosi:sopimus.sopijatoimikunta:'nimi':'toimikausi_alku'}}</a>
+    </fieldset>
+    <fieldset>
       <label>[[tutkintotilaisuuksista-vastaava-oppilaitos]]</label>
       <p><a href="#/oppilaitos/{{sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.oppilaitoskoodi}}/tiedot">{{sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi}}</a></p>
     </fieldset>
+  </div>
+  <div>
+    <fieldset></fieldset>
+    <fieldset>
+      <label>[[yhteyshenkilo]]</label>
+      <div>{{sopimus.vastuuhenkilo}}</div>
+      <div><a href="mailto:{{sopimus.sahkoposti}}">{{sopimus.sahkoposti}}</a></div>
+      <div>{{sopimus.puhelin}}</div>
+    </fieldset>
+  </div>
+  <div>
     <luotu model="sopimus"></luotu>
     <muutettu model="sopimus"></muutettu>
   </div>
