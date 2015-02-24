@@ -168,6 +168,17 @@
       (.setFont pdstream fontti koko))
     (when (:teksti rivi) (.drawString pdstream (:teksti rivi)))))
 
+(defn alleviivaa-rivit [stream rivit fonttikoko fontti]
+  (reduce (fn [tila rivi]
+            (let [tila (merge-with + tila (select-keys rivi [:x :y]))]
+              (when (:underline rivi)
+                (let [{:keys [x y]} tila
+                      pituus (tekstin-pituus fontti fonttikoko (:teksti rivi))]
+                  (.drawLine stream x (- y 2) (+ x pituus) (- y 2))))
+              tila))
+          {:x 0 :y 0}
+          rivit))
+
 (defn kirjoita-sisalto
   "Kirjoittaa valmiiksi sivutetun ja rivitetyn sisällön PDPage sivuihin ja palauttaa sivut"
   [dokumentti fontti bold-fontti sivutettu-sisalto footer]
@@ -178,9 +189,10 @@
         (doto pdstream
           (.beginText)
           (kirjoita-rivit sivun-rivit 12 fontti bold-fontti)
-          (.moveTextPositionByAmount (- vasen-marginaali (laske-koordinaatti :x sivun-rivit)) (- footer-tila (laske-koordinaatti :y sivun-rivit))) ; siirrytään footerin alkuun
+          (.setTextMatrix 1 0 0 1 vasen-marginaali footer-tila) ; siirrytään footerin alkuun
           (kirjoita-rivit footer 8 fontti bold-fontti)
           (.endText)
+          (alleviivaa-rivit sivun-rivit 12 fontti)
           (.drawLine vasen-marginaali footer-tila (- (.getWidth sivukoko) oikea-marginaali) footer-tila)))
       pdfsivu)))
 
