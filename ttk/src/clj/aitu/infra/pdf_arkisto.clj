@@ -30,7 +30,7 @@
     :teksti (:paivays otsikko)}
    {:x 135
     :y 0
-    :teksti (:dnro otsikko)}
+    :teksti (:diaarinumero otsikko)}
    ;; lopuksi headerin marginaali
    {:x (- 0 262 135)
     :y (- (* 3 12))}])
