@@ -109,7 +109,7 @@
   (GET "/paatospohja-oletukset" []
     (cu/autorisoitu-transaktio :paatos nil
       (json-response (:paatospohja-oletukset @asetukset))))
-  (POST ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi kokoonkutsuja lataa]
+  (POST ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi kokoonkutsuja lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -119,11 +119,11 @@
                   :jakelu (s/split-lines jakelu)
                   :tiedoksi (s/split-lines tiedoksi)
                   :kokoonkutsuja kokoonkutsuja}
-            pdf (paatos-arkisto/luo-asettamispaatos diaarinumero data)]
+            pdf (paatos-arkisto/luo-asettamispaatos (keyword kieli) diaarinumero data)]
         (if lataa
           (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (POST ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+  (POST ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasenet paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -133,11 +133,11 @@
                   :jakelu (s/split-lines jakelu)
                   :tiedoksi (s/split-lines tiedoksi)
                   :jasenet jasenet}
-            pdf (paatos-arkisto/luo-taydennyspaatos diaarinumero data)]
+            pdf (paatos-arkisto/luo-taydennyspaatos (keyword kieli) diaarinumero data)]
         (if lataa
           (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (POST ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+  (POST ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasenet korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -148,7 +148,7 @@
                   :tiedoksi (s/split-lines tiedoksi)
                   :jasenet jasenet
                   :korvattu korvattu}
-            pdf (paatos-arkisto/luo-muutospaatos diaarinumero data)]
+            pdf (paatos-arkisto/luo-muutospaatos (keyword kieli) diaarinumero data)]
         (if lataa
           (pdf-response pdf (str "muutospaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf))))))
