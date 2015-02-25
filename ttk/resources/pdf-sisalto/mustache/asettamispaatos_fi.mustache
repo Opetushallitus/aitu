@@ -1,0 +1,49 @@
+*{{toimikunta.nimi_fi}}*
+*{{toimikunta.nimi_sv}}*
+
+
+	Opetushallitus on päättänyt ammatillisesta aikuiskoulutuksesta annetun lain (631/1998) 7 §:n ja ammatillisesta aikuiskoulutuksesta annetun asetuksen (812/1998) 2 §:n nojalla asettaa tutkintotoimikunnan seuraavasti:
+
+*Toimiala*{{#toimikunta.toimiala}}	{{.}}
+{{/toimikunta.toimiala}}
+
+*Toimialue*	Valtakunnallinen
+
+*Kieli*	{{toimikunta.kieli}}
+
+*Toimikausi*	{{toimikunta.alkupvm}} - {{toimikunta.loppupvm}}
+
+*Toimikunnan numero*	{{toimikunta.tilikoodi}}
+
+*Kokoonpano*
+
+*Jäsenet*{{#toimikunta.jasen}}	_{{edustus}}_
+
+{{#jasen}}
+	*{{nimi}}*
+	{{jarjesto}}
+
+{{/jasen}}
+{{/toimikunta.jasen}}
+
+	{{jarjestaytyminen}}
+
+
+
+
+{{#esittelija.asema}}
+
+	{{.}}{{/esittelija.asema}}	{{esittelija.nimi}}
+
+
+{{#hyvaksyja.asema}}
+
+	{{.}}{{/hyvaksyja.asema}}	{{hyvaksyja.nimi}}
+
+
+
+JAKELU{{#jakelu}}	{{.}}
+{{/jakelu}}
+
+TIEDOKSI{{#tiedoksi}}	{{.}}
+{{/tiedoksi}}
