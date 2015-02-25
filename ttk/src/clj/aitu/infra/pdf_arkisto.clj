@@ -179,22 +179,34 @@
           {:x 0 :y 0}
           rivit))
 
+(defn kirjoita-sivunumero
+  [stream sivu viimeinen-sivu fonttikoko fontti]
+  (let [teksti (str sivu "/" viimeinen-sivu)
+        pituus (tekstin-pituus fontti fonttikoko teksti)]
+    (doto stream
+      (.setTextMatrix 1 0 0 1 (- (.getUpperRightX sivukoko) oikea-marginaali pituus) ensimmainen-rivi)
+      (.setFont fontti fonttikoko)
+      (.drawString teksti))))
+
 (defn kirjoita-sisalto
   "Kirjoittaa valmiiksi sivutetun ja rivitetyn sisällön PDPage sivuihin ja palauttaa sivut"
   [dokumentti fontti bold-fontti sivutettu-sisalto footer]
-  (for [[sivunumero sivun-rivit] (sort-by key (group-by :sivu sivutettu-sisalto))]
-    (let [pdfsivu (PDPage. sivukoko)]
-      (with-open [pdstream (PDPageContentStream. dokumentti pdfsivu)]
-        (when (= 1 sivunumero) (lisaa-logo dokumentti pdfsivu))
-        (doto pdstream
-          (.beginText)
-          (kirjoita-rivit sivun-rivit 12 fontti bold-fontti)
-          (.setTextMatrix 1 0 0 1 vasen-marginaali footer-tila) ; siirrytään footerin alkuun
-          (kirjoita-rivit footer 8 fontti bold-fontti)
-          (.endText)
-          (alleviivaa-rivit sivun-rivit 12 fontti)
-          (.drawLine vasen-marginaali footer-tila (- (.getWidth sivukoko) oikea-marginaali) footer-tila)))
-      pdfsivu)))
+  (let [sivut (sort-by key (group-by :sivu sivutettu-sisalto))
+        viimeinen-sivu (reduce max 0 (keys sivut))]
+    (for [[sivunumero sivun-rivit] sivut]
+      (let [pdfsivu (PDPage. sivukoko)]
+        (with-open [pdstream (PDPageContentStream. dokumentti pdfsivu)]
+          (when (= 1 sivunumero) (lisaa-logo dokumentti pdfsivu))
+          (doto pdstream
+            (.beginText)
+            (kirjoita-rivit sivun-rivit 12 fontti bold-fontti)
+            (.setTextMatrix 1 0 0 1 vasen-marginaali footer-tila) ; siirrytään footerin alkuun
+            (kirjoita-rivit footer 8 fontti bold-fontti)
+            (kirjoita-sivunumero sivunumero viimeinen-sivu 12 fontti)
+            (.endText)
+            (alleviivaa-rivit sivun-rivit 12 fontti)
+            (.drawLine vasen-marginaali footer-tila (- (.getWidth sivukoko) oikea-marginaali) footer-tila)))
+        pdfsivu))))
 
 (defn muodosta-pdf
   [osat]
