@@ -46,10 +46,15 @@
     ["2k" :fi] "suomi, ruotsi"
     ["2k" :sv] "finska, svenska"))
 
+(defn ^:private muotoile-pvm [pvm]
+  (.toString pvm "dd.MM.yyyy"))
+
 (defn luo-asettamispaatos [kieli diaarinumero data]
-  (let [toimikunta (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
-                                           [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]
-                                            :tilikoodi :kielisyys [:toimiala :toimialue] :nayttotutkinto :jasenyys])
+  (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
+                                              [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]
+                                               :tilikoodi :kielisyys [:toimiala :toimialue] :nayttotutkinto :jasenyys])
+                     (update-in [:alkupvm] muotoile-pvm)
+                     (update-in [:loppupvm] muotoile-pvm))
         edustus->jasenet (->> (:jasenyys toimikunta)
                            (sort-by (juxt :sukunimi :etunimi))
                            (map (partial muotoile-jasen kieli))
@@ -75,8 +80,10 @@
                                                           :toimiala toimiala)))))
 
 (defn luo-taydennyspaatos [kieli diaarinumero data]
-  (let [toimikunta (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
-                                           [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
+  (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
+                                              [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
+                     (update-in [:alkupvm] muotoile-pvm)
+                     (update-in [:loppupvm] muotoile-pvm))
         jasenet (map ttk-arkisto/hae-jasen-ja-henkilo (:jasenet data))
         edustus->jasenet (->> jasenet
                            (sort-by (juxt :sukunimi :etunimi))
@@ -99,8 +106,10 @@
                 (assoc data :toimikunta (assoc toimikunta :jasen jasenet)))))
 
 (defn luo-muutospaatos [kieli diaarinumero data]
-  (let [toimikunta (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
-                                           [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
+  (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
+                                              [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
+                     (update-in [:alkupvm] muotoile-pvm)
+                     (update-in [:loppupvm] muotoile-pvm))
         jasenet (map ttk-arkisto/hae-jasen-ja-henkilo (:jasenet data))
         edustus->jasenet (->> jasenet
                            (sort-by (juxt :sukunimi :etunimi))
