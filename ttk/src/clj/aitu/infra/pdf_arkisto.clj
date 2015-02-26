@@ -181,7 +181,7 @@
 
 (defn kirjoita-sivunumero
   [stream sivu viimeinen-sivu fonttikoko fontti]
-  (let [teksti (str sivu "/" viimeinen-sivu)
+  (let [teksti (str sivu " (" viimeinen-sivu ")")
         pituus (tekstin-pituus fontti fonttikoko teksti)]
     (doto stream
       (.setTextMatrix 1 0 0 1 (- (.getUpperRightX sivukoko) oikea-marginaali pituus) ensimmainen-rivi)
