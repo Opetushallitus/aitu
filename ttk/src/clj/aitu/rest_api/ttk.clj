@@ -109,7 +109,7 @@
   (GET "/paatospohja-oletukset" []
     (cu/autorisoitu-transaktio :paatos nil
       (json-response (:paatospohja-oletukset @asetukset))))
-  (POST ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi kokoonkutsuja lataa]
+  (POST ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi jarjestaytyminen lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -118,7 +118,7 @@
                               :nimi hyvaksyja}
                   :jakelu (s/split-lines jakelu)
                   :tiedoksi (s/split-lines tiedoksi)
-                  :kokoonkutsuja kokoonkutsuja}
+                  :jarjestaytyminen jarjestaytyminen}
             pdf (paatos-arkisto/luo-asettamispaatos (keyword kieli) diaarinumero data)]
         (if lataa
           (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
