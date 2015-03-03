@@ -65,13 +65,11 @@
                    :resource-paths ["test-resources"]
                    :dependencies [[org.clojure/tools.namespace "0.2.4"]
                                   [clj-webdriver "0.6.0"]
-                                  [clj-http "0.7.6"]
                                   [ring-mock "0.1.5"]]}
              :uberjar {:main aitu.palvelin
                        :aot [aitu.palvelin]}}
   :source-paths ["src/clj"]
   :java-source-paths ["src/java"]
-  :javac-options ["-target" "1.7" "-source" "1.7"]
   :test-paths ["test/clj"]
   :test-selectors {:kaikki (constantly true)
                    :default (complement :integraatio)
