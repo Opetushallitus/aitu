@@ -688,9 +688,10 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       scope: {
         disabloiPyyntojenAjaksi: '@',
         formiValidi : '=',
-        teksti : '='
+        teksti : '=',
+        class : '@'
       },
-      template : '<button ng-disabled="tallennusDisabloitu">{{teksti}}</button>',
+      template : '<button class="{{class}}" ng-disabled="tallennusDisabloitu">{{teksti}}</button>',
       replace : true,
       link : function(scope, el) {
         var idt = scope.$eval(scope.disabloiPyyntojenAjaksi);

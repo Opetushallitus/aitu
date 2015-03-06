@@ -109,7 +109,7 @@
   (GET "/paatospohja-oletukset" []
     (cu/autorisoitu-transaktio :paatos nil
       (json-response (:paatospohja-oletukset @asetukset))))
-  (POST ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi jarjestaytyminen lataa]
+  (GET ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi jarjestaytyminen lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -123,7 +123,7 @@
         (if lataa
           (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (POST ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasenet paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+  (GET ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasenet paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -137,7 +137,7 @@
         (if lataa
           (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (POST ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasenet korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+  (GET ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasenet korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -296,5 +296,4 @@
     :return [Toimikunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (cachable-json-response req (arkisto/hae-termilla (:termi params)))))
-  private-reitit
-  paatos-reitit)
+  private-reitit)

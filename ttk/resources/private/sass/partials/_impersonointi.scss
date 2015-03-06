@@ -25,11 +25,12 @@
 }
 
 .tulosta-paatos{
-  $width: 80%;
-  $height: 70%;
-  min-height: $height;
+  $width: 60%;
+  min-height: 500px;
   margin-left: -$width / 2;
   width: $width;
+  padding-bottom: 40px;
+  top: 30px;
 }
 
 .modal-backdrop {

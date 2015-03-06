@@ -35,6 +35,18 @@ input[type="text"] {
 
 .placeholder { color: #aaa; }
 
+.modal-dialog-button-right {
+  position: absolute;
+  right: 0;
+  bottom: 15px;
+}
+
+.modal-dialog-button-left {
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+}
+
 fieldset {
   border: 0;
   padding: 0;

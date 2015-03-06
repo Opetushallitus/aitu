@@ -92,6 +92,7 @@
       :description "AITUn julkinen rajapinta")
     (swaggered "AITU"
       (c/context "/api/ttk" [] aitu.rest-api.ttk/raportti-reitit)
+      (c/context "/api/ttk" [] aitu.rest-api.ttk/paatos-reitit)
       (c/context "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
       (c/context "/api/henkilo" [] aitu.rest-api.henkilo/raportti-reitit)
       (c/context "/api/henkilo" [] (wrap-tarkasta-csrf-token aitu.rest-api.henkilo/reitit))

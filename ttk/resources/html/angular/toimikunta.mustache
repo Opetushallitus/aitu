@@ -9,6 +9,8 @@
   <ohje tunniste="toimikunta"></ohje>
 </h1>
 
+<button class="button float-right clear" ng-click="showTulostaPaatosModal()" ng-hide="luontiTila" ng-if="[[yllapitaja]]">[[tulosta-asettamispaatos]]</button>
+
 <section class="info-section">
   <form name="toimikuntaForm">
     <fieldset ng-hide="!luontiTila">
@@ -149,68 +151,72 @@
   </div>
 </div>
 
-<div class="modal-window tulosta-paatos ng-hide" ng-show="tulostaPaatosModal">
+<div class="modal-window tulosta-paatos ng-hide" id="tulosta-paatos-modal" ng-show="tulostaPaatosModal">
   <button class="icon delete-icon sulje" ng-click="hideTulostaPaatosModal()"></button>
-  <h2>Tulosta asettamispäätös</h2>
-  <hr>
-  <form name="tulostapaatosForm">
+  <h2>[[tulosta-asettamispaatos]]</h2>
+  <form name="tulostapaatosForm" ng-show="showLomake">
+    <hr>
     <fieldset>
-      Valitse päätöksen kieli <br />
+      [[valitse-paatoksen-kieli]] <br />
       <label>
-        <input type="radio" name="paatos_kieli" value="fi">
-        Suomi
-
+        <input type="radio" value="fi" name="paatosKieli" ng-model="paatosPDF.kieli" ng-required="true">
+        [[paatoskieli-suomi]]
       </label>
       <label>
-        <input type="radio" name="paatos_kieli" value="sv">
-        Ruotsi
+        <input type="radio" value="sv" name="paatosKieli" ng-model="paatosPDF.kieli">
+        [[paatoskieli-ruotsi]]
       </label>
     </fieldset>
 
     <div>
-      <pvm-valitsin pakollinen="true" valittu-pvm="toimikunta.toimikausi_alku" min-pvm="toimikunta.alkupvm" otsikko="Päätöspäivämäärä"></pvm-valitsin>
+      <pvm-valitsin pakollinen="true" valittu-pvm="paatosPDF.paivays" min-pvm="toimikunta.alkupvm" otsikko="[[paatospaivamaara]]"></pvm-valitsin>
     </div>
 
-    <fieldset>
-      <label>Päätösteksti</label>
-      <textarea></textarea>
+    <fieldset style="width: 61%;">
+      <label>[[paatosteksti]]</label>
+      <textarea ng-required="true" ng-model="paatosPDF.jarjestaytyminen"></textarea>
     </fieldset>
 
     <section class="info-section">
       <fieldset>
-        <label class="pakollinen">Päättäjä</label>
-        <input ng-required="true" type="text">
+        <label class="pakollinen">[[paattaja]]</label>
+        <input ng-required="true" type="text" ng-model="paatosPDF.hyvaksyja">
       </fieldset>
       <fieldset>
-        <label class="pakollinen">Virkanimike</label>
-        <input ng-required="true" type="text">
+        <label class="pakollinen">[[virkanimike]]</label>
+        <input ng-required="true" type="text" ng-model="paatosPDF.hyvaksyjan_asema">
       </fieldset>
     </section>
 
     <section class="info-section">
       <fieldset>
-        <label class="pakollinen">Esittelijä</label>
-        <input ng-required="true" type="text">
+        <label class="pakollinen">[[esittelija]]</label>
+        <input ng-required="true" type="text" ng-model="paatosPDF.esittelija">
       </fieldset>
       <fieldset>
-        <label class="pakollinen">Virkanimike</label>
-        <input ng-required="true" type="text">
+        <label class="pakollinen">[[virkanimike]]</label>
+        <input ng-required="true" type="text" ng-model="paatosPDF.esittelijan_asema">
       </fieldset>
     </section>
 
     <section class="info-section">
       <fieldset>
-        <label class="pakollinen">Jakelu</label>
-        <textarea></textarea>
+        <label class="pakollinen">[[jakelu]]</label>
+        <textarea ng-required="true" ng-model="paatosPDF.jakelu"></textarea>
       </fieldset>
       <fieldset>
-        <label class="pakollinen">Tiedoksi</label>
-        <textarea></textarea>
+        <label class="pakollinen">[[tiedoksi]]</label>
+        <textarea ng-required="true" ng-model="paatosPDF.tiedoksi"></textarea>
       </fieldset>
     </section>
-
-    <tallenna formi-validi="tulostapaatosForm.$valid" ng-click="esikatselePaatos()" teksti="'Esikatsele'"></tallenna>
+    <button class="button modal-dialog-button-left" ng-click="hideTulostaPaatosModal()">[[peruuta]]</button>
+    <tallenna class="modal-dialog-button-right" formi-validi="tulostapaatosForm.$valid" ng-click="esikatselePaatos()" teksti="'[[esikatsele]]'"></tallenna>
   </form>
+  <section ng-show="!showLomake">
+    <iframe id="paatosIframe" frameborder="0" width="100%" height="600" ng-src="{{paatosIframeSrc}}" style="padding-bottom: 15px;"></iframe>
+    <button class="button modal-dialog-button-left" ng-click="showLomake=true">[[muokkaa-asettamispaatosta]]</button>
+    <button class="button modal-dialog-button-right" ng-click="lataaPDF()">[[tulosta-asettamispaatos]]</button>
+  </section>
 </div>
 <div class="modal-backdrop" ng-show="tulostaPaatosModal">
 
