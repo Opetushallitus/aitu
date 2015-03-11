@@ -136,7 +136,7 @@
 
 (defn lisaa-logo
   [dokumentti sivu]
-  (with-open [pdf (io/input-stream (io/file (io/resource "pdf-sisalto/oph-logo.pdf")))
+  (with-open [pdf (io/input-stream (io/resource "pdf-sisalto/oph-logo.pdf"))
               logo-dokumentti (PDDocument/load pdf)]
     (let [layer (LayerUtility. dokumentti)
           logo (.importPageAsForm layer logo-dokumentti 0)
@@ -211,7 +211,7 @@
 (defn muodosta-pdf
   [osat]
   (with-open [dokumentti (PDDocument.)
-              fonttitiedosto (io/input-stream (io/file (io/resource "pdf-sisalto/ebgaramond/EBGaramond-Regular.ttf")))]
+              fonttitiedosto (io/input-stream (io/resource "pdf-sisalto/ebgaramond/EBGaramond-Regular.ttf"))]
     (let [output (ByteArrayOutputStream.)
           fontti (PDTrueTypeFont/loadTTF dokumentti fonttitiedosto)
           bold-fontti PDType1Font/TIMES_BOLD
