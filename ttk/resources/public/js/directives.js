@@ -732,4 +732,63 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         scope.i18n = i18n;
       }
     }
+  }])
+
+  .directive('paatosPdf',['i18n', function(i18n) {
+    return {
+      restrict: 'E',
+      scope : {jasenet: '=jasenet'},
+      controller : 'paatosPdfController',
+      templateUrl : 'template/paatos-pdf',
+      link: function (scope, elem, attrs) {
+        scope.i18n = i18n;
+        scope.paatokset = attrs.paatokset.split(',');
+      },
+      controller: ['$scope', '$http', 'kieli', 'pvm', '$routeParams', function ($scope, $http, kieli, pvm, $routeParams){
+        $scope.tulostaPaatosModal = false;
+        $scope.showLomake = true;
+        $scope.paatosIframeSrc = '';
+        $scope.type = '';
+
+        $http.get(ophBaseUrl + '/api/ttk/paatospohja-oletukset').
+          success(function(data) {
+            $scope.paatosPDF = data;
+            $scope.paatosPDF.kieli = kieli;
+          });
+
+        $scope.showTulostaPaatosModal = function (type) {
+          $scope.type = type;
+          $scope.tulostaPaatosModal = true;
+          $scope.showLomake = true;
+          $scope.paatosPDF.paivays = pvm.dateToPvm(Date.now());
+        };
+
+        $scope.hideTulostaPaatosModal = function () {
+          $scope.tulostaPaatosModal = false;
+          $scope.showLomake = true;
+        };
+
+        $scope.esikatselePaatos = function (type) {
+          $scope.paatosIframeSrc = "";
+          $scope.showLomake = false;
+          var diaari = {
+            'diaarinumero': $routeParams.id
+          };
+
+          var nocache = Date.now();
+          $scope.paatosPDF.lataa = true;
+          $scope.paatosPDF.nocache = nocache;
+          $scope.paatosPDF.diaarinumero = diaari.diaarinumero;
+
+          window.tulostaPaatos = {
+            paatosPDFUrl : '../../api/ttk/'+encodeURIComponent(diaari.diaarinumero)+'/'+type+'paatos?'+ $.param($scope.paatosPDF)
+          };
+          $scope.paatosIframeSrc = "../pdf-viewer/pdf-viewer/viewer.html?nocache="+nocache;
+        };
+
+        $scope.lataaPDF = function() {
+          window.location = window.tulostaPaatos.paatosPDFUrl;
+        };
+      }]
+    };
   }]);

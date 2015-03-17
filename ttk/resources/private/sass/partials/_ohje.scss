@@ -18,7 +18,7 @@
     background-color: $primary-color;
     width: $ohje-button-size;
     height: $ohje-button-size;
-    margin: 0 10px;
+    margin: 0;
     @include icon-after(5px, 4px){@include help-icon;};
   }
 

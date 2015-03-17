@@ -84,6 +84,10 @@ ul.pagination {
 }
 
 button.luo-uusi,
-.float-right {float:right;}
+.float-right {
+  float:right;
+  margin-right: 0;
+  margin-left: 10px;
+}
 
 .clear{@include clearfix;}

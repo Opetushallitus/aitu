@@ -113,48 +113,6 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       $scope.toimikunta = toimikuntaResource.get({"diaarinumero": $routeParams.id});
       $scope.nykyisetJasenet = [];
       $scope.entisetJasenet = [];
-      $scope.tulostaPaatosModal = false;
-      $scope.showLomake = true;
-      $scope.paatosIframeSrc = '';
-
-      $http.get(ophBaseUrl + '/api/ttk/paatospohja-oletukset').
-        success(function(data) {
-          $scope.paatosPDF = data;
-          $scope.paatosPDF.kieli = kieli;
-      });
-
-      $scope.showTulostaPaatosModal = function () {
-        $scope.tulostaPaatosModal = true;
-        $scope.showLomake = true;
-        $scope.paatosPDF.paivays = pvm.dateToPvm(Date.now());
-      };
-
-      $scope.hideTulostaPaatosModal = function () {
-        $scope.tulostaPaatosModal = false;
-        $scope.showLomake = true;
-      };
-
-      $scope.esikatselePaatos = function () {
-        $scope.paatosIframeSrc = "";
-        $scope.showLomake = false;
-        var diaari = {
-          'diaarinumero': $routeParams.id
-        };
-
-        var nocache = Date.now();
-        $scope.paatosPDF.lataa = true;
-        $scope.paatosPDF.nocache = nocache;
-        $scope.paatosPDF.diaarinumero = diaari.diaarinumero;
-
-        window.tulostaPaatos = {
-          paatosPDFUrl : '../../api/ttk/'+encodeURIComponent(diaari.diaarinumero)+'/asettamispaatos?'+ $.param($scope.paatosPDF)
-        };
-        $scope.paatosIframeSrc = "../pdf-viewer/pdf-viewer/viewer.html?nocache="+nocache;
-      };
-
-      $scope.lataaPDF = function() {
-        window.location = window.tulostaPaatos.paatosPDFUrl;
-      };
 
       $scope.salliMuokkaus = function() {
         return !$scope.muokkausTila && $scope.toimikunta.voimassa !== false;

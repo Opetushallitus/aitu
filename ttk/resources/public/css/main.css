@@ -1127,9 +1127,11 @@ ul.pagination li:first-child + li + li + li a:after {
 button.luo-uusi,
 .float-right {
   float: right;
+  margin-right: 0;
+  margin-left: 10px;
 }
 
-/* line 89, ../../private/sass/yhteiset/_search.scss */
+/* line 93, ../../private/sass/yhteiset/_search.scss */
 .clear {
   *zoom: 1;
 }
@@ -1587,7 +1589,7 @@ footer.dev-footer .app-wrapper {
   background-color: #107ea2;
   width: 22px;
   height: 22px;
-  margin: 0 10px;
+  margin: 0;
 }
 /* line 16, ../../private/sass/yhteiset/_icons.scss */
 .ohje .avaa:after {
