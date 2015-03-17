@@ -6,8 +6,8 @@
     <button class="icon delete-icon sulje" ng-click="hideTulostaPaatosModal()"></button>
 
     <h2 ng-if="type == 'asettamis'">[[tulosta-asettamispaatos]]</h2>
-    <h2 ng-if="type == 'muutos'">Tulosta muutospäätös</h2>
-    <h2 ng-if="type == 'taydennys'">Tulosta täydennyspäätös</h2>
+    <h2 ng-if="type == 'muutos'">[[tulosta-muutospaatos]]</h2>
+    <h2 ng-if="type == 'taydennys'">[[tulosta-taydennyspaatos]]</h2>
 
     <form name="tulostapaatosForm" ng-show="showLomake" class="clearBoth">
       <hr>
@@ -86,8 +86,12 @@
     </form>
     <section ng-show="!showLomake">
       <iframe id="paatosIframe" frameborder="0" width="100%" height="600" ng-src="{{paatosIframeSrc}}" style="padding-bottom: 15px;"></iframe>
-      <button class="button modal-dialog-button-left" ng-click="showLomake=true">[[muokkaa-asettamispaatosta]]</button>
-      <button class="button modal-dialog-button-right" ng-click="lataaPDF(type)">[[tulosta-asettamispaatos]]</button>
+      <button class="button modal-dialog-button-left" ng-click="showLomake=true">[[muokkaa-paatosta]]</button>
+      <button class="button modal-dialog-button-right" ng-click="lataaPDF(type)">
+        <span ng-if="type == 'asettamis'">[[tulosta-asettamispaatos]]</span>
+        <span ng-if="type == 'muutos'">[[tulosta-muutospaatos]]</span>
+        <span ng-if="type == 'taydennys'">[[tulosta-taydennyspaatos]]</span>
+      </button>
     </section>
   </div>
   <div class="modal-backdrop" ng-show="tulostaPaatosModal">
