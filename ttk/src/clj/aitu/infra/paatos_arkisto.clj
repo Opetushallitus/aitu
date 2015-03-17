@@ -84,7 +84,7 @@
                                               [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
                      (update-in [:alkupvm] muotoile-pvm)
                      (update-in [:loppupvm] muotoile-pvm))
-        jasenet (map ttk-arkisto/hae-jasen-ja-henkilo (:jasenet data))
+        jasenet [(ttk-arkisto/hae-jasen-ja-henkilo (Integer/parseInt (:jasen data)))]
         edustus->jasenet (->> jasenet
                            (sort-by (juxt :sukunimi :etunimi))
                            (map (partial muotoile-jasen kieli))
@@ -110,7 +110,7 @@
                                               [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
                      (update-in [:alkupvm] muotoile-pvm)
                      (update-in [:loppupvm] muotoile-pvm))
-        jasenet (map ttk-arkisto/hae-jasen-ja-henkilo (:jasenet data))
+        jasenet [(ttk-arkisto/hae-jasen-ja-henkilo (Integer/parseInt (:jasen data)))]
         edustus->jasenet (->> jasenet
                            (sort-by (juxt :sukunimi :etunimi))
                            (map (partial muotoile-jasen kieli))

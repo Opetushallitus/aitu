@@ -123,7 +123,7 @@
         (if lataa
           (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (GET ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasenet paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+  (GET ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasen paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -132,12 +132,12 @@
                               :nimi hyvaksyja}
                   :jakelu (s/split-lines jakelu)
                   :tiedoksi (s/split-lines tiedoksi)
-                  :jasenet jasenet}
+                  :jasen jasen}
             pdf (paatos-arkisto/luo-taydennyspaatos (keyword kieli) diaarinumero data)]
         (if lataa
           (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (GET ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasenet korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+  (GET ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasen korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -146,7 +146,7 @@
                               :nimi hyvaksyja}
                   :jakelu (s/split-lines jakelu)
                   :tiedoksi (s/split-lines tiedoksi)
-                  :jasenet jasenet
+                  :jasen jasen
                   :korvattu korvattu}
             pdf (paatos-arkisto/luo-muutospaatos (keyword kieli) diaarinumero data)]
         (if lataa
