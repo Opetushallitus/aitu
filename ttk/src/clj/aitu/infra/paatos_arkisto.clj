@@ -123,10 +123,12 @@
                          {:edustus (case kieli :fi "Opettajien edustaja" :sv "Opettajien edustaja (sv)")
                           :jasen (edustus->jasenet "opettaja")}
                          {:edustus (case kieli :fi "Muu edustaja" :sv "Muu edustaja (sv)")
-                          :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])]
+                          :jasen (mapcat edustus->jasenet ["asiantuntija" "itsenainen" "muu"])}])
+        korvattu (ttk-arkisto/hae-jasen-ja-henkilo (Integer/parseInt (:korvattu data)))]
     (luo-paatos kieli
                 {:teksti "PÄÄTÖS"
                  :paivays (:paivays data)
                  :diaarinumero diaarinumero}
                 :muutospaatos
-                (assoc data :toimikunta (assoc toimikunta :jasen jasenet)))))
+                (assoc data :toimikunta (assoc toimikunta :jasen jasenet)
+                            :korvattu (str (:etunimi korvattu) " " (:sukunimi korvattu))))))
