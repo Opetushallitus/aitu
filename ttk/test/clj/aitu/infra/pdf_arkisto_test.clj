@@ -29,13 +29,13 @@
       (is (= (count elementit) 2))
       (is (every? #(= 1 (:sivu %)) elementit))))
 
-  (testing "Kun uusi elementti ei mahdu sivulle niin se tulee seuraavalle sivulle samalle sisennykselle"
+  (testing "Kun uusi elementti ei mahdu sivulle niin se tulee seuraavalle sivulle toiselle riville samalle sisennykselle"
     (let [edellinen [{:sivu 1 :x 50 :y footer-tila}]
           uusi-elementti {:x 0 :y -12}
           elementit (lisaa-elementti edellinen uusi-elementti)]
       (is (= (count elementit) 2))
       (is (= (-> elementit last)
-             {:sivu 2 :x 50 :y ensimmainen-rivi}))))
+             {:sivu 2 :x 50 :y (- ensimmainen-rivi 24)}))))
 
   (testing "Kun uusi elementti ei mahdu sivulle niin se tulee seuraavalle sivulle"
     (let [edellinen [{:sivu 1 :x 0 :y footer-tila}]

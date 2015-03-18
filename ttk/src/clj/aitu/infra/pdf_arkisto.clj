@@ -58,7 +58,7 @@
               uusi-elementti
               (-> uusi-elementti
                 (update-in [:x] + viimeinen-x-positio)
-                (update-in [:y] + ylamarginaali)))))
+                (update-in [:y] + ensimmainen-rivi -12)))))
     [(assoc uusi-elementti :sivu 1)]))
 
 (defn tekstin-pituus
