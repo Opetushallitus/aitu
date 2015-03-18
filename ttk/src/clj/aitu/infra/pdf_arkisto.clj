@@ -57,7 +57,7 @@
             (if mahtuu-sivulle
               uusi-elementti
               (-> uusi-elementti
-                (update-in [:x] + vasen-marginaali)
+                (update-in [:x] + viimeinen-x-positio)
                 (update-in [:y] + ylamarginaali)))))
     [(assoc uusi-elementti :sivu 1)]))
 
