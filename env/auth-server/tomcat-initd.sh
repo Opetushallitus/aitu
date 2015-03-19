@@ -4,6 +4,8 @@
 # chkconfig: 234 20 80
 CATALINA_HOME=/home/tomcat/apache-tomcat-7.0.47
 cd $CATALINA_HOME
+
+export LANG=en_US.UTF-8
   
 case $1 in  
 start)  
