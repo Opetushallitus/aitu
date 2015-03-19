@@ -109,7 +109,7 @@
   (GET "/paatospohja-oletukset" []
     (cu/autorisoitu-transaktio :paatos nil
       (json-response (:paatospohja-oletukset @asetukset))))
-  (GET ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi jarjestaytyminen lataa]
+  (GET ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -118,26 +118,12 @@
                               :nimi hyvaksyja}
                   :jakelu (s/split-lines jakelu)
                   :tiedoksi (s/split-lines tiedoksi)
-                  :jarjestaytyminen jarjestaytyminen}
+                  :paatosteksti paatosteksti}
             pdf (paatos-arkisto/luo-asettamispaatos (keyword kieli) diaarinumero data)]
         (if lataa
           (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (GET ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasen paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
-    (cu/autorisoitu-transaktio :paatos nil
-      (let [data {:paivays paivays
-                  :esittelija {:asema (s/split-lines esittelijan_asema)
-                               :nimi esittelija}
-                  :hyvaksyja {:asema (s/split-lines hyvaksyjan_asema)
-                              :nimi hyvaksyja}
-                  :jakelu (s/split-lines jakelu)
-                  :tiedoksi (s/split-lines tiedoksi)
-                  :jasen jasen}
-            pdf (paatos-arkisto/luo-taydennyspaatos (keyword kieli) diaarinumero data)]
-        (if lataa
-          (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
-          (pdf-response pdf)))))
-  (GET ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasen korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi lataa]
+  (GET ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasen paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -147,7 +133,23 @@
                   :jakelu (s/split-lines jakelu)
                   :tiedoksi (s/split-lines tiedoksi)
                   :jasen jasen
-                  :korvattu korvattu}
+                  :paatosteksti paatosteksti}
+            pdf (paatos-arkisto/luo-taydennyspaatos (keyword kieli) diaarinumero data)]
+        (if lataa
+          (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
+          (pdf-response pdf)))))
+  (GET ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasen korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
+    (cu/autorisoitu-transaktio :paatos nil
+      (let [data {:paivays paivays
+                  :esittelija {:asema (s/split-lines esittelijan_asema)
+                               :nimi esittelija}
+                  :hyvaksyja {:asema (s/split-lines hyvaksyjan_asema)
+                              :nimi hyvaksyja}
+                  :jakelu (s/split-lines jakelu)
+                  :tiedoksi (s/split-lines tiedoksi)
+                  :jasen jasen
+                  :korvattu korvattu
+                  :paatosteksti paatosteksti}
             pdf (paatos-arkisto/luo-muutospaatos (keyword kieli) diaarinumero data)]
         (if lataa
           (pdf-response pdf (str "muutospaatos_" (s/replace diaarinumero \/ \_) ".pdf"))

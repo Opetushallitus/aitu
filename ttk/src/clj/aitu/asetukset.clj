@@ -60,7 +60,7 @@
                                         :hyvaksyjan_asema s/Str
                                         :hyvaksyja s/Str
                                         :jakelu s/Str
-                                        :jarjestaytyminen s/Str}})
+                                        :paatosteksti s/Str}})
 
 (defn string->boolean [x]
   (case x
@@ -107,7 +107,7 @@
                                                  :hyvaksyjan_asema ""
                                                  :hyvaksyja ""
                                                  :jakelu ""
-                                                 :jarjestaytyminen ""}}))
+                                                 :paatosteksti ""}}))
 
 (def build-id (delay (if-let [r (resource "build-id.txt")]
                        (.trim (slurp r))
