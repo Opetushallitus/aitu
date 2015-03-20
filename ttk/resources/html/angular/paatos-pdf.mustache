@@ -44,9 +44,9 @@
         <pvm-valitsin pakollinen="true" valittu-pvm="paatosPDF.paivays" min-pvm="toimikunta.alkupvm" otsikko="[[paatospaivamaara]]"></pvm-valitsin>
       </div>
 
-      <fieldset style="width: 61%;" ng-if="type == 'asettamis'">
+      <fieldset style="width: 61%;">
         <label>[[paatosteksti]]</label>
-        <textarea ng-if="type == 'asettamis'" ng-required="true" ng-model="paatosPDF.jarjestaytyminen"></textarea>
+        <textarea ng-required="type=='asettamis'" ng-model="paatosPDF.paatosteksti"></textarea>
       </fieldset>
 
       <section class="info-section">

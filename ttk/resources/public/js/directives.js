@@ -761,6 +761,10 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
           $scope.tulostaPaatosModal = true;
           $scope.showLomake = true;
           $scope.paatosPDF.paivays = pvm.dateToPvm(Date.now());
+
+          if(type!="asettamis"){
+            $scope.paatosPDF.paatosteksti = '';
+          }
         };
 
         $scope.hideTulostaPaatosModal = function () {
