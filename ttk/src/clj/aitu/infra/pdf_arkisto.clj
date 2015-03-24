@@ -26,7 +26,7 @@
     :y ensimmainen-rivi
     :teksti (:teksti otsikko)}
    {:x 0
-    :y (- (* 3 12))
+    :y -28
     :teksti (:paivays otsikko)}
    {:x 135
     :y 0
@@ -141,7 +141,7 @@
     (let [layer (LayerUtility. dokumentti)
           logo (.importPageAsForm layer logo-dokumentti 0)
           korkeus (.getHeight (.getBBox logo))
-          skaalaus (/ 50 korkeus)
+          skaalaus (/ 35 korkeus)
           skaalattu-korkeus (* skaalaus korkeus)
           ylareuna (.getUpperRightY sivukoko)
           aft (AffineTransform. skaalaus 0.0 0.0 skaalaus vasen-marginaali (- ylareuna (+ 28 skaalattu-korkeus))) ]
