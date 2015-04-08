@@ -260,10 +260,11 @@
   "Hakee kaikki järjestämissopimukset ja niihin liittyvät tutkinnot osoitepalvelua varten"
   []
   (remove nil? (for [sopimus (sql/select jarjestamissopimus
-                              (sql/with sopimus-ja-tutkinto
-                                (sql/with tutkintoversio
-                                  (sql/with nayttotutkinto
-                                    (sql/with opintoala)))))]
+                               (sql/with sopimus-ja-tutkinto
+                                 (sql/with tutkintoversio
+                                   (sql/with nayttotutkinto
+                                     (sql/with opintoala))))
+                               (sql/where {:jarjestamissopimus.poistettu false}))]
                 (some-> sopimus
                   (update-in [:toimikunta] toimikunta-kaytava/hae)
                   osoitepalvelu-voimassaolo/taydenna-sopimuksen-voimassaolo
