@@ -74,6 +74,13 @@
   []
   (sql/select oppilaitos))
 
+(defn hae-voimassaolevat
+  "Hakee voimassaolevien oppilaitosten kaikki tiedot"
+  []
+  (sql/select oppilaitos
+    (sql/where {:voimassa true})
+    (sql/order :nimi)))
+
 (defn hae-kaikki-toimipaikat-julkiset-tiedot []
   (sql/select toimipaikka
     (sql/fields :toimipaikkakoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
@@ -130,9 +137,10 @@
 (defn hae-termilla
   "Suodattaa hakutuloksia hakutermillä"
   [termi]
-  (for [oppilaitos (hae-kaikki)
+  (for [oppilaitos (hae-voimassaolevat)
         :when (sisaltaako-kentat? oppilaitos [:nimi] termi)]
-    (select-keys oppilaitos [:oppilaitoskoodi :nimi])))
+    {:oppilaitoskoodi (:oppilaitoskoodi oppilaitos)
+     :nimi (str (:nimi oppilaitos) " (" (:oppilaitoskoodi oppilaitos) ")")}))
 
 (defn hae
   "Hakee oppilaitoksen oppilaitoskoodilla"
