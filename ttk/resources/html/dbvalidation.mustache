@@ -1,0 +1,30 @@
+<!doctype html>
+<head>
+  <title>Tietokanta, datan validointi</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 5pt;
+    }
+    th {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+<h1>Tulokset</h1>
+<table>
+  {{#testit}}
+  <tr>
+    <th valign="top">{{title}}</th>
+    <td>
+      {{#results}}
+        <pre>{{result}}</pre>
+      {{/results}}
+    </td>
+  </tr>
+  {{/testit}}
+</table>
+</body>
