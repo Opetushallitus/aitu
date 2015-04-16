@@ -3,6 +3,12 @@
 -- 2. Kyselyä edeltävän rivin kommentti on kyselyn näkyvä otsikko
 --
 -- Lisäksi on jotain pieniä rajoituksia, esim. Oraclen with-syntaksi ei käy yms.
+ 
+-- OPH-1357 oppilaitos ei ole voimassa, mutta sopimus on voimassa
+select * from jarjestamissopimus j
+  inner join oppilaitos o on j.tutkintotilaisuuksista_vastaava_oppilaitos = o.oppilaitoskoodi
+  where o.voimassa = 'f' and j.voimassa ='t'
+  order by sopimusnumero, tutkintotilaisuuksista_vastaava_oppilaitos;
 
 -- OPH-236 Jäsenyyden alku ja loppupäivien tarkastaminen suhteessa toimikunnan toimikauteen
 select j.jasenyys_id, h.etunimi, h.sukunimi
