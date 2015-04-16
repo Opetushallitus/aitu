@@ -172,6 +172,8 @@
                           (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :koulutustoimija y-tunnus))
         (not= vanha-kt uusi-kt) (do
                                   (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
+                                  (when-not (:voimassa uusi-kt)
+                                    (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :poistunut (time/today) :koulutustoimija y-tunnus))
                                   (koulutustoimija-arkisto/paivita! uusi-kt))))))
 
 (defn ^:integration-api ^:private paivita-oppilaitokset! [koodit koulutustoimijakoodit]
@@ -194,6 +196,8 @@
                                   (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :oppilaitos oppilaitoskoodi))
         (not= vanha-oppilaitos uusi-oppilaitos) (do
                                                   (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
+                                                  (when-not (:voimassa uusi-oppilaitos)
+                                                    (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :poistunut (time/today) :oppilaitos oppilaitoskoodi))
                                                   (oppilaitos-arkisto/paivita! uusi-oppilaitos))))))
 
 
@@ -220,6 +224,8 @@
                                    (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :toimipaikka toimipaikkakoodi))
         (not= vanha-toimipaikka uusi-toimipaikka) (do
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
+                                                    (when-not (:voimassa uusi-toimipaikka)
+                                                      (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :poistunut (time/today) :toimipaikka toimipaikkakoodi))
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))))
 
 (defn ^:integration-api paivita-organisaatiot!
