@@ -16,8 +16,9 @@
   </fieldset>
 </form>
 <div class="search-results" lataus-indikaattori metodi-idt="['tutkintolistaus']" viesti="[[tutkintoja-ladataan]]" virheviesti="[[tutkintojen-lataus-epaonnistui]]" yrita-uudelleen="haeTutkinnot()">
-  <hakutulokset tuloksia-sivulla="10" otsikot="['[[tutkintotunnus]]', '[[nimi]]', '[[opintoala]]']" hakutulokset="tutkinnot">
+  <hakutulokset tuloksia-sivulla="10" otsikot="['[[tutkintotunnus]]', '[[peruste]]', '[[nimi]]', '[[opintoala]]']" hakutulokset="tutkinnot">
     <div class="table-cell">{{hakutulos.tutkintotunnus}}</div>
+    <div class="table-cell">{{hakutulos.peruste}}</div>
     <div class="table-cell"><a href="#/tutkinto/{{hakutulos.tutkintotunnus}}">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
     <div class="table-cell">{{hakutulos.opintoala_nimi | lokalisoi:hakutulos:'opintoala_nimi'}}</div>
   </hakutulokset>
