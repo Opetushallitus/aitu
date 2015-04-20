@@ -12,7 +12,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('tutkinnot', ['ngRoute'])
+angular.module('tutkinnot', ['ngRoute', 'resources'])
 
   .config(function($routeProvider) {
     $routeProvider.
@@ -45,15 +45,20 @@ angular.module('tutkinnot', ['ngRoute'])
     });
   }])
 
-  .controller('TutkinnotController', ['$scope', 'TutkintoResource', '$filter',
-    function($scope, TutkintoResource, $filter) {
+  .controller('TutkinnotController', ['$scope', 'TutkintoResource', 'KoulutusalaResource', '$filter',
+    function($scope, TutkintoResource, KoulutusalaResource, $filter) {
       $scope.kaikkiTutkinnot = TutkintoResource.query();
+      $scope.koulutusalat = KoulutusalaResource.query();
       $scope.tutkinnot = [];
       $scope.tutkintoHakuehto = {'nimi': '',
-                                 'voimassaolo': 'voimassaolevat'}
+                                 'voimassaolo': 'voimassaolevat',
+                                 'opintoala': '',
+                                 'tutkintotaso': ''};
 
       $scope.$watch('tutkintoHakuehto.nimi', suodataTutkinnot);
       $scope.$watch('tutkintoHakuehto.voimassaolo', suodataTutkinnot);
+      $scope.$watch('tutkintoHakuehto.opintoala', suodataTutkinnot);
+      $scope.$watch('tutkintoHakuehto.tutkintotaso', suodataTutkinnot);
       $scope.$watchCollection('kaikkiTutkinnot', suodataTutkinnot);
 
       $scope.haeTutkinnot = haeTutkinnot;
@@ -66,6 +71,12 @@ angular.module('tutkinnot', ['ngRoute'])
         var filtered = $filter('suomiJaRuotsi')($scope.kaikkiTutkinnot, 'nimi', $scope.tutkintoHakuehto.nimi);
         if($scope.tutkintoHakuehto.voimassaolo == 'voimassaolevat') {
           filtered = $filter('voimassaOlevat')(filtered, true);
+        }
+        if($scope.tutkintoHakuehto.opintoala) {
+          filtered = _.filter(filtered, {opintoala: $scope.tutkintoHakuehto.opintoala});
+        }
+        if($scope.tutkintoHakuehto.tutkintotaso) {
+          filtered = _.filter(filtered, {tutkintotaso: $scope.tutkintoHakuehto.tutkintotaso});
         }
         $scope.tutkinnot = $filter('orderByLokalisoitu')(filtered, 'nimi');
       }
@@ -176,7 +187,7 @@ angular.module('tutkinnot', ['ngRoute'])
       }
 
       function varmistaTallennus() {
-        var poistettavat = _.reject(tutkinnotAlussa, function(tutkinto){return _.find($scope.valitutTutkinnot, {tutkintotunnus : tutkinto.tutkintotunnus})});
+        var poistettavat = _.reject(tutkinnotAlussa, function(tutkinto){return _.find($scope.valitutTutkinnot, {tutkintotunnus : tutkinto.tutkintotunnus}); });
         if(poistettavat.length > 0) {
           var viesti = i18n.tutkinnot['tutkintojen-poistamisen-varmistus'];
           var tutkinnot = _.reduce(poistettavat, function(viesti, tutkinto){ return viesti + $filter('lokalisoi')(null, tutkinto, 'nimi') + '\n';}, '');

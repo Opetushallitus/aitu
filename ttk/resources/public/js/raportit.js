@@ -19,15 +19,6 @@ angular.module('raportit', ['ngRoute', 'resources'])
       when('/raportit', {controller:'RaportitController', templateUrl:'template/raportit'});
   })
 
-  .factory('KoulutusalaResource', ['$resource', function($resource) {
-    return $resource(ophBaseUrl + '/api/koulutusala/opintoalat', {}, {
-      query: {
-        method: 'GET',
-        isArray: true,
-        id: 'koulutusalalistaus'
-      }});
-  }])
-
   .controller('RaportitController', ['$scope', '$filter', 'i18n', 'ToimikausiResource', 'KoulutusalaResource',
     function($scope, $filter, i18n, ToimikausiResource, KoulutusalaResource) {
       $scope.jasenet = {

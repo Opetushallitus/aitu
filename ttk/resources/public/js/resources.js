@@ -24,6 +24,15 @@ angular.module('resources', ['ngRoute'])
     });
   }])
 
+  .factory('KoulutusalaResource', ['$resource', function($resource) {
+    return $resource(ophBaseUrl + '/api/koulutusala/opintoalat', {}, {
+      query: {
+        method: 'GET',
+        isArray: true,
+        id: 'koulutusalalistaus'
+      }});
+  }])
+
   .factory('toimikuntaResource', ['$resource', '$routeParams', function($resource, $routeParams) {
     return $resource(ophBaseUrl + '/api/ttk/:diaarinumero', {'diaarinumero': '@diaarinumero', 'tkunta' : '@tkunta'}, {
       get: {

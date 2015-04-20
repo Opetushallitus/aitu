@@ -8,6 +8,19 @@
     <input type="text" ng-model="tutkintoHakuehto.nimi" class="search-with-autocomplete">
   </fieldset>
   <fieldset class="search-field">
+    <label>[[opintoala]]</label>
+	<select id="opintoala" class="no-print" ng-model="tutkintoHakuehto.opintoala">
+      <option value=""></option>
+      <optgroup ng-repeat="koulutusala in koulutusalat" label="{{koulutusala.koulutusala_tkkoodi}}. {{koulutusala | lokalisoi:koulutusala:'koulutusala_nimi'}}">
+        <option ng-repeat="opintoala in koulutusala.opintoalat | orderBy:opintoalaOrder" value="{{opintoala.opintoala_tkkoodi}}">{{opintoala.nimi | lokalisoi:opintoala:'opintoala_nimi'}}</option>
+      </optgroup>
+    </select>
+  </fieldset>
+  <fieldset class="search-field">
+    <label>[[tutkintotaso]]</label>
+	<enum-valikko id="tutkintotaso" nimi="tutkintotaso" arvo="tutkintoHakuehto.tutkintotaso"></enum-valikko>
+  </fieldset>
+  <fieldset class="search-field">
     <h3>[[voimassaolo]]</h3>
     <input id="voimassaolo_voimassaolevat" type="radio" ng-model="tutkintoHakuehto.voimassaolo" value="voimassaolevat">
     <label class="input" for="voimassaolo_voimassaolevat">[[voimassaolevat]]</label><br/>

@@ -31,6 +31,9 @@
 (defn nayta-kaikki []
   (valitse-radiobutton "tutkintoHakuehto.voimassaolo" "kaikki"))
 
+(defn valitse-opintoala [tunnus]
+  (w/select-option "#opintoala" {:value tunnus}))
+
 (deftest tutkintolista-test []
   (with-webdriver
     (testing "tutkintolista"
@@ -38,13 +41,15 @@
         ;; Oletetaan, että
         (with-data {:koulutusalat [{:koodi "KA1"}]
                     :opintoalat [{:koodi "OA1"
+                                  :koulutusala "KA1"}
+                                 {:koodi "OA2"
                                   :koulutusala "KA1"}]
                     :tutkinnot [{:nimi_fi "A tutkinto 1"
                                  :tutkintotunnus "TU1"
                                  :opintoala "OA1"},
                                 {:nimi_fi "A tutkinto 2"
                                  :tutkintotunnus "TU2"
-                                 :opintoala "OA1"}
+                                 :opintoala "OA2"}
                                 {:nimi_fi "Vanha tutkinto"
                                  :tutkintotunnus "TU3"
                                  :opintoala "OA1"
@@ -63,4 +68,12 @@
           (nayta-kaikki)
           ;; Niin
           (is (subset? #{"A tutkinto 1" "A tutkinto 2" "Vanha tutkinto"}
-                       (set (nakyvat-tutkinnot)))))))))
+                       (set (nakyvat-tutkinnot))))
+
+          ;; Kun
+          (valitse-opintoala "OA1")
+          ;; Niin
+          (is (subset? #{"A tutkinto 1" "Vanha tutkinto"}
+                       (set (nakyvat-tutkinnot))))
+          (is (not (subset? #{"A tutkinto 2"}
+                            (set (nakyvat-tutkinnot))))))))))
