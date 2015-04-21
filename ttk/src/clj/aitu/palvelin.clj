@@ -42,6 +42,7 @@
             [clj-cas-client.core :refer [cas]]
             [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
             [oph.common.infra.anon-auth :as anon-auth]
+            [oph.korma.korma-auth :as ka]
             [aitu.toimiala.kayttajaoikeudet
              :refer [*current-user-authmap* yllapitaja?]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
@@ -74,11 +75,11 @@
     (anon-auth/enable-development-mode!))
   (if (and (kehitysmoodi? asetukset)
            (not (:enabled (:cas-auth-server asetukset))))
-    (anon-auth/auth-cas-user handler)
+    (anon-auth/auth-cas-user handler ka/default-test-user-uid)
     (fn [request]
       (let [auth-handler (if (and (kehitysmoodi? asetukset)
                                   ((:headers request) "uid"))
-                           (anon-auth/auth-cas-user handler)
+                           (anon-auth/auth-cas-user handler ka/default-test-user-uid)
                            (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
         (auth-handler request)))))
 
@@ -123,7 +124,7 @@
     auth/wrap-sessionuser
     (auth-middleware asetukset)
     log-request-wrapper
-    
+
     (clamav-mock asetukset)
     wrap-multipart-params
     wrap-params
