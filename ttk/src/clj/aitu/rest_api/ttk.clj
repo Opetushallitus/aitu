@@ -18,7 +18,7 @@
             [aitu.infra.ttk-arkisto :as arkisto]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.paatos-arkisto :as paatos-arkisto]
-            [aitu.rest-api.http-util :refer [csv-download-response pdf-response]]
+            [aitu.rest-api.http-util :refer [pdf-response]]
             [valip.predicates :refer [present?]]
             [aitu.infra.i18n :as i18n]
             [aitu.infra.validaatio :as val]
@@ -27,7 +27,8 @@
             [aitu.asetukset :refer [asetukset]]
             [oph.common.util.http-util :refer [validoi validoi-entity-saannoilla
                      luo-validoinnin-virhevastaus cachable-json-response
-                     json-response parse-iso-date sallittu-jos cachable-json-response]]
+                     json-response parse-iso-date sallittu-jos cachable-json-response
+                     csv-download-response]]
             [aitu.compojure-util :as cu]
             [compojure.api.sweet :refer :all]
             [aitu.util :refer [muodosta-csv ->vector]]

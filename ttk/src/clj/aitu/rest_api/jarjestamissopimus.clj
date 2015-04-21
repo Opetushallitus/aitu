@@ -15,8 +15,8 @@
 (ns aitu.rest-api.jarjestamissopimus
   (:require [compojure.core :as c]
             [korma.db :as db]
-            [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response sallittu-jos]]
-            [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin csv-download-response jos-lapaisee-virustarkistuksen]]
+            [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response csv-download-response sallittu-jos]]
+            [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jos-lapaisee-virustarkistuksen]]
             [aitu.util :refer [muodosta-csv ->vector]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]

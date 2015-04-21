@@ -19,10 +19,9 @@
             [aitu.compojure-util :as cu]
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]
-            [oph.common.util.http-util :refer [cachable-json-response json-response]]
+            [oph.common.util.http-util :refer [csv-download-response cachable-json-response json-response]]
             [aitu.toimiala.skeema :refer :all]
-            [aitu.util :refer [muodosta-csv]]
-            [aitu.rest-api.http-util :refer [csv-download-response]]))
+            [aitu.util :refer [muodosta-csv]]))
 
 (def koulutustoimijakenttien-jarjestys [:nimi_fi :nimi_sv :ytunnus :sopimusten_maara])
 

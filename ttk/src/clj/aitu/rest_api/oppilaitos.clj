@@ -22,7 +22,7 @@
             [aitu.toimiala.skeema :refer :all]
             [compojure.api.sweet :refer :all]
             [aitu.util :refer [muodosta-csv]]
-            [aitu.rest-api.http-util :refer [csv-download-response]]))
+            [oph.common.util.http-util :refer [csv-download-response]]))
 
 (def oppilaitoskenttien-jarjestys [:nimi :oppilaitoskoodi :sopimusten_maara])
 

@@ -28,20 +28,6 @@
 (defn sallittu-tiedostotyyppi? [tyyppi]
   (contains? allowed-mimetypes tyyppi))
 
-(defn textfile-download-response
-  ([data filename content-type]
-    (textfile-download-response data filename content-type {}))
-  ([data filename content-type options]
-    {:status 200
-     :body (if-let [charset (:charset options)]
-             (ByteArrayInputStream. (.getBytes (str data) charset))
-             (str data))
-     :headers {"Content-Type" content-type
-               "Content-Disposition" (str "attachment; filename=\"" filename "\"")}}))
-
-(defn csv-download-response [data filename]
-  (textfile-download-response data filename "text/csv" {:charset "CP1252"}))
-
 (defn pdf-response
   ([data]
     {:status 200
