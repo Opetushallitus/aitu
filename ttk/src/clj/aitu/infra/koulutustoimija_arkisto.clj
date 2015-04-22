@@ -18,7 +18,6 @@
              [oph.common.util.util :refer [sisaltaako-kentat?]]
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
-             [oph.korma.korma :refer :all]
              [clojure.string :refer [blank?]])
   (:use [aitu.integraatio.sql.korma]))
 

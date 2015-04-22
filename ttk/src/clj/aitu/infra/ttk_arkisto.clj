@@ -25,7 +25,6 @@
             [schema.macros :as sm]
             [aitu.auditlog :as auditlog]
             [clojure.set :refer [rename-keys]]
-            [oph.korma.korma :refer  :all ]
             [oph.common.util.util :refer :all]
             [clojure.string :refer [blank? split]]
             [clojure-csv.core :refer [write-csv]]

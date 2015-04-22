@@ -14,8 +14,7 @@
 
 (ns aitu.infra.organisaatiopalvelu-arkisto
   (:require [korma.core :as sql]
-            [oph.korma.korma :refer :all])
-  (:use [aitu.integraatio.sql.korma]))
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn hae-viimeisin-paivitys
   []

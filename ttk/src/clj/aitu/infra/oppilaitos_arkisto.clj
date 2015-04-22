@@ -19,7 +19,6 @@
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.util :refer [select-and-rename-keys]]
              [oph.common.util.util :refer [sisaltaako-kentat?]]
-             [oph.korma.korma :refer :all]
              [clojure.string :refer [blank?]])
   (:use [aitu.integraatio.sql.korma]))
 

@@ -25,7 +25,8 @@
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.infra.kayttajaoikeudet-arkisto :as kayttajaoikeudet-arkisto]
             [aitu.integraatio.sql.test-data-util :refer [default-toimikunta]]
-            [aitu.test-timeutil :refer [menneisyydessa tulevaisuudessa]]))
+            [aitu.test-timeutil :refer [menneisyydessa tulevaisuudessa]]
+            oph.korma.korma))
 
 (def testikayttaja-uid "MAN-O-TEST")
 (def testikayttaja-oid "OID.MAN-O-TEST")
