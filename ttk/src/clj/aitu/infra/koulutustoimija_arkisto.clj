@@ -37,6 +37,11 @@
   (sql/delete koulutustoimija
     (sql/where {:ytunnus y-tunnus})))
 
+(defn ^:integration-api laske-voimassaolo! []
+  (sql/update koulutustoimija
+    (sql/set-fields {:voimassa false})
+    (sql/where {:lakkautuspaiva [< (sql/raw "current_date")]})))
+
 (defn hae
   "Hakee yhden koulutustoimijan julkiset tiedot"
   [y-tunnus]

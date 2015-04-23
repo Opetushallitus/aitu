@@ -59,6 +59,16 @@
   (sql/delete toimipaikka
     (sql/where {:toimipaikkakoodi toimipaikkakoodi})))
 
+(defn ^:integration-api laske-voimassaolo! []
+  (sql/update oppilaitos
+    (sql/set-fields {:voimassa false})
+    (sql/where {:lakkautuspaiva [< (sql/raw "current_date")]})))
+
+(defn ^:integration-api laske-toimipaikkojen-voimassaolo! []
+  (sql/update toimipaikka
+    (sql/set-fields {:voimassa false})
+    (sql/where {:lakkautuspaiva [< (sql/raw "current_date")]})))
+
 (defn hae-kaikki-julkiset-tiedot
   "Hakee kaikkien oppilaitokset julkiset tiedot"
   []
