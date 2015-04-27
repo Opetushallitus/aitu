@@ -26,11 +26,3 @@
 
 (require '[robert.hooke :refer [add-hook]])
 (require 'leiningen.test)
-
-(add-hook #'leiningen.test/form-for-testing-namespaces
-          (fn [f & args]
-            (binding [leiningen.test/*exit-after-tests* false]
-              (let [form (apply f args)]
-                `(do
-                   (require 'aitu-e2e.util)
-                   (System/exit (aitu-e2e.util/with-webdriver ~form)))))))
