@@ -17,9 +17,9 @@
                  [clj-webdriver "0.6.1" :exclusions [org.seleniumhq.selenium/selenium-java
                                                      org.seleniumhq.selenium/selenium-server
                                                      org.seleniumhq.selenium/selenium-remote-driver]]
-                 [org.seleniumhq.selenium/selenium-java "2.43.1"]
-                 [org.seleniumhq.selenium/selenium-server "2.43.1"]
-                 [org.seleniumhq.selenium/selenium-remote-driver "2.43.1"]
+                 [org.seleniumhq.selenium/selenium-java "2.45.0"]
+                 [org.seleniumhq.selenium/selenium-server "2.45.0"]
+                 [org.seleniumhq.selenium/selenium-remote-driver "2.45.0"]
                  [clj-http "0.9.2"]
                  [cheshire "5.3.1"]
                  [com.paulhammant/ngwebdriver "0.9.1" :exclusions [org.seleniumhq.selenium/selenium-java]]
