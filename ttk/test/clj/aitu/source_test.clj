@@ -14,7 +14,8 @@
 
 (ns aitu.source-test
   "Tarkistuksia lähdekoodille."
-  (:require [clojure.test :refer [deftest testing is]])
+  (:require [clojure.test :refer [deftest testing is]]
+            [oph.source-util :refer :all])
   (:use oph.source-test))
 
 (deftest clj-debug-test
