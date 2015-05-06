@@ -18,7 +18,7 @@
             [aitu.asetukset :refer [build-id kehitysmoodi? service-path]]
             [aitu.toimiala.skeema :refer :all]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
+            [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
 
             aitu.rest-api.db-validation
             aitu.rest-api.ttk
