@@ -17,7 +17,7 @@
            org.joda.time.LocalDate)
   (:require  korma.db
     [oph.korma.common :refer [defentity defalias]]
-    [aitu.util :refer [update-in-if-exists]]
+    [oph.common.util.util :refer [update-in-if-exists]]
     [aitu.infra.i18n :as i18n]
     [korma.core :as sql]
     [korma.sql.engine :as eng]))

@@ -9,7 +9,7 @@
            (java.io ByteArrayOutputStream
                     ByteArrayInputStream))
   (:require [clojure.java.io :as io]
-            [aitu.util :refer [update-in-if-exists]]))
+            [oph.common.util.util :refer [update-in-if-exists]]))
 
 (def sivukoko (PDPage/PAGE_SIZE_A4))
 (def ylamarginaali (- (.getUpperRightY sivukoko) 28))

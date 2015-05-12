@@ -4,7 +4,7 @@
             [aitu.infra.pdf-arkisto :as pdf-arkisto]
             [clojure.java.io :as io]
             [aitu.asetukset :refer [asetukset]]
-            [aitu.util :refer [select-and-rename-keys]])
+            [oph.common.util.util :refer [select-and-rename-keys]])
   (:import java.io.File))
 
 (defn tallenna-pdf [filename pdf]

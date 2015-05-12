@@ -16,8 +16,7 @@
   (:import org.apache.commons.io.FileUtils)
   (:require  korma.db
              [korma.core :as sql]
-             [aitu.util :refer [select-and-rename-keys]]
-             [oph.common.util.util :refer [map-values]]
+             [oph.common.util.util :refer [map-values select-and-rename-keys]]
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]

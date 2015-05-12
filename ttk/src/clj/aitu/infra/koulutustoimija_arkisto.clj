@@ -14,8 +14,7 @@
 
 (ns aitu.infra.koulutustoimija-arkisto
   (:require  [korma.core :as sql]
-             [aitu.util :refer [select-and-rename-keys]]
-             [oph.common.util.util :refer [sisaltaako-kentat?]]
+             [oph.common.util.util :refer [select-and-rename-keys sisaltaako-kentat?]]
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
              [clojure.string :refer [blank?]])

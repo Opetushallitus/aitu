@@ -19,20 +19,6 @@
             [clj-time.core :as time]
             [clojure.tools.logging :as log]))
 
-(deftest update-in-if-exists-test
-  (let [m {:key1 {:key2 1}}]
-    (is (= (update-in-if-exists m [:key1 :key2] inc) {:key1 {:key2 2}}))
-    (is (= (update-in-if-exists m [:key1 :key2 :key3] inc) m))
-    (is (= (update-in-if-exists m [:key1 :key2] + 10) {:key1 {:key2 11}}))))
-
-(deftest select-and-rename-keys-test
-  (let [m {:key1 :val1
-           :key2 :val2}]
-    (are [keyseq result] (= (select-and-rename-keys m keyseq) result)
-         [:key1]               {:key1 :val1}
-         [:key1 [:key2 :key3]] {:key1 :val1, :key3 :val2}
-         [:key3 [:key4 :key5]] {})))
-
 (deftest keyword-vertailu-test
   (let [jarjestys [:a :b :c]]
     (testing "vertailee avaimet oikein, tuntemattomat avaimet viimeiseksi"

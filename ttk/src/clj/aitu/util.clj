@@ -25,30 +25,6 @@
             [schema.core :as s]
             [clojure-csv.core :refer [write-csv]]))
 
-(defn update-in-if-exists [m [k & ks] f & args]
-  (if (and (associative? m) (contains? m k))
-    (if ks
-      (assoc m k (apply update-in-if-exists (get m k) ks f args))
-      (assoc m k (apply f (get m k) args)))
-    m))
-
-(defn select-and-rename-keys
-  "Poimii mapista annetut avaimet. Jos avain on muotoa [:a :b], vaihtaa samalla avaimen nimen :a -> :b."
-  [map keys]
-  (loop [ret {} keys (seq keys)]
-    (if keys
-      (let [key (first keys)
-            [from to] (if (coll? key)
-                        key
-                        [key key])
-            entry (. clojure.lang.RT (find map from))]
-        (recur
-          (if entry
-            (conj ret [to (val entry)])
-            ret)
-          (next keys)))
-      ret)))
-
 (defn schema? [x]
   (instance? schema.core.Schema x))
 

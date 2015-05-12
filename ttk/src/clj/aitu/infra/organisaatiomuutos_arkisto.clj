@@ -14,7 +14,7 @@
 
 (ns aitu.infra.organisaatiomuutos-arkisto
   (:require [korma.core :as sql]
-            [aitu.util :refer [update-in-if-exists select-and-rename-keys]]
+            [oph.common.util.util :refer [update-in-if-exists select-and-rename-keys]]
             [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
             [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
             [clj-time.core :as time])
