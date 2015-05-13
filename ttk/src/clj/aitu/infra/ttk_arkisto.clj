@@ -20,7 +20,6 @@
             [aitu.toimiala.skeema :as skeema]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :as voimassaolo]
             [aitu.toimiala.voimassaolo.toimikunta :as toimikunnan-voimassaolo]
-            [oph.common.util.util :refer [select-and-rename-keys sisaltaako-kentat?]]
             [schema.macros :as sm]
             [aitu.auditlog :as auditlog]
             [clojure.set :refer [rename-keys]]
