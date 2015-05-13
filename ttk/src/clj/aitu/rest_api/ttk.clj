@@ -31,7 +31,8 @@
                      csv-download-response]]
             [aitu.compojure-util :as cu]
             [compojure.api.sweet :refer :all]
-            [aitu.util :refer [muodosta-csv ->vector]]
+            [aitu.util :refer [muodosta-csv]]
+            [oph.common.util.util :refer [->vector]]
             [clojure.string :as s]))
 
 (defn salli-toimikunnan-paivitys? [diaarinumero]

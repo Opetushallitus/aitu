@@ -132,9 +132,3 @@
                             (name oa))))]
                    arvot))
            :delimiter \;)))
-
-(defn ->vector [item]
-  (when item
-    (if (vector? item)
-      item
-      [item])))
