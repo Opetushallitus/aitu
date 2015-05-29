@@ -30,3 +30,7 @@
 
 - include: skeeman_peruskayttaja.yml
   when: skeeman_peruskayttaja is defined
+
+- include: tietokannan_paakayttaja_ja_peruskayttaja.yml
+  when: tietokannan_paakayttaja is defined and tietokannan_peruskayttaja is defined
+

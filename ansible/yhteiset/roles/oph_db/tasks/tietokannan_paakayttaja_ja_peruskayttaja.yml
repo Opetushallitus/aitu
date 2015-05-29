@@ -1,0 +1,8 @@
+# Pakolliset parametrit:
+# - tietokannan_paakayttaja: Tietokannan pääkäyttäjän nimi
+# - tietokannan_peruskayttaja: Tietokannan peruskäyttäjän nimi
+---
+- name: Anna tietokannan pääkäyttäjälle oikeudet peruskäyttäjään
+  command: psql -c 'GRANT {{ tietokannan_peruskayttaja }} TO {{ tietokannan_paakayttaja }}'
+  when: tietokannan_peruskayttaja != tietokannan_paakayttaja
+
