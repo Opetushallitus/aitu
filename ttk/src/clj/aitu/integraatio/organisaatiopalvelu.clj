@@ -46,6 +46,7 @@
     "oppilaitostyyppi_61" ;; Musiikkioppilaitokset
     "oppilaitostyyppi_62" ;; Liikunnan koulutuskeskukset
     "oppilaitostyyppi_63" ;; Kansanopistot
+    "oppilaitostyyppi_65" ;; Opintokeskukset
     "oppilaitostyyppi_93" ;; Muut koulutuksen järjestäjät
     "oppilaitostyyppi_99" ;; Muut oppilaitokset
     "oppilaitostyyppi_xx" ;; Tyyppi ei tiedossa
