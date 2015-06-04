@@ -234,6 +234,15 @@
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))
     (oppilaitos-arkisto/laske-toimipaikkojen-voimassaolo!)))
 
+(defn ^:integration-api ^:private paivita-haetut-organisaatiot! [koodit]
+  (let [koodit-tyypeittain (group-by tyyppi koodit)
+        koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
+        oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
+        toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
+    (paivita-koulutustoimijat! koulutustoimijakoodit)
+    (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
+    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit koulutustoimijakoodit)))
+
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
@@ -245,13 +254,7 @@
           nyt (time/now)
           koodit (if viimeisin-paivitys
                    (hae-muuttuneet url viimeisin-paivitys)
-                   (hae-kaikki url))
-          koodit-tyypeittain (group-by tyyppi koodit)
-          _ (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
-          koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
-          oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
-          toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
-      (paivita-koulutustoimijat! koulutustoimijakoodit)
-      (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
-      (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit koulutustoimijakoodit)
+                   (hae-kaikki url))]
+      (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
+      (paivita-haetut-organisaatiot! koodit)
       (organisaatiopalvelu-arkisto/tallenna-paivitys! nyt))))
