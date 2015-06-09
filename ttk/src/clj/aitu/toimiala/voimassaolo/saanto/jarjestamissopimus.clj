@@ -38,6 +38,7 @@
   "Onko järjestämissopimus voimassa tai vanhentunut?"
   [jarjestamissopimus sopimuksen-voimassaolo-fn]
   (and
+    (not (:poistettu jarjestamissopimus))
     (toimikunta/toimikunta-voimassa? (:toimikunta jarjestamissopimus))
     (sopimuksen-voimassaolo-fn jarjestamissopimus)
     (joku-tutkinto-voimassa? (map :tutkintoversio (:sopimus_ja_tutkinto jarjestamissopimus)))))

@@ -78,7 +78,8 @@
                            (sql/select* koulutustoimija)
                            (sql/join :left :jarjestamissopimus
                                      (and (= :koulutustoimija.ytunnus :jarjestamissopimus.koulutustoimija)
-                                          (= :jarjestamissopimus.voimassa true)))
+                                          (= :jarjestamissopimus.voimassa true)
+                                          (= :jarjestamissopimus.poistettu false)))
                            (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika
                                        :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
                            (sql/aggregate (count :jarjestamissopimus.jarjestamissopimusid) :sopimusten_maara)
