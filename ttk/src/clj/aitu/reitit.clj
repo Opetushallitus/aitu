@@ -121,7 +121,7 @@
       (c/context "/api/organisaatiomuutos" [] aitu.rest-api.organisaatiomuutos/reitit)
       (c/context "/api/aipal" [] aitu.rest-api.aipal/reitit))
     (testapi asetukset)
-    (c/GET "/template/:nimi" [nimi]
+    (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
       (angular-template nimi asetukset))
     (cu/defapi :etusivu nil :get "/" []
       {:body (s/render-file "html/ttk" {:build-id @build-id
