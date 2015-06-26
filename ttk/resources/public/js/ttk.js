@@ -33,7 +33,8 @@ angular.module('ttk', ['angular-loading-bar',
                        'etusivu',
                        'ohjeet',
                        'organisaatiomuutokset',
-                       'raportit'])
+                       'raportit',
+                       'arviointipaatokset'])
 
   .config(['$routeProvider', '$httpProvider', 'asetukset', function($routeProvider, $httpProvider, asetukset) {
     $routeProvider.
