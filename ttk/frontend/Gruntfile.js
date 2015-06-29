@@ -64,6 +64,18 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js'
       }
     },
+    sass: {
+      compile : {
+        files: {
+          '../resources/public/css/main.css': '../resources/private/sass/main.scss'
+        }
+      },
+      dist : {
+        files: {
+          '../resources/public/css/main.css': '../resources/private/sass/main.scss'
+        }
+      }
+    },
     concat: {
       options : {
         process : false
@@ -123,6 +135,10 @@ module.exports = function (grunt) {
     'concat:dist',
     'copy:dist',
     'copy:test'
+  ]);
+
+  grunt.registerTask('build', [
+    'sass:compile'
   ]);
 
   grunt.registerTask('test', [
