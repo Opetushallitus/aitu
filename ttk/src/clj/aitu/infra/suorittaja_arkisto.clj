@@ -19,5 +19,5 @@
 (defn lisaa!
   [form]
   (auditlog/suorittaja-operaatio! :lisays (dissoc form :hetu :oid))
-  (sql/insert :opiskelija
+  (sql/insert :suorittaja
     (sql/values (select-keys form [:etunimi :sukunimi :hetu :oid]))))
