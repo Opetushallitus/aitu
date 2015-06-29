@@ -1,0 +1,7 @@
+.dialogi {
+  $width: 500px;
+  $height: 160px;
+  min-height: $height;
+  margin-left: -$width / 2;
+  width: $width;
+}

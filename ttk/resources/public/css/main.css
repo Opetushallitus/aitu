@@ -1772,6 +1772,13 @@ div.api-method-feedback > div.error {
   z-index: 99;
 }
 
+/* line 1, ../../private/sass/partials/direktiivit/_dialogi.scss */
+.dialogi {
+  min-height: 160px;
+  margin-left: -250px;
+  width: 500px;
+}
+
 /* NÄKYMÄT
 ------------------------------------------------------------------------------*/
 /* line 1, ../../private/sass/views/_index.scss */
