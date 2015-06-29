@@ -19,11 +19,11 @@ angular.module('arviointipaatokset', [])
   }])
 
   .controller('ArviointipaatoksetController', ['$scope', 'Suorittaja', function($scope, Suorittaja) {
-    $scope.opiskelijaForm = {};
+    $scope.suorittajaForm = {};
 
-    $scope.lisaaOpiskelija = function() {
-      $scope.lisaaOpiskelijaDialogi = false;
-      Suorittaja.lisaa($scope.opiskelijaForm);
+    $scope.lisaaSuorittaja = function() {
+      $scope.lisaaSuorittajaDialogi = false;
+      Suorittaja.lisaa($scope.suorittajaForm);
     };
   }])
 ;
