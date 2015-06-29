@@ -40,6 +40,7 @@
             aitu.rest-api.haku
             aitu.rest-api.organisaatiomuutos
             aitu.rest-api.osoitepalvelu
+            aitu.rest-api.suorittaja
             aitu.rest-api.aipal
 
             aitu.test-api.ttk
@@ -119,6 +120,7 @@
       (c/context "/api/osoitepalvelu" [] aitu.rest-api.osoitepalvelu/reitit)
       (c/context "/api/db-validation" [] aitu.rest-api.db-validation/reitit)
       (c/context "/api/organisaatiomuutos" [] aitu.rest-api.organisaatiomuutos/reitit)
+      (c/context "/api/suorittaja" [] aitu.rest-api.suorittaja/reitit)
       (c/context "/api/aipal" [] aitu.rest-api.aipal/reitit))
     (testapi asetukset)
     (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
