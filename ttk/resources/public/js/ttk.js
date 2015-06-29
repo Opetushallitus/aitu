@@ -12,31 +12,35 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('ttk', ['angular-loading-bar',
-                       'yhteiset.palvelut.virheLogitus',
-                       'aitulocale',
-                       'kayttooikeudet',
-                       'henkilot',
-                       'toimikunnat',
-                       'tutkinnot',
-                       'oppilaitokset',
-                       'koulutustoimijat',
-                       'sopimukset',
-                       'filters',
-                       'directives',
-                       'ngResource',
-                       'ngRoute',
-                       'uiKomponentit',
-                       'apimetodiPalaute',
-                       'ui.select2',
-                       'ngUpload',
-                       'direktiivit.dialogi',
-                       'rest.suorittaja',
-                       'etusivu',
-                       'ohjeet',
-                       'organisaatiomuutokset',
-                       'raportit',
-                       'arviointipaatokset'])
+angular.module('ttk', [
+  'ngResource',
+  'ngRoute',
+
+  'angular-loading-bar',
+  'ngUpload',
+  'ui.select2',
+
+  'aitulocale',
+  'apimetodiPalaute',
+  'arviointipaatokset',
+  'directives',
+  'direktiivit.dialogi',
+  'etusivu',
+  'filters',
+  'henkilot',
+  'kayttooikeudet',
+  'koulutustoimijat',
+  'ohjeet',
+  'oppilaitokset',
+  'organisaatiomuutokset',
+  'raportit',
+  'rest.suorittaja',
+  'sopimukset',
+  'toimikunnat',
+  'tutkinnot',
+  'uiKomponentit',
+  'yhteiset.palvelut.virheLogitus'
+])
 
   .config(['$routeProvider', '$httpProvider', 'asetukset', function($routeProvider, $httpProvider, asetukset) {
     $routeProvider.
