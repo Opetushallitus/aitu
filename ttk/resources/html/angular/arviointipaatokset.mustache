@@ -5,7 +5,30 @@
 
 <section class="opiskelijat">
   <h2>[[opiskelijat]]</h2>
-  <button class="button-with-icon add-icon-white">[[lisaa_opiskelija]]</button>
+  <button class="button-with-icon add-icon-white" ng-click="lisaaOpiskelijaDialogi = true">[[lisaa_opiskelija]]</button>
+  <dialogi avoinna="lisaaOpiskelijaDialogi">
+    <div>
+      <fieldset>
+        <label for="etunimiInput">[[etunimi]]</label>
+        <input id="etunimiInput" type="text" ng-model="opiskelijaForm.etunimi">
+      </fieldset>
+      <fieldset>
+        <label for="sukunimiInput">[[sukunimi]]</label>
+        <input id="sukunimiInput" type="text" ng-model="opiskelijaForm.sukunimi">
+      </fieldset>
+      <fieldset>
+        <label for="hetuInput">[[hetu]]</label>
+        <input id="hetuInput" type="text" ng-model="opiskelijaForm.hetu">
+      </fieldset>
+      <fieldset>
+        <label for="oidInput">OID</label>
+        <input id="oidInput" type="text" ng-model="opiskelijaForm.oid">
+      </fieldset>
+    </div>
+    <div>
+      <button class="button-with-icon add-icon-white" ng-click="lisaaOpiskelija()">[[lisaa_opiskelija]]</button>
+    </div>
+  </dialogi>
 </section>
 
 <section class="suoritukset">
