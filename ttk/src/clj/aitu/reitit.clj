@@ -1,61 +1,61 @@
 (ns aitu.reitit
-  (:require [cheshire.core :as json]
-            [stencil.core :as s]
-            [stencil.loader :as sl]
+  (:require [clojure.pprint :refer [pprint]]
             [clojure.tools.logging :as log]
+
+            [cheshire.core :as json]
+            [compojure.api.sweet :refer :all]
             [compojure.core :as c]
             [compojure.route :as r]
-            schema.core
-            [aitu.compojure-util :as cu]
-            [clojure.pprint :refer [pprint]]
-            [compojure.api.sweet :refer :all]
             [ring.swagger.core :refer [json-type]]
+            schema.core
+            [stencil.core :as s]
+            [stencil.loader :as sl]
 
-            [aitu.infra.i18n :as i18n]
-            [aitu.toimiala.kayttajaoikeudet
-             :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
-            [aitu.infra.status :refer [status]]
             [aitu.asetukset :refer [build-id kehitysmoodi? service-path]]
+            [aitu.compojure-util :as cu]
+            [aitu.infra.i18n :as i18n]
+            [aitu.infra.status :refer [status]]
+            [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
             [aitu.toimiala.skeema :refer :all]
-            [oph.common.util.http-util :refer [json-response]]
             [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
+            [oph.common.util.http-util :refer [json-response]]
 
+            aitu.rest-api.aipal
             aitu.rest-api.db-validation
-            aitu.rest-api.ttk
+            aitu.rest-api.enum
+            aitu.rest-api.haku
             aitu.rest-api.henkilo
-            aitu.rest-api.koulutustoimija
-            aitu.rest-api.oppilaitos
-            aitu.rest-api.tutkinto
-            aitu.rest-api.toimikausi
-            aitu.rest-api.kayttaja
-            aitu.rest-api.koulutusala
-            aitu.rest-api.opintoala
             aitu.rest-api.jarjestamissopimus
             aitu.rest-api.jarjesto
-            aitu.rest-api.enum
-            aitu.rest-api.tutkintorakenne
-            aitu.rest_api.js-log
-            aitu.rest-api.tiedote
+            aitu.rest-api.kayttaja
+            aitu.rest-api.koulutusala
+            aitu.rest-api.koulutustoimija
             aitu.rest-api.ohje
-            aitu.rest-api.haku
+            aitu.rest-api.opintoala
+            aitu.rest-api.oppilaitos
             aitu.rest-api.organisaatiomuutos
             aitu.rest-api.osoitepalvelu
             aitu.rest-api.suorittaja
-            aitu.rest-api.aipal
+            aitu.rest-api.tiedote
+            aitu.rest-api.toimikausi
+            aitu.rest-api.ttk
+            aitu.rest-api.tutkinto
+            aitu.rest-api.tutkintorakenne
+            aitu.rest_api.js-log
 
-            aitu.test-api.ttk
-            aitu.test-api.tutkinto
-            aitu.test-api.tutkintoversio
-            aitu.test-api.tutkintotyyppi
-            aitu.test-api.koulutustoimija
-            aitu.test-api.peruste
+            aitu.test-api.e2e
+            aitu.test-api.henkilo
+            aitu.test-api.jarjestamissopimus
+            aitu.test-api.jarjesto
             aitu.test-api.koulutusala
+            aitu.test-api.koulutustoimija
             aitu.test-api.opintoala
             aitu.test-api.oppilaitos
-            aitu.test-api.jarjestamissopimus
-            aitu.test-api.henkilo
-            aitu.test-api.e2e
-            aitu.test-api.jarjesto))
+            aitu.test-api.peruste
+            aitu.test-api.ttk
+            aitu.test-api.tutkinto
+            aitu.test-api.tutkintotyyppi
+            aitu.test-api.tutkintoversio))
 
 (defn angular-template [nimi asetukset]
   (when-let [mustache (sl/load (str "html/angular/" nimi))]
