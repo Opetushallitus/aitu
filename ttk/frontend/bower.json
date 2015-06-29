@@ -9,7 +9,7 @@
     "angular-resource": "1.2.14",
     "angular-route": "1.2.14",
     "angular-bootstrap": "0.10.0",
-    "angular-loading-bar": "~0.4.3",
+    "angular-loading-bar": "0.8.0",
     "angular-ui-select2": "0.0.5",
     "jquery": "2.1.0",
     "jquery-placeholder": "2.0.7",
