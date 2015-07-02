@@ -33,3 +33,10 @@
   (auditlog/suorittaja-operaatio! :poisto {:suorittajaid suorittajaid})
   (sql/delete :suorittaja
     (sql/where {:suorittaja_id suorittajaid})))
+
+(defn tallenna!
+  [suorittajaid suorittaja]
+  (auditlog/suorittaja-operaatio! :paivitys (assoc suorittaja :suorittaja_id suorittajaid))
+  (sql/update :suorittaja
+    (sql/set-fields (select-keys suorittaja [:etunimi :sukunimi :hetu :oid]))
+    (sql/where {:suorittaja_id suorittajaid})))

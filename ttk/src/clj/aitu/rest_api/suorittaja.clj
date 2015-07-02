@@ -23,5 +23,7 @@
     (json-response (arkisto/hae-kaikki)))
   (cu/defapi :yleinen-rest-api nil :post "/" [& form]
     (arkisto/lisaa! form))
+  (cu/defapi :yleinen-rest-api nil :put "/:suorittajaid" [suorittajaid & suorittaja]
+    (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja))
   (cu/defapi :yleinen-rest-api nil :delete "/:suorittajaid" [suorittajaid]
     (arkisto/poista! (Integer/parseInt suorittajaid))))
