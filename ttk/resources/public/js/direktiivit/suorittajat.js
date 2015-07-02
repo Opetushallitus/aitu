@@ -24,6 +24,12 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
         Suorittaja.haeKaikki().then(function(suorittajat) {
           $scope.suorittajat = suorittajat;
         });
+
+        $scope.poistaSuorittaja = function(suorittaja) {
+          Suorittaja.poista(suorittaja).then(function() {
+            _.remove($scope.suorittajat, {suorittaja_id: suorittaja.suorittaja_id});
+          });
+        };
       }]
     }
   }])
