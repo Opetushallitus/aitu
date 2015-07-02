@@ -18,12 +18,14 @@ angular.module('arviointipaatokset', [])
     $routeProvider.when('/arviointipaatokset', {controller: 'ArviointipaatoksetController', templateUrl: 'template/arviointipaatokset'});
   }])
 
-  .controller('ArviointipaatoksetController', ['$scope', 'Suorittaja', function($scope, Suorittaja) {
+  .controller('ArviointipaatoksetController', ['$route', '$scope', 'Suorittaja', function($route, $scope, Suorittaja) {
     $scope.suorittajaForm = {};
 
     $scope.lisaaSuorittaja = function() {
       $scope.lisaaSuorittajaDialogi = false;
-      Suorittaja.lisaa($scope.suorittajaForm);
+      Suorittaja.lisaa($scope.suorittajaForm).then(function() {
+        $route.reload();
+      });
     };
   }])
 ;
