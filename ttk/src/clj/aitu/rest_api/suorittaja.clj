@@ -15,8 +15,11 @@
 (ns aitu.rest-api.suorittaja
   (:require [compojure.core :as c]
             [aitu.infra.suorittaja-arkisto :as arkisto]
-            [aitu.compojure-util :as cu]))
+            [aitu.compojure-util :as cu]
+            [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
+  (cu/defapi :yleinen-rest-api nil :get "/" []
+    (json-response (arkisto/hae-kaikki)))
   (cu/defapi :yleinen-rest-api nil :post "/" [& form]
     (arkisto/lisaa! form)))

@@ -16,6 +16,12 @@
   (:require  [korma.core :as sql]
              [aitu.auditlog :as auditlog]))
 
+(defn hae-kaikki
+  []
+  (sql/select :suorittaja
+    (sql/fields :suorittaja_id :etunimi :sukunimi :hetu :oid)
+    (sql/order :suorittaja_id :DESC)))
+
 (defn lisaa!
   [form]
   (auditlog/suorittaja-operaatio! :lisays (dissoc form :hetu :oid))
