@@ -27,3 +27,9 @@
   (auditlog/suorittaja-operaatio! :lisays (dissoc form :hetu :oid))
   (sql/insert :suorittaja
     (sql/values (select-keys form [:etunimi :sukunimi :hetu :oid]))))
+
+(defn poista!
+  [suorittajaid]
+  (auditlog/suorittaja-operaatio! :poisto {:suorittajaid suorittajaid})
+  (sql/delete :suorittaja
+    (sql/where {:suorittaja_id suorittajaid})))
