@@ -29,6 +29,11 @@ angular.module('rest.suorittaja', [])
         return $http.delete(ophBaseUrl + '/api/suorittaja/' + suorittaja.suorittaja_id).then(function(response) {
           return response.data;
         });
+      },
+      tallenna: function(suorittaja) {
+        return $http.put(ophBaseUrl + '/api/suorittaja/' + suorittaja.suorittaja_id, suorittaja).then(function(response) {
+          return response.data;
+        });
       }
     };
   }])

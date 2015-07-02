@@ -27,5 +27,22 @@ angular.module('arviointipaatokset', [])
         $route.reload();
       });
     };
+
+    $scope.tallennaSuorittaja = function() {
+      $scope.lisaaSuorittajaDialogi = false;
+      Suorittaja.tallenna($scope.suorittajaForm).then(function() {
+        $route.reload();
+      });
+    };
+
+    $scope.suorittajanLisays = function() {
+      $scope.lisaaSuorittajaDialogi = true;
+      $scope.suorittajaForm = {};
+    };
+
+    $scope.suorittajanMuokkaus = function(suorittaja) {
+      $scope.lisaaSuorittajaDialogi = true;
+      $scope.suorittajaForm = angular.copy(suorittaja);
+    };
   }])
 ;

@@ -19,11 +19,17 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
     return {
       restrict: 'E',
       templateUrl: 'template/direktiivit/suorittajat',
-      scope: {},
+      scope: {
+        'suorittajanMuokkaus': '&'
+      },
       controller: ['$scope', 'Suorittaja', function($scope, Suorittaja) {
         Suorittaja.haeKaikki().then(function(suorittajat) {
           $scope.suorittajat = suorittajat;
         });
+
+        $scope.muokkaaSuorittajaa = function(suorittaja) {
+          $scope.suorittajanMuokkaus({suorittaja: suorittaja});
+        };
 
         $scope.poistaSuorittaja = function(suorittaja) {
           Suorittaja.poista(suorittaja).then(function() {

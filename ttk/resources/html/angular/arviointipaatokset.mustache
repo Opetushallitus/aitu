@@ -5,7 +5,7 @@
 
 <section class="suorittajat">
   <h2>[[suorittajat]]</h2>
-  <button class="button-with-icon add-icon-white" ng-click="lisaaSuorittajaDialogi = true">[[lisaa_suorittaja]]</button>
+  <button class="button-with-icon add-icon-white" ng-click="suorittajanLisays()">[[lisaa_suorittaja]]</button>
   <dialogi avoinna="lisaaSuorittajaDialogi">
     <div>
       <fieldset>
@@ -26,11 +26,12 @@
       </fieldset>
     </div>
     <div>
-      <button class="button-with-icon add-icon-white" ng-click="lisaaSuorittaja()">[[lisaa_suorittaja]]</button>
+      <button ng-if="suorittajaForm.suorittaja_id === undefined" class="button-with-icon add-icon-white" ng-click="lisaaSuorittaja()">[[lisaa_suorittaja]]</button>
+      <button ng-if="suorittajaForm.suorittaja_id !== undefined" class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()">[[tallenna_suorittaja]]</button>
     </div>
   </dialogi>
 
-  <suorittajat></suorittajat>
+  <suorittajat suorittajan-muokkaus="suorittajanMuokkaus(suorittaja)"></suorittajat>
 </section>
 
 <section class="suoritukset">

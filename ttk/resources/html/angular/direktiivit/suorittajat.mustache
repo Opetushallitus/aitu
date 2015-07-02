@@ -18,7 +18,11 @@
       <div class="table-cell">{{ suorittaja.sukunimi }}</div>
       <div class="table-cell">{{ suorittaja.hetu }}</div>
       <div class="table-cell">{{ suorittaja.oid }}</div>
-      <div class="table-cell"><button class="icon delete-icon" ng-click="poistaSuorittaja(suorittaja)"></button></div>
+      <div class="table-cell">
+        <button class="icon edit-icon" ng-click="muokkaaSuorittajaa(suorittaja)"></button>
+        &nbsp;&nbsp;&nbsp;
+        <button class="icon delete-icon" ng-click="poistaSuorittaja(suorittaja)"></button>
+      </div>
     </div>
   </div>
 </div>
