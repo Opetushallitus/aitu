@@ -12,19 +12,19 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('rest.suorittaja', [])
-  .factory('Suorittaja', ['$http', function($http) {
+'use strict';
+
+angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
+  .directive('suorittajat', [function() {
     return {
-      haeKaikki: function() {
-        return $http.get(ophBaseUrl + '/api/suorittaja').then(function(response) {
-          return response.data;
+      restrict: 'E',
+      templateUrl: 'template/direktiivit/suorittajat',
+      scope: {},
+      controller: ['$scope', 'Suorittaja', function($scope, Suorittaja) {
+        Suorittaja.haeKaikki().then(function(suorittajat) {
+          $scope.suorittajat = suorittajat;
         });
-      },
-      lisaa: function(form) {
-        return $http.post(ophBaseUrl + '/api/suorittaja', form).then(function(response) {
-          return response.data;
-        });
-      }
-    };
+      }]
+    }
   }])
 ;

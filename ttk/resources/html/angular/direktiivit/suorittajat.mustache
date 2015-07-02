@@ -1,0 +1,23 @@
+{{=[[ ]]=}}
+[[#i18n.arviointipaatokset]]
+<div>
+  <div>
+    <input type="text" ng-model="haku" ng-model-options="{debounce: 250}" placeholder="Hae suorittajia...">
+  </div>
+
+  <div class="table">
+    <div class="table-header">
+      <div class="table-cell">[[etunimi]]</div>
+      <div class="table-cell">[[sukunimi]]</div>
+      <div class="table-cell">[[hetu]]</div>
+      <div class="table-cell">OID</div>
+    </div>
+    <div class="table-row" ng-repeat="suorittaja in suorittajat | filter:haku">
+      <div class="table-cell">{{ suorittaja.etunimi }}</div>
+      <div class="table-cell">{{ suorittaja.sukunimi }}</div>
+      <div class="table-cell">{{ suorittaja.hetu }}</div>
+      <div class="table-cell">{{ suorittaja.oid }}</div>
+    </div>
+  </div>
+</div>
+[[/i18n.arviointipaatokset]]
