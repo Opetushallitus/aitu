@@ -25,6 +25,10 @@
         <input id="oidInput" type="text" ng-model="suorittajaForm.oid">
       </fieldset>
     </div>
+    <div ng-if="suorittajaForm.suorittaja_id">
+      <div>[[muokattu_viimeksi]] {{ suorittajaForm.muutettuaika | date:'dd.MM.yyyy HH:mm' }}</div>
+      <div>[[muokkaaja]] {{ suorittajaForm.muutettu_nimi }}</div>
+    </div>
     <div>
       <button ng-if="suorittajaForm.suorittaja_id === undefined" class="button-with-icon add-icon-white" ng-click="lisaaSuorittaja()">[[lisaa_suorittaja]]</button>
       <button ng-if="suorittajaForm.suorittaja_id !== undefined" class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()">[[tallenna_suorittaja]]</button>

@@ -19,7 +19,9 @@
 (defn hae-kaikki
   []
   (sql/select :suorittaja
-    (sql/fields :suorittaja_id :etunimi :sukunimi :hetu :oid)
+    (sql/join :kayttaja (= :kayttaja.oid :muutettu_kayttaja))
+    (sql/fields :suorittaja_id :etunimi :sukunimi :hetu :oid :muutettuaika
+                [(sql/sqlfn "concat" :kayttaja.etunimi " " :kayttaja.sukunimi) :muutettu_nimi])
     (sql/order :suorittaja_id :DESC)))
 
 (defn lisaa!
