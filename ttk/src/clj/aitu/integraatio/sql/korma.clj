@@ -256,6 +256,9 @@
 (defentity organisaatiopalvelu_log
   (sql/pk :id))
 
+(defentity eperusteet-log
+  (sql/table :eperusteet_log))
+
 (defn ilike
   "Korma-funktio Postgresql:n ilike-vertailulle"
   [k v]

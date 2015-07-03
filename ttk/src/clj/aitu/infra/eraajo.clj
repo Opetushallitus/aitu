@@ -23,10 +23,12 @@
             [clj-time.core :as time :refer [minutes seconds from-now]]
             aitu.infra.eraajo.kayttajat
             aitu.infra.eraajo.organisaatiot
-            aitu.infra.eraajo.sopimusten-voimassaolo)
+            aitu.infra.eraajo.sopimusten-voimassaolo
+            aitu.infra.eraajo.eperusteet)
   (:import aitu.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
            aitu.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
-           aitu.infra.eraajo.sopimusten_voimassaolo.PaivitaSopimustenVoimassaoloJob))
+           aitu.infra.eraajo.sopimusten_voimassaolo.PaivitaSopimustenVoimassaoloJob
+           aitu.infra.eraajo.eperusteet.PaivitaPerusteetJob))
 
 (defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
@@ -60,7 +62,16 @@
                                 (t/with-identity "daily4")
                                 (t/start-now)
                                 (t/with-schedule (cron/schedule
-                                                   (cron/cron-schedule "0 0 4 * * ?"))))]
+                                                   (cron/cron-schedule "0 0 4 * * ?"))))
+        perusteet-job (j/build
+                        (j/of-type PaivitaSopimustenVoimassaoloJob)
+                        (j/with-identity "paivita-sopimusten-voimassaolo"))
+        perusteet-trigger-daily (t/build
+                                  (t/with-identity "daily6")
+                                  (t/start-now)
+                                  (t/with-schedule (cron/schedule
+                                                     (cron/cron-schedule "0 0 6 * * ?"))))]
     (qs/schedule ldap-job ldap-trigger-5min)
     (qs/schedule org-job org-trigger-daily)
-    (qs/schedule sopimus-job sopimus-trigger-daily)))
+    (qs/schedule sopimus-job sopimus-trigger-daily)
+    (qs/schedule perusteet-job perusteet-trigger-daily)))

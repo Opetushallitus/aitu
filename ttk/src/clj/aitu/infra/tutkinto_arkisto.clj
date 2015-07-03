@@ -19,6 +19,7 @@
             [aitu.infra.opintoala-arkisto :as opintoala-arkisto]
             [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
+            [oph.korma.common :as sql-util]
             [clojure.string :refer [blank?]]
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo])
   (:use [aitu.integraatio.sql.korma]))
@@ -66,7 +67,7 @@
   "Tekee uuden version tutkinnosta ja palauttaa tutkintoversion id:n"
   [tutkinto]
   (let [tutkintotiedot (select-keys tutkinto [:nimi_fi :nimi_sv :opintoala :tyyppi :tutkintotaso])
-        versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio :jarjestyskoodistoversio])
+        versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio :jarjestyskoodistoversio :peruste])
         tutkintotunnus (:tutkintotunnus tutkinto)
         vanha-versio (hae-uusin-tutkintoversio tutkintotunnus)
         uusi-versio (->
@@ -116,7 +117,7 @@
   (let [vanha-osa (hae-tutkinnonosan-uusin-versio (:osatunnus osa))
         uusi-osa (->
                    (merge vanha-osa osa)
-                   (update-in [:versio] inc)
+                   (update-in [:versio] (fnil inc 0))
                    (dissoc :tutkinnonosa_id))]
     (lisaa-tutkinnon-osa! tutkintoversio_id jarjestysnumero uusi-osa)))
 
@@ -323,3 +324,13 @@
     (sql/where {:tutkintotunnus tutkintotunnus}))
   (sql/delete nayttotutkinto
     (sql/where {:tutkintotunnus tutkintotunnus})))
+
+(defn hae-viimeisin-eperusteet-paivitys []
+  (:paivitetty (sql-util/select-unique-or-nil eperusteet-log
+                 (sql/order :paivitetty :desc)
+                 (sql/limit 1)
+                 (sql/fields :paivitetty))))
+
+(defn ^:integration-api tallenna-viimeisin-eperusteet-paivitys! [ajankohta]
+  (sql/insert eperusteet-log
+    (sql/values {:paivitetty ajankohta})))
