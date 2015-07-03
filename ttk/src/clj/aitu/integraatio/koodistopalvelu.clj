@@ -61,7 +61,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   ([asetukset koodisto versio] (get-json-from-url (str (:url asetukset) koodisto "/koodi?koodistoVersio=" versio))))
 
 (defn ^:private hae-koodi
-  [asetukset koodisto koodiuri versio] (get-json-from-url (str (:url asetukset) koodisto "/koodi/" koodiuri "?koodistoVersio=" versio)))
+  [asetukset koodisto koodiuri versio]
+  (try
+    (get-json-from-url (str (:url asetukset) koodisto "/koodi/" koodiuri "?koodistoVersio=" versio))
+    (catch clojure.lang.ExceptionInfo _
+      nil)))
 
 (defn ^:private hae-rinnasteiset
   "Hakee koodistopalvelusta annetun koodin kanssa rinnasteiset koodit"
@@ -110,13 +114,16 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn koodiston-uusin-versio
   [asetukset koodisto]
-  (loop [versio nil]
-    (when-let [json (get-json-from-url (str (:url asetukset)
-                                            koodisto
-                                            (when versio (str "?koodistoVersio=" versio))))]
-      (if (= "HYVAKSYTTY" (:tila json))
-        (:versio json)
-        (recur (dec (:versio json)))))))
+  (try
+    (loop [versio nil]
+      (when-let [json (get-json-from-url (str (:url asetukset)
+                                              koodisto
+                                              (when versio (str "?koodistoVersio=" versio))))]
+        (if (= "HYVAKSYTTY" (:tila json))
+          (:versio json)
+          (recur (dec (:versio json))))))
+    (catch clojure.lang.ExceptionInfo _
+      1)))
 
 (defn ^:private tutkintotasokoodi?
   [koodi]
@@ -153,8 +160,8 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
         tutkinnonosat (keep #(jarjestyskoodi->tutkinnonosa asetukset % jarjestyskoodistoversio) (alakoodit->jarjestyskoodit alakoodit))
         osaamisalakoodit (filter osaamisala-koodi? alakoodit)
         osaamisalakoodistoversio (koodiston-uusin-versio asetukset "osaamisala")
-        osaamisalat (for [{koodi-uri :koodiUri} osaamisalakoodit]
-                      (koodi->osaamisala (hae-koodi asetukset "osaamisala" koodi-uri osaamisalakoodistoversio)))
+        osaamisalat (remove nil? (for [{koodi-uri :koodiUri} osaamisalakoodit]
+                                   (koodi->osaamisala (hae-koodi asetukset "osaamisala" koodi-uri osaamisalakoodistoversio))))
         tutkintotyyppi (some-value tutkintotyyppi-koodi? alakoodit)
         tutkintotasokoodi (some-value tutkintotasokoodi? alakoodit)]
     (cond
@@ -264,7 +271,7 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
                       (select-keys tutkinnon-kentat)
                       (assoc :tutkinnonosat tutkinnonosat
                              :osaamisalat osaamisalat)))
-        tutkinnonosat (map-by :osatunnus (mapcat :tutkinnonosat tutkinnot))
+        tutkinnonosat (map-by :osatunnus (map #(dissoc % :jarjestysnumero) (mapcat :tutkinnonosat tutkinnot)))
         osaamisalat (map-by :osaamisalatunnus (mapcat :osaamisalat tutkinnot))
         tutkinnot (->> tutkinnot
                     (map #(update-in % [:tutkinnonosat] (comp set (partial map tunnus-jarjestysnro))))
@@ -284,11 +291,11 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
                     (map #(select-keys % (conj tutkinnon-kentat :tutkinnonosat :osaamisalat))))
         tutkinnonosat (->> tutkinnot
                         (mapcat :tutkinnonosat)
-                        (map #(dissoc % :koodiUri :kuvaus_fi))
+                        (map #(dissoc % :jarjestysnumero :koodiUri :kuvaus_fi :kuvaus_sv))
                         (map-by :osatunnus))
         osaamisalat (->> tutkinnot
                         (mapcat :osaamisalat)
-                        (map #(dissoc % :koodiUri :kuvaus_fi))
+                        (map #(dissoc % :koodiUri :kuvaus_fi :kuvaus_sv))
                         (map-by :osaamisalatunnus))
         tutkinnot (->> tutkinnot
                  (map #(update-in % [:tutkinnonosat] (comp set (partial map tunnus-jarjestysnro))))

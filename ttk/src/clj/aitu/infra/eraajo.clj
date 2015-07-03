@@ -24,13 +24,16 @@
             aitu.infra.eraajo.kayttajat
             aitu.infra.eraajo.organisaatiot
             aitu.infra.eraajo.sopimusten-voimassaolo
-            aitu.infra.eraajo.eperusteet)
+            aitu.infra.eraajo.eperusteet
+            aitu.infra.eraajo.tutkinnot)
   (:import aitu.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
            aitu.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
            aitu.infra.eraajo.sopimusten_voimassaolo.PaivitaSopimustenVoimassaoloJob
-           aitu.infra.eraajo.eperusteet.PaivitaPerusteetJob))
+           aitu.infra.eraajo.eperusteet.PaivitaPerusteetJob
+           aitu.infra.eraajo.tutkinnot.PaivitaTutkinnotJob))
 
-(defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
+(defn ^:integration-api kaynnista-ajastimet!
+  [kayttooikeuspalvelu organisaatiopalvelu-asetukset eperusteet-asetukset koodistopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
   (qs/initialize)
   (log/info "Poistetaan vanhat jobit ennen uudelleenkäynnistystä")
@@ -63,9 +66,19 @@
                                 (t/start-now)
                                 (t/with-schedule (cron/schedule
                                                    (cron/cron-schedule "0 0 4 * * ?"))))
+        tutkinnot-job (j/build
+                        (j/of-type PaivitaTutkinnotJob)
+                        (j/using-job-data {"asetukset" koodistopalvelu-asetukset})
+                        (j/with-identity "paivita-tutkinnot"))
+        tutkinnot-trigger-daily (t/build
+                                  (t/with-identity "daily5")
+                                  (t/start-now)
+                                  (t/with-schedule (cron/schedule
+                                                     (cron/cron-schedule "0 0 5 * * ?"))))
         perusteet-job (j/build
                         (j/of-type PaivitaSopimustenVoimassaoloJob)
-                        (j/with-identity "paivita-sopimusten-voimassaolo"))
+                        (j/using-job-data {"asetukset" eperusteet-asetukset})
+                        (j/with-identity "paivita-perusteet"))
         perusteet-trigger-daily (t/build
                                   (t/with-identity "daily6")
                                   (t/start-now)
@@ -74,4 +87,5 @@
     (qs/schedule ldap-job ldap-trigger-5min)
     (qs/schedule org-job org-trigger-daily)
     (qs/schedule sopimus-job sopimus-trigger-daily)
+    (qs/schedule tutkinnot-job tutkinnot-trigger-daily)
     (qs/schedule perusteet-job perusteet-trigger-daily)))

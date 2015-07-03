@@ -130,8 +130,7 @@
                                            :tutkinnonosat #{{:jarjestysnumero 1
                                                              :osatunnus "10"}}}}
                           :osaamisalat {}
-                          :tutkinnonosat {"10" {:jarjestysnumero 1
-                                                :nimi_fi "Tutkinnonosa"
+                          :tutkinnonosat {"10" {:nimi_fi "Tutkinnonosa"
                                                 :nimi_sv nil
                                                 :osatunnus "10"
                                                 :voimassa_alkupvm (time/local-date 2014 1 1)
@@ -157,14 +156,12 @@
                                                             {:jarjestysnumero 2
                                                              :osatunnus "11"}}}}
                           :osaamisalat {}
-                          :tutkinnonosat {"10" {:jarjestysnumero 1
-                                                :nimi_fi "Tutkinnonosa"
+                          :tutkinnonosat {"10" {:nimi_fi "Tutkinnonosa"
                                                 :nimi_sv nil
                                                 :osatunnus "10"
                                                 :voimassa_alkupvm (time/local-date 2014 1 1)
                                                 :voimassa_loppupvm (time/local-date 2199 1 1)}
-                                          "11" {:jarjestysnumero 2
-                                                :nimi_fi "Tutkinnonosa 2"
+                                          "11" {:nimi_fi "Tutkinnonosa 2"
                                                 :nimi_sv nil
                                                 :osatunnus "11"
                                                 :voimassa_alkupvm (time/local-date 2014 1 1)
@@ -173,15 +170,13 @@
 (deftest tutkinto-muutokset-test
   (let [{:keys [tutkinnot osaamisalat tutkinnonosat]} (tutkinto-muutokset [tutkinto] 1 [koodisto-uusi koodisto-muuttunut])]
     (is (= osaamisalat {}))
-    (is (= tutkinnonosat {"11" [{:jarjestysnumero 2
-                                                :nimi_fi "Tutkinnonosa 2"
-                                                :nimi_sv nil
-                                                :osatunnus "11"
-                                                :voimassa_alkupvm (time/local-date 2014 1 1)
-                                                :voimassa_loppupvm (time/local-date 2199 1 1)}
+    (is (= tutkinnonosat {"11" [{:nimi_fi "Tutkinnonosa 2"
+                                 :nimi_sv nil
+                                 :osatunnus "11"
+                                 :voimassa_alkupvm (time/local-date 2014 1 1)
+                                 :voimassa_loppupvm (time/local-date 2199 1 1)}
                                 nil]
-                          "104351" [{:jarjestysnumero 1
-                                     :nimi_fi "Ammatin tiedolliset perusvalmiudet"
+                          "104351" [{:nimi_fi "Ammatin tiedolliset perusvalmiudet"
                                      :nimi_sv nil
                                      :osatunnus "104351"
                                      :voimassa_alkupvm (time/local-date 2013 12 17)
