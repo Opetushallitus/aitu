@@ -13,3 +13,5 @@ create trigger eperusteet_logm_insert before insert on eperusteet_log for each r
 create trigger eperusteet_log_mu_update before update on eperusteet_log for each row execute procedure update_modifier() ;
 create trigger eperusteet_log_cu_insert before insert on eperusteet_log for each row execute procedure update_creator() ;
 create trigger eperusteet_log_mu_insert before insert on eperusteet_log for each row execute procedure update_modifier() ;
+
+alter table tutkintoversio alter column peruste type varchar(40);

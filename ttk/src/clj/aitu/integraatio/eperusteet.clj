@@ -14,6 +14,7 @@
 
 (ns aitu.integraatio.eperusteet
   (:require [clj-time.coerce :as c]
+            [clj-time.core :as time]
             [oph.common.util.util :refer :all]))
 
 (defn lataa-kaikki-sivut [url options]
@@ -89,8 +90,8 @@
                                      [(str (:id osa)) (osatunnus osa)]))]
     {:diaarinumero (:diaarinumero peruste)
      :voimassa_alkupvm (c/to-local-date (:voimassaoloAlkaa peruste))
-     :voimassa_loppupvm (c/to-local-date (:voimassaoloLoppuu peruste))
-     :siirtymaajan_loppupvm (c/to-local-date (:siirtymaPaattyy peruste))
+     :voimassa_loppupvm (or (c/to-local-date (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))
+     :siirtymaajan_loppupvm (or (c/to-local-date (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))
      :tutkinnonosat (map-indexed muotoile-tutkinnonosa (:tutkinnonOsat peruste))
      :tutkinnot (map :koulutuskoodiArvo (:koulutukset peruste))}))
 

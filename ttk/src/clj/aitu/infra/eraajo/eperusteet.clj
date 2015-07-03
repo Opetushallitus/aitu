@@ -22,7 +22,6 @@
             [oph.korma.korma-auth
              :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]))
 
-
 (defn valitse-perusteen-kentat [peruste]
   (select-keys peruste [:peruste :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm]))
 
@@ -36,7 +35,6 @@
           :when (and tutkinto
                      (not= peruste (valitse-perusteen-kentat vanha-peruste)))]
       (assoc peruste :tutkintotunnus (:tutkintotunnus tutkinto)))))
-
 
 (defn ^:integration-api paivita-perusteet! [asetukset]
   (binding [*current-user-uid* integraatiokayttaja

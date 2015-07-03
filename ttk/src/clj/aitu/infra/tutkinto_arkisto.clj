@@ -64,7 +64,8 @@
                                               (sql/where {:tutkintotunnus tutkintotunnus})))))))
 
 (defn ^:integration-api paivita-tutkinto!
-  "Tekee uuden version tutkinnosta ja palauttaa tutkintoversion id:n"
+  "Jos peruste on muuttunut, tekee uuden version tutkinnosta. Jos peruste on sama, päivittää olemassaolevaa.
+   Palauttaa tutkintoversion id:n."
   [tutkinto]
   (let [tutkintotiedot (select-keys tutkinto [:nimi_fi :nimi_sv :opintoala :tyyppi :tutkintotaso])
         versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio :jarjestyskoodistoversio :peruste])
@@ -76,9 +77,13 @@
                       (dissoc :tutkintoversio_id))]
     (when (seq tutkintotiedot)
       (paivita! tutkintotunnus tutkintotiedot))
-    (let [tutkintoversio-id (:tutkintoversio_id (lisaa-tutkintoversio! uusi-versio))]
-      (paivita! tutkintotunnus {:uusin_versio_id tutkintoversio-id})
-      tutkintoversio-id)))
+    (if (= (:peruste vanha-versio) (:peruste tutkinto))
+      (do
+        (paivita-tutkintoversio! (assoc versiotiedot :tutkintoversio_id (:tutkintoversio_id vanha-versio)))
+        (:tutkintoversio_id vanha-versio))
+      (let [tutkintoversio-id (:tutkintoversio_id (lisaa-tutkintoversio! uusi-versio))]
+        (paivita! tutkintotunnus {:uusin_versio_id tutkintoversio-id})
+        tutkintoversio-id))))
 
 (defn ^:integration-api lisaa-tutkinto-ja-versio!
   "Lisää arkistoon tutkinnon ja sille tutkintoversion. Palauttaa lisätyn tutkintoversion id:n."
@@ -207,6 +212,12 @@
       (sql/with tutkintotoimikunta
         (sql/with toimikausi))
       (sql/where {:tutkintotunnus tutkintotunnus}))))
+
+(defn hae-peruste [diaarinumero]
+  (sql-util/select-unique-or-nil tutkintoversio
+    (sql/where {:peruste diaarinumero})
+    (sql/order :luotuaika :desc)
+    (sql/limit 1)))
 
 (defn hae
   "Hakee tutkinnon tunnuksen perusteella"
