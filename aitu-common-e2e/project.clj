@@ -13,6 +13,11 @@
 ;; European Union Public Licence for more details.
 
 (defproject solita/opetushallitus-aitu-e2e "0.22.0"
+  :description "aitu-common-e2e"
+  :url "https://github.com/Opetushallitus/aitu/tree/master/aitu-common-e2e"
+  :license {:name "European Union Public License - v1.1 or later"
+            :url "https://joinup.ec.europa.eu/software/page/eupl/licence-eupl"
+            :distribution :repo}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [clj-webdriver "0.6.1" :exclusions [org.seleniumhq.selenium/selenium-java
                                                      org.seleniumhq.selenium/selenium-server
