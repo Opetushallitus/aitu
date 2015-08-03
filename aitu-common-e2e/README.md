@@ -12,6 +12,7 @@ Ohje clojars:n käyttöönottoon
 
         {:user {...
                 :signing {:gpg-key "<avaimesi id>"}}}
+                :deploy-repositories [["clojars" {:url "https://clojars.org/repo/" :sign-releases true}]]
 - tulosta julkinen avain
 - vie tulostettu avain clojars-tiliisi
 
