@@ -20,7 +20,7 @@
                  [org.seleniumhq.selenium/selenium-java "2.47.0"]
                  [org.seleniumhq.selenium/selenium-server "2.47.0"]
                  [org.seleniumhq.selenium/selenium-remote-driver "2.47.0"]
-                 [clj-http "0.9.2"]
+                 [clj-http "1.1.2"]
                  [cheshire "5.3.1"]
                  [com.paulhammant/ngwebdriver "0.9.1" :exclusions [org.seleniumhq.selenium/selenium-java]]
                  [clj-time "0.7.0"]])
