@@ -9,8 +9,9 @@ Ohje clojars:n käyttöönottoon
 - ota avaimesi id talteen (kuten leiningenin ohjeessa)
 - julkaise luomasi avain
 - lisää seuraava ~/.lein/profiles.clj-tiedostoon (user-profiiliin)
-    {:user {...
-            :signing {:gpg-key "<avaimesi id>"}}}
+
+        {:user {...
+                :signing {:gpg-key "<avaimesi id>"}}}
 - tulosta julkinen avain
 - vie tulostettu avain clojars-tiliisi
 
@@ -20,14 +21,14 @@ Ohjeet aitu-common-e2e-kirjaston muutoksiin
   - x+1.y.z: ei taaksepäin yhteensopiva version x.y.z kanssa
   - x.y+1.z: taaksepäin yhteensopiva version x.y.z kanssa
   - x.y.z+1: taaksepäin yhteensopiva korjaus versioon x.y.z
-- aja lein install
+- aja `lein install`
 - tee checkouts hakemisto projekteihin, joissa käytät e2e-kirjastoa
 - tee checkouts-hakemistoon symbolinen linkki aitu-common-e2e-projektin hakemistoon
 - päivitä e2e-kirjaston versionumero kirjastoa käyttävässä projektissa
 - aja e2e testit
 - palaa aitu-common-e2e-hakemistoon
 - tee commit
-- aja lein deploy clojars
+- aja `lein deploy clojars`
 - kasvata e2e-kirjaston minor-versionumeroa (x.Y.z) ja lisää perään sana '-SNAPSHOT'
 - tee commit
 - julkaise muutokset versionhallintaan
