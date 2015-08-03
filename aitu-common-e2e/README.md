@@ -14,6 +14,8 @@ Ohje clojars:n käyttöönottoon
                 :signing {:gpg-key "<avaimesi id>"}}}
                 :deploy-repositories [["clojars" {:url "https://clojars.org/repo/" :sign-releases true}]]
 - tulosta julkinen avain
+
+        gpg --armor --export <avaimesi id>
 - vie tulostettu avain clojars-tiliisi
 
 Ohjeet aitu-common-e2e-kirjaston muutoksiin
