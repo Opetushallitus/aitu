@@ -138,6 +138,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'bower',
     'sass:compile'
   ]);
 
