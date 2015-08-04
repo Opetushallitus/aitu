@@ -13,6 +13,19 @@
 // European Union Public Licence for more details.
 
 angular.module('directives', ['services', 'resources', 'ngCookies'])
+  .directive('transcludeWithSurroundingScope', function() {
+    return {
+      link: {
+        pre: function(scope, element, attr, ctrl, transclude) {
+          if (transclude) {
+            transclude(scope, function(clone) {
+              element.append(clone);
+            })
+          }
+        }
+      }
+    };
+  })
   .directive('hakutulokset', function($parse, i18n){
     return {
       restrict: 'E',
