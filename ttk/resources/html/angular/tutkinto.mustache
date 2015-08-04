@@ -37,7 +37,7 @@
   <fieldset class="toimikunta-lista">
     <label>[[toimikunta]]</label>
     <div ng-repeat="toimikunta in toimikunnat.nykyiset">
-      <a ng-href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a>
+      <a ng-href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot" class="e2e-toimikunta-nimi">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a>
     </div>
   </fieldset>
 </section>
@@ -76,7 +76,7 @@
   </tr>
   </thead>
   <tr ng-repeat="toimikunta in toimikunnat.vanhat">
-    <td><a href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a></td>
+    <td><a href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot" class="e2e-toimikunta-nimi-vanha">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a></td>
     <td>{{toimikunta.alkupvm | date:'dd.MM.yyyy'}} – {{toimikunta.loppupvm | date:'dd.MM.yyyy'}}</td>
   </tr>
 </table>
