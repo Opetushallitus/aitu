@@ -32,7 +32,7 @@
   <hakutulokset tuloksia-sivulla="10" otsikot="['[[tutkintotunnus]]', '[[peruste]]', '[[nimi]]', '[[opintoala]]']" hakutulokset="tutkinnot">
     <div class="table-cell">{{hakutulos.tutkintotunnus}}</div>
     <div class="table-cell">{{hakutulos.peruste}}</div>
-    <div class="table-cell"><a href="#/tutkinto/{{hakutulos.tutkintotunnus}}">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
+    <div class="table-cell"><a href="#/tutkinto/{{hakutulos.tutkintotunnus}}" class="e2e-hakutulos-nimi">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
     <div class="table-cell">{{hakutulos.opintoala_nimi | lokalisoi:hakutulos:'opintoala_nimi'}}</div>
   </hakutulokset>
   <div>
