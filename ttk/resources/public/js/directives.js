@@ -137,7 +137,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('enumValikko', ['i18n', 'EnumResource', '$compile', function (i18n, EnumResource, $compile) {
 
     var template = '<select ng-model="arvo" ng-required="pakollinen" ng-options="arvo.nimi as arvo.label for arvo in arvot">';
-    template += '<option value="" ng-if="(pakollinen && !arvo) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
+    template += '<option value="" ng-show="(pakollinen && !arvo) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
 
     return {
       restrict: 'E',
