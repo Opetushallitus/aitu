@@ -29,16 +29,6 @@
 (defn toimikausi []
   (elementin-teksti "toimikunta.toimikausi_alku"))
 
-(defn voimassaolevat-jasenet []
-  (map w/text (w/find-elements (-> *ng*
-                                 (.repeater "henkilo in nykyisetJasenetJarjestetty")
-                                 (.column "henkilo.sukunimi")))))
-
-(defn entiset-jasenet []
-  (map w/text (w/find-elements (-> *ng*
-                                 (.repeater "henkilo in entisetJasenetJarjestetty")
-                                 (.column "henkilo.sukunimi")))))
-
 (defn jarjestamissopimukset []
   (map w/text (w/find-elements (-> *ng*
                                  (.repeater "sopimus in sopimuksetJarjestetty")
