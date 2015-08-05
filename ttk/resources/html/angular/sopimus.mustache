@@ -18,23 +18,23 @@
     </fieldset>
     <fieldset>
       <label>[[voimassa]]</label>
-      <p>{{sopimus.alkupvm | voimassaoloAika: sopimus.loppupvm}}</p>
+      <p class="e2e-sopimus-alkupvm">{{sopimus.alkupvm | voimassaoloAika: sopimus.loppupvm}}</p>
     </fieldset>
   </div>
   <div>
     <fieldset>
       <label>[[nykyinen-toimikunta]]</label>
-      <a href="#/toimikunta/{{sopimus.toimikunta.diaarinumero}}/tiedot">{{sopimus.toimikunta.nimi | nimivuosi:sopimus.toimikunta:'nimi':'toimikausi_alku'}}</a>
+      <a href="#/toimikunta/{{sopimus.toimikunta.diaarinumero}}/tiedot" class="e2e-sopimus-toimikunta-nimi">{{sopimus.toimikunta.nimi | nimivuosi:sopimus.toimikunta:'nimi':'toimikausi_alku'}}</a>
     </fieldset>
     <fieldset>
       <label>[[koulutustoimija]]</label>
-      <p><a href="#/koulutustoimija/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi | lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></p>
+      <p><a href="#/koulutustoimija/{{sopimus.koulutustoimija.ytunnus}}/tiedot" class="e2e-sopimus-koulutustoimija-nimi">{{sopimus.koulutustoimija.nimi | lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></p>
     </fieldset>
   </div>
   <div>
     <fieldset>
       <label>[[sopijatoimikunta]]</label>
-      <a href="#/toimikunta/{{sopimus.sopijatoimikunta.diaarinumero}}/tiedot">{{sopimus.sopijatoimikunta.nimi | nimivuosi:sopimus.sopijatoimikunta:'nimi':'toimikausi_alku'}}</a>
+      <a href="#/toimikunta/{{sopimus.sopijatoimikunta.diaarinumero}}/tiedot" class="e2e-sopimus-sopijatoimikunta-nimi">{{sopimus.sopijatoimikunta.nimi | nimivuosi:sopimus.sopijatoimikunta:'nimi':'toimikausi_alku'}}</a>
     </fieldset>
     <fieldset>
       <label>[[tutkintotilaisuuksista-vastaava-oppilaitos]]</label>
@@ -118,14 +118,14 @@
 <p ng-hide="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0">[[sopimuksella-ei-tutkintoja]]</p>
 <div class="accordion-container">
   <div ng-show="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0" class="accordion" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto" oletuksena-auki="{{muokkausTila}}" accordion>
-    <div class="accordion-header" id="tutkinto{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">
+    <div class="accordion-header e2e-tutkintoversio" id="tutkinto{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">
         {{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}} {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}} {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}}
         <button ng-show="salliMuokkaus()" class="icon edit-icon" style="float: right; margin: 0 5px 5px 0; " ng-click="muokkaa('tutkinto'+sopimusJaTutkinto.tutkintoversio.tutkintotunnus)"></button>
     </div>
     <div class="accordion-body">
       <fieldset>
         <label>[[tutkinnonperusteiden-diaarinumero]]</label>
-        <p class="tyhja-">{{sopimusJaTutkinto.tutkintoversio.peruste}}</p>
+        <p class="tyhja- e2e-tutkinnon-perusteen-diaarinumero">{{sopimusJaTutkinto.tutkintoversio.peruste}}</p>
       </fieldset>
       <fieldset>
         <label>[[tutkinnon-suorituskieli]]</label>
