@@ -77,7 +77,7 @@
       </thead>
       <tr ng-repeat="tutkinto in tutkintoJarjestetty">
         <td>{{tutkinto.opintoala_nimi | lokalisoi:tutkinto:'opintoala_nimi'}}</td>
-        <td><a href="#/tutkinto/{{tutkinto.tutkintotunnus}}">{{tutkinto.tutkintotunnus}} {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a></td>
+        <td><a href="#/tutkinto/{{tutkinto.tutkintotunnus}}" class="e2e-tutkinto-nimi">{{tutkinto.tutkintotunnus}} {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a></td>
       </tr>
     </table>
   </div>
