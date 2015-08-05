@@ -23,10 +23,8 @@
 
 (defn nayta-tutkinto
   []
-  (-> *ng*
-    (.repeater "sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto")
-    (.column "sopimusJaTutkinto.tutkintoversio.nimi")
-    w/find-elements
+  (->
+    (w/find-elements {:css ".e2e-tutkintoversio"})
     first
     w/click))
 
