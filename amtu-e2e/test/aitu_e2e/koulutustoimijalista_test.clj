@@ -33,9 +33,7 @@
   (odota-angular-pyyntoa))
 
 (defn nakyvat-koulutustoimijat []
-  (map w/text (w/find-elements (-> *ng*
-                                 (.repeater "hakutulos in hakutulokset")
-                                 (.column "hakutulos.nimi")))))
+  (map w/text (w/find-elements {:css ".e2e-koulutustoimija-nimi"})))
 
 (deftest koulutustoimijalista-test []
   (with-webdriver
