@@ -3,7 +3,7 @@
 <div class="ohje">
   <div class="ohje-popup" ng-class="{muokkaus : muokkaus}" ng-show="nayta">
     <button class="icon delete-icon sulje" ng-click="piilotaOhje()"></button>
-    <p ng-hide="muokkaus" ng-repeat="kappale in ohjeteksti">{{kappale.sisalto}}</p>
+    <p ng-hide="muokkaus" ng-repeat="kappale in ohjeteksti" class="e2e-kappale">{{kappale.sisalto}}</p>
     <fieldset ng-show="muokkaus">
       <label>[[ohjeteksti-suomeksi]]</label>
       <textarea ng-model="ohje.teksti_fi"></textarea>
