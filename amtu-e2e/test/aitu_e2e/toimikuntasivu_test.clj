@@ -34,9 +34,7 @@
                                  (.repeater "sopimus in sopimuksetJarjestetty")
                                  (.column "sopimus.sopimusnumero")))))
 (defn sopimuksen-tutkinnot []
-  (map w/text (w/find-elements (-> *ng*
-                                 (.repeater "sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto")
-                                 (.column "sopimusJaTutkinto.tutkintoversio.nimi")))))
+  (map w/text (w/find-elements {:css ".e2e-sopimusjatutkinto-tutkintoversio-nimi"})))
 
 (defn klikkaa-taulukon-sarakkeen-otsikkoa [taulukko sarake]
   (w/click {:css (str ".nykyiset-jasenyydet table[jarjestettava-taulukko=\"" taulukko "\"] th[jarjestettava-sarake=\"" sarake "\"]")})

@@ -16,7 +16,7 @@
       <td><auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA']" oikeus="sopimustiedot_luku" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot" class="e2e-sopimus-sopimusnumero">{{sopimus.sopimusnumero}}</auth-toiminto></td>
       <td ng-show="naytaTutkinnot">
         <div class="sopimus-ja-tutkinto-rivi" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto">
-          <a href="#/tutkinto/{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">{{sopimusJaTutkinto.tutkintoversio.nimi |lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}}</a>
+          <a href="#/tutkinto/{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}" class="e2e-sopimusjatutkinto-tutkintoversio-nimi">{{sopimusJaTutkinto.tutkintoversio.nimi |lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}}</a>
           <span class="perusteen-diaarinumero e2e-perusteen-diaarinumero">{{sopimusJaTutkinto.tutkintoversio.peruste}}</span>
         </div>
       </td>
