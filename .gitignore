@@ -1,3 +1,4 @@
+/amtu-e2e/screenshot-*.png
 *.swp
 node_modules
 bower_components
