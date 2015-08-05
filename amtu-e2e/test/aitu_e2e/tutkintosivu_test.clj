@@ -22,17 +22,14 @@
 
 (defn tutkintosivu [tutkintotunnus] (str "/fi/#/tutkinto/" tutkintotunnus))
 
+(defn css-elementin-teksti [css]
+  (w/text (w/find-element {:css css})))
+
 (defn jarjestamissopimukset []
-  (map w/text (w/find-elements-under ".nykyiset-sopimukset"
-                                     (-> *ng*
-                                       (.repeater "sopimus in sopimuksetJarjestetty")
-                                       (.column "sopimus.sopimusnumero")))))
+  (map w/text (w/find-elements {:css ".nykyiset-sopimukset .e2e-sopimus-sopimusnumero"})))
 
 (defn sopimuksen-tutkinnonperusteet []
-  (map w/text (w/find-elements-under ".nykyiset-sopimukset td[ng-show=\"naytaPerusteSarake\"]"
-                                     (-> *ng*
-                                       (.repeater "sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto")
-                                       (.column "sopimusJaTutkinto.tutkintoversio.peruste")))))
+  (map w/text (w/find-elements {:css ".nykyiset-sopimukset .e2e-perustesarake-peruste"})))
 
 (deftest tutkintosivu-test
   (testing "tutkintosivu"
@@ -75,13 +72,13 @@
             (is (= (sivun-otsikko) "ILMASTOINTIALAN TUTKINTO - TU1")))
           (testing "pitäisi näyttää koulutusalan nimi"
             ;; Niin
-            (is (= (elementin-teksti "tutkinto.opintoala.koulutusala.selite") "Tekniikan ja liikenteen ala")))
+            (is (= (css-elementin-teksti ".e2e-tutkinto-opintoala-koulutusala-selite") "Tekniikan ja liikenteen ala")))
           (testing "pitäisi näyttää opintoalan nimi"
             ;; Niin
-            (is (= (elementin-teksti "tutkinto.opintoala.selite") "Sähköala")))
+            (is (= (css-elementin-teksti ".e2e-tutkinto-opintoala-selite") "Sähköala")))
           (testing "pitäisi näyttää tutkintotyypin nimi"
             ;; Niin
-            (is (= (elementin-teksti "tutkinto.tyyppi_selite") "Paras tutkinto")))
+            (is (= (css-elementin-teksti ".e2e-tutkinto-tyyppi_selite") "Paras tutkinto")))
           (testing "pitäisi näyttää järjestämissopimukset"
             ;; Niin
             (is (= (first (jarjestamissopimukset)) "123" )))
