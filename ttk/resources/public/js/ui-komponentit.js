@@ -14,19 +14,16 @@
 
 angular.module('uiKomponentit', ['ui.bootstrap', 'ngCookies'])
 
-  .constant('datepickerConfig', {
-    dayFormat: 'd',
-    monthFormat: 'MMMM',
-    yearFormat: 'yyyy',
-    dayHeaderFormat: 'EEE',
-    dayTitleFormat: 'MMMM yyyy',
-    monthTitleFormat: 'yyyy',
-    showWeeks: false,
-    startingDay: 1,
-    yearRange: 20,
-    minDate: null,
-    maxDate: null
-  })
+  .config(['datepickerConfig', function(datepickerConfig) {
+    datepickerConfig.formatDay = 'd';
+    datepickerConfig.formatMonth = 'MMMM';
+    datepickerConfig.formatYear = 'yyyy';
+    datepickerConfig.formatDayHeader = 'EEE';
+    datepickerConfig.formatDayTitle = 'MMMM yyyy';
+    datepickerConfig.formatMonthTitle = 'yyyy';
+    datepickerConfig.showWeeks = false;
+    datepickerConfig.startingDay = 1;
+  }])
 
   .run(['i18n', 'kieli', '$cookies', function(i18n, kieli, $cookies) {
     $.fn.select2.ajaxDefaults.params.headers = {"Accept-Language" : kieli, "x-xsrf-token" : $cookies.get('XSRF-TOKEN')};
