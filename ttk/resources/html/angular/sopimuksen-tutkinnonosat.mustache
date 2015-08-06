@@ -23,7 +23,7 @@
         </tr>
         <tr ng-if="!muokkaus" ng-repeat="valittuTutkinnonosa in valitutTutkinnonosat | jarjestaValitutJarjestysnumerolla:kaikkiTutkinnonosat" class="valittu">
           <td class="jarjestysnumero">{{valittuTutkinnonosa | naytaJarjestysnumeroValitulleTutkinnonosalle:kaikkiTutkinnonosat}}</td>
-          <td><span class="osan-tieto nimi">{{valittuTutkinnonosa.nimi | lokalisoi:valittuTutkinnonosa:'nimi'}}</span></td>
+          <td><span class="osan-tieto nimi e2e-valittututkinnonosa-nimi">{{valittuTutkinnonosa.nimi | lokalisoi:valittuTutkinnonosa:'nimi'}}</span></td>
           <td><span class="osan-tieto kuvaus">{{valittuTutkinnonosa.kuvaus}}</span></td>
         </tr>
       </tbody>
@@ -44,7 +44,7 @@
         <td><span class="osan-tieto kuvaus">{{osaamisala.kuvaus}}</span></td>
       </tr>
       <tr ng-if="!muokkaus" ng-repeat="valittuOsaamisala in valitutOsaamisalat" class="valittu">
-        <td><span class="osan-tieto nimi">{{valittuOsaamisala.nimi | lokalisoi:valittuOsaamisala:'nimi'}}</span></td>
+        <td><span class="osan-tieto nimi e2e-valittuosaamisala-nimi">{{valittuOsaamisala.nimi | lokalisoi:valittuOsaamisala:'nimi'}}</span></td>
         <td><span class="osan-tieto kuvaus">{{valittuOsaamisala.kuvaus}}</span></td>
       </tr>
       </tbody>
