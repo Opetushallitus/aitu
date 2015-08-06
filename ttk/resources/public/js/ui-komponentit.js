@@ -29,5 +29,5 @@ angular.module('uiKomponentit', ['ui.bootstrap', 'ngCookies'])
   })
 
   .run(['i18n', 'kieli', '$cookies', function(i18n, kieli, $cookies) {
-    $.fn.select2.ajaxDefaults.params.headers = {"Accept-Language" : kieli, "x-xsrf-token" : $cookies['XSRF-TOKEN']};
+    $.fn.select2.ajaxDefaults.params.headers = {"Accept-Language" : kieli, "x-xsrf-token" : $cookies.get('XSRF-TOKEN')};
   }])

@@ -407,7 +407,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         el.find('input[type=file]').change(function(event){
           var filename = event.target.value? _.last(event.target.value.split('\\')) : '';
 
-          el.find('input.x-xsrf-token').val($cookies['XSRF-TOKEN']);
+          el.find('input.x-xsrf-token').val($cookies.get('XSRF-TOKEN'));
 
           scope.tiedostoValittu = filename.length > 0;
           el.find('input.valittu-tiedosto').val(filename);
