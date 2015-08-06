@@ -86,7 +86,7 @@
   <fieldset ng-hide="muokkausTila">
     <label ng-hide="jasen.henkilo.keskusjarjesto">[[jarjesto]]</label>
     <label ng-hide="!jasen.henkilo.keskusjarjesto">[[keskusjarjesto]]</label>
-    <p>{{jasen.henkilo.jarjesto.jarjesto_nimi | lokalisoi:jasen.henkilo.jarjesto:'jarjesto_nimi'}}</p>
+    <p class="e2e-jasen-henkilo-jarjesto-jarjesto_nimi">{{jasen.henkilo.jarjesto.jarjesto_nimi | lokalisoi:jasen.henkilo.jarjesto:'jarjesto_nimi'}}</p>
   </fieldset>
   <haku-valitsin
     ng-show="muokkausTila"
