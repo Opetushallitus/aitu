@@ -217,6 +217,24 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       }
     };
   }])
+  // Workaround https://github.com/angular-ui/bootstrap/issues/4170
+  .directive('pvmValidointi', [function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attrs, ctrl) {
+        ctrl.$validators.pvmValidointi = function(modelValue) {
+          if (scope.minDate !== undefined && modelValue < scope.minDate) {
+            return false;
+          }
+          if (scope.maxDate !== undefined && modelValue > scope.maxDate) {
+            return false;
+          }
+          return true;
+        };
+      }
+    };
+  }])
   .directive('pvmValitsin', ['pvm',  function(pvm) {
     return {
       restrict: 'E',
