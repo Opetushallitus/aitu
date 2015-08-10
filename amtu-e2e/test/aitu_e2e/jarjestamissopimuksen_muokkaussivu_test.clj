@@ -165,8 +165,8 @@
           (is (= (viestin-teksti) "Järjestämissopimuksen tietoja muokattu"))
           (avaa-tutkinnon-tiedot)
           (testing "Sopimuksen perustiedot tallettuvat oikein"
-            (is (= (elementin-teksti "sopimus.alkupvm") "24.03.1980 - 01.02.2199"))
-            (is (= (elementin-teksti "sopimus.koulutustoimija.nimi") "Hanhivaaran kaupunki"))
+            (is (= (w/text (w/find-element {:css ".e2e-sopimus-alkupvm"})) "24.03.1980 - 01.02.2199"))
+            (is (= (w/text (w/find-element {:css ".e2e-sopimus-koulutustoimija-nimi"})) "Hanhivaaran kaupunki"))
             (is (= (elementin-teksti "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi") "Hanhivaaran urheiluopisto"))
             (is (= (elementin-teksti "sopimus.vastuuhenkilo") "Roope Ankka"))
             (is (= (elementin-teksti "sopimus.sahkoposti") "rankka@jokudomain.com"))
