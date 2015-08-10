@@ -21,6 +21,9 @@
             [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data with-cleaned-data]]))
 
+(defn css-elementin-teksti [css]
+  (w/text (w/find-element {:css css})))
+
 (defn avaa-sopimuksen-luontisivu-toimikunnalle [diaarinumero]
   (avaa (toimikuntasivu diaarinumero))
   (w/click "button[ng-click=\"siirrySopimuksenLuontiin()\"]")
@@ -51,10 +54,10 @@
           (tallenna)
           (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
           (is (= (elementin-teksti "sopimus.sopimusnumero") "8742"))
-          (is (= (elementin-teksti "sopimus.alkupvm") "24.03.1980 - 01.01.2199"))
-          (is (= (elementin-teksti "sopimus.sopijatoimikunta.nimi") "Testialan tutkintotoimikunta (2013)"))
-          (is (= (elementin-teksti "sopimus.toimikunta.nimi") "Testialan tutkintotoimikunta (2013)"))
-          (is (= (elementin-teksti "sopimus.koulutustoimija.nimi") "Hanhivaaran kaupunki"))
+          (is (= (css-elementin-teksti ".e2e-sopimus-alkupvm") "24.03.1980 - 01.01.2199"))
+          (is (= (css-elementin-teksti ".e2e-sopimus-sopijatoimikunta-nimi") "Testialan tutkintotoimikunta (2013)"))
+          (is (= (css-elementin-teksti ".e2e-sopimus-toimikunta-nimi") "Testialan tutkintotoimikunta (2013)"))
+          (is (= (css-elementin-teksti ".e2e-sopimus-koulutustoimija-nimi") "Hanhivaaran kaupunki"))
           (is (= (elementin-teksti "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi") "Hanhivaaran urheiluopisto")))))
     (testing
       "luonti ei onnistu, jos sopimusnumero on käytössä"
@@ -91,8 +94,8 @@
           (is (= (viestin-teksti) "Järjestämissopimuksen luonti onnistui"))
           (tallenna)
           (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
-          (is (= (elementin-teksti "sopimus.sopijatoimikunta.nimi") "Toinen toimikunta (2013)"))
-          (is (= (elementin-teksti "sopimus.toimikunta.nimi") "Toinen toimikunta (2013)")))))
+          (is (= (css-elementin-teksti ".e2e-sopimus-sopijatoimikunta-nimi") "Toinen toimikunta (2013)"))
+          (is (= (css-elementin-teksti ".e2e-sopimus-toimikunta-nimi") "Toinen toimikunta (2013)")))))
     (testing
       "luonti ei onnistu, jos pakollisia tietoja puuttuu"
       (with-webdriver
