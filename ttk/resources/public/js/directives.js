@@ -667,7 +667,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('booleanSelect', ['boolValues', 'i18n', function(boolValues, i18n){
 
     var template = '<select ng-model="model" ng-required="pakollinen" ng-options="b.value as b.name for b in boolValues">';
-    template += '<option value="" ng-if="(pakollinen && !model) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
+    template += '<option value="" ng-show="(pakollinen && !model) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
 
     return {
       restrict: 'E',
