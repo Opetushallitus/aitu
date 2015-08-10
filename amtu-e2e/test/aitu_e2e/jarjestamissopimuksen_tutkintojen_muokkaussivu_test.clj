@@ -66,8 +66,5 @@
         (tallenna)
         (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
 
-        (is (= (set (map w/text (-> *ng*
-                               (.repeater "sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto")
-                               (.column "sopimusJaTutkinto.tutkintoversio.nimi")
-                               (w/find-elements))))
+        (is (= (set (map w/text (w/find-elements {:css ".e2e-tutkintoversio"})))
           #{"TU1 Testialan tutkinto (koko tutkinto)", "TU2 Testialan tutkinto2 (koko tutkinto)"}))))))
