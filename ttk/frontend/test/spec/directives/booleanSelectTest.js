@@ -12,7 +12,7 @@ describe('Directives: enumValikko:', function() {
   }
 
   function optionTeksti(options, indeksi) {
-    return options.filter(':nth-child(' + indeksi + ')').text();
+    return $(options[indeksi - 1]).text();
   }
 
   beforeEach(module(
@@ -54,7 +54,7 @@ describe('Directives: enumValikko:', function() {
     $rootScope.testiBooleanValinta = true;
     var elementti = luoElementti();
 
-    expect(elementti.find('option[selected="selected"]').text()).toEqual('kyllä');
+    expect(elementti.find('option:selected').text()).toEqual('kyllä');
   });
 
   it('Ei näytä tyhjää valintaa, jos pakollisesta boolean valikosta on item valittuna.', function() {
@@ -62,7 +62,7 @@ describe('Directives: enumValikko:', function() {
     $rootScope.testiBooleanValinta = true;
     var elementti = luoElementti();
 
-    var options = elementti.find('option');
+    var options = elementti.find('option:not(".ng-hide")');
 
     expect(optionTeksti(options, 1)).toEqual('kyllä');
     expect(optionTeksti(options, 2)).toEqual('ei');
@@ -74,7 +74,7 @@ describe('Directives: enumValikko:', function() {
     $rootScope.testiBooleanValinta = true;
     var elementti = luoElementti();
 
-    expect(elementti.find('option[selected="selected"]').text()).toEqual('kyllä');
+    expect(elementti.find('option:selected').text()).toEqual('kyllä');
 
     elementti.find('select').val('ei valintaa');
     elementti.find('select').trigger('change');
