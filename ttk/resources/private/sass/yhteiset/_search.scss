@@ -31,7 +31,7 @@ ul.pagination {
   list-style: none; padding: 0; margin: 10px 0 10px 0; @include clearfix;
   li {float: left;
     &:not(.disabled) a:hover {background-color: $darker-primary;}
-    a {color: $primary-action-text; cursor: pointer; background-color: $primary-color; margin-right: $marginL; display: block; padding: 3px 10px 3px 10px;}
+    a[href=""] {color: $primary-action-text; cursor: pointer; background-color: $primary-color; margin-right: $marginL; display: block; padding: 3px 10px 3px 10px;}
     &.disabled {cursor: auto;
       a {background-color: $disabled-primary-color;}
     }
