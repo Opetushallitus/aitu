@@ -76,7 +76,8 @@ module.exports = function (grunt) {
         }
       },
       options : {
-        outputStyle: 'expanded'
+        outputStyle: 'expanded',
+        sourceMap: true
       }
     },
     concat: {
