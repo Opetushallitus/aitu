@@ -25,11 +25,7 @@
 (defn tutkinnon-perusteen-diaarinumero
   "Hakee diaarinumerokentän, joka on accordionin sisällä."
   []
-  (-> *ng*
-    (.repeater "sopimus.sopimus_ja_tutkinto")
-    (.column "tutkintoversio.peruste")
-    (w/find-elements)
-    (first)))
+  (first (w/find-elements {:css ".e2e-tutkinnon-perusteen-diaarinumero"})))
 
 (def jarjestamissopimus-data {:toimikunnat [{:nimi_fi "Testialan tutkintotoimikunta"
                                              :diaarinumero "98/11/543"
@@ -112,25 +108,15 @@
             (is (= sopimusnumero "123"))))
 
         (testing "toimikunnan nimi näkyy sivulla"
-          (let [toimikunnan-nimi (-> *ng*
-                                     (.binding "sopimus.toimikunta.nimi")
-                                     (w/find-element)
-                                     (w/text))]
+          (let [toimikunnan-nimi (w/text (w/find-element {:css ".e2e-sopimus-toimikunta-nimi"}))]
             (is (= toimikunnan-nimi "Testialan tutkintotoimikunta (2013)"))))
 
         (testing "sopijatoimikunnan nimi näkyy sivulla"
-          (let [toimikunnan-nimi (-> *ng*
-                                     (.binding "sopimus.sopijatoimikunta.nimi")
-                                     (w/find-element)
-                                     (w/text))]
+          (let [toimikunnan-nimi (w/text (w/find-element {:css ".e2e-sopimus-sopijatoimikunta-nimi"}))]
             (is (= toimikunnan-nimi "Testialan tutkintotoimikunta (2013)"))))
 
         (testing "oppilaitoksen nimi näkyy sivulla"
-          (let [oppilaitoksen-nimi (-> *ng*
-                                       (.binding "sopimus.koulutustoimija.nimi")
-                                       (w/find-elements)
-                                       (first)
-                                       (w/text))]
+          (let [oppilaitoksen-nimi (w/text (w/find-element {:css ".e2e-sopimus-koulutustoimija-nimi"}))]
             (is (= oppilaitoksen-nimi "Ankkalinnan kaupunki"))))
 
         (testing "oppilaitoksen nimi näkyy sivulla"
@@ -142,21 +128,14 @@
             (is (= oppilaitoksen-nimi "Ankkalinnan aikuiskoulutuskeskus"))))
 
         (testing "voimassaoloaika näkyy sivulla"
-          (let [voimassaoloaika (-> *ng*
-                                    (.binding "sopimus.alkupvm")
-                                    (w/find-element)
-                                    (w/text))]
+          (let [voimassaoloaika (w/text (w/find-element {:css ".e2e-sopimus-alkupvm"}))]
             (is (= voimassaoloaika
                    (str (du/paivamaara-kayttoliittyman-muodossa du/menneisyydessa-pvm) " - "
                         (du/paivamaara-kayttoliittyman-muodossa du/tulevaisuudessa-pvm))))))
 
         (testing "napista pääsee nykyisen toimikunnan sivulle"
           (w/visible? (w/find-element {:css "button[ng-click=\"siirryToimikunnanSivulle(sopimus.toimikunta.diaarinumero)\"]"})))
-        (let [tutkinnot (-> *ng*
-                          (.repeater "sopimus.sopimus_ja_tutkinto")
-                          (.column "tutkintoversio.nimi")
-                          (w/find-elements)
-                          (first))]
+        (let [tutkinnot (first (w/find-elements {:css ".e2e-tutkintoversio"}))]
           (testing "tutkinnot näkyvät sivulla"
             (-> tutkinnot
               (w/text)

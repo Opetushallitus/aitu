@@ -29,7 +29,7 @@
   (w/click "button[ng-click=\"tallennaOhje()\"]"))
 
 (defn nakyva-ohjeteksti []
-  (map w/text (-> *ng* (.repeater "kappale in ohjeteksti") (.column "kappale") (w/find-elements))))
+  (map w/text (w/find-elements {:css ".e2e-kappale"})))
 
 (deftest ^:no-ie ohjeen-muokkaus-test
   (with-webdriver

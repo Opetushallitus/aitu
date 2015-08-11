@@ -14,11 +14,11 @@
   </fieldset>
   <fieldset>
     <label>[[koulutusala]]</label>
-    <p>{{tutkinto.opintoala.koulutusala.selite | lokalisoi:tutkinto.opintoala.koulutusala:'selite'}}</p>
+    <p class="e2e-tutkinto-opintoala-koulutusala-selite">{{tutkinto.opintoala.koulutusala.selite | lokalisoi:tutkinto.opintoala.koulutusala:'selite'}}</p>
   </fieldset>
   <fieldset>
     <label>[[opintoala]]</label>
-    <p>{{tutkinto.opintoala.selite | lokalisoi:tutkinto.opintoala:'selite'}}</p>
+    <p class="e2e-tutkinto-opintoala-selite">{{tutkinto.opintoala.selite | lokalisoi:tutkinto.opintoala:'selite'}}</p>
   </fieldset>
   <fieldset>
     <label>[[tutkintotaso]]</label>
@@ -30,14 +30,14 @@
   </fieldset>
   <fieldset class="tutkintotyyppi">
     <label>[[tyyppi]]</label>
-    <p>{{tutkinto.tyyppi_selite | lokalisoi:tutkinto:'tyyppi_selite'}}</p>
+    <p class="e2e-tutkinto-tyyppi_selite">{{tutkinto.tyyppi_selite | lokalisoi:tutkinto:'tyyppi_selite'}}</p>
   </fieldset>
 
   <br/>
   <fieldset class="toimikunta-lista">
     <label>[[toimikunta]]</label>
     <div ng-repeat="toimikunta in toimikunnat.nykyiset">
-      <a ng-href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a>
+      <a ng-href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot" class="e2e-toimikunta-nimi">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a>
     </div>
   </fieldset>
 </section>
@@ -76,7 +76,7 @@
   </tr>
   </thead>
   <tr ng-repeat="toimikunta in toimikunnat.vanhat">
-    <td><a href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a></td>
+    <td><a href="#/toimikunta/{{toimikunta.diaarinumero}}/tiedot" class="e2e-toimikunta-nimi-vanha">{{toimikunta.nimi | nimivuosi:toimikunta:'nimi':'toimikausi_alku'}}</a></td>
     <td>{{toimikunta.alkupvm | date:'dd.MM.yyyy'}} – {{toimikunta.loppupvm | date:'dd.MM.yyyy'}}</td>
   </tr>
 </table>

@@ -33,7 +33,7 @@
 
 <div class="search-results" lataus-indikaattori metodi-idt="['toimikuntalistaus']" viesti="[[toimikuntia-ladataan]]" virheviesti="[[toimikuntien-lataus-epaonnistui]]" yrita-uudelleen="haeToimikunnat()">
   <hakutulokset tuloksia-sivulla="10" otsikot="['[[nimi]]', '[[diaarinumero]]', '[[i18n.yleiset.tilikoodi]]', '[[toimikausi_voimassa]]', '[[kielisyys]]']" hakutulokset="toimikunnat">
-    <div class="table-cell"><a href="#/toimikunta/{{hakutulos.diaarinumero}}/tiedot">{{hakutulos.nimi | nimivuosi:hakutulos:'nimi':'toimikausi_alku'}}</a></div>
+    <div class="table-cell"><a href="#/toimikunta/{{hakutulos.diaarinumero}}/tiedot" class="e2e-toimikunnat-hakutulos-nimi">{{hakutulos.nimi | nimivuosi:hakutulos:'nimi':'toimikausi_alku'}}</a></div>
     <div class="table-cell">{{hakutulos.diaarinumero}}</div>
     <div class="table-cell">{{hakutulos.tilikoodi}}</div>
     <div class="table-cell">

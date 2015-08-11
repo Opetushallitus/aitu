@@ -117,7 +117,7 @@
             (avaa (jasenen-lisays-sivu "98/11/543"))
             (hae-henkilo "Simo Sisu")
             ;; Niin
-            (is (= (elementin-teksti "henkilo.sukunimi") "Simo Sisu"))))))
+            (is (= (w/text (w/find-element {:css ".e2e-jasen-nimi"})) "Simo Sisu"))))))
     (testing "toimikunnan jäsenen lisäys"
       ;; Oletetaan, että
       (with-data {:toimikunnat testi-toimikunnat

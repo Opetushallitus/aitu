@@ -28,7 +28,7 @@
 
 <div class="search-results" lataus-indikaattori metodi-idt="['koulutustoimijalistaus']" viesti="[[koulutustoimijoita-ladataan]]" virheviesti="[[koulutustoimijoiden-lataus-epaonnistui]]" yrita-uudelleen="haeKoulutustoimijat()">
   <hakutulokset tuloksia-sivulla="10" otsikot="['[[i18n.yleiset.nimi]]', '[[ytunnus]]', '[[i18n.yleiset.sopimukset]]']" hakutulokset="koulutustoimijat">
-    <div class="table-cell"><a href="#/koulutustoimija/{{hakutulos.ytunnus}}/tiedot">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
+    <div class="table-cell"><a href="#/koulutustoimija/{{hakutulos.ytunnus}}/tiedot" class="e2e-koulutustoimija-nimi">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
     <div class="table-cell">{{hakutulos.ytunnus}}</div>
     <div class="table-cell">{{hakutulos.sopimusten_maara}}</div>
   </hakutulokset>

@@ -27,16 +27,14 @@
 ; ByAngular hakee scope-muuttujan arvon sijaan lähimmän elementin jossa binding esiintyy.
 ; Tämän takia toimikaudesta tällä sivulla ei saa suoraan eritellyksi alku-ja loppupäivämääriä.
 (defn toimikausi []
-  (elementin-teksti "toimikunta.toimikausi_alku"))
+  (w/text (w/find-element {:css ".e2e-toimikunta-toimikausi"})))
 
 (defn jarjestamissopimukset []
   (map w/text (w/find-elements (-> *ng*
                                  (.repeater "sopimus in sopimuksetJarjestetty")
                                  (.column "sopimus.sopimusnumero")))))
 (defn sopimuksen-tutkinnot []
-  (map w/text (w/find-elements (-> *ng*
-                                 (.repeater "sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto")
-                                 (.column "sopimusJaTutkinto.tutkintoversio.nimi")))))
+  (map w/text (w/find-elements {:css ".e2e-sopimusjatutkinto-tutkintoversio-nimi"})))
 
 (defn klikkaa-taulukon-sarakkeen-otsikkoa [taulukko sarake]
   (w/click {:css (str ".nykyiset-jasenyydet table[jarjestettava-taulukko=\"" taulukko "\"] th[jarjestettava-sarake=\"" sarake "\"]")})

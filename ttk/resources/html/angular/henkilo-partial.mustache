@@ -6,7 +6,7 @@
 <section class="info-section">
   <fieldset ng-hide="muokkausTila">
     <label>[[nimi]]</label>
-    <p>{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
+    <p class="e2e-jasen-nimi">{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
   </fieldset>
   <fieldset ng-hide="!muokkausTila">
     <label class="pakollinen">[[etunimi]]</label>
@@ -86,7 +86,7 @@
   <fieldset ng-hide="muokkausTila">
     <label ng-hide="jasen.henkilo.keskusjarjesto">[[jarjesto]]</label>
     <label ng-hide="!jasen.henkilo.keskusjarjesto">[[keskusjarjesto]]</label>
-    <p>{{jasen.henkilo.jarjesto.jarjesto_nimi | lokalisoi:jasen.henkilo.jarjesto:'jarjesto_nimi'}}</p>
+    <p class="e2e-jasen-henkilo-jarjesto-jarjesto_nimi">{{jasen.henkilo.jarjesto.jarjesto_nimi | lokalisoi:jasen.henkilo.jarjesto:'jarjesto_nimi'}}</p>
   </fieldset>
   <haku-valitsin
     ng-show="muokkausTila"

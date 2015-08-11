@@ -23,9 +23,7 @@
 (def toimikuntalista "/fi/#/search-toimikunta")
 
 (defn nakyvat-toimikunnat []
-  (set (map w/text (w/find-elements (-> *ng*
-                                      (.repeater "hakutulos in hakutulokset")
-                                      (.column "hakutulos.nimi"))))))
+  (set (map w/text (w/find-elements {:css ".e2e-toimikunnat-hakutulos-nimi"}))))
 
 (def test-toimikunnat {:toimikunnat [{:nimi_fi "Ilmastointialan tutkintotoimikunta"
                                       :nimi_sv "Examenskommission för ventilationsbranschen"

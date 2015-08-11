@@ -927,7 +927,7 @@ ul.pagination li:not(.disabled) a:hover {
   background-color: #083f51;
 }
 
-ul.pagination li a {
+ul.pagination li a[href=""] {
   color: white;
   cursor: pointer;
   background-color: #107ea2;

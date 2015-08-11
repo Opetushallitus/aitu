@@ -24,9 +24,7 @@
 (def tutkintolista "/fi/#/search-tutkinto")
 
 (defn nakyvat-tutkinnot []
-  (map w/text (w/find-elements (-> *ng*
-                                 (.repeater "hakutulos in hakutulokset")
-                                 (.column "hakutulos.nimi")))))
+  (map w/text (w/find-elements {:css ".e2e-hakutulos-nimi"})))
 
 (defn nayta-kaikki []
   (valitse-radiobutton "tutkintoHakuehto.voimassaolo" "kaikki"))

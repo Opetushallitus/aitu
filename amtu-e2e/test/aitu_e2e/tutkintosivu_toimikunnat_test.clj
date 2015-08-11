@@ -24,14 +24,10 @@
 (defn tutkintosivu [tutkintotunnus] (str "/fi/#/tutkinto/" tutkintotunnus))
 
 (defn nykyisten-toimikuntien-nimet []
-  (map w/text (w/find-elements (-> *ng*
-                                 (.repeater "toimikunta in toimikunnat.nykyiset")
-                                 (.column "toimikunta.nimi")))))
+  (map w/text (w/find-elements {:css ".e2e-toimikunta-nimi"})))
 
 (defn vanhojen-toimikuntien-sarakkeen-arvot [sarake]
-  (map w/text (w/find-elements (-> *ng*
-                                 (.repeater "toimikunta in toimikunnat.vanhat")
-                                 (.column sarake)))))
+  (map w/text (w/find-elements {:css ".e2e-toimikunta-nimi-vanha"})))
 
 (defn vanhojen-toimikuntien-nimet []
   (vanhojen-toimikuntien-sarakkeen-arvot "toimikunta.nimi"))

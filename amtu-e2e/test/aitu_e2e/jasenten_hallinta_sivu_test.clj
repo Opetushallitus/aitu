@@ -20,6 +20,9 @@
             [aitu-e2e.data-util :refer [with-data]]
             [clojure.set :refer [subset?]]))
 
+(defn css-elementin-teksti [css]
+  (w/text (w/find-element {:css css})))
+
 (def nayta-vanhat-selector "a[ng-click=\"toggleNaytaVanhat()\"]")
 
 (defn jasenten-hallinta-sivu [diaarinumero] (str "/fi/#/toimikunta/" diaarinumero "/jasenet"))
@@ -89,7 +92,7 @@
           (avaa (jasenten-hallinta-sivu "98/11/543"))
           ;; Niin
           (testing "pitäisi näyttää toimikunnan nimi otsikkossa"
-            (is (= (elementin-teksti "toimikunta.nimi") "JÄSENTEN HALLINTA - ILMASTOINTIALAN TUTKINTOTOIMIKUNTA")))
+            (is (= (css-elementin-teksti ".e2e-jasenet-otsikko") "JÄSENTEN HALLINTA - ILMASTOINTIALAN TUTKINTOTOIMIKUNTA")))
           (testing "pitäisi näyttää nykyiset jäsenet"
             (is (= #{"Aku Ankka" "Mikki Hiiri"}
                    (set (muokattavat-jasenet)))))

@@ -43,7 +43,7 @@
     <muutettu model="toimikunta"></muutettu>
     <div>
       <label ng-class="{pakollinen : luontiTila}">[[toimikausi]]</label>
-      <p ng-hide="muokkausTila">{{toimikunta.toimikausi_alku | date:'dd.MM.yyyy'}} – {{toimikunta.toimikausi_loppu | date:'dd.MM.yyyy'}}</p>
+      <p ng-hide="muokkausTila" class="e2e-toimikunta-toimikausi">{{toimikunta.toimikausi_alku | date:'dd.MM.yyyy'}} – {{toimikunta.toimikausi_loppu | date:'dd.MM.yyyy'}}</p>
       <div ng-hide="!muokkausTila">
         <fieldset ng-hide="!luontiTila">
           <label></label>
@@ -77,7 +77,7 @@
       </thead>
       <tr ng-repeat="tutkinto in tutkintoJarjestetty">
         <td>{{tutkinto.opintoala_nimi | lokalisoi:tutkinto:'opintoala_nimi'}}</td>
-        <td><a href="#/tutkinto/{{tutkinto.tutkintotunnus}}">{{tutkinto.tutkintotunnus}} {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a></td>
+        <td><a href="#/tutkinto/{{tutkinto.tutkintotunnus}}" class="e2e-tutkinto-nimi">{{tutkinto.tutkintotunnus}} {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a></td>
       </tr>
     </table>
   </div>

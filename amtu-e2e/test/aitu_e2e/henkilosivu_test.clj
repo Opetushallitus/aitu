@@ -39,7 +39,7 @@
   (odota-angular-pyyntoa))
 
 (defn jarjeston-nimi []
-  (elementin-teksti "jasen.henkilo.jarjesto.jarjesto_nimi"))
+  (w/text (w/find-element {:css ".e2e-jasen-henkilo-jarjesto-jarjesto_nimi"})))
 
 (defn valitse-jarjesto [jarjeston-nimi]
   (valitse-select2-optio "jasen.henkilo.jarjesto" "jarjesto" jarjeston-nimi))

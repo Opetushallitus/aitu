@@ -12,7 +12,7 @@ describe('Directives: enumValikko:', function() {
   }
 
   function optionTeksti(options, indeksi) {
-    return options.filter(':nth-child(' + indeksi + ')').text();
+    return $(options[indeksi - 1]).text();
   }
 
   beforeEach(module(
@@ -57,7 +57,7 @@ describe('Directives: enumValikko:', function() {
     $rootScope.testiEnumValinta = 'valinta2';
     var elementti = luoElementti();
 
-    expect(elementti.find('option[selected="selected"]').text()).toEqual('valinta2');
+    expect(elementti.find('option:selected').text()).toEqual('valinta2');
   });
 
   it('Ei näytä tyhjää valintaa, jos pakollisesta enum valikosta on item valittuna.', function() {
@@ -65,7 +65,7 @@ describe('Directives: enumValikko:', function() {
     $rootScope.testiEnumValinta = 'valinta2';
     var elementti = luoElementti();
 
-    var options = elementti.find('option');
+    var options = elementti.find('option:not(".ng-hide")');
 
     expect(optionTeksti(options, 1)).toEqual('valinta1');
     expect(optionTeksti(options, 2)).toEqual('valinta2');
@@ -79,7 +79,7 @@ describe('Directives: enumValikko:', function() {
     $rootScope.testiEnumValinta = 'valinta2';
     var elementti = luoElementti();
 
-    expect(elementti.find('option[selected="selected"]').text()).toEqual('valinta2');
+    expect(elementti.find('option:selected').text()).toEqual('valinta2');
 
     elementti.find('select').val('ei valintaa');
     elementti.find('select').trigger('change');

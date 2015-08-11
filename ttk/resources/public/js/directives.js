@@ -13,6 +13,19 @@
 // European Union Public Licence for more details.
 
 angular.module('directives', ['services', 'resources', 'ngCookies'])
+  .directive('transcludeWithSurroundingScope', function() {
+    return {
+      link: {
+        pre: function(scope, element, attr, ctrl, transclude) {
+          if (transclude) {
+            transclude(scope, function(clone) {
+              element.append(clone);
+            })
+          }
+        }
+      }
+    };
+  })
   .directive('hakutulokset', function($parse, i18n){
     return {
       restrict: 'E',
@@ -124,7 +137,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('enumValikko', ['i18n', 'EnumResource', '$compile', function (i18n, EnumResource, $compile) {
 
     var template = '<select ng-model="arvo" ng-required="pakollinen" ng-options="arvo.nimi as arvo.label for arvo in arvot">';
-    template += '<option value="" ng-if="(pakollinen && !arvo) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
+    template += '<option value="" ng-show="(pakollinen && !arvo) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
 
     return {
       restrict: 'E',
@@ -201,6 +214,24 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       template: "<span>{{ i18n.enum[nimi + '-arvo'][arvo] }}</span>",
       link: function (scope, element, attrs) {
         scope.i18n = i18n;
+      }
+    };
+  }])
+  // Workaround https://github.com/angular-ui/bootstrap/issues/4170
+  .directive('pvmValidointi', [function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attrs, ctrl) {
+        ctrl.$validators.pvmValidointi = function(modelValue) {
+          if (scope.minDate !== undefined && modelValue < scope.minDate) {
+            return false;
+          }
+          if (scope.maxDate !== undefined && modelValue > scope.maxDate) {
+            return false;
+          }
+          return true;
+        };
       }
     };
   }])
@@ -394,7 +425,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         el.find('input[type=file]').change(function(event){
           var filename = event.target.value? _.last(event.target.value.split('\\')) : '';
 
-          el.find('input.x-xsrf-token').val($cookies['XSRF-TOKEN']);
+          el.find('input.x-xsrf-token').val($cookies.get('XSRF-TOKEN'));
 
           scope.tiedostoValittu = filename.length > 0;
           el.find('input.valittu-tiedosto').val(filename);
@@ -654,7 +685,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
   .directive('booleanSelect', ['boolValues', 'i18n', function(boolValues, i18n){
 
     var template = '<select ng-model="model" ng-required="pakollinen" ng-options="b.value as b.name for b in boolValues">';
-    template += '<option value="" ng-if="(pakollinen && !model) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
+    template += '<option value="" ng-show="(pakollinen && !model) || !pakollinen" ng-bind="pakollinen ? i18n.yleiset[\'valitse\'] : i18n.yleiset[\'ei-valintaa\']"></option></select>';
 
     return {
       restrict: 'E',
