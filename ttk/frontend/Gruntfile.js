@@ -127,6 +127,12 @@ module.exports = function (grunt) {
       files : ['<%= yeoman.app %>/vendor',
                'test/vendor'],
       options: {force : true}
+    },
+    watch: {
+      sass: {
+        files: ['../resources/private/sass/**/*.scss'],
+        tasks: ['sass:compile']
+      }
     }
   });
 
