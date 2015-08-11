@@ -74,6 +74,9 @@ module.exports = function (grunt) {
         files: {
           '../resources/public/css/main.css': '../resources/private/sass/main.scss'
         }
+      },
+      options : {
+        outputStyle: 'expanded'
       }
     },
     concat: {
