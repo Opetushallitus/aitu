@@ -36,6 +36,7 @@ angular.module('ttk', [
   'organisaatiomuutokset',
   'raportit',
   'rest.suorittaja',
+  'rest.suoritus',
   'sopimukset',
   'toimikunnat',
   'tutkinnot',
