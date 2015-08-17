@@ -36,6 +36,7 @@
             aitu.rest-api.organisaatiomuutos
             aitu.rest-api.osoitepalvelu
             aitu.rest-api.suorittaja
+            aitu.rest-api.suoritus
             aitu.rest-api.tiedote
             aitu.rest-api.toimikausi
             aitu.rest-api.ttk
@@ -121,6 +122,7 @@
       (c/context "/api/db-validation" [] aitu.rest-api.db-validation/reitit)
       (c/context "/api/organisaatiomuutos" [] aitu.rest-api.organisaatiomuutos/reitit)
       (c/context "/api/suorittaja" [] aitu.rest-api.suorittaja/reitit)
+      (c/context "/api/suoritus" [] aitu.rest-api.suoritus/reitit)
       (c/context "/api/aipal" [] aitu.rest-api.aipal/reitit))
     (testapi asetukset)
     (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
