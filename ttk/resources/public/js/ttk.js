@@ -40,6 +40,7 @@ angular.module('ttk', [
   'toimikunnat',
   'tutkinnot',
   'uiKomponentit',
+  'yhteiset.palvelut.lokalisointi',
   'yhteiset.palvelut.virheLogitus'
 ])
 

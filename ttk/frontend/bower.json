@@ -19,6 +19,6 @@
     "ngUpload": "0.5.11",
     "select2": "3.4.8",
     "stacktrace": "0.6.0",
-    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.2"
+    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.27"
   }
 }
