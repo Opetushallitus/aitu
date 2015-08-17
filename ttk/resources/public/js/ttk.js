@@ -26,6 +26,7 @@ angular.module('ttk', [
   'directives',
   'direktiivit.dialogi',
   'direktiivit.suorittajat',
+  'direktiivit.suoritukset',
   'etusivu',
   'filters',
   'henkilot',
