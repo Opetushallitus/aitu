@@ -29,3 +29,11 @@
                 [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
                 [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv])
     (sql/order :suorituskerta_id :DESC)))
+
+(defn lisaa!
+  [{:keys [suorittaja rahoitusmuoto tutkinto]}]
+  (sql/insert :suorituskerta
+    (sql/values {:tutkinto tutkinto
+                 :rahoitusmuoto rahoitusmuoto
+                 :suorittaja suorittaja
+                 :koulutustoimija "0177736-4"})))           ; FIXME

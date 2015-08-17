@@ -20,4 +20,6 @@
 
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/" []
-    (json-response (arkisto/hae-kaikki))))
+    (json-response (arkisto/hae-kaikki)))
+  (cu/defapi :yleinen-rest-api nil :post "/" [& suoritus]
+    (json-response (arkisto/lisaa! suoritus))))
