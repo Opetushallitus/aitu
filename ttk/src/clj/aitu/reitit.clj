@@ -35,6 +35,7 @@
             aitu.rest-api.oppilaitos
             aitu.rest-api.organisaatiomuutos
             aitu.rest-api.osoitepalvelu
+            aitu.rest-api.rahoitusmuoto
             aitu.rest-api.suorittaja
             aitu.rest-api.suoritus
             aitu.rest-api.tiedote
@@ -121,6 +122,7 @@
       (c/context "/api/osoitepalvelu" [] aitu.rest-api.osoitepalvelu/reitit)
       (c/context "/api/db-validation" [] aitu.rest-api.db-validation/reitit)
       (c/context "/api/organisaatiomuutos" [] aitu.rest-api.organisaatiomuutos/reitit)
+      (c/context "/api/rahoitusmuoto" [] aitu.rest-api.rahoitusmuoto/reitit)
       (c/context "/api/suorittaja" [] aitu.rest-api.suorittaja/reitit)
       (c/context "/api/suoritus" [] aitu.rest-api.suoritus/reitit)
       (c/context "/api/aipal" [] aitu.rest-api.aipal/reitit))
