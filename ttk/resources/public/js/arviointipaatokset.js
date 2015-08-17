@@ -18,7 +18,7 @@ angular.module('arviointipaatokset', [])
     $routeProvider.when('/arviointipaatokset', {controller: 'ArviointipaatoksetController', templateUrl: 'template/arviointipaatokset'});
   }])
 
-  .controller('ArviointipaatoksetController', ['$route', '$scope', 'Suorittaja', function($route, $scope, Suorittaja) {
+  .controller('ArviointipaatoksetController', ['$location', '$route', '$scope', 'Suorittaja', function($location, $route, $scope, Suorittaja) {
     $scope.suorittajaForm = {};
 
     $scope.lisaaSuorittaja = function() {
@@ -43,6 +43,10 @@ angular.module('arviointipaatokset', [])
     $scope.suorittajanMuokkaus = function(suorittaja) {
       $scope.lisaaSuorittajaDialogi = true;
       $scope.suorittajaForm = angular.copy(suorittaja);
+    };
+
+    $scope.lisaaSuoritus = function() {
+      $location.url('/lisaa-suoritus');
     };
   }])
 ;

@@ -40,6 +40,7 @@ angular.module('ttk', [
   'rest.suorittaja',
   'rest.suoritus',
   'sopimukset',
+  'suoritus',
   'toimikunnat',
   'tutkinnot',
   'uiKomponentit',

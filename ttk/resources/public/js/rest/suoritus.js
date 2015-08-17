@@ -19,6 +19,11 @@ angular.module('rest.suoritus', [])
         return $http.get(ophBaseUrl + '/api/suoritus').then(function(response) {
           return response.data;
         });
+      },
+      lisaa: function(form) {
+        return $http.post(ophBaseUrl + '/api/suoritus', form).then(function(response) {
+          return response.data;
+        });
       }
     };
   }])
