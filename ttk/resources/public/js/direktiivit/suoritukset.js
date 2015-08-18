@@ -24,6 +24,11 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         $scope.tila = '';
         $scope.form = {};
 
+        $scope.$watch('tila', function() {
+          // Tyhjennä valitut suoritukset filtterin vaihtuessa, että näkymättömiä ei ole valittuna
+          $scope.form = {};
+        });
+
         $scope.valitutSuoritukset = function() {
           return _.chain($scope.form).pairs().filter(function(x) { return x[1]; }).map(function(x) { return parseInt(x[0]); }).value();
         };
