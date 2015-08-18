@@ -42,7 +42,7 @@
     </div>
   </div>
 
-    <button class="float-right" ng-click="lahetaHyvaksyttavaksi()" ng-disabled="valitutSuoritukset().length == 0">[[laheta_hyvaksyttavaksi]]</button>
+    <button class="float-right" ng-click="lahetaHyvaksyttavaksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="tila === 'luonnos'">[[laheta_hyvaksyttavaksi]]</button>
   </form>
 </div>
 [[/i18n.arviointipaatokset]]
