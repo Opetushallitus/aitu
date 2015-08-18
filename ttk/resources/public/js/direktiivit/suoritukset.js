@@ -21,6 +21,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       templateUrl: 'template/direktiivit/suoritukset',
       scope: {},
       controller: ['$scope', 'Suoritus', function($scope, Suoritus) {
+        $scope.tila = '';
         $scope.form = {};
 
         $scope.valitutSuoritukset = function() {

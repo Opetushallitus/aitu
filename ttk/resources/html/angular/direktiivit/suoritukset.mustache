@@ -1,6 +1,27 @@
 {{=[[ ]]=}}
 [[#i18n.arviointipaatokset]]
 <div>
+  <div>
+    [[nayta]]:
+
+    <label>
+      <input type="radio" ng-model="tila" value="">
+      [[kaikki]]
+    </label>
+    <label>
+      <input type="radio" ng-model="tila" value="luonnos">
+      [[luonnokset]]
+    </label>
+    <label>
+      <input type="radio" ng-model="tila" value="ehdotettu">
+      [[ehdotetut]]
+    </label>
+    <label>
+      <input type="radio" ng-model="tila" value="hyvaksytty">
+      [[hyvaksytyt]]
+    </label>
+  </div>
+
   <form name="suorituksetForm">
   <div class="table">
     <div class="table-header">
@@ -11,7 +32,7 @@
       <div class="table-cell">[[tila]]</div>
       <div class="table-cell">[[ehdota_hyvaksyttavaksi]]</div>
     </div>
-    <div class="table-row" ng-repeat="suoritus in suoritukset">
+    <div class="table-row" ng-repeat="suoritus in suoritukset |filter:{tila: tila}">
       <div class="table-cell">{{ suoritus.suorittaja_etunimi }}</div>
       <div class="table-cell">{{ suoritus.suorittaja_sukunimi }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</div>
