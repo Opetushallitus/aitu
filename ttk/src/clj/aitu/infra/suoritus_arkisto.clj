@@ -46,6 +46,7 @@
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
                                            :tila "ehdotettu"})
   (sql/update :suorituskerta
-    (sql/set-fields {:tila "ehdotettu"})
+    (sql/set-fields {:tila "ehdotettu"
+                     :ehdotusaika (sql/sqlfn now)})
     (sql/where {:suorituskerta_id [in suoritukset]
                 :koulutustoimija "0177736-4"})))            ; FIXME varmista että sama kuin käyttäjällä (on oikeus)
