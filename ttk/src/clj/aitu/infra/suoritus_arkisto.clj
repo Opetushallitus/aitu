@@ -41,15 +41,11 @@
                  :suorittaja suorittaja
                  :koulutustoimija "0177736-4"})))           ; FIXME
 
-(defn ^:private paivita-tila!
-  [suoritukset tila]
+(defn laheta!
+  [suoritukset]
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
-                                           :tila tila})
+                                           :tila "ehdotettu"})
   (sql/update :suorituskerta
     (sql/set-fields {:tila "ehdotettu"})
     (sql/where {:suorituskerta_id [in suoritukset]
                 :koulutustoimija "0177736-4"})))            ; FIXME varmista että sama kuin käyttäjällä (on oikeus)
-
-(defn laheta!
-  [suoritukset]
-  (paivita-tila! suoritukset "ehdotettu"))
