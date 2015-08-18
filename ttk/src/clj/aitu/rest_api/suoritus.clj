@@ -24,4 +24,6 @@
   (cu/defapi :yleinen-rest-api nil :post "/" [& suoritus]
     (json-response (arkisto/lisaa! suoritus)))
   (cu/defapi :yleinen-rest-api nil :post "/laheta" [suoritukset]
-    (json-response (arkisto/laheta! suoritukset))))
+    (json-response (arkisto/laheta! suoritukset)))
+  (cu/defapi :yleinen-rest-api nil :post "/hyvaksy" [suoritukset]
+    (json-response (arkisto/hyvaksy! suoritukset))))
