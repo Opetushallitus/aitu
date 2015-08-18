@@ -13,7 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.infra.suoritus-arkisto
-  (:require  [korma.core :as sql]))
+  (:require  [korma.core :as sql]
+             [aitu.auditlog :as auditlog]))
 
 (defn hae-kaikki
   []
@@ -31,7 +32,9 @@
     (sql/order :suorituskerta_id :DESC)))
 
 (defn lisaa!
-  [{:keys [suorittaja rahoitusmuoto tutkinto]}]
+  [{:keys [suorittaja rahoitusmuoto tutkinto]
+    :as suoritus}]
+  (auditlog/suoritus-operaatio! :lisays suoritus)
   (sql/insert :suorituskerta
     (sql/values {:tutkinto tutkinto
                  :rahoitusmuoto rahoitusmuoto

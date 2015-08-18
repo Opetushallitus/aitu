@@ -121,3 +121,8 @@
   [operaatio tiedot]
   {:pre [(contains? operaatiot operaatio)]}
   (kirjoita! :suorittaja operaatio tiedot))
+
+(defn suoritus-operaatio!
+  [operaatio tiedot]
+  {:pre [(contains? operaatiot operaatio)]}
+  (kirjoita! :suorittaja operaatio tiedot))
