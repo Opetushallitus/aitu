@@ -28,6 +28,7 @@
       <div class="table-cell">[[etunimi]]</div>
       <div class="table-cell">[[sukunimi]]</div>
       <div class="table-cell">[[tutkinto]]</div>
+      <div class="table-cell">[[ehdotuspaiva]]</div>
       <div class="table-cell">[[tutkinto_jarjestaja]]</div>
       <div class="table-cell">[[tila]]</div>
       <div class="table-cell">[[ehdota_hyvaksyttavaksi]]</div>
@@ -36,6 +37,7 @@
       <div class="table-cell">{{ suoritus.suorittaja_etunimi }}</div>
       <div class="table-cell">{{ suoritus.suorittaja_sukunimi }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</div>
+      <div class="table-cell">{{ suoritus.ehdotusaika | date:'dd.MM.yyyy' }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'koulutustoimija_nimi' }}</div>
       <div class="table-cell">{{ suoritus.tila }}</div>
       <div class="table-cell"><input type="checkbox" ng-model="form[suoritus.suorituskerta_id]"></div>
