@@ -31,7 +31,10 @@
       <div class="table-cell">[[ehdotuspaiva]]</div>
       <div class="table-cell">[[tutkinto_jarjestaja]]</div>
       <div class="table-cell">[[tila]]</div>
-      <div class="table-cell">[[ehdota_hyvaksyttavaksi]]</div>
+      <div class="table-cell">
+        <span ng-if="tila === 'luonnos'">[[ehdota_hyvaksyttavaksi]]</span>
+        <span ng-if="tila === 'ehdotettu'">[[hyvaksy]]</span>
+      </div>
     </div>
     <div class="table-row" ng-repeat="suoritus in suoritukset |filter:{tila: tila}">
       <div class="table-cell">{{ suoritus.suorittaja_etunimi }}</div>
@@ -45,6 +48,7 @@
   </div>
 
     <button class="float-right" ng-click="lahetaHyvaksyttavaksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="tila === 'luonnos'">[[laheta_hyvaksyttavaksi]]</button>
+    <button class="float-right" ng-click="hyvaksy()" ng-disabled="valitutSuoritukset().length == 0" ng-if="tila === 'ehdotettu'">[[hyvaksy]]</button>
   </form>
 </div>
 [[/i18n.arviointipaatokset]]

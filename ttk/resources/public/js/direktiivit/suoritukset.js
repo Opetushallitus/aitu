@@ -28,15 +28,26 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
           return _.chain($scope.form).pairs().filter(function(x) { return x[1]; }).map(function(x) { return parseInt(x[0]); }).value();
         };
 
+        var paivitaSuoritustenTila = function(suoritukset, tila) {
+          _.forEach(suoritukset, function(valittuSuoritus) {
+            var suoritus = _.find($scope.suoritukset, {suorituskerta_id: valittuSuoritus});
+            if (suoritus !== undefined) {
+              suoritus.tila = tila;
+            }
+          });
+        };
+
         $scope.lahetaHyvaksyttavaksi = function() {
           var valitutSuoritukset = $scope.valitutSuoritukset();
           Suoritus.lahetaHyvaksyttavaksi(valitutSuoritukset).then(function() {
-            _.forEach(valitutSuoritukset, function(valittuSuoritus) {
-              var suoritus = _.find($scope.suoritukset, {suorituskerta_id: valittuSuoritus});
-              if (suoritus !== undefined) {
-                suoritus.tila = 'ehdotettu';
-              }
-            });
+            paivitaSuoritustenTila(valitutSuoritukset, 'ehdotettu');
+          });
+        };
+
+        $scope.hyvaksy = function() {
+          var valitutSuoritukset = $scope.valitutSuoritukset();
+          Suoritus.hyvaksy(valitutSuoritukset).then(function() {
+            paivitaSuoritustenTila(valitutSuoritukset, 'hyvaksytty');
           });
         };
 
