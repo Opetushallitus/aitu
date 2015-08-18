@@ -125,4 +125,4 @@
 (defn suoritus-operaatio!
   [operaatio tiedot]
   {:pre [(contains? operaatiot operaatio)]}
-  (kirjoita! :suorittaja operaatio tiedot))
+  (kirjoita! :suoritus operaatio tiedot))
