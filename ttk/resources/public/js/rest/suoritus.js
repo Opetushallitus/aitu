@@ -24,6 +24,11 @@ angular.module('rest.suoritus', [])
         return $http.post(ophBaseUrl + '/api/suoritus', form).then(function(response) {
           return response.data;
         });
+      },
+      lahetaHyvaksyttavaksi: function(suoritukset) {
+        return $http.post(ophBaseUrl + '/api/suoritus/laheta', {suoritukset: suoritukset}).then(function(response) {
+          return response.data;
+        });
       }
     };
   }])

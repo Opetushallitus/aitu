@@ -21,6 +21,24 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       templateUrl: 'template/direktiivit/suoritukset',
       scope: {},
       controller: ['$scope', 'Suoritus', function($scope, Suoritus) {
+        $scope.form = {};
+
+        $scope.valitutSuoritukset = function() {
+          return _.chain($scope.form).pairs().filter(function(x) { return x[1]; }).map(function(x) { return parseInt(x[0]); }).value();
+        };
+
+        $scope.lahetaHyvaksyttavaksi = function() {
+          var valitutSuoritukset = $scope.valitutSuoritukset();
+          Suoritus.lahetaHyvaksyttavaksi(valitutSuoritukset).then(function() {
+            _.forEach(valitutSuoritukset, function(valittuSuoritus) {
+              var suoritus = _.find($scope.suoritukset, {suorituskerta_id: valittuSuoritus});
+              if (suoritus !== undefined) {
+                suoritus.tila = 'ehdotettu';
+              }
+            });
+          });
+        };
+
         Suoritus.haeKaikki().then(function(suoritukset) {
           $scope.suoritukset = suoritukset;
         })
