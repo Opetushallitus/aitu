@@ -39,6 +39,7 @@ angular.module('ttk', [
   'rest.rahoitusmuoto',
   'rest.suorittaja',
   'rest.suoritus',
+  'rest.tutkinnonosa',
   'sopimukset',
   'suoritus',
   'toimikunnat',
