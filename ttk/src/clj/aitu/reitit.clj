@@ -41,6 +41,7 @@
             aitu.rest-api.tiedote
             aitu.rest-api.toimikausi
             aitu.rest-api.ttk
+            aitu.rest-api.tutkinnonosa
             aitu.rest-api.tutkinto
             aitu.rest-api.tutkintorakenne
             aitu.rest_api.js-log
@@ -125,6 +126,7 @@
       (c/context "/api/rahoitusmuoto" [] (wrap-tarkasta-csrf-token aitu.rest-api.rahoitusmuoto/reitit))
       (c/context "/api/suorittaja" [] (wrap-tarkasta-csrf-token aitu.rest-api.suorittaja/reitit))
       (c/context "/api/suoritus" [] (wrap-tarkasta-csrf-token aitu.rest-api.suoritus/reitit))
+      (c/context "/api/tutkinnonosa" [] (wrap-tarkasta-csrf-token aitu.rest-api.tutkinnonosa/reitit))
       (c/context "/api/aipal" [] aitu.rest-api.aipal/reitit))
     (testapi asetukset)
     (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
