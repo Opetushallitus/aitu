@@ -42,7 +42,7 @@
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</div>
       <div class="table-cell">{{ suoritus.ehdotusaika | date:'dd.MM.yyyy' }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'koulutustoimija_nimi' }}</div>
-      <div class="table-cell"><enum-arvo nimi="arviointipaatokset_tila" arvo="suoritus.tila"></enum-arvo></div>
+      <div class="table-cell">{{ suoritus.tila }}</div>
       <div class="table-cell"><input type="checkbox" ng-model="form[suoritus.suorituskerta_id]"></div>
     </div>
   </div>
