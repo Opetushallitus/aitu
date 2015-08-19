@@ -40,7 +40,7 @@
       </div>
       <div class="table-row" ng-repeat="tutkinnonosa in osat track by $index">
         <div class="table-cell">{{ tutkinnonosa.osatunnus }} {{ tutkinnonosa | lokalisoiKentta:'nimi' }}</div>
-        <div class="table-cell"></div>
+        <div class="table-cell">{{ tutkinnonosa | lokalisoiKentta:'nayttotutkinto_nimi' }}</div>
         <div class="table-cell"><button class="icon delete-icon" ng-click="poistaOsa(tutkinnonosa)"></button></div>
       </div>
     </div>

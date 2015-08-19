@@ -18,4 +18,9 @@
 (defn hae-kaikki
   []
   (sql/select :tutkinnonosa
-    (sql/fields :osatunnus :nimi_fi :nimi_sv :tutkinnonosa_id)))
+    (sql/join :tutkinto_ja_tutkinnonosa (= :tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa_id))
+    (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio))
+    (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+    (sql/fields :osatunnus :nimi_fi :nimi_sv :tutkinnonosa_id
+                [:nayttotutkinto.nimi_fi :nayttotutkinto_nimi_fi]
+                [:nayttotutkinto.nimi_sv :nayttotutkinto_nimi_sv])))
