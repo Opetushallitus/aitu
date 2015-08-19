@@ -18,8 +18,14 @@ angular.module('suoritus', [])
     $routeProvider.when('/lisaa-suoritus', {controller: 'SuoritusController', templateUrl: 'template/suoritus'});
   }])
 
-  .controller('SuoritusController', ['$location', '$scope', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'TutkintoResource', function($location, $scope, Rahoitusmuoto, Suorittaja, Suoritus, TutkintoResource) {
-    $scope.form = {};
+  .controller('SuoritusController', ['$location', '$scope', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', function($location, $scope, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource) {
+    $scope.form = {
+      osat: []
+    };
+    $scope.osat = [];
+    $scope.$watchCollection('osat', function(osat) {
+      $scope.form.osat = _.pluck(osat, 'tutkinnonosa_id');
+    });
 
     Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
       $scope.rahoitusmuodot = rahoitusmuodot;
@@ -29,9 +35,23 @@ angular.module('suoritus', [])
       $scope.suorittajat = suorittajat;
     });
 
+    Tutkinnonosa.haeKaikki().then(function(tutkinnonosat) {
+      $scope.tutkinnonosat = tutkinnonosat;
+    });
+
     TutkintoResource.query(function(tutkinnot) {
       $scope.tutkinnot = tutkinnot;
     });
+
+    $scope.lisaaOsa = function(osa) {
+      if (!_.find($scope.osat, {tutkinnonosa_id: osa.tutkinnonosa_id})) {
+        $scope.osat.push(osa);
+      }
+    };
+
+    $scope.poistaOsa = function(osa) {
+      _.remove($scope.osat, {tutkinnonosa_id: osa.tutkinnonosa_id});
+    };
 
     $scope.lisaaSuoritus = function() {
       Suoritus.lisaa($scope.form).then(function() {
