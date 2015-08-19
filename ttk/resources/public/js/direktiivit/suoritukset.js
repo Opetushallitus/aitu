@@ -20,7 +20,9 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       restrict: 'E',
       templateUrl: 'template/direktiivit/suoritukset',
       scope: {},
-      controller: ['$scope', 'Suoritus', function($scope, Suoritus) {
+      controller: ['$scope', 'Suoritus', 'i18n', function($scope, Suoritus, i18n) {
+        $scope.i18n = i18n;
+
         $scope.tila = '';
         $scope.form = {};
 
