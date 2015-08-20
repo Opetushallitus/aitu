@@ -19,17 +19,36 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
     return {
       restrict: 'E',
       templateUrl: 'template/direktiivit/suorittajat',
-      scope: {
-        'suorittajanMuokkaus': '&'
-      },
-      controller: ['$scope', 'Suorittaja', function($scope, Suorittaja) {
+      scope: {},
+      controller: ['$modal', '$scope', 'Suorittaja', function($modal, $scope, Suorittaja) {
+        $scope.muokkaaSuorittajaa = function(suorittaja) {
+          var modalInstance = $modal.open({
+            templateUrl: 'template/modal/suorittaja',
+            controller: 'LisaaSuorittajaModalController',
+            resolve: {
+              suorittaja: function() {
+                return suorittaja;
+              }
+            }
+          });
+          modalInstance.result.then(function(suorittajaForm) {
+            if (suorittaja === undefined) {
+              // uusi
+              Suorittaja.lisaa(suorittajaForm).then(function(suorittaja) {
+                $scope.suorittajat.unshift(suorittaja);
+              });
+            } else {
+              // muokkaus
+              Suorittaja.tallenna(suorittajaForm).then(function(muokattuSuorittaja) {
+                _.assign(suorittaja, muokattuSuorittaja);
+              });
+            }
+          });
+        };
+
         Suorittaja.haeKaikki().then(function(suorittajat) {
           $scope.suorittajat = suorittajat;
         });
-
-        $scope.muokkaaSuorittajaa = function(suorittaja) {
-          $scope.suorittajanMuokkaus({suorittaja: suorittaja});
-        };
 
         $scope.poistaSuorittaja = function(suorittaja) {
           Suorittaja.poista(suorittaja).then(function() {
@@ -38,5 +57,20 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
         };
       }]
     }
+  }])
+
+  .controller('LisaaSuorittajaModalController', ['$modalInstance', '$scope', 'suorittaja', function($modalInstance, $scope, suorittaja) {
+    $scope.suorittajaForm = {};
+    if (suorittaja) {
+      $scope.suorittajaForm = _.cloneDeep(suorittaja);
+    }
+
+    $scope.lisaaSuorittaja = function() {
+      $modalInstance.close($scope.suorittajaForm);
+    };
+
+    $scope.tallennaSuorittaja = function() {
+      $modalInstance.close($scope.suorittajaForm);
+    };
   }])
 ;
