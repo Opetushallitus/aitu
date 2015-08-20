@@ -1,0 +1,36 @@
+{{=[[ ]]=}}
+[[#i18n.arviointipaatokset]]
+<div class="modal-header">
+  <h1 class="modal-title">[[lisaa_suorittaja]]</h1>
+</div>
+
+<div class="modal-body">
+  <div>
+    <fieldset>
+      <label for="etunimiInput">[[etunimi]]</label>
+      <input id="etunimiInput" type="text" ng-model="suorittajaForm.etunimi">
+    </fieldset>
+    <fieldset>
+      <label for="sukunimiInput">[[sukunimi]]</label>
+      <input id="sukunimiInput" type="text" ng-model="suorittajaForm.sukunimi">
+    </fieldset>
+    <fieldset>
+      <label for="hetuInput">[[hetu]]</label>
+      <input id="hetuInput" type="text" ng-model="suorittajaForm.hetu">
+    </fieldset>
+    <fieldset>
+      <label for="oidInput">OID</label>
+      <input id="oidInput" type="text" ng-model="suorittajaForm.oid">
+    </fieldset>
+  </div>
+  <div ng-if="suorittajaForm.suorittaja_id">
+    <div>[[muokattu_viimeksi]] {{ suorittajaForm.muutettuaika | date:'dd.MM.yyyy HH:mm' }}</div>
+    <div>[[muokkaaja]] {{ suorittajaForm.muutettu_nimi }}</div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button ng-if="suorittajaForm.suorittaja_id === undefined" class="button-with-icon add-icon-white" ng-click="lisaaSuorittaja()">[[lisaa_suorittaja]]</button>
+  <button ng-if="suorittajaForm.suorittaja_id !== undefined" class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()">[[tallenna_suorittaja]]</button>
+</div>
+[[/i18n.arviointipaatokset]]

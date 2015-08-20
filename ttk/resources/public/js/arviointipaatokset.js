@@ -18,35 +18,51 @@ angular.module('arviointipaatokset', [])
     $routeProvider.when('/arviointipaatokset', {controller: 'ArviointipaatoksetController', templateUrl: 'template/arviointipaatokset'});
   }])
 
-  .controller('ArviointipaatoksetController', ['$location', '$route', '$scope', 'Suorittaja', function($location, $route, $scope, Suorittaja) {
+  .controller('ArviointipaatoksetController', ['$location', '$modal', '$route', '$scope', 'Suorittaja', function($location, $modal, $route, $scope, Suorittaja) {
     $scope.suorittajaForm = {};
 
-    $scope.lisaaSuorittaja = function() {
-      $scope.lisaaSuorittajaDialogi = false;
-      Suorittaja.lisaa($scope.suorittajaForm).then(function() {
-        $route.reload();
+    $scope.muokkaaSuorittajaa = function(suorittaja) {
+      var modalInstance = $modal.open({
+        templateUrl: 'template/modal/suorittaja',
+        controller: 'LisaaSuorittajaModalController',
+        resolve: {
+          suorittaja: function() {
+            return suorittaja;
+          }
+        }
       });
-    };
-
-    $scope.tallennaSuorittaja = function() {
-      $scope.lisaaSuorittajaDialogi = false;
-      Suorittaja.tallenna($scope.suorittajaForm).then(function() {
-        $route.reload();
+      modalInstance.result.then(function(suorittajaForm) {
+        if (suorittaja === undefined) {
+          // uusi
+          Suorittaja.lisaa(suorittajaForm).then(function() {
+            $route.reload();
+          });
+        } else {
+          // muokkaus
+          Suorittaja.tallenna(suorittajaForm).then(function(uusiSuorittaja) {
+            $route.reload();
+          });
+        }
       });
-    };
-
-    $scope.suorittajanLisays = function() {
-      $scope.lisaaSuorittajaDialogi = true;
-      $scope.suorittajaForm = {};
-    };
-
-    $scope.suorittajanMuokkaus = function(suorittaja) {
-      $scope.lisaaSuorittajaDialogi = true;
-      $scope.suorittajaForm = angular.copy(suorittaja);
     };
 
     $scope.lisaaSuoritus = function() {
       $location.url('/lisaa-suoritus');
+    };
+  }])
+
+  .controller('LisaaSuorittajaModalController', ['$modalInstance', '$scope', 'suorittaja', function($modalInstance, $scope, suorittaja) {
+    $scope.suorittajaForm = {};
+    if (suorittaja) {
+      $scope.suorittajaForm = _.cloneDeep(suorittaja);
+    }
+
+    $scope.lisaaSuorittaja = function() {
+      $modalInstance.close($scope.suorittajaForm);
+    };
+
+    $scope.tallennaSuorittaja = function() {
+      $modalInstance.close($scope.suorittajaForm);
     };
   }])
 ;
