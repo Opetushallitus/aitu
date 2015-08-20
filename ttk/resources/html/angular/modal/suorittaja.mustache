@@ -1,5 +1,6 @@
 {{=[[ ]]=}}
 [[#i18n.arviointipaatokset]]
+<form name="form">
 <div class="modal-header">
   <h1 class="modal-title">[[lisaa_suorittaja]]</h1>
 </div>
@@ -8,11 +9,11 @@
   <div>
     <fieldset>
       <label for="etunimiInput">[[etunimi]]</label>
-      <input id="etunimiInput" type="text" ng-model="suorittajaForm.etunimi">
+      <input id="etunimiInput" type="text" ng-model="suorittajaForm.etunimi" required>
     </fieldset>
     <fieldset>
       <label for="sukunimiInput">[[sukunimi]]</label>
-      <input id="sukunimiInput" type="text" ng-model="suorittajaForm.sukunimi">
+      <input id="sukunimiInput" type="text" ng-model="suorittajaForm.sukunimi" required>
     </fieldset>
     <fieldset>
       <label for="hetuInput">[[hetu]]</label>
@@ -30,6 +31,7 @@
 </div>
 
 <div class="modal-footer">
-  <button class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()">[[tallenna_suorittaja]]</button>
+  <button class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()" ng-disabled="form.$invalid || !(suorittajaForm.hetu || suorittajaForm.oid)">[[tallenna_suorittaja]]</button>
 </div>
+</form>
 [[/i18n.arviointipaatokset]]
