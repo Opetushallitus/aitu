@@ -65,10 +65,6 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
       $scope.suorittajaForm = _.cloneDeep(suorittaja);
     }
 
-    $scope.lisaaSuorittaja = function() {
-      $modalInstance.close($scope.suorittajaForm);
-    };
-
     $scope.tallennaSuorittaja = function() {
       $modalInstance.close($scope.suorittajaForm);
     };
