@@ -15,12 +15,15 @@
 (ns aitu.infra.tutkinnonosa-arkisto
   (:require [korma.core :as sql]))
 
-(defn hae-kaikki
-  []
-  (sql/select :tutkinnonosa
+(defn hae
+  [tutkintotunnus]
+  (->
+    (sql/select* :tutkinnonosa)
     (sql/join :tutkinto_ja_tutkinnonosa (= :tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa_id))
     (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
     (sql/fields :osatunnus :nimi_fi :nimi_sv :tutkinnonosa_id
                 [:nayttotutkinto.nimi_fi :nayttotutkinto_nimi_fi]
-                [:nayttotutkinto.nimi_sv :nayttotutkinto_nimi_sv])))
+                [:nayttotutkinto.nimi_sv :nayttotutkinto_nimi_sv])
+    (cond-> tutkintotunnus (sql/where {:tutkintoversio.tutkintotunnus tutkintotunnus}))
+    sql/exec))

@@ -19,5 +19,5 @@
             [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" []
-    (json-response (arkisto/hae-kaikki))))
+  (cu/defapi :yleinen-rest-api nil :get "/" [tutkintotunnus]
+    (json-response (arkisto/hae tutkintotunnus))))
