@@ -18,13 +18,17 @@ angular.module('suoritus', [])
     $routeProvider.when('/lisaa-suoritus', {controller: 'SuoritusController', templateUrl: 'template/suoritus'});
   }])
 
-  .controller('SuoritusController', ['$location', '$scope', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', function($location, $scope, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource) {
+  .controller('SuoritusController', ['$location', '$modal', '$scope', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', function($location, $modal, $scope, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource) {
     $scope.form = {
       osat: []
     };
     $scope.osat = [];
     $scope.$watchCollection('osat', function(osat) {
-      $scope.form.osat = _.pluck(osat, 'tutkinnonosa_id');
+      $scope.form.osat = _.map(osat, function(osa) {
+        var result = _.pick(osa, ['arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
+        result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
+        return result;
+      });
     });
 
     Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
@@ -43,14 +47,29 @@ angular.module('suoritus', [])
       $scope.tutkinnot = tutkinnot;
     });
 
-    $scope.lisaaOsa = function(osa) {
-      if (!_.find($scope.osat, {tutkinnonosa_id: osa.tutkinnonosa_id})) {
-        $scope.osat.push(osa);
-      }
+    $scope.lisaaTutkinnonosa = function() {
+      var modalInstance = $modal.open({
+        templateUrl: 'template/modal/suoritus-tutkinnonosa',
+        controller: 'SuoritusTutkinnonosaModalController',
+        resolve: {
+          tutkinnot: function() { return $scope.tutkinnot; },
+          tutkinto: function() { return $scope.form.tutkinto; }
+        }
+      });
+
+      modalInstance.result.then(function(uusiOsa) {
+        if (!_.find($scope.osat, function(osa) {
+            return osa.tutkinnonosa.tutkinnonosa_id === uusiOsa.tutkinnonosa.tutkinnonosa_id;
+          })) {
+          $scope.osat.push(uusiOsa);
+        }
+      });
     };
 
-    $scope.poistaOsa = function(osa) {
-      _.remove($scope.osat, {tutkinnonosa_id: osa.tutkinnonosa_id});
+    $scope.poistaOsa = function(poistettavaOsa) {
+      _.remove($scope.osat, function(osa) {
+        return osa.tutkinnonosa.tutkinnonosa_id === poistettavaOsa.tutkinnonosa.tutkinnonosa_id;
+      });
     };
 
     $scope.lisaaSuoritus = function() {
@@ -61,6 +80,35 @@ angular.module('suoritus', [])
 
     $scope.peruuta = function() {
       $location.url('/arviointipaatokset');
+    };
+  }])
+
+  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Tutkinnonosa', 'tutkinnot', 'tutkinto', function($modalInstance, $scope, Tutkinnonosa, tutkinnot, tutkinto) {
+    $scope.form = {
+      arvosana: 'hyvaksytty',
+      korotus: false,
+      kieli: 'fi',
+      todistus: false,
+      tunnustaminen: false
+    };
+    $scope.tutkinto = tutkinto;
+
+    $scope.tutkinnot = tutkinnot;
+
+    $scope.$watch('tutkinto', function(tutkinto) {
+      if (tutkinto !== undefined) {
+        Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
+          $scope.tutkinnonosat = tutkinnonosat;
+        });
+      }
+    });
+
+    $scope.ok = function() {
+      $modalInstance.close($scope.form);
+    };
+
+    $scope.sulje = function() {
+      $modalInstance.dismiss();
     };
   }])
 ;

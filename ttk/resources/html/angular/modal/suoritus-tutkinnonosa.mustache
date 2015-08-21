@@ -1,0 +1,66 @@
+{{=[[ ]]=}}
+[[#i18n.yleiset]]
+[[#i18n.arviointipaatokset]]
+<form name="osaForm">
+<div class="modal-header">
+  <h1 class="modal-title">[[lisaa_tutkinnon_osa]]</h1>
+</div>
+
+<div class="modal-body">
+  <div>
+    <fieldset>
+      <label>[[tutkinto]]</label>
+      <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="tutkinto" required></select>
+     </fieldset>
+  </div>
+
+  <div>
+    <fieldset>
+      <label>[[tutkinnon_osa]]</label>
+      <select ng-options="tutkinnonosa.osatunnus + ' ' + (tutkinnonosa | lokalisoiKentta:'nimi') for tutkinnonosa in tutkinnonosat" ng-model="form.tutkinnonosa" required></select>
+    </fieldset>
+  </div>
+
+  <fieldset>
+    <label>[[arvosana]]</label>
+    <select ng-model="form.arvosana">
+      <option value="hyvaksytty">[[hyvaksytty]]</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+  </fieldset>
+
+  <fieldset>
+    <label>[[arvosanan_korotus]]</label>
+    <input type="checkbox" ng-model="form.korotus">
+  </fieldset>
+
+  <fieldset>
+    <label>[[osaamisen_tunnustaminen]]</label>
+    <input type="checkbox" ng-model="form.tunnustaminen">
+  </fieldset>
+
+  <fieldset>
+    <label>[[suorituskieli]]</label>
+    [[#i18n.enum.kieli-arvo]]
+    <select ng-model="form.kieli">
+      <option value="fi">[[fi]]</option>
+      <option value="sv">[[sv]]</option>
+    </select>
+    [[/i18n.enum.kieli-arvo]]
+  </fieldset>
+
+  <fieldset>
+    <label>[[tutkinnon_osan_todistus]]</label>
+    <input type="checkbox" ng-model="form.todistus">
+  </fieldset>
+</div>
+
+<div class="modal-footer">
+  <button class="button-with-icon add-icon-white" ng-click="ok()" ng-disabled="osaForm.$invalid">[[lisaa_tutkinnon_osa]]</button>
+  <button ng-click="sulje()">[[peruuta]]</button>
+</div>
+</form>
+[[/i18n.arviointipaatokset]]
+[[/i18n.yleiset]]

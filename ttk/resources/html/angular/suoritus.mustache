@@ -22,26 +22,26 @@
 
     <h2>[[tutkinnon_osat]]</h2>
 
-    <h3>[[lisaa_tutkinnon_osa]]</h3>
-
-    <input type="text" ng-model="osaFilter" ng-model-options="{debounce: 100}" placeholder="[[etsi_tutkinnon_osista]]">
-
-    <div>
-      <div ng-repeat="tutkinnonosa in tutkinnonosat |filter:osaFilter |limitTo:5">{{ tutkinnonosa.osatunnus }} {{ tutkinnonosa | lokalisoiKentta:'nimi' }} <button class="icon add-icon" ng-click="lisaaOsa(tutkinnonosa)"></button></div>
-    </div>
-
-    <h3>[[valitut_osat]]</h3>
+    <button class="button-with-icon add-icon-white" ng-click="lisaaTutkinnonosa()">[[lisaa_tutkinnon_osa]]</button>
 
     <div class="table">
       <div class="table-header">
         <div class="table-cell">[[tutkinnon_osa]]</div>
         <div class="table-cell">[[tutkinto]]</div>
+        <div class="table-cell">[[arvosana]]</div>
+        <div class="table-cell">[[arvosanan_korotus]]</div>
+        <div class="table-cell">[[osaamisen_tunnustaminen]]</div>
+        <div class="table-cell">[[suorituskieli]]</div>
         <div class="table-cell"></div>
       </div>
-      <div class="table-row" ng-repeat="tutkinnonosa in osat track by $index">
-        <div class="table-cell">{{ tutkinnonosa.osatunnus }} {{ tutkinnonosa | lokalisoiKentta:'nimi' }}</div>
-        <div class="table-cell">{{ tutkinnonosa | lokalisoiKentta:'nayttotutkinto_nimi' }}</div>
-        <div class="table-cell"><button class="icon delete-icon" ng-click="poistaOsa(tutkinnonosa)"></button></div>
+      <div class="table-row" ng-repeat="osa in osat track by $index">
+        <div class="table-cell">{{ osa.tutkinnonosa.osatunnus }} {{ osa.tutkinnonosa | lokalisoiKentta:'nimi' }}</div>
+        <div class="table-cell">{{ osa.tutkinnonosa | lokalisoiKentta:'nayttotutkinto_nimi' }}</div>
+        <div class="table-cell">{{ osa.arvosana }}</div>
+        <div class="table-cell">{{ osa.korotus }}</div>
+        <div class="table-cell">{{ osa.tunnustaminen }}</div>
+        <div class="table-cell">{{ osa.kieli }}</div>
+        <div class="table-cell"><button class="icon delete-icon" ng-click="poistaOsa(osa)"></button></div>
       </div>
     </div>
 

@@ -43,7 +43,12 @@
     (doseq [osa osat]
       (sql/insert :suoritus
         (sql/values {:suorituskerta (:suorituskerta_id suorituskerta)
-                     :tutkinnonosa osa})))
+                     :tutkinnonosa (:tutkinnonosa_id osa)
+                     :arvosana (:arvosana osa)
+                     :arvosanan_korotus (:korotus osa)
+                     :osaamisen_tunnustaminen (:tunnustaminen osa)
+                     :kieli (:kieli osa)
+                     :todistus (:todistus osa)})))
     suorituskerta))
 
 (defn laheta!

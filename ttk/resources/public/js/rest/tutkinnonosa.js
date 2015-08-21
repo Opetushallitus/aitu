@@ -19,6 +19,11 @@ angular.module('rest.tutkinnonosa', [])
         return $http.get(ophBaseUrl + '/api/tutkinnonosa').then(function(response) {
           return response.data;
         });
+      },
+      hae: function(tutkintotunnus) {
+        return $http.get(ophBaseUrl + '/api/tutkinnonosa?tutkintotunnus=' + tutkintotunnus).then(function(response) {
+          return response.data;
+        });
       }
     };
   }])
