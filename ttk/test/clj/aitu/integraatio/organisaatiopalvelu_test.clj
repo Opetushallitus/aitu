@@ -18,8 +18,7 @@
 
 (deftest generoi-oid->ytunnus-test
   ;; Koulutustoimija 1 <- oppilaitos 2 <-  oppilaitos 3
-  (let [koulutustoimijakoodit [{:ytunnus "0000000-0"
-                                :oid "1"}]
+  (let [koulutustoimijat-oid->ytunnus {"1" "0000000-0"}
         oppilaitoskoodit [{:oppilaitoskoodi "12345"
                            :oid "2"
                            :parentOid "1"}
@@ -27,15 +26,14 @@
                            :oid "3"
                            :parentOid "2"}]]
     (testing "Oppilaitoksen Y-tunnuksena käytetään oppilaitoksen koulutustoimijan Y-tunnusta"
-      (is (= (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
+      (is (= (generoi-oid->y-tunnus koulutustoimijat-oid->ytunnus oppilaitoskoodit)
              {"1" "0000000-0"
               "2" "0000000-0"
               "3" "0000000-0"})))))
 
 (deftest generoi-oid->ytunnus-ohitetaan-oppilaitos-ilman-parenttia-test
   ;; Oppilaitos ilman parenttia
-  (let [koulutustoimijakoodit [{:ytunnus "0000000-0"
-                                :oid "1"}]
+  (let [koulutustoimijat-oid->ytunnus {"1" "0000000-0"}
         oppilaitoskoodit [{:oppilaitoskoodi "12345"
                            :oid "2"
                            :parentOid "1"}
@@ -46,7 +44,7 @@
                            :oid "4"
                            :parentOid "1"}]]
     (testing "Oppilaitos ilman parenttia ohitetaan"
-      (is (= (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
+      (is (= (generoi-oid->y-tunnus koulutustoimijat-oid->ytunnus oppilaitoskoodit)
              {"1" "0000000-0"
               "2" "0000000-0"
               "4" "0000000-0"})))))
