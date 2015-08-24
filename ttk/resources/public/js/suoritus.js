@@ -19,6 +19,7 @@ angular.module('suoritus', [])
   }])
 
   .controller('SuoritusController', ['$location', '$modal', '$scope', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', function($location, $modal, $scope, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource) {
+    $scope.vuodet = _.range(1, 21);
     $scope.form = {
       osat: []
     };

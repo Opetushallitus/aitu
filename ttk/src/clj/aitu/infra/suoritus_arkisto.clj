@@ -32,13 +32,15 @@
     (sql/order :suorituskerta_id :DESC)))
 
 (defn lisaa!
-  [{:keys [suorittaja rahoitusmuoto tutkinto osat]
+  [{:keys [jarjestamismuoto opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
     :as suoritus}]
   (auditlog/suoritus-operaatio! :lisays suoritus)
   (let [suorituskerta (sql/insert :suorituskerta
                         (sql/values {:tutkinto        tutkinto
                                      :rahoitusmuoto   rahoitusmuoto
                                      :suorittaja      suorittaja
+                                     :jarjestamismuoto jarjestamismuoto
+                                     :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
                                      :koulutustoimija "0177736-4"}))] ; FIXME
     (doseq [osa osat]
       (sql/insert :suoritus

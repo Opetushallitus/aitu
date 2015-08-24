@@ -20,6 +20,22 @@
       <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkinto" required></select>
     </fieldset>
 
+    <fieldset>
+      <label>[[jarjestamismuoto]]</label>
+      <select ng-model="form.jarjestamismuoto" required>
+        <option value="oppilaitosmuotoinen">[[oppilaitosmuotoinen]]</option>
+        <option value="oppisopimuskoulutus">[[oppisopimuskoulutus]]</option>
+        <option value="ei_valmistavaa_koulutusta">[[ei_valmistavaa_koulutusta]]</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <label>[[opiskelijavuosi]]</label>
+      <select ng-model="form.opiskelijavuosi" required>
+        <option ng-repeat="vuosi in vuodet" value="{{ vuosi }}">{{ vuosi }}</option>
+      </select>
+    </fieldset>
+
     <h2>[[tutkinnon_osat]]</h2>
 
     <button class="button-with-icon add-icon-white" ng-click="lisaaTutkinnonosa()">[[lisaa_tutkinnon_osa]]</button>
