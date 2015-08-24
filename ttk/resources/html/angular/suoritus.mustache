@@ -5,21 +5,21 @@
 <h1>[[lisaa_suoritus]]</h1>
 
 <form name="suoritusForm">
+  <div>
     <fieldset>
       <label>[[suorittaja]]</label>
       <select ng-options="suorittaja.suorittaja_id as suorittaja.etunimi + ' ' + suorittaja.sukunimi for suorittaja in suorittajat" ng-model="form.suorittaja" required></select>
     </fieldset>
 
     <fieldset>
-      <label>[[rahoitusmuoto]]</label>
-      <select ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot" ng-model="form.rahoitusmuoto" required></select>
+      <label>[[opiskelijavuosi]]</label>
+      <select ng-model="form.opiskelijavuosi" required>
+        <option ng-repeat="vuosi in vuodet" value="{{ vuosi }}">{{ vuosi }}</option>
+      </select>
     </fieldset>
+  </div>
 
-    <fieldset>
-      <label>[[tutkinto]]</label>
-      <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkinto" required></select>
-    </fieldset>
-
+  <div>
     <fieldset>
       <label>[[jarjestamismuoto]]</label>
       <select ng-model="form.jarjestamismuoto" required>
@@ -30,11 +30,17 @@
     </fieldset>
 
     <fieldset>
-      <label>[[opiskelijavuosi]]</label>
-      <select ng-model="form.opiskelijavuosi" required>
-        <option ng-repeat="vuosi in vuodet" value="{{ vuosi }}">{{ vuosi }}</option>
-      </select>
+      <label>[[rahoitusmuoto]]</label>
+      <select ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot" ng-model="form.rahoitusmuoto" required></select>
     </fieldset>
+  </div>
+
+    <div>
+      <fieldset>
+        <label>[[tutkinto]]</label>
+        <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkinto" required></select>
+      </fieldset>
+    </div>
 
     <h2>[[tutkinnon_osat]]</h2>
 
