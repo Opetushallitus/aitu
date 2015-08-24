@@ -23,7 +23,7 @@
 
   <fieldset>
     <label>[[arvosana]]</label>
-    <select ng-model="form.arvosana">
+    <select ng-model="form.arvosana" ng-disabled="form.tunnustaminen">
       <option value="hyvaksytty">[[hyvaksytty]]</option>
       <option value="1">1</option>
       <option value="2">2</option>
@@ -33,7 +33,7 @@
 
   <fieldset>
     <label>[[arvosanan_korotus]]</label>
-    <input type="checkbox" ng-model="form.korotus">
+    <input type="checkbox" ng-model="form.korotus" ng-disabled="form.tunnustaminen">
   </fieldset>
 
   <fieldset>

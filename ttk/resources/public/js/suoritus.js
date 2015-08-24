@@ -59,6 +59,10 @@ angular.module('suoritus', [])
       });
 
       modalInstance.result.then(function(uusiOsa) {
+        if (uusiOsa.tunnustaminen) {
+          uusiOsa.arvosana = null;
+          uusiOsa.korotus = false;
+        }
         if (!_.find($scope.osat, function(osa) {
             return osa.tutkinnonosa.tutkinnonosa_id === uusiOsa.tutkinnonosa.tutkinnonosa_id;
           })) {
