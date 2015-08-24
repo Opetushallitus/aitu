@@ -36,6 +36,7 @@ angular.module('ttk', [
   'oppilaitokset',
   'organisaatiomuutokset',
   'raportit',
+  'rest.koulutustoimija',
   'rest.rahoitusmuoto',
   'rest.suorittaja',
   'rest.suoritus',
