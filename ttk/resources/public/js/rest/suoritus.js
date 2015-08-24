@@ -34,6 +34,11 @@ angular.module('rest.suoritus', [])
         return $http.post(ophBaseUrl + '/api/suoritus/hyvaksy', {suoritukset: suoritukset}).then(function(response) {
           return response.data;
         });
+      },
+      poista: function(suoritusId) {
+        return $http.delete(ophBaseUrl + '/api/suoritus/' + suoritusId).then(function(response) {
+          return response.data;
+        });
       }
     };
   }])

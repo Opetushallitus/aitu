@@ -35,6 +35,7 @@
         <span ng-if="tila === 'luonnos'">[[ehdota_hyvaksyttavaksi]]</span>
         <span ng-if="tila === 'ehdotettu'">[[hyvaksy]]</span>
       </div>
+      <div class="table-cell"></div>
     </div>
     <div class="table-row" ng-repeat="suoritus in suoritukset |filter:{tila: tila}">
       <div class="table-cell">{{ suoritus.suorittaja_etunimi }}</div>
@@ -44,6 +45,7 @@
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'koulutustoimija_nimi' }}</div>
       <div class="table-cell">{{ i18n.arviointipaatokset['tila-' + suoritus.tila] }}</div>
       <div class="table-cell"><input type="checkbox" ng-model="form[suoritus.suorituskerta_id]" ng-if="tila === 'luonnos' || tila === 'ehdotettu'"></div>
+      <div class="table-cell"><button class="icon delete-icon" ng-click="poistaSuoritus(suoritus)" ng-if="suoritus.tila === 'luonnos'"></button></div>
     </div>
   </div>
 

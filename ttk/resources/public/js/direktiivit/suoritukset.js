@@ -31,6 +31,14 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
           $scope.form = {};
         });
 
+        $scope.poistaSuoritus = function(poistettavaSuoritus) {
+          Suoritus.poista(poistettavaSuoritus.suorituskerta_id).then(function() {
+            _.remove($scope.suoritukset, function(suoritus) {
+              return suoritus.suorituskerta_id == poistettavaSuoritus.suorituskerta_id;
+            })
+          });
+        };
+
         $scope.valitutSuoritukset = function() {
           return _.chain($scope.form).pairs().filter(function(x) { return x[1]; }).map(function(x) { return parseInt(x[0]); }).value();
         };
