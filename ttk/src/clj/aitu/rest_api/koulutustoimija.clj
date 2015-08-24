@@ -36,6 +36,8 @@
     (cachable-json-response req (arkisto/hae-julkiset-tiedot) [KoulutustoimijaLista]))
   (cu/defapi :yleinen-rest-api nil :get "/haku" [termi :as req]
     (json-response (arkisto/hae-termilla termi) [KoulutustoimijaLinkki]))
+  (cu/defapi :yleinen-rest-api nil :get "/nimet" req
+    (cachable-json-response req (arkisto/hae-nimet)))
   (cu/defapi :yleinen-rest-api nil :get "/:ytunnus" [ytunnus]
     (json-response (arkisto/hae ytunnus)))
   (cu/defapi :yleinen-rest-api nil :get "/haku/ala" [tunnus :as req]

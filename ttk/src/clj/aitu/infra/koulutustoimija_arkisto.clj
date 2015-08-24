@@ -115,3 +115,9 @@
     (if (:avaimet ehdot)
       (map #(select-keys % (:avaimet ehdot)) koulutustoimijat)
       koulutustoimijat)))
+
+(defn hae-nimet
+  []
+  (sql/select :koulutustoimija
+    (sql/fields :ytunnus :nimi_fi :nimi_sv)
+    (sql/order :nimi_fi)))
