@@ -32,7 +32,7 @@
     (sql/order :suorituskerta_id :DESC)))
 
 (defn lisaa!
-  [{:keys [jarjestamismuoto opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
+  [{:keys [jarjestamismuoto koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
     :as suoritus}]
   (auditlog/suoritus-operaatio! :lisays suoritus)
   (let [suorituskerta (sql/insert :suorituskerta
@@ -41,7 +41,7 @@
                                      :suorittaja      suorittaja
                                      :jarjestamismuoto jarjestamismuoto
                                      :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
-                                     :koulutustoimija "0177736-4"}))] ; FIXME
+                                     :koulutustoimija koulutustoimija}))]
     (doseq [osa osat]
       (sql/insert :suoritus
         (sql/values {:suorituskerta (:suorituskerta_id suorituskerta)
@@ -60,8 +60,7 @@
   (sql/update :suorituskerta
     (sql/set-fields {:tila "ehdotettu"
                      :ehdotusaika (sql/sqlfn now)})
-    (sql/where {:suorituskerta_id [in suoritukset]
-                :koulutustoimija "0177736-4"})))            ; FIXME varmista että sama kuin käyttäjällä (on oikeus)
+    (sql/where {:suorituskerta_id [in suoritukset]})))
 
 (defn hyvaksy!
   [suoritukset]
@@ -70,5 +69,4 @@
   (sql/update :suorituskerta
     (sql/set-fields {:tila "hyvaksytty"
                      :hyvaksymisaika (sql/sqlfn now)})
-    (sql/where {:suorituskerta_id [in suoritukset]
-                :koulutustoimija "0177736-4" })))          ; FIXME
+    (sql/where {:suorituskerta_id [in suoritukset]})))

@@ -18,7 +18,7 @@ angular.module('suoritus', [])
     $routeProvider.when('/lisaa-suoritus', {controller: 'SuoritusController', templateUrl: 'template/suoritus'});
   }])
 
-  .controller('SuoritusController', ['$location', '$modal', '$scope', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', function($location, $modal, $scope, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource) {
+  .controller('SuoritusController', ['$location', '$modal', '$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', function($location, $modal, $scope, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource) {
     $scope.vuodet = _.range(1, 21);
     $scope.form = {
       osat: []
@@ -46,6 +46,10 @@ angular.module('suoritus', [])
 
     TutkintoResource.query(function(tutkinnot) {
       $scope.tutkinnot = tutkinnot;
+    });
+
+    Koulutustoimija.haeKaikkiNimet().then(function(koulutustoimijat) {
+      $scope.koulutustoimijat = koulutustoimijat;
     });
 
     $scope.lisaaTutkinnonosa = function() {

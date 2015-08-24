@@ -35,6 +35,13 @@
     </fieldset>
   </div>
 
+  <div>
+    <fieldset>
+      <label>[[tutkinto_jarjestaja]]</label>
+      <select ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat" ng-model="form.koulutustoimija" required></select>
+    </fieldset>
+  </div>
+
     <div>
       <fieldset>
         <label>[[tutkinto]]</label>
