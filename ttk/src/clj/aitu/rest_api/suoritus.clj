@@ -21,6 +21,12 @@
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/" []
     (json-response (arkisto/hae-kaikki)))
+  (cu/defapi :yleinen-rest-api nil :delete "/:suorituskerta-id" [suorituskerta-id]
+    (let [suorituskerta-id (Integer/parseInt suorituskerta-id)
+          suorituskerta (arkisto/hae suorituskerta-id)]
+      (if (= "luonnos" (:tila suorituskerta))
+        (json-response (arkisto/poista! suorituskerta-id))
+        {:status 403})))
   (cu/defapi :yleinen-rest-api nil :post "/" [& suoritus]
     (json-response (arkisto/lisaa! suoritus)))
   (cu/defapi :yleinen-rest-api nil :post "/laheta" [suoritukset]

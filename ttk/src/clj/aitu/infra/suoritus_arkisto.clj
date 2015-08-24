@@ -16,6 +16,12 @@
   (:require  [korma.core :as sql]
              [aitu.auditlog :as auditlog]))
 
+(defn hae
+  [suorituskerta-id]
+  (first
+    (sql/select :suorituskerta
+      (sql/where {:suorituskerta_id suorituskerta-id}))))
+
 (defn hae-kaikki
   []
   (sql/select :suorituskerta
@@ -70,3 +76,10 @@
     (sql/set-fields {:tila "hyvaksytty"
                      :hyvaksymisaika (sql/sqlfn now)})
     (sql/where {:suorituskerta_id [in suoritukset]})))
+
+(defn poista!
+  [suorituskerta-id]
+  (auditlog/suoritus-operaatio! :poisto {:suoritus-id suorituskerta-id})
+  (sql/delete :suorituskerta
+    (sql/where {:suorituskerta_id suorituskerta-id
+                :tila "luonnos"})))
