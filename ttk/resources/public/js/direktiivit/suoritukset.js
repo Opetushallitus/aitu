@@ -20,7 +20,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       restrict: 'E',
       templateUrl: 'template/direktiivit/suoritukset',
       scope: {},
-      controller: ['$scope', 'Suoritus', 'i18n', function($scope, Suoritus, i18n) {
+      controller: ['$scope', 'Suoritus', 'Varmistus', 'i18n', function($scope, Suoritus, Varmistus, i18n) {
         $scope.i18n = i18n;
 
         $scope.tila = '';
@@ -32,10 +32,12 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         });
 
         $scope.poistaSuoritus = function(poistettavaSuoritus) {
-          Suoritus.poista(poistettavaSuoritus.suorituskerta_id).then(function() {
-            _.remove($scope.suoritukset, function(suoritus) {
-              return suoritus.suorituskerta_id == poistettavaSuoritus.suorituskerta_id;
-            })
+          Varmistus.varmista(i18n.arviointipaatokset.poistetaanko_suoritus, i18n.arviointipaatokset.poista_suoritus_teksti, i18n.arviointipaatokset.poista_suoritus).then(function() {
+            Suoritus.poista(poistettavaSuoritus.suorituskerta_id).then(function() {
+              _.remove($scope.suoritukset, function(suoritus) {
+                return suoritus.suorituskerta_id == poistettavaSuoritus.suorituskerta_id;
+              })
+            });
           });
         };
 
