@@ -20,7 +20,7 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
       restrict: 'E',
       templateUrl: 'template/direktiivit/suorittajat',
       scope: {},
-      controller: ['$modal', '$scope', 'Suorittaja', function($modal, $scope, Suorittaja) {
+      controller: ['$modal', '$scope', 'Suorittaja', 'Varmistus', 'i18n', function($modal, $scope, Suorittaja, Varmistus, i18n) {
         $scope.muokkaaSuorittajaa = function(suorittaja) {
           var modalInstance = $modal.open({
             templateUrl: 'template/modal/suorittaja',
@@ -51,8 +51,10 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
         });
 
         $scope.poistaSuorittaja = function(suorittaja) {
-          Suorittaja.poista(suorittaja).then(function() {
-            _.remove($scope.suorittajat, {suorittaja_id: suorittaja.suorittaja_id});
+          Varmistus.varmista(i18n.arviointipaatokset.poistetaanko_suorittaja, i18n.arviointipaatokset.poista_suorittaja_teksti, i18n.arviointipaatokset.poista_suorittaja).then(function() {
+            Suorittaja.poista(suorittaja).then(function() {
+              _.remove($scope.suorittajat, {suorittaja_id: suorittaja.suorittaja_id});
+            });
           });
         };
       }]
