@@ -31,7 +31,7 @@
 </div>
 
 <div class="modal-footer">
-  <button class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()" ng-disabled="form.$invalid || !(suorittajaForm.hetu || suorittajaForm.oid)">[[tallenna_suorittaja]]</button>
+  <button class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()" ng-disabled="form.$error.required || !(suorittajaForm.hetu || suorittajaForm.oid)">[[tallenna_suorittaja]]</button>
 </div>
 </form>
 [[/i18n.arviointipaatokset]]
