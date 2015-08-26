@@ -13,6 +13,16 @@
 
     <div>
       <fieldset>
+        <label>[[suoritus_ehdotettu]]</label>
+        <div>
+          <pvm-valitsin pakollinen="false" valittu-pvm="hakuForm.ehdotuspvm_alku" max-pvm="hakuForm.ehdotuspvm_loppu"></pvm-valitsin>
+          &nbsp;&nbsp;&nbsp;&nbsp;-
+          <pvm-valitsin pakollinen="false" valittu-pvm="hakuForm.ehdotuspvm_loppu" min-pvm="hakuForm.ehdotuspvm_alku"></pvm-valitsin>
+        </div>
+        <div>
+        </div>
+      </fieldset>
+      <fieldset>
         <label>[[tutkinto_jarjestaja]]</label>
         <select ng-model="hakuForm.koulutustoimija" ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat">
           <option value=""></option>

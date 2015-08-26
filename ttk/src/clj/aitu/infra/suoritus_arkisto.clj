@@ -14,7 +14,9 @@
 
 (ns aitu.infra.suoritus-arkisto
   (:require  [korma.core :as sql]
-             [aitu.auditlog :as auditlog]))
+             [aitu.auditlog :as auditlog]
+             [clj-time.coerce :refer [to-sql-date]]
+             [oph.common.util.http-util :refer [parse-iso-date]]))
 
 (defn hae
   [suorituskerta-id]
@@ -23,7 +25,7 @@
       (sql/where {:suorituskerta_id suorituskerta-id}))))
 
 (defn hae-kaikki
-  [{:keys [jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto]}]
+  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto]}]
   (->
     (sql/select* :suorituskerta)
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
@@ -38,6 +40,8 @@
                 [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv])
     (sql/order :suorituskerta_id :DESC)
     (cond->
+      (seq ehdotuspvm_alku) (sql/where {:ehdotusaika [>= (to-sql-date (parse-iso-date ehdotuspvm_alku))]})
+      (seq ehdotuspvm_loppu) (sql/where {:ehdotusaika [<= (to-sql-date (parse-iso-date ehdotuspvm_loppu))]})
       (seq jarjestamismuoto) (sql/where {:jarjestamismuoto jarjestamismuoto})
       (seq koulutustoimija) (sql/where {:koulutustoimija koulutustoimija})
       (seq rahoitusmuoto) (sql/where {:rahoitusmuoto (Integer/parseInt rahoitusmuoto)})
