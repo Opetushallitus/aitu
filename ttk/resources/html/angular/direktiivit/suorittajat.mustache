@@ -1,6 +1,16 @@
 {{=[[ ]]=}}
 [[#i18n.arviointipaatokset]]
 <div>
+  <a ng-click="naytaSuorittajat = !naytaSuorittajat">
+    [
+    <span ng-if="!naytaSuorittajat">[[nayta_suorittajat]]</span>
+    <span ng-if="naytaSuorittajat">[[piilota_suorittajat]]</span>
+    ]
+  </a>
+</div>
+<div ng-if="naytaSuorittajat">
+  <h2>[[suorittajat]]</h2>
+
   <button class="button-with-icon add-icon-white float-right" ng-click="muokkaaSuorittajaa()">[[lisaa_suorittaja]]</button>
 
   <div>
