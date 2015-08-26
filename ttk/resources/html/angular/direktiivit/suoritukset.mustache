@@ -1,23 +1,71 @@
 {{=[[ ]]=}}
 [[#i18n.arviointipaatokset]]
 <div>
+  <h3 ng-click="haeSuorituksia = !haeSuorituksia">[[hae_suorituksia]]</h3>
+
+  <div ng-show="haeSuorituksia" style="border: 1px solid black; padding: 1em">
+
+    <div>
+      <fieldset>
+        <input type="text" placeholder="[[hae_tutkinnon_suorittaja_placeholder]]">
+      </fieldset>
+    </div>
+
+    <div>
+      <fieldset>
+        <label>[[tutkinto_jarjestaja]]</label>
+        <select ng-model="hakuForm.koulutustoimija" ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat">
+          <option value=""></option>
+        </select>
+      </fieldset>
+      <fieldset>
+        <label>[[tutkinto]]</label>
+        <select ng-model="hakuForm.tutkinto" ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot">
+          <option value=""></option>
+        </select>
+      </fieldset>
+    </div>
+    <div>
+    </div>
+    <div>
+      <fieldset>
+        <label>[[rahoitusmuoto]]</label>
+        <select ng-model="hakuForm.rahoitusmuoto" ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot">
+          <option value=""></option>
+        </select>
+      </fieldset>
+    </div>
+    <div>
+      <fieldset>
+        <label>[[jarjestamismuoto]]</label>
+        <select ng-model="hakuForm.jarjestamismuoto">
+          <option ng-value="null"></option>
+          <option value="oppilaitosmuotoinen">[[oppilaitosmuotoinen]]</option>
+          <option value="oppisopimuskoulutus">[[oppisopimuskoulutus]]</option>
+          <option value="ei_valmistavaa_koulutusta">[[ei_valmistavaa_koulutusta]]</option>
+        </select>
+      </fieldset>
+    </div>
+
+  </div>
+
   <div>
     [[nayta]]:
 
     <label>
-      <input type="radio" ng-model="tila" value="">
+      <input type="radio" ng-model="hakuForm.tila" value="">
       [[kaikki]]
     </label>
     <label>
-      <input type="radio" ng-model="tila" value="luonnos">
+      <input type="radio" ng-model="hakuForm.tila" value="luonnos">
       [[luonnokset]]
     </label>
     <label>
-      <input type="radio" ng-model="tila" value="ehdotettu">
+      <input type="radio" ng-model="hakuForm.tila" value="ehdotettu">
       [[ehdotetut]]
     </label>
     <label>
-      <input type="radio" ng-model="tila" value="hyvaksytty">
+      <input type="radio" ng-model="hakuForm.tila" value="hyvaksytty">
       [[hyvaksytyt]]
     </label>
   </div>
@@ -32,25 +80,25 @@
       <div class="table-cell">[[tutkinto_jarjestaja]]</div>
       <div class="table-cell">[[tila]]</div>
       <div class="table-cell">
-        <span ng-if="tila === 'luonnos'">[[ehdota_hyvaksyttavaksi]]</span>
-        <span ng-if="tila === 'ehdotettu'">[[hyvaksy]]</span>
+        <span ng-if="hakuForm.tila === 'luonnos'">[[ehdota_hyvaksyttavaksi]]</span>
+        <span ng-if="hakuForm.tila === 'ehdotettu'">[[hyvaksy]]</span>
       </div>
       <div class="table-cell"></div>
     </div>
-    <div class="table-row" ng-repeat="suoritus in suoritukset |filter:{tila: tila}">
+    <div class="table-row" ng-repeat="suoritus in suoritukset |filter:{tila: hakuForm.tila}">
       <div class="table-cell">{{ suoritus.suorittaja_etunimi }}</div>
       <div class="table-cell">{{ suoritus.suorittaja_sukunimi }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</div>
       <div class="table-cell">{{ suoritus.ehdotusaika | date:'dd.MM.yyyy' }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'koulutustoimija_nimi' }}</div>
       <div class="table-cell">{{ i18n.arviointipaatokset['tila-' + suoritus.tila] }}</div>
-      <div class="table-cell"><input type="checkbox" ng-model="form[suoritus.suorituskerta_id]" ng-if="tila === 'luonnos' || tila === 'ehdotettu'"></div>
+      <div class="table-cell"><input type="checkbox" ng-model="form[suoritus.suorituskerta_id]" ng-if="hakuForm.tila === 'luonnos' || hakuForm.tila === 'ehdotettu'"></div>
       <div class="table-cell"><button class="icon delete-icon" ng-click="poistaSuoritus(suoritus)" ng-if="suoritus.tila === 'luonnos'"></button></div>
     </div>
   </div>
 
-    <button class="float-right" ng-click="lahetaHyvaksyttavaksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="tila === 'luonnos'">[[laheta_hyvaksyttavaksi]]</button>
-    <button class="float-right" ng-click="hyvaksy()" ng-disabled="valitutSuoritukset().length == 0" ng-if="tila === 'ehdotettu'">[[hyvaksy]]</button>
+    <button class="float-right" ng-click="lahetaHyvaksyttavaksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'luonnos'">[[laheta_hyvaksyttavaksi]]</button>
+    <button class="float-right" ng-click="hyvaksy()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'ehdotettu'">[[hyvaksy]]</button>
   </form>
 </div>
 [[/i18n.arviointipaatokset]]

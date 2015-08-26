@@ -15,8 +15,8 @@
 angular.module('rest.suoritus', [])
   .factory('Suoritus', ['$http', function($http) {
     return {
-      haeKaikki: function() {
-        return $http.get(ophBaseUrl + '/api/suoritus').then(function(response) {
+      haeKaikki: function(ehdot) {
+        return $http.get(ophBaseUrl + '/api/suoritus', {params: ehdot}).then(function(response) {
           return response.data;
         });
       },
