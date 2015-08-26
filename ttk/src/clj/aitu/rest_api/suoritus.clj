@@ -19,8 +19,8 @@
             [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" []
-    (json-response (arkisto/hae-kaikki)))
+  (cu/defapi :yleinen-rest-api nil :get "/" [& ehdot]
+    (json-response (arkisto/hae-kaikki ehdot)))
   (cu/defapi :yleinen-rest-api nil :delete "/:suorituskerta-id" [suorituskerta-id]
     (let [suorituskerta-id (Integer/parseInt suorituskerta-id)
           suorituskerta (arkisto/hae suorituskerta-id)]

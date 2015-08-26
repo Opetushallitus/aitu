@@ -23,8 +23,9 @@
       (sql/where {:suorituskerta_id suorituskerta-id}))))
 
 (defn hae-kaikki
-  []
-  (sql/select :suorituskerta
+  [{:keys [jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto]}]
+  (->
+    (sql/select* :suorituskerta)
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
@@ -35,7 +36,14 @@
                 [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
                 [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
                 [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv])
-    (sql/order :suorituskerta_id :DESC)))
+    (sql/order :suorituskerta_id :DESC)
+    (cond->
+      (seq jarjestamismuoto) (sql/where {:jarjestamismuoto jarjestamismuoto})
+      (seq koulutustoimija) (sql/where {:koulutustoimija koulutustoimija})
+      (seq rahoitusmuoto) (sql/where {:rahoitusmuoto (Integer/parseInt rahoitusmuoto)})
+      (seq tila) (sql/where {:tila tila})
+      (seq tutkinto) (sql/where {:tutkinto tutkinto}))
+    sql/exec))
 
 (defn lisaa!
   [{:keys [jarjestamismuoto koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
