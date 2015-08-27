@@ -24,6 +24,13 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         $scope.hakuForm = {};
         $scope.i18n = i18n;
 
+        $scope.$watch('haeSuorituksia', function(haeSuorituksia) {
+          // Tyhjennä hakuehdot kun haku suljetaan
+          if (haeSuorituksia === false) {
+            $scope.hakuForm = _.pick($scope.hakuForm, 'tila');
+          }
+        });
+
         Koulutustoimija.haeKaikkiNimet().then(function(koulutustoimijat) {
           $scope.koulutustoimijat = koulutustoimijat;
         });
