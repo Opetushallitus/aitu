@@ -245,7 +245,8 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         minPvm : '=',
         maxPvm : '=',
         otsikko : '@',
-        pakollinen : '='
+        pakollinen : '=',
+        tyhjennettava: '@'
       },
       templateUrl : 'template/pvm-valitsin',
       link : function(scope) {
