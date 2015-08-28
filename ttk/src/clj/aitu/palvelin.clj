@@ -36,7 +36,8 @@
             oph.korma.korma
 
             [oph.common.infra.print-wrapper :refer [debug-request log-request-wrapper]]
-            [aitu.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus build-id kehitysmoodi? service-path]]
+            [aitu.asetukset :refer [lue-asetukset oletusasetukset build-id kehitysmoodi? service-path]]
+            [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.i18n :as i18n]
             [aitu.infra.auth-wrapper :as auth]
             [clj-cas-client.core :refer [cas]]

@@ -41,10 +41,6 @@
                  [org.clojure/tools.logging "0.2.6"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [org.slf4j/slf4j-log4j12 "1.7.1"]
-                 [log4j/log4j "1.2.17" :exclusions [javax.mail/mail
-                                                    javax.jms/jms
-                                                    com.sun.jmdk/jmxtools
-                                                    com.sun.jmx/jmxri]]
 
                  [stencil "0.3.2"]
                  [slingshot "0.10.3"]

@@ -23,8 +23,7 @@
                               paths]]
             [aitu.util :refer [kaikki-optional]]
             [schema.core :as s]
-            [schema.coerce :as sc])
-  (:import [org.apache.log4j PropertyConfigurator]))
+            [schema.coerce :as sc]))
 
 (def asetukset (promise))
 
@@ -53,8 +52,7 @@
                 :eraajo Boolean
                 :development-mode Boolean
                 :ominaisuus {:proto Boolean}
-                :log4j {:properties-file s/Str
-                        :refresh-interval s/Int}
+                :logback {:properties-file s/Str}
                 :paatospohja-oletukset {:esittelijan_asema s/Str
                                         :esittelija s/Str
                                         :hyvaksyjan_asema s/Str
@@ -101,7 +99,7 @@
                          :eraajo false
                          :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
                          :ominaisuus {:proto false}
-                         :log4j {:properties-file "resources/log4j.properties" :refresh-interval 3000} ; päivitä log4j asetukset kerran kolmessa sekunnissa dynaamisesti
+                         :logback {:properties-file "resources/logback.xml"}
                          :paatospohja-oletukset {:esittelijan_asema ""
                                                  :esittelija ""
                                                  :hyvaksyjan_asema ""
@@ -116,18 +114,6 @@
 (defn kehitysmoodi?
   [asetukset]
   (true? (:development-mode asetukset)))
-
-(defn konfiguroi-lokitus
-  "Konfiguroidaan log4j asetukset tiedostosta joka määritellään asetuksissa."
-  [asetukset]
-  (oph.log/lisaa-uid-ja-requestid-hook)
-  (let [filepath (:properties-file (:log4j asetukset))
-        refresh (:refresh-interval (:log4j asetukset))
-        log4j-configfile (file filepath)
-        cfpath (.getAbsolutePath log4j-configfile)]
-    (log/info "log4j configuration reset. Watch " cfpath " interval " refresh)
-    (PropertyConfigurator/configure cfpath)
-    (PropertyConfigurator/configureAndWatch cfpath refresh)))
 
 (defn lue-asetukset-tiedostosta
   [polku]
