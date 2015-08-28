@@ -44,9 +44,13 @@
                        raporttikenttien-jarjestys)
         "nayttotutkinnot_raportti.csv"))))
 
+(defn rajaa-tutkinnon-kentat [tutkinto]
+  (select-keys tutkinto [:tutkintotunnus :nimi_fi :nimi_sv :opintoala_nimi_fi :opintoala_nimi_sv
+                         :opintoala :tutkintotaso :peruste :voimassa]))
+
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/" [:as req]
-    (cachable-json-response req (map voimassaolo/taydenna-tutkinnon-voimassaolo
+    (cachable-json-response req (map (comp rajaa-tutkinnon-kentat voimassaolo/taydenna-tutkinnon-voimassaolo)
                                      (arkisto/hae-kaikki))))
   (cu/defapi :yleinen-rest-api nil :get "/:tutkintotunnus" [tutkintotunnus]
     (json-response (tutkinto/taydenna-tutkinto (arkisto/hae tutkintotunnus))))
