@@ -122,6 +122,7 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
           nykyinenAskel++;
         }
       }
+      $scope.kokemusvuodet = _.range(1, 21);
       $scope.jasen = { henkilo: {} };
       $scope.search = { henkilo: {} };
       $scope.voimassaAlkaen = new Date(new Date().setHours(0,0,0,0));

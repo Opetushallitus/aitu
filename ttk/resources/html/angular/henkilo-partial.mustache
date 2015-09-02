@@ -28,6 +28,11 @@
     <enum-valikko pakollinen="true" ng-hide="!muokkausTila" nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-valikko>
     <p ng-hide="muokkausTila"><enum-arvo nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-arvo></p>
   </fieldset>
+  <fieldset>
+    <label>[[syntymavuosi]]</label>
+    <input type="number" ng-model="jasen.henkilo.syntymavuosi" min="1900" ng-hide="!muokkausTila">
+    <p ng-hide="muokkausTila" ng-bind="jasen.henkilo.syntymavuosi"></p>
+  </fieldset>
   <auth-toiminto auth-blokki sallitut-roolit="['YLLAPITAJA']">
     <fieldset ng-hide="muokkausTila">
       <label>[[tunnus]]</label>
@@ -104,6 +109,13 @@
     <label>[[nayttotutkintomestari]]</label>
     <p ng-hide="muokkausTila">{{jasen.henkilo.nayttomestari | muotoileNayttotutkintomestari}}</p>
     <boolean-select ng-hide="!muokkausTila" model="jasen.henkilo.nayttomestari"></boolean-select>
+  </fieldset>
+  <fieldset>
+    <label>[[kokemus_toimikunnista]]</label>
+    <select ng-model="jasen.henkilo.kokemusvuodet" ng-options="kokemus as kokemus for kokemus in kokemusvuodet" ng-hide="!muokkausTila">
+      <option value="">[[ei_ole]]</option>
+    </select>
+    <p ng-hide="muokkausTila" ng-bind="jasen.henkilo.kokemusvuodet"></p>
   </fieldset>
 </section>
 <section class="info-section">
