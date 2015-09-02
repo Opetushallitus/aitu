@@ -70,6 +70,8 @@
                           (s/optional-key :jarjesto) (s/maybe s/Any)
                           (s/optional-key :lisatiedot) s/Str
                           (s/optional-key :nayttomestari) Boolean
+                          (s/optional-key :syntymavuosi) s/Int
+                          (s/optional-key :kokemusvuodet) (s/maybe s/Int)
                           (s/optional-key :kayttaja_oid) s/Str})
 
 (defmodel ToimikunnanJasen (merge JasenyysTiedot
