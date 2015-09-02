@@ -56,21 +56,21 @@
 
 (defmodel HenkilonTiedot {:etunimi s/Str
                           :sukunimi s/Str
-                          :organisaatio (s/maybe s/Str)
-                          :aidinkieli (s/maybe Kieli)
-                          :sukupuoli (s/maybe Sukupuoli)
-                          (s/optional-key :sahkoposti) (s/maybe s/Str)
-                          :sahkoposti_julkinen (s/maybe Boolean)
-                          (s/optional-key :puhelin) (s/maybe s/Str)
-                          :puhelin_julkinen (s/maybe Boolean)
-                          (s/optional-key :osoite) (s/maybe s/Str)
-                          :osoite_julkinen (s/maybe Boolean)
-                          (s/optional-key :postinumero) (s/maybe s/Str)
-                          (s/optional-key :postitoimipaikka) (s/maybe s/Str)
-                          :jarjesto (s/maybe s/Any)
-                          (s/optional-key :lisatiedot) (s/maybe s/Str)
-                          :nayttomestari (s/maybe Boolean)
-                          (s/optional-key :kayttaja_oid) (s/maybe s/Str)})
+                          (s/optional-key :organisaatio) s/Str
+                          :aidinkieli Kieli
+                          :sukupuoli Sukupuoli
+                          (s/optional-key :sahkoposti) s/Str
+                          (s/optional-key :sahkoposti_julkinen) Boolean
+                          (s/optional-key :puhelin) s/Str
+                          (s/optional-key :puhelin_julkinen) Boolean
+                          (s/optional-key :osoite) s/Str
+                          (s/optional-key :osoite_julkinen) Boolean
+                          (s/optional-key :postinumero) s/Str
+                          (s/optional-key :postitoimipaikka) s/Str
+                          (s/optional-key :jarjesto) (s/maybe s/Any)
+                          (s/optional-key :lisatiedot) s/Str
+                          (s/optional-key :nayttomestari) Boolean
+                          (s/optional-key :kayttaja_oid) s/Str})
 
 (defmodel ToimikunnanJasen (merge JasenyysTiedot
                              {:etunimi s/Str

@@ -120,15 +120,16 @@
                       :sukupuoli "mies"
                       :sahkoposti "sahkoposti"
                       :puhelin "puhelin"
-                      :puhelin_julkinen nil
-                      :lisatiedot nil
-                      :postitoimipaikka nil
+                      :puhelin_julkinen false
+                      :lisatiedot ""
+                      :postitoimipaikka "Tampere"
                       :jarjesto nil
-                      :sahkoposti_julkinen nil
-                      :osoite_julkinen nil
-                      :osoite nil
-                      :nayttomestari nil
-                      :postinumero nil})
+                      :sahkoposti_julkinen false
+                      :osoite_julkinen false
+                      :osoite "on"
+                      :nayttomestari false
+                      :postinumero "33720"
+                      })
 (s/validate HenkilonTiedot default-henkilo)
 
 (defn lisaa-henkilo!

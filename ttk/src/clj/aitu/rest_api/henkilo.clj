@@ -53,25 +53,12 @@
 
 (c/defroutes reitit
   (cu/defapi :henkilo_lisays nil :post "/"
-    [sukunimi etunimi organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
-     osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
-      (let [henkilodto {:kayttaja_oid (:oid kayttaja)
-                        :etunimi etunimi
-                        :sukunimi sukunimi
-                        :organisaatio organisaatio
-                        :aidinkieli aidinkieli
-                        :sukupuoli sukupuoli
-                        :sahkoposti sahkoposti
-                        :sahkoposti_julkinen sahkoposti_julkinen
-                        :puhelin puhelin
-                        :puhelin_julkinen puhelin_julkinen
-                        :osoite osoite
-                        :osoite_julkinen osoite_julkinen
-                        :postinumero postinumero
-                        :postitoimipaikka postitoimipaikka
-                        :jarjesto (:jarjesto jarjesto)
-                        :lisatiedot lisatiedot
-                        :nayttomestari nayttomestari}]
+    [& henkilodto]
+      (let [kayttaja_oid (-> henkilodto :kayttaja :oid)
+            henkilodto (-> henkilodto
+                           (cond-> kayttaja_oid (assoc :kayttaja_oid kayttaja_oid))
+                           (cond-> (:jarjesto henkilodto) (assoc :jarjesto (-> henkilodto :jarjesto :jarjesto)))
+                           (dissoc :henkilo :kayttaja))]
         (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
           (s/validate skeema/HenkilonTiedot henkilodto)
           (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
