@@ -68,11 +68,11 @@
                           (s/optional-key :postinumero) s/Str
                           (s/optional-key :postitoimipaikka) s/Str
                           (s/optional-key :jarjesto) (s/maybe s/Any)
-                          (s/optional-key :lisatiedot) s/Str
-                          (s/optional-key :nayttomestari) Boolean
-                          (s/optional-key :syntymavuosi) s/Int
+                          (s/optional-key :lisatiedot) (s/maybe s/Str)
+                          (s/optional-key :nayttomestari) (s/maybe Boolean)
+                          (s/optional-key :syntymavuosi) (s/maybe s/Int)
                           (s/optional-key :kokemusvuodet) (s/maybe s/Int)
-                          (s/optional-key :kayttaja_oid) s/Str})
+                          (s/optional-key :kayttaja_oid) (s/maybe s/Str)})
 
 (defmodel ToimikunnanJasen (merge JasenyysTiedot
                              {:etunimi s/Str
