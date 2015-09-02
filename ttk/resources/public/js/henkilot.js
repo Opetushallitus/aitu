@@ -132,8 +132,19 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
           function() { ToimikuntaUtil.siirryJasentenMuokkaukseen(jasen.toimikunta.diaarinumero); });
       };
       $scope.lisaaHenkiloJaSiirrySeuraavaan = function(henkilo) {
+        // Siivotaan hakuvalitsimen malleihin jättämät ylimääräiset kentät pois
+        var dto = _.cloneDeep(henkilo);
+        delete dto.henkilo;
+        if (dto.kayttaja !== undefined) {
+          dto.kayttaja_oid = dto.kayttaja.oid;
+          delete dto.kayttaja;
+        }
+        if (dto.jarjesto !== undefined) {
+          dto.jarjesto = dto.jarjesto.jarjesto;
+        }
+
         varmistaPoistuminen.tallenna(
-          henkiloVelhoResource.saveHenkilo(henkilo),
+          henkiloVelhoResource.saveHenkilo(dto),
           function(response) {
             $scope.jasen.henkilo = response;
             siirrySeuraavaan();

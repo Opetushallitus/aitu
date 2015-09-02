@@ -54,16 +54,11 @@
 (c/defroutes reitit
   (cu/defapi :henkilo_lisays nil :post "/"
     [& henkilodto]
-      (let [kayttaja_oid (-> henkilodto :kayttaja :oid)
-            henkilodto (-> henkilodto
-                           (cond-> kayttaja_oid (assoc :kayttaja_oid kayttaja_oid))
-                           (cond-> (:jarjesto henkilodto) (assoc :jarjesto (-> henkilodto :jarjesto :jarjesto)))
-                           (dissoc :henkilo :kayttaja))]
-        (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
-          (s/validate skeema/HenkilonTiedot henkilodto)
-          (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
-            {:status 200
-             :body (cheshire/generate-string uusi-henkilo)}))))
+    (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
+      (s/validate skeema/HenkilonTiedot henkilodto)
+      (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
+        {:status 200
+         :body   (cheshire/generate-string uusi-henkilo)})))
 
   (cu/defapi :henkilo_haku nil :get "/" [toimikausi :as req]
     (let [henkilot (if (= toimikausi "nykyinen")
