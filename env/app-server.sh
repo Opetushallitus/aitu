@@ -26,46 +26,9 @@ mkdir -p $install_dir
 
 useradd aituadmin
 
-# Aitua ajetaan tomcat-käyttäjänä
-useradd -r -s /bin/false tomcat
-
 # aituadmin-käyttäjälle oikeudet ajaa rootina asennukseen tarvittavat komennot
 # ilman salasanaa
 echo 'aituadmin ALL = NOPASSWD: ALL' >> /etc/sudoers
-
-# Palvelimen asetukset
-cp app-server/ttk.properties $install_dir
-mkdir "$install_dir/resources"
-chmod a+rx "$install_dir/resources"
-cp app-server/log4j.properties "$install_dir/resources"
-mkdir "$install_dir/logs"
-chmod a+rwx "$install_dir/logs"
-sed -i -e "s|\\\$DB_HOST|$db_host|g" $install_dir/ttk.properties
-sed -i -e "s|\\\$BASE_URL|$base_url|g" $install_dir/ttk.properties
-sed -i -e "s|\\\$CAS_URL|https://$cas_ip:8443/cas-server-webapp-3.5.2|g" $install_dir/ttk.properties
-
-# Migraatioiden asetukset
-cp app-server/ttk-db.properties $install_dir
-sed -i -e "s|\\\$DB_HOST|$db_host|g" $install_dir/ttk-db.properties
-
-
-# Aituhaku
-aituhaku_install_dir=/data00/aituhaku
-
-mkdir -p $aituhaku_install_dir
-
-echo 'aituadmin ALL = NOPASSWD: /bin/cp * /data00/aituhaku, /bin/ln -sf * aituhaku.jar, /bin/chown tomcat\:tomcat -R /data00/aituhaku, /sbin/service aituhaku *' >> /etc/sudoers
-
-cp app-server/aituhaku/aituhaku-init.d.sh /etc/init.d/aituhaku
-chmod 755 /etc/init.d/aituhaku
-
-cp app-server/aituhaku/aituhaku.properties $aituhaku_install_dir
-mkdir "$aituhaku_install_dir/resources"
-chmod a+rx "$aituhaku_install_dir/resources"
-cp app-server/aituhaku/logback.xml "$aituhaku_install_dir/resources"
-mkdir "$aituhaku_install_dir/logs"
-chmod a+rwx "$aituhaku_install_dir/logs"
-sed -i -e "s|\\\$DB_HOST|$db_host|g" $aituhaku_install_dir/aituhaku.properties
 
 # Sallitaan asennusten pääsy ssh:lla
 mkdir /home/aituadmin/.ssh
