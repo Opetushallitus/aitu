@@ -56,17 +56,17 @@
 
 (defmodel HenkilonTiedot {:etunimi s/Str
                           :sukunimi s/Str
-                          (s/optional-key :organisaatio) s/Str
+                          (s/optional-key :organisaatio) (s/maybe s/Str)
                           :aidinkieli Kieli
                           :sukupuoli Sukupuoli
-                          (s/optional-key :sahkoposti) s/Str
-                          (s/optional-key :sahkoposti_julkinen) Boolean
-                          (s/optional-key :puhelin) s/Str
-                          (s/optional-key :puhelin_julkinen) Boolean
-                          (s/optional-key :osoite) s/Str
-                          (s/optional-key :osoite_julkinen) Boolean
-                          (s/optional-key :postinumero) s/Str
-                          (s/optional-key :postitoimipaikka) s/Str
+                          (s/optional-key :sahkoposti) (s/maybe s/Str)
+                          (s/optional-key :sahkoposti_julkinen) (s/maybe Boolean)
+                          (s/optional-key :puhelin) (s/maybe s/Str)
+                          (s/optional-key :puhelin_julkinen) (s/maybe Boolean)
+                          (s/optional-key :osoite) (s/maybe s/Str)
+                          (s/optional-key :osoite_julkinen) (s/maybe Boolean)
+                          (s/optional-key :postinumero) (s/maybe s/Str)
+                          (s/optional-key :postitoimipaikka) (s/maybe s/Str)
                           (s/optional-key :jarjesto) (s/maybe s/Any)
                           (s/optional-key :lisatiedot) (s/maybe s/Str)
                           (s/optional-key :nayttomestari) (s/maybe Boolean)
