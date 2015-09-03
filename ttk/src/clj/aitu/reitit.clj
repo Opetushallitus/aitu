@@ -27,6 +27,7 @@
             aitu.rest-api.henkilo
             aitu.rest-api.jarjestamissopimus
             aitu.rest-api.jarjesto
+            aitu.rest-api.jasenesitykset
             aitu.rest-api.kayttaja
             aitu.rest-api.koulutusala
             aitu.rest-api.koulutustoimija
@@ -127,6 +128,7 @@
       (c/context "/api/suorittaja" [] (wrap-tarkasta-csrf-token aitu.rest-api.suorittaja/reitit))
       (c/context "/api/suoritus" [] (wrap-tarkasta-csrf-token aitu.rest-api.suoritus/reitit))
       (c/context "/api/tutkinnonosa" [] (wrap-tarkasta-csrf-token aitu.rest-api.tutkinnonosa/reitit))
+      (c/context "/api/jasenesitykset" [] (wrap-tarkasta-csrf-token aitu.rest-api.jasenesitykset/reitit))
       (c/context "/api/aipal" [] aitu.rest-api.aipal/reitit))
     (testapi asetukset)
     (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
