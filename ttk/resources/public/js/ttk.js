@@ -31,6 +31,7 @@ angular.module('ttk', [
   'etusivu',
   'filters',
   'henkilot',
+  'jasenesitykset',
   'kayttooikeudet',
   'koulutustoimijat',
   'ohjeet',

@@ -1,0 +1,50 @@
+{{=[[ ]]=}}
+[[#i18n.yleiset]]
+[[#i18n.jasenesitykset]]
+<h1>[[jasenesitykset]]</h1>
+
+<button class="button-with-icon add-icon-white luo-uusi">[[luo_jasenesitys]]</button>
+
+<h2>[[hae_jasenesityksia]]</h2>
+
+<fieldset>
+  <label>[[ehdokkaan_nimi]]</label>
+  <input type="text" ng-model="haku.ehdokas">
+</fieldset>
+<fieldset>
+  <label>[[tyoelamajarjesto]]</label>
+  <input type="text" ng-model="haku.jarjesto">
+</fieldset>
+<fieldset>
+  <label>[[tutkintotoimikunta]]</label>
+  <input type="text" ng-model="haku.toimikunta">
+</fieldset>
+<fieldset>
+  <input type="checkbox" ng-model="haku.asiantuntijaksi"/>
+  <label>[[kaytettavissa_asiantuntijaksi]]</label>
+</fieldset>
+
+<div>
+  [[nayta]]
+
+  <label><input type="radio" ng-model="haku.tila" ng-value="null"> [[kaikki]]</label>
+  <label><input type="radio" ng-model="haku.tila" value="esitetty"> [[esitetty]]</label>
+  <label><input type="radio" ng-model="haku.tila" value="nimitetty"> [[nimitetty]]</label>
+  <label><input type="radio" ng-model="haku.tila" value="peruutettu"> [[peruutettu]]</label>
+</div>
+
+<div class="table">
+  <div class="table-header">
+    <div class="table-cell">[[ehdokkaan_nimi]]</div>
+    <div class="table-cell">[[toimikunta]]</div>
+    <div class="table-cell">[[tila]]</div>
+  </div>
+  <div class="table-row">
+    <div class="table-cell"></div>
+    <div class="table-cell"></div>
+    <div class="table-cell"></div>
+  </div>
+</div>
+
+[[/i18n.jasenesitykset]]
+[[/i18n.yleiset]]
