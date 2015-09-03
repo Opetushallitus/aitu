@@ -9,15 +9,15 @@
 
 <fieldset>
   <label>[[ehdokkaan_nimi]]</label>
-  <input type="text" ng-model="haku.ehdokas">
+  <input type="text" ng-model="haku.ehdokas" ng-model-options="{debounce: 200}">
 </fieldset>
 <fieldset>
   <label>[[tyoelamajarjesto]]</label>
-  <input type="text" ng-model="haku.jarjesto">
+  <input type="text" ng-model="haku.jarjesto" ng-model-options="{debounce: 200}">
 </fieldset>
 <fieldset>
   <label>[[tutkintotoimikunta]]</label>
-  <input type="text" ng-model="haku.toimikunta">
+  <input type="text" ng-model="haku.toimikunta" ng-model-options="{debounce: 200}">
 </fieldset>
 <fieldset>
   <input type="checkbox" ng-model="haku.asiantuntijaksi"/>
