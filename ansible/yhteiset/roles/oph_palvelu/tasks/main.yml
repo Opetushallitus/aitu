@@ -124,8 +124,13 @@
   file: path={{ asennushakemisto }}/{{ palvelu }}.jar state=link src={{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat
   when: migraatio|success
 
+- name: Tarkasta palvelun version (vanha tai uusi) olemassaolo
+  stat: path={{ asennushakemisto }}/{{ palvelu }}.jar
+  register: palvelu_versio_jar
+
 - name: Käynnistä palvelu
   service: name={{ palvelu }} state=started
+  when: palvelu_versio_jar.stat.exists
 
 - name: Merkitse palvelu käynnistettäväksi palvelimen käynnistyksen yhteydessä
   service: name={{ palvelu }} enabled=yes
