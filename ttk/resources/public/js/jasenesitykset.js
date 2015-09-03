@@ -12,11 +12,18 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
 
-angular.module('jasenesitykset', ['ngRoute'])
+angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/jasenesitykset', {controller: 'JasenesityksetController', templateUrl: 'template/jasenesitykset'});
   }])
 
-  .controller('JasenesityksetController', [function() {
+  .controller('JasenesityksetController', ['$q', '$scope', 'Jasenesitykset', function($q, $scope, Jasenesitykset) {
+    $scope.haku = {};
+
+    $scope.$watch('haku', function(haku) {
+      Jasenesitykset.hae(haku.ehdokas, haku.jarjesto, haku.toimikunta, haku.asiantuntijaksi, haku.tila).then(function(esitykset) {
+        $scope.esitykset = esitykset;
+      });
+    }, true);
   }])
 ;
