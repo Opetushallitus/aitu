@@ -19,6 +19,7 @@ angular.module('resources', ['ngRoute'])
       get: {
         method: 'GET',
         isArray: true,
+        cache: true,
         id: 'enumeraatio'
       }
     });
