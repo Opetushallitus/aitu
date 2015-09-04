@@ -296,7 +296,7 @@
   [termi]
   (for [ttk (hae-nykyiset)
         :when (sisaltaako-kentat? ttk [:nimi_fi :nimi_sv] termi)]
-    (select-keys ttk [:tkunta :diaarinumero :nimi_fi :nimi_sv])))
+    (select-keys ttk [:tkunta :diaarinumero :nimi_fi :nimi_sv :toimikausi_alku :toimikausi_loppu])))
 
 (defn paivita-tutkinnot!
   "Päivittää toimikunnan tutkinnot"
