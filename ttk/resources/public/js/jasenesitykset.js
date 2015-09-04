@@ -17,8 +17,12 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
     $routeProvider.when('/jasenesitykset', {controller: 'JasenesityksetController', templateUrl: 'template/jasenesitykset'});
   }])
 
-  .controller('JasenesityksetController', ['$q', '$scope', 'Jasenesitykset', function($q, $scope, Jasenesitykset) {
+  .controller('JasenesityksetController', ['$location', '$q', '$scope', 'Jasenesitykset', function($location, $q, $scope, Jasenesitykset) {
     $scope.haku = {};
+
+    $scope.luoJasenesitys = function() {
+      $location.url('/henkilot/uusi');
+    };
 
     $scope.$watch('haku', function(haku) {
       Jasenesitykset.hae(haku.ehdokas, haku.jarjesto, haku.toimikunta, haku.asiantuntijaksi, haku.tila).then(function(esitykset) {
