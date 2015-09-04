@@ -255,7 +255,7 @@
                                {:tkunta tkunta})))
       {:status 200}))
 
-  (POST ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero henkilo rooli alkupvm loppupvm edustus]
+  (POST ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero henkilo rooli alkupvm loppupvm edustus asiantuntijaksi vapaateksti_kokemus esittaja]
     (cu/autorisoitu-transaktio :toimikuntajasen_yllapito nil
       (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
         (let [tutkintotoimikunta (arkisto/hae diaarinumero)
@@ -264,7 +264,11 @@
                      :rooli rooli
                      :edustus edustus
                      :alkupvm (when alkupvm (parse-iso-date alkupvm))
-                     :loppupvm (when loppupvm (parse-iso-date loppupvm))}
+                     :loppupvm (when loppupvm (parse-iso-date loppupvm))
+                     :asiantuntijaksi asiantuntijaksi
+                     :vapaateksti_kokemus vapaateksti_kokemus
+                     :esittaja (:jarjesto esittaja)}
+              jasen (into {} (remove (comp nil? second) jasen))
               entiset-jasenyydet (arkisto/hae-jasenyydet (:henkiloid jasen) (:tkunta tutkintotoimikunta))]
           (validoi jasen
             (toimikunnan-jasenen-validaatiosaannot
