@@ -1,6 +1,7 @@
 {{=[[ ]]=}}
 [[#i18n.yleiset]]
 [[#i18n.toimikunta]]
+[[#i18n.jasenesitykset]]
 <h1>[[henkilon-lisays]]</h1>
 
 <div ng-if="nykyinenAskel(0)">
@@ -67,10 +68,35 @@
       <pvm-valitsin pakollinen="true" oletus-pvm="jasen.toimikunta.toimikausi_alku" valittu-pvm="jasen.alkupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-alkupvm]]"></pvm-valitsin>
       <pvm-valitsin pakollinen="true" oletus-pvm="jasen.toimikunta.toimikausi_loppu" valittu-pvm="jasen.loppupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-loppupvm]]"></pvm-valitsin>
     </div>
+
+    <haku-valitsin
+      otsikko="[[esittaja]]"
+      url="[[base-url]]/api/jarjesto/haku/"
+      model="jasen.esittaja"
+      model-id-property="jarjesto"
+      model-text-property="jarjesto_nimi"
+      pakollinen="true">
+    </haku-valitsin>
+
+    <div>
+      <fieldset>
+        <input type="checkbox" ng-model="jasen.asiantuntijaksi">
+        [[kaytettavissa_asiantuntijaksi]]
+      </fieldset>
+    </div>
+
+    <div>
+      <fieldset>
+        <label>[[kokemus_toimikunnasta]]</label>
+        <textarea ng-model="jasen.vapaateksti_kokemus"></textarea>
+      </fieldset>
+    </div>
+
     <pakollisia-kenttia></pakollisia-kenttia>
     <tallenna formi-validi="jasenForm2.$valid" disabloi-pyyntojen-ajaksi="['uusi-toimikunnan-jasen']" ng-click="lisaaJasen(jasen)" teksti="'[[lisaa-jasen]]'"></tallenna>
     <button ng-click="peruuta()">[[peruuta]]</button>
   </form>
 </div>
+[[/i18n.jasenesitykset]]
 [[/i18n.toimikunta]]
 [[/i18n.yleiset]]
