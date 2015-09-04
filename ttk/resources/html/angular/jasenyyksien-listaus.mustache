@@ -7,6 +7,7 @@
     <tr>
       <th jarjestettava-sarake="ttk" jarjestely-fn="orderByToimikuntaNimiVuosi:nimi:toimikausi_alku" ng-show="naytaToimikunta">[[toimikunta]]</th>
       <th jarjestettava-sarake="sukunimi" oletus-jarjestely ng-hide="piilotaNimi">[[nimi]]</th>
+      <th jarjestettava-sarake="status" jarjestely-fn="orderByLokalisoitu">[[tila]]</th>
       <th jarjestettava-sarake="rooli" jarjestely-fn="orderByEnumArvo:rooli">[[rooli]]</th>
       <th jarjestettava-sarake="edustus" jarjestely-fn="orderByEnumArvo:edustus">[[edustus]]</th>
       <th jarjestettava-sarake="jarjesto_nimi" jarjestely-fn="orderByLokalisoitu" ng-hide="piilotaJarjesto">[[jarjesto]]</th>
@@ -21,6 +22,7 @@
         <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
         <span ng-show="naytaJasenyydenAlkuPvm(henkilo)">({{henkilo.alkupvm | voimassaoloAika }})</span>
       </td>
+      <td>{{henkilo.status}}</td>
       <td><enum-arvo nimi="rooli" arvo="henkilo.rooli"></enum-arvo></td>
       <td><enum-arvo nimi="edustus" arvo="henkilo.edustus"></enum-arvo></td>
       <td ng-hide="piilotaJarjesto">{{henkilo | lokalisoi:henkilo:'jarjesto_nimi'}}</td>

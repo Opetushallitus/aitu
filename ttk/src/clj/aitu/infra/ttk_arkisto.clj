@@ -117,7 +117,7 @@
                        (sql/with toimikausi
                          (sql/fields :alkupvm :loppupvm :voimassa))
                        (sql/with jasenyys
-                         (sql/fields :alkupvm :loppupvm :rooli :edustus :jasenyys_id :henkiloid)
+                         (sql/fields :alkupvm :loppupvm :rooli :edustus :jasenyys_id :henkiloid :status)
                          (sql/with henkilo
                            (sql/fields :etunimi :sukunimi :sahkoposti :sahkoposti_julkinen :aidinkieli)
                            (sql/with jarjesto
