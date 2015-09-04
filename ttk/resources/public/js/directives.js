@@ -250,9 +250,12 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       },
       templateUrl : 'template/pvm-valitsin',
       link : function(scope) {
-        if(!scope.valittuPvm) {
-          scope.valittuPvm = scope.oletusPvm;
-        }
+        // oletusPvm-model voi osoittaa toisen komponentin valintaan, jolloin sen arvo on saatavilla vasta myöhemmin
+        scope.$watch('oletusPvm', function(oletusPvm) {
+          if (oletusPvm !== undefined && scope.valittuPvm === undefined) {
+            scope.valittuPvm = scope.oletusPvm;
+          }
+        });
 
         //Bootstrap datepicker ei osaa parsia muotoa dd.MM.yyyy päivämäärästringejä.
         //Muunnetaan string muotoiset päivämäärät dateiksi.
