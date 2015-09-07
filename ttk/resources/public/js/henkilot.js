@@ -31,7 +31,7 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
       when('/henkilot', {controller:'listaaHenkilotController', templateUrl:'template/henkilot'}).
       when('/henkilot/:id/tiedot', {controller:'henkilonTiedotController', templateUrl:'template/henkilo'}).
       when('/henkilot/:id/muokkaa', {controller:'crudController', resolve : crudDeps, templateUrl:'template/henkilo'}).
-      when('/henkilot/uusi', {controller:'HenkiloVelhoController', resolve : crudDeps, templateUrl:'template/jasen'});
+      when('/henkilot/uusi', {controller:'HenkiloVelhoController', templateUrl:'template/jasen'});
   })
 
   .factory('henkiloResource', ['$resource', 'i18n', function($resource, i18n) {
