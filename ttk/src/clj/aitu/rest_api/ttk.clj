@@ -68,7 +68,8 @@
      :alkupvm (when alkupvm (parse-iso-date alkupvm))
      :loppupvm (when loppupvm (parse-iso-date loppupvm))
      :rooli (:rooli jasen)
-     :edustus (:edustus jasen)}))
+     :edustus (:edustus jasen)
+     :status (:status jasen)}))
 
 (defn validoi-paivitettavat-jasenyydet [toimikunta jasenyydet]
   (apply merge-with concat

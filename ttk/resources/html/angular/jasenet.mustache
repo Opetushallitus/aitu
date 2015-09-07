@@ -19,6 +19,7 @@
     <thead>
     <tr>
       <th>[[nimi]]</th>
+      <th>[[tila]]</th>
       <th>[[rooli]]</th>
       <th>[[edustus]]</th>
       <th>[[jarjesto]]</th>
@@ -31,6 +32,7 @@
         <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
         <span ng-hide="henkilo.voimassa">([[ei-voimassa]])</span>
       </td>
+      <td><enum-valikko pakollinen="true" nimi="jasenyyden_status" arvo="henkilo.status"></enum-valikko></td>
       <td><enum-valikko pakollinen="true" nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>
       <td><enum-valikko pakollinen="true" nimi="edustus" arvo="henkilo.edustus"></enum-valikko></td>
       <td>{{henkilo | lokalisoiKentta:'jarjesto_nimi' }}</td>
