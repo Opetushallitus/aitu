@@ -129,11 +129,11 @@
                     :jasenet (vector (first testi-jasenet))}
           ;; Kun
           (avaa (jasenten-hallinta-sivu "98/11/543"))
-          (w/select-option {:css "select"} {:text "sihteeri"})
+          (w/select-option {:css ".e2e-rooli select"} {:text "sihteeri"})
           (tallenna-jasenet)
           (is (= (viestin-teksti) "Toimikunnan jäseniä muokattu"))
           (testing "voimassaolevat jäsenet pitäisi näyttää muokattu jäsen uusilla tiedoilla"
-            (is (re-find #"Aku Ankka sihteeri" (listarivi ".nykyiset-jasenyydet" 0)))))))))
+            (is (re-find #"Aku Ankka.*sihteeri" (listarivi ".nykyiset-jasenyydet" 0)))))))))
 
 (deftest ^:no-ie jasenten-hallinta-sivu-test-voimassaolo-muutokset
   (testing "Toimikunnan jäsenten hallinta sivu"

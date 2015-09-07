@@ -33,7 +33,7 @@
         <span ng-hide="henkilo.voimassa">([[ei-voimassa]])</span>
       </td>
       <td><enum-valikko pakollinen="true" nimi="jasenyyden_status" arvo="henkilo.status"></enum-valikko></td>
-      <td><enum-valikko pakollinen="true" nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>
+      <td class="e2e-rooli"><enum-valikko pakollinen="true" nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>
       <td><enum-valikko pakollinen="true" nimi="edustus" arvo="henkilo.edustus"></enum-valikko></td>
       <td>{{henkilo | lokalisoiKentta:'jarjesto_nimi' }}</td>
       <td>
