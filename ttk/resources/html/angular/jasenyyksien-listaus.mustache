@@ -22,7 +22,7 @@
         <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
         <span ng-show="naytaJasenyydenAlkuPvm(henkilo)">({{henkilo.alkupvm | voimassaoloAika }})</span>
       </td>
-      <td>{{henkilo.status}}</td>
+      <td><enum-arvo nimi="jasenyyden_status" arvo="henkilo.status"></enum-arvo></td>
       <td><enum-arvo nimi="rooli" arvo="henkilo.rooli"></enum-arvo></td>
       <td><enum-arvo nimi="edustus" arvo="henkilo.edustus"></enum-arvo></td>
       <td ng-hide="piilotaJarjesto">{{henkilo | lokalisoi:henkilo:'jarjesto_nimi'}}</td>
