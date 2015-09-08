@@ -73,8 +73,6 @@
                     {:diaarinumero "98/11/543"
                      :toimikunta "ILMA"
                      :henkilo {:henkiloid 999}}])
-(def testi-jarjestot [{:jarjestoid 1
-                       :nimi_fi "testijärjestö"}])
 (def jasenen-poisto-fn #(str "/api/test/ttk/" (:toimikunta %) "/jasen/" (:henkiloid %)))
 (def jasenien-poisto-fn #(str "/api/test/ttk/" (:toimikunta %) "/jasen"))
 
@@ -88,8 +86,6 @@
   (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
   (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" alkupvm)
   (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" loppupvm)
-  (valitse-select2-optio "jasen.esittaja" "jarjesto" "a")
-  (odota-angular-pyyntoa)
   (paina-lisaa-jasen-nappia))
 
 (deftest ^:no-ie jasenen-lisays-sivu-test
@@ -126,8 +122,7 @@
       ;; Oletetaan, että
       (with-data {:toimikunnat testi-toimikunnat
                   :henkilot testi-henkilot
-                  :jasenet testi-jasenet
-                  :jarjestot testi-jarjestot}
+                  :jasenet testi-jasenet}
         (testing "onnistuu kun alkupvm toimikunnan voimassaoloajan sisällä"
           (with-webdriver
             (avaa (jasenen-lisays-sivu "98/11/543"))
@@ -138,8 +133,6 @@
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "02.08.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
-            (valitse-select2-optio "jasen.esittaja" "jarjesto" "a")
-            (odota-angular-pyyntoa)
             (paina-lisaa-jasen-nappia)
             ;; Niin
             (is (= #{"Aku Ankka" "Mikki Hiiri" "Simo Sisu"}
@@ -155,8 +148,6 @@
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
-            (valitse-select2-optio "jasen.esittaja" "jarjesto" "a")
-            (odota-angular-pyyntoa)
             (paina-lisaa-jasen-nappia)
             ;; Niin
             (is (= #{"Aku Ankka" "Mikki Hiiri" "Simo Sisu"}
@@ -204,8 +195,7 @@
     (testing "tuntemattoman henkilön lisäys jäseneksi onnistuu"
       (with-cleaned-data {:toimikunnat testi-toimikunnat
                           :henkilot testi-henkilot
-                          :jasenet testi-jasenet
-                          :jarjestot testi-jarjestot}
+                          :jasenet testi-jasenet}
         (with-webdriver
           (avaa (jasenen-lisays-sivu "98/11/543"))
           (paina-nappia)
@@ -219,8 +209,6 @@
           (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
           (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
           (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
-          (valitse-select2-optio "jasen.esittaja" "jarjesto" "a")
-          (odota-angular-pyyntoa)
           (paina-lisaa-jasen-nappia)
           ;; Niin
           (is (= (set (voimassaolevat-jasenet))
