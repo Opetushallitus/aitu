@@ -16,8 +16,8 @@
   (:require [compojure.core :as c]
             [aitu.compojure-util :as cu]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [cachable-json-response]]))
+            [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" [& ehdot :as req]
-    (cachable-json-response req (arkisto/hae ehdot))))
+  (cu/defapi :yleinen-rest-api nil :get "/" [& ehdot]
+    (json-response (arkisto/hae ehdot))))
