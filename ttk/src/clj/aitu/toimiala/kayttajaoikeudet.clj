@@ -86,7 +86,8 @@
     (let [roolitunnus (:roolitunnus *current-user-authmap*)]
       (or (= roolitunnus (:kayttaja kayttajaroolit))
           (= roolitunnus (:yllapitaja kayttajaroolit))
-          (= roolitunnus (:oph-katselija kayttajaroolit))))))
+          (= roolitunnus (:oph-katselija kayttajaroolit))
+          (= roolitunnus (:jarjesto kayttajaroolit))))))
 
 (defn osoitepalvelu-kayttaja?
   ([x] (osoitepalvelu-kayttaja?))

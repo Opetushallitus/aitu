@@ -19,4 +19,5 @@
                      :kayttaja "KAYTTAJA"
                      :osoitepalvelu "OSOITEPALVELU"
                      :oph-katselija "OPH-KATSELIJA"
-                     :aipal "AIPAL"})
+                     :aipal "AIPAL"
+                     :jarjesto "JARJESTO"})
