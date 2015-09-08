@@ -115,7 +115,7 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
   .controller('HenkiloVelhoController', ['$location', '$scope', '$rootScope', '$routeParams', 'ToimikuntaUtil', 'varmistaPoistuminen', 'henkiloVelhoResource', 'edellinenLokaatio', 'toimikuntaResource',
     function($location, $scope, $rootScope, $routeParams, ToimikuntaUtil, varmistaPoistuminen, henkiloVelhoResource, edellinenLokaatio, toimikuntaResource) {
       var nykyinenAskel = 0;
-      var jasenEsitykset = ($location.url() === '/jasenesitykset/uusi');
+      $scope.jasenEsitys = ($location.url() === '/jasenesitykset/uusi');
 
       function siirrySeuraavaan() {
         if (nykyinenAskel < 2) {
@@ -125,7 +125,7 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
       }
       $scope.kokemusvuodet = _.range(1, 21);
       $scope.jasen = { henkilo: {} };
-      if (jasenEsitykset) {
+      if ($scope.jasenEsitys) {
         $scope.jasen.status = 'esitetty';
       }
       $scope.search = { henkilo: {} };

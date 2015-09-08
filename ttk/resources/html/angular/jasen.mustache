@@ -69,27 +69,29 @@
       <pvm-valitsin pakollinen="true" oletus-pvm="jasen.toimikunta.toimikausi_loppu" valittu-pvm="jasen.loppupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-loppupvm]]"></pvm-valitsin>
     </div>
 
-    <haku-valitsin
-      otsikko="[[esittaja]]"
-      url="[[base-url]]/api/jarjesto/haku/"
-      model="jasen.esittaja"
-      model-id-property="jarjesto"
-      model-text-property="jarjesto_nimi"
-      pakollinen="true">
-    </haku-valitsin>
+    <div ng-if="jasenEsitys">
+      <haku-valitsin
+        otsikko="[[esittaja]]"
+        url="[[base-url]]/api/jarjesto/haku/"
+        model="jasen.esittaja"
+        model-id-property="jarjesto"
+        model-text-property="jarjesto_nimi"
+        pakollinen="true">
+      </haku-valitsin>
 
-    <div>
-      <fieldset>
-        <input type="checkbox" ng-model="jasen.asiantuntijaksi">
-        [[kaytettavissa_asiantuntijaksi]]
-      </fieldset>
-    </div>
+      <div>
+        <fieldset>
+          <input type="checkbox" ng-model="jasen.asiantuntijaksi">
+          [[kaytettavissa_asiantuntijaksi]]
+        </fieldset>
+      </div>
 
-    <div>
-      <fieldset>
-        <label>[[kokemus_toimikunnasta]]</label>
-        <textarea ng-model="jasen.vapaateksti_kokemus"></textarea>
-      </fieldset>
+      <div>
+        <fieldset>
+          <label>[[kokemus_toimikunnasta]]</label>
+          <textarea ng-model="jasen.vapaateksti_kokemus"></textarea>
+        </fieldset>
+      </div>
     </div>
 
     <pakollisia-kenttia></pakollisia-kenttia>
