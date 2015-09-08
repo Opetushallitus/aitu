@@ -15,13 +15,14 @@
 angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/jasenesitykset', {controller: 'JasenesityksetController', templateUrl: 'template/jasenesitykset'});
+    $routeProvider.when('/jasenesitykset/uusi', {controller:'HenkiloVelhoController', templateUrl:'template/jasen'});
   }])
 
   .controller('JasenesityksetController', ['$location', '$q', '$scope', 'Jasenesitykset', function($location, $q, $scope, Jasenesitykset) {
     $scope.haku = {};
 
     $scope.luoJasenesitys = function() {
-      $location.url('/henkilot/uusi');
+      $location.url('/jasenesitykset/uusi');
     };
 
     $scope.$watch('haku', function(haku) {

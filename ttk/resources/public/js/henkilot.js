@@ -112,9 +112,10 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
     }
   ])
 
-  .controller('HenkiloVelhoController', ['$scope', '$rootScope', '$routeParams', 'ToimikuntaUtil', 'varmistaPoistuminen', 'henkiloVelhoResource', 'edellinenLokaatio', 'toimikuntaResource',
-    function($scope, $rootScope, $routeParams, ToimikuntaUtil, varmistaPoistuminen, henkiloVelhoResource, edellinenLokaatio, toimikuntaResource) {
+  .controller('HenkiloVelhoController', ['$location', '$scope', '$rootScope', '$routeParams', 'ToimikuntaUtil', 'varmistaPoistuminen', 'henkiloVelhoResource', 'edellinenLokaatio', 'toimikuntaResource',
+    function($location, $scope, $rootScope, $routeParams, ToimikuntaUtil, varmistaPoistuminen, henkiloVelhoResource, edellinenLokaatio, toimikuntaResource) {
       var nykyinenAskel = 0;
+      var jasenEsitykset = ($location.url() === '/jasenesitykset/uusi');
 
       function siirrySeuraavaan() {
         if (nykyinenAskel < 2) {
@@ -124,6 +125,9 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
       }
       $scope.kokemusvuodet = _.range(1, 21);
       $scope.jasen = { henkilo: {} };
+      if (jasenEsitykset) {
+        $scope.jasen.status = 'esitetty';
+      }
       $scope.search = { henkilo: {} };
       $scope.voimassaAlkaen = new Date(new Date().setHours(0,0,0,0));
       $scope.jasen.toimikunta = $routeParams.id ? toimikuntaResource.get({"diaarinumero": $routeParams.id}) : {};
