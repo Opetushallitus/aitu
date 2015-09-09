@@ -44,7 +44,7 @@
     <div class="table-cell">{{ esitys.etunimi }} {{ esitys.sukunimi }}</div>
     <div class="table-cell">{{ esitys | lokalisoiKentta:'esittaja_jarjesto_nimi' }}</div>
     <div class="table-cell"><a ng-href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</a></div>
-    <div class="table-cell">{{ esitys.status }}</div>
+    <div class="table-cell"><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></div>
   </div>
 </div>
 
