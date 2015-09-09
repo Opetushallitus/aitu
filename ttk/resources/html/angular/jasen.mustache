@@ -54,7 +54,7 @@
         pakollinen="true">
       </haku-valitsin>
     </div>
-    <div>
+    <div ng-if="!jasenEsitys">
       <fieldset>
         <label class="pakollinen">[[rooli]]</label>
         <enum-valikko pakollinen="true" nimi="rooli" arvo="jasen.rooli"></enum-valikko>
@@ -64,7 +64,7 @@
         <enum-valikko pakollinen="true" nimi="edustus" arvo="jasen.edustus"></enum-valikko>
       </fieldset>
     </div>
-    <div>
+    <div ng-if="!jasenEsitys">
       <pvm-valitsin pakollinen="true" oletus-pvm="jasen.toimikunta.toimikausi_alku" valittu-pvm="jasen.alkupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-alkupvm]]"></pvm-valitsin>
       <pvm-valitsin pakollinen="true" oletus-pvm="jasen.toimikunta.toimikausi_loppu" valittu-pvm="jasen.loppupvm" min-pvm="jasen.toimikunta.toimikausi_alku" max-pvm="jasen.toimikunta.toimikausi_loppu" otsikko="[[jasenyyden-loppupvm]]"></pvm-valitsin>
     </div>

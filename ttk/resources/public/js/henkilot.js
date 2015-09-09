@@ -127,6 +127,12 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
       $scope.jasen = { henkilo: {} };
       if ($scope.jasenEsitys) {
         $scope.jasen.status = 'esitetty';
+        $scope.jasen.rooli = 'jasen';
+        $scope.jasen.edustus = 'muu';
+        $scope.$watch('jasen.toimikunta', function(toimikunta) {
+          $scope.jasen.alkupvm = toimikunta.toimikausi_alku;
+          $scope.jasen.loppupvm = toimikunta.toimikausi_loppu;
+        });
       }
       $scope.search = { henkilo: {} };
       $scope.voimassaAlkaen = new Date(new Date().setHours(0,0,0,0));
