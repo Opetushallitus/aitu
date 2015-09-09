@@ -38,12 +38,18 @@
     <div class="table-cell">[[ehdokkaan_nimi]]</div>
     <div class="table-cell">[[tyoelamajarjesto]]</div>
     <div class="table-cell">[[toimikunta]]</div>
+    <div class="table-cell">[[esityspvm]]</div>
+    <div class="table-cell">[[rooli]]</div>
+    <div class="table-cell">[[edustus]]</div>
     <div class="table-cell">[[tila]]</div>
   </div>
   <div class="table-row" ng-repeat="esitys in esitykset">
     <div class="table-cell">{{ esitys.etunimi }} {{ esitys.sukunimi }}</div>
     <div class="table-cell">{{ esitys | lokalisoiKentta:'esittaja_jarjesto_nimi' }}</div>
     <div class="table-cell"><a ng-href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</a></div>
+    <div class="table-cell">{{ esitys.luotuaika | date:'dd.MM.yyyy' }}</div>
+    <div class="table-cell"><enum-arvo arvo="esitys.rooli" nimi="rooli"></enum-arvo></div>
+    <div class="table-cell"><enum-arvo arvo="esitys.edustus" nimi="edustus"></enum-arvo></div>
     <div class="table-cell"><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></div>
   </div>
 </div>
