@@ -60,7 +60,8 @@
 
 (defn toimikunnan-jasenyys [toimikunta jasen]
   (let [alkupvm (:alkupvm jasen)
-        loppupvm (:loppupvm jasen)]
+        loppupvm (:loppupvm jasen)
+        nimityspaiva (:nimityspaiva jasen)]
     {:toimikunta (:tkunta toimikunta)
      :jasenyys_id (:jasenyys_id jasen)
      :henkiloid (:henkiloid jasen)
@@ -69,7 +70,8 @@
      :loppupvm (when loppupvm (parse-iso-date loppupvm))
      :rooli (:rooli jasen)
      :edustus (:edustus jasen)
-     :status (:status jasen)}))
+     :status (:status jasen)
+     :nimityspaiva (when nimityspaiva (parse-iso-date nimityspaiva))}))
 
 (defn validoi-paivitettavat-jasenyydet [toimikunta jasenyydet]
   (apply merge-with concat
