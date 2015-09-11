@@ -29,7 +29,7 @@
     (sql/join :henkilo (= :henkilo.henkiloid :jasenyys.henkiloid))
     (sql/join :tutkintotoimikunta (= :tutkintotoimikunta.tkunta :jasenyys.toimikunta))
     (sql/join [:jarjesto :esittaja_jarjesto] (= :jasenyys.esittaja :esittaja_jarjesto.jarjestoid))
-    (sql/fields :jasenyys.toimikunta :jasenyys.status :jasenyys.esittaja :jasenyys.luotuaika :jasenyys.muutettuaika :jasenyys.rooli :jasenyys.edustus
+    (sql/fields :jasenyys.toimikunta :jasenyys.status :jasenyys.esittaja :jasenyys.luotuaika :jasenyys.muutettuaika :jasenyys.rooli :jasenyys.edustus :jasenyys.nimityspaiva
                 :henkilo.etunimi :henkilo.sukunimi
                 [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi] [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv] [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
                 [:esittaja_jarjesto.nimi_fi :esittaja_jarjesto_nimi_fi] [:esittaja_jarjesto.nimi_sv :esittaja_jarjesto_nimi_sv])
