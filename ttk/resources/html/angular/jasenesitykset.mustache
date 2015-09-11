@@ -41,6 +41,7 @@
     <div class="table-cell">[[esityspvm]]</div>
     <div class="table-cell" ng-if="!haku.tila || haku.tila === 'nimitetty'">[[rooli]]</div>
     <div class="table-cell" ng-if="!haku.tila || haku.tila === 'nimitetty'">[[edustus]]</div>
+    <div class="table-cell">[[muutettu]]</div>
     <div class="table-cell">[[tila]]</div>
   </div>
   <div class="table-row" ng-repeat="esitys in esitykset">
@@ -50,6 +51,7 @@
     <div class="table-cell">{{ esitys.luotuaika | date:'dd.MM.yyyy' }}</div>
     <div class="table-cell" ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.rooli" nimi="rooli"></enum-arvo></div>
     <div class="table-cell" ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.edustus" nimi="edustus"></enum-arvo></div>
+    <div class="table-cell">{{ esitys.muutettuaika | date:'dd.MM.yyyy' }}</div>
     <div class="table-cell"><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></div>
   </div>
 </div>
