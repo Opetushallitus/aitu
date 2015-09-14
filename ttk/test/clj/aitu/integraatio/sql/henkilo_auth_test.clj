@@ -41,7 +41,7 @@
                (autorisoi-henkilon-paivitys henkiloid))))
 
 (defn autorisoi-henkilon-lisays []
-  (cu/autorisoi :henkilo_lisays nil true))
+  (cu/autorisoi :henkilo_lisays "ignored" true))
 
 (defn henkilon-lisays-onnistuu []
   (is (autorisoi-henkilon-lisays)))
