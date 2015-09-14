@@ -140,7 +140,13 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
       $scope.lisaaJasen = function(jasen) {
         varmistaPoistuminen.tallenna(
           henkiloVelhoResource.saveJasen(_.assign({diaarinumero: jasen.toimikunta.diaarinumero }, jasen)),
-          function() { ToimikuntaUtil.siirryJasentenMuokkaukseen(jasen.toimikunta.diaarinumero); });
+          function() {
+            if ($scope.jasenEsitys) {
+              $location.url('/jasenesitykset');
+            } else {
+              ToimikuntaUtil.siirryJasentenMuokkaukseen(jasen.toimikunta.diaarinumero);
+            }
+          });
       };
       $scope.lisaaHenkiloJaSiirrySeuraavaan = function(henkilo) {
         // Siivotaan hakuvalitsimen malleihin jättämät ylimääräiset kentät pois
