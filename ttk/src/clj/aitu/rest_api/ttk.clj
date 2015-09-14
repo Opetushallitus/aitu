@@ -259,7 +259,7 @@
       {:status 200}))
 
   (POST ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero henkilo rooli alkupvm loppupvm edustus asiantuntijaksi vapaateksti_kokemus esittaja status]
-    (cu/autorisoitu-transaktio :toimikuntajasen_yllapito nil
+    (cu/autorisoitu-transaktio :toimikuntajasen_lisays nil
       (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
         (let [tutkintotoimikunta (arkisto/hae diaarinumero)
               jasen {:toimikunta (:tkunta tutkintotoimikunta)
