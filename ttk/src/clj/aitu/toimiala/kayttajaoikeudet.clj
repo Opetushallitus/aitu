@@ -103,6 +103,12 @@
       (or (= roolitunnus (:aipal kayttajaroolit))
           (= roolitunnus (:yllapitaja kayttajaroolit))))))
 
+(defn jarjesto-kayttaja?
+  ([x] (jarjesto-kayttaja?))
+  ([]
+    (let [roolitunnus (:roolitunnus *current-user-authmap*)]
+      (= roolitunnus (:jarjesto kayttajaroolit)))))
+
 (def sallittu-kaikille (constantly true))
 
 (defn sallittu-yllapitajalle [& _] (yllapitaja?))
@@ -116,7 +122,6 @@
 (def yllapitotoiminnot
   `{:toimikunta_luonti  sallittu-yllapitajalle
     :toimikunta_paivitys sallittu-yllapitajalle
-    :henkilo_lisays  sallittu-yllapitajalle
     :toimikuntajasen_yllapito sallittu-yllapitajalle
     :toimikuntakayttaja-listaus sallittu-yllapitajalle
     :tiedote_muokkaus sallittu-yllapitajalle
@@ -141,7 +146,8 @@
     :yleinen-rest-api sallittu-kaikille
     :osoitepalvelu-api osoitepalvelu-kayttaja?
     :aipal aipal-kayttaja?
-    :impersonointi-lopetus sallittu-impersonoidulle})
+    :impersonointi-lopetus sallittu-impersonoidulle
+    :henkilo_lisays #(or (yllapitaja?) (jarjesto-kayttaja?))})
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
   (let [id (int-arvo sopimusid)]
