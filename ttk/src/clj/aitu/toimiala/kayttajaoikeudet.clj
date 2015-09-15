@@ -149,7 +149,7 @@
     :osoitepalvelu-api osoitepalvelu-kayttaja?
     :aipal aipal-kayttaja?
     :impersonointi-lopetus sallittu-impersonoidulle
-    :henkilo_lisays #(or (yllapitaja?) (jarjesto-kayttaja? %))
+    :henkilo_lisays sallittu-yllapitajalle-ja-jarjestolle
     :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle})
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
