@@ -113,6 +113,8 @@
 
 (defn sallittu-yllapitajalle [& _] (yllapitaja?))
 
+(defn sallittu-yllapitajalle-ja-jarjestolle [& _] (or (yllapitaja?) (jarjesto-kayttaja?)))
+
 (defn sallittu-impersonoidulle [& _]
   (or (yllapitaja?) (not= *impersonoitu-oid* nil)))
 
@@ -148,7 +150,7 @@
     :aipal aipal-kayttaja?
     :impersonointi-lopetus sallittu-impersonoidulle
     :henkilo_lisays #(or (yllapitaja?) (jarjesto-kayttaja? %))
-    :toimikuntajasen_lisays #(or (yllapitaja?) (jarjesto-kayttaja? %))})
+    :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle})
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
   (let [id (int-arvo sopimusid)]
