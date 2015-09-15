@@ -30,8 +30,9 @@
           (locking System/err
             (binding [*out* *err*]
               (println "========== Virhe palvelimella ==========")
-              (doseq [line (-> e .getData :object :body split-lines)]
-                (println ">" line))
+              (when-let [body (-> e .getData :object :body)]
+                (doseq [line (split-lines body)]
+                  (println ">" line)))
               (println "========================================"))))
         (throw e)))))
 
