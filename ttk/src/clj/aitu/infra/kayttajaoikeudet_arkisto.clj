@@ -60,6 +60,7 @@
                                                 :loppupvm
                                                 :toimikausi_alku
                                                 :toimikausi_loppu]) jasenyys))
+         :jarjesto (:jarjesto kayttaja)
          :jarjestamissopimus (set (flatten (map :jarjestamissopimus jasenyys)))})))
   ([] "Hakee sisäänkirjautuneen käyttäjän oikeudet"
     (db/transaction
