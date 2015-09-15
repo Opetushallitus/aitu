@@ -16,8 +16,10 @@
   (:require [compojure.core :as c]
             [aitu.compojure-util :as cu]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
+            [aitu.toimiala.kayttajaoikeudet :as ko]
             [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/" [& ehdot]
-    (json-response (arkisto/hae ehdot))))
+    (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
+      (json-response (arkisto/hae jarjesto ehdot)))))

@@ -23,7 +23,7 @@
     (sql/where query
       (apply or ehdot))))
 
-(defn hae [{:keys [asiantuntijaksi ehdokas jarjesto tila toimikunta]}]
+(defn hae [kayttajan-jarjesto {:keys [asiantuntijaksi ehdokas jarjesto tila toimikunta]}]
   (->
     (sql/select* :jasenyys)
     (sql/join :henkilo (= :henkilo.henkiloid :jasenyys.henkiloid))
@@ -35,6 +35,7 @@
                 [:esittaja_jarjesto.nimi_fi :esittaja_jarjesto_nimi_fi] [:esittaja_jarjesto.nimi_sv :esittaja_jarjesto_nimi_sv])
     (sql/where (not= :jasenyys.esittaja nil))
     (cond->
+      kayttajan-jarjesto (sql/where {:jasenyys.esittaja kayttajan-jarjesto})
       (seq asiantuntijaksi) (sql/where {:jasenyys.asiantuntijaksi (= asiantuntijaksi "true")})
       (seq ehdokas) (rajaa-kentilla [:henkilo.etunimi :henkilo.sukunimi] ehdokas)
       (seq jarjesto) (rajaa-kentilla [:esittaja_jarjesto.nimi_fi :esittaja_jarjesto.nimi_sv] jarjesto)
