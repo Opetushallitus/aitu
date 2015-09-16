@@ -151,6 +151,10 @@
   (-> (merge default-jasen jasen)
     toimikunta-arkisto/lisaa-jasen!))
 
+(defn lisaa-jarjesto!
+  [jarjesto]
+  (toimikunta-arkisto/lisaa-jarjesto! jarjesto))
+
 (let [seuraava-indeksi (atom 0)]
   (defn default-koulutustoimija []
     (let [i (swap! seuraava-indeksi inc)]

@@ -31,6 +31,7 @@
              "oppilaitos"
              "koulutustoimija"
              "jasenyys"
+             "jarjesto"
              "toimikunta_ja_tutkinto"
              "tutkinnonosa"
              "tutkintoversio"

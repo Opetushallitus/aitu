@@ -203,6 +203,11 @@
   (sql/insert jasenyys
     (sql/values toimikunnan_henkilo)))
 
+(defn ^:test-api lisaa-jarjesto!
+  [jarjesto]
+  (sql/insert :jarjesto
+    (sql/values jarjesto)))
+
 (defn hae-jasen
   "Hakee toimikunnan jäsenen jasenyysid:n perusteella"
   [jasenyysid]
