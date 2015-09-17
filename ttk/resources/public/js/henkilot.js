@@ -123,7 +123,6 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
           nykyinenAskel++;
         }
       }
-      $scope.kokemusvuodet = _.range(1, 21);
       $scope.jasen = { henkilo: {} };
       if ($scope.jasenEsitys) {
         $scope.jasen.status = 'esitetty';

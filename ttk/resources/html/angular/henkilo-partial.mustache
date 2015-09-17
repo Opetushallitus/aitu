@@ -112,10 +112,7 @@
   </fieldset>
   <fieldset>
     <label>[[kokemus_toimikunnista]]</label>
-    <select ng-model="jasen.henkilo.kokemusvuodet" ng-options="kokemus as kokemus for kokemus in kokemusvuodet" ng-hide="!muokkausTila">
-      <option value="">[[ei_ole]]</option>
-    </select>
-    <p ng-hide="muokkausTila" ng-bind="jasen.henkilo.kokemusvuodet"></p>
+    <kokemusvuodet arvo="jasen.henkilo.kokemusvuodet" muokattavissa="muokkausTila"></kokemusvuodet>
   </fieldset>
 </section>
 <section class="info-section">

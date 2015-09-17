@@ -1,0 +1,12 @@
+{{=[[ ]]=}}
+
+[[#i18n.henkilo]]
+[[#i18n.yleiset]]
+
+<select ng-model="arvo" ng-options="kokemus as kokemus for kokemus in kokemusvuodet" ng-hide="!muokattavissa">
+  <option value="">[[ei_ole]]</option>
+</select>
+<p ng-hide="muokattavissa" ng-bind="arvo"></p>
+
+[[/i18n.yleiset]]
+[[/i18n.henkilo]]
