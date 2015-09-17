@@ -70,14 +70,16 @@
     </div>
 
     <div ng-if="jasenEsitys">
-      <haku-valitsin
-        otsikko="[[esittaja]]"
-        url="[[base-url]]/api/jarjesto/haku/"
-        model="jasen.esittaja"
-        model-id-property="jarjesto"
-        model-text-property="jarjesto_nimi"
-        pakollinen="true">
-      </haku-valitsin>
+      <auth-toiminto auth-blokki sallitut-roolit="['YLLAPITAJA']">
+        <haku-valitsin
+          otsikko="[[esittaja]]"
+          url="[[base-url]]/api/jarjesto/haku/"
+          model="jasen.esittaja"
+          model-id-property="jarjesto"
+          model-text-property="jarjesto_nimi"
+          pakollinen="true">
+        </haku-valitsin>
+      </auth-toiminto>
 
       <div>
         <fieldset>

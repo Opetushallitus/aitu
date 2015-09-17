@@ -22,6 +22,7 @@
             [valip.predicates :refer [present?]]
             [aitu.infra.i18n :as i18n]
             [aitu.infra.validaatio :as val]
+            [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
             [aitu.toimiala.toimikunta :as toimikunta]
             [aitu.toimiala.skeema :refer :all]
             [aitu.asetukset :refer [asetukset]]
@@ -262,6 +263,7 @@
     (cu/autorisoitu-transaktio :toimikuntajasen_lisays nil
       (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
         (let [tutkintotoimikunta (arkisto/hae diaarinumero)
+              kayttaja-jarjesto (:jarjesto kayttajaoikeudet/*current-user-authmap*)
               jasen {:toimikunta (:tkunta tutkintotoimikunta)
                      :henkiloid (:henkiloid henkilo)
                      :rooli rooli
@@ -270,7 +272,7 @@
                      :loppupvm (when loppupvm (parse-iso-date loppupvm))
                      :asiantuntijaksi asiantuntijaksi
                      :vapaateksti_kokemus vapaateksti_kokemus
-                     :esittaja (:jarjesto esittaja)
+                     :esittaja (or kayttaja-jarjesto (:jarjesto esittaja))
                      :status status}
               jasen (into {} (remove (comp nil? second) jasen))
               entiset-jasenyydet (arkisto/hae-jasenyydet (:henkiloid jasen) (:tkunta tutkintotoimikunta))]
