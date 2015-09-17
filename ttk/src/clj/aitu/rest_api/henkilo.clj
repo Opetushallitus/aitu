@@ -89,7 +89,7 @@
 
   (cu/defapi :henkilo_paivitys {:henkiloid henkiloid, :kayttaja (:oid kayttaja)} :put "/:henkiloid"
     [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
-     osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen]
+     osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen syntymavuosi kokemusvuodet]
       (let [id (Integer/parseInt henkiloid)
             kayttaja-oid (:oid kayttaja)
             henkilodto {:henkiloid id
@@ -109,7 +109,9 @@
                         :postitoimipaikka postitoimipaikka
                         :jarjesto (:jarjesto jarjesto)
                         :lisatiedot lisatiedot
-                        :nayttomestari nayttomestari}]
+                        :nayttomestari nayttomestari
+                        :syntymavuosi syntymavuosi
+                        :kokemusvuodet kokemusvuodet}]
         (validoi henkilodto (henkilon-validointisaannot id kayttaja-oid) ((i18n/tekstit) :validointi)
           (s/validate skeema/Henkilo henkilodto)
           (arkisto/paivita! henkilodto)
