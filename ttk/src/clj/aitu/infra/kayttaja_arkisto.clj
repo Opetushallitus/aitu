@@ -93,3 +93,10 @@
     (sql/order :sukunimi)
     (sql/order :etunimi)
     (sql/order :uid)))
+
+(defn hae-jarjesto
+  [jarjestoid]
+  (first
+    (sql/select :jarjesto
+      (sql/fields :nimi_fi :nimi_sv)
+      (sql/where {:jarjestoid jarjestoid}))))

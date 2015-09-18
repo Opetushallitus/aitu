@@ -52,6 +52,10 @@
                      paivita-kayttajan-sopimuskohtaiset-oikeudet
                      liita-kayttajan-henkilo-oikeudet
                      json-response))))
+  (cu/defapi :kayttajan_tiedot nil :get "/jarjesto" []
+    (json-response
+      (let [jarjesto (arkisto/hae-jarjesto (:jarjesto ko/*current-user-authmap*))]
+        (if jarjesto jarjesto {}))))
   (cu/defapi :omat_tiedot oid :get "/:oid" [oid]
     (json-response (arkisto/hae oid))))
 
