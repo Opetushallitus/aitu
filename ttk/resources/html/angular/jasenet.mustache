@@ -37,7 +37,7 @@
       <td class="e2e-rooli"><enum-valikko pakollinen="true" nimi="rooli" arvo="henkilo.rooli"></enum-valikko></td>
       <td><enum-valikko pakollinen="true" nimi="edustus" arvo="henkilo.edustus"></enum-valikko></td>
       <td>{{henkilo | lokalisoiKentta:'jarjesto_nimi' }}</td>
-      <td><pvm-valitsin valittu-pvm="henkilo.nimityspaiva"></pvm-valitsin></td>
+      <td><pvm-valitsin valittu-pvm="henkilo.nimityspaiva" ng-disabled="henkilo.status == 'esitetty'"></pvm-valitsin></td>
       <td>
         <pvm-valitsin pakollinen="true" valittu-pvm="henkilo.alkupvm" min-pvm="toimikunta.toimikausi_alku" max-pvm="toimikunta.toimikausi_loppu"></pvm-valitsin>
         -
