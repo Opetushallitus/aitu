@@ -52,7 +52,7 @@
 <section class="info-section">
   <fieldset>
     <label>[[sahkoposti]]</label>
-    <input type="text" ng-hide="!muokkausTila" ng-model="jasen.henkilo.sahkoposti">
+    <input type="text" ng-hide="!muokkausTila" ng-model="jasen.henkilo.sahkoposti" ng-required="!jasen.henkilo.henkiloid">
     <label ng-hide="!muokkausTila"><input type="checkbox" ng-model="jasen.henkilo.sahkoposti_julkinen" /> [[julkinen]]</label>
     <p ng-hide="muokkausTila"><a href="mailto:{{jasen.henkilo.sahkoposti}}">{{jasen.henkilo.sahkoposti}}</a></p>
   </fieldset>
@@ -67,14 +67,14 @@
       <label>[[organisaatio]]</label>
       <input type="text" ng-hide="!muokkausTila" ng-model="jasen.henkilo.organisaatio">
       <label>[[osoite]]</label>
-      <input type="text" ng-model="jasen.henkilo.osoite">
+      <input type="text" ng-model="jasen.henkilo.osoite" ng-required="!jasen.henkilo.henkiloid">
       <span id="postinumero">
         <label>[[postinumero]]</label>
-        <input type="text" ng-model="jasen.henkilo.postinumero" class="postinumero">
+        <input type="text" ng-model="jasen.henkilo.postinumero" class="postinumero" ng-required="!jasen.henkilo.henkiloid">
       </span>
       <span id="postitoimipaikka">
         <label>[[postitoimipaikka]]</label>
-        <input type="text" ng-model="jasen.henkilo.postitoimipaikka" class="postitoimipaikka">
+        <input type="text" ng-model="jasen.henkilo.postitoimipaikka" class="postitoimipaikka" ng-required="!jasen.henkilo.henkiloid">
       </span>
     </p>
     <p ng-hide="muokkausTila">
