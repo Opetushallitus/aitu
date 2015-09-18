@@ -41,6 +41,7 @@ angular.module('ttk', [
   'raportit',
   'palvelut.varmistus',
   'rest.jasenesitykset',
+  'rest.kayttaja',
   'rest.koulutustoimija',
   'rest.rahoitusmuoto',
   'rest.suorittaja',
