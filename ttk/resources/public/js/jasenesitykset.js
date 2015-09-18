@@ -18,12 +18,18 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
     $routeProvider.when('/jasenesitykset/uusi', {controller:'HenkiloVelhoController', templateUrl:'template/jasen'});
   }])
 
-  .controller('JasenesityksetController', ['$location', '$q', '$scope', 'Jasenesitykset', function($location, $q, $scope, Jasenesitykset) {
+  .controller('JasenesityksetController', ['$location', '$q', '$scope', 'Jasenesitykset', 'Kayttaja', function($location, $q, $scope, Jasenesitykset, Kayttaja) {
     $scope.haku = {};
 
     $scope.luoJasenesitys = function() {
       $location.url('/jasenesitykset/uusi');
     };
+
+    Kayttaja.haeJarjesto().then(function(jarjesto) {
+      if (jarjesto.nimi_fi !== undefined) {
+        $scope.jarjesto = jarjesto;
+      }
+    });
 
     $scope.$watch('haku', function(haku) {
       Jasenesitykset.hae(haku.ehdokas, haku.jarjesto, haku.toimikunta, haku.asiantuntijaksi, haku.tila).then(function(esitykset) {
