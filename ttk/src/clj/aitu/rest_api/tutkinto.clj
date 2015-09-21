@@ -14,14 +14,12 @@
 
 (ns aitu.rest-api.tutkinto
   (:require [compojure.core :as c]
-            [cheshire.core :as cheshire]
             [aitu.infra.tutkinto-arkisto :as arkisto]
             [aitu.toimiala.tutkinto :as tutkinto]
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
             [aitu.compojure-util :as cu]
             [aitu.util :refer [muodosta-csv]]
-            [oph.common.util.http-util :refer [csv-download-response cachable-json-response json-response]]
-            [korma.db :as db]))
+            [oph.common.util.http-util :refer [csv-download-response cachable-json-response json-response]]))
 
 (def tutkintokenttien-jarjestys [:tutkintotunnus :nimi_fi :nimi_sv :peruste :opintoala_fi :opintoala_sv])
 
