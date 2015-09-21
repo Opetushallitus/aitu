@@ -1,12 +1,10 @@
 {{=[[ ]]=}}
 
-[[#i18n.henkilo]]
-[[#i18n.yleiset]]
+[[#i18n.jasenesitykset]]
 
-<select ng-model="arvo" ng-options="kokemus as kokemus for kokemus in kokemusvuodet" ng-hide="!muokattavissa">
-  <option value="">[[ei_ole]]</option>
+<select ng-model="arvo" ng-options="parseInt(index,10) as i18n.jasenesitykset[vaihtoehto] for (index, vaihtoehto) in vaihtoehdot" ng-hide="!muokattavissa">
+  <option value="">[[kokemus_ei_lainkaan]]</option>
 </select>
 <p ng-hide="muokattavissa" ng-bind="arvo"></p>
 
-[[/i18n.yleiset]]
-[[/i18n.henkilo]]
+[[/i18n.jasenesitykset]]

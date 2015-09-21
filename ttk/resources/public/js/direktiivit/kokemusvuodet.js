@@ -15,7 +15,7 @@
 'use strict';
 
 angular.module('direktiivit.kokemusvuodet', [])
-  .directive('kokemusvuodet', [function() {
+  .directive('kokemusvuodet', ['i18n', function(i18n) {
     return {
       restrict: 'E',
       templateUrl: 'template/direktiivit/kokemusvuodet',
@@ -24,7 +24,13 @@ angular.module('direktiivit.kokemusvuodet', [])
         muokattavissa: '='
       },
       link: function(scope) {
-        scope.kokemusvuodet = _.range(1, 21);
+        scope.i18n = i18n;
+
+        scope.vaihtoehdot = [
+          'kokemus_1_3_vuotta',
+          'kokemus_4_6_vuotta',
+          'kokemus_7_tai_enemman'
+        ];
       }
     }
   }])
