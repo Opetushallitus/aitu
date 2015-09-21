@@ -42,6 +42,11 @@
      [:kayttaja_oid #(or (kayttaja-arkisto/kayttaja-liitetty-henkiloon? henkiloid %)
                          (not (kayttaja-arkisto/kayttaja-liitetty-johonkin-henkiloon? %))) [:kayttaja-kaytossa (henkilon-nimi (kayttaja-arkisto/hae-kayttajaan-liitetty-henkilo kayttaja-oid))]]]))
 
+(defn rajaa-henkilon-kentat [henkilo]
+  (-> henkilo
+    (select-keys [:henkiloid :etunimi :sukunimi :jasenyydet])
+    (update-in [:jasenyydet] (partial map #(select-keys % [:nimi_fi :nimi_sv :diaarinumero :toimikausi_alku :toimikausi_loppu])))))
+
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
 
@@ -74,7 +79,7 @@
                               (.withMillisOfSecond 0))]
       (if (> 0 (compare cache-muokattu henkilot-muokattu))
         {:status 200
-         :body (cheshire/generate-string henkilot)
+         :body (cheshire/generate-string (map rajaa-henkilon-kentat henkilot))
          :headers (get-cache-headers henkilot-muokattu)}
         {:status 304})))
 
