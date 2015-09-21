@@ -44,6 +44,14 @@
 (defn valitse-jarjesto [jarjeston-nimi]
   (valitse-select2-optio "jasen.henkilo.jarjesto" "jarjesto" jarjeston-nimi))
 
+(defn tayta-pakolliset-kentat! []
+  (kirjoita-henkilon-tietokenttaan "jasen.henkilo.etunimi" "Sihto")
+  (kirjoita-henkilon-tietokenttaan "jasen.henkilo.sukunimi" "Amakuutio")
+  (kirjoita-henkilon-tietokenttaan "jasen.henkilo.sahkoposti" "sihto.amakuutio@example.com")
+  (kirjoita-henkilon-tietokenttaan "jasen.henkilo.osoite" "Åkerlundinkatu")
+  (kirjoita-henkilon-tietokenttaan "jasen.henkilo.postinumero" "33330")
+  (kirjoita-henkilon-tietokenttaan "jasen.henkilo.postitoimipaikka" "Tampere"))
+
 (deftest ^:no-ie henkilosivu-test
   (testing "henkilösivu"
     (testing "pitäisi käyttää henkilön nimeä sivun otsikkona"
@@ -108,8 +116,7 @@
           ;; Kun
           (avaa (uuden-henkilon-luonti))
           (paina-jatka-nappia)
-          (kirjoita-henkilon-tietokenttaan "jasen.henkilo.etunimi" "Sihto")
-          (kirjoita-henkilon-tietokenttaan "jasen.henkilo.sukunimi" "Amakuutio")
+          (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (odota-angular-pyyntoa)
@@ -124,8 +131,7 @@
           ;; Kun
           (avaa (uuden-henkilon-luonti))
           (paina-jatka-nappia)
-          (kirjoita-henkilon-tietokenttaan "jasen.henkilo.etunimi" "Sihto")
-          (kirjoita-henkilon-tietokenttaan "jasen.henkilo.sukunimi" "Amakuutio")
+          (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (odota-angular-pyyntoa)
@@ -140,8 +146,7 @@
           ;; Kun
           (avaa (uuden-henkilon-luonti))
           (paina-jatka-nappia)
-          (kirjoita-henkilon-tietokenttaan "jasen.henkilo.etunimi" "Sihto")
-          (kirjoita-henkilon-tietokenttaan "jasen.henkilo.sukunimi" "Amakuutio")
+          (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.postinumero" "123456")
