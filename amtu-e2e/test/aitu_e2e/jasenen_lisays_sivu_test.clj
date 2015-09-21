@@ -202,6 +202,10 @@
           ;; Kun
           (kirjoita-tietokenttaan "jasen.henkilo.etunimi" "Roope")
           (kirjoita-tietokenttaan "jasen.henkilo.sukunimi" "Setä")
+          (kirjoita-tietokenttaan "jasen.henkilo.sahkoposti" "roope.seta@example.com")
+          (kirjoita-tietokenttaan "jasen.henkilo.osoite" "Åkerlundinkatu")
+          (kirjoita-tietokenttaan "jasen.henkilo.postinumero" "33330")
+          (kirjoita-tietokenttaan "jasen.henkilo.postitoimipaikka" "Tampere")
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (paina-lisaa-henkilo-nappia)
