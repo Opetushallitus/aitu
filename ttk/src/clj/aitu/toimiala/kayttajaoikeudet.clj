@@ -86,8 +86,7 @@
     (let [roolitunnus (:roolitunnus *current-user-authmap*)]
       (or (= roolitunnus (:kayttaja kayttajaroolit))
           (= roolitunnus (:yllapitaja kayttajaroolit))
-          (= roolitunnus (:oph-katselija kayttajaroolit))
-          (= roolitunnus (:jarjesto kayttajaroolit))))))
+          (= roolitunnus (:oph-katselija kayttajaroolit))))))
 
 (defn osoitepalvelu-kayttaja?
   ([x] (osoitepalvelu-kayttaja?))
@@ -115,6 +114,8 @@
 
 (defn sallittu-yllapitajalle-ja-jarjestolle [& _] (or (yllapitaja?) (jarjesto-kayttaja?)))
 
+(defn sallittu-kayttajalle-ja-jarjestolle [& _] (or (aitu-kayttaja?) (jarjesto-kayttaja?)))
+
 (defn sallittu-impersonoidulle [& _]
   (or (yllapitaja?) (not= *impersonoitu-oid* nil)))
 
@@ -139,12 +140,12 @@
 (def kayttajatoiminnot
   `{:omat_tiedot #(or (yllapitaja?) (= (:oid *current-user-authmap*) %))
     :logitus aitu-kayttaja?
-    :kayttajan_tiedot aitu-kayttaja?
+    :kayttajan_tiedot sallittu-kayttajalle-ja-jarjestolle
     :ohjeet_luku aitu-kayttaja?
-    :toimikunta_haku aitu-kayttaja?
+    :toimikunta_haku sallittu-kayttajalle-ja-jarjestolle
     :toimikunta_katselu aitu-kayttaja?
-    :etusivu aitu-kayttaja?
-    :henkilo_haku aitu-kayttaja?
+    :etusivu sallittu-kayttajalle-ja-jarjestolle
+    :henkilo_haku sallittu-kayttajalle-ja-jarjestolle
     :yleinen-rest-api sallittu-kaikille
     :osoitepalvelu-api osoitepalvelu-kayttaja?
     :aipal aipal-kayttaja?
