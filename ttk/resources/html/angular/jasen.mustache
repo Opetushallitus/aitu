@@ -4,7 +4,7 @@
 [[#i18n.jasenesitykset]]
 <h1>[[henkilon-lisays]]</h1>
 
-<div ng-if="nykyinenAskel(0)">
+<div ng-if="nykyinenAskel == 0">
   <form>
     <haku-valitsin
       otsikko="[[kerro-ensin-nimi-ja-sitten-jatka]]"
@@ -19,7 +19,7 @@
   </form>
 </div>
 
-<div ng-if="nykyinenAskel(1)">
+<div ng-if="nykyinenAskel == 1">
   <form name="jasenForm1">
     <div>
       <fieldset>
@@ -37,7 +37,7 @@
 
 </div>
 
-<div ng-if="nykyinenAskel(2)">
+<div ng-if="nykyinenAskel == 2">
   <p>[[lisaa-viela-henkilon-jasenyystiedot]]</p>
   <fieldset>
     <label>[[nimi]]</label>

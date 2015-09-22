@@ -114,13 +114,13 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
 
   .controller('HenkiloVelhoController', ['$location', '$scope', '$rootScope', '$routeParams', 'ToimikuntaUtil', 'varmistaPoistuminen', 'henkiloVelhoResource', 'edellinenLokaatio', 'toimikuntaResource',
     function($location, $scope, $rootScope, $routeParams, ToimikuntaUtil, varmistaPoistuminen, henkiloVelhoResource, edellinenLokaatio, toimikuntaResource) {
-      var nykyinenAskel = 0;
+      $scope.nykyinenAskel = 0;
       $scope.jasenEsitys = ($location.url() === '/jasenesitykset/uusi');
 
       function siirrySeuraavaan() {
-        if (nykyinenAskel < 2) {
+        if ($scope.nykyinenAskel < 2) {
           $rootScope.$broadcast('wizardPageChange');
-          nykyinenAskel++;
+          $scope.nykyinenAskel++;
         }
       }
       $scope.jasen = { henkilo: {} };
@@ -190,9 +190,6 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
 
       $scope.$watchCollection('henkilot', valitseHenkilo);
 
-      $scope.nykyinenAskel = function(askelNumero) {
-        return nykyinenAskel === askelNumero;
-      };
       $scope.siirrySeuraavaan = siirrySeuraavaan;
 
       function valitseHenkilo() {
