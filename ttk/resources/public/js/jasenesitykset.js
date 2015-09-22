@@ -19,7 +19,9 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
   }])
 
   .controller('JasenesityksetController', ['$filter', '$location', '$q', '$scope', 'Jasenesitykset', 'Kayttaja', function($filter, $location, $q, $scope, Jasenesitykset, Kayttaja) {
-    $scope.haku = {};
+    $scope.haku = {
+      asiantuntijaksi: null
+    };
 
     $scope.luoJasenesitys = function() {
       $location.url('/jasenesitykset/uusi');

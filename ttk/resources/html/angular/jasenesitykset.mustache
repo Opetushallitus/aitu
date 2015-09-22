@@ -20,8 +20,9 @@
   <input type="text" ng-model="haku.toimikunta" ng-model-options="{debounce: 200}">
 </fieldset>
 <fieldset>
-  <input type="checkbox" ng-model="haku.asiantuntijaksi"/>
   <label>[[kaytettavissa_asiantuntijaksi]]</label>
+  <select ng-model="haku.asiantuntijaksi" ng-options="vaihtoehto.arvo as vaihtoehto.teksti for vaihtoehto in [{arvo: null, teksti: '[[ei_valia]]'}, {arvo: true, teksti: '[[kylla]]'}, {arvo: false, teksti: '[[ei]]'}]">
+  </select>
 </fieldset>
 
 <div>
