@@ -27,10 +27,20 @@ angular.module('direktiivit.kokemusvuodet', [])
         scope.i18n = i18n;
 
         scope.vaihtoehdot = [
-          'kokemus_1_3_vuotta',
-          'kokemus_4_6_vuotta',
-          'kokemus_7_tai_enemman'
+          {arvo: null, avain: 'kokemus_ei_tiedossa'},
+          {arvo: 0, avain: 'kokemus_ei_lainkaan'},
+          {arvo: 2, avain: 'kokemus_1_3_vuotta'},
+          {arvo: 5, avain: 'kokemus_4_6_vuotta'},
+          {arvo: 7, avain: 'kokemus_7_tai_enemman'}
         ];
+
+        scope.haeTeksti = function(vuodet) {
+          var vaihtoehto = _.find(scope.vaihtoehdot, {arvo: vuodet});
+          if (vaihtoehto !== undefined) {
+            return i18n.jasenesitykset[vaihtoehto.avain];
+          }
+          return vuodet;
+        };
       }
     }
   }])

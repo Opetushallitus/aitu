@@ -2,9 +2,8 @@
 
 [[#i18n.jasenesitykset]]
 
-<select ng-model="arvo" ng-options="parseInt(index,10) as i18n.jasenesitykset[vaihtoehto] for (index, vaihtoehto) in vaihtoehdot" ng-hide="!muokattavissa">
-  <option value="">[[kokemus_ei_lainkaan]]</option>
+<select ng-model="arvo" ng-options="vaihtoehto.arvo as i18n.jasenesitykset[vaihtoehto.avain] for vaihtoehto in vaihtoehdot" ng-hide="!muokattavissa">
 </select>
-<p ng-hide="muokattavissa" ng-bind="arvo"></p>
+<p ng-hide="muokattavissa" ng-bind="haeTeksti(arvo)"></p>
 
 [[/i18n.jasenesitykset]]
