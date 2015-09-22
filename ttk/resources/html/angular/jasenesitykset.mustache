@@ -20,7 +20,7 @@
   <input type="text" ng-model="haku.toimikunta" ng-model-options="{debounce: 200}">
 </fieldset>
 <fieldset>
-  <label>[[kaytettavissa_asiantuntijaksi]]</label>
+  <label>[[kaytettavissa_asiantuntijaksi_lyhyt]]</label>
   <select ng-model="haku.asiantuntijaksi" ng-options="vaihtoehto.arvo as vaihtoehto.teksti for vaihtoehto in [{arvo: null, teksti: '[[ei_valia]]'}, {arvo: true, teksti: '[[kylla]]'}, {arvo: false, teksti: '[[ei]]'}]">
   </select>
 </fieldset>
