@@ -29,7 +29,7 @@
     <div class="table-cell">[[kaikki]]</div>
   </div>
   <div class="table-row" ng-repeat="toimikunta in toimikunnat |filter:filter">
-    <div class="table-cell">{{ toimikunta | lokalisoiKentta:'nimi' }}</div>
+    <div class="table-cell"><a ng-href="#/toimikunta/{{ toimikunta.diaarinumero }}/tiedot">{{ toimikunta | lokalisoiKentta:'nimi' }}</a></div>
     <div class="table-cell">{{ toimikunta.esitetty_miehia }} </div>
     <div class="table-cell">{{ toimikunta.esitetty_naisia }} </div>
     <div class="table-cell">{{ toimikunta.esitetty_yhteensa }} </div>

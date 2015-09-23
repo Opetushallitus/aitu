@@ -64,7 +64,7 @@
 (defn hae-yhteenveto [jarjesto {:keys [vain_jasenesityksia_sisaltavat]}]
   (->
     (sql/select* :tutkintotoimikunta)
-    (sql/fields :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv
+    (sql/fields :tutkintotoimikunta.diaarinumero :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv
                 [(subselect-laske-jasenesitykset "esitetty" "mies") :esitetty_miehia]
                 [(subselect-laske-jasenesitykset "esitetty" "nainen") :esitetty_naisia]
                 [(subselect-laske-jasenesitykset "nimitetty" "mies") :nimitetty_miehia]
