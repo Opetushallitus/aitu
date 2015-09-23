@@ -45,8 +45,17 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
     }, true);
   }])
 
-  .controller('JasenesityksetYhteenvetoController', ['$scope', 'Jasenesitykset', function($scope, Jasenesitykset) {
+  .controller('JasenesityksetYhteenvetoController', ['$scope', 'Jasenesitykset', 'ToimikausiResource', function($scope, Jasenesitykset, ToimikausiResource) {
     $scope.search = {};
+
+    ToimikausiResource.query({}, function(toimikaudet) {
+      $scope.toimikaudet = toimikaudet;
+      $scope.search.toimikausi = toimikaudet[0].toimikausi_id;
+
+      $scope.$watch('search', function(search) {
+        paivita();
+      }, true);
+    });
 
     var paivita = function() {
       Jasenesitykset.haeYhteenveto($scope.search).then(function(toimikunnat) {
@@ -61,9 +70,5 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
         $scope.toimikunnat = toimikunnat;
       });
     };
-
-    $scope.$watch('search', function(search) {
-      paivita();
-    }, true);
   }])
 ;

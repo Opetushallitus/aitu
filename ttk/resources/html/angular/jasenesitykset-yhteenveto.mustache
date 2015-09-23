@@ -11,6 +11,11 @@
   </label>
 </fieldset>
 
+<fieldset>
+  <label>[[toimikausi]]</label>
+  <select ng-model="search.toimikausi" ng-options="toimikausi.toimikausi_id as toimikausi.alkupvm+'-'+toimikausi.loppupvm for toimikausi in toimikaudet"></select>
+</fieldset>
+
 <div style="margin-bottom: 2em">
   <input type="text" ng-model="filter" placeholder="[[hae_toimikuntia]]">
 </div>
