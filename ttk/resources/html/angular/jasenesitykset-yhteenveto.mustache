@@ -1,0 +1,35 @@
+{{=[[ ]]=}}
+[[#i18n.yleiset]]
+[[#i18n.jasenesitykset]]
+
+<h1>[[jasenesitykset]]: [[yhteenveto]]</h1>
+
+<div class="table" ng-show="toimikunnat">
+  <div class="table-header">
+    <div class="table-cell">[[tutkintotoimikunta]]</div>
+    <div class="table-cell">[[esitetty]]: [[miehet]]</div>
+    <div class="table-cell">[[esitetty]]: [[naiset]]</div>
+    <div class="table-cell">[[esitetty]]: [[kaikki]]</div>
+    <div class="table-cell">[[nimitetty]]: [[miehet]]</div>
+    <div class="table-cell">[[nimitetty]]: [[naiset]]</div>
+    <div class="table-cell">[[nimitetty]]: [[kaikki]]</div>
+    <div class="table-cell">[[kaikki]]: [[miehet]]</div>
+    <div class="table-cell">[[kaikki]]: [[naiset]]</div>
+    <div class="table-cell">[[kaikki]]</div>
+  </div>
+  <div class="table-row" ng-repeat="toimikunta in toimikunnat">
+    <div class="table-cell">{{ toimikunta | lokalisoiKentta:'nimi' }}</div>
+    <div class="table-cell">{{ toimikunta.esitetty_miehia }} </div>
+    <div class="table-cell">{{ toimikunta.esitetty_naisia }} </div>
+    <div class="table-cell">{{ toimikunta.esitetty_yhteensa }} </div>
+    <div class="table-cell">{{ toimikunta.nimitetty_miehia }} </div>
+    <div class="table-cell">{{ toimikunta.nimitetty_naisia }} </div>
+    <div class="table-cell">{{ toimikunta.nimitetty_yhteensa }} </div>
+    <div class="table-cell">{{ toimikunta.kaikki_miehet }}</div>
+    <div class="table-cell">{{ toimikunta.kaikki_naiset }}</div>
+    <div class="table-cell">{{ toimikunta.kaikki }}</div>
+  </div>
+</div>
+
+[[/i18n.jasenesitykset]]
+[[/i18n.yleiset]]

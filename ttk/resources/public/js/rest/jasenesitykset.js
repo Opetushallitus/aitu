@@ -19,6 +19,11 @@ angular.module('rest.jasenesitykset', [])
         return $http.get(ophBaseUrl + '/api/jasenesitykset', {params: {ehdokas: ehdokas, jarjesto: jarjesto, toimikunta: toimikunta, asiantuntijaksi: asiantuntijaksi, tila: tila}}).then(function(response) {
           return response.data;
         });
+      },
+      haeYhteenveto: function() {
+        return $http.get(ophBaseUrl + '/api/jasenesitykset/yhteenveto').then(function(response) {
+          return response.data;
+        });
       }
     };
   }])

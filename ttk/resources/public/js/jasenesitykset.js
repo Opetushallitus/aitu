@@ -16,6 +16,7 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/jasenesitykset', {controller: 'JasenesityksetController', templateUrl: 'template/jasenesitykset'});
     $routeProvider.when('/jasenesitykset/uusi', {controller:'HenkiloVelhoController', templateUrl:'template/jasen'});
+    $routeProvider.when('/jasenesitykset/yhteenveto', {controller:'JasenesityksetYhteenvetoController', templateUrl: 'template/jasenesitykset-yhteenveto'});
   }])
 
   .controller('JasenesityksetController', ['$filter', '$location', '$q', '$scope', 'Jasenesitykset', 'Kayttaja', function($filter, $location, $q, $scope, Jasenesitykset, Kayttaja) {
@@ -25,6 +26,10 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
 
     $scope.luoJasenesitys = function() {
       $location.url('/jasenesitykset/uusi');
+    };
+
+    $scope.yhteenveto = function() {
+      $location.url('/jasenesitykset/yhteenveto');
     };
 
     Kayttaja.haeJarjesto().then(function(jarjesto) {
@@ -38,5 +43,19 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
         $scope.esitykset = $filter('orderByLokalisoitu')(esitykset, 'tutkintotoimikunta_nimi');
       });
     }, true);
+  }])
+
+  .controller('JasenesityksetYhteenvetoController', ['$scope', 'Jasenesitykset', function($scope, Jasenesitykset) {
+    Jasenesitykset.haeYhteenveto().then(function(toimikunnat) {
+      _.forEach(toimikunnat, function(toimikunta) {
+        toimikunta.esitetty_yhteensa = toimikunta.esitetty_miehia + toimikunta.esitetty_naisia;
+        toimikunta.nimitetty_yhteensa = toimikunta.nimitetty_miehia + toimikunta.nimitetty_naisia;
+        toimikunta.kaikki_miehet = toimikunta.esitetty_miehia + toimikunta.nimitetty_miehia;
+        toimikunta.kaikki_naiset = toimikunta.esitetty_naisia + toimikunta.nimitetty_naisia;
+        toimikunta.kaikki = toimikunta.kaikki_miehet + toimikunta.kaikki_naiset;
+      });
+
+      $scope.toimikunnat = toimikunnat;
+    });
   }])
 ;
