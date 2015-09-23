@@ -4,6 +4,10 @@
 
 <h1>[[jasenesitykset]]: [[yhteenveto]]</h1>
 
+<div style="margin-bottom: 2em">
+  <input type="text" ng-model="filter" placeholder="[[hae_toimikuntia]]">
+</div>
+
 <div class="table" ng-show="toimikunnat">
   <div class="table-header">
     <div class="table-cell">[[tutkintotoimikunta]]</div>
@@ -17,7 +21,7 @@
     <div class="table-cell">[[kaikki]]: [[naiset]]</div>
     <div class="table-cell">[[kaikki]]</div>
   </div>
-  <div class="table-row" ng-repeat="toimikunta in toimikunnat">
+  <div class="table-row" ng-repeat="toimikunta in toimikunnat |filter:filter">
     <div class="table-cell">{{ toimikunta | lokalisoiKentta:'nimi' }}</div>
     <div class="table-cell">{{ toimikunta.esitetty_miehia }} </div>
     <div class="table-cell">{{ toimikunta.esitetty_naisia }} </div>
