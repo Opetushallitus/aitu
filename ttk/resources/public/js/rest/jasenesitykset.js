@@ -20,8 +20,8 @@ angular.module('rest.jasenesitykset', [])
           return response.data;
         });
       },
-      haeYhteenveto: function() {
-        return $http.get(ophBaseUrl + '/api/jasenesitykset/yhteenveto').then(function(response) {
+      haeYhteenveto: function(search) {
+        return $http.get(ophBaseUrl + '/api/jasenesitykset/yhteenveto', {params: search}).then(function(response) {
           return response.data;
         });
       }

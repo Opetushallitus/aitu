@@ -61,7 +61,7 @@
                 :status tila
                 :henkilo.sukupuoli sukupuoli})))
 
-(defn hae-yhteenveto [jarjesto]
+(defn hae-yhteenveto [jarjesto {:keys [vain_jasenesityksia_sisaltavat]}]
   (->
     (sql/select* :tutkintotoimikunta)
     (sql/fields :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv
@@ -75,5 +75,10 @@
       jarjesto (sql/where {:tutkintotoimikunta.tkunta [in (sql/subselect :jasenyys
                                                             (sql/modifier "DISTINCT")
                                                             (sql/fields :jasenyys.toimikunta)
-                                                            (sql/where {:jasenyys.esittaja jarjesto}))]}))
+                                                            (sql/where {:jasenyys.esittaja jarjesto}))]})
+
+      vain_jasenesityksia_sisaltavat (sql/where {:tutkintotoimikunta.tkunta [in (sql/subselect :jasenyys
+                                                                                  (sql/modifier "DISTINCT")
+                                                                                  (sql/fields :jasenyys.toimikunta)
+                                                                                  (sql/where {:jasenyys.esittaja [not= nil]}))]}))
     sql/exec))

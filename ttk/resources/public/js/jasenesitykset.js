@@ -46,16 +46,24 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
   }])
 
   .controller('JasenesityksetYhteenvetoController', ['$scope', 'Jasenesitykset', function($scope, Jasenesitykset) {
-    Jasenesitykset.haeYhteenveto().then(function(toimikunnat) {
-      _.forEach(toimikunnat, function(toimikunta) {
-        toimikunta.esitetty_yhteensa = toimikunta.esitetty_miehia + toimikunta.esitetty_naisia;
-        toimikunta.nimitetty_yhteensa = toimikunta.nimitetty_miehia + toimikunta.nimitetty_naisia;
-        toimikunta.kaikki_miehet = toimikunta.esitetty_miehia + toimikunta.nimitetty_miehia;
-        toimikunta.kaikki_naiset = toimikunta.esitetty_naisia + toimikunta.nimitetty_naisia;
-        toimikunta.kaikki = toimikunta.kaikki_miehet + toimikunta.kaikki_naiset;
-      });
+    $scope.search = {};
 
-      $scope.toimikunnat = toimikunnat;
-    });
+    var paivita = function() {
+      Jasenesitykset.haeYhteenveto($scope.search).then(function(toimikunnat) {
+        _.forEach(toimikunnat, function(toimikunta) {
+          toimikunta.esitetty_yhteensa = toimikunta.esitetty_miehia + toimikunta.esitetty_naisia;
+          toimikunta.nimitetty_yhteensa = toimikunta.nimitetty_miehia + toimikunta.nimitetty_naisia;
+          toimikunta.kaikki_miehet = toimikunta.esitetty_miehia + toimikunta.nimitetty_miehia;
+          toimikunta.kaikki_naiset = toimikunta.esitetty_naisia + toimikunta.nimitetty_naisia;
+          toimikunta.kaikki = toimikunta.kaikki_miehet + toimikunta.kaikki_naiset;
+        });
+
+        $scope.toimikunnat = toimikunnat;
+      });
+    };
+
+    $scope.$watch('search', function(search) {
+      paivita();
+    }, true);
   }])
 ;
