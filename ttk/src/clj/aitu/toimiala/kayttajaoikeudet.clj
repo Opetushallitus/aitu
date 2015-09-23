@@ -151,7 +151,8 @@
     :aipal aipal-kayttaja?
     :impersonointi-lopetus sallittu-impersonoidulle
     :henkilo_lisays sallittu-yllapitajalle-ja-jarjestolle
-    :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle})
+    :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle
+    :jasenesitykset sallittu-yllapitajalle-ja-jarjestolle})
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
   (let [id (int-arvo sopimusid)]
