@@ -22,4 +22,7 @@
 (c/defroutes reitit
   (cu/defapi :jasenesitykset nil :get "/" [& ehdot]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
-      (json-response (arkisto/hae jarjesto ehdot)))))
+      (json-response (arkisto/hae jarjesto ehdot))))
+  (cu/defapi :jasenesitykset nil :get "/yhteenveto" []
+    (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
+      (json-response (arkisto/hae-yhteenveto jarjesto)))))

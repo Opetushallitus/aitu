@@ -52,3 +52,28 @@
     (sql/order (sql/raw "jasenyys.luotuaika::date") :desc)
     (sql/order :henkilo.sukunimi :asc)
     sql/exec))
+
+(defn ^:private subselect-laske-jasenesitykset [tila sukupuoli]
+  (sql/subselect :jasenyys
+    (sql/aggregate (count :*) :cnt)
+    (sql/join :henkilo (= :henkilo.henkiloid :jasenyys.henkiloid))
+    (sql/where {:toimikunta :tutkintotoimikunta.tkunta
+                :status tila
+                :henkilo.sukupuoli sukupuoli})))
+
+(defn hae-yhteenveto [jarjesto]
+  (->
+    (sql/select* :tutkintotoimikunta)
+    (sql/fields :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv
+                [(subselect-laske-jasenesitykset "esitetty" "mies") :esitetty_miehia]
+                [(subselect-laske-jasenesitykset "esitetty" "nainen") :esitetty_naisia]
+                [(subselect-laske-jasenesitykset "nimitetty" "mies") :nimitetty_miehia]
+                [(subselect-laske-jasenesitykset "nimitetty" "nainen") :nimitetty_naisia])
+
+    (cond->
+      ; Rajaa toimikunnat toimikuntiin, joihin järjestöllä on jäsenesityksiä
+      jarjesto (sql/where {:tutkintotoimikunta.tkunta [in (sql/subselect :jasenyys
+                                                            (sql/modifier "DISTINCT")
+                                                            (sql/fields :jasenyys.toimikunta)
+                                                            (sql/where {:jasenyys.esittaja jarjesto}))]}))
+    sql/exec))
