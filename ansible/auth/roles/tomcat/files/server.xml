@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Server port="8005" shutdown="SHUTDOWN">
-  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
   <Listener className="org.apache.catalina.core.JasperListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
@@ -22,7 +22,7 @@
 
     <Connector port="8443"  SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
-	       keystoreFile="/env/auth-server/cas-tomcat.keystore" keystorePass="cas-tomcat"
+	       keystoreFile="/usr/share/tomcat/cas-tomcat.keystore" keystorePass="cas-tomcat"
 	       protocol="org.apache.coyote.http11.Http11NioProtocol"
                clientAuth="false" sslProtocol="TLS" />
 

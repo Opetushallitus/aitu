@@ -1,0 +1,27 @@
+---
+  - name: Asenna Java
+    yum: name=java-1.8.0-openjdk state=latest
+  - name: Luo asennushakemisto
+    file: name=/opt/tomcat state=directory
+  - name: Kopioi Tomcat
+    copy: src=apache-tomcat-7.0.47.tar.gz dest=/tmp/apache-tomcat-7.0.47.tar.gz
+  - name: Asenna Tomcat
+    unarchive: src=/tmp/apache-tomcat-7.0.47.tar.gz dest=/usr/share copy=no
+  - name: Asenna Tomcat
+    command: creates="/usr/share/tomcat" mv /usr/share/apache-tomcat-7.0.47 /usr/share/tomcat
+  - name: Luo käyttäjä
+    user: name=tomcat system=yes shell=/bin/false
+  - name: Aseta oikeudet
+    file: name=/usr/share/tomcat state=directory recurse=yes owner=tomcat group=tomcat mode="g+r,o+r"
+  - name: init.d-skripti
+    copy: src=tomcat.sh dest=/etc/init.d/tomcat owner=root group=root mode=0755
+  - name: server.xml
+    copy: src=server.xml dest=/usr/share/tomcat/conf
+  - name: keystore
+    copy: src=cas-tomcat.keystore dest=/usr/share/tomcat
+  - name: Käynnistä Tomcat
+    service: name=tomcat enabled=yes state=restarted
+  - name: Tyhjennä iptables
+    shell: iptables -F
+    when: tyhjenna_iptables is defined
+

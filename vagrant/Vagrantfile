@@ -44,8 +44,14 @@ Vagrant.configure("2") do |config|
     auth.vm.box = "CentOS-6.5-x86_64-v20140311.box"
     auth.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
 
-    auth.vm.synced_folder "../env", "/env"
-    auth.vm.provision "shell", inline: "cd /env && ./dev-auth.sh"
+    auth.vm.provision "ansible" do |ansible|
+      ansible.playbook = "../ansible/auth/auth.yml"
+      ansible.extra_vars = {
+        asenna_aitun_kayttajat: true,
+        asenna_aipalin_kayttajat: true,
+        tyhjenna_iptables: true
+      }
+    end
 
     # auth tomcat näkyviin localhostiin portissa 9090
     auth.vm.network "forwarded_port", host: 9090, guest: 8080

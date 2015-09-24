@@ -1,0 +1,10 @@
+---
+  - name: Luo properties-hakemisto
+    file: path=/usr/share/tomcat/oph-configuration state=directory owner=tomcat group=tomcat
+  - name: Kopioi properties-tiedostot
+    copy: src=common.properties dest=/usr/share/tomcat/oph-configuration
+  - name: Kopioi properties-tiedostot
+    copy: src=override.properties dest=/usr/share/tomcat/oph-configuration
+  - name: Kopioi CAS
+    copy: src=cas-server-webapp-3.5.2.war dest=/usr/share/tomcat/webapps
+

@@ -1,0 +1,11 @@
+dn: uid=T-1001,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: T-1001
+employeeNumber: OID.T-1001
+givenName: Ivan
+sn: Ivanovits
+cn: Ivan
+

@@ -1,0 +1,8 @@
+---
+- name: Asenna autentikointipalvelut
+  hosts: auth
+  sudo: yes
+  roles:
+    - role: tomcat
+    - role: cas 
+    - role: ldap

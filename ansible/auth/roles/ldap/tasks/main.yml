@@ -1,0 +1,27 @@
+---
+  - name: Asenna LDAP
+    yum: name=openldap-servers state=latest
+  - name: Kopioi tietokanta
+    copy: src="olcDatabase={2}bdb.ldif" dest="/etc/openldap/slapd.d/cn=config"
+  - name: Käynnistä slapd
+    service: name=slapd state=running
+  - name: Asenna LDAP client
+    yum: name=openldap-clients state=latest
+  - name: Kopioi ldif-tiedostot
+    copy: src={{ item }} dest=/tmp/
+    with_fileglob: 
+      - ./*.ldif
+  - name: Luo hakemisto tiedostoille joilla estetään moninkertainen ldif-ajo
+    file: path=/etc/openldap/.done state=directory
+  - name: Asenna tietokannan rakenne
+    shell: ldapmodify -c -h localhost -p 389 -D "cn=aituserv,ou=People,dc=opintopolku,dc=fi" -w salasana -a -f /tmp/rakenne.ldif && touch /etc/openldap/.done/rakenne creates=/etc/openldap/.done/rakenne
+  - name: Asenna pääkäyttäjä
+    shell: ldapmodify -c -h localhost -p 389 -D "cn=aituserv,ou=People,dc=opintopolku,dc=fi" -w salasana -a -f /tmp/paakayttaja.ldif && touch /etc/openldap/.done/paakayttaja creates=/etc/openldap/.done/paakayttaja
+    when: (asenna_aitun_kayttajat is defined) or (asenna_aipalin_kayttajat is defined)
+  - name: Asenna Aipalin käyttäjät
+    shell: ldapmodify -c -h localhost -p 389 -D "cn=aituserv,ou=People,dc=opintopolku,dc=fi" -w salasana -a -f /tmp/aipal.ldif && touch /etc/openldap/.done/aipal creates=/etc/openldap/.done/aipal
+    when: asenna_aipalin_kayttajat is defined
+  - name: Asenna Aitun käyttäjät
+    shell: ldapmodify -c -h localhost -p 389 -D "cn=aituserv,ou=People,dc=opintopolku,dc=fi" -w salasana -a -f /tmp/aitu.ldif && touch /etc/openldap/.done/aitu creates=/etc/openldap/.done/aitu
+    when: asenna_aitun_kayttajat is defined
+

@@ -1,20 +1,3 @@
-dn: dc=opintopolku,dc=fi
-o: opintopolku.fi
-objectClass: top
-objectClass: dcObject
-objectClass: organization
-dc: opintopolku
-
-dn: ou=People,dc=opintopolku,dc=fi
-ou: People
-objectClass: top
-objectClass: organizationalUnit
-
-dn: ou=Groups,dc=opintopolku,dc=fi
-ou: Groups
-objectClass: top
-objectClass: organizationalUnit
-
 dn: uid=aitunpaakayttaja,ou=People,dc=opintopolku,dc=fi
 objectclass: top
 objectclass: person
@@ -47,17 +30,6 @@ employeeNumber: OID.T-800
 givenName: Arska
 sn: Raaka
 cn: Arska
-
-dn: uid=T-1001,ou=People,dc=opintopolku,dc=fi
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-uid: T-1001
-employeeNumber: OID.T-1001
-givenName: Ivan
-sn: Ivanovits
-cn: Ivan
 
 dn: uid=osoitepalvelu,ou=People,dc=opintopolku,dc=fi
 objectclass: top

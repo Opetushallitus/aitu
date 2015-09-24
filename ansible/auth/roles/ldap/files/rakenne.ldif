@@ -1,0 +1,17 @@
+dn: dc=opintopolku,dc=fi
+o: opintopolku.fi
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+dc: opintopolku
+
+dn: ou=People,dc=opintopolku,dc=fi
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Groups,dc=opintopolku,dc=fi
+ou: Groups
+objectClass: top
+objectClass: organizationalUnit
+
