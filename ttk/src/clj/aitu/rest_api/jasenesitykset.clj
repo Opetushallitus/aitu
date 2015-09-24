@@ -23,7 +23,6 @@
   (cu/defapi :jasenesitykset nil :get "/" [& ehdot]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (json-response (arkisto/hae jarjesto ehdot))))
-  (cu/defapi :jasenesitykset nil :get "/yhteenveto" [& ehdot]
-    (let [jarjesto (:jarjesto ko/*current-user-authmap*)
-          ehdot (update-in ehdot [:vain_jasenesityksia_sisaltavat] #(Boolean/valueOf %))]
-      (json-response (arkisto/hae-yhteenveto jarjesto ehdot)))))
+  (cu/defapi :jasenesitykset nil :get "/yhteenveto" [toimikausi vain_jasenesityksia_sisaltavat]
+    (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
+      (json-response (arkisto/hae-yhteenveto jarjesto (Integer/parseInt toimikausi) (Boolean/valueOf vain_jasenesityksia_sisaltavat))))))

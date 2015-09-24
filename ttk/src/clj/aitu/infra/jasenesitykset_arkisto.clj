@@ -61,7 +61,7 @@
                 :status tila
                 :henkilo.sukupuoli sukupuoli})))
 
-(defn hae-yhteenveto [jarjesto {:keys [vain_jasenesityksia_sisaltavat]}]
+(defn hae-yhteenveto [jarjesto toimikausi vain_jasenesityksia_sisaltavat]
   (->
     (sql/select* :tutkintotoimikunta)
     (sql/fields :tutkintotoimikunta.diaarinumero :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv
@@ -71,6 +71,7 @@
                 [(subselect-laske-jasenesitykset "nimitetty" "nainen") :nimitetty_naisia])
 
     (cond->
+      toimikausi (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi})
       ; Rajaa toimikunnat toimikuntiin, joihin järjestöllä on jäsenesityksiä
       jarjesto (sql/where {:tutkintotoimikunta.tkunta [in (sql/subselect :jasenyys
                                                             (sql/modifier "DISTINCT")
