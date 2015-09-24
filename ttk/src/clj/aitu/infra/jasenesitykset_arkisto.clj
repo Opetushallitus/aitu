@@ -61,25 +61,32 @@
                 :status tila
                 :henkilo.sukupuoli sukupuoli})))
 
+(defn ^:private hae-jarjeston-alijarjestot [jarjesto]
+  (let [jarjestot (sql/select :jarjesto
+                    (sql/fields :jarjestoid)
+                    (sql/where {:keskusjarjestoid jarjesto}))]
+    (map :jarjestoid jarjestot)))
+
 (defn hae-yhteenveto [jarjesto toimikausi vain_jasenesityksia_sisaltavat]
-  (->
-    (sql/select* :tutkintotoimikunta)
-    (sql/fields :tutkintotoimikunta.diaarinumero :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv
-                [(subselect-laske-jasenesitykset "esitetty" "mies") :esitetty_miehia]
-                [(subselect-laske-jasenesitykset "esitetty" "nainen") :esitetty_naisia]
-                [(subselect-laske-jasenesitykset "nimitetty" "mies") :nimitetty_miehia]
-                [(subselect-laske-jasenesitykset "nimitetty" "nainen") :nimitetty_naisia])
+  (let [jarjesto-ja-alijarjestot (conj (hae-jarjeston-alijarjestot jarjesto) jarjesto)]
+    (->
+      (sql/select* :tutkintotoimikunta)
+      (sql/fields :tutkintotoimikunta.diaarinumero :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv
+                  [(subselect-laske-jasenesitykset "esitetty" "mies") :esitetty_miehia]
+                  [(subselect-laske-jasenesitykset "esitetty" "nainen") :esitetty_naisia]
+                  [(subselect-laske-jasenesitykset "nimitetty" "mies") :nimitetty_miehia]
+                  [(subselect-laske-jasenesitykset "nimitetty" "nainen") :nimitetty_naisia])
 
-    (cond->
-      toimikausi (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi})
-      ; Rajaa toimikunnat toimikuntiin, joihin järjestöllä on jäsenesityksiä
-      jarjesto (sql/where {:tutkintotoimikunta.tkunta [in (sql/subselect :jasenyys
-                                                            (sql/modifier "DISTINCT")
-                                                            (sql/fields :jasenyys.toimikunta)
-                                                            (sql/where {:jasenyys.esittaja jarjesto}))]})
+      (cond->
+        toimikausi (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi})
+        ; Rajaa toimikunnat toimikuntiin, joihin järjestöllä tai sen alijärjestöillä on jäsenesityksiä
+        jarjesto (sql/where {:tutkintotoimikunta.tkunta [in (sql/subselect :jasenyys
+                                                              (sql/modifier "DISTINCT")
+                                                              (sql/fields :jasenyys.toimikunta)
+                                                              (sql/where {:jasenyys.esittaja [in jarjesto-ja-alijarjestot]}))]})
 
-      vain_jasenesityksia_sisaltavat (sql/where {:tutkintotoimikunta.tkunta [in (sql/subselect :jasenyys
-                                                                                  (sql/modifier "DISTINCT")
-                                                                                  (sql/fields :jasenyys.toimikunta)
-                                                                                  (sql/where {:jasenyys.esittaja [not= nil]}))]}))
-    sql/exec))
+        vain_jasenesityksia_sisaltavat (sql/where {:tutkintotoimikunta.tkunta [in (sql/subselect :jasenyys
+                                                                                    (sql/modifier "DISTINCT")
+                                                                                    (sql/fields :jasenyys.toimikunta)
+                                                                                    (sql/where {:jasenyys.esittaja [not= nil]}))]}))
+      sql/exec)))
