@@ -4,12 +4,14 @@
 
 <h1>[[jasenesitykset]]: [[yhteenveto]]</h1>
 
-<fieldset>
-  <label>
-    <input type="checkbox" ng-model="search.vain_jasenesityksia_sisaltavat">
-    [[vain_jasenesityksia_sisaltavat]]
-  </label>
-</fieldset>
+<auth-toiminto auth-blokki sallitut-roolit="['YLLAPITAJA']">
+  <fieldset>
+    <label>
+      <input type="checkbox" ng-model="search.vain_jasenesityksia_sisaltavat">
+      [[vain_jasenesityksia_sisaltavat]]
+    </label>
+  </fieldset>
+</auth-toiminto>
 
 <fieldset>
   <label>[[toimikausi]]</label>
