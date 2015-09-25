@@ -22,32 +22,45 @@
   <input type="text" ng-model="filter" placeholder="[[hae_toimikuntia]]">
 </div>
 
-<div class="table" ng-show="toimikunnat">
-  <div class="table-header">
-    <div class="table-cell">[[tutkintotoimikunta]]</div>
-    <div class="table-cell">[[esitetty]]: [[miehet]]</div>
-    <div class="table-cell">[[esitetty]]: [[naiset]]</div>
-    <div class="table-cell">[[esitetty]]: [[kaikki]]</div>
-    <div class="table-cell">[[nimitetty]]: [[miehet]]</div>
-    <div class="table-cell">[[nimitetty]]: [[naiset]]</div>
-    <div class="table-cell">[[nimitetty]]: [[kaikki]]</div>
-    <div class="table-cell">[[kaikki]]: [[miehet]]</div>
-    <div class="table-cell">[[kaikki]]: [[naiset]]</div>
-    <div class="table-cell">[[kaikki]]</div>
-  </div>
-  <div class="table-row" ng-repeat="toimikunta in toimikunnat |filter:filter">
-    <div class="table-cell"><a ng-href="#/toimikunta/{{ toimikunta.diaarinumero }}/tiedot">{{ toimikunta | lokalisoiKentta:'nimi' }}</a></div>
-    <div class="table-cell">{{ toimikunta.esitetty_miehia }} </div>
-    <div class="table-cell">{{ toimikunta.esitetty_naisia }} </div>
-    <div class="table-cell">{{ toimikunta.esitetty_yhteensa }} </div>
-    <div class="table-cell">{{ toimikunta.nimitetty_miehia }} </div>
-    <div class="table-cell">{{ toimikunta.nimitetty_naisia }} </div>
-    <div class="table-cell">{{ toimikunta.nimitetty_yhteensa }} </div>
-    <div class="table-cell">{{ toimikunta.kaikki_miehet }}</div>
-    <div class="table-cell">{{ toimikunta.kaikki_naiset }}</div>
-    <div class="table-cell">{{ toimikunta.kaikki }}</div>
-  </div>
+<div style="text-align: right;">
+  [[lyhenteet]]
 </div>
+<table ng-show="toimikunnat" style="text-align: center">
+  <thead>
+    <tr>
+      <td></td>
+      <td colspan="3">[[esitetty]]</td>
+      <td colspan="3">[[nimitetty]]</td>
+      <td colspan="3">[[kaikki]]</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">[[tutkintotoimikunta]]</td>
+      <td>[[lyhenne_mies]]</td>
+      <td>[[lyhenne_nainen]]</td>
+      <td>[[lyhenne_kaikki]]</td>
+      <td>[[lyhenne_mies]]</td>
+      <td>[[lyhenne_nainen]]</td>
+      <td>[[lyhenne_kaikki]]</td>
+      <td>[[lyhenne_mies]]</td>
+      <td>[[lyhenne_nainen]]</td>
+      <td>[[lyhenne_kaikki]]</td>
+    </tr>
+  </thead>
+  <tbody ng-repeat="toimikunta in toimikunnat | filter:filter">
+    <tr>
+      <td style="text-align: left"><a ng-href="#/toimikunta/{{ toimikunta.diaarinumero }}/tiedot">{{ toimikunta | lokalisoiKentta:'nimi' }}</a></td>
+      <td>{{ toimikunta.esitetty_miehia }}</td>
+      <td>{{ toimikunta.esitetty_naisia }}</td>
+      <td>{{ toimikunta.esitetty_yhteensa }}</td>
+      <td>{{ toimikunta.nimitetty_miehia }}</td>
+      <td>{{ toimikunta.nimitetty_naisia }}</td>
+      <td>{{ toimikunta.nimitetty_yhteensa }}</td>
+      <td>{{ toimikunta.kaikki_miehet }}</td>
+      <td>{{ toimikunta.kaikki_naiset }}</td>
+      <td>{{ toimikunta.kaikki }}</td>
+    </tr>
+  </tbody>
+</table>
 
 [[/i18n.jasenesitykset]]
 [[/i18n.yleiset]]
