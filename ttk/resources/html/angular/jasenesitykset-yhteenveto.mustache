@@ -29,21 +29,30 @@
   <thead>
     <tr>
       <td></td>
-      <td colspan="3">[[esitetty]]</td>
-      <td colspan="3">[[nimitetty]]</td>
-      <td colspan="3">[[kaikki]]</td>
+      <td colspan="6">[[esitetty]]</td>
+      <td colspan="6">[[nimitetty]]</td>
+      <td colspan="6">[[kaikki]]</td>
     </tr>
     <tr>
       <td style="text-align: left">[[tutkintotoimikunta]]</td>
       <td>[[lyhenne_mies]]</td>
       <td>[[lyhenne_nainen]]</td>
       <td>[[lyhenne_kaikki]]</td>
+      <td>FI</td>
+      <td>SV</td>
+      <td>SE</td>
       <td>[[lyhenne_mies]]</td>
       <td>[[lyhenne_nainen]]</td>
       <td>[[lyhenne_kaikki]]</td>
+      <td>FI</td>
+      <td>SV</td>
+      <td>SE</td>
       <td>[[lyhenne_mies]]</td>
       <td>[[lyhenne_nainen]]</td>
       <td>[[lyhenne_kaikki]]</td>
+      <td>FI</td>
+      <td>SV</td>
+      <td>SE</td>
     </tr>
   </thead>
   <tbody ng-repeat="toimikunta in toimikunnat | filter:filter">
@@ -52,12 +61,21 @@
       <td>{{ toimikunta.esitetty_miehia }}</td>
       <td>{{ toimikunta.esitetty_naisia }}</td>
       <td>{{ toimikunta.esitetty_yhteensa }}</td>
-      <td>{{ toimikunta.nimitetty_miehia }}</td>
+      <td>{{ toimikunta.esitetty_fi }}</td>
+      <td>{{ toimikunta.esitetty_sv }}</td>
+      <td>{{ toimikunta.esitetty_se }}</td>
+      <td style="border-left: 1px solid black">{{ toimikunta.nimitetty_miehia }}</td>
       <td>{{ toimikunta.nimitetty_naisia }}</td>
       <td>{{ toimikunta.nimitetty_yhteensa }}</td>
-      <td>{{ toimikunta.kaikki_miehet }}</td>
+      <td>{{ toimikunta.nimitetty_fi }}</td>
+      <td>{{ toimikunta.nimitetty_sv }}</td>
+      <td>{{ toimikunta.nimitetty_se }}</td>
+      <td style="border-left: 1px solid black">{{ toimikunta.kaikki_miehet }}</td>
       <td>{{ toimikunta.kaikki_naiset }}</td>
       <td>{{ toimikunta.kaikki }}</td>
+      <td>{{ toimikunta.kaikki_fi }}</td>
+      <td>{{ toimikunta.kaikki_sv }}</td>
+      <td>{{ toimikunta.kaikki_se }}</td>
     </tr>
   </tbody>
 </table>

@@ -53,13 +53,15 @@
     (sql/order :henkilo.sukunimi :asc)
     sql/exec))
 
-(defn ^:private subselect-laske-jasenesitykset [tila sukupuoli]
+(defn ^:private subselect-laske-jasenesitykset [tila sukupuoli kieli]
   (sql/subselect :jasenyys
     (sql/aggregate (count :*) :cnt)
     (sql/join :henkilo (= :henkilo.henkiloid :jasenyys.henkiloid))
-    (sql/where {:toimikunta :tutkintotoimikunta.tkunta
-                :status tila
-                :henkilo.sukupuoli sukupuoli})))
+    (sql/where {:toimikunta :tutkintotoimikunta.tkunta})
+    (cond->
+      tila (sql/where {:status tila})
+      sukupuoli (sql/where {:henkilo.sukupuoli sukupuoli})
+      kieli (sql/where {:henkilo.aidinkieli kieli}))))
 
 (defn ^:private hae-jarjeston-alijarjestot [jarjesto]
   (let [jarjestot (sql/select :jarjesto
@@ -72,10 +74,17 @@
     (->
       (sql/select* :tutkintotoimikunta)
       (sql/fields :tutkintotoimikunta.diaarinumero :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv
-                  [(subselect-laske-jasenesitykset "esitetty" "mies") :esitetty_miehia]
-                  [(subselect-laske-jasenesitykset "esitetty" "nainen") :esitetty_naisia]
-                  [(subselect-laske-jasenesitykset "nimitetty" "mies") :nimitetty_miehia]
-                  [(subselect-laske-jasenesitykset "nimitetty" "nainen") :nimitetty_naisia])
+                  [(subselect-laske-jasenesitykset "esitetty" "mies" nil) :esitetty_miehia]
+                  [(subselect-laske-jasenesitykset "esitetty" "nainen" nil) :esitetty_naisia]
+                  [(subselect-laske-jasenesitykset "nimitetty" "mies" nil) :nimitetty_miehia]
+                  [(subselect-laske-jasenesitykset "nimitetty" "nainen" nil) :nimitetty_naisia]
+                  [(subselect-laske-jasenesitykset "esitetty" nil "fi") :esitetty_fi]
+                  [(subselect-laske-jasenesitykset "esitetty" nil "sv") :esitetty_sv]
+                  [(subselect-laske-jasenesitykset "esitetty" nil "se") :esitetty_se]
+                  [(subselect-laske-jasenesitykset "nimitetty" nil "fi") :nimitetty_fi]
+                  [(subselect-laske-jasenesitykset "nimitetty" nil "sv") :nimitetty_sv]
+                  [(subselect-laske-jasenesitykset "nimitetty" nil "se") :nimitetty_se]
+                  )
 
       (cond->
         toimikausi (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi})
