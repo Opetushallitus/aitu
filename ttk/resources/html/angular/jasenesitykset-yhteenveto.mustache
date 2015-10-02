@@ -56,8 +56,8 @@
       <td>SE</td>
     </tr>
   </thead>
-  <tbody ng-repeat="toimikunta in toimikunnat | filter:filter">
-    <tr>
+  <tbody>
+    <tr ng-repeat="toimikunta in toimikunnat | filter:filter">
       <td style="text-align: left"><a ng-href="#/toimikunta/{{ toimikunta.diaarinumero }}/tiedot">{{ toimikunta | lokalisoiKentta:'nimi' }}</a></td>
       <td>{{ toimikunta.esitetty_miehia }}</td>
       <td>{{ toimikunta.esitetty_naisia }}</td>
