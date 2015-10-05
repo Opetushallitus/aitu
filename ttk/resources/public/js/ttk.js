@@ -29,6 +29,7 @@ angular.module('ttk', [
   'direktiivit.kokemusvuodet',
   'direktiivit.suorittajat',
   'direktiivit.suoritukset',
+  'direktiivit.tiedote',
   'etusivu',
   'filters',
   'henkilot',

@@ -20,24 +20,7 @@
 </header>
 
 [[#i18n.yleiset]]
-  <section class="tiedote" ng-show="tiedoteOlemassa() || [[yllapitaja]]">
-    <h1>
-      <button ng-if="!muokkausTila && [[yllapitaja]]" class="icon edit-icon" ng-click="muokkaa()"></button>
-      [[tiedote]]
-    </h1>
-    <label ng-hide="muokkausTila || !tiedoteOlemassa()">{{tiedote.muutettuaika | date:'dd.MM.yyyy HH:mm'}}</label>
-    <p ng-hide="muokkausTila || !tiedoteOlemassa()" ng-repeat="rivi in (tiedote.teksti | lokalisoi:tiedote:'teksti' | rivit)">{{rivi}}</p>
-    <span ng-hide="!muokkausTila">
-      <label>[[tiedote-suomeksi]]</label>
-      <textarea ng-model="tiedote.teksti_fi"></textarea>
-      <label>[[tiedote-ruotsiksi]]</label>
-      <textarea ng-model="tiedote.teksti_sv"></textarea>
-
-      <tallenna disabloi-pyyntojen-ajaksi="['tiedotteen-tallennus']" ng-hide="!muokkausTila" ng-click="julkaise()" teksti="'[[julkaise]]'"></tallenna>
-      <tallenna disabloi-pyyntojen-ajaksi="['tiedotteen-poisto']" ng-hide="!muokkausTila" ng-click="poista()" teksti="'[[poista]]'"></tallenna>
-      <button ng-hide="!muokkausTila" ng-click="peruuta()" class="oikealle">[[peruuta]]</button>
-    </span>
-  </section>
+  <tiedote></tiedote>
   <section class="organisaatiomuutos" ng-show="muutoksiaOlemassa() && [[yllapitaja]]">
     <h1>[[organisaatiomuutokset]]</h1>
     <a href="#/organisaatiomuutokset">{{muutostenMaara.maara}} [[organisaatiomuutoksia]]</a>
