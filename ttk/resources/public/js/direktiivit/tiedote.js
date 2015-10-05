@@ -53,4 +53,24 @@ angular.module('direktiivit.tiedote', [])
       }]
     }
   }])
+
+  .factory('tiedoteResource', ['$resource', function($resource) {
+    return $resource(ophBaseUrl + '/api/tiedote', {}, {
+      get: {
+        method: 'GET',
+        params: { nocache: function() { return Date.now(); }},
+        id: 'tiedotteen-teksti'
+      },
+      delete: {
+        method: 'DELETE',
+        id: 'tiedotteen-poisto',
+        i18n : 'etusivu'
+      },
+      save: {
+        method: 'POST',
+        id: 'tiedotteen-tallennus',
+        i18n : 'etusivu'
+      }
+    });
+  }])
 ;

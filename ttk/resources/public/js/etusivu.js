@@ -14,26 +14,6 @@
 
 angular.module('etusivu', [])
 
-  .factory('tiedoteResource', ['$resource', 'i18n', function($resource, i18n) {
-    return $resource(ophBaseUrl + '/api/tiedote', {}, {
-      get: {
-        method: 'GET',
-        params: { nocache: function() { return Date.now(); }},
-        id: 'tiedotteen-teksti'
-      },
-      delete: {
-        method: 'DELETE',
-        id: 'tiedotteen-poisto',
-        i18n : 'etusivu'
-      },
-      save: {
-        method: 'POST',
-        id: 'tiedotteen-tallennus',
-        i18n : 'etusivu'
-      }
-    });
-  }])
-
   .factory('hakuResource', ['$resource', 'i18n', function($resource, i18n) {
     return $resource(ophBaseUrl + '/api/haku/:tunnus', {'tunnus': '@tunnus'}, {
       get: {
