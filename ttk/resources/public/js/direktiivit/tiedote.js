@@ -20,12 +20,18 @@ angular.module('direktiivit.tiedote', [])
       restrict: 'E',
       templateUrl: 'template/direktiivit/tiedote',
       replace: true,
-      scope: {},
+      scope: {
+        tiedoteid: '@'
+      },
       controller: ['$rootScope', '$scope', 'tiedoteResource', function($rootScope, $scope, tiedoteResource) {
-        $scope.tiedote = tiedoteResource.get();
+        $scope.tiedote = tiedoteResource.get({tiedoteid: $scope.tiedoteid});
 
         function palaaNormaalitilaan(tiedote) {
-          $scope.tiedote = tiedote ? tiedote : {};
+          if (tiedote && tiedote.tiedoteid) {
+            $scope.tiedote = tiedote;
+          } else {
+            $scope.tiedote = {tiedoteid: $scope.tiedoteid};
+          }
           $scope.muokkausTila = false;
           $rootScope.$broadcast('wizardPageChange');
         }
@@ -44,7 +50,7 @@ angular.module('direktiivit.tiedote', [])
         };
 
         $scope.poista = function() {
-          tiedoteResource.delete(null, palaaNormaalitilaan);
+          tiedoteResource.delete({tiedoteid: $scope.tiedoteid}, palaaNormaalitilaan);
         };
 
         $scope.peruuta = function() {
@@ -55,7 +61,7 @@ angular.module('direktiivit.tiedote', [])
   }])
 
   .factory('tiedoteResource', ['$resource', function($resource) {
-    return $resource(ophBaseUrl + '/api/tiedote', {}, {
+    return $resource(ophBaseUrl + '/api/tiedote/:tiedoteid', {tiedoteid: '@tiedoteid'}, {
       get: {
         method: 'GET',
         params: { nocache: function() { return Date.now(); }},
