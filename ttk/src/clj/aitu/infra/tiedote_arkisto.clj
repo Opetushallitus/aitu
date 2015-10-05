@@ -19,19 +19,23 @@
 
 (defn hae
   "Hakee tiedotteen."
-  []
-  (first (sql/select tiedote)))
+  [tiedoteid]
+  (first
+    (sql/select tiedote
+      (sql/where {:tiedoteid tiedoteid}))))
 
 (defn poista-ja-lisaa!
   "Poistaa vanhan tiedotteen ja lisää uuden"
-  [teksti]
-  (auditlog/tiedote-operaatio! :lisays)
-  (sql/delete tiedote)
+  [tiedoteid teksti]
+  (auditlog/tiedote-operaatio! :lisays tiedoteid)
+  (sql/delete tiedote
+    (sql/where {:tiedoteid tiedoteid}))
   (sql/insert tiedote
-    (sql/values teksti)))
+    (sql/values (assoc teksti :tiedoteid tiedoteid))))
 
 (defn poista!
   "Poistaa tiedotteen."
-  []
-  (auditlog/tiedote-operaatio! :poisto)
-  (sql/delete tiedote))
+  [tiedoteid]
+  (auditlog/tiedote-operaatio! :poisto tiedoteid)
+  (sql/delete tiedote
+    (sql/where {:tiedoteid tiedoteid})))

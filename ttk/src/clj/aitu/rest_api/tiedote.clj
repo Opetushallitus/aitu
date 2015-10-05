@@ -20,18 +20,19 @@
             [cheshire.core :as cheshire]))
 
 (c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" []
-    (let [tiedote (arkisto/hae)]
+  (cu/defapi :yleinen-rest-api nil :get "/:tiedoteid" [tiedoteid]
+    (let [tiedoteid (Integer/parseInt tiedoteid)
+          tiedote (arkisto/hae tiedoteid)]
       (-> (if (nil? tiedote)
-            {}
+            {:tiedoteid tiedoteid}
             tiedote)
         json-response)))
 
-  (cu/defapi :tiedote_muokkaus nil :post "/" [teksti_fi teksti_sv]
-    (let [tiedote (arkisto/poista-ja-lisaa! {:teksti_fi teksti_fi :teksti_sv teksti_sv})]
+  (cu/defapi :tiedote_muokkaus nil :post "/:tiedoteid" [tiedoteid teksti_fi teksti_sv]
+    (let [tiedote (arkisto/poista-ja-lisaa! (Integer/parseInt tiedoteid) {:teksti_fi teksti_fi :teksti_sv teksti_sv})]
         {:status 200
          :body (cheshire/generate-string tiedote)}))
 
-  (cu/defapi :tiedote_muokkaus nil :delete "/" []
-    (arkisto/poista!)
+  (cu/defapi :tiedote_muokkaus nil :delete "/:tiedoteid" [tiedoteid]
+    (arkisto/poista! (Integer/parseInt tiedoteid))
     {:status 200}))

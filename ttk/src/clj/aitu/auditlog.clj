@@ -113,9 +113,9 @@
   (kirjoita! :ohje :paivitys {:ohjetunniste ohjetunniste}))
 
 (defn tiedote-operaatio!
-  [operaatio]
+  [operaatio tiedoteid]
   {:pre [(contains? operaatiot operaatio)]}
-  (kirjoita! :tiedote operaatio))
+  (kirjoita! :tiedote operaatio {:tiedoteid tiedoteid}))
 
 (defn suorittaja-operaatio!
   [operaatio tiedot]
