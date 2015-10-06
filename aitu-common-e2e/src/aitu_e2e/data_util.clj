@@ -183,8 +183,8 @@
                                        :versio 1
                                        :nimi (str "Osaamisala " i)})})
 
-(def tiedote-tiedot {:post-fn (constantly "/api/tiedote")
-                     :delete-fn (constantly "/api/tiedote")
+(def tiedote-tiedot {:post-fn #(str "/api/tiedote/" (:tiedoteid %))
+                     :delete-fn #(str "/api/tiedote/" (:tiedoteid %))
                      :default (repeat {:teksti_fi "Tiedote suomi"
                                        :teksti_sv "Tiedote ruotsi"})})
 

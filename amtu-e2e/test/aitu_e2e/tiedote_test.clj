@@ -44,7 +44,8 @@
 (deftest tiedote-teksti-nakyvissa-test
   (testing "Etusivulle mentäessä tiedote näkyvissä on näkyvissä"
     (with-webdriver
-      (with-cleaned-data {:tiedote [{:teksti_fi "suomi"
+      (with-cleaned-data {:tiedote [{:tiedoteid "1"
+                                     :teksti_fi "suomi"
                                      :teksti_sv "ruotsi"}]}
         (testing "kun ollaan suomenkielisellä etusivulla"
           (avaa-etusivu-suomeksi)
@@ -56,7 +57,8 @@
 (deftest tiedoteen-muokkaus-test
   (testing "Tiedotteen muokkaus onnistuu"
     (with-webdriver
-      (with-cleaned-data {:tiedote [{:teksti_fi "suomi"}]}
+      (with-cleaned-data {:tiedote [{:tiedoteid "1"
+                                     :teksti_fi "suomi"}]}
         (avaa-etusivu-suomeksi)
         (muokkaa-tiedotetta)
         (syota-tiedotekenttaan "tiedote.teksti_fi" "Uusi tiedote")
@@ -79,7 +81,8 @@
 (deftest tietotteen-poisto-test
   (testing "Etusivulle mentäessä tiedote näkyvissä on näkyvissä"
     (with-webdriver
-      (with-cleaned-data {:tiedote [{:teksti_fi "suomenkielinen tiedot"
+      (with-cleaned-data {:tiedote [{:tiedoteid "1"
+                                     :teksti_fi "suomenkielinen tiedot"
                                      :teksti_sv "ruotsi"}]}
         (avaa-etusivu-suomeksi)
         (muokkaa-tiedotetta)
