@@ -1193,8 +1193,10 @@ header {
   margin-top: -10px;
 }
 
-header + section {
+header + .header-margin {
   margin-top: 160px;
+  display: inline-block;
+  width: 100%;
 }
 
 header .app-wrapper {
