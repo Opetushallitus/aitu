@@ -14,7 +14,7 @@
 
 (defproject aitu-e2e "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [solita/opetushallitus-aitu-e2e "0.22.0"]]
+                 [solita/opetushallitus-aitu-e2e "0.23.0"]]
   :plugins [[test2junit "1.0.1"]]
 
   :test-selectors {:ie (complement (some-fn :no-ie :ie-epastabiili))
