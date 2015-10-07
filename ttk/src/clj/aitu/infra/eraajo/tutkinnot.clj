@@ -84,7 +84,7 @@
 
 (defn ^:integration-api tallenna-muuttuneet-tutkinnonosat! [tutkintoversio-id tutkinnonosat]
   (doseq [{:keys [jarjestysnumero tutkinnonosa osatunnus]} tutkinnonosat]
-    (log/info "Päivitetään tutkinnonosa " (:osatunnus tutkinnonosa) ", muutokset: " (dissoc tutkinnonosa :osatunnus))
+    (log/info "Päivitetään tutkinnonosa " osatunnus ", muutokset: " (dissoc tutkinnonosa :osatunnus))
     (tutkinto-arkisto/paivita-tutkinnon-osa! tutkintoversio-id
                                              jarjestysnumero
                                              (assoc tutkinnonosa :osatunnus osatunnus))))
@@ -117,6 +117,26 @@
     (tallenna-uudet-osaamisalat! tutkintoversio-id uudet)
     (tallenna-muuttuneet-osaamisalat! tutkintoversio-id muuttuneet)))
 
+(defn ^:integration-api tallenna-uudet-tutkintonimikkeet! [tutkintoversio-id tutkintonimikkeet]
+  (doseq [tutkintonimike tutkintonimikkeet]
+    (log/info "Lisätään tutkintonimike " (:nimiketunnus tutkintonimike))
+    (tutkinto-arkisto/lisaa-tai-paivita-tutkintonimike! tutkintoversio-id tutkintonimike)))
+
+(defn ^:integration-api tallenna-muuttuneet-tutkintonimikkeet! [tutkintoversio-id tutkintonimikkeet]
+  (doseq [tutkintonimike tutkintonimikkeet]
+    (log/info "Päivitetään tutkintonimike " (:nimiketunnus tutkintonimike) ", muutokset " (dissoc tutkintonimike :nimiketunnus))
+    (tutkinto-arkisto/lisaa-tai-paivita-tutkintonimike! tutkintoversio-id tutkintonimike)))
+
+(defn ^:integration-api tallenna-tutkintonimikkeet! [tutkintoversio-id tutkintonimikkeet]
+  (let [uudet (for [nimike tutkintonimikkeet
+                    :when (vector? nimike)]
+                (first nimike))
+        muuttuneet (for [nimike tutkintonimikkeet
+                         :when (map? nimike)]
+                     (uudet-arvot nimike))]
+    (tallenna-uudet-tutkintonimikkeet! tutkintoversio-id uudet)
+    (tallenna-muuttuneet-tutkintonimikkeet! tutkintoversio-id muuttuneet)))
+
 (defn ^:integration-api paivita-tutkinto! [koodistoasetukset tutkinto]
   (when (:jarjestyskoodistoversio tutkinto)
     (let [vanha-tutkintoversio (tutkinto-arkisto/hae-tutkinto (:tutkintotunnus tutkinto))
@@ -125,7 +145,7 @@
                                                  :voimassa_loppupvm (:voimassa_loppupvm jarjestyskoodisto)})))
   (let [tutkintotunnus (:tutkintotunnus tutkinto)
         tutkintotiedot (remove-nil-vals (select-keys tutkinto [:nimi_fi :nimi_sv :tyyppi :tutkintotaso :opintoala]))
-        versiotiedot (remove-nil-vals (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm]))]
+        versiotiedot (remove-nil-vals (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio]))]
     (when (not-every? nil? (vals tutkintotiedot))
       (tutkinto-arkisto/paivita! tutkintotunnus tutkintotiedot))
     (when (not-every? nil? (vals versiotiedot))
@@ -135,30 +155,33 @@
 
 (defn ^:integration-api paivita-tutkinnot! [koodistoasetukset tutkintomuutokset]
   (let [opintoalat (set (map :opintoala_tkkoodi (opintoala-arkisto/hae-kaikki)))
-        {:keys [tutkinnot osaamisalat tutkinnonosat]} tutkintomuutokset]
+        {:keys [tutkinnot osaamisalat tutkinnonosat tutkintonimikkeet]} tutkintomuutokset]
     (doseq [t (keep uusi tutkinnot)
             :when (contains? opintoalat (:opintoala t))]
       (log/info "Lisätään tutkinto " (:tutkintotunnus t))
       (let [tutkintoversio-id (tutkinto-arkisto/lisaa-tutkinto-ja-versio! (assoc (dissoc t :osaamisalat :tutkinnonosat)
                                                                                 :versio 1))
             osaamisalat (map osaamisalat (:osaamisalat t))
+            tutkintonimikkeet (map tutkintonimikkeet (:tutkintonimikkeet t))
             tutkinnonosat (for [{:keys [osatunnus jarjestysnumero]} (:tutkinnonosat t)]
                             {:jarjestysnumero jarjestysnumero
                              :osatunnus osatunnus
                              :tutkinnonosa (tutkinnonosat osatunnus)})]
         (tallenna-osaamisalat! tutkintoversio-id osaamisalat)
-        (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)))
-    (doseq [t (keep muuttunut tutkinnot)
-            :when (contains? opintoalat (:opintoala t))]
+        (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)
+        (tallenna-tutkintonimikkeet! tutkintoversio-id tutkintonimikkeet)))
+    (doseq [t (keep muuttunut tutkinnot)]
       (log/info "Päivitetään tutkinto " (:tutkintotunnus t) ", muutokset: " (dissoc t :tutkintotunnus))
       (let [tutkintoversio-id (paivita-tutkinto! koodistoasetukset t)
             osaamisalat (map osaamisalat (:osaamisalat t))
             tutkinnonosat (for [{:keys [osatunnus jarjestysnumero]} (:tutkinnonosat t)]
                             {:jarjestysnumero jarjestysnumero
                              :osatunnus osatunnus
-                             :tutkinnonosa (tutkinnonosat osatunnus)})]
+                             :tutkinnonosa (tutkinnonosat osatunnus)})
+            tutkintonimikkeet (map tutkintonimikkeet (:tutkintonimikkeet t))]
         (tallenna-osaamisalat! tutkintoversio-id osaamisalat)
-        (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)))))
+        (tallenna-tutkinnonosat! tutkintoversio-id tutkinnonosat)
+        (tallenna-tutkintonimikkeet! tutkintoversio-id tutkintonimikkeet)))))
 
 (defn ^:integration-api paivita-tutkinnot-koodistopalvelusta! [asetukset]
   (try
