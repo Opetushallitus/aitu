@@ -64,6 +64,7 @@
 (deftest ^:integraatio hae-nykyiset-test
   (testing "hae-nykyiset"
     (let [henkiloita-alussa (count (arkisto/hae-nykyiset))
+          henkiloita-voimassa-alussa (count (arkisto/hae-nykyiset-voimassa))
           testihenkilo (arkisto/lisaa! data/default-henkilo)]
       (sql/exec-raw (str "insert into tutkintotoimikunta("
                          "tkunta,"
@@ -93,10 +94,12 @@
                          "'sihteeri',"
                          "'itsenainen',"
                          "'2013-01-01',"
-                         "'2016-01-01'"
+                         "'2015-10-01'"
                          ")"))
-      (let [henkiloita (count (arkisto/hae-nykyiset))]
-        (is (= henkiloita (+ henkiloita-alussa 1)))))))
+      (let [henkiloita (count (arkisto/hae-nykyiset))
+            henkiloita-voimassa (count (arkisto/hae-nykyiset-voimassa))]
+        (is (= henkiloita (+ henkiloita-alussa 1)))
+        (is (= henkiloita-voimassa henkiloita-voimassa-alussa))))))
 
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
   (let [mennyt-toimikausi (lisaa-toimikausi! {:voimassa false
