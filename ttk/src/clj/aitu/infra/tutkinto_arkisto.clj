@@ -166,6 +166,15 @@
   (sql/delete osaamisala
     (sql/where {:osaamisalatunnus osaamisalatunnus})))
 
+(defn ^:integration-api lisaa-tai-paivita-tutkintonimike!
+  [tutkintoversio-id nimike]
+  (sql-util/insert-or-update tutkintonimike
+                             :nimiketunnus
+                             nimike)
+  (sql-util/insert-if-not-exists tutkintonimike-ja-tutkintoversio
+                                 {:tutkintonimike (:nimiketunnus nimike)
+                                  :tutkintoversio tutkintoversio-id}))
+
 (defn hae-kaikki
   "Hakee kaikkien tutkintojen uusimman version."
   []
