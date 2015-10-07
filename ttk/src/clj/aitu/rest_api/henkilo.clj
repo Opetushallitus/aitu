@@ -66,8 +66,9 @@
          :body   (cheshire/generate-string uusi-henkilo)})))
 
   (cu/defapi :henkilo_haku nil :get "/" [toimikausi :as req]
-    (let [henkilot (if (= toimikausi "nykyinen")
-                     (arkisto/hae-nykyiset)
+    (let [henkilot (case toimikausi
+                     "nykyinen_voimassa" (arkisto/hae-nykyiset-voimassa)
+                     "nykyinen" (arkisto/hae-nykyiset)
                      (arkisto/hae-kaikki))
           cache-muokattu (get-cache-date req)
           henkilot-muokattu (->

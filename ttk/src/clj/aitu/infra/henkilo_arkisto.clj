@@ -41,7 +41,8 @@
 (defn ^:private pg-hae-jasenyydet-ehdoilla
   [ehdot]
   (let [toimikunta (str "%" (:toimikunta ehdot) "%")]
-    (sql/select jasenyys
+    (->
+      (sql/select* jasenyys)
       (sql/fields :alkupvm :loppupvm :muutettuaika :henkiloid :rooli)
       (sql/with tutkintotoimikunta
         (sql/with toimikausi)
@@ -52,12 +53,14 @@
           :toimikausi_alku
           :toimikausi_loppu
           [:muutettuaika :toimikunta_muutettuaika])
-        (sql/where (and
-                     (or (not= (:toimikausi ehdot) "nykyinen")
-                         {:toimikausi.voimassa true})
-                     (or (blank? (:toimikunta ehdot))
-                         {:tutkintotoimikunta.nimi_fi [ilike toimikunta]}
-                         {:tutkintotoimikunta.nimi_sv [ilike toimikunta]})))))))
+        (sql/where (or (blank? (:toimikunta ehdot))
+                       {:tutkintotoimikunta.nimi_fi [ilike toimikunta]}
+                       {:tutkintotoimikunta.nimi_sv [ilike toimikunta]})))
+      (cond->
+        (some #{(:toimikausi ehdot)} ["nykyinen" "nykyinen_voimassa"]) (sql/where {:toimikausi.voimassa true})
+        (= (:toimikausi ehdot) "nykyinen_voimassa") (sql/where (and (<= :jasenyys.alkupvm (sql/raw "current_date"))
+                                                                    (<= (sql/raw "current_date") :jasenyys.loppupvm))))
+      sql/exec)))
 
 (defn ^:private pg-hae-henkilot-ehdoilla
   [ehdot]
@@ -92,11 +95,18 @@
 
 (defn hae-nykyiset
   "Hakee kaikki henkilöt nykyisen toimikauden toimikunnista"
+  ([]
+   (hae-nykyiset "nykyinen"))
+  ([toimikausi]
+   (let [yhdistetyt-henkilot
+         (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot-ehdoilla {})
+                                         (pg-hae-jasenyydet-ehdoilla {:toimikausi toimikausi}))]
+     (remove #(empty? (:jasenyydet %)) yhdistetyt-henkilot))))
+
+(defn hae-nykyiset-voimassa
+  "Hakee kaikki henkilöt joiden nykyisen toimikauden jäsenyys on voimassa"
   []
-  (let [yhdistetyt-henkilot
-        (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot-ehdoilla {})
-                                        (pg-hae-jasenyydet-ehdoilla {:toimikausi "nykyinen"}))]
-    (remove #(empty? (:jasenyydet %)) yhdistetyt-henkilot)))
+  (hae-nykyiset "nykyinen_voimassa"))
 
 (defn hae
   "Hakee henkilön id:n perusteella"
