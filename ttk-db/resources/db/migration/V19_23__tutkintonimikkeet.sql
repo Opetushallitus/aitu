@@ -31,3 +31,11 @@ create trigger tutkintonimike_ja_tutkintoversiom_insert before insert on tutkint
 create trigger tutkintonimike_ja_tutkintoversio_mu_update before update on tutkintonimike_ja_tutkintoversio for each row execute procedure update_modifier() ;
 create trigger tutkintonimike_ja_tutkintoversio_cu_insert before insert on tutkintonimike_ja_tutkintoversio for each row execute procedure update_creator() ;
 create trigger tutkintonimike_ja_tutkintoversio_mu_insert before insert on tutkintonimike_ja_tutkintoversio for each row execute procedure update_modifier() ;
+
+create or replace view aituhaku.tutkintonimike_view as
+  select t.tutkintotunnus, tn.nimi_fi, tn.nimi_sv
+  from tutkintonimike tn
+  inner join tutkintonimike_ja_tutkintoversio tnv on tn.nimiketunnus = tnv.tutkintonimike
+  inner join tutkintoversio tv on tv.tutkintoversio_id = tnv.tutkintoversio
+  inner join nayttotutkinto t on t.uusin_versio_id = tv.tutkintoversio_id;
+  
