@@ -66,7 +66,7 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
       $scope.henkilot = [];
       $scope.search = {nimi: "",
         toimikunta: "",
-        toimikausi: "nykyinen"};
+        toimikausi: "nykyinen_voimassa"};
 
       $scope.$watch('search.nimi', suodataHenkilot);
       $scope.$watch('search.toimikunta', suodataHenkilot);
