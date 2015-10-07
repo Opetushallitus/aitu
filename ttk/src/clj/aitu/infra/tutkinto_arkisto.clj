@@ -182,7 +182,8 @@
     (sql/with uusin-versio
       (sql/with tutkinto-ja-tutkinnonosa
         (sql/with tutkinnonosa))
-      (sql/with osaamisala))
+      (sql/with osaamisala)
+      (sql/with tutkintonimike))
     (sql/with opintoala
       (sql/fields :koulutusala_tkkoodi))))
 

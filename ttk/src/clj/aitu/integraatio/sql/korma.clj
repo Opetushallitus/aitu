@@ -119,6 +119,14 @@
   (sql/belongs-to tutkinnonosa
     {:fk :tutkinnonosa}))
 
+(defentity tutkintonimike
+  (sql/pk :nimiketunnus)
+  (sql/many-to-many tutkintoversio
+    :tutkintonimike_ja_tutkintoversio {:lfk :tutkintonimike, :rfk :tutkintoversio}))
+
+(defentity tutkintonimike-ja-tutkintoversio
+  (sql/table :tutkintonimike_ja_tutkintoversio))
+
 (defentity jasenyys
   (sql/belongs-to henkilo
     {:fk :henkiloid})
@@ -158,6 +166,8 @@
     {:fk :tutkintoversio})
   (sql/many-to-many tutkinnonosa
     :tutkinto_ja_tutkinnonosa {:lfk :tutkintoversio, :rfk :tutkinnonosa})
+  (sql/many-to-many tutkintonimike
+    :tutkintonimike_ja_tutkintoversio {:lfk :tutkintoversio, :rfk :tutkintonimike})
   (sql/has-many osaamisala
     {:fk :tutkintoversio}))
 
