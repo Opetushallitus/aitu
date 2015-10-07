@@ -442,7 +442,7 @@
     (sql/order :henkilo.sukunimi)
     (sql/order :henkilo.etunimi)
     (sql/fields [:tutkintotoimikunta.nimi_fi :toimikunta] :tutkintotoimikunta.tilikoodi
-                :henkilo.etunimi :henkilo.sukunimi :rooli :edustus :henkilo.aidinkieli
+                :henkilo.etunimi :henkilo.sukunimi :rooli :edustus :henkilo.aidinkieli :henkilo.sahkoposti :henkilo.puhelin :henkilo.organisaatio :henkilo.osoite :henkilo.postinumero :henkilo.postitoimipaikka
                 [:jarjesto.nimi_fi :jarjesto_nimi_fi])
     (cond->
       (seq rooli)     (sql/where {:rooli [in rooli]})
