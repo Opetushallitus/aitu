@@ -14,20 +14,20 @@
 
 (ns aitu.toimiala.voimassaolo.saanto.toimikunta
   (:require [clj-time.core :as time]
-            [aitu.timeutil :as timeutil]))
+            [oph.common.util.util :as util]))
 
 (defn toimikunta-voimassa?
   "Onko toimikunta voimassa?"
   [toimikunta]
   (let [alkupvm (:toimikausi_alku toimikunta)
         loppupvm (:toimikausi_loppu toimikunta)]
-    (and (timeutil/pvm-mennyt-tai-tanaan? alkupvm) (timeutil/pvm-tuleva-tai-tanaan? loppupvm))))
+    (and (util/pvm-mennyt-tai-tanaan? alkupvm) (util/pvm-tuleva-tai-tanaan? loppupvm))))
 
 (defn toimikunta-vanhentunut?
   "Onko toimikunta vanhentunut? Toimikunta on vanhentunut jos loppupvm on menneisyydessä."
   [toimikunta]
   (let [loppupvm (:toimikausi_loppu toimikunta)]
-    (not (timeutil/pvm-tuleva-tai-tanaan? loppupvm))))
+    (not (util/pvm-tuleva-tai-tanaan? loppupvm))))
 
 (defn taydenna-toimikunnan-voimassaolo
   "Lisää toimikuntaan voimassaolo-tieto"

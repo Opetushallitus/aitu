@@ -13,9 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.tutkinto
-  (:require [clj-time.core :as time]
-            [aitu.timeutil :as timeutil]
-            [aitu.toimiala.voimassaolo.tutkinto :as voimassaolo]))
+  (:require [aitu.toimiala.voimassaolo.tutkinto :as voimassaolo]))
 
 (defn tutkinto? [x]
   (and (contains? x :tutkintotunnus)

@@ -16,7 +16,7 @@
   (:require [clojure.test :refer [deftest is are testing]]
             [clj-time.core :as time]
             [aitu.toimiala.tutkinto :refer :all]
-            [aitu.timeutil :refer [time-forever]]))
+            [oph.common.util.util :refer [time-forever]]))
 
 (deftest tutkinto-validointi []
   (is (tutkinto? {:tutkintotunnus "123456"

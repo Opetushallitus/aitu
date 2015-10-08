@@ -13,9 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.voimassaolo.toimikunta
-  (:require [clj-time.core :as time]
-            [aitu.timeutil :as timeutil]
-            [aitu.toimiala.voimassaolo.jarjestamissopimus :as sopimus-paivitys]
+  (:require [aitu.toimiala.voimassaolo.jarjestamissopimus :as sopimus-paivitys]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :as toimikunta]
             [aitu.toimiala.voimassaolo.saanto.jasenyys :as jasenyys-saanto]))
 

@@ -13,20 +13,20 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.voimassaolo.saanto.jarjestamissopimus
-  (:require [aitu.timeutil :as timeutil]
+  (:require [oph.common.util.util :as util]
             (aitu.toimiala.voimassaolo.saanto [toimikunta :as toimikunta]
                                               [tutkinto :as tutkinto])))
 
 (defn sopimuksen-voimassaoloajalla?
   [jarjestamissopimus]
   (let [alkupvm (:alkupvm jarjestamissopimus)
-        loppupvm (or (:loppupvm jarjestamissopimus) timeutil/time-forever)]
-    (and (timeutil/pvm-mennyt-tai-tanaan? alkupvm) (timeutil/pvm-tuleva-tai-tanaan? loppupvm))))
+        loppupvm (or (:loppupvm jarjestamissopimus) util/time-forever)]
+    (and (util/pvm-mennyt-tai-tanaan? alkupvm) (util/pvm-tuleva-tai-tanaan? loppupvm))))
 
 (defn sopimuksen-loppupvm-menneisyydessa?
   [jarjestamissopimus]
-  (let [loppupvm (or (:loppupvm jarjestamissopimus) timeutil/time-forever)]
-    (not (timeutil/pvm-tuleva-tai-tanaan? loppupvm))))
+  (let [loppupvm (or (:loppupvm jarjestamissopimus) util/time-forever)]
+    (not (util/pvm-tuleva-tai-tanaan? loppupvm))))
 
 
 (defn joku-tutkinto-voimassa?

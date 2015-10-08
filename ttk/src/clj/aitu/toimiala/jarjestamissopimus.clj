@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.jarjestamissopimus
-  (:require [aitu.toimiala.voimassaolo.jarjestamissopimus :as voimassaolo]
-            [aitu.timeutil :as timeutil]))
+  (:require [aitu.toimiala.voimassaolo.jarjestamissopimus :as voimassaolo]))
 
 (defn jarjestamissopimus? [x]
   "Onko järjestämissopimuksen tietosisältö oikeellinen?"

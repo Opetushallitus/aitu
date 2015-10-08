@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.voimassaolo.saanto.osoitepalvelu-jarjestamissopimus
-  (:require [aitu.timeutil :as timeutil]
-            (aitu.toimiala.voimassaolo.saanto [toimikunta :as toimikunta]
+  (:require (aitu.toimiala.voimassaolo.saanto [toimikunta :as toimikunta]
                                               [tutkinto :as tutkinto])
             [aitu.toimiala.voimassaolo.saanto.jarjestamissopimus :refer [sopimuksen-voimassaoloajalla?
                                                                          sopimuksen-loppupvm-menneisyydessa?

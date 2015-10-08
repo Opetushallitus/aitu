@@ -13,11 +13,11 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.voimassaolo.saanto.jasenyys
-  (:require [aitu.timeutil :as timeutil]))
+  (:require [oph.common.util.util :as util]))
 
 (defn ^:private onko-voimassa?
   [jasenyys ttk-voimassaolo]
-  (and ttk-voimassaolo (timeutil/pvm-tuleva-tai-tanaan? (or (:loppupvm jasenyys) timeutil/time-forever))))
+  (and ttk-voimassaolo (util/pvm-tuleva-tai-tanaan? (or (:loppupvm jasenyys) util/time-forever))))
 
 (defn taydenna-jasenyyden-voimassaolo
   "Täydentää jäsenyyden voimassaolon toimikunta-voimassaolon perusteella"

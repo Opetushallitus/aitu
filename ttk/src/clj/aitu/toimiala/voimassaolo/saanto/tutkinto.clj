@@ -14,18 +14,18 @@
 
 (ns aitu.toimiala.voimassaolo.saanto.tutkinto
   (:require [clj-time.core :as time]
-            [aitu.timeutil :as timeutil]))
+            [oph.common.util.util :as util]))
 
 (defn tutkinto-voimassa?
   [tutkinto]
   (let [alkupvm (:voimassa_alkupvm tutkinto)
         siirtymaajan_loppupvm (:siirtymaajan_loppupvm tutkinto)]
-    (and (timeutil/pvm-mennyt-tai-tanaan? alkupvm) (timeutil/pvm-tuleva-tai-tanaan? siirtymaajan_loppupvm))))
+    (and (util/pvm-mennyt-tai-tanaan? alkupvm) (util/pvm-tuleva-tai-tanaan? siirtymaajan_loppupvm))))
 
 (defn taydenna-siirtymaajan-paattyminen
   [tutkinto]
   (let [{:keys [siirtymaajan_loppupvm]} tutkinto]
-    (if (not (= siirtymaajan_loppupvm timeutil/time-forever))
+    (if (not (= siirtymaajan_loppupvm util/time-forever))
       (assoc tutkinto :siirtymaaika_paattyy siirtymaajan_loppupvm)
       tutkinto)))
 
