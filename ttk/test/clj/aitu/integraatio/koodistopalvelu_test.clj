@@ -128,13 +128,15 @@
                                            :koodistoversio 1
                                            :osaamisalat #{}
                                            :tutkinnonosat #{{:jarjestysnumero 1
-                                                             :osatunnus "10"}}}}
+                                                             :osatunnus "10"}}
+                                           :tutkintonimikkeet #{}}}
                           :osaamisalat {}
                           :tutkinnonosat {"10" {:nimi_fi "Tutkinnonosa"
                                                 :nimi_sv nil
                                                 :osatunnus "10"
                                                 :voimassa_alkupvm (time/local-date 2014 1 1)
-                                                :voimassa_loppupvm (time/local-date 2199 1 1)}}}))))
+                                                :voimassa_loppupvm (time/local-date 2199 1 1)}}
+                          :tutkintonimikkeet {}}))))
 
 (deftest koodistodata->vertailumuoto-test
   (let [vertailumuoto (koodistodata->vertailumuoto 1 [koodisto-muuttunut])]
@@ -154,7 +156,8 @@
                                            :tutkinnonosat #{{:jarjestysnumero 1
                                                              :osatunnus "10"}
                                                             {:jarjestysnumero 2
-                                                             :osatunnus "11"}}}}
+                                                             :osatunnus "11"}}
+                                           :tutkintonimikkeet #{}}}
                           :osaamisalat {}
                           :tutkinnonosat {"10" {:nimi_fi "Tutkinnonosa"
                                                 :nimi_sv nil
@@ -165,7 +168,8 @@
                                                 :nimi_sv nil
                                                 :osatunnus "11"
                                                 :voimassa_alkupvm (time/local-date 2014 1 1)
-                                                :voimassa_loppupvm (time/local-date 2199 1 1)}}}))))
+                                                :voimassa_loppupvm (time/local-date 2199 1 1)}}
+                          :tutkintonimikkeet {}}))))
 
 (deftest tutkinto-muutokset-test
   (let [{:keys [tutkinnot osaamisalat tutkinnonosat]} (tutkinto-muutokset [tutkinto] 1 [koodisto-uusi koodisto-muuttunut])]
@@ -200,7 +204,8 @@
                            :nimi_fi nil
                            :osajarjestyskoodisto nil
                            :koodistoversio nil
-                           :osaamisalat nil}
+                           :osaamisalat nil
+                           :tutkintonimikkeet nil}
                       "357207" [{:koulutusala "5"
                                  :voimassa_loppupvm (time/local-date 2199 1 1)
                                  :nimi_fi "Kylmämestarin erikoisammattitutkinto"
@@ -215,6 +220,7 @@
                                  :osajarjestyskoodisto "kylmamestarineatjarjestys"
                                  :tutkintotaso "erikoisammattitutkinto"
                                  :osaamisalat #{}
+                                 :tutkintonimikkeet #{}
                                  :tutkintotunnus "357207"} nil]}))))
 
 (deftest muutokset-test
