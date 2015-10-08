@@ -128,6 +128,8 @@
     (tutkinto-arkisto/lisaa-tai-paivita-tutkintonimike! tutkintoversio-id tutkintonimike)))
 
 (defn ^:integration-api tallenna-tutkintonimikkeet! [tutkintoversio-id tutkintonimikkeet]
+  (when (seq tutkintonimikkeet)
+    (tutkinto-arkisto/poista-tutkinnon-tutkintonimikkeet! tutkintoversio-id))
   (let [uudet (for [nimike tutkintonimikkeet
                     :when (vector? nimike)]
                 (first nimike))
@@ -148,10 +150,10 @@
         versiotiedot (remove-nil-vals (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio]))]
     (when (not-every? nil? (vals tutkintotiedot))
       (tutkinto-arkisto/paivita! tutkintotunnus tutkintotiedot))
-    (when (not-every? nil? (vals versiotiedot))
-      (let [tutkintoversio-id (:tutkintoversio_id (tutkinto-arkisto/hae-tutkinto (:tutkintotunnus tutkinto)))]
-        (tutkinto-arkisto/paivita-tutkintoversio! (assoc versiotiedot :tutkintoversio_id tutkintoversio-id))
-        tutkintoversio-id))))
+    (let [tutkintoversio-id (:tutkintoversio_id (tutkinto-arkisto/hae-tutkinto (:tutkintotunnus tutkinto)))]
+      (when (not-every? nil? (vals versiotiedot))
+        (tutkinto-arkisto/paivita-tutkintoversio! (assoc versiotiedot :tutkintoversio_id tutkintoversio-id)))
+      tutkintoversio-id)))
 
 (defn ^:integration-api paivita-tutkinnot! [koodistoasetukset tutkintomuutokset]
   (let [opintoalat (set (map :opintoala_tkkoodi (opintoala-arkisto/hae-kaikki)))

@@ -175,6 +175,11 @@
                                  {:tutkintonimike (:nimiketunnus nimike)
                                   :tutkintoversio tutkintoversio-id}))
 
+(defn ^:integration-api poista-tutkinnon-tutkintonimikkeet!
+  [tutkintoversio-id]
+  (sql/delete tutkintonimike-ja-tutkintoversio
+    (sql/where {:tutkintoversio tutkintoversio-id})))
+
 (defn hae-kaikki
   "Hakee kaikkien tutkintojen uusimman version."
   []
