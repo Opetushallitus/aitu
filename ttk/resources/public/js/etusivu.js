@@ -29,7 +29,7 @@ angular.module('etusivu', [])
 
     function siirryHakutulokseen(hakutulos) {
       if (hakutulos && hakutulos.url && hakutulos.tunnus) {
-        $location.path(hakutulos.url.replace('*', encodeURIComponent(hakutulos.tunnus)));
+        $location.path(hakutulos.url.replace('*', hakutulos.tunnus));
       }
       else {
         $scope.hakupalaute = true;
@@ -50,5 +50,5 @@ angular.module('etusivu', [])
 
     $scope.muutoksiaOlemassa = function() {
       return !_.isUndefined($scope.muutostenMaara.maara) && $scope.muutostenMaara.maara > 0;
-    }
+    };
   }]);
