@@ -22,7 +22,7 @@ angular.module('filters', [] )
 
   .filter('kokonimi', function() {
     return function(objs, term) {
-      if(term == undefined) {
+      if(term === undefined) {
         return objs;
       }
       var lowerTerm = term.toLowerCase();
@@ -36,7 +36,7 @@ angular.module('filters', [] )
 
   .filter('henkilonToimikunta', ['$filter', function($filter) {
     return function(objs, term) {
-      if(term == undefined || term == "") {
+      if(term === undefined || term === "") {
         return objs;
       }
       return _.filter(objs, function(obj){
@@ -77,7 +77,7 @@ angular.module('filters', [] )
       var lowerTerm = term.toLowerCase();
       return _.filter(entityt, function(entity) {
         var arvo_fi = entity[kentta + "_fi"].toLowerCase();
-        var arvo_sv = entity[kentta + "_sv"].toLowerCase();
+        var arvo_sv = (entity[kentta + "_sv"] || "").toLowerCase();
         return (arvo_fi.indexOf(lowerTerm) > -1 || arvo_sv.indexOf(lowerTerm) > -1);
       });
     };
@@ -193,7 +193,7 @@ angular.module('filters', [] )
 
     return function (kaikkiOsat, valitutOsat, tunnisteProperty) {
       return _.map(kaikkiOsat, function(osa){return merkitseValinnat(osa, valitutOsat, tunnisteProperty);});
-    }
+    };
   })
 
   .filter('toimipaikanNimi', function() {
@@ -206,7 +206,7 @@ angular.module('filters', [] )
       } else {
         return toimipaikkakoodi;
       }
-    }
+    };
   })
 
   .filter('muotoileNayttotutkintomestari', ['i18n', function(i18n) {
@@ -245,7 +245,7 @@ angular.module('filters', [] )
           return entity.sopimusten_maara === 0;
         });
       }
-    }
+    };
   }])
 
   .filter('parametrit', [function() {
@@ -257,5 +257,5 @@ angular.module('filters', [] )
           return kentta + "=" + item;
         }
       }).join("&");
-    }
+    };
   }]);
