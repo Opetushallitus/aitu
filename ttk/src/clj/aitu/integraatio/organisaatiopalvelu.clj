@@ -19,7 +19,7 @@
             [aitu.infra.organisaatiopalvelu-arkisto :as organisaatiopalvelu-arkisto]
             [clj-time.core :as time]
             [clj-time.coerce :as time-coerce]
-            [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value parse-ymd]]
+            [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value parse-ymd muutos]]
             [clojure.tools.logging :as log]
             [korma.db :as db]))
 
@@ -127,19 +127,19 @@
   (when koulutustoimija
     (select-keys koulutustoimija [:nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
                                   :postinumero :postitoimipaikka :www_osoite
-                                  :ytunnus :voimassa])))
+                                  :ytunnus :voimassa :lakkautuspaiva])))
 
 (defn ^:private oppilaitoksen-kentat [oppilaitos]
   (when oppilaitos
     (select-keys oppilaitos [:nimi :oid :sahkoposti :puhelin :osoite
                              :postinumero :postitoimipaikka :www_osoite
-                             :oppilaitoskoodi :koulutustoimija :voimassa])))
+                             :oppilaitoskoodi :koulutustoimija :voimassa :lakkautuspaiva])))
 
 (defn ^:private toimipaikan-kentat [toimipaikka]
   (when toimipaikka
     (select-keys toimipaikka [:nimi :oid :sahkoposti :puhelin :osoite
                               :postinumero :postitoimipaikka :www_osoite
-                              :toimipaikkakoodi :oppilaitos :voimassa])))
+                              :toimipaikkakoodi :oppilaitos :voimassa :lakkautuspaiva])))
 
 (defn ^:private tyyppi [koodi]
   (cond
@@ -174,7 +174,7 @@
                           (koulutustoimija-arkisto/lisaa! uusi-kt)
                           (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :koulutustoimija y-tunnus))
         (not= vanha-kt uusi-kt) (do
-                                  (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
+                                  (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt) (muutos vanha-kt uusi-kt))
                                   (when (and (:lakkautuspaiva uusi-kt) (not (:lakkautuspaiva vanha-kt)))
                                     (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :poistunut (:lakkautuspaiva uusi-kt) :koulutustoimija y-tunnus))
                                   (koulutustoimija-arkisto/paivita! uusi-kt))))
@@ -201,7 +201,7 @@
                                   (oppilaitos-arkisto/lisaa! uusi-oppilaitos)
                                   (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :oppilaitos oppilaitoskoodi))
         (not= vanha-oppilaitos uusi-oppilaitos) (do
-                                                  (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
+                                                  (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos) (muutos vanha-oppilaitos uusi-oppilaitos))
                                                   (when (and (:lakkautuspaiva uusi-oppilaitos) (not (:lakkautuspaiva vanha-oppilaitos)))
                                                     (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :poistunut (:lakkautuspaiva uusi-oppilaitos) :oppilaitos oppilaitoskoodi))
                                                   (oppilaitos-arkisto/paivita! uusi-oppilaitos))))
@@ -228,7 +228,7 @@
                                    (oppilaitos-arkisto/lisaa-toimipaikka! uusi-toimipaikka)
                                    (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :uusi (time/today) :toimipaikka toimipaikkakoodi))
         (not= vanha-toimipaikka uusi-toimipaikka) (do
-                                                    (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
+                                                    (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka) (muutos vanha-toimipaikka uusi-toimipaikka))
                                                     (when (and (:lakkautuspaiva uusi-toimipaikka) (not (:lakkautuspaiva vanha-toimipaikka)))
                                                       (organisaatiomuutos-arkisto/lisaa-organisaatiomuutos! :poistunut (:lakkautuspaiva uusi-toimipaikka) :toimipaikka toimipaikkakoodi))
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))
