@@ -55,4 +55,6 @@ Toteutuskoodilla on riippuvuus yleiskäyttöisiä kirjastofunktioita sisältäv�
 Tiedostossa ttk/README.md on ohjeita kehitystyöhön enemmän.
 
 
+# Dokumentaatio
 
+Järjestelmän toimintaan ja arkkitehtuuriin liittyvä yleinen dokumentaatio löytyy [Aitu wiki-sivulta](https://confluence.csc.fi/display/OPHPALV/Tutkintotoimikuntarekisteri) CSC:n julkisesta palvelusta. 
