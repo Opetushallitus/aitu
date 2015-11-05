@@ -252,7 +252,7 @@
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))
     (oppilaitos-arkisto/laske-toimipaikkojen-voimassaolo!)))
 
-(defn paivita-tyoelamajarjesto! [uusi-jarjesto vanha-jarjesto]
+(defn ^:integration-api ^:private paivita-tyoelamajarjesto! [uusi-jarjesto vanha-jarjesto]
   (let [jarjestoid (:jarjestoid vanha-jarjesto)
         vanha-jarjesto (dissoc vanha-jarjesto :jarjestoid)]
     (cond
