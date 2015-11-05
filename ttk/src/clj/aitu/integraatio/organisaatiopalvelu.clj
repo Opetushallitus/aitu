@@ -13,8 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.integraatio.organisaatiopalvelu
-  (:require [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
-            [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
+  (:require [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
+            [aitu.infra.jarjesto-arkisto :as jarjesto-arkisto]
+            [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
             [aitu.infra.organisaatiomuutos-arkisto :as organisaatiomuutos-arkisto]
             [aitu.infra.organisaatiopalvelu-arkisto :as organisaatiopalvelu-arkisto]
             [clj-time.core :as time]
@@ -123,6 +124,17 @@
    :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
    :voimassa (voimassa? koodi)})
 
+(defn ^:private koodi->jarjesto [koodi]
+  {:nimi_fi (nimi koodi)
+   :nimi_sv (nimi-sv koodi)
+   :oid (:oid koodi)
+   :sahkoposti (email koodi)
+   :puhelin (puhelin koodi)
+   :osoite (get-in koodi [:postiosoite :osoite])
+   :postinumero (postinumero koodi)
+   :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
+   :www_osoite (www-osoite koodi)})
+
 (defn ^:private koulutustoimijan-kentat [koulutustoimija]
   (when koulutustoimija
     (select-keys koulutustoimija [:nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
@@ -141,8 +153,14 @@
                               :postinumero :postitoimipaikka :www_osoite
                               :toimipaikkakoodi :oppilaitos :voimassa :lakkautuspaiva])))
 
+(defn ^:private jarjeston-kentat [jarjesto]
+  (when jarjesto
+    (select-keys jarjesto [:jarjestoid :nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
+                           :postinumero :postitoimipaikka :www_osoite :keskusjarjestoid :keskusjarjestotieto])))
+
 (defn ^:private tyyppi [koodi]
   (cond
+    (some #{"Tyoelamajarjesto"} (:tyypit koodi)) :tyoelamajarjesto
     (some #{"Koulutustoimija"} (:tyypit koodi)) :koulutustoimija
     (haluttu-tyyppi? koodi) :oppilaitos
     (:toimipistekoodi koodi) :toimipaikka))
@@ -234,14 +252,54 @@
                                                     (oppilaitos-arkisto/paivita-toimipaikka! uusi-toimipaikka))))
     (oppilaitos-arkisto/laske-toimipaikkojen-voimassaolo!)))
 
+(defn paivita-tyoelamajarjesto! [uusi-jarjesto vanha-jarjesto]
+  (let [jarjestoid (:jarjestoid vanha-jarjesto)
+        vanha-jarjesto (dissoc vanha-jarjesto :jarjestoid)]
+    (cond
+      (nil? vanha-jarjesto) (do
+                              (log/info "Uusi työelämäjärjestö: " (:nimi_fi uusi-jarjesto))
+                              (jarjesto-arkisto/lisaa! uusi-jarjesto))
+      (not= vanha-jarjesto uusi-jarjesto) (do
+                                            (log/info "Muuttunut työelämäjärjestö: " (:nimi_fi uusi-jarjesto) (muutos vanha-jarjesto uusi-jarjesto))
+                                            (jarjesto-arkisto/paivita! (assoc uusi-jarjesto :jarjestoid jarjestoid))))))
+
+(def ^:private oph-oid "1.2.246.562.10.00000000001")
+
+(def ^:private keskusjarjesto-oidit #{"1.2.246.562.10.64191728270" ;; STTK
+                                      "1.2.246.562.10.52547716042" ;; MTA
+                                      "1.2.246.562.10.77037285505" ;; Akava 
+                                      "1.2.246.562.10.28194798254" ;; Yrittäjät
+                                      "1.2.246.562.10.37965376161" ;; SAK
+                                      "1.2.246.562.10.98301593353" ;; EK
+                                      })
+
+(defn ^:integration-api ^:private paivita-tyoelamajarjestot! [koodit]
+  (let [keskusjarjestot (filter (comp keskusjarjesto-oidit :oid) koodit)
+        alajarjestot (remove (comp keskusjarjesto-oidit :oid) koodit)
+        vanhat-jarjestot (map-by :oid (map jarjeston-kentat (jarjesto-arkisto/hae-kaikki)))]
+    (doseq [koodi keskusjarjestot
+            :let [uusi-jarjesto (assoc (koodi->jarjesto koodi) :keskusjarjestotieto true
+                                                               :keskusjarjestoid nil)
+                  vanha-jarjesto (vanhat-jarjestot (:oid uusi-jarjesto))]]
+      (paivita-tyoelamajarjesto! uusi-jarjesto vanha-jarjesto))
+    (let [oid->keskusjarjesto (into {} (for [kj (jarjesto-arkisto/hae-keskusjarjestot)]
+                                         [(:oid kj) (:jarjestoid kj)]))]
+      (doseq [koodi alajarjestot
+              :let [uusi-jarjesto (assoc (koodi->jarjesto koodi) :keskusjarjestotieto false
+                                                                 :keskusjarjestoid (oid->keskusjarjesto (:parentOid koodi)))
+                    vanha-jarjesto (vanhat-jarjestot (:oid uusi-jarjesto))]]
+        (paivita-tyoelamajarjesto! uusi-jarjesto vanha-jarjesto)))))
+
 (defn ^:integration-api ^:private paivita-haetut-organisaatiot! [koodit]
   (let [koodit-tyypeittain (group-by tyyppi koodit)
         koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
         oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
-        toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
+        toimipaikkakoodit (:toimipaikka koodit-tyypeittain)
+        jarjestokoodit (:tyoelamajarjesto koodit-tyypeittain)]
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit)
-    (paivita-toimipaikat! toimipaikkakoodit)))
+    (paivita-toimipaikat! toimipaikkakoodit)
+    (paivita-tyoelamajarjestot! koodit)))
 
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]

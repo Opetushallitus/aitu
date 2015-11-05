@@ -29,12 +29,22 @@
      :jarjesto_nimi_fi (str (:nimi_fi jarjesto) (when (:keskusjarjestotieto jarjesto) " (*)"))
      :jarjesto_nimi_sv (str (:nimi_sv jarjesto) (when (:keskusjarjestotieto jarjesto) " (*)"))}))
 
+(defn hae-keskusjarjestot []
+  (sql/select jarjesto
+    (sql/where {:keskusjarjestotieto true})))
+
 (defn ^:test-api poista!
   [jarjestoid]
   (sql/delete jarjesto
     (sql/where {:jarjestoid jarjestoid})))
 
-(defn ^:test-api lisaa!
+(defn ^:integration-api paivita!
+  [data]
+  (sql/update jarjesto
+    (sql/set-fields (dissoc data :jarjestoid))
+    (sql/where {:jarjestoid (:jarjestoid data)})))
+
+(defn ^:integration-api lisaa!
   [uusi-jarjesto]
   (sql/insert jarjesto
     (sql/values uusi-jarjesto)))
