@@ -49,10 +49,6 @@
         (throw (.getNextException e)))))
   (jdbc-do (str "set " kayttaja-param " to default")))
 
-(defn luo-kayttajat!
-  [kayttaja-param]
-  (run-sql (sql-resurssista "sql/ophkayttajat.sql") kayttaja-param))
-
 (defn luo-testikayttajat!
   [kayttaja-param]
   (run-sql (sql-resurssista "sql/testikayttajat.sql") kayttaja-param))
@@ -171,8 +167,6 @@
       (try 
         (jdbc/with-connection {:datasource datasource}
           (aseta-oikeudet-sovelluskayttajille options)
-          (when (:clear options)
-            (luo-kayttajat! (:uservariable options)))
           (when (:testikayttajat options)
             (luo-testikayttajat! (:uservariable options))))
         (finally
