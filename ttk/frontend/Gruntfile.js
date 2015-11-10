@@ -93,7 +93,7 @@ module.exports = function (grunt) {
               'bower_components/select2/select2.min.js',
               'bower_components/angular-ui-select2/src/select2.js',
               'bower_components/jquery-waypoints/waypoints.min.js',
-              'bower_components/lodash/dist/lodash.min.js',
+              'bower_components/lodash/lodash.min.js',
               'bower_components/stacktrace/stacktrace.js',
               'bower_components/jquery-placeholder/jquery.placeholder.min.js',
               'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
