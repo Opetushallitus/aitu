@@ -16,7 +16,7 @@ angular.module('filters', [] )
 
   .filter('sivutusSuodatin', function() {
     return function(suodatettava, nykyinenSivu, tuloksiaSivulla) {
-      return _(suodatettava).drop((nykyinenSivu - 1)*tuloksiaSivulla).take(tuloksiaSivulla).value();
+      return _(suodatettava).rest((nykyinenSivu - 1)*tuloksiaSivulla).first(tuloksiaSivulla).value();
     };
   })
 

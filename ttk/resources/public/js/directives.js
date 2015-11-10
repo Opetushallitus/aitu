@@ -81,7 +81,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
     }
 
     function statusPaivitettyViimeksi(metodiIdt) {
-      return _.max(_(apiCallInterceptor.pyynnot).pick(metodiIdt).map(function(pyynto){return pyynto.paivitetty;}).value());
+      return _(apiCallInterceptor.pyynnot).pick(metodiIdt).map(function(pyynto){return pyynto.paivitetty;}).max().value();
     }
 
     return {
