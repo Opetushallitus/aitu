@@ -14,5 +14,8 @@ values (-2, 'Testijäsenjärjestö', -1);
 insert into kayttaja(uid, oid, etunimi, sukunimi, rooli, jarjesto)
 values ('T-9999', 'OID.T-9999', 'Jäsen', 'Järjestö', 'JARJESTO', -1);
 
+insert into henkilo(henkiloid, jarjesto, kayttaja_oid, etunimi, sukunimi, aidinkieli, sukupuoli)
+values (-1, -1, 'OID.T-9999', 'Jäsen', 'Järjestö', 'fi', 'mies');
+
 insert into kayttaja(oid, etunimi, sukunimi, rooli, voimassa, uid)
 values('OID.OPH-KATSELIJA', 'Oph', 'Katselija', 'OPH-KATSELIJA', true, 'oph-katselija');
