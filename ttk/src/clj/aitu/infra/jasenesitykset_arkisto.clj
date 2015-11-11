@@ -32,9 +32,12 @@
     (sql/join [:jarjesto :esittaja_keskusjarjesto] (and {:esittaja_keskusjarjesto.keskusjarjestoid nil}
                                                         (or {:esittaja_keskusjarjesto.jarjestoid :jasenyys.esittaja}
                                                             {:esittaja_keskusjarjesto.jarjestoid :esittaja_jarjesto.keskusjarjestoid})))
+    (sql/join [:kayttaja :esittaja_kayttaja] (= :jasenyys.luotu_kayttaja :esittaja_kayttaja.oid))
+    (sql/join :left [:henkilo :esittaja_henkilo] (= :esittaja_kayttaja.oid :esittaja_henkilo.kayttaja_oid))
     (sql/fields :jasenyys.toimikunta :jasenyys.status :jasenyys.esittaja :jasenyys.luotuaika :jasenyys.muutettuaika :jasenyys.rooli :jasenyys.edustus :jasenyys.nimityspaiva
                 :henkilo.etunimi :henkilo.sukunimi
                 [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi] [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv] [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
+                [:esittaja_henkilo.henkiloid :esittaja_henkilo_henkiloid] [:esittaja_henkilo.etunimi :esittaja_henkilo_etunimi] [:esittaja_henkilo.sukunimi :esittaja_henkilo_sukunimi]
                 [:esittaja_jarjesto.nimi_fi :esittaja_jarjesto_nimi_fi] [:esittaja_jarjesto.nimi_sv :esittaja_jarjesto_nimi_sv]
                 [:esittaja_keskusjarjesto.nimi_fi :esittaja_keskusjarjesto_nimi_fi] [:esittaja_keskusjarjesto.nimi_sv :esittaja_keskusjarjesto_nimi_sv])
     (sql/where (not= :jasenyys.esittaja nil))

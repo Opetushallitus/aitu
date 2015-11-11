@@ -42,6 +42,7 @@
 <div class="table">
   <div class="table-header">
     <div class="table-cell">[[ehdokkaan_nimi]]</div>
+    <div class="table-cell">[[esittajan_nimi]]</div>
     <div class="table-cell">[[keskusjarjesto]]</div>
     <div class="table-cell">[[tyoelamajarjesto]]</div>
     <div class="table-cell">[[toimikunta]]</div>
@@ -54,6 +55,9 @@
   </div>
   <div class="table-row" ng-repeat="esitys in esitykset">
     <div class="table-cell">{{ esitys.etunimi }} {{ esitys.sukunimi }}</div>
+    <div class="table-cell">
+      <a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a>
+    </div>
     <div class="table-cell">{{ esitys | lokalisoiKentta:'esittaja_keskusjarjesto_nimi' }}</div>
     <div class="table-cell">{{ esitys | lokalisoiKentta:'esittaja_jarjesto_nimi' }}</div>
     <div class="table-cell"><a ng-href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</a></div>
