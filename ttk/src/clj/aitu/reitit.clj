@@ -128,6 +128,7 @@
       (c/context "/api/suorittaja" [] (wrap-tarkasta-csrf-token aitu.rest-api.suorittaja/reitit))
       (c/context "/api/suoritus" [] (wrap-tarkasta-csrf-token aitu.rest-api.suoritus/reitit))
       (c/context "/api/tutkinnonosa" [] (wrap-tarkasta-csrf-token aitu.rest-api.tutkinnonosa/reitit))
+      (c/context "/api/jasenesitykset" [] aitu.rest-api.jasenesitykset/reitit-csv)
       (c/context "/api/jasenesitykset" [] (wrap-tarkasta-csrf-token aitu.rest-api.jasenesitykset/reitit))
       (c/context "/api/aipal" [] aitu.rest-api.aipal/reitit))
     (testapi asetukset)

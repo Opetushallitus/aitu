@@ -73,6 +73,9 @@
 <div>
   [[jasenesityksia]]: {{ esitykset.length }}
 </div>
+<div>
+  <a ng-href="[[base-url]]/api/jasenesitykset/csv?ehdokas={{haku.ehdokas}}&jarjesto={{haku.jarjesto}}&toimikunta={{haku.toimikunta}}&asiantuntijaksi={{haku.asiantuntijaksi}}" class="liite-linkki" target="_blank">[[lataa_jasenesitykset]]</a>
+</div>
 
 <button ng-click="yhteenveto()">[[yhteenveto]]</button>
 
