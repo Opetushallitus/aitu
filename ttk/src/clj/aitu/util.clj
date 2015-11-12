@@ -121,14 +121,17 @@
                                    solu)))))
     "\n"))
 
-(defn muodosta-csv [data kenttien-jarjestys]
-  (pakota-numerokentat-csv-stringsoluiksi
-    (write-csv (let [[otsikko-avaimet & arvot] (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys)]
-             (into [(for [oa otsikko-avaimet]
-                      (or (sarakkeiden-otsikot oa)
-                          (do
-                            (log/error (str "CSV-tiedoston sarakkeen otsikkoa ei löytynyt avaimella "
-                                            "'" (name oa) "'"))
-                            (name oa))))]
-                   arvot))
-           :delimiter \;)))
+(defn muodosta-csv
+  ([data kenttien-jarjestys sarakkeiden-otsikot]
+   (pakota-numerokentat-csv-stringsoluiksi
+     (write-csv (let [[otsikko-avaimet & arvot] (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys)]
+                  (into [(for [oa otsikko-avaimet]
+                           (or (sarakkeiden-otsikot oa)
+                               (do
+                                 (log/error (str "CSV-tiedoston sarakkeen otsikkoa ei löytynyt avaimella "
+                                                 "'" (name oa) "'"))
+                                 (name oa))))]
+                        arvot))
+                :delimiter \;)))
+  ([data kenttien-jarjestys]
+    (muodosta-csv data kenttien-jarjestys sarakkeiden-otsikot)))

@@ -17,7 +17,7 @@
             [aitu.compojure-util :as cu]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
             [aitu.toimiala.kayttajaoikeudet :as ko]
-            [aitu.util :refer [muodosta-csv]]
+            [aitu.util :refer [muodosta-csv] :as aitu-util]
             [oph.common.util.http-util :refer [csv-download-response json-response]]))
 
 (def ^:private kenttien-jarjestys [:etunimi :sukunimi
@@ -32,11 +32,32 @@
                                    :muutettuaika
                                    :status])
 
+(def ^:private sarakkeiden-otsikot
+  (merge
+    aitu-util/sarakkeiden-otsikot
+    {:esittaja_henkilo_henkiloid "Esittäjän henkilöid"
+     :esittaja_henkilo_etunimi "Esittäjän etunimi"
+     :esittaja_henkilo_sukunimi "Esittäjän sukunimi"
+     :esittaja_keskusjarjesto_nimi_fi "Esittäjän keskusjärjestö suomeksi"
+     :esittaja_keskusjarjesto_nimi_sv "Esittäjän keskusjärjestö ruotsiksi"
+     :esittaja "Esittäjän järjestöid"
+     :esittaja_jarjesto_nimi_fi "Esittäjän järjestö suomeksi"
+     :esittaja_jarjesto_nimi_sv "Esittäjän järjestö ruotsiksi"
+     :tutkintotoimikunta_diaarinumero "Toimikunnan diaarinumero"
+     :toimikunta "Tutkintotoimikunta"
+     :tutkintotoimikunta_nimi_fi "Toimikunnan nimi suomeksi"
+     :tutkintotoimikunta_nimi_sv "Toimikunnan nimi ruotsiksi"
+     :luotuaika "Esityspvm"
+     :nimityspaiva "Nimityspvm"
+     :muutettuaika "Muutettu"
+     :status "Tila"}))
+
 (c/defroutes reitit-csv
   (cu/defapi :jasenesitykset nil :get "/csv" [& ehdot]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (csv-download-response (muodosta-csv (arkisto/hae jarjesto ehdot)
-                                           kenttien-jarjestys)
+                                           kenttien-jarjestys
+                                           sarakkeiden-otsikot)
                              "jasenesitykset.csv"))))
 
 (c/defroutes reitit
