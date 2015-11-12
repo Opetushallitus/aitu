@@ -119,8 +119,9 @@
                          :henkiloid (:henkiloid nykyinen-henkilo)})
 
         ei-toimikuntaa (lisaa-henkilo! {:etunimi "ei toimikuntaa"})])
-  (is (= (set (map :etunimi (arkisto/hae-ehdoilla {})))
-         #{"mennyt" "nykyinen" "ei toimikuntaa"})))
+  (is
+    (empty? (clojure.set/difference #{"mennyt" "nykyinen" "ei toimikuntaa"} (set (map :etunimi (arkisto/hae-ehdoilla {})))))
+    "Lisätyt henkilöt löytyvät"))
 
 (deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
   (let [mennyt-toimikausi (lisaa-toimikausi! {:voimassa false
@@ -191,5 +192,6 @@
                          :henkiloid (:henkiloid henkilo)})
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-2)
                          :henkiloid (:henkiloid henkilo)})])
-  (is (= (set (map :toimikunta_fi (arkisto/hae-ehdoilla {})))
-         #{"foo" "bar"})))
+  (is
+    (empty? (clojure.set/difference #{"foo" "bar"} (set (map :toimikunta_fi (arkisto/hae-ehdoilla {})))))
+    "Lisätyt jäsenyydet löytyvät"))
