@@ -20,7 +20,7 @@
             [aitu.util :refer [muodosta-csv] :as aitu-util]
             [oph.common.util.http-util :refer [csv-download-response json-response]]))
 
-(def ^:private kenttien-jarjestys [:etunimi :sukunimi
+(def ^:private kenttien-jarjestys [:henkiloid :etunimi :sukunimi
                                    :esittaja_henkilo_henkiloid :esittaja_henkilo_etunimi :esittaja_henkilo_sukunimi
                                    :esittaja_keskusjarjesto_nimi_fi :esittaja_keskusjarjesto_nimi_sv
                                    :esittaja :esittaja_jarjesto_nimi_fi :esittaja_jarjesto_nimi_sv
@@ -35,7 +35,8 @@
 (def ^:private sarakkeiden-otsikot
   (merge
     aitu-util/sarakkeiden-otsikot
-    {:esittaja_henkilo_henkiloid "Esittäjän henkilöid"
+    {:henkiloid "Henkilöid"
+     :esittaja_henkilo_henkiloid "Esittäjän henkilöid"
      :esittaja_henkilo_etunimi "Esittäjän etunimi"
      :esittaja_henkilo_sukunimi "Esittäjän sukunimi"
      :esittaja_keskusjarjesto_nimi_fi "Esittäjän keskusjärjestö suomeksi"

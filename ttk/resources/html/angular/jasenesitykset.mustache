@@ -54,7 +54,9 @@
     <div class="table-cell">[[tila]]</div>
   </div>
   <div class="table-row" ng-repeat="esitys in esitykset">
-    <div class="table-cell">{{ esitys.etunimi }} {{ esitys.sukunimi }}</div>
+    <div class="table-cell">
+      <a ng-href="#/henkilot/{{ esitys.henkiloid }}/tiedot">{{ esitys.etunimi }} {{ esitys.sukunimi }}</a>
+    </div>
     <div class="table-cell">
       <a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a>
     </div>
