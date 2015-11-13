@@ -47,7 +47,7 @@
                                                                   (sql/fields :jarjestoid)
                                                                   (sql/where {:keskusjarjestoid kayttajan-jarjesto}))]}))
       (seq asiantuntijaksi) (sql/where {:jasenyys.asiantuntijaksi (= asiantuntijaksi "true")})
-      (seq ehdokas) (rajaa-kentilla [:henkilo.etunimi :henkilo.sukunimi] ehdokas)
+      (seq ehdokas) (rajaa-kentilla [:henkilo.etunimi :henkilo.sukunimi (sql/raw "henkilo.etunimi || ' ' || henkilo.sukunimi") (sql/raw "henkilo.sukunimi || ' ' || henkilo.etunimi")] ehdokas)
       (seq jarjesto) (rajaa-kentilla [:esittaja_jarjesto.nimi_fi :esittaja_jarjesto.nimi_sv :esittaja_keskusjarjesto.nimi_fi :esittaja_keskusjarjesto.nimi_sv] jarjesto)
       (nil? tila) (sql/where {:jasenyys.status [in ["esitetty", "nimitetty"]]})
       (seq tila) (sql/where {:jasenyys.status tila})
