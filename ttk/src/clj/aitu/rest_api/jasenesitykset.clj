@@ -21,6 +21,9 @@
             [oph.common.util.http-util :refer [csv-download-response json-response]]))
 
 (def ^:private kenttien-jarjestys [:henkiloid :etunimi :sukunimi
+                                   ; Vain jos "Kaikki henkilötiedot" on ruksittu
+                                   :syntymavuosi :sukupuoli :sahkoposti :sahkoposti_julkinen :puhelin :puhelin_julkinen :osoite :postinumero :postitoimipaikka :osoite_julkinen :nayttomestari :kokemusvuodet :lisatiedot
+
                                    :esittaja_henkilo_henkiloid :esittaja_henkilo_etunimi :esittaja_henkilo_sukunimi
                                    :esittaja_keskusjarjesto_nimi_fi :esittaja_keskusjarjesto_nimi_sv
                                    :esittaja :esittaja_jarjesto_nimi_fi :esittaja_jarjesto_nimi_sv
@@ -36,6 +39,16 @@
   (merge
     aitu-util/sarakkeiden-otsikot
     {:henkiloid "Henkilöid"
+     :asiantuntijaksi "Käytettävissä asiantuntijaksi"
+     :vapaateksti_kokemus "Kokemus-tieto"
+     :syntymavuosi "Syntymävuosi"
+     :sukupuoli "Sukupuoli"
+     :sahkoposti_julkinen "Sähköposti julkinen"
+     :puhelin_julkinen "Puhelinnumero julkinen"
+     :osoite_julkinen "Osoite julkinen"
+     :nayttomestari "Näyttömestari"
+     :kokemusvuodet "Kokemusvuodet"
+     :lisatiedot "Lisätiedot-tieto"
      :esittaja_henkilo_henkiloid "Esittäjän henkilöid"
      :esittaja_henkilo_etunimi "Esittäjän etunimi"
      :esittaja_henkilo_sukunimi "Esittäjän sukunimi"

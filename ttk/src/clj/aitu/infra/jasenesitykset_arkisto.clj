@@ -23,7 +23,7 @@
     (sql/where query
       (apply or ehdot))))
 
-(defn hae [kayttajan-jarjesto {:keys [asiantuntijaksi ehdokas jarjesto tila toimikunta]}]
+(defn hae [kayttajan-jarjesto {:keys [asiantuntijaksi ehdokas henkilotiedot jarjesto tila toimikunta]}]
   (->
     (sql/select* :jasenyys)
     (sql/join :henkilo (= :henkilo.henkiloid :jasenyys.henkiloid))
@@ -40,6 +40,11 @@
                 [:esittaja_henkilo.henkiloid :esittaja_henkilo_henkiloid] [:esittaja_henkilo.etunimi :esittaja_henkilo_etunimi] [:esittaja_henkilo.sukunimi :esittaja_henkilo_sukunimi]
                 [:esittaja_jarjesto.nimi_fi :esittaja_jarjesto_nimi_fi] [:esittaja_jarjesto.nimi_sv :esittaja_jarjesto_nimi_sv]
                 [:esittaja_keskusjarjesto.nimi_fi :esittaja_keskusjarjesto_nimi_fi] [:esittaja_keskusjarjesto.nimi_sv :esittaja_keskusjarjesto_nimi_sv])
+    (cond->
+      (java.lang.Boolean/valueOf ^String henkilotiedot) (sql/fields :henkilo.sukupuoli :henkilo.aidinkieli :henkilo.syntymavuosi :henkilo.sahkoposti :henkilo.sahkoposti_julkinen
+                                                                    :henkilo.puhelin :henkilo.puhelin_julkinen :henkilo.osoite :henkilo.postinumero :henkilo.postitoimipaikka :henkilo.osoite_julkinen
+                                                                    :henkilo.nayttomestari :henkilo.kokemusvuodet
+                                                                    (sql/raw "henkilo.lisatiedot IS NOT NULL AS lisatiedot")))
     (sql/where (not= :jasenyys.esittaja nil))
     (cond->
       kayttajan-jarjesto (sql/where (or {:jasenyys.esittaja kayttajan-jarjesto}
