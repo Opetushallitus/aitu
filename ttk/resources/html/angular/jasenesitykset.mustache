@@ -39,38 +39,38 @@
   <label><input type="radio" ng-model="haku.tila" value="peruutettu"> [[peruutettu]]</label>
 </div>
 
-<div class="table">
-  <div class="table-header">
-    <div class="table-cell">[[ehdokkaan_nimi]]</div>
-    <div class="table-cell">[[esittajan_nimi]]</div>
-    <div class="table-cell">[[keskusjarjesto]]</div>
-    <div class="table-cell">[[tyoelamajarjesto]]</div>
-    <div class="table-cell">[[toimikunta]]</div>
-    <div class="table-cell">[[esityspvm]]</div>
-    <div class="table-cell">[[nimityspvm]]</div>
-    <div class="table-cell" ng-if="!haku.tila || haku.tila === 'nimitetty'">[[rooli]]</div>
-    <div class="table-cell" ng-if="!haku.tila || haku.tila === 'nimitetty'">[[edustus]]</div>
-    <div class="table-cell">[[muutettu]]</div>
-    <div class="table-cell">[[tila]]</div>
-  </div>
-  <div class="table-row" ng-repeat="esitys in esitykset">
-    <div class="table-cell">
-      <a ng-href="#/henkilot/{{ esitys.henkiloid }}/tiedot">{{ esitys.etunimi }} {{ esitys.sukunimi }}</a>
-    </div>
-    <div class="table-cell">
-      <a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a>
-    </div>
-    <div class="table-cell">{{ esitys | lokalisoiKentta:'esittaja_keskusjarjesto_nimi' }}</div>
-    <div class="table-cell">{{ esitys | lokalisoiKentta:'esittaja_jarjesto_nimi' }}</div>
-    <div class="table-cell"><a ng-href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</a></div>
-    <div class="table-cell">{{ esitys.luotuaika | date:'dd.MM.yyyy' }}</div>
-    <div class="table-cell">{{ esitys.nimityspaiva | date:'dd.MM.yyyy' }}</div>
-    <div class="table-cell" ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.rooli" nimi="rooli"></enum-arvo></div>
-    <div class="table-cell" ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.edustus" nimi="edustus"></enum-arvo></div>
-    <div class="table-cell">{{ esitys.muutettuaika | date:'dd.MM.yyyy' }}</div>
-    <div class="table-cell"><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></div>
-  </div>
-</div>
+<table>
+  <thead>
+  <tr>
+    <th>[[ehdokkaan_nimi]]</th>
+    <th>[[esittajan_nimi]]</th>
+    <th>[[keskusjarjesto]]</th>
+    <th>[[tyoelamajarjesto]]</th>
+    <th>[[toimikunta]]</th>
+    <th>[[esityspvm]]</th>
+    <th>[[nimityspvm]]</th>
+    <th ng-if="!haku.tila || haku.tila === 'nimitetty'">[[rooli]]</th>
+    <th ng-if="!haku.tila || haku.tila === 'nimitetty'">[[edustus]]</th>
+    <th>[[muutettu]]</th>
+    <th>[[tila]]</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="esitys in esitykset">
+    <td><a ng-href="#/henkilot/{{ esitys.henkiloid }}/tiedot">{{ esitys.etunimi }} {{ esitys.sukunimi }}</a></td>
+    <td><a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a></td>
+    <td>{{ esitys | lokalisoiKentta:'esittaja_keskusjarjesto_nimi' }}</td>
+    <td>{{ esitys | lokalisoiKentta:'esittaja_jarjesto_nimi' }}</td>
+    <td><a ng-href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</a></td>
+    <td>{{ esitys.luotuaika | date:'dd.MM.yyyy' }}</td>
+    <td>{{ esitys.nimityspaiva | date:'dd.MM.yyyy' }}</td>
+    <td ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.rooli" nimi="rooli"></enum-arvo></td>
+    <td ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.edustus" nimi="edustus"></enum-arvo></td>
+    <td>{{ esitys.muutettuaika | date:'dd.MM.yyyy' }}</td>
+    <td><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></td>
+  </tr>
+  </tbody>
+</table>
 
 <div>
   [[jasenesityksia]]: {{ esitykset.length }}
