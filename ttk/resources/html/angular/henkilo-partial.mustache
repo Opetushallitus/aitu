@@ -106,7 +106,7 @@
   </fieldset>
   <fieldset>
     <label>[[nayttotutkintomestari]]</label>
-    <p ng-hide="muokkausTila">{{jasen.henkilo.nayttomestari | muotoileNayttotutkintomestari}}</p>
+    <p ng-hide="muokkausTila">{{jasen.henkilo.nayttomestari | muotoileBoolean}}</p>
     <boolean-select ng-hide="!muokkausTila" model="jasen.henkilo.nayttomestari"></boolean-select>
   </fieldset>
   <fieldset>

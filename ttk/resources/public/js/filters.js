@@ -209,7 +209,7 @@ angular.module('filters', [] )
     };
   })
 
-  .filter('muotoileNayttotutkintomestari', ['i18n', function(i18n) {
+  .filter('muotoileBoolean', ['i18n', function(i18n) {
     return function(arvo){
       var naytettavaArvo = i18n.yleinen['ei-tiedossa'];
       if(arvo === true) {
