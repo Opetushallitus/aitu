@@ -64,8 +64,9 @@
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
   (fn []
-    (let [{:keys [host port user password]} ldap-auth-server-asetukset
-          asetukset (merge {:host (str host ":" port)}
+    (let [{:keys [host port user password ssl]} ldap-auth-server-asetukset
+          asetukset (merge {:host (str host ":" port)
+                            :ssl? ssl}
                            (when user {:bind-dn user})
                            (when password {:password password}))]
       (ldap/connect asetukset))))
