@@ -35,6 +35,7 @@
     (sql/join [:kayttaja :esittaja_kayttaja] (= :jasenyys.luotu_kayttaja :esittaja_kayttaja.oid))
     (sql/join :left [:henkilo :esittaja_henkilo] (= :esittaja_kayttaja.oid :esittaja_henkilo.kayttaja_oid))
     (sql/fields :jasenyys.toimikunta :jasenyys.status :jasenyys.esittaja :jasenyys.luotuaika :jasenyys.muutettuaika :jasenyys.rooli :jasenyys.edustus :jasenyys.nimityspaiva
+                :jasenyys.asiantuntijaksi (sql/raw "jasenyys.vapaateksti_kokemus IS NOT NULL AS vapaateksti_kokemus")
                 :henkilo.henkiloid :henkilo.etunimi :henkilo.sukunimi
                 [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi] [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv] [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
                 [:esittaja_henkilo.henkiloid :esittaja_henkilo_henkiloid] [:esittaja_henkilo.etunimi :esittaja_henkilo_etunimi] [:esittaja_henkilo.sukunimi :esittaja_henkilo_sukunimi]

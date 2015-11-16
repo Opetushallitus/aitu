@@ -20,7 +20,7 @@
             [aitu.util :refer [muodosta-csv] :as aitu-util]
             [oph.common.util.http-util :refer [csv-download-response json-response]]))
 
-(def ^:private kenttien-jarjestys [:henkiloid :etunimi :sukunimi
+(def ^:private kenttien-jarjestys [:henkiloid :etunimi :sukunimi :asiantuntijaksi :vapaateksti_kokemus
                                    ; Vain jos "Kaikki henkilötiedot" on ruksittu
                                    :syntymavuosi :sukupuoli :sahkoposti :sahkoposti_julkinen :puhelin :puhelin_julkinen :osoite :postinumero :postitoimipaikka :osoite_julkinen :nayttomestari :kokemusvuodet :lisatiedot
 
