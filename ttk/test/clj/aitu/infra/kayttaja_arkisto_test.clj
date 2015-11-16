@@ -26,7 +26,8 @@
        (for [i (iterate inc 0)]
          {:etunimi (str "etu" i)
           :sukunimi (str "suku" i)
-          :rooli (:kayttaja kayttajaroolit)})
+          :rooli (:kayttaja kayttajaroolit)
+          :uid (str "uid" i)})
        kt))
 
 (defn on-olemassa-kayttajat [& kt]
