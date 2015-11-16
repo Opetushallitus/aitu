@@ -19,6 +19,7 @@
             [clojure.tools.logging :as log]
             [oph.korma.korma-auth
              :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
+            [aitu.infra.jarjesto-arkisto :as jarjesto-arkisto]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
@@ -36,9 +37,11 @@
             ;; käsittelijästä, meidän täytyy luoda promise itse.
             *current-user-oid* (promise)]
     (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
-    (kayttaja-arkisto/paivita!
-      (apply concat (for [rooli roolit-jarjestyksessa]
-                      (kop/kayttajat kayttooikeuspalvelu (get kayttajaroolit rooli)))))))
+    (let [oid->jarjesto-id (into {} (for [jarjesto (jarjesto-arkisto/hae-kaikki)]
+                                      [(:oid jarjesto) (:jarjestoid jarjesto)]))] 
+      (kayttaja-arkisto/paivita!
+        (apply concat (for [rooli roolit-jarjestyksessa]
+                        (kop/kayttajat kayttooikeuspalvelu (get kayttajaroolit rooli) oid->jarjesto-id)))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.

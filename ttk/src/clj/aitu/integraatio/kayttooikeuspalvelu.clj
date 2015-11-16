@@ -20,6 +20,7 @@
 
 (def aitu-organisaatio "1.2.246.562.10.2013121312395140176502")
 (def toimikunnat-organisaatio "1.2.246.562.10.59113820717")
+(def jarjesto-organisaatio "*")
 
 (defn aitu-ryhma-cn [organisaatio nimi]
   (str "APP_AITU_" nimi "_" organisaatio))
@@ -30,36 +31,41 @@
                                (aitu-ryhma-cn aitu-organisaatio "READ_UPDATE")]
    (:osoitepalvelu kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "OSOITEPALVELU")]
    (:oph-katselija kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "READ")]
-   (:aipal kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "AIPALREAD")]})
+   (:aipal kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "AIPALREAD")]
+   (:jarjesto kayttajaroolit) [(aitu-ryhma-cn jarjesto-organisaatio "TYOELAMAJARJESTO")]})
 
 
-(defn ryhma-dn [ryhma-cn]
-  (str "cn=" ryhma-cn ",ou=Groups,dc=opintopolku,dc=fi"))
+(defn ryhma-cn-filter [ryhma-cn]
+  {:filter (str "cn=" ryhma-cn)})
 
-(defn kayttajat [kayttooikeuspalvelu rooli]
+(def ryhma-base "ou=Groups,dc=opintopolku,dc=fi")
+
+(defn kayttajat [kayttooikeuspalvelu rooli oid->jarjesto-id]
   {:pre [(contains? roolin-ryhma-cnt rooli)]}
   (with-open [yhteys (kayttooikeuspalvelu)]
     (apply concat (for [cn (roolin-ryhma-cnt rooli)
-                        :let [roolin-ryhma-dn (ryhma-dn cn)]]
-                    (if-let [ryhma (ldap/get yhteys roolin-ryhma-dn)]
-                      (let [kayttaja-dnt (:uniqueMember ryhma)
-                            ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
-                            ;; palauttaa arvon (stringin) eikä vektoria arvoista.
-                            kayttaja-dnt (if (string? kayttaja-dnt)
-                                           [kayttaja-dnt]
-                                           kayttaja-dnt)]
-                        (doall
-                          (for [kayttaja-dn kayttaja-dnt
-                                :let [kayttaja (ldap/get yhteys kayttaja-dn)]
-                                :when kayttaja
-                                :let [[etunimi toinennimi] (s/split (:cn kayttaja) #" ")
-                                      sukunimi (:sn kayttaja)]]
-                            {:oid (:employeeNumber kayttaja)
-                             :uid (:uid kayttaja)
-                             :etunimi etunimi
-                             :sukunimi (or sukunimi "")
-                             :rooli rooli})))
-                      (log/warn "Roolin" rooli "ryhmää" roolin-ryhma-dn
+                        :let [cn-filter (ryhma-cn-filter cn)]]
+                    (if-let [ryhmat (ldap/search yhteys ryhma-base cn-filter)]
+                      (doall (for [ryhma ryhmat
+                                   :let [jarjesto-oid (last (s/split (:cn ryhma) #"_"))
+                                         kayttaja-dnt (:uniqueMember ryhma)
+                                         ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
+                                         ;; palauttaa arvon (stringin) eikä vektoria arvoista.
+                                         kayttaja-dnt (if (string? kayttaja-dnt)
+                                                        [kayttaja-dnt]
+                                                        kayttaja-dnt)]
+                                   kayttaja-dn kayttaja-dnt
+                                   :let [kayttaja (ldap/get yhteys kayttaja-dn)]
+                                   :when kayttaja
+                                   :let [[etunimi toinennimi] (s/split (:cn kayttaja) #" ")
+                                         sukunimi (:sn kayttaja)]]
+                               {:oid (:employeeNumber kayttaja)
+                                :uid (:uid kayttaja)
+                                :etunimi etunimi
+                                :sukunimi (or sukunimi "")
+                                :rooli rooli
+                                :jarjesto (oid->jarjesto-id jarjesto-oid)}))
+                      (log/warn "Roolin" rooli "ryhmää" cn
                                 "ei löytynyt, ei lueta roolin käyttäjiä"))))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
