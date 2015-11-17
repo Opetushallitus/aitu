@@ -78,42 +78,45 @@
       (testing "päivitysen jälkeen rooli on muuttunut"
         (is (= (:rooli paivitettava-jasen) (:rooli paivitetty-jasen)))))))
 
-;; Ilman hakuehtoja hae-ehdoilla palauttaa kaikki toimikunnat
-(deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
+(defn lisaa-vanha-toimikausi!
+  []
   (lisaa-toimikausi! {:toimikausi_id -3
                       :voimassa false
                       :alkupvm (time/local-date 1900 1 1)
                       :loppupvm (time/local-date 1902 12 31)})
+  -3)
+
+;; loogisesti huono asia että tietokannassa on tämän jälkeen kaksi voimassaolevaa toimikautta?
+(defn lisaa-voimassaoleva-toimikausi!
+  []
   (lisaa-toimikausi! {:toimikausi_id -4
-                      :voimassa true
-                      :alkupvm (time/local-date 1903 1 1)
-                      :loppupvm (time/local-date 2099 12 31)})
+                  :voimassa true
+                  :alkupvm (time/local-date 1903 1 1)
+                  :loppupvm (time/local-date 2099 12 31)})
+  -4) 
+
+;; Ilman hakuehtoja hae-ehdoilla palauttaa kaikki toimikunnat
+(deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
+  (lisaa-vanha-toimikausi!)
+  (lisaa-voimassaoleva-toimikausi!)
   (lisaa-toimikunta! {:tkunta "TK1"
                       :toimikausi_id -3})
   (lisaa-toimikunta! {:tkunta "TK2"
                       :toimikausi_id -4})
   (is (= (set (map :tkunta (arkisto/hae-ehdoilla {})))
-         #{"TK1" "TK2"})))
+         #{"Lynx lynx" "Gulo gulo" "TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-jarjestaa-tulokset-suomenkielisen-nimen-mukaan
   (lisaa-toimikunta! {:tkunta "TK1"
                       :nimi_fi "foo"})
-  (lisaa-toimikunta! {:tkunta "TK2"
-                      :nimi_fi "xyz"})
   (lisaa-toimikunta! {:tkunta "TK3"
                       :nimi_fi "bar"})
   (is (= (map :tkunta (arkisto/hae-ehdoilla {}))
-         ["TK3" "TK1" "TK2"])))
+         ["Gulo gulo" "TK3" "TK1" "Lynx lynx"])))
 
 (deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
-  (lisaa-toimikausi! {:toimikausi_id -3
-                      :voimassa false
-                      :alkupvm (time/local-date 1900 1 1)
-                      :loppupvm (time/local-date 1902 12 31)})
-  (lisaa-toimikausi! {:toimikausi_id -4
-                      :voimassa true
-                      :alkupvm (time/local-date 1903 1 1)
-                      :loppupvm (time/local-date 2099 12 31)})
+  (lisaa-vanha-toimikausi!)
+  (lisaa-voimassaoleva-toimikausi!)
   (lisaa-toimikunta! {:tkunta "TK1"
                       :toimikausi_id -3})
   (lisaa-toimikunta! {:tkunta "TK2"
@@ -122,20 +125,14 @@
          ["TK2"])))
 
 (deftest ^:integraatio hae-ehdoilla-muu-toimikausi
-  (lisaa-toimikausi! {:toimikausi_id -3
-                      :voimassa false
-                      :alkupvm (time/local-date 1900 1 1)
-                      :loppupvm (time/local-date 1902 12 31)})
-  (lisaa-toimikausi! {:toimikausi_id -4
-                      :voimassa true
-                      :alkupvm (time/local-date 1903 1 1)
-                      :loppupvm (time/local-date 2099 12 31)})
+  (lisaa-vanha-toimikausi!)
+  (lisaa-voimassaoleva-toimikausi!)
   (lisaa-toimikunta! {:tkunta "TK1"
                       :toimikausi_id -3})
   (lisaa-toimikunta! {:tkunta "TK2"
                       :toimikausi_id -4})
   (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "asdf"})))
-         #{"TK1" "TK2"})))
+         #{"Lynx lynx" "Gulo gulo" "TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
   (lisaa-toimikunta! {:tkunta "TK1"
@@ -148,31 +145,27 @@
 
 (deftest ^:integraatio hae-ehdoilla-tyhja-nimi
   (lisaa-toimikunta! {:tkunta "TK1"})
-  (lisaa-toimikunta! {:tkunta "TK2"})
-  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:nimi "     "})))
-         #{"TK1" "TK2"})))
+  (testing "tyhjällä nimellä pitäisi löytyä kaikki toimikunnat, myös ne joilla on nimi"
+    (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:nimi "     "})))
+           #{"Lynx lynx" "Gulo gulo" "TK1"}))))
 
 (deftest ^:integraatio hae-ehdoilla-kielisyys
-  (lisaa-toimikunta! {:tkunta "TK1"
-                      :kielisyys "fi"})
-  (lisaa-toimikunta! {:tkunta "TK2"
-                      :kielisyys "2k"})
-  (lisaa-toimikunta! {:tkunta "TK3"
-                      :kielisyys "sv"})
-  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "fi,sv"})))
-         #{"TK1" "TK3"})))
+  (let [fi-toimikunta "Gulo gulo"
+        sv-toimikunta "Lynx lynx"]
+    (lisaa-toimikunta! {:tkunta "TK2"
+                        :kielisyys "2k"})
+    (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "fi,sv"})))
+           #{fi-toimikunta sv-toimikunta}))))
 
 (deftest ^:integraatio hae-ehdoilla-tyhja-kielisyys
-  (lisaa-toimikunta! {:tkunta "TK1"})
-  (lisaa-toimikunta! {:tkunta "TK2"})
   (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:kielisyys "     "})))
-         #{"TK1" "TK2"})))
+         #{"Lynx lynx" "Gulo gulo"})))
 
 (deftest ^:integraatio hae-ehdoilla-avaimet
-  (lisaa-toimikunta! {:nimi_fi "foo"
-                      :nimi_sv "bar"})
-  (is (= (arkisto/hae-ehdoilla {:avaimet [:nimi_fi :nimi_sv]})
-         [{:nimi_fi "foo", :nimi_sv "bar"}])))
+  (let [tk1 {:nimi_sv "Aakkosissa Aavasaksa asettuu alkuun", :nimi_fi "Aavasaksalainen testitoimikunta"}
+        tk2 {:nimi_sv "Ruotsalaisen lattaraudan testitoimikunta", :nimi_fi "Lattaraudan taivutuksen testitoimikunta"}]
+    (is (= (arkisto/hae-ehdoilla {:avaimet [:nimi_fi :nimi_sv]})
+           [tk1 tk2]))))
 
 (deftest ^:integraatio hae-ehdoilla-opintoala
   (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
