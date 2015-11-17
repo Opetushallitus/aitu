@@ -275,7 +275,8 @@
                      :esittaja (or kayttaja-jarjesto (:jarjesto esittaja))
                      :status status}
               jasen (into {} (remove (comp nil? second) jasen))
-              entiset-jasenyydet (arkisto/hae-jasenyydet (:henkiloid jasen) (:tkunta tutkintotoimikunta))]
+              ex-jasenyydet (arkisto/hae-jasenyydet (:henkiloid jasen) (:tkunta tutkintotoimikunta))
+              entiset-jasenyydet (if (= status "esitetty") (filter #(= (:esittaja %) (:esittaja jasen)) ex-jasenyydet) ex-jasenyydet)]
           (validoi jasen
             (toimikunnan-jasenen-validaatiosaannot
               tutkintotoimikunta

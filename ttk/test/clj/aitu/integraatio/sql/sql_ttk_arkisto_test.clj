@@ -25,7 +25,7 @@
             aitu.integraatio.sql.korma))
 
 (use-fixtures :each tietokanta-fixture)
-
+ 
 (defn hae-ja-taydenna
   [diaarinumero]
   (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero)))
