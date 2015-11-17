@@ -94,14 +94,18 @@
         tk (merge tk-data {:toimikausi_id tk-vanha})]
     (lisaa-toimikunta! tk)))
 
+(defn lisaa-toimikunta-voimassaolevalle-kaudelle!
+  [tk-data]
+  (let [tk-vanha (hae-voimassaoleva-toimikausi)
+        tk (merge tk-data {:toimikausi_id tk-vanha})]
+    (lisaa-toimikunta! tk)))
+
 ;; Ilman hakuehtoja hae-ehdoilla palauttaa kaikki toimikunnat
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
   (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})
-  (let [tk-voimassa (hae-voimassaoleva-toimikausi)]
-    (lisaa-toimikunta! {:tkunta "TK2"
-                        :toimikausi_id tk-voimassa})
-    (is (= (set (map :tkunta (arkisto/hae-ehdoilla {})))
-           #{"Lynx lynx" "Gulo gulo" "TK1" "TK2"}))))
+  (lisaa-toimikunta-voimassaolevalle-kaudelle! {:tkunta "TK2"})
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {})))
+         #{"Lynx lynx" "Gulo gulo" "TK1" "TK2"})))
 
 (deftest ^:integraatio hae-voimassaolevat-ja-tulevat
   (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})
@@ -118,21 +122,15 @@
 
 (deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
   (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})
-  (let [tk-voimassa (hae-voimassaoleva-toimikausi)]
-    (lisaa-toimikunta! {:tkunta "TK2"
-                        :toimikausi_id tk-voimassa})
-    (is (= (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "nykyinen"}))
-           ["TK2"]))))
+  (lisaa-toimikunta-voimassaolevalle-kaudelle! {:tkunta "TK2"})
+  (is (= (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "nykyinen"}))
+         ["TK2"])))
 
 (deftest ^:integraatio hae-ehdoilla-muu-toimikausi
-  (let [tk-voimassa (hae-voimassaoleva-toimikausi)
-        tk-vanha   (hae-vanha-toimikausi)]
-    (lisaa-toimikunta! {:tkunta "TK1"
-                        :toimikausi_id tk-vanha})
-    (lisaa-toimikunta! {:tkunta "TK2"
-                        :toimikausi_id tk-voimassa})
-    (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "asdf"})))
-           #{"Lynx lynx" "Gulo gulo" "TK1" "TK2"}))))
+  (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})
+  (lisaa-toimikunta-voimassaolevalle-kaudelle! {:tkunta "TK2"})
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "asdf"})))
+         #{"Lynx lynx" "Gulo gulo" "TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
   (lisaa-toimikunta! {:tkunta "TK1"
