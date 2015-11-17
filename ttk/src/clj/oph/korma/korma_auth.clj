@@ -29,7 +29,7 @@
   {:pre [(string? uid)]}
   (log/debug "tarkistetaan käyttäjä " uid)
   (with-open [pstmt (doto
-                      (.prepareStatement con "select * from kayttaja where uid = ?")
+                      (.prepareStatement con "select * from kayttaja where lower(uid) = lower(?)")
                       (.setString 1 uid))
               rs (.executeQuery pstmt)]
     (let [valid (.next rs)]

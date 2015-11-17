@@ -52,11 +52,7 @@
 (defn aja-testidata-sql! 
   [kayttaja-param tiedosto]
   (run-sql (sql-resurssista (str "sql/" tiedosto)) kayttaja-param))
-
-(defn luo-kayttajat!
-  [kayttaja-param]
-  (aja-testidata-sql! kayttaja-param "ophkayttajat.sql"))
-
+ 
 (defn luo-testikayttajat!
   [kayttaja-param]
   (aja-testidata-sql! kayttaja-param "testikayttajat.sql"))
@@ -180,8 +176,6 @@
       (try 
         (jdbc/with-connection {:datasource datasource}
           (aseta-oikeudet-sovelluskayttajille options)
-          (when (:clear options)
-            (luo-kayttajat! (:uservariable options)))
           (when (:testidata options)
             (luo-testidata! (:uservariable options))))
         (finally
