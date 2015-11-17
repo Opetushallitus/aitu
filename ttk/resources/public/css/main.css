@@ -766,18 +766,30 @@ table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, tabl
   background-image: url("../img/oph-icon-sprite.png");
 }
 
-table:not(.table-condensed) tbody tr, table:not(.table-condensed) .table-row, .table tbody tr, .table .table-row {
+table:not(.table-condensed) tbody tr td, table:not(.table-condensed) tbody tr .table-cell, table:not(.table-condensed) .table-row td, table:not(.table-condensed) .table-row .table-cell, .table tbody tr td, .table tbody tr .table-cell, .table .table-row td, .table .table-row .table-cell {
+  padding: 6px 12px;
+  max-width: 20% !important;
+}
+
+table:not(.table-condensed) tbody:not(.tuplarivit) tr, table:not(.table-condensed) .table-row, .table tbody:not(.tuplarivit) tr, .table .table-row {
   border-bottom: 1px solid #999999;
   background: #e6e6e6;
 }
 
-table:not(.table-condensed) tbody tr:nth-child(odd), table:not(.table-condensed) .table-row:nth-child(odd), .table tbody tr:nth-child(odd), .table .table-row:nth-child(odd) {
+table:not(.table-condensed) tbody:not(.tuplarivit) tr:nth-child(odd), table:not(.table-condensed) .table-row:nth-child(odd), .table tbody:not(.tuplarivit) tr:nth-child(odd), .table .table-row:nth-child(odd) {
   background: white;
 }
 
-table:not(.table-condensed) tbody tr td, table:not(.table-condensed) tbody tr .table-cell, table:not(.table-condensed) .table-row td, table:not(.table-condensed) .table-row .table-cell, .table tbody tr td, .table tbody tr .table-cell, .table .table-row td, .table .table-row .table-cell {
-  padding: 6px 12px;
-  max-width: 20% !important;
+table:not(.table-condensed) tbody.tuplarivit tr, .table tbody.tuplarivit tr {
+  background: #e6e6e6;
+}
+
+table:not(.table-condensed) tbody.tuplarivit tr:nth-child(4n+1), table:not(.table-condensed) tbody.tuplarivit tr:nth-child(4n+2), .table tbody.tuplarivit tr:nth-child(4n+1), .table tbody.tuplarivit tr:nth-child(4n+2) {
+  background: white;
+}
+
+table:not(.table-condensed) tbody.tuplarivit tr:nth-child(2n+1), .table tbody.tuplarivit tr:nth-child(2n+1) {
+  border-top: 1px solid #999999;
 }
 
 .table {

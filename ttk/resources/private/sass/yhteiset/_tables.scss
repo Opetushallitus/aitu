@@ -41,16 +41,29 @@ table:not(.table-condensed), .table {
     }
   }
   tbody tr, .table-row {
+    td, .table-cell {
+      padding: $marginS $marginM;
+      max-width: 20% !important;
+    }
+  }
+
+  tbody:not(.tuplarivit) tr, .table-row {
     border-bottom: 1px solid $border-color;
     background: $lightest-gray;
 
     &:nth-child(odd) {
       background: lighten($lightest-gray, 10%);
     }
+  }
 
-    td, .table-cell {
-      padding: $marginS $marginM;
-      max-width: 20% !important;
+  tbody.tuplarivit tr {
+    background: $lightest-gray;
+
+    &:nth-child(4n+1), &:nth-child(4n+2) {
+      background: lighten($lightest-gray, 10%);
+    }
+    &:nth-child(2n+1) {
+      border-top: 1px solid $border-color;
     }
   }
 }

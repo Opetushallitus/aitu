@@ -42,8 +42,8 @@
 <table>
   <thead>
   <tr>
+    <th></th>
     <th>[[ehdokkaan_nimi]]</th>
-    <th>[[esittajan_nimi]]</th>
     <th>[[keskusjarjesto]]</th>
     <th>[[tyoelamajarjesto]]</th>
     <th>[[toimikunta]]</th>
@@ -55,10 +55,10 @@
     <th>[[tila]]</th>
   </tr>
   </thead>
-  <tbody>
-  <tr ng-repeat="esitys in esitykset">
+  <tbody class="tuplarivit">
+  <tr ng-repeat-start="esitys in esitykset">
+    <td><button class="icon" ng-class="{'expand-icon-small': !esitys.auki, 'collapse-icon-small': esitys.auki}" ng-click="esitys.auki = !esitys.auki"></button></td>
     <td><a ng-href="#/henkilot/{{ esitys.henkiloid }}/tiedot">{{ esitys.etunimi }} {{ esitys.sukunimi }}</a></td>
-    <td><a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a></td>
     <td>{{ esitys | lokalisoiKentta:'esittaja_keskusjarjesto_nimi' }}</td>
     <td>{{ esitys | lokalisoiKentta:'esittaja_jarjesto_nimi' }}</td>
     <td><a ng-href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</a></td>
@@ -68,6 +68,25 @@
     <td ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.edustus" nimi="edustus"></enum-arvo></td>
     <td>{{ esitys.muutettuaika | date:'dd.MM.yyyy' }}</td>
     <td><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></td>
+  </tr>
+  <tr ng-repeat-end ng-show="esitys.auki">
+    <td></td>
+    <td colspan="11">
+      <div>
+        <fieldset>
+          <label>[[esittajan_nimi]]</label>
+          <div><a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a></div>
+        </fieldset>
+        <fieldset>
+          <label>Kokemus</label>
+          <div ng-bind="esitys.vapaateksti_kokemus"></div>
+        </fieldset>
+        <fieldset>
+          <label>Asiantuntijaksi</label>
+          <div ng-bind="esitys.asiantuntijaksi | muotoileBoolean"></div>
+        </fieldset>
+      </div>
+    </td>
   </tr>
   </tbody>
 </table>
