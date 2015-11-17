@@ -49,13 +49,22 @@
         (throw (.getNextException e)))))
   (jdbc-do (str "set " kayttaja-param " to default")))
 
+(defn aja-testidata-sql! 
+  [kayttaja-param tiedosto]
+  (run-sql (sql-resurssista (str "sql/" tiedosto)) kayttaja-param))
+
 (defn luo-kayttajat!
   [kayttaja-param]
-  (run-sql (sql-resurssista "sql/ophkayttajat.sql") kayttaja-param))
+  (aja-testidata-sql! kayttaja-param "ophkayttajat.sql"))
 
 (defn luo-testikayttajat!
   [kayttaja-param]
-  (run-sql (sql-resurssista "sql/testikayttajat.sql") kayttaja-param))
+  (aja-testidata-sql! kayttaja-param "testikayttajat.sql"))
+
+(defn luo-testidata!
+  [kayttaja-param]
+  (luo-testikayttajat! kayttaja-param)
+  (aja-testidata-sql! kayttaja-param "testitoimikunnat.sql"))
 
 (defn aseta-oikeudet-sovelluskayttajille
   [options]
@@ -107,8 +116,8 @@
   [[nil "--clear" "Tyhjennetään kanta ja luodaan skeema ja pohjadata uusiksi"
     :default false]
    [nil "--target-version VERSION" "Tehdään migrate annettuun versioon saakka"]
-   ["-t" nil "Testikäyttäjien luonti"
-    :id :testikayttajat]
+   ["-t" nil "Testidatan luonti"
+    :id :testidata]
    ["-u" "--username USER" "Tietokantakäyttäjä"
     :default "ttk_user"]
    [nil "--aituhaku-username USER" "Aituhaun tietokantakäyttäjä"]
@@ -173,8 +182,8 @@
           (aseta-oikeudet-sovelluskayttajille options)
           (when (:clear options)
             (luo-kayttajat! (:uservariable options)))
-          (when (:testikayttajat options)
-            (luo-testikayttajat! (:uservariable options))))
+          (when (:testidata options)
+            (luo-testidata! (:uservariable options))))
         (finally
           (when migraatiopoikkeus
             (.printStackTrace migraatiopoikkeus System/out)

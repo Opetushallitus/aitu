@@ -80,18 +80,18 @@
 
 ;; Ilman hakuehtoja hae-ehdoilla palauttaa kaikki toimikunnat
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
-  (lisaa-toimikausi! {:toimikausi_id 3
+  (lisaa-toimikausi! {:toimikausi_id -3
                       :voimassa false
                       :alkupvm (time/local-date 1900 1 1)
                       :loppupvm (time/local-date 1902 12 31)})
-  (lisaa-toimikausi! {:toimikausi_id 4
+  (lisaa-toimikausi! {:toimikausi_id -4
                       :voimassa true
                       :alkupvm (time/local-date 1903 1 1)
                       :loppupvm (time/local-date 2099 12 31)})
   (lisaa-toimikunta! {:tkunta "TK1"
-                      :toimikausi_id 3})
+                      :toimikausi_id -3})
   (lisaa-toimikunta! {:tkunta "TK2"
-                      :toimikausi_id 4})
+                      :toimikausi_id -4})
   (is (= (set (map :tkunta (arkisto/hae-ehdoilla {})))
          #{"TK1" "TK2"})))
 
@@ -106,34 +106,34 @@
          ["TK3" "TK1" "TK2"])))
 
 (deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
-  (lisaa-toimikausi! {:toimikausi_id 3
+  (lisaa-toimikausi! {:toimikausi_id -3
                       :voimassa false
                       :alkupvm (time/local-date 1900 1 1)
                       :loppupvm (time/local-date 1902 12 31)})
-  (lisaa-toimikausi! {:toimikausi_id 4
+  (lisaa-toimikausi! {:toimikausi_id -4
                       :voimassa true
                       :alkupvm (time/local-date 1903 1 1)
                       :loppupvm (time/local-date 2099 12 31)})
   (lisaa-toimikunta! {:tkunta "TK1"
-                      :toimikausi_id 3})
+                      :toimikausi_id -3})
   (lisaa-toimikunta! {:tkunta "TK2"
-                      :toimikausi_id 4})
+                      :toimikausi_id -4})
   (is (= (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "nykyinen"}))
          ["TK2"])))
 
 (deftest ^:integraatio hae-ehdoilla-muu-toimikausi
-  (lisaa-toimikausi! {:toimikausi_id 3
+  (lisaa-toimikausi! {:toimikausi_id -3
                       :voimassa false
                       :alkupvm (time/local-date 1900 1 1)
                       :loppupvm (time/local-date 1902 12 31)})
-  (lisaa-toimikausi! {:toimikausi_id 4
+  (lisaa-toimikausi! {:toimikausi_id -4
                       :voimassa true
                       :alkupvm (time/local-date 1903 1 1)
                       :loppupvm (time/local-date 2099 12 31)})
   (lisaa-toimikunta! {:tkunta "TK1"
-                      :toimikausi_id 3})
+                      :toimikausi_id -3})
   (lisaa-toimikunta! {:tkunta "TK2"
-                      :toimikausi_id 4})
+                      :toimikausi_id -4})
   (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "asdf"})))
          #{"TK1" "TK2"})))
 
