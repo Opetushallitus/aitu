@@ -61,7 +61,7 @@
     <td><a ng-href="#/henkilot/{{ esitys.henkiloid }}/tiedot">{{ esitys.etunimi }} {{ esitys.sukunimi }}</a></td>
     <td>{{ esitys | lokalisoiKentta:'esittaja_keskusjarjesto_nimi' }}</td>
     <td>{{ esitys | lokalisoiKentta:'esittaja_jarjesto_nimi' }}</td>
-    <td><a ng-href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</a></td>
+    <td><auth-toiminto auth-linkki href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</auth-toiminto></td>
     <td>{{ esitys.luotuaika | date:'dd.MM.yyyy' }}</td>
     <td ng-if="!haku.tila || haku.tila === 'nimitetty'">{{ esitys.nimityspaiva | date:'dd.MM.yyyy' }}</td>
     <td ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.rooli" nimi="rooli"></enum-arvo></td>
