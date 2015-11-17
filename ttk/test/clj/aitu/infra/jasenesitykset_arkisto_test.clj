@@ -43,18 +43,18 @@
                            :esittaja -200})
 
   (testing "Keskusjärjestö näkee kaikki jäsenesityspyynnöt"
-    (let [esitykset (arkisto/hae -100 {})]
+    (let [esitykset (arkisto/hae -100 {} false)]
       (is (= (count esitykset) 2))))
 
   (testing "Alijärjestö näkee vain oman jäsenesityspyynnön"
-    (let [esitykset (arkisto/hae -200 {})]
+    (let [esitykset (arkisto/hae -200 {} false)]
       (is (= (count esitykset) 1))
       (is (every? #{-200} (map :esittaja esitykset)))))
 
   (testing "Alijärjestö ei näe toisen alijärjestön jäsenesityspyyntöjä"
-    (let [esitykset (arkisto/hae -300 {})]
+    (let [esitykset (arkisto/hae -300 {} false)]
       (is (= (count esitykset) 0))))
 
   (testing "OPH näkee kaikki jäsenesityspyynnöt"
-    (let [esitykset (arkisto/hae nil {})]
+    (let [esitykset (arkisto/hae nil {} false)]
       (is (>= (count esitykset) 2)))))
