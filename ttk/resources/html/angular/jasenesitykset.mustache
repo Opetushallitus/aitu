@@ -48,7 +48,7 @@
     <th>[[tyoelamajarjesto]]</th>
     <th>[[toimikunta]]</th>
     <th>[[esityspvm]]</th>
-    <th>[[nimityspvm]]</th>
+    <th ng-if="!haku.tila || haku.tila === 'nimitetty'">[[nimityspvm]]</th>
     <th ng-if="!haku.tila || haku.tila === 'nimitetty'">[[rooli]]</th>
     <th ng-if="!haku.tila || haku.tila === 'nimitetty'">[[edustus]]</th>
     <th>[[muutettu]]</th>
@@ -63,7 +63,7 @@
     <td>{{ esitys | lokalisoiKentta:'esittaja_jarjesto_nimi' }}</td>
     <td><a ng-href="#/toimikunta/{{ esitys.tutkintotoimikunta_diaarinumero }}/tiedot">{{ esitys | lokalisoiKentta:'tutkintotoimikunta_nimi' }}</a></td>
     <td>{{ esitys.luotuaika | date:'dd.MM.yyyy' }}</td>
-    <td>{{ esitys.nimityspaiva | date:'dd.MM.yyyy' }}</td>
+    <td ng-if="!haku.tila || haku.tila === 'nimitetty'">{{ esitys.nimityspaiva | date:'dd.MM.yyyy' }}</td>
     <td ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.rooli" nimi="rooli"></enum-arvo></td>
     <td ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.edustus" nimi="edustus"></enum-arvo></td>
     <td>{{ esitys.muutettuaika | date:'dd.MM.yyyy' }}</td>
