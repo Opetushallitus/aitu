@@ -69,7 +69,7 @@
 (c/defroutes reitit-csv
   (cu/defapi :jasenesitykset nil :get "/csv" [& ehdot]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
-      (csv-download-response (muodosta-csv (arkisto/hae jarjesto ehdot)
+      (csv-download-response (muodosta-csv (arkisto/hae jarjesto ehdot true)
                                            kenttien-jarjestys
                                            sarakkeiden-otsikot)
                              "jasenesitykset.csv"))))
@@ -77,7 +77,7 @@
 (c/defroutes reitit
   (cu/defapi :jasenesitykset nil :get "/" [& ehdot]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
-      (json-response (arkisto/hae jarjesto ehdot))))
+      (json-response (arkisto/hae jarjesto ehdot false))))
   (cu/defapi :jasenesitykset nil :get "/yhteenveto" [toimikausi vain_jasenesityksia_sisaltavat]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (json-response (arkisto/hae-yhteenveto jarjesto (Integer/parseInt toimikausi) (Boolean/valueOf vain_jasenesityksia_sisaltavat))))))

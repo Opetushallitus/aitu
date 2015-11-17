@@ -23,7 +23,7 @@
     (sql/where query
       (apply or ehdot))))
 
-(defn hae [kayttajan-jarjesto {:keys [asiantuntijaksi ehdokas henkilotiedot jarjesto tila toimikunta]}]
+(defn hae [kayttajan-jarjesto {:keys [asiantuntijaksi ehdokas henkilotiedot jarjesto tila toimikunta]} csv]
   (->
     (sql/select* :jasenyys)
     (sql/join :henkilo (= :henkilo.henkiloid :jasenyys.henkiloid))
@@ -35,13 +35,15 @@
     (sql/join [:kayttaja :esittaja_kayttaja] (= :jasenyys.luotu_kayttaja :esittaja_kayttaja.oid))
     (sql/join :left [:henkilo :esittaja_henkilo] (= :esittaja_kayttaja.oid :esittaja_henkilo.kayttaja_oid))
     (sql/fields :jasenyys.toimikunta :jasenyys.status :jasenyys.esittaja :jasenyys.luotuaika :jasenyys.muutettuaika :jasenyys.rooli :jasenyys.edustus :jasenyys.nimityspaiva
-                :jasenyys.asiantuntijaksi (sql/raw "jasenyys.vapaateksti_kokemus IS NOT NULL AS vapaateksti_kokemus")
+                :jasenyys.asiantuntijaksi
                 :henkilo.henkiloid :henkilo.etunimi :henkilo.sukunimi
                 [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi] [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv] [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
                 [:esittaja_henkilo.henkiloid :esittaja_henkilo_henkiloid] [:esittaja_henkilo.etunimi :esittaja_henkilo_etunimi] [:esittaja_henkilo.sukunimi :esittaja_henkilo_sukunimi]
                 [:esittaja_jarjesto.nimi_fi :esittaja_jarjesto_nimi_fi] [:esittaja_jarjesto.nimi_sv :esittaja_jarjesto_nimi_sv]
                 [:esittaja_keskusjarjesto.nimi_fi :esittaja_keskusjarjesto_nimi_fi] [:esittaja_keskusjarjesto.nimi_sv :esittaja_keskusjarjesto_nimi_sv])
     (cond->
+      (not csv) (sql/fields :jasenyys.vapaateksti_kokemus)
+      csv (sql/fields (sql/raw "jasenyys.vapaateksti_kokemus IS NOT NULL AS vapaateksti_kokemus"))
       (java.lang.Boolean/valueOf ^String henkilotiedot) (sql/fields :henkilo.sukupuoli :henkilo.aidinkieli :henkilo.syntymavuosi :henkilo.sahkoposti :henkilo.sahkoposti_julkinen
                                                                     :henkilo.puhelin :henkilo.puhelin_julkinen :henkilo.osoite :henkilo.postinumero :henkilo.postitoimipaikka :henkilo.osoite_julkinen
                                                                     :henkilo.nayttomestari :henkilo.kokemusvuodet
