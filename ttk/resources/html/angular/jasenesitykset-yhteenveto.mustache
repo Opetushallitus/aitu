@@ -29,7 +29,7 @@
 <div style="text-align: right;">
   [[lyhenteet]]
 </div>
-<table ng-show="toimikunnat">
+<table ng-show="toimikunnat" jarjestettava-taulukko="toimikunnat" jarjestetty-data="toimikunnatJarjestetty">
   <thead style="font-weight: bold">
     <tr>
       <th></th>
@@ -38,29 +38,29 @@
       <th colspan="6" style="text-align: center">[[kaikki]]</th>
     </tr>
     <tr>
-      <th>[[tutkintotoimikunta]]</th>
-      <th>[[lyhenne_mies]]</th>
-      <th>[[lyhenne_nainen]]</th>
-      <th>[[lyhenne_kaikki]]</th>
-      <th>FI</th>
-      <th>SV</th>
-      <th>SE</th>
-      <th>[[lyhenne_mies]]</th>
-      <th>[[lyhenne_nainen]]</th>
-      <th>[[lyhenne_kaikki]]</th>
-      <th>FI</th>
-      <th>SV</th>
-      <th>SE</th>
-      <th>[[lyhenne_mies]]</th>
-      <th>[[lyhenne_nainen]]</th>
-      <th>[[lyhenne_kaikki]]</th>
-      <th>FI</th>
-      <th>SV</th>
-      <th>SE</th>
+      <th jarjestettava-sarake="nimi" jarjestely-fn="orderByLokalisoitu" oletus-jarjestely>[[tutkintotoimikunta]]</th>
+      <th jarjestettava-sarake="esitetty_miehia">[[lyhenne_mies]]</th>
+      <th jarjestettava-sarake="esitetty_naisia">[[lyhenne_nainen]]</th>
+      <th jarjestettava-sarake="esitetty_yhteensa">[[lyhenne_kaikki]]</th>
+      <th jarjestettava-sarake="esitetty_fi">FI</th>
+      <th jarjestettava-sarake="esitetty_sv">SV</th>
+      <th jarjestettava-sarake="esitetty_se">SE</th>
+      <th jarjestettava-sarake="nimitetty_miehia">[[lyhenne_mies]]</th>
+      <th jarjestettava-sarake="nimitetty_naisia">[[lyhenne_nainen]]</th>
+      <th jarjestettava-sarake="nimitetty_yhteensa">[[lyhenne_kaikki]]</th>
+      <th jarjestettava-sarake="nimitetty_fi">FI</th>
+      <th jarjestettava-sarake="nimitetty_sv">SV</th>
+      <th jarjestettava-sarake="nimitetty_se">SE</th>
+      <th jarjestettava-sarake="kaikki_miehet">[[lyhenne_mies]]</th>
+      <th jarjestettava-sarake="kaikki_naiset">[[lyhenne_nainen]]</th>
+      <th jarjestettava-sarake="kaikki">[[lyhenne_kaikki]]</th>
+      <th jarjestettava-sarake="kaikki_fi">FI</th>
+      <th jarjestettava-sarake="kaikki_sv">SV</th>
+      <th jarjestettava-sarake="kaikki_se">SE</th>
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="toimikunta in toimikunnat | filter:filter">
+    <tr ng-repeat="toimikunta in toimikunnatJarjestetty | filter:filter">
       <td style="text-align: left"><a ng-href="#/toimikunta/{{ toimikunta.diaarinumero }}/tiedot">{{ toimikunta | lokalisoiKentta:'nimi' }}</a></td>
       <td>{{ toimikunta.esitetty_miehia }}</td>
       <td>{{ toimikunta.esitetty_naisia }}</td>
