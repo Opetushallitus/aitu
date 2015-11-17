@@ -99,6 +99,10 @@
       (map #(select-keys % (:avaimet ehdot)) toimikunnat)
       toimikunnat)))
 
+(defn hae-toimikaudet []
+  (sql/select toimikausi
+     (sql/order :alkupvm :asc)))
+
 (defn hae-nykyiset-ja-tulevat
   []
   (map voimassaolo/taydenna-toimikunnan-voimassaolo
