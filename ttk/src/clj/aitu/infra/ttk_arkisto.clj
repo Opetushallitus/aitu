@@ -115,6 +115,27 @@
          (sql/where (or {:toimikausi.voimassa true}
                         (> :toimikausi.alkupvm (sql/sqlfn "now")))))))
 
+(defn hae-toimikaudet-termilla
+  [termi vain-uusimmat]
+  (map voimassaolo/taydenna-toimikunnan-voimassaolo
+       (->
+         (sql/select* tutkintotoimikunta)
+         (sql/with toimikausi)
+         (sql/fields :tkunta :diaarinumero :toimikausi_alku :toimikausi_loppu
+                     [(sql/raw "nimi_fi || ' (' || extract(year FROM alkupvm) || ')'") :nimi_fi]
+                     [(sql/raw "nimi_sv || ' (' || extract(year FROM alkupvm) || ')'") :nimi_sv])
+         (sql/order :nimi_fi)
+         (cond->
+           termi (sql/where (or {:nimi_fi [ilike (str "%" termi "%")]}
+                                {:nimi_sv [ilike (str "%" termi "%")]}))
+           (not vain-uusimmat) (sql/where (or {:toimikausi.voimassa true}
+                                              (> :toimikausi.alkupvm (sql/sqlfn "now"))))
+           vain-uusimmat (sql/where {:tutkintotoimikunta.toimikausi_id (sql/subselect toimikausi
+                                                                         (sql/fields :toimikausi_id)
+                                                                         (sql/order :alkupvm :desc)
+                                                                         (sql/limit 1))}))
+         sql/exec)))
+
 (defn hae
   "Hakee toimikunnan diaarinumeron perusteella"
   [diaarinumero]
@@ -306,7 +327,7 @@
 (defn hae-termilla
   "Suodattaa hakutuloksia hakutermillä"
   [termi]
-  (filter #(sisaltaako-kentat? % [:nimi_fi :nimi_sv] termi) (hae-nykyiset-ja-tulevat)))
+  (hae-toimikaudet-termilla termi false))
 
 (defn paivita-tutkinnot!
   "Päivittää toimikunnan tutkinnot"
