@@ -262,6 +262,10 @@
   (POST ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero henkilo rooli alkupvm loppupvm edustus asiantuntijaksi vapaateksti_kokemus esittaja status]
     (cu/autorisoitu-transaktio :toimikuntajasen_lisays nil
       (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
+        (if (and
+              (= (:roolitunnus kayttajaoikeudet/*current-user-authmap*) "JARJESTO")
+              (not= status "esitetty"))
+          (throw (IllegalArgumentException. "JARJESTO-roolilla ei voi luoda jäsenyyttä muissa kuin esitetty-tilassa")))
         (let [tutkintotoimikunta (arkisto/hae diaarinumero)
               kayttaja-jarjesto (:jarjesto kayttajaoikeudet/*current-user-authmap*)
               jasen {:toimikunta (:tkunta tutkintotoimikunta)
