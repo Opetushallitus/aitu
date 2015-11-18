@@ -21,6 +21,7 @@
             [oph.common.util.http-util :refer :all]
             [aitu.rest-api.http-util :refer :all]
             [aitu.toimiala.henkilo :as henkilo]
+            [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
             [aitu.toimiala.skeema :as skeema]
             [oph.common.util.util :refer [uusin-muokkausaika]]
             [valip.predicates :refer [present? max-length]]
@@ -61,6 +62,9 @@
     [& henkilodto]
     (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
       (s/validate skeema/HenkilonTiedot henkilodto)
+      (if (and (= (:roolitunnus kayttajaoikeudet/*current-user-authmap*) "JARJESTO")
+               (:kayttaja_oid henkilodto))
+        (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi asettaa kayttaja_oid-tietoa")))
       (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
         {:status 200
          :body   (cheshire/generate-string uusi-henkilo)})))
