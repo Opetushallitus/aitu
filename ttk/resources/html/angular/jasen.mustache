@@ -44,10 +44,20 @@
     <p>{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}</p>
   </fieldset>
   <form name="jasenForm2">
-    <div>
+    <div ng-if="!jasenEsitys">
       <haku-valitsin
         otsikko="[[toimikunta]]"
         url="[[base-url]]/api/ttk/haku"
+        model="jasen.toimikunta"
+        model-id-property="diaarinumero"
+        model-text-property="nimi"
+        pakollinen="true">
+      </haku-valitsin>
+    </div>
+    <div ng-if="jasenEsitys">
+      <haku-valitsin
+        otsikko="[[toimikunta]]"
+        url="[[base-url]]/api/ttk/haku-uudet"
         model="jasen.toimikunta"
         model-id-property="diaarinumero"
         model-text-property="nimi"

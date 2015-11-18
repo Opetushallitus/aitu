@@ -310,5 +310,12 @@
     :query [params TermiParams]
     :return [Toimikunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (cachable-json-response req (arkisto/hae-termilla (:termi params)))))
+      (cachable-json-response req (arkisto/hae-toimikaudet-termilla (:termi params) false))))
+
+  (GET* "/haku-uudet" [:as req]
+    :summary "Hakee uusimman toimikauden toimikunnat, joiden nimi sisältää annetun termin"
+    :query [params TermiParams]
+    :return [Toimikunta]
+    (cu/autorisoitu-transaktio :toimikunta_haku nil
+      (cachable-json-response req (arkisto/hae-toimikaudet-termilla (:termi params) true))))
   private-reitit)
