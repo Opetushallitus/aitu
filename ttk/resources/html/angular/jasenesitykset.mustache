@@ -74,8 +74,13 @@
     <td colspan="11">
       <div>
         <fieldset>
-          <label>[[esittajan_nimi]]</label>
-          <div><a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a></div>
+          <label>[[ilmoittajan_nimi]]</label>          
+  		  <div ng-if="[[yllapitaja]]"> 
+  		    <a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a>
+  		  </div>
+          <div ng-if="![[yllapitaja]]">
+              {{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}
+          </div>
         </fieldset>
         <fieldset>
           <label>Kokemus</label>
