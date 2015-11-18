@@ -75,10 +75,10 @@
       <div>
         <fieldset>
           <label>[[ilmoittajan_nimi]]</label>          
-  		  <div ng-if="[[yllapitaja]]"> 
+  		  <div ng-if="[[yllapitaja]] && esitys.esittaja_henkilo_henkiloid">
   		    <a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a>
   		  </div>
-          <div ng-if="![[yllapitaja]]">
+          <div ng-if="![[yllapitaja]] || !esitys.esittaja_henkilo_henkiloid">
               {{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}
           </div>
         </fieldset>

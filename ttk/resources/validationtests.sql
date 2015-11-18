@@ -29,4 +29,10 @@ select nt.tutkintotunnus,nt.nimi_fi,nt.luotuaika, tv.voimassa_loppupvm, tv.hyvak
   where not exists (select 1 from toimikunta_ja_tutkinto tt where tt.tutkintotunnus = nt.tutkintotunnus)
   and tv.voimassa_loppupvm > CURRENT_DATE 
   and tv.hyvaksytty = 't';
-  
+ 
+-- OPH-1622 käyttäjän etunimi ja henkilön etunimi pitäisi olla samat loogisesti jos henkilö ja käyttäjä on kytketty toisiinsa.
+select k.oid, k.uid, h.henkiloid, h.etunimi, h.sukunimi, k.etunimi, k.sukunimi from henkilo h
+ inner join kayttaja k on h.kayttaja_oid = k.oid
+ where h.etunimi != k.etunimi or h.sukunimi != k.sukunimi;
+ 
+ 

@@ -38,7 +38,7 @@
                 :jasenyys.asiantuntijaksi
                 :henkilo.henkiloid :henkilo.etunimi :henkilo.sukunimi
                 [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi] [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv] [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
-                [:esittaja_henkilo.henkiloid :esittaja_henkilo_henkiloid] [:esittaja_henkilo.etunimi :esittaja_henkilo_etunimi] [:esittaja_henkilo.sukunimi :esittaja_henkilo_sukunimi]
+                [:esittaja_henkilo.henkiloid :esittaja_henkilo_henkiloid] [:esittaja_kayttaja.etunimi :esittaja_henkilo_etunimi] [:esittaja_kayttaja.sukunimi :esittaja_henkilo_sukunimi]
                 [:esittaja_jarjesto.nimi_fi :esittaja_jarjesto_nimi_fi] [:esittaja_jarjesto.nimi_sv :esittaja_jarjesto_nimi_sv]
                 [:esittaja_keskusjarjesto.nimi_fi :esittaja_keskusjarjesto_nimi_fi] [:esittaja_keskusjarjesto.nimi_sv :esittaja_keskusjarjesto_nimi_sv])
     (cond->
