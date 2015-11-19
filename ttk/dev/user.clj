@@ -47,7 +47,8 @@
    :post [@palvelin]}
   (require 'aitu.palvelin)
   (require 'aitu.asetukset)
-  (reset! palvelin ((ns-resolve 'aitu.palvelin 'kaynnista!) (repl-asetukset))))
+  (reset! palvelin ((ns-resolve 'aitu.palvelin 'kaynnista!) (repl-asetukset)))
+  nil)
 
 
 (defn ^:private sammuta! []
