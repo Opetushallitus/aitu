@@ -62,12 +62,6 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
         _.forEach(toimikunnat, function(toimikunta) {
           toimikunta.esitetty_yhteensa = toimikunta.esitetty_miehia + toimikunta.esitetty_naisia;
           toimikunta.nimitetty_yhteensa = toimikunta.nimitetty_miehia + toimikunta.nimitetty_naisia;
-          toimikunta.kaikki_miehet = toimikunta.esitetty_miehia + toimikunta.nimitetty_miehia;
-          toimikunta.kaikki_naiset = toimikunta.esitetty_naisia + toimikunta.nimitetty_naisia;
-          toimikunta.kaikki = toimikunta.kaikki_miehet + toimikunta.kaikki_naiset;
-          toimikunta.kaikki_fi = toimikunta.esitetty_fi + toimikunta.nimitetty_fi;
-          toimikunta.kaikki_sv = toimikunta.esitetty_sv + toimikunta.nimitetty_sv;
-          toimikunta.kaikki_se = toimikunta.esitetty_se + toimikunta.nimitetty_se;
         });
 
         $scope.toimikunnat = toimikunnat;
