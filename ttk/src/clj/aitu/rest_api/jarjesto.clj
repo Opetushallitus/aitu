@@ -14,11 +14,9 @@
 
 (ns aitu.rest-api.jarjesto
   (:require [compojure.core :as c]
-            [cheshire.core :as cheshire]
             [aitu.infra.jarjesto-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-json-response]]
-            [aitu.compojure-util :as cu]
-            [korma.db :as db]))
+            [aitu.compojure-util :as cu])
 
 (c/defroutes reitit
   (cu/defapi :yleinen-rest-api nil :get "/haku/" [termi :as req]
