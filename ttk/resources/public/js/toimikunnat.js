@@ -115,7 +115,7 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       $scope.entisetJasenet = [];
 
       $scope.salliMuokkaus = function() {
-        return !$scope.muokkausTila && $scope.toimikunta.voimassa !== false;
+        return !$scope.muokkausTila && ($scope.toimikunta.voimassa !== false || $scope.toimikunta.vanhentunut === false);
       };
 
       $scope.muokkaa = function() {
