@@ -704,13 +704,13 @@ table:not(.table-condensed).full-width, .table.full-width {
   width: 100%;
 }
 
-table:not(.table-condensed) thead tr, table:not(.table-condensed) .table-header, .table thead tr, .table .table-header {
+table:not(.table-condensed) thead tr, table:not(.table-condensed) tfoot tr, table:not(.table-condensed) .table-header, .table thead tr, .table tfoot tr, .table .table-header {
   border-bottom: 1px solid #999999;
   border-top: 1px solid #999999;
   background: #b3b3b3;
 }
 
-table:not(.table-condensed) thead tr th, table:not(.table-condensed) thead tr .table-cell, table:not(.table-condensed) .table-header th, table:not(.table-condensed) .table-header .table-cell, .table thead tr th, .table thead tr .table-cell, .table .table-header th, .table .table-header .table-cell {
+table:not(.table-condensed) thead tr th, table:not(.table-condensed) thead tr .table-cell, table:not(.table-condensed) tfoot tr th, table:not(.table-condensed) tfoot tr .table-cell, table:not(.table-condensed) .table-header th, table:not(.table-condensed) .table-header .table-cell, .table thead tr th, .table thead tr .table-cell, .table tfoot tr th, .table tfoot tr .table-cell, .table .table-header th, .table .table-header .table-cell {
   padding: 6px 12px;
   font-weight: bold;
   max-width: 20%;
@@ -718,16 +718,16 @@ table:not(.table-condensed) thead tr th, table:not(.table-condensed) thead tr .t
   vertical-align: bottom;
 }
 
-table:not(.table-condensed) thead tr th:last-child, table:not(.table-condensed) thead tr .table-cell:last-child, table:not(.table-condensed) .table-header th:last-child, table:not(.table-condensed) .table-header .table-cell:last-child, .table thead tr th:last-child, .table thead tr .table-cell:last-child, .table .table-header th:last-child, .table .table-header .table-cell:last-child {
+table:not(.table-condensed) thead tr th:last-child, table:not(.table-condensed) thead tr .table-cell:last-child, table:not(.table-condensed) tfoot tr th:last-child, table:not(.table-condensed) tfoot tr .table-cell:last-child, table:not(.table-condensed) .table-header th:last-child, table:not(.table-condensed) .table-header .table-cell:last-child, .table thead tr th:last-child, .table thead tr .table-cell:last-child, .table tfoot tr th:last-child, .table tfoot tr .table-cell:last-child, .table .table-header th:last-child, .table .table-header .table-cell:last-child {
   max-width: 80%;
 }
 
-table:not(.table-condensed) thead tr th.sortable, table:not(.table-condensed) thead tr .table-cell.sortable, table:not(.table-condensed) .table-header th.sortable, table:not(.table-condensed) .table-header .table-cell.sortable, .table thead tr th.sortable, .table thead tr .table-cell.sortable, .table .table-header th.sortable, .table .table-header .table-cell.sortable {
+table:not(.table-condensed) thead tr th.sortable, table:not(.table-condensed) thead tr .table-cell.sortable, table:not(.table-condensed) tfoot tr th.sortable, table:not(.table-condensed) tfoot tr .table-cell.sortable, table:not(.table-condensed) .table-header th.sortable, table:not(.table-condensed) .table-header .table-cell.sortable, .table thead tr th.sortable, .table thead tr .table-cell.sortable, .table tfoot tr th.sortable, .table tfoot tr .table-cell.sortable, .table .table-header th.sortable, .table .table-header .table-cell.sortable {
   cursor: pointer;
   padding-right: 25px;
 }
 
-table:not(.table-condensed) thead tr th.sortable .sort-icon, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon, table:not(.table-condensed) .table-header th.sortable .sort-icon, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon, .table thead tr th.sortable .sort-icon, .table thead tr .table-cell.sortable .sort-icon, .table .table-header th.sortable .sort-icon, .table .table-header .table-cell.sortable .sort-icon {
+table:not(.table-condensed) thead tr th.sortable .sort-icon, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon, table:not(.table-condensed) tfoot tr th.sortable .sort-icon, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon, table:not(.table-condensed) .table-header th.sortable .sort-icon, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon, .table thead tr th.sortable .sort-icon, .table thead tr .table-cell.sortable .sort-icon, .table tfoot tr th.sortable .sort-icon, .table tfoot tr .table-cell.sortable .sort-icon, .table .table-header th.sortable .sort-icon, .table .table-header .table-cell.sortable .sort-icon {
   display: inline-block;
   position: absolute;
   margin-left: 10px;
@@ -738,11 +738,11 @@ table:not(.table-condensed) thead tr th.sortable .sort-icon, table:not(.table-co
   background-position: 0 -700px;
 }
 
-.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon, .no-svg .table thead tr th.sortable .sort-icon, .no-svg .table thead tr .table-cell.sortable .sort-icon, .no-svg .table .table-header th.sortable .sort-icon, .no-svg .table .table-header .table-cell.sortable .sort-icon {
+.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon, .no-svg .table thead tr th.sortable .sort-icon, .no-svg .table thead tr .table-cell.sortable .sort-icon, .no-svg .table tfoot tr th.sortable .sort-icon, .no-svg .table tfoot tr .table-cell.sortable .sort-icon, .no-svg .table .table-header th.sortable .sort-icon, .no-svg .table .table-header .table-cell.sortable .sort-icon {
   background-image: url("../img/oph-icon-sprite.png");
 }
 
-table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby, table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby, .table thead tr th.sortable .sort-icon.sortby, .table thead tr .table-cell.sortable .sort-icon.sortby, .table .table-header th.sortable .sort-icon.sortby, .table .table-header .table-cell.sortable .sort-icon.sortby {
+table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby, table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby, table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby, .table thead tr th.sortable .sort-icon.sortby, .table thead tr .table-cell.sortable .sort-icon.sortby, .table tfoot tr th.sortable .sort-icon.sortby, .table tfoot tr .table-cell.sortable .sort-icon.sortby, .table .table-header th.sortable .sort-icon.sortby, .table .table-header .table-cell.sortable .sort-icon.sortby {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
   height: 5px;
@@ -750,11 +750,11 @@ table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, table:not(.t
   margin-top: 10px;
 }
 
-.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby, .no-svg .table thead tr th.sortable .sort-icon.sortby, .no-svg .table thead tr .table-cell.sortable .sort-icon.sortby, .no-svg .table .table-header th.sortable .sort-icon.sortby, .no-svg .table .table-header .table-cell.sortable .sort-icon.sortby {
+.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby, .no-svg .table thead tr th.sortable .sort-icon.sortby, .no-svg .table thead tr .table-cell.sortable .sort-icon.sortby, .no-svg .table tfoot tr th.sortable .sort-icon.sortby, .no-svg .table tfoot tr .table-cell.sortable .sort-icon.sortby, .no-svg .table .table-header th.sortable .sort-icon.sortby, .no-svg .table .table-header .table-cell.sortable .sort-icon.sortby {
   background-image: url("../img/oph-icon-sprite.png");
 }
 
-table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby-reverse, .table thead tr th.sortable .sort-icon.sortby-reverse, .table thead tr .table-cell.sortable .sort-icon.sortby-reverse, .table .table-header th.sortable .sort-icon.sortby-reverse, .table .table-header .table-cell.sortable .sort-icon.sortby-reverse {
+table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby-reverse, .table thead tr th.sortable .sort-icon.sortby-reverse, .table thead tr .table-cell.sortable .sort-icon.sortby-reverse, .table tfoot tr th.sortable .sort-icon.sortby-reverse, .table tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .table .table-header th.sortable .sort-icon.sortby-reverse, .table .table-header .table-cell.sortable .sort-icon.sortby-reverse {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
   height: 5px;
@@ -762,7 +762,7 @@ table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, tabl
   margin-top: 10px;
 }
 
-.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table thead tr th.sortable .sort-icon.sortby-reverse, .no-svg .table thead tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table .table-header th.sortable .sort-icon.sortby-reverse, .no-svg .table .table-header .table-cell.sortable .sort-icon.sortby-reverse {
+.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table thead tr th.sortable .sort-icon.sortby-reverse, .no-svg .table thead tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table tfoot tr th.sortable .sort-icon.sortby-reverse, .no-svg .table tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table .table-header th.sortable .sort-icon.sortby-reverse, .no-svg .table .table-header .table-cell.sortable .sort-icon.sortby-reverse {
   background-image: url("../img/oph-icon-sprite.png");
 }
 

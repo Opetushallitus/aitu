@@ -10,7 +10,7 @@ table:not(.table-condensed), .table {
     width: 100%;
   }
 
-  thead tr, .table-header {
+  thead tr, tfoot tr, .table-header {
     border-bottom: 1px solid $border-color;
     border-top: 1px solid $border-color;
     background: $lighter-gray;
