@@ -24,6 +24,11 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
       asiantuntijaksi: null
     };
 
+    // Hakuvalitsin-workaroundit
+    $scope.$watch('hakuvalitsin_jarjesto', function(jarjesto) {
+      $scope.haku.jarjesto = jarjesto && jarjesto.jarjesto;
+    });
+
     $scope.luoJasenesitys = function() {
       $location.url('/jasenesitykset/uusi');
     };

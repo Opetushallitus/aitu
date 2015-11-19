@@ -16,10 +16,13 @@
   <label>[[ehdokkaan_nimi]]</label>
   <input type="text" ng-model="haku.ehdokas" ng-model-options="{debounce: 200}">
 </fieldset>
-<fieldset>
-  <label>[[tyoelamajarjesto]]</label>
-  <input type="text" ng-model="haku.jarjesto" ng-model-options="{debounce: 200}">
-</fieldset>
+<haku-valitsin
+  otsikko="[[tyoelamajarjesto]]"
+  url="[[base-url]]/api/jarjesto/haku/"
+  model="hakuvalitsin_jarjesto"
+  model-id-property="jarjesto"
+  model-text-property="jarjesto_nimi">
+</haku-valitsin>
 <fieldset>
   <label>[[tutkintotoimikunta]]</label>
   <input type="text" ng-model="haku.toimikunta" ng-model-options="{debounce: 200}">
