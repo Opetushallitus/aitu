@@ -19,8 +19,7 @@
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :refer [toimikunta-vanhentunut?]]
             [aitu.toimiala.voimassaolo.saanto.jasenyys :refer [taydenna-jasenyyden-voimassaolo]]
-            [aitu.toimiala.kayttajaroolit :refer :all]
-            [clojure.tools.logging :as log]))
+            [aitu.toimiala.kayttajaroolit :refer :all]))
 
 (def ^:dynamic *current-user-authmap*)
 (def ^:dynamic *impersonoitu-oid* nil)
