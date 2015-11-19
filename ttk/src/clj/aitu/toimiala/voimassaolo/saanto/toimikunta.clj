@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.voimassaolo.saanto.toimikunta
-  (:require [clj-time.core :as time]
-            [oph.common.util.util :as util]))
+  (:require [oph.common.util.util :as util]))
 
 (defn toimikunta-voimassa?
   "Onko toimikunta voimassa?"
