@@ -39,8 +39,13 @@
   <label><input type="radio" ng-model="haku.tila" value="peruutettu"> [[peruutettu]]</label>
 </div>
 
+<button class="float-right" ng-click="yhteenveto()">[[yhteenveto]]</button>
+
 <table>
   <thead>
+  <tr>
+    <th colspan="0">[[jasenesityksia]]: {{ esitykset.length }}</th>
+  </tr>
   <tr>
     <th></th>
     <th>[[ehdokkaan_nimi]]</th>
@@ -94,11 +99,15 @@
     </td>
   </tr>
   </tbody>
+  <tfoot>
+  <tr>
+    <th colspan="0">[[jasenesityksia]]: {{ esitykset.length }}</th>
+  </tr>
+  </tfoot>
 </table>
 
-<div>
-  [[jasenesityksia]]: {{ esitykset.length }}
-</div>
+<button class="float-right" ng-click="yhteenveto()">[[yhteenveto]]</button>
+
 <div>
   <label>
     <input type="checkbox" ng-model="henkilotiedot">
@@ -107,8 +116,6 @@
   </label>
   <a ng-href="[[base-url]]/api/jasenesitykset/csv?ehdokas={{haku.ehdokas}}&jarjesto={{haku.jarjesto}}&toimikunta={{haku.toimikunta}}&asiantuntijaksi={{haku.asiantuntijaksi}}&henkilotiedot={{henkilotiedot}}" class="liite-linkki" target="_blank">[[lataa_jasenesitykset]]</a>
 </div>
-
-<button ng-click="yhteenveto()">[[yhteenveto]]</button>
 
 [[/i18n.jasenesitykset]]
 [[/i18n.yleiset]]
