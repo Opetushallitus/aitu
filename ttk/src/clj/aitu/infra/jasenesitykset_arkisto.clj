@@ -60,7 +60,7 @@
                                     {:esittaja_keskusjarjesto.jarjestoid (Integer/parseInt jarjesto)}))
       (nil? tila) (sql/where {:jasenyys.status [in ["esitetty", "nimitetty"]]})
       (seq tila) (sql/where {:jasenyys.status tila})
-      (seq toimikunta) (rajaa-kentilla [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta.nimi_sv] toimikunta))
+      (seq toimikunta) (sql/where {:tutkintotoimikunta.tkunta toimikunta}))
     (sql/order (sql/raw "jasenyys.luotuaika::date") :desc)
     (sql/order :henkilo.sukunimi :asc)
     sql/exec))

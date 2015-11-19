@@ -28,6 +28,9 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
     $scope.$watch('hakuvalitsin_jarjesto', function(jarjesto) {
       $scope.haku.jarjesto = jarjesto && jarjesto.jarjesto;
     });
+    $scope.$watch('hakuvalitsin_toimikunta', function(toimikunta) {
+      $scope.haku.toimikunta = toimikunta && toimikunta.tkunta;
+    });
 
     $scope.luoJasenesitys = function() {
       $location.url('/jasenesitykset/uusi');
