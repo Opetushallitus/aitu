@@ -37,6 +37,10 @@
       <th colspan="6" style="text-align: center">[[nimitetty]]</th>
     </tr>
     <tr>
+      <th>[[yhteensa]]</th>
+      <th ng-repeat="sarakekentta in sarakekentat" ng-bind="summat[sarakekentta]"></th>
+    </tr>
+    <tr>
       <th jarjestettava-sarake="nimi" jarjestely-fn="orderByLokalisoitu" oletus-jarjestely>[[tutkintotoimikunta]]</th>
       <th jarjestettava-sarake="esitetty_yhteensa">[[lyhenne_kaikki]]</th>
       <th jarjestettava-sarake="esitetty_miehia">[[lyhenne_mies]]</th>
@@ -69,6 +73,12 @@
       <td>{{ toimikunta.nimitetty_se }}</td>
     </tr>
   </tbody>
+  <tfoot>
+  <tr>
+    <th>[[yhteensa]]</th>
+    <th ng-repeat="sarakekentta in sarakekentat" ng-bind="summat[sarakekentta]"></th>
+  </tr>
+  </tfoot>
 </table>
 
 [[/i18n.jasenesitykset]]
