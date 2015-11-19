@@ -38,15 +38,15 @@
     </tr>
     <tr>
       <th jarjestettava-sarake="nimi" jarjestely-fn="orderByLokalisoitu" oletus-jarjestely>[[tutkintotoimikunta]]</th>
+      <th jarjestettava-sarake="esitetty_yhteensa">[[lyhenne_kaikki]]</th>
       <th jarjestettava-sarake="esitetty_miehia">[[lyhenne_mies]]</th>
       <th jarjestettava-sarake="esitetty_naisia">[[lyhenne_nainen]]</th>
-      <th jarjestettava-sarake="esitetty_yhteensa">[[lyhenne_kaikki]]</th>
       <th jarjestettava-sarake="esitetty_fi">FI</th>
       <th jarjestettava-sarake="esitetty_sv">SV</th>
       <th jarjestettava-sarake="esitetty_se">SE</th>
+      <th jarjestettava-sarake="nimitetty_yhteensa">[[lyhenne_kaikki]]</th>
       <th jarjestettava-sarake="nimitetty_miehia">[[lyhenne_mies]]</th>
       <th jarjestettava-sarake="nimitetty_naisia">[[lyhenne_nainen]]</th>
-      <th jarjestettava-sarake="nimitetty_yhteensa">[[lyhenne_kaikki]]</th>
       <th jarjestettava-sarake="nimitetty_fi">FI</th>
       <th jarjestettava-sarake="nimitetty_sv">SV</th>
       <th jarjestettava-sarake="nimitetty_se">SE</th>
@@ -55,15 +55,15 @@
   <tbody>
     <tr ng-repeat="toimikunta in toimikunnatJarjestetty | filter:filter">
       <td style="text-align: left"><a ng-href="#/toimikunta/{{ toimikunta.diaarinumero }}/tiedot">{{ toimikunta | lokalisoiKentta:'nimi' }}</a></td>
+      <td>{{ toimikunta.esitetty_yhteensa }}</td>
       <td>{{ toimikunta.esitetty_miehia }}</td>
       <td>{{ toimikunta.esitetty_naisia }}</td>
-      <td>{{ toimikunta.esitetty_yhteensa }}</td>
       <td>{{ toimikunta.esitetty_fi }}</td>
       <td>{{ toimikunta.esitetty_sv }}</td>
       <td>{{ toimikunta.esitetty_se }}</td>
-      <td style="border-left: 1px solid black">{{ toimikunta.nimitetty_miehia }}</td>
+      <td style="border-left: 1px solid black">{{ toimikunta.nimitetty_yhteensa }}</td>
+      <td>{{ toimikunta.nimitetty_miehia }}</td>
       <td>{{ toimikunta.nimitetty_naisia }}</td>
-      <td>{{ toimikunta.nimitetty_yhteensa }}</td>
       <td>{{ toimikunta.nimitetty_fi }}</td>
       <td>{{ toimikunta.nimitetty_sv }}</td>
       <td>{{ toimikunta.nimitetty_se }}</td>
