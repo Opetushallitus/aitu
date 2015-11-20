@@ -22,12 +22,20 @@
   (sql/select jarjesto
     (sql/order :nimi_fi)))
 
-(defn hae-termilla [termi]
-  (for [jarjesto (hae-kaikki)
-        :when (sisaltaako-kentat? jarjesto [:nimi_fi :nimi_sv] termi)]
-    {:jarjesto (:jarjestoid jarjesto)
-     :jarjesto_nimi_fi (str (:nimi_fi jarjesto) (when (:keskusjarjestotieto jarjesto) " (*)"))
-     :jarjesto_nimi_sv (str (:nimi_sv jarjesto) (when (:keskusjarjestotieto jarjesto) " (*)"))}))
+(defn hae-termilla [termi kayttajan-jarjesto]
+  (let [kayttajan-keskusjarjestoid (sql/subselect jarjesto
+                                     (sql/fields (sql/sqlfn "COALESCE" :keskusjarjestoid :jarjestoid))
+                                     (sql/where {:jarjestoid kayttajan-jarjesto}))]
+    (->
+      (sql/select* :jarjesto)
+      (sql/fields [:jarjestoid :jarjesto] [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv])
+      (cond->
+        termi (sql/where (or {:nimi_fi [ilike (str "%" termi "%")]}
+                             {:nimi_sv [ilike (str "%" termi "%")]}))
+        kayttajan-jarjesto (sql/where (or {:jarjestoid kayttajan-keskusjarjestoid}
+                                          {:keskusjarjestoid kayttajan-keskusjarjestoid})))
+      (sql/order :nimi_fi)
+      sql/exec)))
 
 (defn hae-keskusjarjestot []
   (sql/select jarjesto
