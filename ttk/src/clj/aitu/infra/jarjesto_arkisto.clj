@@ -15,7 +15,8 @@
 (ns aitu.infra.jarjesto-arkisto
   (:require  korma.db
              [korma.core :as sql]
-             [oph.common.util.util :refer [sisaltaako-kentat?]])
+             [oph.common.util.util :refer [sisaltaako-kentat?]]
+             [oph.korma.common :refer [rajaa-kentilla]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-kaikki []
@@ -27,8 +28,7 @@
     (sql/select* :jarjesto)
     (sql/fields [:jarjestoid :jarjesto] [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv])
     (cond->
-      termi (sql/where (or {:nimi_fi [ilike (str "%" termi "%")]}
-                           {:nimi_sv [ilike (str "%" termi "%")]}))
+      termi (rajaa-kentilla [:nimi_fi :nimi_sv] termi)
       kayttajan-jarjesto (sql/where (or {:jarjestoid kayttajan-jarjesto}
                                         {:keskusjarjestoid kayttajan-jarjesto})))
     (sql/order :nimi_fi)

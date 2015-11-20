@@ -15,13 +15,8 @@
 (ns aitu.infra.jasenesitykset-arkisto
   (:require [korma.core :as sql]
             [aitu.integraatio.sql.korma :refer [ilike]]
-            [oph.common.util.util :refer [sisaltaako-kentat?]]))
-
-(defn ^:private rajaa-kentilla [query kentat teksti]
-  (let [ehdot (for [kentta kentat]
-                {kentta [ilike (str "%" teksti "%")]})]
-    (sql/where query
-      (apply or ehdot))))
+            [oph.common.util.util :refer [sisaltaako-kentat?]]
+            [oph.korma.common :refer [rajaa-kentilla]]))
 
 (defn hae [kayttajan-jarjesto {:keys [asiantuntijaksi ehdokas henkilotiedot jarjesto tila toimikunta]} csv]
   (->
