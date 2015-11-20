@@ -23,19 +23,16 @@
     (sql/order :nimi_fi)))
 
 (defn hae-termilla [termi kayttajan-jarjesto]
-  (let [kayttajan-keskusjarjestoid (sql/subselect jarjesto
-                                     (sql/fields (sql/sqlfn "COALESCE" :keskusjarjestoid :jarjestoid))
-                                     (sql/where {:jarjestoid kayttajan-jarjesto}))]
-    (->
-      (sql/select* :jarjesto)
-      (sql/fields [:jarjestoid :jarjesto] [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv])
-      (cond->
-        termi (sql/where (or {:nimi_fi [ilike (str "%" termi "%")]}
-                             {:nimi_sv [ilike (str "%" termi "%")]}))
-        kayttajan-jarjesto (sql/where (or {:jarjestoid kayttajan-keskusjarjestoid}
-                                          {:keskusjarjestoid kayttajan-keskusjarjestoid})))
-      (sql/order :nimi_fi)
-      sql/exec)))
+  (->
+    (sql/select* :jarjesto)
+    (sql/fields [:jarjestoid :jarjesto] [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv])
+    (cond->
+      termi (sql/where (or {:nimi_fi [ilike (str "%" termi "%")]}
+                           {:nimi_sv [ilike (str "%" termi "%")]}))
+      kayttajan-jarjesto (sql/where (or {:jarjestoid kayttajan-jarjesto}
+                                        {:keskusjarjestoid kayttajan-jarjesto})))
+    (sql/order :nimi_fi)
+    sql/exec))
 
 (defn hae-keskusjarjestot []
   (sql/select jarjesto
