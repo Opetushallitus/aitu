@@ -350,6 +350,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       scope : {
         otsikko : '@',
         url : '@',
+        minimumInputLength: '@',
         model : '=',
         modelIdProperty : '@',
         modelTextProperty : '@',
@@ -374,7 +375,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
 
         $scope.options = {
           width: '100%',
-          minimumInputLength : 1,
+          minimumInputLength : $scope.minimumInputLength || 1,
           allowClear : true,
           multiple : $scope.monivalinta,
           ajax: {
