@@ -78,6 +78,8 @@
   (cu/defapi :jasenesitykset nil :get "/" [& ehdot]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (json-response (arkisto/hae jarjesto ehdot false))))
+  (cu/defapi :jasenesitys-poisto jasenyysid :delete "/jasenyys/:jasenyysid", [jasenyysid]
+    (json-response (arkisto/poista! (Integer/parseInt jasenyysid))))
   (cu/defapi :jasenesitykset nil :get "/yhteenveto" [toimikausi vain_jasenesityksia_sisaltavat]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (json-response (arkisto/hae-yhteenveto jarjesto (Integer/parseInt toimikausi) (Boolean/valueOf vain_jasenesityksia_sisaltavat))))))

@@ -14,6 +14,7 @@
 
 (ns aitu.infra.jasenesitykset-arkisto
   (:require [korma.core :as sql]
+            [aitu.auditlog :as auditlog]
             [aitu.integraatio.sql.korma :refer [ilike]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [oph.korma.common :refer [rajaa-kentilla]]))
@@ -106,3 +107,8 @@
                                                                                     (sql/fields :jasenyys.toimikunta)
                                                                                     (sql/where {:jasenyys.esittaja [not= nil]}))]}))
       sql/exec)))
+
+(defn poista! [jasenyys_id]
+  (auditlog/jasenyys-operaatio! :poisto nil jasenyys_id)
+  (sql/delete :jasenyys
+    (sql/where {:jasenyys_id jasenyys_id})))

@@ -135,6 +135,12 @@
     :raportti sallittu-yllapitajalle
     :paatos sallittu-yllapitajalle})
 
+(defn jasenesityksen-poisto-sallittu? [jasenyysid]
+  (let [jasenyys (ttk-arkisto/hae-jasen jasenyysid)
+        luotu-kayttaja (:luotu_kayttaja jasenyys)
+        kirjautunut-kayttaja (:oid *current-user-authmap*)]
+    (= luotu-kayttaja kirjautunut-kayttaja)))
+
 ;; Kuten yllä, arvot eivät saa olla funktio-olioita.
 (def kayttajatoiminnot
   `{:omat_tiedot #(or (yllapitaja?) (= (:oid *current-user-authmap*) %))
@@ -151,7 +157,8 @@
     :impersonointi-lopetus sallittu-impersonoidulle
     :henkilo_lisays sallittu-yllapitajalle-ja-jarjestolle
     :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle
-    :jasenesitykset sallittu-yllapitajalle-ja-jarjestolle})
+    :jasenesitykset sallittu-yllapitajalle-ja-jarjestolle
+    :jasenesitys-poisto #(or (yllapitaja?) (jasenesityksen-poisto-sallittu? (int-arvo %)))})
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
   (let [id (int-arvo sopimusid)]
