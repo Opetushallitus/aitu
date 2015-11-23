@@ -82,7 +82,7 @@
     <td ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.edustus" nimi="edustus"></enum-arvo></td>
     <td>{{ esitys.muutettuaika | date:'dd.MM.yyyy' }}</td>
     <td><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></td>
-    <td><button class="icon delete-icon" ng-click="poistaJasenesitys(esitys)"></button></td>
+    <td><button class="icon delete-icon" ng-click="poistaJasenesitys(esitys)" ng-if="poistoSallittu(esitys)"></button></td>
   </tr>
   <tr ng-repeat-end ng-show="esitys.auki">
     <td></td>
