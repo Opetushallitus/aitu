@@ -28,4 +28,4 @@ angular.module('kayttooikeudet', ['ngResource'])
   }])
 
   .run(['kayttooikeudet', function(kayttooikeudet) {}])
-
+;
