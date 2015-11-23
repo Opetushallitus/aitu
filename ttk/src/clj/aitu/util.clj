@@ -107,6 +107,15 @@
                           :toimikausi_loppu "Toimikausi loppupvm"
                           :toimikunta "Toimikunta"})
 
+(def type-mapping
+  "Arvojen konversio CSV-exporttia varten käyttäjäystävällisemmäksi"
+  {false "Ei"
+   true "Kyllä"})
+
+(defn convert-values
+  ([m value-map] (clojure.walk/postwalk #(get value-map % %) m))
+  ([m] (convert-values m type-mapping))) 
+
 (defn csv-rivi-soluiksi [csv-rivi]
   (string/split csv-rivi #"\;(?=([^\"]*\"[^\"]*\")*(?![^\"]*\"))"))
 

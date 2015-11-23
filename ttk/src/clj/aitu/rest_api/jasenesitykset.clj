@@ -17,7 +17,7 @@
             [aitu.compojure-util :as cu]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
             [aitu.toimiala.kayttajaoikeudet :as ko]
-            [aitu.util :refer [muodosta-csv] :as aitu-util]
+            [aitu.util :refer [muodosta-csv convert-values] :as aitu-util]
             [oph.common.util.http-util :refer [csv-download-response json-response]]))
 
 (def ^:private kenttien-jarjestys [:henkiloid :etunimi :sukunimi :asiantuntijaksi :vapaateksti_kokemus
@@ -69,7 +69,7 @@
 (c/defroutes reitit-csv
   (cu/defapi :jasenesitykset nil :get "/csv" [& ehdot]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
-      (csv-download-response (muodosta-csv (arkisto/hae jarjesto ehdot true)
+      (csv-download-response (muodosta-csv (convert-values (arkisto/hae jarjesto ehdot true))
                                            kenttien-jarjestys
                                            sarakkeiden-otsikot)
                              "jasenesitykset.csv"))))

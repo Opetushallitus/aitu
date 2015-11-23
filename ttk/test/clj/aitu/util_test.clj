@@ -73,3 +73,10 @@
         "12\n34;56\""
         ""
         "1234"])))
+
+(deftest konversiot-toimivat
+  (let [a [{:nimi_fi "foo", :truthy true} {:nimi_fi "bar" :truthy false}]
+        b (muodosta-csv (convert-values a) [:nimi_fi :truthy] {:nimi_fi "nimi" :truthy "totuus"})]
+    (is (= b "nimi;totuus\nfoo;Kyllä\nbar;Ei\n"))))
+
+  
