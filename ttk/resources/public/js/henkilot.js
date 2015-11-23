@@ -112,8 +112,8 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
     }
   ])
 
-  .controller('HenkiloVelhoController', ['$location', '$scope', '$rootScope', '$routeParams', 'ToimikuntaUtil', 'varmistaPoistuminen', 'henkiloVelhoResource', 'edellinenLokaatio', 'toimikuntaResource',
-    function($location, $scope, $rootScope, $routeParams, ToimikuntaUtil, varmistaPoistuminen, henkiloVelhoResource, edellinenLokaatio, toimikuntaResource) {
+  .controller('HenkiloVelhoController', ['$location', '$scope', '$rootScope', '$routeParams', 'Kayttaja', 'ToimikuntaUtil', 'varmistaPoistuminen', 'henkiloVelhoResource', 'edellinenLokaatio', 'toimikuntaResource',
+    function($location, $scope, $rootScope, $routeParams, Kayttaja, ToimikuntaUtil, varmistaPoistuminen, henkiloVelhoResource, edellinenLokaatio, toimikuntaResource) {
       $scope.nykyinenAskel = 0;
       $scope.jasenEsitys = ($location.url() === '/jasenesitykset/uusi');
 
@@ -131,6 +131,15 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
         $scope.$watch('jasen.toimikunta', function(toimikunta) {
           $scope.jasen.alkupvm = toimikunta.toimikausi_alku;
           $scope.jasen.loppupvm = toimikunta.toimikausi_loppu;
+        });
+        Kayttaja.haeJarjesto().then(function(jarjesto) {
+          if (jarjesto.jarjestoid) {
+            $scope.jasen.henkilo.jarjesto = {
+              jarjesto: jarjesto.jarjestoid,
+              jarjesto_nimi_fi: jarjesto.nimi_fi,
+              jarjesto_nimi_sv: jarjesto.nimi_sv
+            };
+          }
         });
       }
       $scope.search = { henkilo: {} };
