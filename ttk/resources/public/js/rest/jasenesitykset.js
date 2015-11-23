@@ -24,6 +24,11 @@ angular.module('rest.jasenesitykset', [])
         return $http.get(ophBaseUrl + '/api/jasenesitykset/yhteenveto', {params: search}).then(function(response) {
           return response.data;
         });
+      },
+      poista: function(jasenyysId) {
+        return $http.delete(ophBaseUrl + '/api/jasenesitykset/jasenyys/' + jasenyysId).then(function(response) {
+          return response.data;
+        });
       }
     };
   }])

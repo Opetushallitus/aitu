@@ -19,7 +19,7 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
     $routeProvider.when('/jasenesitykset/yhteenveto', {controller:'JasenesityksetYhteenvetoController', templateUrl: 'template/jasenesitykset-yhteenveto'});
   }])
 
-  .controller('JasenesityksetController', ['$filter', '$location', '$q', '$scope', 'Jasenesitykset', 'Kayttaja', function($filter, $location, $q, $scope, Jasenesitykset, Kayttaja) {
+  .controller('JasenesityksetController', ['$filter', '$location', '$q', '$scope', 'Jasenesitykset', 'Kayttaja', 'i18n', function($filter, $location, $q, $scope, Jasenesitykset, Kayttaja, i18n) {
     $scope.haku = {
       asiantuntijaksi: null
     };
@@ -34,6 +34,14 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
 
     $scope.luoJasenesitys = function() {
       $location.url('/jasenesitykset/uusi');
+    };
+
+    $scope.poistaJasenesitys = function(esitys) {
+      if (confirm(i18n.jasenesitykset.poistetaanko)) {
+        Jasenesitykset.poista(esitys.jasenyys_id).then(function() {
+          _.remove($scope.esitykset, function(e) { return e.jasenyys_id == esitys.jasenyys_id; });
+        });
+      }
     };
 
     $scope.yhteenveto = function() {

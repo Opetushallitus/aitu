@@ -52,7 +52,7 @@
 <table>
   <thead>
   <tr>
-    <th colspan="11">[[jasenesityksia]]: {{ esitykset.length }}</th>
+    <th colspan="12">[[jasenesityksia]]: {{ esitykset.length }}</th>
   </tr>
   <tr>
     <th></th>
@@ -66,6 +66,7 @@
     <th ng-if="!haku.tila || haku.tila === 'nimitetty'">[[edustus]]</th>
     <th>[[muutettu]]</th>
     <th>[[tila]]</th>
+    <th>[[poista]]</th>
   </tr>
   </thead>
   <tbody class="tuplarivit">
@@ -81,10 +82,11 @@
     <td ng-if="!haku.tila || haku.tila === 'nimitetty'"><enum-arvo arvo="esitys.edustus" nimi="edustus"></enum-arvo></td>
     <td>{{ esitys.muutettuaika | date:'dd.MM.yyyy' }}</td>
     <td><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></td>
+    <td><button class="icon delete-icon" ng-click="poistaJasenesitys(esitys)"></button></td>
   </tr>
   <tr ng-repeat-end ng-show="esitys.auki">
     <td></td>
-    <td colspan="11">
+    <td colspan="12">
       <div>
         <fieldset>
           <label>[[ilmoittajan_nimi]]</label>          
@@ -109,7 +111,7 @@
   </tbody>
   <tfoot>
   <tr>
-    <th colspan="11">[[jasenesityksia]]: {{ esitykset.length }}</th>
+    <th colspan="12">[[jasenesityksia]]: {{ esitykset.length }}</th>
   </tr>
   </tfoot>
 </table>
