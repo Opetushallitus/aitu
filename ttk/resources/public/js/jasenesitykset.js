@@ -50,7 +50,7 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
     };
 
     $scope.poistoSallittu = function(esitys) {
-      return kirjautunutKayttaja.roolitunnus === 'YLLAPITAJA' || kirjautunutKayttaja.oid === esitys.luotu_kayttaja;
+      return esitys.status === 'esitetty' && (kirjautunutKayttaja.roolitunnus === 'YLLAPITAJA' || kirjautunutKayttaja.oid === esitys.luotu_kayttaja);
     };
 
     $scope.yhteenveto = function() {

@@ -139,7 +139,8 @@
   (let [jasenyys (ttk-arkisto/hae-jasen jasenyysid)
         luotu-kayttaja (:luotu_kayttaja jasenyys)
         kirjautunut-kayttaja (:oid *current-user-authmap*)]
-    (= luotu-kayttaja kirjautunut-kayttaja)))
+    (and (= "esitetty" (:status jasenyys))
+         (= luotu-kayttaja kirjautunut-kayttaja))))
 
 ;; Kuten yllä, arvot eivät saa olla funktio-olioita.
 (def kayttajatoiminnot
