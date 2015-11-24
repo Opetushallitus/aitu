@@ -299,7 +299,7 @@
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit)
     (paivita-toimipaikat! toimipaikkakoodit)
-    (paivita-tyoelamajarjestot! koodit)))
+    (paivita-tyoelamajarjestot! jarjestokoodit)))
 
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
