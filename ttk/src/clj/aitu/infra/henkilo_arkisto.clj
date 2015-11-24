@@ -160,6 +160,12 @@
   [etunimi sukunimi]
   (->>
     (sql/select henkilo
+      (sql/with jarjesto
+        (sql/fields [:nimi_fi :jarjesto_nimi_fi]
+                    [:nimi_sv :jarjesto_nimi_sv]
+                    [:keskusjarjestotieto :keskusjarjesto])
+        (sql/with keskusjarjesto
+          (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
       (sql/where {:etunimi etunimi
                   :sukunimi sukunimi}))
     piilota-salaiset
