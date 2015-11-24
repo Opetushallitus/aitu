@@ -134,7 +134,7 @@
         (sql/with keskusjarjesto
           (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
       (sql/with jasenyys
-        (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta))
+        (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
       (sql/where {:henkiloid id}))
     piilota-salaiset
     first
