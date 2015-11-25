@@ -63,3 +63,25 @@
     }
   }
 }
+
+// Ylikirjoitetaan osa tyyleistä, tarvitaan koska aitussa ei ole bootstrappia
+.wizard {
+  display: block;
+
+  a {
+    cursor: pointer;
+  }
+
+  .wizard-item {
+    width: 33%;
+    float: left;
+
+    &:after, &:before {
+      height: auto;
+    }
+
+    &:before {
+      left: -2em;
+    }
+  }
+}

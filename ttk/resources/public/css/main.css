@@ -1790,6 +1790,27 @@ div.api-method-feedback > div.error {
   border: 0px;
 }
 
+.wizard {
+  display: block;
+}
+
+.wizard a {
+  cursor: pointer;
+}
+
+.wizard .wizard-item {
+  width: 33%;
+  float: left;
+}
+
+.wizard .wizard-item:after, .wizard .wizard-item:before {
+  height: auto;
+}
+
+.wizard .wizard-item:before {
+  left: -2em;
+}
+
 .dialogi {
   min-height: 160px;
   margin-left: -250px;
