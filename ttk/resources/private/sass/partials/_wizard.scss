@@ -14,16 +14,16 @@
     color: $gray-color;
     overflow: visible;
     &.active {
-      background-color: $lighter-primary;
+      background-color: $primary-color;
       a {
         color: white;
       }
       &:after {
-        border-left: 1em solid $lighter-primary;
+        border-left: 1em solid $primary-color;
       }
       &:before {
-        border-top: 1em solid $lighter-primary;
-        border-bottom: 1em solid $lighter-primary;
+        border-top: 1em solid $primary-color;
+        border-bottom: 1em solid $primary-color;
       }
     }
     &.enabled {
@@ -75,6 +75,10 @@
   .wizard-item {
     width: 33%;
     float: left;
+
+    &.active {
+      color: white;
+    }
 
     &:after, &:before {
       height: auto;

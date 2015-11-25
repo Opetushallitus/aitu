@@ -1741,7 +1741,7 @@ div.api-method-feedback > div.error {
 }
 
 .wizard .wizard-item.active {
-  background-color: #43b1d5;
+  background-color: #107ea2;
 }
 
 .wizard .wizard-item.active a {
@@ -1749,12 +1749,12 @@ div.api-method-feedback > div.error {
 }
 
 .wizard .wizard-item.active:after {
-  border-left: 1em solid #43b1d5;
+  border-left: 1em solid #107ea2;
 }
 
 .wizard .wizard-item.active:before {
-  border-top: 1em solid #43b1d5;
-  border-bottom: 1em solid #43b1d5;
+  border-top: 1em solid #107ea2;
+  border-bottom: 1em solid #107ea2;
 }
 
 .wizard .wizard-item:after {
@@ -1801,6 +1801,10 @@ div.api-method-feedback > div.error {
 .wizard .wizard-item {
   width: 33%;
   float: left;
+}
+
+.wizard .wizard-item.active {
+  color: white;
 }
 
 .wizard .wizard-item:after, .wizard .wizard-item:before {
