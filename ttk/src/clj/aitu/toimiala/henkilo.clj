@@ -27,7 +27,7 @@
   (cond-> henkilo
     (not (:puhelin_julkinen henkilo)) (dissoc :puhelin)
     (not (:osoite_julkinen henkilo)) (dissoc :osoite :postinumero :postitoimipaikka)
-    true (dissoc :lisatiedot)))
+    true (dissoc :lisatiedot :syntymavuosi)))
 
 (defn piilota-salaiset-henkiloilta
   "Tyhjentää salaiseksi määritellyt kentät henkilöiltä jos ei käyttäjä ei ole ylläpitäjä"
