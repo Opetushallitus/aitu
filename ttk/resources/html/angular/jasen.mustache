@@ -5,19 +5,19 @@
 
 <div class="wizard">
   <div class="wizard-item" ng-class="{active: nykyinenAskel == 0}">
-    <a ng-click="nykyinenAskel = 0">Henkilön haku</a>
+    <a ng-click="nykyinenAskel = 0">[[henkilon-haku]]</a>
   </div>
   <div class="wizard-item" ng-class="{active: nykyinenAskel == 1}">
     <span ng-show="muokkausTila">
       <span>[[henkilon-lisays]]</span>
     </span>
     <span ng-show="!muokkausTila">
-      <a ng-click="nykyinenAskel = 1" ng-show="nykyinenAskel > 1">Henkilön valinta</a>
-      <span ng-if="nykyinenAskel <= 1">Henkilön valinta</span>
+      <a ng-click="nykyinenAskel = 1" ng-show="nykyinenAskel > 1">[[henkilon-valinta]]</a>
+      <span ng-if="nykyinenAskel <= 1">[[henkilon-valinta]]</span>
     </span>
   </div>
   <div class="wizard-item" ng-class="{active: nykyinenAskel == 2}">
-    Jäsenyyden lisäys
+    [[jasenyyden-lisays]]
   </div>
 </div>
 
