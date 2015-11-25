@@ -180,7 +180,7 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
         edellinenLokaatio();
       };
       $scope.haeHenkilotJaSiirrySeuraavaan = function() {
-        var henkiloValittu = ($scope.search.henkilo.osat !== undefined);
+        var henkiloValittu = ($scope.search.henkilo !== undefined && $scope.search.henkilo.osat !== undefined);
         if(henkiloValittu) {
           $scope.henkilot = henkiloVelhoResource.get(
             {etunimi: $scope.search.henkilo.osat.etunimi, sukunimi: $scope.search.henkilo.osat.sukunimi},
