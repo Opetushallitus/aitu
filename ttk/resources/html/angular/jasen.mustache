@@ -2,7 +2,24 @@
 [[#i18n.yleiset]]
 [[#i18n.toimikunta]]
 [[#i18n.jasenesitykset]]
-<h1>[[henkilon-lisays]]</h1>
+
+<div class="wizard">
+  <div class="wizard-item" ng-class="{active: nykyinenAskel == 0}">
+    <a ng-click="nykyinenAskel = 0">Henkilön haku</a>
+  </div>
+  <div class="wizard-item" ng-class="{active: nykyinenAskel == 1}">
+    <span ng-show="muokkausTila">
+      <span>[[henkilon-lisays]]</span>
+    </span>
+    <span ng-show="!muokkausTila">
+      <a ng-click="nykyinenAskel = 1" ng-show="nykyinenAskel > 1">Henkilön valinta</a>
+      <span ng-if="nykyinenAskel <= 1">Henkilön valinta</span>
+    </span>
+  </div>
+  <div class="wizard-item" ng-class="{active: nykyinenAskel == 2}">
+    Jäsenyyden lisäys
+  </div>
+</div>
 
 <div ng-if="nykyinenAskel == 0">
   <form>
