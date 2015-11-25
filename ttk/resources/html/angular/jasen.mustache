@@ -22,18 +22,28 @@
 </div>
 
 <div ng-if="nykyinenAskel == 0">
+  <div class="wide-fieldset" style="width: 40%; float: left; margin-right: 2em">
   <form>
     <haku-valitsin
       otsikko="[[kerro-ensin-nimi-ja-sitten-jatka]]"
       url="[[base-url]]/api/henkilo/nimi/"
       model="search.henkilo"
       model-id-property="osat"
-      model-text-property="nimi">
+      model-text-property="nimi"
+      pakollinen="true">
     </haku-valitsin>
     <div>
-      <button ng-click="haeHenkilotJaSiirrySeuraavaan()">[[jatka]]</button>
+      <button ng-click="haeHenkilotJaSiirrySeuraavaan()" ng-disabled="search.henkilo.osat === undefined">[[jatka]]</button>
     </div>
   </form>
+  </div>
+
+  <div style="width: 40%; float: left; margin-left: 2em;">
+    <br><br><br>
+    [[#i18n.henkilot]]
+    <button class="button-with-icon add-icon-white" ng-click="haeHenkilotJaSiirrySeuraavaan()">[[luo-uusi]]</button>
+    [[/i18n.henkilot]]
+  </div>
 </div>
 
 <div ng-if="nykyinenAskel == 1">

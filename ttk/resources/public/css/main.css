@@ -438,6 +438,10 @@ fieldset.lisatiedot p {
   padding: 0;
 }
 
+.wide-fieldset fieldset {
+  width: 100%;
+}
+
 .select2-container .select2-container-multi .select2-results {
   width: 50%;
   display: block;
