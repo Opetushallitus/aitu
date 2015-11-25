@@ -25,7 +25,6 @@
   "Poistaa yhden henkilön ei julkisiksi määritellyt kentät"
   [henkilo]
   (cond-> henkilo
-    (not (:sahkoposti_julkinen henkilo)) (dissoc :sahkoposti)
     (not (:puhelin_julkinen henkilo)) (dissoc :puhelin)
     (not (:osoite_julkinen henkilo)) (dissoc :osoite :postinumero :postitoimipaikka)
     true (dissoc :lisatiedot)))
