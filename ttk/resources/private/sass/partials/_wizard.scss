@@ -1,0 +1,65 @@
+// osaan.fi .wizard
+.wizard {
+  margin-bottom: 1em;
+  margin-top: 1em;
+  .wizard-item {
+    text-align: center;
+    background-color: $lightest-gray;
+    height: 2em;
+    line-height: 2em;
+    padding: 0;
+    position: relative;
+    margin-bottom: 2px;
+    font-size: 1.14285714285714em;
+    color: $gray-color;
+    overflow: visible;
+    &.active {
+      background-color: $lighter-primary;
+      a {
+        color: white;
+      }
+      &:after {
+        border-left: 1em solid $lighter-primary;
+      }
+      &:before {
+        border-top: 1em solid $lighter-primary;
+        border-bottom: 1em solid $lighter-primary;
+      }
+    }
+    &.enabled {
+    }
+    &:after {
+      content: ' ';
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 1.2em;
+      height: 100%;
+      border-top: 1em solid white;
+      border-left: 1em solid $lightest-gray;
+      border-bottom: 1em solid white;
+    }
+    &:before {
+      content: ' ';
+      position: absolute;
+      left: -1em;
+      top: 0;
+      width: 1em;
+      height: 100%;
+      border-top: 1em solid $lightest-gray;
+      border-left: 1em solid transparent;
+      border-bottom: 1em solid $lightest-gray;
+      z-index: 1000;
+    }
+    &:first-child {
+      &:before {
+        border: 0px;
+      }
+    }
+    &:last-child {
+      &:after {
+        border: 0px;
+      }
+    }
+  }
+}
