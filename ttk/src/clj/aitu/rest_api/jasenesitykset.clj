@@ -16,6 +16,7 @@
   (:require [compojure.core :as c]
             [aitu.compojure-util :as cu]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
+            [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.util :refer [muodosta-csv convert-values] :as aitu-util]
             [oph.common.util.http-util :refer [csv-download-response json-response]]))
@@ -69,7 +70,7 @@
 (c/defroutes reitit-csv
   (cu/defapi :jasenesitykset nil :get "/csv" [& ehdot]
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
-      (csv-download-response (muodosta-csv (convert-values (arkisto/hae jarjesto ehdot true))
+      (csv-download-response (muodosta-csv (convert-values (henkilo/piilota-salaiset-henkiloilta (arkisto/hae jarjesto ehdot true)))
                                            kenttien-jarjestys
                                            sarakkeiden-otsikot)
                              "jasenesitykset.csv"))))
