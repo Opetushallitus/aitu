@@ -24,8 +24,8 @@
 (defn henkilosivu [id] (str "/fi/#/henkilot/" id "/tiedot"))
 (defn henkilon-muokkaussivu [id] (str "/fi/#/henkilot/" id "/muokkaa"))
 (defn uuden-henkilon-luonti [] (str "/fi/#/henkilot/uusi"))
-(defn paina-jatka-nappia []
-  (w/click {:css "button[ng-click=\"haeHenkilotJaSiirrySeuraavaan()\"]"})
+(defn paina-luo-uusi-henkilo []
+  (w/click {:css ".e2e-luo-uusi-henkilo"})
   (odota-angular-pyyntoa))
 (defn henkilon-kokonimi-lisayksessa [] (elementin-teksti "jasen.henkilo.sukunimi"))
 (defn henkilon-kokonimi [] (first (map w/text (w/xpath-finder "//section[1]/fieldset[1]/p"))))
@@ -115,7 +115,7 @@
           {}
           ;; Kun
           (avaa (uuden-henkilon-luonti))
-          (paina-jatka-nappia)
+          (paina-luo-uusi-henkilo)
           (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
@@ -130,7 +130,7 @@
           {}
           ;; Kun
           (avaa (uuden-henkilon-luonti))
-          (paina-jatka-nappia)
+          (paina-luo-uusi-henkilo)
           (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
@@ -145,7 +145,7 @@
           {}
           ;; Kun
           (avaa (uuden-henkilon-luonti))
-          (paina-jatka-nappia)
+          (paina-luo-uusi-henkilo)
           (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})

@@ -41,6 +41,9 @@
 (defn paina-nappia []
   (w/click {:css "button[ng-click=\"haeHenkilotJaSiirrySeuraavaan()\"]"})
   (odota-angular-pyyntoa))
+(defn paina-luo-uusi-henkilo-nappia []
+  (w/click {:css ".e2e-luo-uusi-henkilo"})
+  (odota-angular-pyyntoa))
 (defn paina-lisaa-henkilo-nappia []
   (w/click {:css "button[ng-click=\"lisaaHenkiloJaSiirrySeuraavaan(jasen.henkilo)\"]"})
   (odota-angular-pyyntoa))
@@ -99,7 +102,7 @@
           (testing "pitäisi olla muokkaustilassa jos henkilöä ei valitse"
             ;; Kun
             (avaa (jasenen-lisays-sivu "98/11/543"))
-            (paina-nappia)
+            (paina-luo-uusi-henkilo-nappia)
             ;; Niin
             (is (w/displayed? {:css "button[ng-click=\"lisaaHenkiloJaSiirrySeuraavaan(jasen.henkilo)\"]"}))
             (not (w/displayed? {:css "button[ng-click=\"siirrySeuraavaan()\"]"}))))
@@ -198,7 +201,7 @@
                           :jasenet testi-jasenet}
         (with-webdriver
           (avaa (jasenen-lisays-sivu "98/11/543"))
-          (paina-nappia)
+          (paina-luo-uusi-henkilo-nappia)
           ;; Kun
           (kirjoita-tietokenttaan "jasen.henkilo.etunimi" "Roope")
           (kirjoita-tietokenttaan "jasen.henkilo.sukunimi" "Setä")
