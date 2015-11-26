@@ -1470,39 +1470,47 @@ header form p {
   background-color: #107ea2;
 }
 
+footer {
+  color: #ffffff;
+}
+
+footer a {
+  color: #43b1d5;
+}
+
+footer .info {
+  background-color: #4d4d4d;
+  padding: 0.5em 0;
+}
+
 footer .separator {
   margin: 0 10px;
 }
 
-.copyright-footer, footer.dev-footer {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  color: #ffffff;
-}
-
-.copyright-footer a, footer.dev-footer a {
-  color: #43b1d5;
-}
-
-.copyright-footer .app-wrapper, footer.dev-footer .app-wrapper {
+.copyright, footer.dev-footer {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-.copyright-footer {
+.copyright .app-wrapper, footer.dev-footer .app-wrapper {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.copyright {
   height: 120px;
   background-color: #1a1a1a;
 }
 
-.copyright-footer .app-wrapper {
+.copyright .app-wrapper {
   padding-top: 50px;
   height: 120px;
   background: url("../img/oph_logo_footer.svg") right 10px center no-repeat;
 }
 
-.no-svg .copyright-footer .app-wrapper {
+.no-svg .copyright .app-wrapper {
   background-image: url("../img/oph_logo_footer.png");
 }
 

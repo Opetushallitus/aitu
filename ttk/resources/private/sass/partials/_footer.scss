@@ -1,15 +1,23 @@
-footer .separator {margin: 0 10px;}
-
-.copyright-footer, footer.dev-footer {
-  @include border-box;
+footer {
+  a { color: $lighter-primary; }
   color: #ffffff;
-  a {color:$lighter-primary;}
+
+  .info {
+    background-color: $darker-gray;
+    padding: 0.5em 0;
+  }
+
+  .separator { margin: 0 10px; }
+}
+
+.copyright, footer.dev-footer {
+  @include border-box;
   .app-wrapper {
     @include border-box;
   }
 }
 
-.copyright-footer {
+.copyright {
   $footer-height: 120px;
   height: $footer-height; background-color: $darkest-gray;
   .app-wrapper {

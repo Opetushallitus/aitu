@@ -75,11 +75,20 @@
     <div ng-view></div>
   </div>
 </div>
+[[#i18n.footer]]
 <footer>
-  <section class="copyright-footer">
+  <section class="info">
+    <div class="app-wrapper">
+      <h3>[[otsikko]]</h3>
+      <p><a href="../img/[[rekisteriseloste_tiedosto]]">[[rekisteriseloste]]</a></p>
+      <p>[[ota-yhteytta]]: <a href="mailto:aitu-tuki@oph.fi">aitu-tuki@oph.fi</a>.</p>
+    </div>
+  </section>
+  <section class="copyright">
     <div class="app-wrapper"><span copyright></span></div>
   </section>
 </footer>
+[[/i18n.footer]]
 <footer class="dev-footer">
   <div class="app-wrapper"><span class="build-id">Build: [[build-id]]</span> <span class="separator">|</span> <a href="[[base-url]]/status" ng-if="[[yllapitaja]]">Status</a></div>
 </footer>
