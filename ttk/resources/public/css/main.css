@@ -1474,35 +1474,35 @@ footer .separator {
   margin: 0 10px;
 }
 
-footer.copyright-footer, footer.dev-footer {
+.copyright-footer, footer.dev-footer {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   color: #ffffff;
 }
 
-footer.copyright-footer a, footer.dev-footer a {
+.copyright-footer a, footer.dev-footer a {
   color: #43b1d5;
 }
 
-footer.copyright-footer .app-wrapper, footer.dev-footer .app-wrapper {
+.copyright-footer .app-wrapper, footer.dev-footer .app-wrapper {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-footer.copyright-footer {
+.copyright-footer {
   height: 120px;
   background-color: #1a1a1a;
 }
 
-footer.copyright-footer .app-wrapper {
+.copyright-footer .app-wrapper {
   padding-top: 50px;
   height: 120px;
   background: url("../img/oph_logo_footer.svg") right 10px center no-repeat;
 }
 
-.no-svg footer.copyright-footer .app-wrapper {
+.no-svg .copyright-footer .app-wrapper {
   background-image: url("../img/oph_logo_footer.png");
 }
 

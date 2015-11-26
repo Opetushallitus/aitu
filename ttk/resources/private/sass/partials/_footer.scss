@@ -1,6 +1,6 @@
 footer .separator {margin: 0 10px;}
 
-footer.copyright-footer, footer.dev-footer {
+.copyright-footer, footer.dev-footer {
   @include border-box;
   color: #ffffff;
   a {color:$lighter-primary;}
@@ -9,7 +9,7 @@ footer.copyright-footer, footer.dev-footer {
   }
 }
 
-footer.copyright-footer {
+.copyright-footer {
   $footer-height: 120px;
   height: $footer-height; background-color: $darkest-gray;
   .app-wrapper {
