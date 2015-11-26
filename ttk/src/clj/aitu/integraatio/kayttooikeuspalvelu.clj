@@ -57,6 +57,9 @@
                                    kayttaja-dn kayttaja-dnt
                                    :let [kayttaja (ldap/get yhteys kayttaja-dn)]
                                    :when kayttaja
+                                   ;; Järjestökäyttäjällä on oltava järjestö
+                                   :when (or (not= rooli (:jarjesto kayttajaroolit))
+                                             (oid->jarjesto-id jarjesto-oid))
                                    :let [[etunimi toinennimi] (s/split (:cn kayttaja) #" ")
                                          sukunimi (:sn kayttaja)]]
                                {:oid (:employeeNumber kayttaja)
