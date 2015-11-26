@@ -1,5 +1,11 @@
 footer {
-  a { color: $lighter-primary; }
+  a {
+    color: $lighter-primary;
+
+    &:hover {
+      color: $lightest-primary;
+    }
+  }
   color: #ffffff;
 
   .info {

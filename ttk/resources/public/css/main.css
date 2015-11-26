@@ -1478,6 +1478,10 @@ footer a {
   color: #43b1d5;
 }
 
+footer a:hover {
+  color: #72c4e0;
+}
+
 footer .info {
   background-color: #4d4d4d;
   padding: 0.5em 0;
