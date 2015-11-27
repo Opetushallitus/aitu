@@ -160,11 +160,11 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
         // Siivotaan hakuvalitsimen malleihin jättämät ylimääräiset kentät pois
         var dto = _.cloneDeep(henkilo);
         delete dto.henkilo;
-        if (dto.kayttaja !== undefined) {
+        if (dto.kayttaja) {
           dto.kayttaja_oid = dto.kayttaja.oid;
-          delete dto.kayttaja;
         }
-        if (dto.jarjesto !== undefined) {
+        delete dto.kayttaja;
+        if (dto.jarjesto) {
           dto.jarjesto = dto.jarjesto.jarjesto;
         }
 
