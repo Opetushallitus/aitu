@@ -18,7 +18,11 @@
             [cheshire.core :as json]
             [clj-time.core :as time]
             [clj-time.format :as time-format]
-            [cheshire.generate :as json-gen]))
+            [cheshire.generate :as json-gen])
+  (:import [java.net.URLEncoder]))
+
+(defn ^:private urlencode [component]
+  (java.net.URLEncoder/encode component "utf-8"))
 
 (json-gen/add-encoder org.joda.time.DateTime
   (fn [c json-generator]
@@ -68,7 +72,7 @@
                                     :toimikausi_alku "2013-08-01"
                                     :toimikausi_loppu "2016-07-31"})})
 
-(def jasen-tiedot {:post-fn #(str "/api/ttk/" (:diaarinumero %) "/jasenet")
+(def jasen-tiedot {:post-fn #(str "/api/ttk/" (urlencode (:diaarinumero %)) "/jasenet")
                    :delete-fn #(str "/api/test/ttk/" (:toimikunta %) "/jasen/" (:henkiloid (:henkilo %)))
                    :default (for [i (iterate inc 1)]
                               {:henkilo {:henkiloid -1}
@@ -94,7 +98,7 @@
                                      :selite_sv (str "Koulutusala (sv)" i)})})
 
 (def peruste-tiedot {:post-fn (constantly "/api/test/peruste")
-                     :delete-fn #(str "/api/test/peruste/" (:diaarinumero %))
+                     :delete-fn #(str "/api/test/peruste/" (urlencode (:diaarinumero %)))
                      :default (for [i (iterate inc 1)]
                                 {:diaarinumero (str i "/04/13")
                                  :alkupvm kuukausi-sitten})})
@@ -251,7 +255,7 @@
   [toimikunta]
   (paivita-olemassa-olevat
     [(assoc toimikunta :toimikausi_loppu menneisyydessa)]
-    (constantly (str "/api/ttk/" (:diaarinumero toimikunta)))))
+    (constantly (str "/api/ttk/" (urlencode (:diaarinumero toimikunta))))))
 
 (defn poista
   [entityt url-fn]
