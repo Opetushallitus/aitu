@@ -26,7 +26,7 @@
       (arkisto/lisaa! {:diaarinumero diaarinumero
                        :alkupvm (parse-iso-date alkupvm)})
       {:status 200}))
-  (c/DELETE ["/:diaarinumero" :diaarinumero #"[0-9/]+"] [diaarinumero]
+  (c/DELETE "/:diaarinumero" [diaarinumero]
     (db/transaction
       (arkisto/poista! {:diaarinumero diaarinumero})
       {:status 200})))

@@ -26,7 +26,7 @@
       {:status 200})))
 
 (def sample-user-api
-  '(compojure.core/GET ["/toimikunta/:diaarinumero" :diaarinumero #"[0-9/]+"] [diaarinumero]
+  '(compojure.core/GET "/toimikunta/:diaarinumero" [diaarinumero]
     (aitu.compojure-util/autorisoi :toimikunta_katselu diaarinumero
       {:status 200})))
 

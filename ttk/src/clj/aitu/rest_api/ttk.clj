@@ -115,7 +115,7 @@
   (GET "/paatospohja-oletukset" []
     (cu/autorisoitu-transaktio :paatos nil
       (json-response (:paatospohja-oletukset @asetukset))))
-  (GET ["/:diaarinumero/asettamispaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
+  (GET "/:diaarinumero/asettamispaatos" [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -129,7 +129,7 @@
         (if lataa
           (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (GET ["/:diaarinumero/taydennyspaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasen paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
+  (GET "/:diaarinumero/taydennyspaatos" [diaarinumero kieli jasen paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -144,7 +144,7 @@
         (if lataa
           (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
           (pdf-response pdf)))))
-  (GET ["/:diaarinumero/muutospaatos" :diaarinumero #"[0-9/]+"] [diaarinumero kieli jasen korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
+  (GET "/:diaarinumero/muutospaatos" [diaarinumero kieli jasen korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     (cu/autorisoitu-transaktio :paatos nil
       (let [data {:paivays paivays
                   :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -206,7 +206,7 @@
                              "aiemmat-jasenet.csv"))))
 
 (defroutes private-reitit
-  (PUT ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero jasenet]
+  (PUT "/:diaarinumero/jasenet" [diaarinumero jasenet]
     (cu/autorisoitu-transaktio :toimikuntajasen_yllapito nil
       (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
         (let [toimikunta (arkisto/hae diaarinumero)
@@ -221,7 +221,7 @@
               ((i18n/tekstit) :validointi))
             (paivita-jasenyydet diaarinumero jasenyydet))))))
 
-   (PUT ["/:diaarinumero" :diaarinumero #"[0-9/]+"] [diaarinumero kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti]
+   (PUT "/:diaarinumero" [diaarinumero kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti]
     (cu/autorisoitu-transaktio :toimikunta_paivitys tkunta
       (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
         (let [paivitettava {:diaarinumero diaarinumero
@@ -259,7 +259,7 @@
                                {:tkunta tkunta})))
       {:status 200}))
 
-  (POST ["/:diaarinumero/jasenet" :diaarinumero #"[0-9/]+"] [diaarinumero henkilo rooli alkupvm loppupvm edustus asiantuntijaksi vapaateksti_kokemus esittaja status]
+  (POST "/:diaarinumero/jasenet" [diaarinumero henkilo rooli alkupvm loppupvm edustus asiantuntijaksi vapaateksti_kokemus esittaja status]
     (cu/autorisoitu-transaktio :toimikuntajasen_lisays nil
       (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
         (if (and
@@ -303,7 +303,7 @@
       (cachable-json-response req (arkisto/hae-ehdoilla {:tunnus tunnus
                                                          :toimikausi toimikausi}))))
 
-  (GET* ["/:diaarinumero" :diaarinumero #"[0-9/]+"] [diaarinumero]
+  (GET* "/:diaarinumero" [diaarinumero]
     :summary "Hakee toimikunnan diaarinumeron perusteella"
     :return ToimikuntaLaajatTiedot
     (cu/autorisoitu-transaktio :toimikunta_katselu nil
