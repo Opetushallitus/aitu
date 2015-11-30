@@ -14,7 +14,8 @@
 
 (defproject ttk "0.1.0-SNAPSHOT"
   :description "Tutkintotoimikuntarekisteri"
-  :dependencies [[org.clojure/clojure "1.5.1"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
+                 [org.clojure/core.cache "0.6.4"]
                  [ring/ring-core "1.4.0"]
                  [http-kit "2.1.18"]
                  [compojure "1.4.0"]
@@ -42,7 +43,7 @@
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [org.slf4j/slf4j-log4j12 "1.7.1"]
 
-                 [stencil "0.3.2"]
+                 [stencil "0.3.2" :exclusions [org.clojure/core.cache]]
                  [slingshot "0.10.3"]
 
                  [org.apache.pdfbox/pdfbox "1.8.8"]
