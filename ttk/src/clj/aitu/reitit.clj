@@ -6,7 +6,6 @@
             [compojure.api.sweet :refer :all]
             [compojure.core :as c]
             [compojure.route :as r]
-            [ring.swagger.core :refer [json-type]]
             schema.core
             [stencil.core :as s]
             [stencil.loader :as sl]

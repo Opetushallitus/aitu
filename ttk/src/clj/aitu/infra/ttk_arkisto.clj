@@ -16,7 +16,6 @@
   (:require [korma.core :as sql]
             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
-            [aitu.infra.toimikausi-arkisto :as toimikausi-arkisto]
             [aitu.toimiala.skeema :as skeema]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :as voimassaolo]
             [aitu.toimiala.voimassaolo.toimikunta :as toimikunnan-voimassaolo]
@@ -25,8 +24,7 @@
             [clojure.set :refer [rename-keys]]
             [oph.common.util.util :refer :all]
             [clojure.string :refer [blank? split]]
-            [clojure-csv.core :refer [write-csv]]
-            [clojure.tools.logging :as log])
+            [clojure-csv.core :refer [write-csv]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-toimikunnan-diaarinumero

@@ -14,11 +14,8 @@
 
 (ns aitu.integraatio.sql.compojure-util-test
   "Testataan auth-makron toteutusta. käyttöoikeuksien tarkistusfunktioille on erikseen yksikkötestit"
-  (:require [aitu.compojure-util :as cu]
-            [compojure.core :as c]
-            [ring.mock.request :as rmock]
+  (:require [ring.mock.request :as rmock]
             [aitu.toimiala.kayttajaoikeudet :as ko]
-            [korma.db :as db]
             [aitu.integraatio.sql.test-util :refer :all]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]])
   (:use clojure.test))
