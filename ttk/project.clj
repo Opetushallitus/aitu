@@ -54,7 +54,7 @@
                  [org.clojure/data.zip "0.1.1"]
                  [robert/hooke "1.3.0"]
                  [peridot "0.3.0"]
-                 [prismatic/schema "0.2.0"]
+                 [prismatic/schema "1.0.3"]
                  [clj-http "1.0.1"]]
   :plugins [[lein-cloverage "1.0.2"]
             [test2junit "1.1.0"]

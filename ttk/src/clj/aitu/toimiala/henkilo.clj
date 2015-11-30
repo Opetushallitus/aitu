@@ -14,7 +14,7 @@
 
 (ns aitu.toimiala.henkilo
   (:require [aitu.toimiala.skeema :refer [SisaltaaHenkilonTiedot]]
-            [schema.macros :as sm]
+            [schema.core :as s]
             [aitu.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :as toimikunta-saanto]
             [aitu.toimiala.voimassaolo.saanto.jasenyys :as jasenyys-saanto]
@@ -58,7 +58,7 @@
       (dissoc :kayttaja_oid)
       (assoc :kayttaja kayttaja))))
 
-(sm/defn taydenna-henkilo :- SisaltaaHenkilonTiedot
+(s/defn taydenna-henkilo :- SisaltaaHenkilonTiedot
   "Täydentää henkilon tiedot, kuten jäsenyyksien ja toimikuntien voimassaolo"
   [henkilo :- SisaltaaHenkilonTiedot]
   (some-> henkilo

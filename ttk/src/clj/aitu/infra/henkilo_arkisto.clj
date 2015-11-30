@@ -15,7 +15,7 @@
 (ns aitu.infra.henkilo-arkisto
   (:require korma.db
             [korma.core :as sql]
-            [schema.macros :as sm]
+            [schema.core :as s]
             [aitu.toimiala.henkilo :refer :all]
             [aitu.toimiala.skeema :refer [HenkiloTaiTiedot Henkilo]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
@@ -30,7 +30,7 @@
   (sql/exec-raw "delete from jasenyys")
   (sql/exec-raw "delete from henkilo"))
 
-(sm/defn lisaa!
+(s/defn lisaa!
   "Lisää henkilön arkistoon."
   [uusi-henkilo :- HenkiloTaiTiedot]
   (let [luotu-henkilo (sql/insert henkilo
@@ -141,7 +141,7 @@
     eriyta-jarjesto
     (update-in [:jasenyys] #(for [jasen %] (assoc jasen :ttk (toimikunta-kaytava/hae (:toimikunta jasen)))))))
 
-(sm/defn paivita!
+(s/defn paivita!
   "Päivittää henkilön tiedot"
   [paivitettava-henkilo :- Henkilo]
   (auditlog/henkilo-operaatio! :paivitys (:henkiloid paivitettava-henkilo))

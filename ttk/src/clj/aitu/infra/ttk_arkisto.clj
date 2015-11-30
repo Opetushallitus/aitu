@@ -19,7 +19,7 @@
             [aitu.toimiala.skeema :as skeema]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :as voimassaolo]
             [aitu.toimiala.voimassaolo.toimikunta :as toimikunnan-voimassaolo]
-            [schema.macros :as sm]
+            [schema.core :as s]
             [aitu.auditlog :as auditlog]
             [clojure.set :refer [rename-keys]]
             [oph.common.util.util :refer :all]
@@ -54,7 +54,7 @@
   (sql/exec-raw "delete from jarjestamissopimus")
   (sql/exec-raw "delete from tutkintotoimikunta"))
 
-(sm/defn lisaa!
+(s/defn lisaa!
   "Lisää toimikunnan arkistoon."
   [toimikunta :- skeema/UusiToimikunta]
   (auditlog/tutkintotoimikunta-operaatio! :lisays (:tkunta toimikunta) (:diaarinumero toimikunta))
@@ -195,7 +195,7 @@
       rajaa-toimikunnan-kentat
       (update-in [:jasenyydet] #(map rajaa-jasenyyden-kentat %)))))
 
-(sm/defn paivita!
+(s/defn paivita!
   "Päivittää toimikunnan tiedot"
   [diaarinumero, ttk :- skeema/ToimikunnanTiedot]
   (auditlog/tutkintotoimikunta-operaatio! :paivitys (:tkunta ttk) diaarinumero)

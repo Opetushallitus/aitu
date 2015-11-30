@@ -25,7 +25,6 @@
             [clj-time.core :as time]
             [korma.core :as sql]
             [schema.core :as s]
-            [schema.macros :as sm]
             [aitu.test-timeutil :refer :all]
             [aitu.integraatio.sql.korma
              :refer [osaamisala toimikausi]]))
@@ -107,7 +106,7 @@
        :toimikausi_alku (kuukausi-sitten)
        :toimikausi_loppu (vuoden-kuluttua)})))
 
-(sm/defn lisaa-toimikunta! :- SisaltaaToimikunnanTiedot
+(s/defn lisaa-toimikunta! :- SisaltaaToimikunnanTiedot
   ([] (lisaa-toimikunta! nil))
   ([toimikunta]
     (doto (merge (default-toimikunta) toimikunta)
