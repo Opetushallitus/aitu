@@ -27,8 +27,8 @@
             [aitu.toimiala.skeema :refer :all]
             [aitu.asetukset :refer [asetukset]]
             [oph.common.util.http-util :refer [validoi validoi-entity-saannoilla
-                     luo-validoinnin-virhevastaus cachable-json-response
-                     json-response parse-iso-date sallittu-jos cachable-json-response
+                     luo-validoinnin-virhevastaus
+                     json-response parse-iso-date sallittu-jos cachable-response response-or-404
                      csv-download-response]]
             [aitu.compojure-util :as cu]
             [compojure.api.sweet :refer :all]
@@ -300,26 +300,26 @@
     :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta tai opintoalasta"
     :return [Toimikunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (cachable-json-response req (arkisto/hae-ehdoilla {:tunnus tunnus
-                                                         :toimikausi toimikausi}))))
+      (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus
+                                                    :toimikausi toimikausi}))))
 
   (GET* "/:diaarinumero" [diaarinumero]
     :summary "Hakee toimikunnan diaarinumeron perusteella"
     :return ToimikuntaLaajatTiedot
     (cu/autorisoitu-transaktio :toimikunta_katselu nil
-      (json-response (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero)))))
+      (response-or-404 (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero)))))
 
   (GET* "/haku" [:as req]
     :summary "Hakee toimikunnat, joiden nimi sisältää annetun termin"
     :query [params TermiParams]
     :return [Toimikunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (cachable-json-response req (arkisto/hae-toimikaudet-termilla (:termi params) false))))
+      (cachable-response req (arkisto/hae-toimikaudet-termilla (:termi params) false))))
 
   (GET* "/haku-uudet" [:as req]
     :summary "Hakee uusimman toimikauden toimikunnat, joiden nimi sisältää annetun termin"
     :query [params TermiParams]
     :return [Toimikunta]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
-      (cachable-json-response req (arkisto/hae-toimikaudet-termilla (:termi params) true))))
+      (cachable-response req (arkisto/hae-toimikaudet-termilla (:termi params) true))))
   private-reitit)

@@ -18,7 +18,7 @@
             [korma.db :as db]
             [aitu.compojure-util :as cu]
             [aitu.infra.oppilaitos-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [cachable-json-response json-response]]
+            [oph.common.util.http-util :refer [cachable-response response-or-404]]
             [aitu.toimiala.skeema :refer :all]
             [compojure.api.sweet :refer :all]
             [aitu.util :refer [muodosta-csv]]
@@ -35,24 +35,24 @@
 (defroutes* reitit
   (GET* "/" [:as req]
     :summary "Hakee kaikki oppilaitokset"
-    :return [OppilaitosTiedot]
+    :return [OppilaitosLista]
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (cachable-json-response req (arkisto/hae-kaikki-julkiset-tiedot) [OppilaitosLista])))
+      (cachable-response req (arkisto/hae-kaikki-julkiset-tiedot))))
 
   (GET*  "/haku" [termi :as req]
     :summary "Hakee kaikki oppilaitokset joiden nimi sisältää annetun termin"
     :return [OppilaitosLinkki]
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (cachable-json-response req (arkisto/hae-termilla termi) [OppilaitosLinkki])))
+      (cachable-response req (arkisto/hae-termilla termi))))
 
   (GET* "/:oppilaitoskoodi" [oppilaitoskoodi]
     :summary "Hakee oppilaitoksen oppilaitoskoodilla"
     :return OppilaitosLaajatTiedot
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (json-response (arkisto/hae oppilaitoskoodi))))
+      (response-or-404 (arkisto/hae oppilaitoskoodi))))
 
   (GET* "/haku/ala" [tunnus :as req]
     :summary "Hakee kaikki oppilaitokset joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
-    :return [OppilaitosTiedot]
+    :return [OppilaitosLista]
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (cachable-json-response req (arkisto/hae-ehdoilla {:tunnus tunnus}) [OppilaitosLista]))))
+      (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus})))))
