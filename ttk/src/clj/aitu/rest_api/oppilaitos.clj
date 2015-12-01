@@ -47,7 +47,7 @@
 
   (GET* "/:oppilaitoskoodi" [oppilaitoskoodi]
     :summary "Hakee oppilaitoksen oppilaitoskoodilla"
-    :return OppilaitosLaajatTiedot
+    ;:return OppilaitosLaajatTiedot
     (cu/autorisoitu-transaktio :yleinen-rest-api nil
       (response-or-404 (arkisto/hae oppilaitoskoodi))))
 
