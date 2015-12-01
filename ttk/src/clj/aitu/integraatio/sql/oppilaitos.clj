@@ -23,7 +23,7 @@
   (first
     (sql/select
       oppilaitos
-      (sql/fields :oppilaitoskoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
+      (sql/fields :oppilaitoskoodi :nimi :kieli
                   :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue :koulutustoimija)
       (sql/where {:oppilaitoskoodi oppilaitoskoodi}))))
 

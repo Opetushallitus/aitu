@@ -17,6 +17,10 @@
             [korma.core :as sql])
   (:use [aitu.integraatio.sql.korma]))
 
+(defn ^:private jarjestamissopimuksen-rajatut-kentat
+  [query]
+  (sql/fields query :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm :voimassa))
+
 (defn ^:private jarjestamissopimuksen-kentat
   [query]
   (sql/fields query
@@ -52,7 +56,7 @@
   (vec
     (sql/select
       jarjestamissopimus
-      (jarjestamissopimuksen-kentat)
+      (jarjestamissopimuksen-rajatut-kentat)
       (sql/where {:tutkintotilaisuuksista_vastaava_oppilaitos oppilaitoskoodi
                   :poistettu false}))))
 

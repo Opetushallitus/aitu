@@ -34,6 +34,16 @@
   [tutkintoversion-haku-fn rivit]
   (mapv (partial liita-sopimus-ja-tutkinto-riviin tutkintoversion-haku-fn) rivit))
 
+(defn hae-jarjestamissopimuksen-tutkinnot-rajatut-tiedot
+  [jarjestamissopimusid]
+  (sql/select sopimus-ja-tutkinto
+    (sql/with tutkintoversio
+      (sql/with nayttotutkinto))
+    (sql/where {:jarjestamissopimusid jarjestamissopimusid
+                :poistettu false})
+    (sql/fields :tutkintoversio.peruste :nayttotutkinto.tutkintotunnus
+                :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv)))
+
 (defn hae-jarjestamissopimuksen-tutkinnot
   [jarjestamissopimusid]
   (let [sopimus-ja-tutkinto-rivit (sql/select sopimus-ja-tutkinto

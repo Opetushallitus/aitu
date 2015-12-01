@@ -194,9 +194,9 @@
 (defn ^:private liita-tutkinnot-sopimukseen-rajatut-tiedot
   [jarjestamissopimus]
   (let [id (:jarjestamissopimusid jarjestamissopimus)
-        sopimus-ja-tutkinto-rivit (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimuksen-tutkinnot id)]
+        sopimus-ja-tutkinto-rivit (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimuksen-tutkinnot-rajatut-tiedot id)]
     (some-> jarjestamissopimus
-      (assoc :sopimus_ja_tutkinto sopimus-ja-tutkinto-rivit))))
+      (assoc :tutkinnot sopimus-ja-tutkinto-rivit))))
 
 (defn ^:private liita-tutkinnot-ja-tutkinnonosat-sopimukseen
   [jarjestamissopimus]

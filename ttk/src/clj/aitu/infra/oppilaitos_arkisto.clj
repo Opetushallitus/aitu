@@ -157,7 +157,7 @@
         jarjestamissopimukset (sopimus-arkisto/hae-oppilaitoksen-sopimukset oppilaitoskoodi)]
     (some-> oppilaitos
             (assoc :jarjestamissopimus jarjestamissopimukset)
-            (update-in [:koulutustoimija] koulutustoimija-kaytava/hae))))
+            (update-in [:koulutustoimija] koulutustoimija-kaytava/hae-linkki))))
 
 (defn rajaa-oppilaitoksen-kentat
   "Valitsee oppilaitoksen tiedoista osoitepalvelun tarvitsemat kentät"
