@@ -15,12 +15,12 @@
     <tr ng-repeat="sopimus in sopimuksetJarjestetty">
       <td><auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA']" oikeus="sopimustiedot_luku" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot" class="e2e-sopimus-sopimusnumero">{{sopimus.sopimusnumero}}</auth-toiminto></td>
       <td ng-show="naytaTutkinnot">
-        <div class="sopimus-ja-tutkinto-rivi" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto">
-          <a href="#/tutkinto/{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}" class="e2e-sopimusjatutkinto-tutkintoversio-nimi">{{sopimusJaTutkinto.tutkintoversio.nimi |lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}}</a>
-          <span class="perusteen-diaarinumero e2e-perusteen-diaarinumero">{{sopimusJaTutkinto.tutkintoversio.peruste}}</span>
+        <div class="sopimus-ja-tutkinto-rivi" ng-repeat="tutkinto in sopimus.tutkinnot">
+          <a href="#/tutkinto/{{tutkinto.tutkintotunnus}}" class="e2e-sopimusjatutkinto-tutkintoversio-nimi">{{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a>
+          <span class="perusteen-diaarinumero e2e-perusteen-diaarinumero">{{tutkinto.peruste}}</span>
         </div>
       </td>
-      <td ng-show="naytaPerusteSarake"><div ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto" class="e2e-perustesarake-peruste">{{sopimusJaTutkinto.tutkintoversio.peruste}}</div></td>
+      <td ng-show="naytaPerusteSarake"><div ng-repeat="tutkinto in sopimus.tutkinnot" class="e2e-perustesarake-peruste">{{tutkinto.peruste}}</div></td>
       <td ng-hide="piilotaKoulutustoimijat"><a href="#/koulutustoimija/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi |lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></td>
       <td>{{sopimus.alkupvm | date:'dd.MM.yyyy'}} – {{sopimus.loppupvm | date:'dd.MM.yyyy'}}</td>
     </tr>
