@@ -23,8 +23,8 @@
                  [ring/ring-headers "0.1.0"]
                  [ring/ring-session-timeout "0.1.0"]
                  [cheshire "5.2.0"]
-                 [metosin/compojure-api "0.8.2"]
-                 [metosin/ring-swagger-ui "2.0.10-1"]
+                 [metosin/compojure-api "0.24.1"]
+                 [metosin/ring-swagger-ui "2.1.3"]
                  [clojure-csv/clojure-csv "2.0.1"]
 
                  [org.clojars.noidi/clj-cas-client
