@@ -312,14 +312,14 @@
   (GET* "/haku" [:as req]
     :summary "Hakee toimikunnat, joiden nimi sisältää annetun termin"
     :query [params TermiParams]
-    :return [Toimikunta]
+    :return [ToimikunnanHakuTiedot]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (cachable-response req (arkisto/hae-toimikaudet-termilla (:termi params) false))))
 
   (GET* "/haku-uudet" [:as req]
     :summary "Hakee uusimman toimikauden toimikunnat, joiden nimi sisältää annetun termin"
     :query [params TermiParams]
-    :return [Toimikunta]
+    :return [ToimikunnanHakuTiedot]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (cachable-response req (arkisto/hae-toimikaudet-termilla (:termi params) true))))
   private-reitit)
