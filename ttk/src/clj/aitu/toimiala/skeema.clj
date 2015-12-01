@@ -292,8 +292,7 @@
                                            :koulutustoimija KoulutustoimijaLinkki}))
 
 (s/defschema KoulutustoimijaLaajatTiedot (merge KoulutustoimijanTiedot
-                                               AuditTiedot
-                                               {:jarjestamissopimus [JarjestamissopimusJaToimikunnat]
+                                               {:jarjestamissopimus [JarjestamissopimusLista]
                                                 :oppilaitokset [OppilaitosLinkki]}))
 
 (s/defschema Lokalisoitu
