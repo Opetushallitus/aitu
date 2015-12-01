@@ -53,7 +53,7 @@
                  [clojurewerkz/quartzite "1.1.0"]
                  [org.clojure/data.zip "0.1.1"]
                  [robert/hooke "1.3.0"]
-                 [peridot "0.3.0"]
+                 [peridot "0.4.2"]
                  [prismatic/schema "1.0.3"]
                  [clj-http "1.0.1"]]
   :plugins [[lein-cloverage "1.0.2"]
