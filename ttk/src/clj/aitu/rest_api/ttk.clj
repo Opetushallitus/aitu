@@ -303,7 +303,7 @@
       (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus
                                                     :toimikausi toimikausi}))))
 
-  (GET* "/:diaarinumero" [diaarinumero]
+  (GET* ["/:diaarinumero" :diaarinumero #"[0-9%F]+"] [diaarinumero]
     :summary "Hakee toimikunnan diaarinumeron perusteella"
     :return ToimikuntaLaajatTiedot
     (cu/autorisoitu-transaktio :toimikunta_katselu nil
