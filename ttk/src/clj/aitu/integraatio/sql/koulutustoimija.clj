@@ -23,7 +23,7 @@
   (first
     (sql/select
       koulutustoimija
-      (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
+      (sql/fields :ytunnus :nimi_fi :nimi_sv
                   :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
       (sql/where {:ytunnus y-tunnus}))))
 

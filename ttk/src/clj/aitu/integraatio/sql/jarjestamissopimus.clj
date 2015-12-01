@@ -65,7 +65,7 @@
   [y-tunnus]
   (vec
     (sql/select jarjestamissopimus
-      (jarjestamissopimuksen-kentat)
+      (jarjestamissopimuksen-rajatut-kentat)
       (sql/where {:koulutustoimija y-tunnus
                   :poistettu false}))))
 
