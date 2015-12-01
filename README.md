@@ -12,6 +12,8 @@
 
 Sovellusta voi ajaa paikallisesti [Vagrant](http://www.vagrantup.com/) ohjelman avulla. Virtuaalikoneiden ajamisesta huolehtii [https://www.virtualbox.org/](Oracle Virtualbox). Molemmat ovat ilmaisia ohjelmia. Virtuaalikoneissa ajetaan [CentOS](http://www.centos.org/) Linux-käyttöjärjestelmää ja palvelinohjelmistoina erilaisia avoimen lähdekoodin ilmaisia sovelluksia, kuten [PostgreSQL](http://www.postgresql.org/).
 
+Koneiden provisiointiskriptit edellyttävät myös [Ansiblen](http://www.ansible.com/) asentamista koneelle, jotta autentikaatiopalvelin voidaan alustaa.
+
 ## Koneiden pystytys
 
 Ensin tietysti pitää ottaa lähdekoodi itselleen esimerkiksi näin: 
