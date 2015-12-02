@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.henkilo
-  (:require [compojure.core :as c]
-            [cheshire.core :as cheshire]
+  (:require [cheshire.core :as cheshire]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
             [aitu.infra.henkilo-arkisto :as arkisto]
             [aitu.infra.i18n :as i18n]
@@ -26,7 +25,8 @@
             [oph.common.util.util :refer [uusin-muokkausaika]]
             [valip.predicates :refer [present? max-length]]
             [ring.util.response :refer [response]]
-            [aitu.compojure-util :as cu]
+            [aitu.compojure-util :as cu :refer [GET* POST* PUT*]]
+            [compojure.api.core :refer [defroutes*]]
             [schema.core :as s]
             [aitu.util :refer [muodosta-csv]]))
 
@@ -51,25 +51,26 @@
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
 
-(c/defroutes raportti-reitit
-  (cu/defapi :henkilo_haku nil :get "/csv" req
+(defroutes* raportti-reitit
+  (GET* "/csv" req
+    :kayttooikeus :henkilo_haku
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet henkilokenttien-jarjestys))
                                          henkilokenttien-jarjestys)
                            "henkilot.csv")))
 
-(c/defroutes reitit
-  (cu/defapi :henkilo_lisays nil :post "/"
-    [& henkilodto]
+(defroutes* reitit
+  (POST* "/" [& henkilodto]
+    :kayttooikeus :henkilo_lisays
     (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
       (s/validate skeema/HenkilonTiedot henkilodto)
       (if (and (= (:roolitunnus kayttajaoikeudet/*current-user-authmap*) "JARJESTO")
                (:kayttaja_oid henkilodto))
         (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi asettaa kayttaja_oid-tietoa")))
       (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
-        {:status 200
-         :body   (cheshire/generate-string uusi-henkilo)})))
+        (json-response uusi-henkilo))))
 
-  (cu/defapi :henkilo_haku nil :get "/" [toimikausi :as req]
+  (GET* "/" [toimikausi :as req]
+    :kayttooikeus :henkilo_haku
     (let [henkilot (case toimikausi
                      "nykyinen_voimassa" (arkisto/hae-nykyiset-voimassa)
                      "nykyinen" (arkisto/hae-nykyiset)
@@ -88,18 +89,23 @@
          :headers (get-cache-headers henkilot-muokattu)}
         {:status 304})))
 
-  (cu/defapi :henkilo_haku nil :get "/:henkiloid" [henkiloid]
+  (GET* "/:henkiloid" [henkiloid]
+    :kayttooikeus :henkilo_haku
     (json-response (henkilo/taydenna-henkilo (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid)))))
 
-  (cu/defapi :henkilo_haku nil :get "/nimi/:etunimi/:sukunimi" [etunimi sukunimi]
+  (GET* "/nimi/:etunimi/:sukunimi" [etunimi sukunimi]
+    :kayttooikeus :henkilo_haku
     (json-response (arkisto/hae-hlo-nimella etunimi sukunimi)))
 
-  (cu/defapi :henkilo_haku nil :get "/nimi/" [termi]
-      (json-response (arkisto/hae-hlo-nimen-osalla termi)))
+  (GET* "/nimi/" [termi]
+    :kayttooikeus :henkilo_haku
+    (json-response (arkisto/hae-hlo-nimen-osalla termi)))
 
-  (cu/defapi :henkilo_paivitys {:henkiloid henkiloid, :kayttaja (:oid kayttaja)} :put "/:henkiloid"
+  (PUT* "/:henkiloid"
     [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
      osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen syntymavuosi kokemusvuodet]
+    :kayttooikeus :henkilo_paivitys
+    :konteksti {:henkiloid henkiloid, :kayttaja (:oid kayttaja)}
       (let [id (Integer/parseInt henkiloid)
             kayttaja-oid (:oid kayttaja)
             henkilodto {:henkiloid id
