@@ -13,13 +13,13 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.toimikausi
-  (:require [compojure.core :as c]
-            [cheshire.core :as cheshire]
-            [aitu.infra.toimikausi-arkisto :as arkisto]
-            [aitu.compojure-util :as cu]
-            [korma.db :as db]))
+  (:require [aitu.infra.toimikausi-arkisto :as arkisto]
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]
+            [oph.common.util.http-util :refer [json-response]]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" []
+(defroutes* reitit
+  (GET* "/" []
+    :kayttooikeus :yleinen-rest-api
     (let [toimikaudet (arkisto/hae-kaikki)]
-      (cheshire/generate-string toimikaudet))))
+      (json-response toimikaudet))))
