@@ -14,14 +14,15 @@
 
 (ns aitu.rest-api.aipal
   (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
-            [compojure.core :as c]
-            [aitu.toimiala.skeema :refer :all]
-            [aitu.compojure-util :as cu]
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(c/defroutes reitit
+(defroutes* reitit
   ; vanha API - voidaan poistaa kun kaikissa ympäristöissä on uusi API käytössä
-  (cu/defapi :aipal nil :get  "/sopimukset" []
+  (GET* "/sopimukset" []
+    :kayttooikeus :aipal
     (json-response (jarjestamissopimus-arkisto/hae-tutkinnot-koulutustoimijoittain)))
-  (cu/defapi :aipal nil :get "/sopimukset/v2" []
+  (GET* "/sopimukset/v2" []
+    :kayttooikeus :aipal
     (json-response (jarjestamissopimus-arkisto/hae-tutkinnot-koulutustoimijoittain-jarjestamissopimusten-voimassaolon-kanssa))))
