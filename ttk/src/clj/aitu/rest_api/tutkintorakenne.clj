@@ -13,13 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.tutkintorakenne
-  (:require [compojure.core :as c]
-            [cheshire.core :as cheshire]
-            [aitu.infra.tutkintorakenne-arkisto :as arkisto]
-            [aitu.compojure-util :as cu]
-            [oph.common.util.http-util :refer [cachable-json-response json-response]]
-            [korma.db :as db]))
+  (:require [aitu.infra.tutkintorakenne-arkisto :as arkisto]
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]
+            [oph.common.util.http-util :refer [cachable-json-response json-response]]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" [:as req]
+(defroutes* reitit
+  (GET* "/" [:as req]
+    :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (arkisto/hae))))
