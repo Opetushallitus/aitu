@@ -104,8 +104,7 @@
                                            :www_osoite (s/maybe s/Str)
                                            :sahkoposti (s/maybe s/Str)}))
 
-(s/defschema KoulutustoimijaLista (merge KoulutustoimijanTiedot
-                                         AuditTiedot
+(s/defschema KoulutustoimijaLista (merge KoulutustoimijaLinkki
                                          {:sopimusten_maara s/Int}))
 
 (s/defschema OppilaitosLinkki {:nimi s/Str

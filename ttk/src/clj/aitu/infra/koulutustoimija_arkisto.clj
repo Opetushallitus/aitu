@@ -80,11 +80,9 @@
                                      (and (= :koulutustoimija.ytunnus :jarjestamissopimus.koulutustoimija)
                                           (= :jarjestamissopimus.voimassa true)
                                           (= :jarjestamissopimus.poistettu false)))
-                           (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika
-                                       :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
+                           (sql/fields :ytunnus :nimi_fi :nimi_sv)
                            (sql/aggregate (count :jarjestamissopimus.jarjestamissopimusid) :sopimusten_maara)
-                           (sql/group :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika
-                                      :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
+                           (sql/group :ytunnus :nimi_fi :nimi_sv)
                            (cond->
                              (not (blank? (:tunnus ehdot))) (sql/where (sql/sqlfn exists (sql/subselect jarjestamissopimus
                                                                                            (sql/join :inner sopimus-ja-tutkinto
