@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.kayttaja
-  (:require [compojure.core :as c]
-            [oph.korma.korma-auth :as ka]
+  (:require [oph.korma.korma-auth :as ka]
             [aitu.infra.kayttaja-arkisto :as arkisto]
             [aitu.toimiala.kayttajaoikeudet :refer [paivita-kayttajan-toimikuntakohtaiset-oikeudet
                                                     paivita-kayttajan-sopimuskohtaiset-oikeudet
@@ -23,39 +22,40 @@
             [aitu.infra.kayttajaoikeudet-arkisto :as ko-arkisto]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.toimiala.kayttajaoikeudet :as ko]
-            [aitu.compojure-util :as cu]
-            [korma.db :as db]))
+            [aitu.compojure-util :as cu :refer [GET* POST*]]
+            [compojure.api.core :refer [defroutes*]]))
 
-(c/defroutes reitit
-  (cu/defapi :impersonointi nil :post "/impersonoi" [:as {session :session}, oid]
+(defroutes* reitit
+  (POST* "/impersonoi" [:as {session :session}, oid]
+    :kayttooikeus :impersonointi
     {:status 200
      :session (assoc session :impersonoitu-oid oid)})
-
-  (cu/defapi :impersonointi-lopetus nil :post "/lopeta-impersonointi" {session :session}
+  (POST* "/lopeta-impersonointi" {session :session}
+    :kayttooikeus :impersonointi-lopetus
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
-
-  (cu/defapi :impersonointi nil :get "/impersonoitava" [termi]
+  (GET* "/impersonoitava" [termi]
+    :kayttooikeus :impersonointi
     (json-response (arkisto/hae-impersonoitava-termilla termi)))
-
-  (cu/defapi :toimikuntakayttaja-listaus nil :get "/toimikuntakayttajat" [termi]
+  (GET* "/toimikuntakayttajat" [termi]
+    :kayttooikeus :toimikuntakayttaja-listaus
     (json-response (arkisto/hae-toimikuntakayttajat-termilla termi)))
-
-  (cu/defapi :kayttajan_tiedot nil :get "/" []
-             (let [oikeudet (ko-arkisto/hae-oikeudet)
-                   roolitunnus (:roolitunnus oikeudet)]
-               (if (or (= roolitunnus (:yllapitaja kayttajaroolit))
-                       (= roolitunnus (:oph-katselija kayttajaroolit)))
-                 (json-response oikeudet)
-                 (-> oikeudet
-                     paivita-kayttajan-toimikuntakohtaiset-oikeudet
-                     paivita-kayttajan-sopimuskohtaiset-oikeudet
-                     liita-kayttajan-henkilo-oikeudet
-                     json-response))))
-  (cu/defapi :kayttajan_tiedot nil :get "/jarjesto" []
-    (json-response
-      (let [jarjesto (arkisto/hae-jarjesto (:jarjesto ko/*current-user-authmap*))]
-        (if jarjesto jarjesto {}))))
-  (cu/defapi :omat_tiedot oid :get "/:oid" [oid]
+  (GET* "/" []
+    :kayttooikeus :kayttajan_tiedot
+    (let [oikeudet (ko-arkisto/hae-oikeudet)
+          roolitunnus (:roolitunnus oikeudet)]
+      (if (or (= roolitunnus (:yllapitaja kayttajaroolit))
+              (= roolitunnus (:oph-katselija kayttajaroolit)))
+        (json-response oikeudet)
+        (-> oikeudet
+            paivita-kayttajan-toimikuntakohtaiset-oikeudet
+            paivita-kayttajan-sopimuskohtaiset-oikeudet
+            liita-kayttajan-henkilo-oikeudet
+            json-response))))
+  (GET* "/jarjesto" []
+    :kayttooikeus :kayttajan_tiedot
+    (json-response (or (arkisto/hae-jarjesto (:jarjesto ko/*current-user-authmap*)) {})))
+  (GET* "/:oid" [oid]
+    :kayttooikeus :omat_tiedot
     (json-response (arkisto/hae oid))))
 
