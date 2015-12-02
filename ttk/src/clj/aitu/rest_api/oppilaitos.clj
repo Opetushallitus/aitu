@@ -13,21 +13,19 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.oppilaitos
-  (:require [compojure.core :as c]
-            [cheshire.core :as cheshire]
-            [korma.db :as db]
-            [aitu.compojure-util :as cu]
+  (:require [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]
             [aitu.infra.oppilaitos-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-response response-or-404]]
             [aitu.toimiala.skeema :refer :all]
-            [compojure.api.sweet :refer :all]
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.http-util :refer [csv-download-response]]))
 
 (def oppilaitoskenttien-jarjestys [:nimi :oppilaitoskoodi :sopimusten_maara])
 
-(c/defroutes raportti-reitit
-  (cu/defapi :yleinen-rest-api nil :get "/csv" req
+(defroutes* raportti-reitit
+  (GET* "/csv" req
+    :kayttooikeus :yleinen-rest-api
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet oppilaitoskenttien-jarjestys))
                                          oppilaitoskenttien-jarjestys)
                            "oppilaitokset.csv")))
@@ -36,23 +34,23 @@
   (GET* "/" [:as req]
     :summary "Hakee kaikki oppilaitokset"
     :return [OppilaitosLista]
-    (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (cachable-response req (arkisto/hae-kaikki-julkiset-tiedot))))
+    :kayttooikeus :yleinen-rest-api
+    (cachable-response req (arkisto/hae-kaikki-julkiset-tiedot)))
 
   (GET*  "/haku" [termi :as req]
     :summary "Hakee kaikki oppilaitokset joiden nimi sisältää annetun termin"
     :return [OppilaitosLinkki]
-    (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (cachable-response req (arkisto/hae-termilla termi))))
+    :kayttooikeus :yleinen-rest-api
+    (cachable-response req (arkisto/hae-termilla termi)))
 
   (GET* "/:oppilaitoskoodi" [oppilaitoskoodi]
     :summary "Hakee oppilaitoksen oppilaitoskoodilla"
     :return OppilaitosLaajatTiedot
-    (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (response-or-404 (arkisto/hae oppilaitoskoodi))))
+    :kayttooikeus :yleinen-rest-api
+    (response-or-404 (arkisto/hae oppilaitoskoodi)))
 
   (GET* "/haku/ala" [tunnus :as req]
     :summary "Hakee kaikki oppilaitokset joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
     :return [OppilaitosLista]
-    (cu/autorisoitu-transaktio :yleinen-rest-api nil
-      (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus})))))
+    :kayttooikeus :yleinen-rest-api
+    (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus}))))
