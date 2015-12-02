@@ -13,9 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.jarjestamissopimus
-  (:require [compojure.core :as c]
-            [korma.db :as db]
-            [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response csv-download-response sallittu-jos]]
+  (:require [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response csv-download-response sallittu-jos]]
             [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jos-lapaisee-virustarkistuksen]]
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.util :refer [->vector]]
@@ -23,7 +21,8 @@
             [aitu.infra.i18n :as i18n]
             [valip.predicates :refer [present?]]
             [aitu.toimiala.skeema :as skeema]
-            [aitu.compojure-util :as cu]
+            [aitu.compojure-util :as cu :refer [GET* POST* PUT* DELETE*]]
+            [compojure.api.core :refer [defroutes*]]
             [aitu.infra.validaatio :refer [validoi-alkupvm-sama-tai-ennen-loppupvm]]
             [aitu.toimiala.jarjestamissopimus :as jarjestamissopimus]
             [aitu.toimiala.voimassaolo.saanto.jarjestamissopimus :as voimassaolo]))
@@ -68,15 +67,17 @@
    :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv :peruste :siirtymaajan_loppupvm :osaamisalat
    :oppilaitoskoodi :oppilaitos :kieli :vastuuhenkilo :vastuuhenkilo_sahkoposti :vastuuhenkilo_puhelin])
 
-(c/defroutes raportti-reitit
-  (cu/defapi :yleinen-rest-api nil :get "/csv" [voimassa :as req]
+(defroutes* raportti-reitit
+  (GET* "/csv" [voimassa :as req]
+    :kayttooikeus :yleinen-rest-api
     (let [voimassa (not= voimassa "false")]
       (csv-download-response (muodosta-csv (arkisto/hae-sopimukset-csv (assoc (:params req)
                                                                               :avaimet rajattujen-sopimuskenttien-jarjestys
                                                                               :voimassa voimassa))
                                            rajattujen-sopimuskenttien-jarjestys)
                              "sopimukset.csv")))
-  (cu/defapi :yleinen-rest-api nil :get "/raportti" [toimikausi opintoala]
+  (GET* "/raportti" [toimikausi opintoala]
+    :kayttooikeus :yleinen-rest-api
     (let [hakuehdot {:toimikausi (Integer/parseInt toimikausi)
                      :opintoala (->vector opintoala)
                      :avaimet kaikkien-sopimuskenttien-jarjestys}
@@ -84,25 +85,29 @@
      (csv-download-response (muodosta-csv raportti kaikkien-sopimuskenttien-jarjestys)
                             "sopimukset.csv"))))
 
-(c/defroutes reitit
-  (cu/defapi :sopimus_lisays tkunta :post "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
-      (let [sopimus (merge {:sopimusnumero sopimusnumero
-                            :toimikunta tkunta
-                            :sopijatoimikunta (paljas-tai-kentan-arvo sopijatoimikunta :tkunta)
-                            :koulutustoimija (paljas-tai-kentan-arvo koulutustoimija :ytunnus)
-                            :tutkintotilaisuuksista_vastaava_oppilaitos (paljas-tai-kentan-arvo tutkintotilaisuuksista_vastaava_oppilaitos :oppilaitoskoodi)
-                            :alkupvm (if alkupvm (parse-iso-date alkupvm) nil)
-                            :loppupvm (if loppupvm (parse-iso-date loppupvm) nil)
-                            :vastuuhenkilo vastuuhenkilo
-                            :puhelin puhelin
-                            :sahkoposti sahkoposti
-                            :voimassa voimassa}
-                           (when jarjestamissopimusid {:jarjestamissopimusid jarjestamissopimusid}))]
-        (validoi sopimus (luo-sopimuksen-luonnille-validointisaannot sopimus) ((i18n/tekstit) :validointi)
-                 (let [uusi-sopimus (arkisto/lisaa! sopimus)]
-                   (json-response uusi-sopimus)))))
+(defroutes* reitit
+  (POST* "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
+    :kayttooikeus :sopimus_lisays
+    :konteksti tkunta
+    (let [sopimus (merge {:sopimusnumero sopimusnumero
+                          :toimikunta tkunta
+                          :sopijatoimikunta (paljas-tai-kentan-arvo sopijatoimikunta :tkunta)
+                          :koulutustoimija (paljas-tai-kentan-arvo koulutustoimija :ytunnus)
+                          :tutkintotilaisuuksista_vastaava_oppilaitos (paljas-tai-kentan-arvo tutkintotilaisuuksista_vastaava_oppilaitos :oppilaitoskoodi)
+                          :alkupvm (if alkupvm (parse-iso-date alkupvm) nil)
+                          :loppupvm (if loppupvm (parse-iso-date loppupvm) nil)
+                          :vastuuhenkilo vastuuhenkilo
+                          :puhelin puhelin
+                          :sahkoposti sahkoposti
+                          :voimassa voimassa}
+                         (when jarjestamissopimusid {:jarjestamissopimusid jarjestamissopimusid}))]
+      (validoi sopimus (luo-sopimuksen-luonnille-validointisaannot sopimus) ((i18n/tekstit) :validointi)
+               (let [uusi-sopimus (arkisto/lisaa! sopimus)]
+                 (json-response uusi-sopimus)))))
 
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :put "/:jarjestamissopimusid" [jarjestamissopimusid sopimusnumero alkupvm loppupvm koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
+  (PUT* "/:jarjestamissopimusid" [jarjestamissopimusid sopimusnumero alkupvm loppupvm koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
+    :kayttooikeus :sopimustiedot_paivitys
+    :konteksti jarjestamissopimusid
     (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
         (let [sopimus {:jarjestamissopimusid jarjestamissopimus_id_int
@@ -119,23 +124,31 @@
             (arkisto/paivita! sopimus sopimus_ja_tutkinto)
             (json-response sopimus))))))
 
-  (cu/defapi :sopimustiedot_luku jarjestamissopimusid :get "/:jarjestamissopimusid" [jarjestamissopimusid]
-      (json-response (jarjestamissopimus/taydenna-sopimus (arkisto/hae-ja-liita-tutkinnonosiin-asti (Integer/parseInt jarjestamissopimusid)))))
+  (GET* "/:jarjestamissopimusid" [jarjestamissopimusid]
+    :kayttooikeus :sopimustiedot_luku
+    :konteksti jarjestamissopimusid
+    (json-response (jarjestamissopimus/taydenna-sopimus (arkisto/hae-ja-liita-tutkinnonosiin-asti (Integer/parseInt jarjestamissopimusid)))))
 
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/tutkinnot" [jarjestamissopimusid sopimus_ja_tutkinto]
+  (POST* "/:jarjestamissopimusid/tutkinnot" [jarjestamissopimusid sopimus_ja_tutkinto]
+    :kayttooikeus :sopimustiedot_paivitys
+    :konteksti jarjestamissopimusid
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
         (arkisto/paivita-tutkinnot! jarjestamissopimusid_int sopimus_ja_tutkinto)
         {:status 200})))
 
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid" [jarjestamissopimusid]
+  (DELETE* "/:jarjestamissopimusid" [jarjestamissopimusid]
+    :kayttooikeus :sopimustiedot_paivitys
+    :konteksti jarjestamissopimusid
     (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos
         (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
         (arkisto/merkitse-sopimus-poistetuksi! jarjestamissopimus_id_int)
         {:status 200})))
 
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
+  (POST* "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
+    :kayttooikeus :sopimustiedot_paivitys
+    :konteksti jarjestamissopimusid
     (sallittu-jos (sallittu-tiedostotyyppi? (:content-type file))
       (jos-lapaisee-virustarkistuksen file
         (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
@@ -146,7 +159,9 @@
           (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
             (file-upload-response (arkisto/lisaa-suunnitelma-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))))
 
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+  (DELETE* "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+    :kayttooikeus :sopimustiedot_paivitys
+    :konteksti jarjestamissopimusid
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)
           jarjestamissopimusid_jarjestamissuunnitelma (arkisto/hae-jarjestamissopimusid-jarjestamissuunnitelmalle jarjestamissuunnitelma_id_int)
@@ -156,7 +171,9 @@
         (arkisto/poista-suunnitelma! jarjestamissuunnitelma_id_int)
         {:status 200})))
 
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :post "/:jarjestamissopimusid/liite/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
+  (POST* "/:jarjestamissopimusid/liite/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
+    :kayttooikeus :sopimustiedot_paivitys
+    :konteksti jarjestamissopimusid
     (sallittu-jos (sallittu-tiedostotyyppi? (:content-type file))
       (jos-lapaisee-virustarkistuksen file
         (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
@@ -167,7 +184,9 @@
           (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
             (file-upload-response (arkisto/lisaa-liite-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))))
 
-  (cu/defapi :sopimustiedot_paivitys jarjestamissopimusid :delete "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
+  (DELETE* "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
+    :kayttooikeus :sopimustiedot_paivitys
+    :konteksti jarjestamissopimusid
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           sopimuksen_liite_id_int (Integer/parseInt sopimuksen_liite_id)
           jarjestamissopimusid_liite (arkisto/hae-jarjestamissopimusid-sopimuksen-liitteelle sopimuksen_liite_id_int)
@@ -178,8 +197,10 @@
         {:status 200}))))
 
 ; Liitteiden lataukselle omat reitit. Ei csrf tarkistusta.
-(c/defroutes liite-lataus-reitit
-  (cu/defapi :suunnitelma_luku jarjestamissopimusid :get "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+(defroutes* liite-lataus-reitit
+  (GET* "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+    :kayttooikeus :suunnitelma_luku
+    :konteksti jarjestamissopimusid
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)
           jarjestamissopimusid_jarjestamissuunnitelma (arkisto/hae-jarjestamissopimusid-jarjestamissuunnitelmalle jarjestamissuunnitelma_id_int)
@@ -190,7 +211,9 @@
           content-type (:jarjestamissuunnitelma_content_type suunnitelma)]
       (file-download-response binary-data filename content-type)))
 
-  (cu/defapi :sopimuksen_liite_luku jarjestamissopimusid :get "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
+  (GET* "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
+    :kayttooikeus :sopimuksen_liite_luku
+    :konteksti jarjestamissopimusid
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           sopimuksen_liite_id_int (Integer/parseInt sopimuksen_liite_id)
           jarjestamissopimusid_liite (arkisto/hae-jarjestamissopimusid-sopimuksen-liitteelle sopimuksen_liite_id_int)
