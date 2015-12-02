@@ -13,9 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.compojure-util
- (:require [oph.compojure-util :as oph-cjure]
-   [aitu.toimiala.kayttajaoikeudet :as ko]
-   ))
+ (:require compojure.api.core
+           [oph.compojure-util :as oph-cjure]
+           [aitu.toimiala.kayttajaoikeudet :as ko]))
 
 (defmacro defapi
   "Esittelee rajapinta-funktion sisältäen käyttöoikeuksien tarkastamisen ja tietokanta-transaktion hallinnan."
@@ -34,3 +34,16 @@
   [toiminto konteksti & body]
   (let [auth-map ko/toiminnot]
       `(oph-cjure/autorisoi ~auth-map ~toiminto ~konteksti ~@body)))
+
+(defmacro api [method path params & body]
+  (let [[kw-args body] (split-with (comp keyword? first) (partition-all 2 body))
+        kw-args (apply hash-map (apply concat kw-args))
+        swagger-args (dissoc kw-args :kayttooikeus :konteksti)]
+    (assert (:kayttooikeus kw-args) "Käyttöoikeutta ei ole määritelty")
+    `(~method ~path ~params ~@(apply concat swagger-args)
+       (autorisoitu-transaktio ~(:kayttooikeus kw-args) ~(:konteksti kw-args) ~@(apply concat body)))))
+
+(defmacro GET* [& args] `(api compojure.api.core/GET* ~@args))
+(defmacro POST* [& args] `(api compojure.api.core/POST* ~@args))
+(defmacro PUT* [& args] `(api compojure.api.core/PUT* ~@args))
+(defmacro DELETE* [& args] `(api compojure.api.core/DELETE* ~@args))
