@@ -13,11 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.tutkinnonosa
-  (:require [compojure.core :as c]
-            [aitu.infra.tutkinnonosa-arkisto :as arkisto]
-            [aitu.compojure-util :as cu]
+  (:require [aitu.infra.tutkinnonosa-arkisto :as arkisto]
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" [tutkintotunnus]
+(defroutes* reitit
+  (GET* "/" [tutkintotunnus]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae tutkintotunnus))))
