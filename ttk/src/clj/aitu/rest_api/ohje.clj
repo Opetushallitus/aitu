@@ -13,18 +13,19 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.ohje
-  (:require [compojure.core :as c]
-            [aitu.infra.ohje-arkisto :as arkisto]
+  (:require [aitu.infra.ohje-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.compojure-util :as cu]
-            [cheshire.core :as cheshire]))
+            [aitu.compojure-util :as cu :refer [GET* PUT*]]
+            [compojure.api.core :refer [defroutes*]]))
 
-(c/defroutes reitit
-  (cu/defapi :ohjeet_luku nil :get "/:ohjetunniste" [ohjetunniste]
+(defroutes* reitit
+  (GET* "/:ohjetunniste" [ohjetunniste]
+    :kayttooikeus :ohjeet_luku
     (if-let [ohje (arkisto/hae ohjetunniste)]
       (json-response ohje)
       {:status 200}))
-  (cu/defapi :ohje_muokkaus nil :put "/:ohjetunniste" [ohjetunniste teksti_fi teksti_sv]
+  (PUT* "/:ohjetunniste" [ohjetunniste teksti_fi teksti_sv]
+    :kayttooikeus :ohje_muokkaus
     (arkisto/muokkaa-tai-luo-uusi! {:ohjetunniste ohjetunniste
                                     :teksti_fi teksti_fi
                                     :teksti_sv teksti_sv})
