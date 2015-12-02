@@ -13,19 +13,18 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.opintoala
-  (:require [compojure.core :as c]
-            [cheshire.core :as cheshire]
-            [aitu.infra.opintoala-arkisto :as arkisto]
+  (:require [aitu.infra.opintoala-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.compojure-util :as cu]
-            [korma.db :as db]))
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/haku" [termi]
+(defroutes* reitit
+  (GET* "/haku" [termi]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-termilla termi)))
-  (cu/defapi :yleinen-rest-api nil :get "/" []
+  (GET* "/" []
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki)))
-  (cu/defapi :yleinen-rest-api nil :get "/:koodi" [koodi]
+  (GET* "/:koodi" [koodi]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae koodi))))
-
-
