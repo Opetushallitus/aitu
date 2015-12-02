@@ -13,8 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.jasenesitykset
-  (:require [compojure.core :as c]
-            [aitu.compojure-util :as cu]
+  (:require[aitu.compojure-util :as cu :refer [GET* DELETE*]]
+            [compojure.api.core :refer [defroutes*]]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
             [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.kayttajaoikeudet :as ko]
@@ -67,20 +67,25 @@
      :muutettuaika "Muutettu"
      :status "Tila"}))
 
-(c/defroutes reitit-csv
-  (cu/defapi :jasenesitykset nil :get "/csv" [& ehdot]
+(defroutes* reitit-csv
+  (GET* "/csv" [& ehdot]
+    :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (csv-download-response (muodosta-csv (convert-values (henkilo/piilota-salaiset-henkiloilta (arkisto/hae jarjesto ehdot true)))
                                            kenttien-jarjestys
                                            sarakkeiden-otsikot)
                              "jasenesitykset.csv"))))
 
-(c/defroutes reitit
-  (cu/defapi :jasenesitykset nil :get "/" [& ehdot]
+(defroutes* reitit
+  (GET* "/" [& ehdot]
+    :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (json-response (arkisto/hae jarjesto ehdot false))))
-  (cu/defapi :jasenesitys-poisto jasenyysid :delete "/jasenyys/:jasenyysid", [jasenyysid]
+  (DELETE* "/jasenyys/:jasenyysid" [jasenyysid]
+    :kayttooikeus :jasenesitys-poisto
+    :konteksti jasenyysid
     (json-response (arkisto/poista! (Integer/parseInt jasenyysid))))
-  (cu/defapi :jasenesitykset nil :get "/yhteenveto" [toimikausi vain_jasenesityksia_sisaltavat]
+  (GET* "/yhteenveto" [toimikausi vain_jasenesityksia_sisaltavat]
+    :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (json-response (arkisto/hae-yhteenveto jarjesto (Integer/parseInt toimikausi) (Boolean/valueOf vain_jasenesityksia_sisaltavat))))))
