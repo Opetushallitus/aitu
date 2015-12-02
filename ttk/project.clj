@@ -28,7 +28,6 @@
                  [javax.servlet/servlet-api "2.5"]
                  [korma "0.3.0-RC6"]
                  [metosin/compojure-api "0.24.1"]
-                 [metosin/ring-swagger-ui "2.1.3"]
                  [org.apache.pdfbox/pdfbox "1.8.8"]
                  [org.clojars.noidi/clj-cas-client "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1" :exclusions [ring]]
                  [org.clojars.pntblnk/clj-ldap "0.0.7"]
