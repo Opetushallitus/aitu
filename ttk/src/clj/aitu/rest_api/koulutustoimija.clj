@@ -13,32 +13,46 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.koulutustoimija
-  (:require [compojure.core :as c]
-            [cheshire.core :as cheshire]
-            [korma.db :as db]
-            [aitu.compojure-util :as cu]
+  (:require [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]
-            [oph.common.util.http-util :refer [csv-download-response cachable-json-response json-response]]
+            [oph.common.util.http-util :refer [csv-download-response cachable-response response-or-404]]
             [aitu.toimiala.skeema :refer :all]
             [aitu.util :refer [muodosta-csv]]))
 
 (def koulutustoimijakenttien-jarjestys [:nimi_fi :nimi_sv :ytunnus :sopimusten_maara])
 
-(c/defroutes raportti-reitit
-  (cu/defapi :yleinen-rest-api nil :get "/csv" req
+(defroutes* raportti-reitit
+  (GET* "/csv" req
+    :kayttooikeus :yleinen-rest-api
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet koulutustoimijakenttien-jarjestys))
                                          koulutustoimijakenttien-jarjestys)
                            "koulutustoimijat.csv")))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" req
-    (cachable-json-response req (arkisto/hae-julkiset-tiedot) [KoulutustoimijaLista]))
-  (cu/defapi :yleinen-rest-api nil :get "/haku" [termi :as req]
-    (json-response (arkisto/hae-termilla termi) [KoulutustoimijaLinkki]))
-  (cu/defapi :yleinen-rest-api nil :get "/nimet" req
-    (cachable-json-response req (arkisto/hae-nimet)))
-  (cu/defapi :yleinen-rest-api nil :get "/:ytunnus" [ytunnus]
-    (json-response (arkisto/hae ytunnus) KoulutustoimijaLaajatTiedot))
-  (cu/defapi :yleinen-rest-api nil :get "/haku/ala" [tunnus :as req]
-    (cachable-json-response req (arkisto/hae-ehdoilla {:tunnus tunnus}) [KoulutustoimijaLista])))
+(defroutes* reitit
+  (GET* "/" req
+    :summary "Hakee kaikki koulutustoimijat"
+    :return [KoulutustoimijaLista]
+    :kayttooikeus :yleinen-rest-api
+    (cachable-response req (arkisto/hae-julkiset-tiedot)))
+  (GET* "/haku" [termi :as req]
+    :summary "Hakee kaikki koulutustoimijat joiden nimi sisältää annetun termin" 
+    :return [KoulutustoimijaLinkki]
+    :kayttooikeus :yleinen-rest-api
+    (response-or-404 (arkisto/hae-termilla termi)))
+  (GET* "/nimet" req 
+    :summary "Hakee listan koulutustoimijoiden nimistä" 
+    :kayttooikeus :yleinen-rest-api
+    :return [KoulutustoimijaLinkki]
+    (cachable-response req (arkisto/hae-nimet)))
+  (GET* "/:ytunnus" [ytunnus]
+    :summary "Hakee koulutustoimijan y-tunnuksella"
+    :return KoulutustoimijaLaajatTiedot
+    :kayttooikeus :yleinen-rest-api
+    (response-or-404 (arkisto/hae ytunnus)))
+  (GET* "/haku/ala" [tunnus :as req]
+    :summary "Hakee kaikki koulutustoimijat joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu" 
+    :return [KoulutustoimijaLista]
+    :kayttooikeus :yleinen-rest-api
+    (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus}))))

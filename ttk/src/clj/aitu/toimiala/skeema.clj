@@ -93,8 +93,8 @@
 (s/defschema SisaltaaHenkilonTiedot (assoc HenkilonTiedot s/Keyword s/Any))
 
 (s/defschema KoulutustoimijaLinkki {:nimi_fi s/Str
-                                   :nimi_sv s/Str
-                                   :ytunnus s/Str})
+                                    :nimi_sv (s/maybe s/Str)
+                                    :ytunnus s/Str})
 
 (s/defschema KoulutustoimijanTiedot (merge KoulutustoimijaLinkki
                                           {:postinumero (s/maybe s/Str)
