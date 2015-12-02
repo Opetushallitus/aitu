@@ -13,17 +13,21 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.suorittaja
-  (:require [compojure.core :as c]
-            [aitu.infra.suorittaja-arkisto :as arkisto]
-            [aitu.compojure-util :as cu]
+  (:require [aitu.infra.suorittaja-arkisto :as arkisto]
+            [aitu.compojure-util :as cu :refer [GET* POST* PUT* DELETE*]]
+            [compojure.api.core :refer [defroutes*]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" []
+(defroutes* reitit
+  (GET* "/" []
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki)))
-  (cu/defapi :yleinen-rest-api nil :post "/" [& form]
+  (POST* "/" [& form]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/lisaa! form)))
-  (cu/defapi :yleinen-rest-api nil :put "/:suorittajaid" [suorittajaid & suorittaja]
+  (PUT* "/:suorittajaid" [suorittajaid & suorittaja]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja)))
-  (cu/defapi :yleinen-rest-api nil :delete "/:suorittajaid" [suorittajaid]
+  (DELETE* "/:suorittajaid" [suorittajaid]
+    :kayttooikeus :yleinen-rest-api
     (arkisto/poista! (Integer/parseInt suorittajaid))))
