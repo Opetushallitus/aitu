@@ -264,14 +264,16 @@
                                     (s/optional-key :voimassa) Boolean
                                     (s/optional-key :vanhentunut) Boolean})
 
-(s/defschema ToimikunnanTiedot (merge ToimikunnanHakuTiedot
+(s/defschema Toimikuntalista (assoc ToimikunnanHakuTiedot
+                                    :tilikoodi s/Str
+                                    :kielisyys Kieli))
+
+(s/defschema ToimikunnanTiedot (merge Toimikuntalista
                                       {:sahkoposti (s/maybe s/Str)
-                                       :tilikoodi s/Str
                                        (s/optional-key :toimikausi_id) s/Int
                                        (s/optional-key :alkupvm) org.joda.time.LocalDate
                                        (s/optional-key :loppupvm) org.joda.time.LocalDate
-                                       (s/optional-key :toimiala) s/Str
-                                       :kielisyys Kieli}))
+                                       (s/optional-key :toimiala) s/Str}))
 
 (s/defschema UusiToimikunta (-> ToimikunnanTiedot
                              (dissoc ToimikunnanTiedot :tkunta)

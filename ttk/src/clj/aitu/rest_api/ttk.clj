@@ -298,10 +298,11 @@
 (defroutes* reitit
   (GET* "/" [tunnus toimikausi :as req]
     :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta tai opintoalasta"
-    ;:return [Toimikunta]
+    :return [Toimikuntalista]
     (cu/autorisoitu-transaktio :toimikunta_haku nil
       (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus
-                                                    :toimikausi toimikausi}))))
+                                                    :toimikausi toimikausi
+                                                    :avaimet [:tkunta :diaarinumero :nimi_fi :nimi_sv :kielisyys :tilikoodi :voimassa :toimikausi_alku :toimikausi_loppu]}))))
 
   (GET* ["/:diaarinumero" :diaarinumero #"[0-9%F]+"] [diaarinumero]
     :summary "Hakee toimikunnan diaarinumeron perusteella"
