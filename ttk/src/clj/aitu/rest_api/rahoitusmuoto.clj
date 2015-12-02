@@ -13,11 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.rahoitusmuoto
-  (:require [compojure.core :as c]
-            [aitu.infra.rahoitusmuoto-arkisto :as arkisto]
-            [aitu.compojure-util :as cu]
+  (:require [aitu.infra.rahoitusmuoto-arkisto :as arkisto]
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" []
+(defroutes* reitit
+  (GET* "/" []
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki))))
