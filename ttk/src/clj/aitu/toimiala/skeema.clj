@@ -19,8 +19,6 @@
 (s/defschema TermiParams {:termi s/Str
                           (s/optional-key :_) s/Str})
 
-(s/defschema TermiJaToimikausiParams (assoc TermiParams :toimikausi (s/enum "nykyinen" "kaikki")))
-
 (s/defschema AuditTiedot {:muutettu_kayttaja s/Str
                           :luotu_kayttaja s/Str
                           :muutettuaika org.joda.time.DateTime
@@ -40,7 +38,6 @@
 (s/defschema AuditTiedotJaKayttajat (assoc AuditTiedot
                                           :muutettu_kayttaja Kayttaja
                                           :luotu_kayttaja Kayttaja))
-
 
 (def Sukupuoli (s/enum "mies" "nainen"))
 
@@ -93,14 +90,7 @@
 
 (s/defschema Henkilo (assoc HenkilonTiedot :henkiloid s/Int))
 
-(s/defschema HenkilonJulkisetTiedot (dissoc HenkilonTiedot :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka))
-
 (s/defschema SisaltaaHenkilonTiedot (assoc HenkilonTiedot s/Keyword s/Any))
-
-(s/defschema SisaltaaHenkilonJulkisetTiedot (assoc HenkilonJulkisetTiedot s/Keyword s/Any))
-
-
-(declare SopimusJaTutkinto)
 
 (s/defschema KoulutustoimijaLinkki {:nimi_fi s/Str
                                    :nimi_sv s/Str
@@ -114,9 +104,9 @@
                                            :www_osoite (s/maybe s/Str)
                                            :sahkoposti (s/maybe s/Str)}))
 
-(s/defschema Koulutustoimija (merge KoulutustoimijanTiedot AuditTiedot))
-
-(s/defschema KoulutustoimijaLista (assoc Koulutustoimija :sopimusten_maara s/Int))
+(s/defschema KoulutustoimijaLista (merge KoulutustoimijanTiedot
+                                         AuditTiedot
+                                         {:sopimusten_maara s/Int}))
 
 (s/defschema OppilaitosLinkki {:nimi s/Str
                               :oppilaitoskoodi s/Str})
@@ -132,128 +122,20 @@
                                         :sahkoposti (s/maybe s/Str)
                                         :koulutustoimija s/Str}))
 
-(s/defschema ToimipaikkaLinkki {:nimi_fi s/Str
-                               :nimi_sv s/Str
-                               :toimipaikkakoodi s/Str})
-
-(s/defschema OppilaitosTiedot (merge OppilaitoksenTiedot AuditTiedot))
-
-(s/defschema OppilaitosLista (assoc OppilaitosTiedot :sopimusten_maara s/Int))
-
-(s/defschema JarjestamissopimusPerustiedot {:jarjestamissopimusid s/Int
-                                            :alkupvm (s/maybe org.joda.time.LocalDate)
-                                            :loppupvm (s/maybe org.joda.time.LocalDate)
-                                            :sopimusnumero s/Str
-                                            (s/optional-key :voimassa) Boolean})
-
-(s/defschema JarjestamissopimusTiedot (merge JarjestamissopimusPerustiedot
-                                             {:toimikunta s/Str
-                                              (s/optional-key :sopijatoimikunta) s/Str
-                                              :koulutustoimija s/Str
-                                              :tutkintotilaisuuksista_vastaava_oppilaitos (s/maybe s/Str)
-                                              (s/optional-key :vastuuhenkilo) (s/maybe s/Str)
-                                              (s/optional-key :puhelin) (s/maybe s/Str)
-                                              (s/optional-key :sahkoposti) (s/maybe s/Str)
-                                              (s/optional-key :vanhentunut) Boolean
-                                              (s/optional-key :poistettu) Boolean}
-                                             (optional-keys AuditTiedot)))
-
-(s/defschema JarjestamissuunnitelmaLinkki {:jarjestamissuunnitelma_id s/Int
-                                     :jarjestamissuunnitelma_filename s/Str})
-
-(s/defschema SopimuksenLiiteLinkki {:sopimuksen_liite_id s/Int
-                                   :sopimuksen_liite_filename s/Str})
+(s/defschema OppilaitosLista (merge OppilaitoksenTiedot
+                                    AuditTiedot
+                                    {:sopimusten_maara s/Int}))
 
 (s/defschema TutkintoversioLinkki {:tutkintotunnus s/Str
                                    :nimi_fi s/Str
                                    :nimi_sv (s/maybe s/Str)
                                    :peruste (s/maybe s/Str)})
 
-(s/defschema TutkintoversioTiedot (merge TutkintoversioLinkki
-                                         {:voimassa_alkupvm org.joda.time.LocalDate
-                                          :uusin_versio_id s/Int
-                                          :hyvaksytty Boolean
-                                          :tutkintoversio_id s/Int
-                                          :voimassa_loppupvm org.joda.time.LocalDate
-                                          :koodistoversio s/Int
-                                          :opintoala s/Str
-                                          :versio s/Int
-                                          :jarjestyskoodistoversio (s/maybe s/Int)
-                                          :osajarjestyskoodisto (s/maybe s/Str)
-                                          :tyyppi (s/maybe s/Str)
-                                          :siirtymaajan_loppupvm org.joda.time.LocalDate
-                                          (s/optional-key :siirtymaaika_paattyy) org.joda.time.LocalDate
-                                          (s/optional-key :voimassa) Boolean
-                                          :tutkintotaso (s/maybe s/Str)}
-                                         AuditTiedot))
-
-;; TODO: osaamisala ja osaamisala_id sisältää saman tiedon: käytetäänkö molempia?
-(s/defschema SopimusJaTutkintoJaOsaamisala (merge {:nimi_fi s/Str
-                                                  :nimi_sv (s/maybe s/Str)
-                                                  :voimassa_alkupvm org.joda.time.LocalDate
-                                                  :sopimus_ja_tutkinto s/Int
-                                                  :voimassa_loppupvm org.joda.time.LocalDate
-                                                  :osaamisala s/Int
-                                                  :versio s/Int
-                                                  :tutkintoversio (s/maybe s/Int)
-                                                  :osaamisalatunnus s/Str
-                                                  :toimipaikka (s/maybe s/Str)
-                                                  :osaamisala_id s/Int
-                                                  :kuvaus (s/maybe s/Str)}
-                                                 AuditTiedot))
-
-  ;; TODO: tutkinnonosa ja tutkinnonosa_id sisältää saman tiedon: käytetäänkö molempia?
-(s/defschema SopimusJaTutkintoJaTutkinnonosa (merge {:tutkinnonosa s/Int
-                                                    :nimi_fi s/Str
-                                                    :nimi_sv (s/maybe s/Str)
-                                                    :sopimus_ja_tutkinto s/Int
-                                                    :versio s/Int
-                                                    :tutkinnonosa_id s/Int
-                                                    :osatunnus s/Str
-                                                    :toimipaikka (s/maybe s/Str)
-                                                    :kuvaus (s/maybe s/Str)}
-                                                   AuditTiedot))
-
-(s/defschema SopimusJaTutkinto (merge {:sopimus_ja_tutkinto_id s/Int
-                                      :jarjestamissopimus (s/maybe JarjestamissopimusTiedot)
-                                      :jarjestamissopimusid s/Int
-                                      (s/optional-key :kieli) (s/maybe Kieli)
-                                      (s/optional-key :vastuuhenkilo) (s/maybe s/Str)
-                                      (s/optional-key :puhelin) (s/maybe s/Str)
-                                      (s/optional-key :sahkoposti) (s/maybe s/Str)
-                                      (s/optional-key :nayttomestari) (s/maybe Boolean)
-                                      (s/optional-key :lisatiedot) (s/maybe s/Str)
-                                      (s/optional-key :vastuuhenkilo_vara) (s/maybe s/Str)
-                                      (s/optional-key :puhelin_vara) (s/maybe s/Str)
-                                      (s/optional-key :sahkoposti_vara) (s/maybe s/Str)
-                                      (s/optional-key :nayttomestari_vara) (s/maybe Boolean)
-                                      (s/optional-key :lisatiedot_vara) (s/maybe s/Str)
-                                      :poistettu Boolean
-                                      :tutkintoversio TutkintoversioTiedot
-                                      :jarjestamissuunnitelmat [JarjestamissuunnitelmaLinkki]
-                                      :liitteet [SopimuksenLiiteLinkki]
-                                      :sopimus_ja_tutkinto_ja_osaamisala [SopimusJaTutkintoJaOsaamisala]
-                                      :sopimus_ja_tutkinto_ja_tutkinnonosa [SopimusJaTutkintoJaTutkinnonosa]}
-                                     (optional-keys AuditTiedot)))
-
-(s/defschema Jarjestamissopimus (merge JarjestamissopimusTiedot
-                                      {:koulutustoimija Koulutustoimija
-                                       :tutkintotilaisuuksista_vastaava_oppilaitos (s/maybe OppilaitosTiedot)
-                                       (s/optional-key :sopimus_ja_tutkinto) [SopimusJaTutkinto]}))
-
 (s/defschema Tutkintolinkki {:tutkintotunnus s/Str
                              (s/optional-key :opintoala_nimi_fi) s/Str
                              (s/optional-key :opintoala_nimi_sv) s/Str
                              :nimi_fi s/Str
                              :nimi_sv (s/maybe s/Str)})
-
-(s/defschema TutkinnonTiedot (merge Tutkintolinkki
-                                    {:tyyppi (s/maybe (s/enum "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13"))
-                                     :tutkintotaso (s/maybe (s/enum "erikoisammattitutkinto" "ammattitutkinto" "perustutkinto"))
-                                     :uusin_versio_id (s/maybe s/Int)
-                                     :opintoala s/Str}))
-
-(s/defschema Tutkinto (merge TutkinnonTiedot AuditTiedot))
 
 (s/defschema ToimikunnanHakuTiedot {:tkunta s/Str
                                     :diaarinumero s/Str
@@ -281,20 +163,21 @@
 
 (s/defschema SisaltaaToimikunnanTiedot (assoc ToimikunnanTiedot s/Keyword s/Any))
 
-(s/defschema Toimikunta (merge ToimikunnanTiedot AuditTiedot))
-
-(s/defschema JarjestamissopimusLista (assoc JarjestamissopimusPerustiedot
-                                            :tutkinnot [TutkintoversioLinkki]))
+(s/defschema JarjestamissopimusLista {:jarjestamissopimusid s/Int
+                                      :alkupvm (s/maybe org.joda.time.LocalDate)
+                                      :loppupvm (s/maybe org.joda.time.LocalDate)
+                                      :sopimusnumero s/Str
+                                      (s/optional-key :voimassa) Boolean
+                                      :tutkinnot [TutkintoversioLinkki]})
 
 (s/defschema JarjestamissopimusJaKoulutustoimija (assoc JarjestamissopimusLista
                                                         :koulutustoimija KoulutustoimijaLinkki))
 
-(s/defschema ToimikuntaLaajatTiedot (merge Toimikunta
-                                     {:jasenyys [ToimikunnanJasen]
-                                      :nayttotutkinto [Tutkintolinkki]
-                                      :jarjestamissopimus [JarjestamissopimusJaKoulutustoimija]
-                                      :luotu_kayttaja Kayttaja
-                                      :muutettu_kayttaja Kayttaja}))
+(s/defschema ToimikuntaLaajatTiedot (merge ToimikunnanTiedot
+                                           AuditTiedotJaKayttajat
+                                           {:jasenyys [ToimikunnanJasen]
+                                            :nayttotutkinto [Tutkintolinkki]
+                                            :jarjestamissopimus [JarjestamissopimusJaKoulutustoimija]}))
 
 (s/defschema OppilaitosLaajatTiedot (merge OppilaitoksenTiedot
                                           {:jarjestamissopimus [JarjestamissopimusLista]
@@ -355,13 +238,3 @@
 (s/defschema Osoitepalvelu
   {:toimikunnat [Osoitepalvelu-Toimikunta]
    :oppilaitokset [Osoitepalvelu-Oppilaitos]})
-
-(s/defschema Organisaatiomuutos
-  (merge {:organisaatiomuutosid s/Int
-          :koulutustoimija (s/maybe KoulutustoimijaLinkki)
-          :oppilaitos (s/maybe OppilaitosLinkki)
-          :toimipaikka (s/maybe ToimipaikkaLinkki)
-          :tehty (s/maybe org.joda.time.LocalDate)
-          :paivamaara org.joda.time.LocalDate
-          :tyyppi s/Keyword}
-         AuditTiedot))
