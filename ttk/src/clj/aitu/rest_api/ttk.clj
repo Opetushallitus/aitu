@@ -305,7 +305,7 @@
 
   (GET* ["/:diaarinumero" :diaarinumero #"[0-9%F]+"] [diaarinumero]
     :summary "Hakee toimikunnan diaarinumeron perusteella"
-    ;:return ToimikuntaLaajatTiedot
+    :return ToimikuntaLaajatTiedot
     (cu/autorisoitu-transaktio :toimikunta_katselu nil
       (response-or-404 (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero)))))
 
