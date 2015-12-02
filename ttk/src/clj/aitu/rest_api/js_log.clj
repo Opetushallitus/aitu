@@ -13,10 +13,11 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest_api.js-log
-  (:require [compojure.core :as c]
-            [aitu.compojure-util :as cu]
+  (:require [aitu.compojure-util :as cu :refer [POST*]]
+            [compojure.api.core :refer [defroutes*]]
             [oph.rest_api.js-log :refer :all]))
 
-(c/defroutes reitit
-  (cu/defapi :logitus nil :post "/virhe" [virheenUrl userAgent virheviesti stackTrace cause]
+(defroutes* reitit
+  (POST* "/virhe" [virheenUrl userAgent virheviesti stackTrace cause]
+    :kayttooikeus :logitus
     (logita virheenUrl userAgent virheviesti stackTrace cause)))
