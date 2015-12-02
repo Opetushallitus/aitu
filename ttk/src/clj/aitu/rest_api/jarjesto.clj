@@ -13,15 +13,17 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.jarjesto
-  (:require [compojure.core :as c]
-            [aitu.infra.jarjesto-arkisto :as arkisto]
+  (:require [aitu.infra.jarjesto-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-json-response]]
-            [aitu.compojure-util :as cu]
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/haku/" [termi :as req]
+(defroutes* reitit
+  (GET* "/haku/" [termi :as req]
+    :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (arkisto/hae-termilla termi nil)))
-  (cu/defapi :yleinen-rest-api nil :get "/haku/omat" [termi :as req]
+  (GET* "/haku/omat" [termi :as req]
+    :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (arkisto/hae-termilla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
  
