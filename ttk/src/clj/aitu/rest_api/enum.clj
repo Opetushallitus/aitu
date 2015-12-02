@@ -13,12 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.enum
-  (:require [compojure.core :as c]
-            [aitu.infra.enum-arkisto :as arkisto]
+  (:require [aitu.infra.enum-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.compojure-util :as cu]
-            [korma.db :as db]))
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/:enum" [enum]
+(defroutes* reitit
+  (GET* "/:enum" [enum]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki enum))))
