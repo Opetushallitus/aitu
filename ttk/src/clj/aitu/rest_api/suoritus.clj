@@ -13,23 +13,28 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.suoritus
-  (:require [compojure.core :as c]
-            [aitu.infra.suoritus-arkisto :as arkisto]
-            [aitu.compojure-util :as cu]
+  (:require [aitu.infra.suoritus-arkisto :as arkisto]
+            [aitu.compojure-util :as cu :refer [GET* POST* DELETE*]]
+            [compojure.api.core :refer [defroutes*]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(c/defroutes reitit
-  (cu/defapi :yleinen-rest-api nil :get "/" [& ehdot]
+(defroutes* reitit
+  (GET* "/" [& ehdot]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki ehdot)))
-  (cu/defapi :yleinen-rest-api nil :delete "/:suorituskerta-id" [suorituskerta-id]
+  (DELETE* "/:suorituskerta-id" [suorituskerta-id]
+    :kayttooikeus :yleinen-rest-api
     (let [suorituskerta-id (Integer/parseInt suorituskerta-id)
           suorituskerta (arkisto/hae suorituskerta-id)]
       (if (= "luonnos" (:tila suorituskerta))
         (json-response (arkisto/poista! suorituskerta-id))
         {:status 403})))
-  (cu/defapi :yleinen-rest-api nil :post "/" [& suoritus]
+  (POST* "/" [& suoritus]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/lisaa! suoritus)))
-  (cu/defapi :yleinen-rest-api nil :post "/laheta" [suoritukset]
+  (POST* "/laheta" [suoritukset]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/laheta! suoritukset)))
-  (cu/defapi :yleinen-rest-api nil :post "/hyvaksy" [suoritukset]
+  (POST* "/hyvaksy" [suoritukset]
+    :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hyvaksy! suoritukset))))
