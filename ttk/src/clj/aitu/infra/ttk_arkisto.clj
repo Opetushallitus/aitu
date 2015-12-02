@@ -140,6 +140,9 @@
   (let [toimikunta (first
                      (sql/select
                        tutkintotoimikunta
+                       (sql/fields :tkunta :diaarinumero :nimi_fi :nimi_sv :sahkoposti :kielisyys
+                                   :tilikoodi :toimiala :toimikausi_alku :toimikausi_loppu
+                                   :luotu_kayttaja :luotuaika :muutettu_kayttaja :muutettuaika)
                        (sql/with toimikausi
                          (sql/fields :alkupvm :loppupvm :voimassa))
                        (sql/with jasenyys
@@ -149,6 +152,7 @@
                            (sql/with jarjesto
                              (sql/fields [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv]))))
                        (sql/with nayttotutkinto
+                         (sql/fields :nimi_fi :nimi_sv :tutkintotunnus)
                          (sql/with opintoala
                            (sql/fields [:selite_fi :opintoala_nimi_fi] [:selite_sv :opintoala_nimi_sv])))
                        (sql/where {:diaarinumero diaarinumero})))

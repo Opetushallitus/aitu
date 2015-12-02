@@ -16,7 +16,7 @@
   (:import org.apache.commons.io.FileUtils)
   (:require  korma.db
              [korma.core :as sql]
-             [oph.common.util.util :refer [map-values select-and-rename-keys]]
+             [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists]]
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
@@ -177,12 +177,12 @@
 (defn ^:private liita-perustiedot-sopimukseen
   [jarjestamissopimus]
   (some-> jarjestamissopimus
-      (update-in [:toimikunta] toimikunta-kaytava/hae)
-      (update-in [:sopijatoimikunta] toimikunta-kaytava/hae)
-      (update-in [:koulutustoimija] koulutustoimija-kaytava/hae)
-      (update-in [:tutkintotilaisuuksista_vastaava_oppilaitos] oppilaitos-kaytava/hae)
-      (update-in [:muutettu_kayttaja] kayttaja-arkisto/hae)
-      (update-in [:luotu_kayttaja] kayttaja-arkisto/hae)))
+      (update-in-if-exists [:toimikunta] toimikunta-kaytava/hae)
+      (update-in-if-exists [:sopijatoimikunta] toimikunta-kaytava/hae)
+      (update-in-if-exists [:koulutustoimija] koulutustoimija-kaytava/hae-linkki)
+      (update-in-if-exists [:tutkintotilaisuuksista_vastaava_oppilaitos] oppilaitos-kaytava/hae)
+      (update-in-if-exists [:muutettu_kayttaja] kayttaja-arkisto/hae)
+      (update-in-if-exists [:luotu_kayttaja] kayttaja-arkisto/hae)))
 
 (defn ^:private liita-tutkinnot-sopimukseen
   [jarjestamissopimus]

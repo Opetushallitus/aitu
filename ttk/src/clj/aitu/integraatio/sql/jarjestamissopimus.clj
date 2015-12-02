@@ -45,8 +45,7 @@
   (vec
     (sql/select
      jarjestamissopimus
-     (sql/fields :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm :voimassa
-                 :koulutustoimija :tutkintotilaisuuksista_vastaava_oppilaitos :toimikunta)
+     (sql/fields :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm :voimassa :koulutustoimija)
      (sql/where {:toimikunta toimikunta
                  :poistettu false}))))
 
