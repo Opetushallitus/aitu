@@ -13,12 +13,13 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.haku
-  (:require [compojure.core :as c]
-            [aitu.infra.haku-arkisto :as arkisto]
+  (:require [aitu.infra.haku-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.compojure-util :as cu]))
+            [aitu.compojure-util :as cu :refer [GET*]]
+            [compojure.api.core :refer [defroutes*]]))
 
-(c/defroutes reitit
+(defroutes* reitit
   ; Regex hoitaa tässä SQL-injektion. Arkisto-koodissa ei ole sanitointia.
-  (cu/defapi :etusivu_haku nil :get ["/:tunnus" :tunnus #"[0-9/]+"] [tunnus]
+  (GET* ["/:tunnus" :tunnus #"[0-9/]+"] [tunnus]
+    :kayttooikeus :etusivu_haku
     (json-response (or (arkisto/hae-tunnuksella-ensimmainen tunnus) {}))))
