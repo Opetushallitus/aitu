@@ -17,12 +17,6 @@
            [oph.compojure-util :as oph-cjure]
            [aitu.toimiala.kayttajaoikeudet :as ko]))
 
-(defmacro defapi
-  "Esittelee rajapinta-funktion sisältäen käyttöoikeuksien tarkastamisen ja tietokanta-transaktion hallinnan."
-  [toiminto konteksti-arg http-method path args & body]
-  (let [auth-map ko/toiminnot]
-    `(oph-cjure/defapi  ~auth-map ~toiminto ~konteksti-arg ~http-method ~path ~args ~@body)))
-
 (defmacro autorisoitu-transaktio
   "Tarkastaa käyttöoikeudet ja hallitsee tietokanta-transaktion"
   [toiminto konteksti & body]
