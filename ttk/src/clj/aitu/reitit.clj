@@ -3,7 +3,7 @@
             [clojure.tools.logging :as log]
 
             [cheshire.core :as json]
-            [compojure.api.sweet :refer :all]
+            [compojure.api.sweet :refer [api context* swagger-docs swagger-ui]]
             [compojure.core :as c]
             [compojure.route :as r]
             schema.core
@@ -11,7 +11,7 @@
             [stencil.loader :as sl]
 
             [aitu.asetukset :refer [build-id kehitysmoodi? service-path]]
-            [aitu.compojure-util :as cu]
+            [aitu.compojure-util :as cu :refer [GET*]]
             [aitu.infra.i18n :as i18n]
             [aitu.infra.status :refer [status]]
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
@@ -132,7 +132,8 @@
     (testapi asetukset)
     (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
       (angular-template nimi asetukset))
-    (cu/defapi :etusivu nil :get "/" []
+    (GET* "/" []
+      :kayttooikeus :etusivu
       {:body (s/render-file "html/ttk" {:build-id @build-id
                                         :current-user (:kayttajan_nimi *current-user-authmap*)
                                         :impersonoitu (if *impersonoitu-oid* "true" "false")
@@ -145,7 +146,8 @@
        :status 200
        :headers {"Content-Type" "text/html"
                  "Set-cookie" (aseta-csrf-token (-> asetukset :server :base-url service-path))}})
-    (cu/defapi :status nil :get "/status" []
+    (GET* "/status" []
+      :kayttooikeus :status
       (s/render-file "html/status"
                      (assoc (status)
                             :asetukset (with-out-str
