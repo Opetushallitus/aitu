@@ -24,4 +24,6 @@
   - name: Tyhjennä iptables
     shell: iptables -F
     when: tyhjenna_iptables is defined
+  - command: service iptables save
+    when: tyhjenna_iptables is defined
 
