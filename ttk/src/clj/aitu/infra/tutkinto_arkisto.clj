@@ -106,11 +106,24 @@
                                         (sql/aggregate (max :versio) :max_versio)
                                         (sql/where {:osatunnus osatunnus}))))))))
 
+(defn ^:private hae-tutkinnonosan-id
+  [osatunnus tutkintoversio_id]
+  (first (sql/select tutkinnonosa
+           (sql/join :inner tutkinto-ja-tutkinnonosa {:tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id})
+           (sql/fields :tutkinnonosa.tutkinnonosa_id)
+           (sql/where {:osatunnus osatunnus
+                       :tutkinto_ja_tutkinnonosa.tutkintoversio tutkintoversio_id}))))
+
 (defn ^:integration-api lisaa-tutkinnon-osa!
   "Lisää tutkinnon osan"
   [tutkintoversio_id jarjestysnumero osa]
   (let [osa (sql/insert tutkinnonosa
-              (sql/values osa))]
+              (sql/values (assoc osa
+                                 :versio (sql/sqlfn coalesce 
+                                                    (sql/subselect tutkinnonosa
+                                                      (sql/fields (sql/raw "max(versio)+1"))
+                                                      (sql/where {:osatunnus (:osatunnus osa)}))
+                                                    1))))]
     (sql/insert tutkinto-ja-tutkinnonosa
       (sql/values {:tutkintoversio tutkintoversio_id
                    :tutkinnonosa (:tutkinnonosa_id osa)
@@ -119,12 +132,20 @@
 (defn ^:integration-api paivita-tutkinnon-osa!
   "Tekee uuden version tutkinnonosasta"
   [tutkintoversio_id jarjestysnumero osa]
-  (let [vanha-osa (hae-tutkinnonosan-uusin-versio (:osatunnus osa))
-        uusi-osa (->
-                   (merge vanha-osa osa)
-                   (update-in [:versio] (fnil inc 0))
-                   (dissoc :tutkinnonosa_id))]
-    (lisaa-tutkinnon-osa! tutkintoversio_id jarjestysnumero uusi-osa)))
+  (if-let [vanha-osa (hae-tutkinnonosan-id (:osatunnus osa) tutkintoversio_id)]
+    (do
+      (sql-util/update-unique tutkinnonosa
+        (sql/set-fields osa)
+        (sql/where {:tutkinnonosa_id (:tutkinnonosa_id vanha-osa)}))
+      (sql-util/update-unique tutkinto-ja-tutkinnonosa
+        (sql/set-fields {:jarjestysnumero jarjestysnumero})
+        (sql/where {:tutkintoversio tutkintoversio_id
+                    :tutkinnonosa (:tutkinnonosa_id vanha-osa)})))
+    (lisaa-tutkinnon-osa! tutkintoversio_id jarjestysnumero (-> 
+                                                              (hae-tutkinnonosan-uusin-versio (:osatunnus osa))
+                                                              (merge osa)
+                                                              (update-in [:versio] (fnil inc 0))
+                                                              (dissoc :tutkinnonosa_id :tutkintoversio)))))
 
 (defn ^:test-api poista-tutkinnon-osa!
   "Poistaa tutkinnon osan"
@@ -153,12 +174,14 @@
 (defn ^:integration-api paivita-osaamisala!
   "Lisää uuden version osaamisalasta"
   [oala]
-  (let [vanha-ala (hae-osaamisalan-uusin-versio (:osaamisalatunnus oala))
-        uusi-ala (->
-                   (merge vanha-ala oala)
-                   (update-in [:versio] inc)
-                   (dissoc :osaamisala_id))]
-    (lisaa-osaamisala! uusi-ala)))
+  (let [vanha-ala (hae-osaamisalan-uusin-versio (:osaamisalatunnus oala))] 
+    (if (= (:tutkintoversio vanha-ala) (:tutkintoversio oala))
+      (sql-util/update-unique osaamisala
+        (sql/set-fields oala)
+        (sql/where {:osaamisala_id (:osaamisala_id vanha-ala)})))
+    (lisaa-osaamisala! (-> (merge vanha-ala oala)
+                         (update :versio inc)
+                         (dissoc :osaamisala_id)))))
 
 (defn ^:test-api poista-osaamisala!
   "Poistaa osaamisalan"
