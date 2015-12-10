@@ -24,6 +24,7 @@
             [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.session.memory :refer [memory-store]]
+            [ring.util.request :refer [path-info request-url]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.middleware.session-timeout :refer [wrap-idle-session-timeout]]
@@ -68,21 +69,34 @@
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
 
+(def swagger-resources
+  "Swagger API resources, not authenticated using CAS"
+  #{"/api-docs" "/swagger.json" "/fi/swagger.json"})
+
 (defn auth-middleware
   [handler asetukset]
   (when (and (kehitysmoodi? asetukset)
-             (:unsafe-https (:cas-auth-server asetukset))
-             (:enabled (:cas-auth-server asetukset)))
+          (:unsafe-https (:cas-auth-server asetukset))
+          (:enabled (:cas-auth-server asetukset)))
     (anon-auth/enable-development-mode!))
-  (if (and (kehitysmoodi? asetukset)
-           (not (:enabled (:cas-auth-server asetukset))))
-    (anon-auth/auth-cas-user handler ka/default-test-user-uid)
-    (fn [request]
-      (let [auth-handler (if (and (kehitysmoodi? asetukset)
-                                  ((:headers request) "uid"))
-                           (anon-auth/auth-cas-user handler ka/default-test-user-uid)
-                           (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
-        (auth-handler request)))))
+  
+  (fn [request]
+      (let [anon-auth-handler (anon-auth/auth-cas-user handler ka/default-test-user-uid)
+            auth-handler (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]  
+      (cond
+        (some #(.startsWith (path-info request) %) swagger-resources)
+          (do
+            (log/info "swagger API docs are public, no auth")
+            (anon-auth-handler request)) 
+        (and (kehitysmoodi? asetukset) (not (:enabled (:cas-auth-server asetukset))))
+          (do 
+           (log/info "development, no CAS")
+           (anon-auth-handler request))
+        (and (kehitysmoodi? asetukset) ((:headers request) "uid"))
+          (do
+            (log/info "development, fake CAS")
+            (anon-auth-handler request))
+        :else (auth-handler request)))))
 
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
