@@ -74,6 +74,7 @@
     (let [henkilot (case toimikausi
                      "nykyinen_voimassa" (arkisto/hae-nykyiset-voimassa)
                      "nykyinen" (arkisto/hae-nykyiset)
+                     "tuleva" (arkisto/hae-tulevat)
                      (arkisto/hae-kaikki))
           cache-muokattu (get-cache-date req)
           henkilot-muokattu (->

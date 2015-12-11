@@ -59,7 +59,8 @@
       (cond->
         (some #{(:toimikausi ehdot)} ["nykyinen" "nykyinen_voimassa"]) (sql/where {:toimikausi.voimassa true})
         (= (:toimikausi ehdot) "nykyinen_voimassa") (sql/where (and (<= :jasenyys.alkupvm (sql/raw "current_date"))
-                                                                    (<= (sql/raw "current_date") :jasenyys.loppupvm))))
+                                                                    (<= (sql/raw "current_date") :jasenyys.loppupvm)))
+        (= (:toimikausi ehdot) "tuleva") (sql/where (< (sql/raw "current_date") :toimikausi.alkupvm)))
       sql/exec)))
 
 (defn ^:private pg-hae-henkilot-ehdoilla
@@ -93,20 +94,27 @@
   (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot-ehdoilla {})
                                   (pg-hae-jasenyydet-ehdoilla {:toimikausi "kaikki"})))
 
+(defn hae-henkilot-toimikaudella
+  "Hakee henkilöt, joilla on jäsenyys annetun toimikauden toimikunnassa"
+  [toimikausi]
+  (let [yhdistetyt-henkilot (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot-ehdoilla {})
+                                                            (pg-hae-jasenyydet-ehdoilla {:toimikausi toimikausi}))]
+    (remove (comp empty? :jasenyydet) yhdistetyt-henkilot)))
+
 (defn hae-nykyiset
   "Hakee kaikki henkilöt nykyisen toimikauden toimikunnista"
-  ([]
-   (hae-nykyiset "nykyinen"))
-  ([toimikausi]
-   (let [yhdistetyt-henkilot
-         (yhdista-henkilot-ja-jasenyydet (pg-hae-henkilot-ehdoilla {})
-                                         (pg-hae-jasenyydet-ehdoilla {:toimikausi toimikausi}))]
-     (remove #(empty? (:jasenyydet %)) yhdistetyt-henkilot))))
+  []
+  (hae-henkilot-toimikaudella "nykyinen"))
 
 (defn hae-nykyiset-voimassa
   "Hakee kaikki henkilöt joiden nykyisen toimikauden jäsenyys on voimassa"
   []
-  (hae-nykyiset "nykyinen_voimassa"))
+  (hae-henkilot-toimikaudella "nykyinen_voimassa"))
+
+(defn hae-tulevat
+  "Hakee kaikki henkilöt tulevien toimikausien toimikunnista"
+  []
+  (hae-henkilot-toimikaudella "tuleva"))
 
 (defn hae
   "Hakee henkilön id:n perusteella"
