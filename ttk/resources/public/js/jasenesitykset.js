@@ -70,7 +70,7 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
     }, true);
   }])
 
-  .controller('JasenesityksetYhteenvetoController', ['$scope', 'Jasenesitykset', 'ToimikausiResource', function($scope, Jasenesitykset, ToimikausiResource) {
+  .controller('JasenesityksetYhteenvetoController', ['$filter', '$scope', 'Jasenesitykset', 'ToimikausiResource', function($filter, $scope, Jasenesitykset, ToimikausiResource) {
     $scope.search = {};
     $scope.summat = {};
     $scope.sarakekentat = ['esitetty_yhteensa', 'esitetty_miehia', 'esitetty_naisia', 'esitetty_fi', 'esitetty_sv', 'esitetty_se', 'nimitetty_yhteensa', 'nimitetty_miehia', 'nimitetty_naisia', 'nimitetty_fi', 'nimitetty_sv', 'nimitetty_se'];
@@ -84,6 +84,18 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
       }, true);
     });
 
+    $scope.$watch('filter', function() {
+      paivitaSummat();
+    });
+
+    var paivitaSummat = function() {
+      var toimikunnat = $filter('filter')($scope.toimikunnat, $scope.filter);
+
+      _.forEach($scope.sarakekentat, function(kentta) {
+        $scope.summat[kentta] = _.reduce(_.pluck(toimikunnat, kentta), function(total, n) { return total + n; }, 0);
+      });
+    };
+
     var paivita = function() {
       Jasenesitykset.haeYhteenveto($scope.search).then(function(toimikunnat) {
         _.forEach(toimikunnat, function(toimikunta) {
@@ -91,11 +103,8 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
           toimikunta.nimitetty_yhteensa = toimikunta.nimitetty_miehia + toimikunta.nimitetty_naisia;
         });
 
-        _.forEach($scope.sarakekentat, function(kentta) {
-          $scope.summat[kentta] = _.reduce(_.pluck(toimikunnat, kentta), function(total, n) { return total + n; }, 0);
-        });
-
         $scope.toimikunnat = toimikunnat;
+        paivitaSummat();
       });
     };
   }])
