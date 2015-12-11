@@ -36,13 +36,13 @@
       <ul>
 
         <li><a href="#/">[[etusivu]]</a></li>
-        <li><a href="#/search-tutkinto">[[tutkinnot]]</a></li>
         <auth-toiminto auth-blokki sallitut-roolit="['KAYTTAJA']">
+        <li><a href="#/search-tutkinto">[[tutkinnot]]</a></li>
         <li><a href="#/search-toimikunta">[[toimikunnat]]</a></li>
         <li><a href="#/henkilot">[[henkilot]]</a></li>
-        </auth-toiminto>
         <li><a href="#/search-koulutustoimija">[[koulutustoimijat]]</a></li>
         <li><a href="#/search-oppilaitos">[[oppilaitokset]]</a></li>
+        </auth-toiminto>
         <li ng-if="[[yllapitaja]]"><a href="#/raportit">[[raportit]]</a></li>
         <li ng-if="[[yllapitaja]]"><a href="#/arviointipaatokset">[[arviointipaatokset]]</a></li>
         <auth-toiminto auth-blokki sallitut-roolit="['JARJESTO']">
