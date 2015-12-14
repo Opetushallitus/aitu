@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.jasenesitykset
-  (:require[aitu.compojure-util :as cu :refer [GET* DELETE*]]
+  (:require [aitu.compojure-util :as cu :refer [GET* DELETE*]]
             [compojure.api.core :refer [defroutes*]]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
             [aitu.toimiala.henkilo :as henkilo]
