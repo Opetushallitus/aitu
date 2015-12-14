@@ -15,6 +15,7 @@
 (ns aitu.rest-api.jasenesitykset
   (:require [aitu.compojure-util :as cu :refer [GET* DELETE*]]
             [compojure.api.core :refer [defroutes*]]
+            [clj-time.coerce :as time-coerce]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
             [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.kayttajaoikeudet :as ko]
@@ -68,7 +69,9 @@
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (-> (arkisto/hae jarjesto ehdot true)
           (->>
-            (map #(apply dissoc % csv-poistettavat-kentat)))
+            (map #(apply dissoc % csv-poistettavat-kentat))
+            (map #(update % :luotuaika time-coerce/to-local-date))
+            (map #(update % :muutettuaika time-coerce/to-local-date)))
           henkilo/piilota-salaiset-henkiloilta
           convert-values
           (muodosta-csv kenttien-jarjestys sarakkeiden-otsikot)
