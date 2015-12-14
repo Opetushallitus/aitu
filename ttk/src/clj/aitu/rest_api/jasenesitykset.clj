@@ -39,8 +39,7 @@
 (def ^:private sarakkeiden-otsikot
   (merge
     aitu-util/sarakkeiden-otsikot
-    {:henkiloid "Henkilöid"
-     :asiantuntijaksi "Käytettävissä asiantuntijaksi"
+    {:asiantuntijaksi "Käytettävissä asiantuntijaksi"
      :vapaateksti_kokemus "Kokemus-tieto"
      :syntymavuosi "Syntymävuosi"
      :sukupuoli "Sukupuoli"
@@ -50,28 +49,26 @@
      :nayttomestari "Näyttömestari"
      :kokemusvuodet "Kokemusvuodet"
      :lisatiedot "Lisätiedot-tieto"
-     :esittaja_henkilo_henkiloid "Esittäjän henkilöid"
      :esittaja_henkilo_etunimi "Esittäjän etunimi"
      :esittaja_henkilo_sukunimi "Esittäjän sukunimi"
-     :esittaja_keskusjarjesto_nimi_fi "Esittäjän keskusjärjestö suomeksi"
-     :esittaja_keskusjarjesto_nimi_sv "Esittäjän keskusjärjestö ruotsiksi"
-     :esittaja "Esittäjän järjestöid"
-     :esittaja_jarjesto_nimi_fi "Esittäjän järjestö suomeksi"
-     :esittaja_jarjesto_nimi_sv "Esittäjän järjestö ruotsiksi"
+     :esittaja_keskusjarjesto_nimi_fi "Esittäjän keskusjärjestö"
+     :esittaja_jarjesto_nimi_fi "Esittäjän järjestö"
      :tutkintotoimikunta_diaarinumero "Toimikunnan diaarinumero"
-     :toimikunta "Tutkintotoimikunta"
-     :tutkintotoimikunta_nimi_fi "Toimikunnan nimi suomeksi"
-     :tutkintotoimikunta_nimi_sv "Toimikunnan nimi ruotsiksi"
+     :tutkintotoimikunta_nimi_fi "Toimikunnan nimi"
      :luotuaika "Esityspvm"
      :nimityspaiva "Nimityspvm"
      :muutettuaika "Muutettu"
      :status "Tila"}))
+
+(def ^:private csv-poistettavat-kentat [:henkiloid :esittaja_henkilo_henkiloid :esittaja_keskusjarjesto_nimi_sv :esittaja :esittaja_jarjesto_nimi_sv :toimikunta :tutkintotoimikunta_nimi_sv :luotu_kayttaja :jasenyys_id])
 
 (defroutes* reitit-csv
   (GET* "/csv" [& ehdot]
     :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (-> (arkisto/hae jarjesto ehdot true)
+          (->>
+            (map #(apply dissoc % csv-poistettavat-kentat)))
           henkilo/piilota-salaiset-henkiloilta
           convert-values
           (muodosta-csv kenttien-jarjestys sarakkeiden-otsikot)
