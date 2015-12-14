@@ -71,10 +71,11 @@
   (GET* "/csv" [& ehdot]
     :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
-      (csv-download-response (muodosta-csv (convert-values (henkilo/piilota-salaiset-henkiloilta (arkisto/hae jarjesto ehdot true)))
-                                           kenttien-jarjestys
-                                           sarakkeiden-otsikot)
-                             "jasenesitykset.csv"))))
+      (-> (arkisto/hae jarjesto ehdot true)
+          henkilo/piilota-salaiset-henkiloilta
+          convert-values
+          (muodosta-csv kenttien-jarjestys sarakkeiden-otsikot)
+          (csv-download-response "jasenesitykset.csv")))))
 
 (defroutes* reitit
   (GET* "/" [& ehdot]
