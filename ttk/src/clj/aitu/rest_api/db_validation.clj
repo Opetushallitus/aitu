@@ -8,6 +8,7 @@
 
 (defroutes* reitit
   (GET* "/" []
+    :summary "Tietosisällön validointikyselyiden tulokset, raportti."
     :kayttooikeus :status
     (let [results-raw (validationtest/run-queries! query-list)
           results (map (fn [rm] {:title (:title rm) :results (map (fn [n] {:result n}) (:results rm))}) results-raw)]

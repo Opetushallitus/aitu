@@ -21,8 +21,10 @@
 (defroutes* reitit
   ; vanha API - voidaan poistaa kun kaikissa ympäristöissä on uusi API käytössä
   (GET* "/sopimukset" []
+    :summary "Sopimustiedot Aipalia varten"
     :kayttooikeus :aipal
     (json-response (jarjestamissopimus-arkisto/hae-tutkinnot-koulutustoimijoittain)))
   (GET* "/sopimukset/v2" []
+    :summary "Sopimustiedot Aipalia varten"
     :kayttooikeus :aipal
     (json-response (jarjestamissopimus-arkisto/hae-tutkinnot-koulutustoimijoittain-jarjestamissopimusten-voimassaolon-kanssa))))
