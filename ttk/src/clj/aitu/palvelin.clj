@@ -138,7 +138,6 @@
       :base-url (-> asetukset :server :base-url))
     (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
                                 :timeout-response (timeout-response asetukset)})
-    ;auth/wrap-sessionuser
     (auth-middleware asetukset)
     log-request-wrapper
 

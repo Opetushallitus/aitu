@@ -22,7 +22,6 @@
   (let [crout (init-peridot!)]
     (let [response (-> (peridot/session crout)
                      (mock-plain-request "/api-docs/../fi/template/direktiivit/tiedote" :get {}))]
-      (println (:response response))
       (is (= (:status (:response response)) 404))))) ; not found 
  
 
