@@ -20,5 +20,6 @@
 
 (defroutes* reitit
   (GET* "/" []
+    :summary "Rahoitusmuodot, joiden kautta koulutusta voidaan järjestää."
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki))))

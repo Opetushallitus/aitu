@@ -20,11 +20,14 @@
 
 (defroutes* reitit
   (GET* "/haku" [termi]
+    :summary "Koulutusalan haku termillä. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-termilla termi)))
   (GET* "/" []
+    :summary "Kaikki opintoalat. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki)))
   (GET* "/:koodi" [koodi]
+    :summary "Opintoala tunnuksella. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae koodi))))

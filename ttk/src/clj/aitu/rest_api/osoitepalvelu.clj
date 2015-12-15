@@ -8,7 +8,7 @@
 
 (defroutes* reitit
   (GET* "/" []
-    :summary "Hakee osoitepalvelun tarvitsemat tiedot"
+    :summary "INTEGRAATIO: Hakee osoitepalvelun tarvitsemat tiedot"
     :return Osoitepalvelu
     :kayttooikeus :osoitepalvelu-api
     (let [oppilaitokset (oppilaitos-arkisto/hae-osoitepalvelulle)

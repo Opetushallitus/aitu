@@ -93,7 +93,7 @@
     (swagger-ui "/api-docs")
     (swagger-docs
       {:info {:title "AITU API"
-              :description "AITUn julkinen rajapinta"}})
+              :description "AITUn rajapinnat. Sisältää sekä integraatiorajapinnat muihin järjestelmiin, että Aitun sisäiseen käyttöön tarkoitetut rajapinnat."}})
     (context* "/api/ttk" [] aitu.rest-api.ttk/raportti-reitit)
     (context* "/api/ttk" [] aitu.rest-api.ttk/paatos-reitit)
     (context* "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
@@ -147,6 +147,7 @@
        :headers {"Content-Type" "text/html"
                  "Set-cookie" (aseta-csrf-token (-> asetukset :server :base-url service-path))}})
     (GET* "/status" []
+      :summary "Tietoa Aitun asetuksista palvelimella. Versionumerot yms. ongelmien selvittämistä varten."
       :kayttooikeus :status
       (s/render-file "html/status"
                      (assoc (status)

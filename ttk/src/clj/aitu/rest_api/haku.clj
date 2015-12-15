@@ -21,5 +21,6 @@
 (defroutes* reitit
   ; Regex hoitaa tässä SQL-injektion. Arkisto-koodissa ei ole sanitointia.
   (GET* ["/:tunnus" :tunnus #"[0-9/]+"] [tunnus]
+    :summary "Pikahaku yksilöivällä tunnuksella eri käsitteisiin"
     :kayttooikeus :etusivu_haku
     (json-response (or (arkisto/hae-tunnuksella-ensimmainen tunnus) {}))))

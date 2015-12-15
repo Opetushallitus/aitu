@@ -20,5 +20,6 @@
 
 (defroutes* reitit
   (GET* "/" [:as req]
+    :summary "Palauttaa tutkintorakenteen. (ePerusteet master-järjestelmä)"
     :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (arkisto/hae))))

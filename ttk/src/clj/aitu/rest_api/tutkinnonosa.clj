@@ -20,5 +20,6 @@
 
 (defroutes* reitit
   (GET* "/" [tutkintotunnus]
+    :summary "Tutkinnon osat tutkinnon tunnuksen perusteella. (ePerusteet on tietojen master-järjestelmä)"
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae tutkintotunnus))))

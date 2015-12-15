@@ -20,5 +20,6 @@
 
 (defroutes* reitit
   (GET* "/opintoalat" req
+    :summary "Koulutusalat. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (arkisto/hae-koulutusalat-ja-opintoalat))))

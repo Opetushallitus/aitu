@@ -20,6 +20,7 @@
 
 (defroutes* reitit
   (GET* "/" []
+    :summary "Palauttaa tutkintotoimikuntien toimikaudet."
     :kayttooikeus :yleinen-rest-api
     (let [toimikaudet (arkisto/hae-kaikki)]
       (json-response toimikaudet))))
