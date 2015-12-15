@@ -20,10 +20,11 @@
             [aitu.test-timeutil :refer :all]
             [aitu.integraatio.sql.test-util :refer [toimikunnan-jasenyys]]))
 
+; TODO: siirretään clojure-utils pakettiin
 (defn no-args? [f]
-  (println (type f))
-  (println (seq? f))
-  (println (symbol? f))
+;  (println (type f))
+;  (println (seq? f))
+;  (println (symbol? f))
 ;  (println (first f))
   (cond (and 
           (seq? f)

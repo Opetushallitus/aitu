@@ -48,11 +48,9 @@
   [rooli]
   (= (:yllapitaja kayttajaroolit) rooli))
 
-(defn yllapitaja?
-  ([kayttaja-map]
-   (onko-kayttajan-rooli? kayttaja-map (:yllapitaja kayttajaroolit)))
-  ([] (yllapitaja? *current-user-authmap*)))
-
+(defn yllapitaja? []
+  (onko-kayttajan-rooli? :yllapitaja))
+ 
 (defn oph-katselija? []
   (onko-kayttajan-rooli? :oph-katselija))
 
@@ -100,13 +98,11 @@
 (defn jarjesto-kayttaja? [] 
   (onko-kayttajan-rooli? :jarjesto))
 
-(def sallittu-kaikille (constantly true))
-
-(defn sallittu-yllapitajalle [& _] (yllapitaja?))
+(def sallittu-kaikille 
+  "Sallittu kaikille, ilman autentikointia. Tätä on tarkoitus käyttää vain julkisesti saatavilla olevien tietojen välittämiseen."
+  (constantly true))
 
 (defn sallittu-yllapitajalle-ja-jarjestolle [& _] (or (yllapitaja?) (jarjesto-kayttaja?)))
-
-(defn sallittu-kayttajalle-ja-jarjestolle [& _] (or (aitu-kayttaja?) (jarjesto-kayttaja?)))
 
 (defn toimikunnan-katselu? 
   "Sallittu muille käyttäjille, mutta ei järjestökäyttäjälle."
@@ -123,18 +119,18 @@
 ;; muodostamassa koodissa, joten ne eivät saa olla funktio-olioita
 ;; (ks. http://stackoverflow.com/a/11287181).
 (def yllapitotoiminnot
-  `{:toimikunta_luonti  sallittu-yllapitajalle
-    :toimikunta_paivitys sallittu-yllapitajalle
-    :toimikuntajasen_yllapito sallittu-yllapitajalle
-    :toimikuntakayttaja-listaus sallittu-yllapitajalle
-    :tiedote_muokkaus sallittu-yllapitajalle
-    :status sallittu-yllapitajalle
-    :ohje_muokkaus sallittu-yllapitajalle
-    :etusivu_haku sallittu-yllapitajalle
-    :impersonointi sallittu-yllapitajalle
-    :organisaatiomuutos sallittu-yllapitajalle
-    :raportti sallittu-yllapitajalle
-    :paatos sallittu-yllapitajalle})
+  `{:toimikunta_luonti  yllapitaja?
+    :toimikunta_paivitys yllapitaja?
+    :toimikuntajasen_yllapito yllapitaja?
+    :toimikuntakayttaja-listaus yllapitaja?
+    :tiedote_muokkaus yllapitaja?
+    :status yllapitaja?
+    :ohje_muokkaus yllapitaja?
+    :etusivu_haku yllapitaja?
+    :impersonointi yllapitaja?
+    :organisaatiomuutos yllapitaja?
+    :raportti yllapitaja?
+    :paatos yllapitaja?})
 
 (defn jasenesityksen-poisto-sallittu? [jasenyysid]
   (let [jasenyys (ttk-arkisto/hae-jasen jasenyysid)
