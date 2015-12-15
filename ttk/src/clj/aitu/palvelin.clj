@@ -81,13 +81,15 @@
     (anon-auth/enable-development-mode!))
   
   (fn [request]
-      (let [anon-auth-handler (anon-auth/auth-cas-user handler ka/default-test-user-uid)
-            auth-handler (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]  
+      (let [cas-handler (auth/wrap-sessionuser handler)
+            anon-auth-handler (anon-auth/auth-cas-user cas-handler ka/default-test-user-uid)
+            fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
+            auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]  
       (cond
         (some #(.startsWith (path-info request) %) swagger-resources)
           (do
             (log/info "swagger API docs are public, no auth")
-            (anon-auth-handler request)) 
+            (handler request)) 
         (and (kehitysmoodi? asetukset) (not (:enabled (:cas-auth-server asetukset))))
           (do 
            (log/info "development, no CAS")
@@ -95,7 +97,7 @@
         (and (kehitysmoodi? asetukset) ((:headers request) "uid"))
           (do
             (log/info "development, fake CAS")
-            (anon-auth-handler request))
+            (fake-auth-handler request))
         :else (auth-handler request)))))
 
 (defn sammuta [palvelin]
@@ -136,7 +138,7 @@
       :base-url (-> asetukset :server :base-url))
     (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
                                 :timeout-response (timeout-response asetukset)})
-    auth/wrap-sessionuser
+    ;auth/wrap-sessionuser
     (auth-middleware asetukset)
     log-request-wrapper
 

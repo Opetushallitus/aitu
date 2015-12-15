@@ -20,18 +20,30 @@
       (deliver ka/*current-user-oid* (:oid olemassaoleva-kayttaja))
       (f))))
 
-(defn mock-request [app url method params]
+
+(defn mock-plain-request
+  "Ei autentikoitua käyttäjää, eikä CSRF-tokeneita."
+  [app url method params]
+  (peridot/request app url
+                   :request-method method
+                   :params params))
+
+(defn mock-request 
+  "Autentikoitu testikäyttäjä ja fake CSRF-token."
+  [app url method params]
   (with-auth-user
     #(peridot/request app url
-                      :request-method method
-                      :headers { "x-xsrf-token" "token"}
-                      :cookies { "XSRF-TOKEN" {:value "token"}}
-                      :params params)))
+       :request-method method
+       :headers { "x-xsrf-token" "token"
+                  "uid" auth/default-test-user-uid}
+       :cookies { "XSRF-TOKEN" {:value "token"}}
+       :params params)))
+
 
 (defn init-peridot! []
   (let [asetukset
         (-> oletusasetukset
-          (assoc-in [:cas-auth-server :enabled] false)
+          (assoc-in [:cas-auth-server :enabled] true)
           (assoc :development-mode true))
         _ (alusta-korma! asetukset)]
     (palvelin/app asetukset)))
