@@ -37,9 +37,12 @@
                                    "ulkopuolinensihteeri"})
 
 (defn onko-kayttajan-rooli?
-  [kayttaja-map rooli]
-  {:pre [(some #{(:roolitunnus kayttaja-map)} (vals kayttajaroolit))]}
-  (= rooli (:roolitunnus kayttaja-map)))
+  ([kayttaja-map rooli]
+    {:pre [(some #{(:roolitunnus kayttaja-map)} (vals kayttajaroolit))]}
+    (= rooli (:roolitunnus kayttaja-map)))
+  ([rooli-kw]
+    (onko-kayttajan-rooli? *current-user-authmap* (rooli-kw kayttajaroolit))))
+  
 
 (defn yllapitajarooli?
   [rooli]
@@ -80,12 +83,12 @@
          (kayttaja-arkisto/kayttaja-liitetty-henkiloon? henkiloid kayttaja-oid))))
 
 (defn aitu-kayttaja?
+  "Mikä tahansa käyttäjärooli Aituun, joka ei ole järjestelmärajapintaan liittyvä."
   ([x] (aitu-kayttaja?))
   ([]
-    (let [roolitunnus (:roolitunnus *current-user-authmap*)]
-      (or (= roolitunnus (:kayttaja kayttajaroolit))
-          (= roolitunnus (:yllapitaja kayttajaroolit))
-          (= roolitunnus (:oph-katselija kayttajaroolit))))))
+    (let [roolitunnus (:roolitunnus *current-user-authmap*)
+          roolitunnukset (vals (select-keys kayttajaroolit ihmiskayttajat))]
+      (some #(= % roolitunnus) roolitunnukset))))
 
 (defn osoitepalvelu-kayttaja?
   ([x] (osoitepalvelu-kayttaja?))
@@ -114,6 +117,14 @@
 (defn sallittu-yllapitajalle-ja-jarjestolle [& _] (or (yllapitaja?) (jarjesto-kayttaja?)))
 
 (defn sallittu-kayttajalle-ja-jarjestolle [& _] (or (aitu-kayttaja?) (jarjesto-kayttaja?)))
+
+(defn toimikunnan-katselu? 
+  "Sallittu muille käyttäjille, mutta ei järjestökäyttäjälle."
+  ([x] (toimikunnan-katselu?))
+  ([]
+    (and (aitu-kayttaja?)      
+      (let [roolitunnus (:roolitunnus *current-user-authmap*)]
+        (not (= roolitunnus (:jarjesto kayttajaroolit)))))))
 
 (defn sallittu-impersonoidulle [& _]
   (or (yllapitaja?) (not= *impersonoitu-oid* nil)))
@@ -146,12 +157,12 @@
 (def kayttajatoiminnot
   `{:omat_tiedot #(or (yllapitaja?) (= (:oid *current-user-authmap*) %))
     :logitus aitu-kayttaja?
-    :kayttajan_tiedot sallittu-kayttajalle-ja-jarjestolle
+    :kayttajan_tiedot aitu-kayttaja?
     :ohjeet_luku aitu-kayttaja?
-    :toimikunta_haku sallittu-kayttajalle-ja-jarjestolle
-    :toimikunta_katselu aitu-kayttaja?
-    :etusivu sallittu-kayttajalle-ja-jarjestolle
-    :henkilo_haku sallittu-kayttajalle-ja-jarjestolle
+    :toimikunta_haku aitu-kayttaja?
+    :toimikunta_katselu toimikunnan-katselu?
+    :etusivu aitu-kayttaja?
+    :henkilo_haku aitu-kayttaja?
     :yleinen-rest-api sallittu-kaikille
     :osoitepalvelu-api osoitepalvelu-kayttaja?
     :aipal aipal-kayttaja?

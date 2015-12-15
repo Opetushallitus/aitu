@@ -14,6 +14,12 @@
 
 (ns aitu.toimiala.kayttajaroolit)
 
+(def ihmiskayttajat 
+  #{:kayttaja :yllapitaja :oph-katselija :jarjesto})
+
+(def jarjestelmat
+  #{:aipal :osoitepalvelu})
+
 ;; kayttajarooli-taulun arvot
 (def kayttajaroolit {:yllapitaja "YLLAPITAJA"
                      :kayttaja "KAYTTAJA"
