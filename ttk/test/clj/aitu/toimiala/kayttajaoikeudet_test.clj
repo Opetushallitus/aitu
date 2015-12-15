@@ -22,10 +22,6 @@
 
 ; TODO: siirretään clojure-utils pakettiin
 (defn no-args? [f]
-;  (println (type f))
-;  (println (seq? f))
-;  (println (symbol? f))
-;  (println (first f))
   (cond (and 
           (seq? f)
           (= 'fn* (first f)))
