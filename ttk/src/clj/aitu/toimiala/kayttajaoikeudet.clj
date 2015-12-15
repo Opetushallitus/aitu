@@ -157,7 +157,9 @@
     :henkilo_lisays sallittu-yllapitajalle-ja-jarjestolle
     :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle
     :jasenesitykset sallittu-yllapitajalle-ja-jarjestolle
-    :jasenesitys-poisto #(or (yllapitaja?) (jasenesityksen-poisto-sallittu? (int-arvo %)))})
+    :jasenesitys-poisto #(or (yllapitaja?) (jasenesityksen-poisto-sallittu? (int-arvo %)))
+    :arviointipaatos yllapitaja? ; väliaikainen tilanne. pitää määritellä tarkemmin kenelle muille oikeuksia annetaan
+    })
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
   (let [id (int-arvo sopimusid)]

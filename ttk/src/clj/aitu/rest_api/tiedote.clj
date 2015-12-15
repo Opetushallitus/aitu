@@ -20,7 +20,7 @@
 
 (defroutes* reitit
   (GET* "/:tiedoteid" [tiedoteid]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :etusivu
     (let [tiedoteid (Integer/parseInt tiedoteid)
           tiedote (arkisto/hae tiedoteid)]
       (-> (if (nil? tiedote)

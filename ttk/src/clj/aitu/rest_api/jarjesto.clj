@@ -21,9 +21,9 @@
 
 (defroutes* reitit
   (GET* "/haku/" [termi :as req]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :jasenesitykset
     (cachable-json-response req (arkisto/hae-termilla termi nil)))
   (GET* "/haku/omat" [termi :as req]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :jasenesitykset
     (cachable-json-response req (arkisto/hae-termilla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
  

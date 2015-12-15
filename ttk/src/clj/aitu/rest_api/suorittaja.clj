@@ -20,14 +20,14 @@
 
 (defroutes* reitit
   (GET* "/" []
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (json-response (arkisto/hae-kaikki)))
   (POST* "/" [& form]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (json-response (arkisto/lisaa! form)))
   (PUT* "/:suorittajaid" [suorittajaid & suorittaja]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (json-response (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja)))
   (DELETE* "/:suorittajaid" [suorittajaid]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (arkisto/poista! (Integer/parseInt suorittajaid))))

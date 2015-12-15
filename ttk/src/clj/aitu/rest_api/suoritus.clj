@@ -20,21 +20,21 @@
 
 (defroutes* reitit
   (GET* "/" [& ehdot]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (json-response (arkisto/hae-kaikki ehdot)))
   (DELETE* "/:suorituskerta-id" [suorituskerta-id]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (let [suorituskerta-id (Integer/parseInt suorituskerta-id)
           suorituskerta (arkisto/hae suorituskerta-id)]
       (if (= "luonnos" (:tila suorituskerta))
         (json-response (arkisto/poista! suorituskerta-id))
         {:status 403})))
   (POST* "/" [& suoritus]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (json-response (arkisto/lisaa! suoritus)))
   (POST* "/laheta" [suoritukset]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (json-response (arkisto/laheta! suoritukset)))
   (POST* "/hyvaksy" [suoritukset]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :arviointipaatos
     (json-response (arkisto/hyvaksy! suoritukset))))
