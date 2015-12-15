@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.kayttajaoikeudet
-  "https://knowledge.solita.fi/pages/viewpage.action?pageId=56984327"
+  "https://confluence.csc.fi/pages/viewpage.action?pageId=53519037"
   (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.infra.ttk-arkisto :as ttk-arkisto]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
@@ -121,6 +121,7 @@
 (def yllapitotoiminnot
   `{:toimikunta_luonti  yllapitaja?
     :toimikunta_paivitys yllapitaja?
+    :raportointi yllapitaja?
     :toimikuntajasen_yllapito yllapitaja?
     :toimikuntakayttaja-listaus yllapitaja?
     :tiedote_muokkaus yllapitaja?

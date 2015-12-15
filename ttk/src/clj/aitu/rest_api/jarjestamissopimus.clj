@@ -69,7 +69,7 @@
 
 (defroutes* raportti-reitit
   (GET* "/csv" [voimassa :as req]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :raportointi
     (let [voimassa (not= voimassa "false")]
       (csv-download-response (muodosta-csv (arkisto/hae-sopimukset-csv (assoc (:params req)
                                                                               :avaimet rajattujen-sopimuskenttien-jarjestys
@@ -77,7 +77,7 @@
                                            rajattujen-sopimuskenttien-jarjestys)
                              "sopimukset.csv")))
   (GET* "/raportti" [toimikausi opintoala]
-    :kayttooikeus :yleinen-rest-api
+    :kayttooikeus :raportointi
     (let [hakuehdot {:toimikausi (Integer/parseInt toimikausi)
                      :opintoala (->vector opintoala)
                      :avaimet kaikkien-sopimuskenttien-jarjestys}
