@@ -54,7 +54,7 @@
   ([] (yllapitaja? *current-user-authmap*)))
 
 (defn oph-katselija? []
-  (onko-kayttajan-rooli? *current-user-authmap* (:oph-katselija kayttajaroolit)))
+  (onko-kayttajan-rooli? :oph-katselija))
 
 (defn jasenyys-voimassa? [jasenyys]
   (:voimassa (taydenna-jasenyyden-voimassaolo jasenyys (not (toimikunta-vanhentunut? jasenyys)))))
@@ -84,31 +84,21 @@
 
 (defn aitu-kayttaja?
   "Mikä tahansa käyttäjärooli Aituun, joka ei ole järjestelmärajapintaan liittyvä."
-  ([x] (aitu-kayttaja?))
-  ([]
-    (let [roolitunnus (:roolitunnus *current-user-authmap*)
-          roolitunnukset (vals (select-keys kayttajaroolit ihmiskayttajat))]
-      (some #(= % roolitunnus) roolitunnukset))))
+  []
+  (let [roolitunnus (:roolitunnus *current-user-authmap*)
+        roolitunnukset (vals (select-keys kayttajaroolit ihmiskayttajat))]
+    (some #(= % roolitunnus) roolitunnukset)))
 
-(defn osoitepalvelu-kayttaja?
-  ([x] (osoitepalvelu-kayttaja?))
-  ([]
-    (let [roolitunnus (:roolitunnus *current-user-authmap*)]
-      (or (= roolitunnus (:osoitepalvelu kayttajaroolit))
-          (= roolitunnus (:yllapitaja kayttajaroolit))))))
+(defn osoitepalvelu-kayttaja? [] 
+  (or (onko-kayttajan-rooli? :osoitepalvelu))
+      (onko-kayttajan-rooli? :yllapitaja))
 
-(defn aipal-kayttaja?
-  ([x] (aipal-kayttaja?))
-  ([]
-    (let [roolitunnus (:roolitunnus *current-user-authmap*)]
-      (or (= roolitunnus (:aipal kayttajaroolit))
-          (= roolitunnus (:yllapitaja kayttajaroolit))))))
+(defn aipal-kayttaja? [] 
+  (or (onko-kayttajan-rooli? :aipal))
+      (onko-kayttajan-rooli? :yllapitaja ))
 
-(defn jarjesto-kayttaja?
-  ([x] (jarjesto-kayttaja?))
-  ([]
-    (let [roolitunnus (:roolitunnus *current-user-authmap*)]
-      (= roolitunnus (:jarjesto kayttajaroolit)))))
+(defn jarjesto-kayttaja? [] 
+  (onko-kayttajan-rooli? :jarjesto))
 
 (def sallittu-kaikille (constantly true))
 
@@ -165,7 +155,7 @@
     :henkilo_haku aitu-kayttaja?
     :yleinen-rest-api sallittu-kaikille
     :osoitepalvelu-api osoitepalvelu-kayttaja?
-    :aipal aipal-kayttaja?
+    :aipal  aipal-kayttaja? 
     :impersonointi-lopetus sallittu-impersonoidulle
     :henkilo_lisays sallittu-yllapitajalle-ja-jarjestolle
     :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle

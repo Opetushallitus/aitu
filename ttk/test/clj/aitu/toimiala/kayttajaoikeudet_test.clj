@@ -20,6 +20,20 @@
             [aitu.test-timeutil :refer :all]
             [aitu.integraatio.sql.test-util :refer [toimikunnan-jasenyys]]))
 
+(defn no-args? [f]
+  (println (type f))
+  (println (seq? f))
+  (println (symbol? f))
+;  (println (first f))
+  (cond (and 
+          (seq? f)
+          (= 'fn* (first f)))
+       (empty? (second f))
+    (symbol? f)
+      (= '([]) (:arglists (meta (resolve f))))
+    (true? true) false))
+
+
 (defn saako-tehda?
   "Saako käyttäjä tehdä annetun toiminnon. Toiminnon kohde voi vaikuttaa kontekstisensitiivisiin oikeuksiin ellei käyttäjä ole ylläpitäjä-roolissa"
   [kayttaja-map toiminto kohdeid]
@@ -27,7 +41,7 @@
          (some #{(:roolitunnus kayttaja-map)} (vals kayttajaroolit))]}
   (binding [*current-user-authmap* kayttaja-map]
     (let [auth-fn (get toiminnot toiminto)]
-      (if (nil? kohdeid)
+      (if (or (nil? kohdeid) (no-args? auth-fn))
         ((eval auth-fn))
         ((eval auth-fn) kohdeid)))))
 
