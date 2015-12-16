@@ -130,20 +130,26 @@
   [henkilo]
   (assoc henkilo :jarjesto (select-keys henkilo [:jarjesto :jarjesto_nimi_fi :jarjesto_nimi_sv])))
 
+(defn ^:private hae-henkilo-jarjestolla
+  []
+  (->
+    (sql/select* henkilo)
+    (sql/with jarjesto
+      (sql/fields [:nimi_fi :jarjesto_nimi_fi]
+                  [:nimi_sv :jarjesto_nimi_sv]
+                  [:keskusjarjestotieto :keskusjarjesto])
+      (sql/with keskusjarjesto
+        (sql/fields [:nimi_fi :keskusjarjesto_nimi])))))
+
 (defn hae-hlo-ja-ttk
   "Hakee henkilön ja toimikuntien jäsenyystiedot id:n perusteella"
   [id]
   (some->
-    (sql/select henkilo
-      (sql/with jarjesto
-        (sql/fields [:nimi_fi :jarjesto_nimi_fi]
-                    [:nimi_sv :jarjesto_nimi_sv]
-                    [:keskusjarjestotieto :keskusjarjesto])
-        (sql/with keskusjarjesto
-          (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
-      (sql/with jasenyys
-        (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
-      (sql/where {:henkiloid id}))
+    hae-henkilo-jarjestolla
+    (sql/with jasenyys
+      (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
+    (sql/where {:henkiloid id})
+    sql/exec
     piilota-salaiset
     first
     eriyta-jarjesto
@@ -166,18 +172,13 @@
 (defn hae-hlo-nimella
   "Hakee henkilöitä nimellä"
   [etunimi sukunimi]
-  (->>
-    (sql/select henkilo
-      (sql/with jarjesto
-        (sql/fields [:nimi_fi :jarjesto_nimi_fi]
-                    [:nimi_sv :jarjesto_nimi_sv]
-                    [:keskusjarjestotieto :keskusjarjesto])
-        (sql/with keskusjarjesto
-          (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
-      (sql/where {:etunimi etunimi
-                  :sukunimi sukunimi}))
-    piilota-salaiset
-    (map eriyta-jarjesto)))
+  (->
+    hae-henkilo-jarjestolla
+    (sql/where {:etunimi etunimi
+                :sukunimi sukunimi})
+    sql/exec
+    (->> piilota-salaiset
+         (map eriyta-jarjesto))))
 
 (defn hae-hlo-nimen-osalla
   "Hakee henkilöitä nimen osalla"
