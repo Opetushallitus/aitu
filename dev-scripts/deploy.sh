@@ -1,14 +1,6 @@
 #!/bin/bash
 set -eu
 
-ansible_re='^ansible 1\.6\.[0-9]+$'
-
-if ! [[ $(ansible --version 2> /dev/null) =~ $ansible_re ]]
-then
-  echo 'Asenna Ansible 1.6.x: http://docs.ansible.com/intro_installation.html'
-  exit 1
-fi
-
 repo_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 set -x
