@@ -18,18 +18,13 @@
             [aitu.toimiala.kayttajaoikeudet :refer :all]
             [aitu.toimiala.kayttajaroolit :refer :all]
             [aitu.test-timeutil :refer :all]
-            [aitu.integraatio.sql.test-util :refer [toimikunnan-jasenyys]]))
+            [aitu.integraatio.sql.test-util :refer [toimikunnan-jasenyys]]
+            [oph.reflect :as ophr]))
 
-; TODO: siirretään clojure-utils pakettiin
 (defn no-args? [f]
-  (cond (and 
-          (seq? f)
-          (= 'fn* (first f)))
-       (empty? (second f))
-    (symbol? f)
-      (= '([]) (:arglists (meta (resolve f))))
-    (true? true) false))
-
+  (if (symbol? f)
+        (= '([]) (:arglists (meta (resolve f))))
+      (ophr/no-args? f)))
 
 (defn saako-tehda?
   "Saako käyttäjä tehdä annetun toiminnon. Toiminnon kohde voi vaikuttaa kontekstisensitiivisiin oikeuksiin ellei käyttäjä ole ylläpitäjä-roolissa"
