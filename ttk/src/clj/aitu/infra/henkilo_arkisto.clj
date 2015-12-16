@@ -131,7 +131,7 @@
   (assoc henkilo :jarjesto (select-keys henkilo [:jarjesto :jarjesto_nimi_fi :jarjesto_nimi_sv])))
 
 (defn ^:private hae-henkilo-jarjestolla
-  []
+  [kayttajan-jarjesto]
   (->
     (sql/select* henkilo)
     (sql/with jarjesto
@@ -139,13 +139,18 @@
                   [:nimi_sv :jarjesto_nimi_sv]
                   [:keskusjarjestotieto :keskusjarjesto])
       (sql/with keskusjarjesto
-        (sql/fields [:nimi_fi :keskusjarjesto_nimi])))))
+        (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
+    (cond->
+      (some? kayttajan-jarjesto) (sql/where (or {:henkilo.jarjesto kayttajan-jarjesto}
+                                                {:henkilo.jarjesto [in (sql/subselect :jarjesto
+                                                                         (sql/fields :jarjestoid)
+                                                                         (sql/where {:keskusjarjestoid kayttajan-jarjesto}))]})))))
 
 (defn hae-hlo-ja-ttk
   "Hakee henkilön ja toimikuntien jäsenyystiedot id:n perusteella"
-  [id]
+  [id kayttajan-jarjesto]
   (some->
-    hae-henkilo-jarjestolla
+    (hae-henkilo-jarjestolla kayttajan-jarjesto)
     (sql/with jasenyys
       (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
     (sql/where {:henkiloid id})
@@ -171,9 +176,9 @@
 
 (defn hae-hlo-nimella
   "Hakee henkilöitä nimellä"
-  [etunimi sukunimi]
+  [etunimi sukunimi kayttajan-jarjesto]
   (->
-    hae-henkilo-jarjestolla
+    (hae-henkilo-jarjestolla kayttajan-jarjesto)
     (sql/where {:etunimi etunimi
                 :sukunimi sukunimi})
     sql/exec
@@ -182,12 +187,18 @@
 
 (defn hae-hlo-nimen-osalla
   "Hakee henkilöitä nimen osalla"
-  [termi]
-  (for [henkilo (sql/select henkilo
-                  (sql/modifier "DISTINCT")
-                  (sql/fields :etunimi :sukunimi)
-                  (sql/order :etunimi)
-                  (sql/order :sukunimi))
+  [termi kayttajan-jarjesto]
+  (for [henkilo (-> (sql/select* henkilo)
+                    (sql/modifier "DISTINCT")
+                    (sql/fields :etunimi :sukunimi)
+                    (cond->
+                      (some? kayttajan-jarjesto) (sql/where (or {:henkilo.jarjesto kayttajan-jarjesto}
+                                                                {:henkilo.jarjesto [in (sql/subselect :jarjesto
+                                                                                         (sql/fields :jarjestoid)
+                                                                                         (sql/where {:keskusjarjestoid kayttajan-jarjesto}))]})))
+                    (sql/order :etunimi)
+                    (sql/order :sukunimi)
+                    sql/exec)
         :when (sisaltaako-kentat? henkilo [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi henkilo) " " (:sukunimi henkilo))
      :osat henkilo}))

@@ -24,7 +24,7 @@
 
 (defn hae-ja-taydenna
   [henkiloid]
-  (henkilo/taydenna-henkilo (arkisto/hae-hlo-ja-ttk henkiloid)))
+  (henkilo/taydenna-henkilo (arkisto/hae-hlo-ja-ttk henkiloid nil)))
 
 (deftest ^:integraatio hae-ja-taydenna-test
   (testing "hae-ja-taydenna palauttaa henkilön jolla on toimikunnan ja jäsenyyden tiedot täydennettynä"

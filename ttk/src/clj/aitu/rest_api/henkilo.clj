@@ -92,15 +92,15 @@
 
   (GET* "/:henkiloid" [henkiloid]
     :kayttooikeus :henkilo_haku
-    (json-response (henkilo/taydenna-henkilo (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid)))))
+    (json-response (henkilo/taydenna-henkilo (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid) (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
 
   (GET* "/nimi/:etunimi/:sukunimi" [etunimi sukunimi]
     :kayttooikeus :henkilo_haku
-    (json-response (arkisto/hae-hlo-nimella etunimi sukunimi)))
+    (json-response (arkisto/hae-hlo-nimella etunimi sukunimi (:jarjesto kayttajaoikeudet/*current-user-authmap*))))
 
   (GET* "/nimi/" [termi]
     :kayttooikeus :henkilo_haku
-    (json-response (arkisto/hae-hlo-nimen-osalla termi)))
+    (json-response (arkisto/hae-hlo-nimen-osalla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*))))
 
   (PUT* "/:henkiloid"
     [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
