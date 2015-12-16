@@ -112,6 +112,12 @@
       (let [roolitunnus (:roolitunnus *current-user-authmap*)]
         (not (= roolitunnus (:jarjesto kayttajaroolit)))))))
 
+(defn toimikunnan-paivitys?
+  "Sallittu ylläpitäjälle ja toimikunnan sihteerille kun ammattisihteerit saadaan."
+  ; TODO: Sihteeriroolin käsittely
+  [tkunta]
+  (yllapitaja?))
+
 (defn sallittu-impersonoidulle [& _]
   (or (yllapitaja?) (not= *impersonoitu-oid* nil)))
 
@@ -119,8 +125,8 @@
 ;; muodostamassa koodissa, joten ne eivät saa olla funktio-olioita
 ;; (ks. http://stackoverflow.com/a/11287181).
 (def yllapitotoiminnot
-  `{:toimikunta_luonti  yllapitaja?
-    :toimikunta_paivitys yllapitaja?
+  `{:toimikunta_luonti yllapitaja?
+    :toimikunta_paivitys toimikunnan-paivitys?
     :raportointi yllapitaja?
     :toimikuntajasen_yllapito yllapitaja?
     :toimikuntakayttaja-listaus yllapitaja?
