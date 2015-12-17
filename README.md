@@ -7,6 +7,8 @@
 * **dev-scripts** kehitystyössä käytettäviä skriptejä
 * **vagrant** virtuaalikoneiden konfiguraatio
 * **env** virtuaalikoneisiin liittyvät alustusskriptit ja asennuspaketit
+* **amtu-e2e** selainpohjaiset end-to-end testit
+* **aitu-common-e2e** selaintestien pohjaksi kirjasto.
 
 # Virtuaalikoneiden käyttö
 
@@ -52,7 +54,11 @@ cd dev-scripts
 
 Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Java-virtuaalikoneen ja [leiningen](http://leiningen.org/) työkalun.
 
-Toteutuskoodilla on riippuvuus yleiskäyttöisiä kirjastofunktioita sisältävään [clojure-utils](https://github.com/Opetushallitus/clojure-utils) repositoryyn siten että molemmat täytyy paikallisesti kloonata rinnakkaisiin hakemistoihin. 
+Toteutuskoodilla on riippuvuus yleiskäyttöisiä kirjastofunktioita sisältävään [clojure-utils](https://github.com/Opetushallitus/clojure-utils) repositoryyn siten että molemmat täytyy paikallisesti kloonata rinnakkaisiin hakemistoihin.
+
+Lisäksi käyttöliittymätoteutuksessa on riippuvuutena [aituaipaljs](https://github.com/Opetushallitus/aituaipaljs). Tätä repositorya ei tarvitse kloonata itselleen kehitystyötä varten.
+
+Selaintesteissä käytettävä kirjasto löytyy valmiiksi paketoituna [Clojars palvelusta](https://clojars.org/solita/opetushallitus-aitu-e2e).
 
 Tiedostossa ttk/README.md on ohjeita kehitystyöhön enemmän.
 
