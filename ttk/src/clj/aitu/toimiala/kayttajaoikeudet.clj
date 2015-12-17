@@ -158,7 +158,7 @@
     :henkilo_haku aitu-kayttaja?
     :yleinen-rest-api sallittu-kaikille
     :osoitepalvelu-api osoitepalvelu-kayttaja?
-    :aipal  aipal-kayttaja? 
+    :aipal  aipal-kayttaja?
     :impersonointi-lopetus sallittu-impersonoidulle
     :henkilo_lisays sallittu-yllapitajalle-ja-jarjestolle
     :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle
@@ -173,7 +173,6 @@
       (let [sopimus (jarjestamissopimus-arkisto/hae id)
             voimassa? (:voimassa sopimus)]
         (and voimassa? (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta id)))))))
-
 
 (def sopimustoiminnot
   `{:sopimustiedot_paivitys sopimuksen-muokkaus-sallittu?
