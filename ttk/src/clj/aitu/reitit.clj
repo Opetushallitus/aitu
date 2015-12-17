@@ -90,11 +90,14 @@
 
 (defn reitit [asetukset]
   (api
-    (swagger-ui "/api-docs")
+    (let [base-url (get-in asetukset [:server :base-url])]
+      (swagger-ui "/api-docs" :swagger-docs (str (service-path base-url) "/swagger.json")))
+
     (swagger-docs
       {:info {:title "AITU API"
               :description "AITUn rajapinnat. Sisältää sekä integraatiorajapinnat muihin järjestelmiin, että Aitun sisäiseen käyttöön tarkoitetut rajapinnat."}})
-    (context* "/api/ttk" [] aitu.rest-api.ttk/raportti-reitit)
+    (context* 
+      "/api/ttk"  [] aitu.rest-api.ttk/raportti-reitit) 
     (context* "/api/ttk" [] aitu.rest-api.ttk/paatos-reitit)
     (context* "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
     (context* "/api/henkilo" [] aitu.rest-api.henkilo/raportti-reitit)
@@ -133,6 +136,7 @@
     (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
       (angular-template nimi asetukset))
     (GET* "/" []
+
       :kayttooikeus :etusivu
       {:body (s/render-file "html/ttk" {:build-id @build-id
                                         :current-user (:kayttajan_nimi *current-user-authmap*)
