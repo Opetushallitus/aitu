@@ -130,20 +130,31 @@
   [henkilo]
   (assoc henkilo :jarjesto (select-keys henkilo [:jarjesto :jarjesto_nimi_fi :jarjesto_nimi_sv])))
 
+(defn ^:private hae-henkilo-jarjestolla
+  [kayttajan-jarjesto]
+  (->
+    (sql/select* henkilo)
+    (sql/with jarjesto
+      (sql/fields [:nimi_fi :jarjesto_nimi_fi]
+                  [:nimi_sv :jarjesto_nimi_sv]
+                  [:keskusjarjestotieto :keskusjarjesto])
+      (sql/with keskusjarjesto
+        (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
+    (cond->
+      (some? kayttajan-jarjesto) (sql/where (or {:henkilo.jarjesto kayttajan-jarjesto}
+                                                {:henkilo.jarjesto [in (sql/subselect :jarjesto
+                                                                         (sql/fields :jarjestoid)
+                                                                         (sql/where {:keskusjarjestoid kayttajan-jarjesto}))]})))))
+
 (defn hae-hlo-ja-ttk
   "Hakee henkilön ja toimikuntien jäsenyystiedot id:n perusteella"
-  [id]
+  [id kayttajan-jarjesto]
   (some->
-    (sql/select henkilo
-      (sql/with jarjesto
-        (sql/fields [:nimi_fi :jarjesto_nimi_fi]
-                    [:nimi_sv :jarjesto_nimi_sv]
-                    [:keskusjarjestotieto :keskusjarjesto])
-        (sql/with keskusjarjesto
-          (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
-      (sql/with jasenyys
-        (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
-      (sql/where {:henkiloid id}))
+    (hae-henkilo-jarjestolla kayttajan-jarjesto)
+    (sql/with jasenyys
+      (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
+    (sql/where {:henkiloid id})
+    sql/exec
     piilota-salaiset
     first
     eriyta-jarjesto
@@ -165,28 +176,29 @@
 
 (defn hae-hlo-nimella
   "Hakee henkilöitä nimellä"
-  [etunimi sukunimi]
-  (->>
-    (sql/select henkilo
-      (sql/with jarjesto
-        (sql/fields [:nimi_fi :jarjesto_nimi_fi]
-                    [:nimi_sv :jarjesto_nimi_sv]
-                    [:keskusjarjestotieto :keskusjarjesto])
-        (sql/with keskusjarjesto
-          (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
-      (sql/where {:etunimi etunimi
-                  :sukunimi sukunimi}))
-    piilota-salaiset
-    (map eriyta-jarjesto)))
+  [etunimi sukunimi kayttajan-jarjesto]
+  (->
+    (hae-henkilo-jarjestolla kayttajan-jarjesto)
+    (sql/where {:etunimi etunimi
+                :sukunimi sukunimi})
+    sql/exec
+    (->> piilota-salaiset
+         (map eriyta-jarjesto))))
 
 (defn hae-hlo-nimen-osalla
   "Hakee henkilöitä nimen osalla"
-  [termi]
-  (for [henkilo (sql/select henkilo
-                  (sql/modifier "DISTINCT")
-                  (sql/fields :etunimi :sukunimi)
-                  (sql/order :etunimi)
-                  (sql/order :sukunimi))
+  [termi kayttajan-jarjesto]
+  (for [henkilo (-> (sql/select* henkilo)
+                    (sql/modifier "DISTINCT")
+                    (sql/fields :etunimi :sukunimi)
+                    (cond->
+                      (some? kayttajan-jarjesto) (sql/where (or {:henkilo.jarjesto kayttajan-jarjesto}
+                                                                {:henkilo.jarjesto [in (sql/subselect :jarjesto
+                                                                                         (sql/fields :jarjestoid)
+                                                                                         (sql/where {:keskusjarjestoid kayttajan-jarjesto}))]})))
+                    (sql/order :etunimi)
+                    (sql/order :sukunimi)
+                    sql/exec)
         :when (sisaltaako-kentat? henkilo [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi henkilo) " " (:sukunimi henkilo))
      :osat henkilo}))

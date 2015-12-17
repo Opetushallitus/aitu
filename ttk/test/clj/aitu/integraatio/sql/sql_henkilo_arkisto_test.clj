@@ -59,7 +59,7 @@
 (deftest ^:integraatio olematon-henkilo-test
   (testing "hae-hlo-ja-ttk"
     (testing "palauttaa nil olemattomalla id:llä"
-       (is (nil? (arkisto/hae-hlo-ja-ttk -999999))))))
+       (is (nil? (arkisto/hae-hlo-ja-ttk -999999 nil))))))
 
 (deftest ^:integraatio hae-nykyiset-test
   (testing "hae-nykyiset"
