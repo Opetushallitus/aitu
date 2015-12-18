@@ -48,6 +48,7 @@
                                    :user (s/maybe s/Str)
                                    :password (s/maybe s/Str)
                                    :ssl Boolean}
+                :eperusteet-palvelu {:url s/Str}
                 :koodistopalvelu {:url s/Str}
                 :organisaatiopalvelu {:url s/Str}
                 :eraajo Boolean
@@ -96,6 +97,7 @@
                                             :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
                                             :password "salasana"
                                             :ssl false}
+                         :eperusteet-palvelu {:url "https://virkailija.opintopolku.fi/eperusteet-service/"}
                          :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
                          :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
                          :eraajo false

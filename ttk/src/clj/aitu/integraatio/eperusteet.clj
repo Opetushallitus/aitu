@@ -28,6 +28,7 @@
 
 (defn muotoile-peruste [peruste]
   {:diaarinumero (:diaarinumero peruste)
+   :eperustetunnus (:id peruste)
    :voimassa_alkupvm (c/to-local-date (:voimassaoloAlkaa peruste))
    :voimassa_loppupvm (or (c/to-local-date (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))
    :siirtymaajan_loppupvm (or (c/to-local-date (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))

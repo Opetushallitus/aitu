@@ -23,7 +23,7 @@
              :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]))
 
 (defn valitse-perusteen-kentat [peruste]
-  (select-keys peruste [:peruste :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm]))
+  (select-keys peruste [:peruste :eperustetunnus :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm]))
 
 (defn hae-muutokset [viimeisin-haku asetukset]
   (let [uudet (eperusteet/hae-perusteet viimeisin-haku asetukset)]
