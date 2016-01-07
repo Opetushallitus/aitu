@@ -146,7 +146,7 @@ angular.module('ttk', [
     };
     $scope.lopetaImpersonointi = function() {
       impersonaatioResource.lopeta(null, function() {
-        $window.location = ophBaseUrl '/';
+        $window.location = ophBaseUrl + '/';
       });
     };
   }])
