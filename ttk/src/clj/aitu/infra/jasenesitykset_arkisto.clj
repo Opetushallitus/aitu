@@ -54,7 +54,7 @@
       (seq ehdokas) (rajaa-kentilla [:henkilo.etunimi :henkilo.sukunimi (sql/raw "henkilo.etunimi || ' ' || henkilo.sukunimi") (sql/raw "henkilo.sukunimi || ' ' || henkilo.etunimi")] ehdokas)
       (seq jarjesto) (sql/where (or {:esittaja_jarjesto.jarjestoid (Integer/parseInt jarjesto)}
                                     {:esittaja_keskusjarjesto.jarjestoid (Integer/parseInt jarjesto)}))
-      (nil? tila) (sql/where {:jasenyys.status [in ["esitetty", "nimitetty"]]})
+      (empty? tila) (sql/where {:jasenyys.status [in ["esitetty", "nimitetty"]]})
       (seq tila) (sql/where {:jasenyys.status tila})
       (seq toimikunta) (sql/where {:tutkintotoimikunta.tkunta toimikunta}))
     (sql/order (sql/raw "jasenyys.luotuaika::date") :desc)
