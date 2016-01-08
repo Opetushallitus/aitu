@@ -84,28 +84,30 @@
     <td><enum-arvo arvo="esitys.status" nimi="jasenyyden_status"></enum-arvo></td>
     <td><button class="icon delete-icon" ng-click="poistaJasenesitys(esitys)" ng-if="poistoSallittu(esitys)"></button></td>
   </tr>
-  <tr ng-repeat-end ng-show="esitys.auki">
+  <tr ng-repeat-end ng-show="esitys.auki" style="vertical-align: top">
     <td></td>
-    <td colspan="12">
-      <div>
-        <fieldset>
-          <label>[[ilmoittajan_nimi]]</label>          
-  		  <div ng-if="[[yllapitaja]] && esitys.esittaja_henkilo_henkiloid">
-  		    <a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a>
-  		  </div>
-          <div ng-if="![[yllapitaja]] || !esitys.esittaja_henkilo_henkiloid">
-              {{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}
-          </div>
-        </fieldset>
-        <fieldset>
-          <label>Kokemus</label>
-          <div ng-bind="esitys.vapaateksti_kokemus"></div>
-        </fieldset>
-        <fieldset>
-          <label>Asiantuntijaksi</label>
-          <div ng-bind="esitys.asiantuntijaksi | muotoileBoolean"></div>
-        </fieldset>
-      </div>
+    <td colspan="3">
+      <fieldset>
+        <label>[[ilmoittajan_nimi]]</label>
+        <div ng-if="[[yllapitaja]] && esitys.esittaja_henkilo_henkiloid">
+          <a ng-href="#/henkilot/{{ esitys.esittaja_henkilo_henkiloid }}/tiedot">{{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}</a>
+        </div>
+        <div ng-if="![[yllapitaja]] || !esitys.esittaja_henkilo_henkiloid">
+          {{ esitys.esittaja_henkilo_etunimi }} {{ esitys.esittaja_henkilo_sukunimi }}
+        </div>
+      </fieldset>
+    </td>
+    <td colspan="3">
+      <fieldset>
+        <label>Kokemus</label>
+        <div ng-bind="esitys.vapaateksti_kokemus"></div>
+      </fieldset>
+    </td>
+    <td colspan="5">
+      <fieldset>
+        <label>Asiantuntijaksi</label>
+        <div ng-bind="esitys.asiantuntijaksi | muotoileBoolean"></div>
+      </fieldset>
     </td>
   </tr>
   </tbody>
