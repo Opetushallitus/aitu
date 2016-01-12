@@ -156,7 +156,7 @@
     :toimikunta_katselu toimikunnan-katselu?
     :etusivu aitu-kayttaja?
     :henkilo_haku aitu-kayttaja?
-    :yleinen-rest-api sallittu-kaikille
+    :yleinen-rest-api sallittu-kaikille ; erikoistapaus, julkinen data voi olla autentikoinnin ulkopuolella
     :osoitepalvelu-api osoitepalvelu-kayttaja?
     :aipal  aipal-kayttaja?
     :impersonointi-lopetus sallittu-impersonoidulle
