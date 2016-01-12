@@ -68,7 +68,7 @@
    Palauttaa tutkintoversion id:n."
   [tutkinto]
   (let [tutkintotiedot (select-keys tutkinto [:nimi_fi :nimi_sv :opintoala :tyyppi :tutkintotaso])
-        versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio :jarjestyskoodistoversio :peruste])
+        versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio :jarjestyskoodistoversio :peruste :eperustetunnus])
         tutkintotunnus (:tutkintotunnus tutkinto)
         vanha-versio (hae-uusin-tutkintoversio tutkintotunnus)
         uusi-versio (->
@@ -77,7 +77,8 @@
                       (dissoc :tutkintoversio_id))]
     (when (seq tutkintotiedot)
       (paivita! tutkintotunnus tutkintotiedot))
-    (if (= (:peruste vanha-versio) (:peruste tutkinto))
+    (if (or (blank? (:peruste vanha-versio))
+            (= (:peruste vanha-versio) (:peruste tutkinto)))
       (do
         (paivita-tutkintoversio! (assoc versiotiedot :tutkintoversio_id (:tutkintoversio_id vanha-versio)))
         (:tutkintoversio_id vanha-versio))

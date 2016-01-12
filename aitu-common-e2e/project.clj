@@ -12,19 +12,19 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(defproject solita/opetushallitus-aitu-e2e "0.25.0-SNAPSHOT"
+(defproject solita/opetushallitus-aitu-e2e "0.26.0-SNAPSHOT"
   :description "aitu-common-e2e"
   :url "https://github.com/Opetushallitus/aitu/tree/master/aitu-common-e2e"
   :license {:name "European Union Public License - v1.1 or later"
             :url "https://joinup.ec.europa.eu/software/page/eupl/licence-eupl"
             :distribution :repo}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [clj-webdriver "0.6.1" :exclusions [org.seleniumhq.selenium/selenium-java
+                 [clj-webdriver "0.7.2" :exclusions [org.seleniumhq.selenium/selenium-java
                                                      org.seleniumhq.selenium/selenium-server
                                                      org.seleniumhq.selenium/selenium-remote-driver]]
-                 [org.seleniumhq.selenium/selenium-java "2.47.0"]
-                 [org.seleniumhq.selenium/selenium-server "2.47.0"]
-                 [org.seleniumhq.selenium/selenium-remote-driver "2.47.0"]
+                 [org.seleniumhq.selenium/selenium-java "2.48.2"]
+                 [org.seleniumhq.selenium/selenium-server "2.48.2"]
+                 [org.seleniumhq.selenium/selenium-remote-driver "2.48.2"]
                  [clj-http "1.1.2"]
                  [cheshire "5.3.1"]
                  [com.paulhammant/ngwebdriver "0.9.1" :exclusions [org.seleniumhq.selenium/selenium-java]]

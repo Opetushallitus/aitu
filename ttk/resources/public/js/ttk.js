@@ -141,12 +141,12 @@ angular.module('ttk', [
     };
     $scope.impersonoi = function() {
       impersonaatioResource.impersonoi({oid: $scope.impersonoitava.oid}, function() {
-        $window.location = ophBaseUrl;
+        $window.location = ophBaseUrl + '/';
       });
     };
     $scope.lopetaImpersonointi = function() {
       impersonaatioResource.lopeta(null, function() {
-        $window.location = ophBaseUrl;
+        $window.location = ophBaseUrl + '/';
       });
     };
   }])
