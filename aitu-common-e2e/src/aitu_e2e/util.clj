@@ -38,6 +38,10 @@
 (defmacro odota-kunnes [& body]
   `(w/wait-until (fn [] ~@body) 20000))
 
+(defn odota-ja-klikkaa [q]
+  (odota-kunnes (w/present? q))
+  (w/click q))
+
 (def ^:dynamic *dialogit-kaytossa?* false)
 
 (defmacro dialogit-kaytossa [& body]
