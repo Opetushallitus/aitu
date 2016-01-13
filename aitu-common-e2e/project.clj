@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(defproject solita/opetushallitus-aitu-e2e "0.26.0-SNAPSHOT"
+(defproject solita/opetushallitus-aitu-e2e "0.26.0"
   :description "aitu-common-e2e"
   :url "https://github.com/Opetushallitus/aitu/tree/master/aitu-common-e2e"
   :license {:name "European Union Public License - v1.1 or later"
