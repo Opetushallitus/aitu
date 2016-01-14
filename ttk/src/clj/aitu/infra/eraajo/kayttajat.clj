@@ -37,8 +37,9 @@
             ;; käsittelijästä, meidän täytyy luoda promise itse.
             *current-user-oid* (promise)]
     (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
+    (kayttaja-arkisto/merkitse-kaikki-vanhentuneiksi!)
     (let [oid->jarjesto-id (into {} (for [jarjesto (jarjesto-arkisto/hae-kaikki)]
-                                      [(:oid jarjesto) (:jarjestoid jarjesto)]))] 
+                                      [(:oid jarjesto) (:jarjestoid jarjesto)]))]
       (kayttaja-arkisto/paivita!
         (apply concat (for [rooli roolit-jarjestyksessa]
                         (kop/kayttajat kayttooikeuspalvelu (get kayttajaroolit rooli) oid->jarjesto-id)))))))

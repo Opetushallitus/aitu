@@ -45,6 +45,11 @@
   [oid]
   (first (sql/select taulut/kayttaja (sql/where {:oid oid}))))
 
+(defn ^:integration-api merkitse-kaikki-vanhentuneiksi! []
+  (sql/update taulut/kayttaja
+    (sql/set-fields {:voimassa false})
+    (sql/where {:luotu_kayttaja integraatiokayttaja})))
+
 (defn olemassa? [k]
   (boolean (hae (:oid k))))
 
