@@ -76,7 +76,7 @@
                                   (t/with-schedule (cron/schedule
                                                      (cron/cron-schedule "0 0 5 * * ?"))))
         perusteet-job (j/build
-                        (j/of-type PaivitaSopimustenVoimassaoloJob)
+                        (j/of-type PaivitaPerusteetJob)
                         (j/using-job-data {"asetukset" eperusteet-asetukset})
                         (j/with-identity "paivita-perusteet"))
         perusteet-trigger-daily (t/build
