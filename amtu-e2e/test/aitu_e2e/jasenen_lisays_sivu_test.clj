@@ -213,6 +213,8 @@
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (paina-lisaa-henkilo-nappia)
           (w/execute-script "scroll(0, 0)")
+          ; odota .feedback-containerin siirtymistä sivun yläosaan
+          (Thread/sleep 1000)
           (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
           (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
           (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
