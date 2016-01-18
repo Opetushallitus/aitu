@@ -12,3 +12,5 @@ update tutkintotoimikunta set nimi_sv = 'Examenskommissionen för lantmäteribra
 update tutkintotoimikunta set nimi_fi = 'Sosiaali- ja terveysalan tutkintotoimikunta' where diaarinumero = '70/042/2015';
 update tutkintotoimikunta set nimi_sv = 'Yrittäjyysalan tutkintotoimikunta' where diaarinumero = '93/042/2015';
 
+-- Puuttuvat ruotsinkieliset nimet jotka on merkitty viivalla aiheuttavat päänvaivaa. Kaikilla toimikunnilla ei ole virallista ruotsinkielistä nimeä kuitenkaan.
+update tutkintotoimikunta set nimi_sv = nimi_fi where nimi_sv = '-';
