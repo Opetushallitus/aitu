@@ -78,28 +78,6 @@
       (testing "päivitysen jälkeen rooli on muuttunut"
         (is (= (:rooli paivitettava-jasen) (:rooli paivitetty-jasen)))))))
 
-(defn hae-vanha-toimikausi
-  []
-  (let [id (:toimikausi_id (first (filter #(false? (:voimassa %)) (arkisto/hae-toimikaudet))))]
-  id))
-
-(defn hae-voimassaoleva-toimikausi
-  []
-  (let [id (:toimikausi_id (first (filter #(true? (:voimassa %)) (arkisto/hae-toimikaudet))))]
-  id))
-
-(defn lisaa-toimikunta-vanhalle-kaudelle!
-  [tk-data]
-  (let [tk-vanha (hae-vanha-toimikausi)
-        tk (merge tk-data {:toimikausi_id tk-vanha})]
-    (lisaa-toimikunta! tk)))
-
-(defn lisaa-toimikunta-voimassaolevalle-kaudelle!
-  [tk-data]
-  (let [tk-vanha (hae-voimassaoleva-toimikausi)
-        tk (merge tk-data {:toimikausi_id tk-vanha})]
-    (lisaa-toimikunta! tk)))
-
 ;; Ilman hakuehtoja hae-ehdoilla palauttaa kaikki toimikunnat
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
   (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})

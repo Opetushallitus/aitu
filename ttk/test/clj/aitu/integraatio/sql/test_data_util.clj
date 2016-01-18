@@ -101,7 +101,7 @@
        :nimi_sv "Testitoimikunnan nimi (sv)"
        :tilikoodi (str i)
        :toimiala "toimiala"
-       :toimikausi_id 2
+       :toimikausi_id 2 ; voimassaoleva toimikausi
        :kielisyys "fi"
        :sahkoposti "toimikunta@email.fi"
        :toimikausi_alku (kuukausi-sitten)
@@ -112,6 +112,31 @@
   ([toimikunta]
     (doto (merge (default-toimikunta) toimikunta)
       toimikunta-arkisto/lisaa!)))
+
+(defn hae-vanha-toimikausi
+  []
+  (let [id (:toimikausi_id (first (filter #(false? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
+  id))
+
+(defn hae-voimassaoleva-toimikausi
+  []
+  (let [id (:toimikausi_id (first (filter #(true? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
+  id))
+
+(defn lisaa-toimikunta-vanhalle-kaudelle!
+  ([tk-data]
+    (let [tk-vanha (hae-vanha-toimikausi)
+          tk (merge tk-data {:toimikausi_id tk-vanha})]
+      (lisaa-toimikunta! tk)))
+  ([] (lisaa-toimikunta-vanhalle-kaudelle! (default-toimikunta))))
+
+(defn lisaa-toimikunta-voimassaolevalle-kaudelle!
+  ([tk-data]
+    (let [tk-vanha (hae-voimassaoleva-toimikausi)
+          tk (merge tk-data {:toimikausi_id tk-vanha})]
+      (lisaa-toimikunta! tk)))
+  ([] (lisaa-toimikunta-voimassaolevalle-kaudelle! (default-toimikunta))))
+
 
 (def default-henkilo {:etunimi "Taimi"
                       :sukunimi "Pilvilinna"
@@ -251,12 +276,3 @@
     (jarjestamissopimus-arkisto/paivita! sopimus sopimus-tutkinto-liitokset)
     sopimus))
 
-(defn hae-vanha-toimikausi
-  []
-  (let [id (:toimikausi_id (first (filter #(false? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
-  id))
-
-(defn hae-voimassaoleva-toimikausi
-  []
-  (let [id (:toimikausi_id (first (filter #(true? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
-  id))

@@ -102,14 +102,12 @@
         (is (= henkiloita-voimassa henkiloita-voimassa-alussa))))))
 
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
-  (let [mennyt-toimikausi (hae-vanha-toimikausi)
-        mennyt-toimikunta (lisaa-toimikunta! {:toimikausi_id mennyt-toimikausi})
+  (let [mennyt-toimikunta (lisaa-toimikunta-vanhalle-kaudelle!) 
         mennyt-henkilo (lisaa-henkilo! {:etunimi "mennyt"})
         _ (lisaa-jasen! {:toimikunta (:tkunta mennyt-toimikunta)
                          :henkiloid (:henkiloid mennyt-henkilo)})
 
-        nykyinen-toimikausi (hae-voimassaoleva-toimikausi)
-        nykyinen-toimikunta (lisaa-toimikunta! {:toimikausi_id nykyinen-toimikausi})
+        nykyinen-toimikunta (lisaa-toimikunta-voimassaolevalle-kaudelle!)
         nykyinen-henkilo (lisaa-henkilo! {:etunimi "nykyinen"})
         _ (lisaa-jasen! {:toimikunta (:tkunta nykyinen-toimikunta)
                          :henkiloid (:henkiloid nykyinen-henkilo)})
@@ -120,16 +118,14 @@
     "Lisätyt henkilöt löytyvät"))
 
 (deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
-  (let [mennyt-toimikausi (hae-vanha-toimikausi)
-        mennyt-toimikunta (lisaa-toimikunta! {:toimikausi_id mennyt-toimikausi})
+  (let [mennyt-toimikunta  (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})
         mennyt-henkilo (lisaa-henkilo! {:etunimi "mennyt"})
-        _ (lisaa-jasen! {:toimikunta (:tkunta mennyt-toimikunta)
+        _ (lisaa-jasen! {:toimikunta "TK1"
                          :henkiloid (:henkiloid mennyt-henkilo)})
 
-        nykyinen-toimikausi (hae-voimassaoleva-toimikausi)
-        nykyinen-toimikunta (lisaa-toimikunta! {:toimikausi_id nykyinen-toimikausi})
+        nykyinen-toimikunta (lisaa-toimikunta-voimassaolevalle-kaudelle! {:tkunta "TK2"})
         nykyinen-henkilo (lisaa-henkilo! {:etunimi "nykyinen"})
-        _ (lisaa-jasen! {:toimikunta (:tkunta nykyinen-toimikunta)
+        _ (lisaa-jasen! {:toimikunta "TK2"
                          :henkiloid (:henkiloid nykyinen-henkilo)})
 
         ei-toimikuntaa (lisaa-henkilo! {:etunimi "ei toimikuntaa"})])
@@ -137,20 +133,17 @@
          #{"nykyinen"})))
 
 (deftest ^:integraatio hae-ehdoilla-toimikunta
-  (let [toimikausi (hae-voimassaoleva-toimikausi)
-        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id toimikausi
-                                         :nimi_fi "foo bar baz"})
+  (let [toimikunta-1 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_fi "foo bar baz"})
         henkilo-1 (lisaa-henkilo! {:etunimi "nimi1"})
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-1)
                          :henkiloid (:henkiloid henkilo-1)})
 
-        toimikunta-2 (lisaa-toimikunta! {:toimikausi_id toimikausi
-                                         :nimi_sv "FÅÅ BAR BAZ"})
+        toimikunta-2 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_sv "FÅÅ BAR BAZ"})
         henkilo-2 (lisaa-henkilo! {:etunimi "nimi2"})
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-2)
                          :henkiloid (:henkiloid henkilo-2)})
 
-        toimikunta-3 (lisaa-toimikunta! {:toimikausi_id toimikausi})
+        toimikunta-3 (lisaa-toimikunta-voimassaolevalle-kaudelle!)
         henkilo-3 (lisaa-henkilo!)
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-3)
                          :henkiloid (:henkiloid henkilo-3)})
@@ -169,11 +162,8 @@
          #{1000 1001})))
 
 (deftest ^:integraatio hae-ehdoilla-monta-jasenyytta
-  (let [toimikausi (hae-voimassaoleva-toimikausi)
-        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id toimikausi
-                                         :nimi_fi "foo"})
-        toimikunta-2 (lisaa-toimikunta! {:toimikausi_id toimikausi
-                                         :nimi_fi "bar"})
+  (let [toimikunta-1 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_fi "foo"})
+        toimikunta-2 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_fi "bar"})
         henkilo (lisaa-henkilo! {:etunimi "nimi1"})
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-1)
                          :henkiloid (:henkiloid henkilo)})
@@ -194,9 +184,7 @@
  
 ; lein test :only aitu.integraatio.sql.sql-henkilo-arkisto-test/hae-esitetty-henkilo
 (deftest ^:integraatio hae-esitetty-henkilo
-  (let [voimassaoleva-toimikausi (hae-voimassaoleva-toimikausi)
-        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id voimassaoleva-toimikausi
-                                         :nimi_fi "foo"})]
+  (let [toimikunta-1 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_fi "foo"})]
     (lisaa-henkilo! {:henkiloid 1000
                      :etunimi "foo bar baz"
                      :jarjesto -1})
