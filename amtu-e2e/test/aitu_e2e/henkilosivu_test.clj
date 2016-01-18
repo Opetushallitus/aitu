@@ -118,7 +118,7 @@
           (paina-luo-uusi-henkilo)
           (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
-          (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
+          (w/select-option {:css ".e2e-kieli-select"} {:text "suomi"})
           (odota-angular-pyyntoa)
           (jatka-jasenyyden-luontiin)
           ;;Niin

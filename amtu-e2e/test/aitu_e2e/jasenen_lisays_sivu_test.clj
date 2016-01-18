@@ -210,7 +210,7 @@
           (kirjoita-tietokenttaan "jasen.henkilo.postinumero" "33330")
           (kirjoita-tietokenttaan "jasen.henkilo.postitoimipaikka" "Tampere")
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
-          (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
+          (w/select-option {:css ".e2e-kieli-select"} {:text "suomi"})
           (paina-lisaa-henkilo-nappia)
           ; Poistetaan .feedback-container testeissä, ettei se ole kenttien päällä (edes hetkellisesti)
           (w/execute-script "$('.feedback-container').remove()")
