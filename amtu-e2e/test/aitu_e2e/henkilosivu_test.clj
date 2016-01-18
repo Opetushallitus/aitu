@@ -133,7 +133,7 @@
           (paina-luo-uusi-henkilo)
           (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
-          (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
+          (w/select-option {:css ".e2e-kieli-select"} {:text "suomi"})
           (odota-angular-pyyntoa)
           (jatka-jasenyyden-luontiin)
           ;;Niin
@@ -148,7 +148,7 @@
           (paina-luo-uusi-henkilo)
           (tayta-pakolliset-kentat!)
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
-          (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
+          (w/select-option {:css ".e2e-kieli-select"} {:text "suomi"})
           (kirjoita-henkilon-tietokenttaan "jasen.henkilo.postinumero" "123456")
           (odota-angular-pyyntoa)
           (jatka-jasenyyden-luontiin)
