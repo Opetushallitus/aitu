@@ -195,3 +195,26 @@
   (is
     (empty? (clojure.set/difference #{"foo" "bar"} (set (map :toimikunta_fi (arkisto/hae-ehdoilla {})))))
     "Lisätyt jäsenyydet löytyvät"))
+
+;
+;insert into jasenyys (jasenyys_id, henkiloid, toimikunta, status, alkupvm, loppupvm, rooli, edustus)
+;values (1, -1000, 'Lynx lynx', 'nimitetty', now(), now(), 'sihteeri', 'muu');
+;-, (with-testikayttaja (korma.core/select :henkilo 
+;                           (korma.core/fields :henkiloid)
+ ;                          (korma.core/where (and {:jarjesto -1}
+ ;                                              (korma.core/raw "(not exists (select 42 from jasenyys j where j.henkiloid = henkiloid and j.status='nimitetty'))"))
+ ;                            )))
+ 
+; lein test :only aitu.integraatio.sql.sql-henkilo-arkisto-test/hae-esitetty-henkilo
+(deftest ^:integraatio hae-esitetty-henkilo
+  (let [voimassaoleva-toimikausi (hae-voimassaoleva-toimikausi)
+        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id voimassaoleva-toimikausi
+                                         :nimi_fi "foo"})]
+    (lisaa-henkilo! {:henkiloid 1000
+                     :etunimi "foo bar baz"
+                     :jarjesto -1})
+    (is (= (set [{:henkiloid -1000} {:henkiloid 1000}]) (set (arkisto/hae-jarjeston-esitetyt-henkilot -1))))
+    (lisaa-jasen! {:toimikunta (:tkunta toimikunta-1)
+                   :henkiloid 1000})
+    (is (= [{:henkiloid -1000}] (arkisto/hae-jarjeston-esitetyt-henkilot -1)))))
+ 

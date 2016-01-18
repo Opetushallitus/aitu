@@ -79,6 +79,22 @@
                          {:henkilo.sukunimi [ilike nimi]}))))
       piilota-salaiset)))
 
+; TODO: vanhoja voimassaolevia jäseniä ei ole "nimitetty" tällä hetkellä
+(defn hae-jarjeston-esitetyt-henkilot
+  [jarjestoid]  
+  (sql/select :henkilo
+    (sql/fields :henkiloid)
+    (sql/where (and {:jarjesto jarjestoid}
+                 (sql/raw "(not exists (select 42 from jasenyys j where j.henkiloid = henkilo.henkiloid and j.status='nimitetty'))")))))
+
+;  (sql/select oppilaitos
+;    (sql/fields :oppilaitoskoodi :nimi :kieli :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
+;                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue :koulutustoimija
+;                (sql/raw "(select count(*) from jarjestamissopimus where tutkintotilaisuuksista_vastaava_oppilaitos = oppilaitoskoodi and voimassa) as sopimusten_maara"))
+;    (sql/order :nimi)))
+
+
+
 (defn yhdista-henkilot-ja-jasenyydet
   [henkilot jasenyydet]
   (let [jasenyydet-map (group-by :henkiloid jasenyydet)]

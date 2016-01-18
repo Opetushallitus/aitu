@@ -16,6 +16,7 @@
   (:require [aitu.infra.ttk-arkisto :as toimikunta-arkisto]
             [aitu.infra.henkilo-arkisto :as henkilo-arkisto]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
+            [aitu.infra.ttk-arkisto :as ttk-arkisto]
             [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
             [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
             [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
@@ -249,6 +250,16 @@
                     osaamisala-idt)))]
     (jarjestamissopimus-arkisto/paivita! sopimus sopimus-tutkinto-liitokset)
     sopimus))
+
+(defn hae-vanha-toimikausi
+  []
+  (let [id (:toimikausi_id (first (filter #(false? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
+  id))
+
+(defn hae-voimassaoleva-toimikausi
+  []
+  (let [id (:toimikausi_id (first (filter #(true? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
+  id))
 
 (def default-toimikausi (let [seuraava-indeksi (atom 0)]
                           (fn []
