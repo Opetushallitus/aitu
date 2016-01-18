@@ -260,13 +260,3 @@
   []
   (let [id (:toimikausi_id (first (filter #(true? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
   id))
-
-(def default-toimikausi (let [seuraava-indeksi (atom 0)]
-                          (fn []
-                            {:toimikausi_id (+ 1000 (swap! seuraava-indeksi inc))
-                             :alkupvm (time/local-date 2011 1 1)
-                             :loppupvm (time/local-date 2211 1 1)
-                             :voimassa true})))
-
-(defn lisaa-toimikausi! [t]
-  (sql/insert toimikausi (sql/values (merge (default-toimikausi) t))))
