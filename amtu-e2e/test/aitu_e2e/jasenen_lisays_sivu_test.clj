@@ -212,6 +212,8 @@
           (w/select-option {:css "span[nimi*=\"sukupuoli\"] > select"} {:text "mies"})
           (w/select-option {:css "span[nimi*=\"kieli\"] > select"} {:text "suomi"})
           (paina-lisaa-henkilo-nappia)
+          ; Poistetaan .feedback-container testeissä, ettei se ole kenttien päällä (edes hetkellisesti)
+          (w/execute-script "$('.feedback-container').remove()")
           (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
           (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
           (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")

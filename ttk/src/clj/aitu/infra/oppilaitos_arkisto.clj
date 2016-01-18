@@ -145,10 +145,15 @@
 (defn hae-termilla
   "Suodattaa hakutuloksia hakutermillä"
   [termi]
-  (for [oppilaitos (hae-voimassaolevat)
-        :when (sisaltaako-kentat? oppilaitos [:nimi] termi)]
-    {:oppilaitoskoodi (:oppilaitoskoodi oppilaitos)
-     :nimi (str (:nimi oppilaitos) " (" (:oppilaitoskoodi oppilaitos) ")")}))
+  (let [termi (str \% termi \%)
+        oppilaitokset (sql/select oppilaitos
+                        (sql/fields :oppilaitoskoodi :nimi)
+                        (sql/where {:voimassa true
+                                    :nimi [ilike termi]})
+                        (sql/order :nimi))]
+    (for [oppilaitos oppilaitokset]
+      {:oppilaitoskoodi (:oppilaitoskoodi oppilaitos)
+       :nimi (str (:nimi oppilaitos) " (" (:oppilaitoskoodi oppilaitos) ")")})))
 
 (defn hae
   "Hakee oppilaitoksen oppilaitoskoodilla"

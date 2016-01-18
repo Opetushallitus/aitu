@@ -74,25 +74,25 @@
   [ehdot]
   (let [nimi (str "%" (:nimi ehdot) "%")
         kielisyydet (split (:kielisyys ehdot "") #",")
-        toimikunnat (->> (sql/select tutkintotoimikunta
-                           (sql/with toimikausi)
-                           (sql/where (and
-                                        (or (blank? (:tunnus ehdot))
-                                            (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
-                                                                (sql/with nayttotutkinto
-                                                                  (sql/with opintoala))
-                                                                (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
-                                                                                (or {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}
-                                                                                    {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}))))))
-                                        (or (not= (:toimikausi ehdot) "nykyinen")
-                                            {:toimikausi.voimassa true})
-                                        (or (blank? (:nimi ehdot))
-                                            {:nimi_fi [ilike nimi]}
-                                            {:nimi_sv [ilike nimi]})
-                                        (or (blank? (:kielisyys ehdot))
-                                            {:kielisyys [in kielisyydet]})))
-                           (sql/order :nimi_fi))
-                      (map voimassaolo/taydenna-toimikunnan-voimassaolo))]
+        toimikunnat (-> 
+                      (sql/select* tutkintotoimikunta)
+                      (sql/with toimikausi)
+                      (cond->
+                        (not (blank? (:tunnus ehdot))) (sql/where 
+                                                         (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
+                                                                             (sql/with nayttotutkinto
+                                                                               (sql/with opintoala))
+                                                                             (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
+                                                                                             (or {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}
+                                                                                                 {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}))))))
+                        (not (blank? (:nimi ehdot))) (sql/where (or {:nimi_fi [ilike nimi]}
+                                                                    {:nimi_sv [ilike nimi]}))
+                        (not (blank? (:kielisyys ehdot))) (sql/where {:kielisyys [in kielisyydet]})
+                        (= (:toimikausi ehdot) "nykyinen") (sql/where {:toimikausi.voimassa true})
+                        (= (:toimikausi ehdot) "tuleva") (sql/where (< (sql/raw "current_date") :toimikausi.alkupvm)))
+                      (sql/order :nimi_fi)
+                      (sql/exec)
+                      (->> (map voimassaolo/taydenna-toimikunnan-voimassaolo)))]
     (if (:avaimet ehdot)
       (map #(select-keys % (:avaimet ehdot)) toimikunnat)
       toimikunnat)))

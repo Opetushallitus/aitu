@@ -55,10 +55,10 @@
   "Hakee kaikkien koulutustoimijoiden julkiset tiedot"
   []
   (sql/select koulutustoimija
-    (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
-                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite
-                (sql/raw "(select count(*) from jarjestamissopimus where koulutustoimija = ytunnus and voimassa) as sopimusten_maara"))
-    (sql/order :nimi_fi)))
+   (sql/fields :ytunnus :nimi_fi :nimi_sv :muutettu_kayttaja :luotu_kayttaja :muutettuaika :luotuaika
+               :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite
+               (sql/raw "(select count(*) from jarjestamissopimus where koulutustoimija = ytunnus and voimassa) as sopimusten_maara"))
+   (sql/order :nimi_fi)))
 
 (defn hae-kaikki []
   (sql/select koulutustoimija))
@@ -66,9 +66,13 @@
 (defn hae-termilla
   "Suodattaa hakutuloksia termillä"
   [termi]
-  (for [koulutustoimija (hae-julkiset-tiedot)
-        :when (sisaltaako-kentat? koulutustoimija [:nimi_fi :nimi_sv] termi)]
-    (select-keys koulutustoimija [:ytunnus :nimi_fi :nimi_sv])))
+  (let [termi (str \% termi \%)]
+    (sql/select koulutustoimija
+      (sql/fields :ytunnus :nimi_fi :nimi_sv)
+      (sql/where (and {:voimassa true}
+                      (or {:nimi_fi [ilike termi]}
+                          {:nimi_sv [ilike termi]})))
+      (sql/order :nimi_fi))))
 
 (defn hae-ehdoilla
   "Hakee kaikki hakuehtoja vastaavat koulutustoimijat. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
