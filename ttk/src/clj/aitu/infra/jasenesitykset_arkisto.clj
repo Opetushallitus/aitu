@@ -61,7 +61,7 @@
     (sql/order :henkilo.sukunimi :asc)
     sql/exec))
 
-(defn ^:private subselect-laske-jasenesitykset [tila sukupuoli kieli]
+(defn ^:private subselect-laske-jasenesitykset [tila sukupuoli kielet]
   (sql/subselect :jasenyys
     (sql/aggregate (count :*) :cnt)
     (sql/join :henkilo (= :henkilo.henkiloid :jasenyys.henkiloid))
@@ -69,7 +69,7 @@
     (cond->
       tila (sql/where {:status tila})
       sukupuoli (sql/where {:henkilo.sukupuoli sukupuoli})
-      kieli (sql/where {:henkilo.aidinkieli kieli}))))
+      kielet (sql/where {:henkilo.aidinkieli [in kielet]}))))
 
 (defn ^:private hae-jarjeston-alijarjestot [jarjesto]
   (let [jarjestot (sql/select :jarjesto
@@ -86,13 +86,10 @@
                   [(subselect-laske-jasenesitykset "esitetty" "nainen" nil) :esitetty_naisia]
                   [(subselect-laske-jasenesitykset "nimitetty" "mies" nil) :nimitetty_miehia]
                   [(subselect-laske-jasenesitykset "nimitetty" "nainen" nil) :nimitetty_naisia]
-                  [(subselect-laske-jasenesitykset "esitetty" nil "fi") :esitetty_fi]
-                  [(subselect-laske-jasenesitykset "esitetty" nil "sv") :esitetty_sv]
-                  [(subselect-laske-jasenesitykset "esitetty" nil "se") :esitetty_se]
-                  [(subselect-laske-jasenesitykset "nimitetty" nil "fi") :nimitetty_fi]
-                  [(subselect-laske-jasenesitykset "nimitetty" nil "sv") :nimitetty_sv]
-                  [(subselect-laske-jasenesitykset "nimitetty" nil "se") :nimitetty_se]
-                  )
+                  [(subselect-laske-jasenesitykset "esitetty" nil ["fi", "2k"]) :esitetty_fi]
+                  [(subselect-laske-jasenesitykset "esitetty" nil ["sv", "2k"]) :esitetty_sv]
+                  [(subselect-laske-jasenesitykset "nimitetty" nil ["fi", "2k"]) :nimitetty_fi]
+                  [(subselect-laske-jasenesitykset "nimitetty" nil ["sv", "2k"]) :nimitetty_sv])
 
       (cond->
         toimikausi (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi})
