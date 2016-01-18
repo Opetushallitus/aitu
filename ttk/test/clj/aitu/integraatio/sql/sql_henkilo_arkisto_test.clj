@@ -102,18 +102,14 @@
         (is (= henkiloita-voimassa henkiloita-voimassa-alussa))))))
 
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
-  (let [mennyt-toimikausi (lisaa-toimikausi! {:voimassa false
-                                              :alkupvm (time/local-date 1900 1 1)
-                                              :loppupvm (time/local-date 1902 12 31)})
-        mennyt-toimikunta (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id mennyt-toimikausi)})
+  (let [mennyt-toimikausi (hae-vanha-toimikausi)
+        mennyt-toimikunta (lisaa-toimikunta! {:toimikausi_id mennyt-toimikausi})
         mennyt-henkilo (lisaa-henkilo! {:etunimi "mennyt"})
         _ (lisaa-jasen! {:toimikunta (:tkunta mennyt-toimikunta)
                          :henkiloid (:henkiloid mennyt-henkilo)})
 
-        nykyinen-toimikausi (lisaa-toimikausi! {:voimassa true
-                                                :alkupvm (time/local-date 1903 1 1)
-                                                :loppupvm (time/local-date 2099 12 31)})
-        nykyinen-toimikunta (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id nykyinen-toimikausi)})
+        nykyinen-toimikausi (hae-voimassaoleva-toimikausi)
+        nykyinen-toimikunta (lisaa-toimikunta! {:toimikausi_id nykyinen-toimikausi})
         nykyinen-henkilo (lisaa-henkilo! {:etunimi "nykyinen"})
         _ (lisaa-jasen! {:toimikunta (:tkunta nykyinen-toimikunta)
                          :henkiloid (:henkiloid nykyinen-henkilo)})
@@ -124,18 +120,14 @@
     "Lisätyt henkilöt löytyvät"))
 
 (deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
-  (let [mennyt-toimikausi (lisaa-toimikausi! {:voimassa false
-                                              :alkupvm (time/local-date 1900 1 1)
-                                              :loppupvm (time/local-date 1902 12 31)})
-        mennyt-toimikunta (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id mennyt-toimikausi)})
+  (let [mennyt-toimikausi (hae-vanha-toimikausi)
+        mennyt-toimikunta (lisaa-toimikunta! {:toimikausi_id mennyt-toimikausi})
         mennyt-henkilo (lisaa-henkilo! {:etunimi "mennyt"})
         _ (lisaa-jasen! {:toimikunta (:tkunta mennyt-toimikunta)
                          :henkiloid (:henkiloid mennyt-henkilo)})
 
-        nykyinen-toimikausi (lisaa-toimikausi! {:voimassa true
-                                                :alkupvm (time/local-date 1903 1 1)
-                                                :loppupvm (time/local-date 2099 12 31)})
-        nykyinen-toimikunta (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id nykyinen-toimikausi)})
+        nykyinen-toimikausi (hae-voimassaoleva-toimikausi)
+        nykyinen-toimikunta (lisaa-toimikunta! {:toimikausi_id nykyinen-toimikausi})
         nykyinen-henkilo (lisaa-henkilo! {:etunimi "nykyinen"})
         _ (lisaa-jasen! {:toimikunta (:tkunta nykyinen-toimikunta)
                          :henkiloid (:henkiloid nykyinen-henkilo)})
@@ -145,23 +137,20 @@
          #{"nykyinen"})))
 
 (deftest ^:integraatio hae-ehdoilla-toimikunta
-  (let [toimikausi (lisaa-toimikausi! {:voimassa true
-                                       :alkupvm (time/local-date 1903 1 1)
-                                       :loppupvm (time/local-date 2099 12 31)})
-
-        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id toimikausi)
+  (let [toimikausi (hae-voimassaoleva-toimikausi)
+        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id toimikausi
                                          :nimi_fi "foo bar baz"})
         henkilo-1 (lisaa-henkilo! {:etunimi "nimi1"})
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-1)
                          :henkiloid (:henkiloid henkilo-1)})
 
-        toimikunta-2 (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id toimikausi)
+        toimikunta-2 (lisaa-toimikunta! {:toimikausi_id toimikausi
                                          :nimi_sv "FÅÅ BAR BAZ"})
         henkilo-2 (lisaa-henkilo! {:etunimi "nimi2"})
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-2)
                          :henkiloid (:henkiloid henkilo-2)})
 
-        toimikunta-3 (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id toimikausi)})
+        toimikunta-3 (lisaa-toimikunta! {:toimikausi_id toimikausi})
         henkilo-3 (lisaa-henkilo!)
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-3)
                          :henkiloid (:henkiloid henkilo-3)})
@@ -180,12 +169,10 @@
          #{1000 1001})))
 
 (deftest ^:integraatio hae-ehdoilla-monta-jasenyytta
-  (let [toimikausi (lisaa-toimikausi! {:voimassa true
-                                       :alkupvm (time/local-date 1903 1 1)
-                                       :loppupvm (time/local-date 2099 12 31)})
-        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id toimikausi)
+  (let [toimikausi (hae-voimassaoleva-toimikausi)
+        toimikunta-1 (lisaa-toimikunta! {:toimikausi_id toimikausi
                                          :nimi_fi "foo"})
-        toimikunta-2 (lisaa-toimikunta! {:toimikausi_id (:toimikausi_id toimikausi)
+        toimikunta-2 (lisaa-toimikunta! {:toimikausi_id toimikausi
                                          :nimi_fi "bar"})
         henkilo (lisaa-henkilo! {:etunimi "nimi1"})
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-1)
