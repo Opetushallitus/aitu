@@ -73,7 +73,7 @@ angular.module('jasenesitykset', ['ngRoute', 'rest.jasenesitykset'])
   .controller('JasenesityksetYhteenvetoController', ['$filter', '$scope', 'Jasenesitykset', 'ToimikausiResource', function($filter, $scope, Jasenesitykset, ToimikausiResource) {
     $scope.search = {};
     $scope.summat = {};
-    $scope.sarakekentat = ['esitetty_yhteensa', 'esitetty_miehia', 'esitetty_naisia', 'esitetty_fi', 'esitetty_sv', 'esitetty_se', 'nimitetty_yhteensa', 'nimitetty_miehia', 'nimitetty_naisia', 'nimitetty_fi', 'nimitetty_sv', 'nimitetty_se'];
+    $scope.sarakekentat = ['esitetty_yhteensa', 'esitetty_miehia', 'esitetty_naisia', 'esitetty_fi', 'esitetty_sv', 'nimitetty_yhteensa', 'nimitetty_miehia', 'nimitetty_naisia', 'nimitetty_fi', 'nimitetty_sv'];
 
     ToimikausiResource.query({}, function(toimikaudet) {
       $scope.toimikaudet = toimikaudet;
