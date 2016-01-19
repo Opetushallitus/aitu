@@ -167,6 +167,7 @@
   {:henkiloid -1234
    :toimikunta "T12345"
    :rooli "jasen"
+;   :status "nimitetty"
    :edustus "opettaja"
    :alkupvm (kuukausi-sitten)
    :loppupvm (vuoden-kuluttua)})

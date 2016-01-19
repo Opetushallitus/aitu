@@ -21,13 +21,14 @@
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [oph.korma.korma-auth :refer [*current-user-uid*
                                           *current-user-oid*
-                                          integraatiokayttaja]]))
+                                          integraatiokayttaja]]
+            [oph.korma.common :refer [select-unique-or-nil select-unique]]))
 
 (defn kayttaja-liitetty-henkiloon?
   [henkiloid oid]
-  (= oid (:kayttaja_oid (first (sql/select taulut/henkilo
-                                 (sql/where {:henkiloid henkiloid})
-                                 (sql/fields :kayttaja_oid))))))
+  (= oid (:kayttaja_oid (select-unique-or-nil taulut/henkilo
+                          (sql/where {:henkiloid henkiloid})
+                          (sql/fields :kayttaja_oid)))))
 
 (defn kayttaja-liitetty-johonkin-henkiloon?
   [oid]
@@ -37,13 +38,12 @@
 
 (defn hae-kayttajaan-liitetty-henkilo
   [oid]
-  (first (sql/select taulut/henkilo
-           (sql/where {:kayttaja_oid oid}))))
+  (select-unique-or-nil taulut/henkilo (sql/where {:kayttaja_oid oid})))
 
 (defn hae
-  "Hakee käyttäjätunnuksen perusteella."
+  "Hakee käyttäjätunnuksen perusteella. Palauttaa nil jos ei löydy."
   [oid]
-  (first (sql/select taulut/kayttaja (sql/where {:oid oid}))))
+  (select-unique-or-nil taulut/kayttaja (sql/where {:oid oid})))
 
 (defn ^:integration-api merkitse-kaikki-vanhentuneiksi! []
   (sql/update taulut/kayttaja
@@ -101,7 +101,6 @@
 
 (defn hae-jarjesto
   [jarjestoid]
-  (first
-    (sql/select :jarjesto
-      (sql/fields :jarjestoid :nimi_fi :nimi_sv)
-      (sql/where {:jarjestoid jarjestoid}))))
+  (select-unique :jarjesto
+    (sql/fields :jarjestoid :nimi_fi :nimi_sv)
+    (sql/where {:jarjestoid jarjestoid})))

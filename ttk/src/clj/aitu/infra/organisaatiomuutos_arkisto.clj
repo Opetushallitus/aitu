@@ -17,7 +17,8 @@
             [oph.common.util.util :refer [update-in-if-exists select-and-rename-keys]]
             [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
             [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
-            [clj-time.core :as time])
+            [clj-time.core :as time]
+            [oph.korma.common :refer [select-unique-or-nil select-unique]])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn ^:integration-api lisaa-organisaatiomuutos! [tyyppi paivamaara & {:keys [koulutustoimija oppilaitos toimipaikka]}]
@@ -75,9 +76,9 @@
     (map erottele-organisaatiot)))
 
 (defn tekemattomien-maara []
-  (first (sql/select organisaatiomuutos
-           (sql/aggregate (count :*) :maara)
-           (sql/where (= :tehty nil)))))
+  (select-unique organisaatiomuutos
+    (sql/aggregate (count :*) :maara)
+    (sql/where (= :tehty nil))))
 
 (defn merkitse-tehdyksi [organisaatiomuutosid]
   (sql/update organisaatiomuutos

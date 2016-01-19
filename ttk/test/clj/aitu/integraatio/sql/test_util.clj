@@ -82,6 +82,7 @@
    :rooli rooli
    :alkupvm menneisyydessa
    :loppupvm tulevaisuudessa
+;   :status "nimitetty"
    :toimikausi_alku menneisyydessa
    :toimikausi_loppu tulevaisuudessa})
 

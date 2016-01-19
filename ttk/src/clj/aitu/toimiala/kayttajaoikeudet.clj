@@ -74,6 +74,7 @@
   (and (= (:henkiloid *current-user-authmap*) henkiloid)
        (kayttaja-arkisto/kayttaja-liitetty-henkiloon? (int-arvo henkiloid) kayttaja-oid)))
 
+;TODO: ei ole hyvä näin. Parempi arkisto/hae-jarjesto jne .
 (defn henkilolla-voimassaolevia-jasenyyksia?
   [henkiloid]
   (let [henkilon-toimikunnat (filter jasenyys-voimassa? (ttk-arkisto/hae-toimikuntien-jasenyydet henkiloid))]
@@ -193,7 +194,8 @@
   `{:henkilo_paivitys #(or (yllapitaja?)
                            (omien-tietojen-muokkausoikeus? *current-user-authmap* (:henkiloid %) (:kayttaja %))
                            (henkilon-muokkausoikeus-toimikunnan-kautta? *current-user-authmap* (int-arvo (:henkiloid %)) (:kayttaja %))
-                           (not (henkilolla-voimassaolevia-jasenyyksia? (int-arvo (:henkiloid %)))))})
+)})                           
+;                           (not (henkilolla-voimassaolevia-jasenyyksia? (int-arvo (:henkiloid %)))))})
 
 (def toiminnot (conj yllapitotoiminnot kayttajatoiminnot toimikuntatoiminnot sopimustoiminnot henkilotoiminnot))
 

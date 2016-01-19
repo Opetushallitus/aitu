@@ -58,10 +58,10 @@
 
 (defn ^:private hae-uusin-tutkintoversio
   [tutkintotunnus]
-  (first (sql/select tutkintoversio
-           (sql/where (= :tutkintoversio_id (sql/subselect nayttotutkinto
-                                              (sql/fields :uusin_versio_id)
-                                              (sql/where {:tutkintotunnus tutkintotunnus})))))))
+  (sql-util/select-unique tutkintoversio
+    (sql/where (= :tutkintoversio_id (sql/subselect nayttotutkinto
+                                       (sql/fields :uusin_versio_id)
+                                       (sql/where {:tutkintotunnus tutkintotunnus}))))))
 
 (defn ^:integration-api paivita-tutkinto!
   "Jos peruste on muuttunut, tekee uuden version tutkinnosta. Jos peruste on sama, päivittää olemassaolevaa.
@@ -101,19 +101,19 @@
 
 (defn ^:private hae-tutkinnonosan-uusin-versio
   [osatunnus]
-  (first (sql/select tutkinnonosa
-           (sql/where (and (= :osatunnus osatunnus)
-                           (= :versio (sql/subselect tutkinnonosa
-                                        (sql/aggregate (max :versio) :max_versio)
-                                        (sql/where {:osatunnus osatunnus}))))))))
+  (sql-util/select-unique tutkinnonosa
+    (sql/where (and (= :osatunnus osatunnus)
+                    (= :versio (sql/subselect tutkinnonosa
+                                 (sql/aggregate (max :versio) :max_versio)
+                                 (sql/where {:osatunnus osatunnus})))))))
 
 (defn ^:private hae-tutkinnonosan-id
   [osatunnus tutkintoversio_id]
-  (first (sql/select tutkinnonosa
-           (sql/join :inner tutkinto-ja-tutkinnonosa {:tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id})
-           (sql/fields :tutkinnonosa.tutkinnonosa_id)
-           (sql/where {:osatunnus osatunnus
-                       :tutkinto_ja_tutkinnonosa.tutkintoversio tutkintoversio_id}))))
+  (sql-util/select-unique tutkinnonosa
+    (sql/join :inner tutkinto-ja-tutkinnonosa {:tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id})
+    (sql/fields :tutkinnonosa.tutkinnonosa_id)
+    (sql/where {:osatunnus osatunnus
+                :tutkinto_ja_tutkinnonosa.tutkintoversio tutkintoversio_id})))
 
 (defn ^:integration-api lisaa-tutkinnon-osa!
   "Lisää tutkinnon osan"
@@ -160,11 +160,11 @@
 
 (defn ^:private hae-osaamisalan-uusin-versio
   [osaamisalatunnus]
-  (first (sql/select osaamisala
-           (sql/where (and (= :osaamisalatunnus osaamisalatunnus)
-                           (= :versio (sql/subselect osaamisala
-                                        (sql/aggregate (max :versio) :max_versio)
-                                        (sql/where {:osaamisalatunnus osaamisalatunnus}))))))))
+  (sql-util/select-unique osaamisala
+    (sql/where (and (= :osaamisalatunnus osaamisalatunnus)
+                    (= :versio (sql/subselect osaamisala
+                                 (sql/aggregate (max :versio) :max_versio)
+                                 (sql/where {:osaamisalatunnus osaamisalatunnus})))))))
 
 (defn ^:integration-api lisaa-osaamisala!
   "Lisää osaamisalan"

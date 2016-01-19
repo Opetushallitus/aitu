@@ -22,6 +22,7 @@
             [aitu.toimiala.kayttajaoikeudet :as ko])
   (:use [aitu.integraatio.sql.korma]))
 
+; TODO: miksi first? Eihän tämä nyt voi toimia oikein??
 (defn hae-jasenyys-ja-sopimukset [kayttajaid]
   (first (sql/select henkilo
            (sql/fields :henkiloid :kayttaja_oid)
