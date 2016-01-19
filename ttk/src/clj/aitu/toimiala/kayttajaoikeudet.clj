@@ -43,7 +43,6 @@
     (= rooli (:roolitunnus kayttaja-map)))
   ([rooli-kw]
     (onko-kayttajan-rooli? *current-user-authmap* (rooli-kw kayttajaroolit))))
-  
 
 (defn yllapitajarooli?
   [rooli]

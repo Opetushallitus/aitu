@@ -190,12 +190,12 @@
 (defn hae-hlo-nimella
   "Hakee henkilöitä nimellä"
   [etunimi sukunimi kayttajan-jarjesto]
-  (->
-    (hae-henkilo-jarjestolla kayttajan-jarjesto)
-    (sql/where {:etunimi etunimi
-                :sukunimi sukunimi})
-    sql/exec
-    (map eriyta-jarjesto)))
+  (map eriyta-jarjesto
+    (->
+      (hae-henkilo-jarjestolla kayttajan-jarjesto)
+      (sql/where {:etunimi etunimi
+                  :sukunimi sukunimi})
+      sql/exec)))
 
 (defn hae-hlo-nimen-osalla
   "Hakee henkilöitä nimen osalla"

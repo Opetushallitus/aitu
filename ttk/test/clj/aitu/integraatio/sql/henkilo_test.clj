@@ -35,3 +35,7 @@
         (is (contains? haettu-henkilo :jasenyys))
         (is (contains? (first (:jasenyys haettu-henkilo)) :voimassa))
         (is (contains? (:ttk (first (:jasenyys haettu-henkilo))) :voimassa)))))
+
+(deftest ^:integraatio hae-nimella
+  (let [a (arkisto/hae-hlo-nimella "Jäsen" "Jäsenjärjestö" -1)]
+    (is (= (count a) 1))))
