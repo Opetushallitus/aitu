@@ -35,4 +35,6 @@ select k.oid, k.uid, h.henkiloid, h.etunimi, h.sukunimi, k.etunimi, k.sukunimi f
  inner join kayttaja k on h.kayttaja_oid = k.oid
  where h.etunimi != k.etunimi or h.sukunimi != k.sukunimi;
  
- 
+-- Henkilöitä, jotka eivät ole jäseniä toimikunnissa lainkaan. Näitä ei pitäisi olla tietokannassa.
+--select * from henkilo h
+-- where not exists (select * from jasenyys j where j.henkiloid = h.henkiloid) order by henkiloid;

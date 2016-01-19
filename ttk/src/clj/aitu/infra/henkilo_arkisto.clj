@@ -94,7 +94,6 @@
 ;    (sql/order :nimi)))
 
 
-
 (defn yhdista-henkilot-ja-jasenyydet
   [henkilot jasenyydet]
   (let [jasenyydet-map (group-by :henkiloid jasenyydet)]
@@ -146,7 +145,7 @@
   [henkilo]
   (assoc henkilo :jarjesto (select-keys henkilo [:jarjesto :jarjesto_nimi_fi :jarjesto_nimi_sv])))
 
-(defn ^:private hae-henkilo-jarjestolla
+(defn hae-henkilo-jarjestolla
   [kayttajan-jarjesto]
   (->
     (sql/select* henkilo)

@@ -53,7 +53,7 @@
             _ (log/debug "kontekstioikeuksia on .. " oikeudet)]
         {:oid (:oid kayttaja)
          :kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))
-         :henkiloid (:henkiloid oikeudet)
+         :henkiloid (:henkiloid oikeudet) ; TODO: testausta varten
          :roolitunnus (:rooli kayttaja)
          :toimikunta (set (map #(select-keys % [:tkunta
                                                 :rooli

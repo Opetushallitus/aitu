@@ -39,6 +39,7 @@
     (yhdista-henkilo-ja-kayttaja! testikayttaja-oid -1234)
     (let [jasenyys-map (arkisto/hae-jasenyys-ja-sopimukset testikayttaja-oid)
           testi-jasenyys (first (:jasenyys jasenyys-map))]
+      (println jasenyys-map)
       (is (= (:tkunta testi-jasenyys) "T12345"))
       (is (= (:henkiloid jasenyys-map) -1234)))))
 

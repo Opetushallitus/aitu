@@ -17,6 +17,7 @@
   (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.infra.ttk-arkisto :as ttk-arkisto]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
+;            [aitu.infra.henkilo-arkisto :as henkilo-arkisto]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :refer [toimikunta-vanhentunut?]]
             [aitu.toimiala.voimassaolo.saanto.jasenyys :refer [taydenna-jasenyyden-voimassaolo]]
             [aitu.toimiala.kayttajaroolit :refer :all]))
