@@ -17,11 +17,12 @@
               [aitu.toimiala.henkilo :refer :all]
               [aitu.integraatio.sql.test-data-util :refer [default-henkilo]]))
 
-(deftest piilota-salaiset-henkiloilta-yllapitaja-test
-  (testing "Testataan kenttien säilyminen ylläpitäjä tason käyttäjällä"
-    (let [henkilo (assoc default-henkilo :sahkoposti_julkinen true)]
-      (with-redefs [aitu.toimiala.kayttajaoikeudet/yllapitaja? (constantly true)]
-        (is (= [henkilo henkilo] (piilota-salaiset-henkiloilta [henkilo henkilo])))))))
+; tarpeeton testi
+;(deftest piilota-salaiset-henkiloilta-yllapitaja-test
+;  (testing "Testataan kenttien säilyminen ylläpitäjä tason käyttäjällä"
+;    (let [henkilo (assoc default-henkilo :sahkoposti_julkinen true)]
+;      (with-redefs [aitu.toimiala.kayttajaoikeudet/yllapitaja? (constantly true)]
+;        (is (= [henkilo henkilo] (piilota-salaiset-henkiloilta [henkilo henkilo])))))))
 
 (deftest piilota-salaiset-henkiloilta-kayttaja-test
   (testing "Testataan kenttien poistuminen normaalilla käyttäjällä"

@@ -48,6 +48,13 @@
     (select-keys [:henkiloid :etunimi :sukunimi :jasenyydet])
     (update-in [:jasenyydet] (partial map #(select-keys % [:nimi_fi :nimi_sv :diaarinumero :toimikausi_alku :toimikausi_loppu])))))
 
+(defn piilota-salaiset-kentat
+  "Piilottaa osan tietokentistä jos käyttäjä ei ole ylläpitäjä"
+  [henkilo]
+  (if (kayttajaoikeudet/yllapitaja?)
+    henkilo
+    (henkilo/poista-salaiset-henkilolta henkilo)))
+
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
 
@@ -92,15 +99,18 @@
 
   (GET* "/:henkiloid" [henkiloid]
     :kayttooikeus :henkilo_haku
-    (json-response (henkilo/taydenna-henkilo (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid) (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
+    (json-response (henkilo/taydenna-henkilo 
+                     (piilota-salaiset-kentat (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid) (:jarjesto kayttajaoikeudet/*current-user-authmap*))))))
 
   (GET* "/nimi/:etunimi/:sukunimi" [etunimi sukunimi]
     :kayttooikeus :henkilo_haku
-    (json-response (arkisto/hae-hlo-nimella etunimi sukunimi (:jarjesto kayttajaoikeudet/*current-user-authmap*))))
+    (json-response (piilota-salaiset-kentat
+                     (arkisto/hae-hlo-nimella etunimi sukunimi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
 
   (GET* "/nimi/" [termi]
     :kayttooikeus :henkilo_haku
-    (json-response (arkisto/hae-hlo-nimen-osalla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*))))
+    (json-response (piilota-salaiset-kentat
+                     (arkisto/hae-hlo-nimen-osalla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
 
   (PUT* "/:henkiloid"
     [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja

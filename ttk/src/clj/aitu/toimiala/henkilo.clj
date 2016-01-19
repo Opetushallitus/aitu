@@ -15,7 +15,6 @@
 (ns aitu.toimiala.henkilo
   (:require [aitu.toimiala.skeema :refer [SisaltaaHenkilonTiedot]]
             [schema.core :as s]
-            [aitu.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :as toimikunta-saanto]
             [aitu.toimiala.voimassaolo.saanto.jasenyys :as jasenyys-saanto]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto])
@@ -30,11 +29,9 @@
     true (dissoc :lisatiedot :syntymavuosi)))
 
 (defn piilota-salaiset-henkiloilta
-  "Tyhjentää salaiseksi määritellyt kentät henkilöiltä jos ei käyttäjä ei ole ylläpitäjä"
+  "Tyhjentää salaiseksi määritellyt kentät henkilöiltä"
   [henkilot]
-  (if (yllapitaja?)
-    henkilot
-    (map poista-salaiset-henkilolta henkilot)))
+  (map poista-salaiset-henkilolta henkilot))
 
 (defn piilota-salaiset
   "Piilottaa vastauksesta henkilöiden tiedoista salaiseksi määritellyt kentät"
@@ -64,4 +61,3 @@
   (some-> henkilo
          (update-in [:jasenyys] #(map taydenna-jasenyys %))
          liita-kayttaja))
-

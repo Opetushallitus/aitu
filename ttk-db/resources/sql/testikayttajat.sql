@@ -16,10 +16,10 @@ values
   ('T-9999', 'OID.T-9999', 'Jäsen', 'Järjestö', 'JARJESTO', -1),
   ('T-9998', 'OID.T-9998', 'Jäsen', 'Jäsenjärjestö', 'JARJESTO', -2);
 
-insert into henkilo(henkiloid, jarjesto, kayttaja_oid, etunimi, sukunimi, aidinkieli, sukupuoli)
+insert into henkilo(henkiloid, jarjesto, kayttaja_oid, etunimi, sukunimi, aidinkieli, sukupuoli, puhelin, puhelin_julkinen, sahkoposti, sahkoposti_julkinen)
 values
-  (-1000, -1, 'OID.T-9999', 'Jäsen', 'Järjestö', 'fi', 'mies'),
-  (-1001, -2, 'OID.T-9998', 'Jäsen', 'Jäsenjärjestö', 'fi', 'mies');
+  (-1000, -1, 'OID.T-9999', 'Jäsen', 'Järjestö', 'fi', 'mies', '050-TIUKKA-PAIKKA', false, 'ssh.se.on.salaisuus@solita.fi', false),
+  (-1001, -2, 'OID.T-9998', 'Jäsen', 'Jäsenjärjestö', 'fi', 'mies', '040-1234567', true, 'ala.katso@solita.fi', false);
 
 insert into kayttaja(oid, etunimi, sukunimi, rooli, voimassa, uid)
 values('OID.OPH-KATSELIJA', 'Oph', 'Katselija', 'OPH-KATSELIJA', true, 'oph-katselija');

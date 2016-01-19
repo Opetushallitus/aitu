@@ -76,8 +76,7 @@
             (sql/fields [:nimi_fi :keskusjarjesto_nimi]))
           (sql/where (or (blank? (:nimi ehdot))
                          {:henkilo.etunimi [ilike nimi]}
-                         {:henkilo.sukunimi [ilike nimi]}))))
-      piilota-salaiset)))
+                         {:henkilo.sukunimi [ilike nimi]})))))))
 
 ; TODO: vanhoja voimassaolevia jäseniä ei ole "nimitetty" tällä hetkellä
 (defn hae-jarjeston-esitetyt-henkilot
@@ -131,13 +130,13 @@
   []
   (hae-henkilot-toimikaudella "tuleva"))
 
+; TODO: unique? 
 (defn hae
   "Hakee henkilön id:n perusteella"
   [id]
   (->
     (sql/select henkilo
       (sql/where {:henkiloid id}))
-    piilota-salaiset
     first))
 
 (defn ^:private eriyta-jarjesto
@@ -170,7 +169,6 @@
       (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
     (sql/where {:henkiloid id})
     sql/exec
-    piilota-salaiset
     first
     eriyta-jarjesto
     (update-in [:jasenyys] #(for [jasen %] (assoc jasen :ttk (toimikunta-kaytava/hae (:toimikunta jasen)))))))
@@ -197,8 +195,7 @@
     (sql/where {:etunimi etunimi
                 :sukunimi sukunimi})
     sql/exec
-    (->> piilota-salaiset
-         (map eriyta-jarjesto))))
+    (map eriyta-jarjesto)))
 
 (defn hae-hlo-nimen-osalla
   "Hakee henkilöitä nimen osalla"
