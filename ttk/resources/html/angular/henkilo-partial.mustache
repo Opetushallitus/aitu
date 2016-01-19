@@ -24,8 +24,10 @@
     <p ng-hide="muokkausTila"><enum-arvo nimi="sukupuoli" arvo="jasen.henkilo.sukupuoli"></enum-arvo></p>
   </fieldset>
   <fieldset>
-    <label class="pakollinen">[[kielisyys]]</label>
-    <enum-valikko pakollinen="true" ng-hide="!muokkausTila" nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-valikko>
+    <label class="pakollinen">[[tyoskentelykieli]]</label>
+    <select class="e2e-kieli-select" ng-hide="!muokkausTila" required ng-model="jasen.henkilo.aidinkieli" ng-options="kieli as i18n.enum['kieli-arvo'][kieli] for kieli in ['fi', 'sv', '2k']">
+      <option value="" ng-bind="i18n.yleiset.valitse"></option>
+    </select>
     <p ng-hide="muokkausTila"><enum-arvo nimi="kieli" arvo="jasen.henkilo.aidinkieli"></enum-arvo></p>
   </fieldset>
   <fieldset>
