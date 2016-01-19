@@ -101,6 +101,6 @@
 
 (defn hae-jarjesto
   [jarjestoid]
-  (select-unique :jarjesto
+  (select-unique-or-nil :jarjesto
     (sql/fields :jarjestoid :nimi_fi :nimi_sv)
     (sql/where {:jarjestoid jarjestoid})))
