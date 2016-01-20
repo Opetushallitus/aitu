@@ -34,7 +34,7 @@
          (is (true? (:voimassaolo-taydennetty (taydenna-toimikunta toimikunta)))))
        (testing
          "piilottaa salaiset tiedot jäsenyyksissä"
-         (is (= :jasenyys (:salaiset-piilotettu-kentassa (taydenna-toimikunta toimikunta))))))
-     (testing
-       "ei muuta nil-arvoa"
-       (is (nil? (taydenna-toimikunta nil)))))))
+         (is (= :jasenyys (:salaiset-piilotettu-kentassa (taydenna-toimikunta toimikunta)))))))))
+;     (testing
+;       "ei muuta nil-arvoa"
+;       (is (nil? (taydenna-toimikunta nil)))))))

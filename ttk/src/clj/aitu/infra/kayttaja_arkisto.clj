@@ -26,9 +26,11 @@
 
 (defn kayttaja-liitetty-henkiloon?
   [henkiloid oid]
-  (= oid (:kayttaja_oid (select-unique-or-nil taulut/henkilo
-                          (sql/where {:henkiloid henkiloid})
-                          (sql/fields :kayttaja_oid)))))
+  (and 
+    (not (nil? oid))
+    (= oid (:kayttaja_oid (select-unique-or-nil taulut/henkilo
+                            (sql/where {:henkiloid henkiloid})
+                            (sql/fields :kayttaja_oid))))))
 
 (defn kayttaja-liitetty-johonkin-henkiloon?
   [oid]

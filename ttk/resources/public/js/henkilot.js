@@ -51,6 +51,12 @@ angular.module('henkilot', ['ngRoute', 'services', 'crud', 'resources', 'toimiku
         method: 'PUT',
         id:"henkilon-tietojen-muokkaus",
         i18n : 'henkilo'
+      },
+      save: {
+        method: 'POST',
+        id: 'henkilon-luonti',
+        i18n: 'henkilo',
+        url: ophBaseUrl + '/api/henkilo'
       }
     });
   }])

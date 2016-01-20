@@ -35,6 +35,7 @@
             [oph.common.util.util :refer [->vector]]
             [clojure.string :as s]))
 
+; TODO: miksi some? milloin saa olla nil?
 (defn salli-toimikunnan-paivitys? [diaarinumero]
   (some->
     (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero))

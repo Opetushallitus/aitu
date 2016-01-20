@@ -18,6 +18,11 @@ angular.module('kayttooikeudet', ['ngResource'])
     paivitaOikeudet();
 
     apiCallInterceptor.asetaVastausCallback('sopimuksen-luonti', paivitaOikeudet);
+    apiCallInterceptor.asetaVastausCallback('henkilon-luonti', paivitaOikeudet);
+    apiCallInterceptor.asetaVastausCallback('uusi-henkilo', paivitaOikeudet);
+    
+    // TODO: jäsenesityksissä päivitys myös
+    // apiCallInterceptor.asetaVastausCallback('', paivitaOikeudet);
 
     return {
       hae : function() {

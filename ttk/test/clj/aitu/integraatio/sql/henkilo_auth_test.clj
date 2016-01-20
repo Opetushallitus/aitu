@@ -12,7 +12,7 @@
 (defn lisaa-testidata! []
   (lisaa-henkilo! {:henkiloid -1})
   (lisaa-henkilo! {:henkiloid -2})
-  (lisaa-henkilo! {:henkiloid -3})
+  (lisaa-henkilo! {:henkiloid -3 :kayttaja_oid testikayttaja-oid})
   (lisaa-henkilo! {:henkiloid -4})
   (lisaa-toimikunta! {:tkunta "T12345"})
   (lisaa-jasen! {:toimikunta "T12345", :henkiloid -1})
@@ -27,11 +27,13 @@
    (kayttaja-auth-map (toimikunnan-jasenyys "T12345" "sihteeri")))
   ([jasenyys]
   {:henkiloid -3
+   :oid testikayttaja-oid
    :roolitunnus (:kayttaja kayttajaroolit)
    :toimikunta #{jasenyys}}))
 
+; {:henkiloid henkiloid, :kayttaja (:oid kayttaja)}
 (defn autorisoi-henkilon-paivitys [henkiloid]
-  (cu/autorisoi :henkilo_paivitys {:henkiloid henkiloid} true))
+  (cu/autorisoi :henkilo_paivitys {:henkiloid henkiloid :kayttaja testikayttaja-oid} true))
 
 (defn henkilon-paivitys-onnistuu [henkiloid]
   (is (autorisoi-henkilon-paivitys henkiloid)))
@@ -74,10 +76,10 @@
     (with-user-rights
       oph-katselija-auth-map
       #(henkilon-paivitys-ei-onnistu -2)))
-  (testing "Saman toimikunnan muokkausjäsen voi päivittää henkilön tietoja"
-    (with-user-rights
-      (kayttaja-auth-map)
-      #(henkilon-paivitys-onnistuu -1)))
+;  (testing "Saman toimikunnan muokkausjäsen voi päivittää henkilön tietoja"
+;    (with-user-rights
+;      (kayttaja-auth-map)
+;      #(henkilon-paivitys-onnistuu -1)))
   (testing "Käyttäjä voi päivittää omia tietojaan"
     (with-user-rights
       (kayttaja-auth-map)

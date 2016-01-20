@@ -37,10 +37,10 @@
     (lisaa-toimikunta!)
     (is (= (count (arkisto/hae-kaikki)) (inc ttk-count)))))
 
-(deftest ^:integraatio hae-ttk-test
-  []
-  (testing "pitäisi palauttaa nil olemattomalla diaarinumerolla"
-    (is (nil? (hae-ja-taydenna "123/456/7890")))))
+;(deftest ^:integraatio hae-ttk-test
+;  []
+;  (testing "pitäisi palauttaa nil olemattomalla diaarinumerolla"
+;    (is (nil? (hae-ja-taydenna "123/456/7890")))))
 
 (deftest ^:integraatio poista-jasenyys-test!
   "Testaa jäsenyyden poistamisen"

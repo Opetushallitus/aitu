@@ -35,13 +35,18 @@
 
 (defn henkilon-validointisaannot
   ([]
-    (henkilon-validointisaannot nil nil))
-  ([henkiloid kayttaja-oid]
     [[:etunimi present? :pakollinen]
      [:sukunimi present? :pakollinen]
-     [:postinumero (max-length 5) :liian-pitka]
-     [:kayttaja_oid #(or (kayttaja-arkisto/kayttaja-liitetty-henkiloon? henkiloid %)
-                         (not (kayttaja-arkisto/kayttaja-liitetty-johonkin-henkiloon? %))) [:kayttaja-kaytossa (henkilon-nimi (kayttaja-arkisto/hae-kayttajaan-liitetty-henkilo kayttaja-oid))]]]))
+     [:postinumero (max-length 5) :liian-pitka]])
+  ([henkiloid kayttaja-oid]
+    (conj (henkilon-validointisaannot)
+     ; TODO: mitä tapahtuu jos annetaan parametreina nil ja nil?
+     [:kayttaja_oid #(or (kayttaja-arkisto/kayttaja-liitetty-henkiloon? henkiloid %) ; käyttäjä liitetty tähän henkilöön
+                       (not (kayttaja-arkisto/kayttaja-liitetty-johonkin-henkiloon? %))) ; tai ei mihinkään henkilöön
+      ; validointiviesti
+      [:kayttaja-kaytossa (henkilon-nimi 
+                            (when kayttaja-oid
+                              (kayttaja-arkisto/hae-kayttajaan-liitetty-henkilo kayttaja-oid)))]])))
 
 (defn rajaa-henkilon-kentat [henkilo]
   (-> henkilo
@@ -53,7 +58,9 @@
   [henkilo]
   (if (kayttajaoikeudet/yllapitaja?)
     henkilo
-    (henkilo/poista-salaiset-henkilolta henkilo)))
+    (if (seq? henkilo)
+      (henkilo/piilota-salaiset-henkiloilta henkilo)
+      (henkilo/poista-salaiset-henkilolta henkilo))))
 
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])

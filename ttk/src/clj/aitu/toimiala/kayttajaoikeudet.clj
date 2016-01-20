@@ -74,12 +74,6 @@
   (and (= (:henkiloid *current-user-authmap*) henkiloid)
        (kayttaja-arkisto/kayttaja-liitetty-henkiloon? (int-arvo henkiloid) kayttaja-oid)))
 
-;TODO: ei ole hyvä näin. Parempi arkisto/hae-jarjesto jne .
-(defn henkilolla-voimassaolevia-jasenyyksia?
-  [henkiloid]
-  (let [henkilon-toimikunnat (filter jasenyys-voimassa? (ttk-arkisto/hae-toimikuntien-jasenyydet henkiloid))]
-    (empty? henkilon-toimikunnat)))
-
 (defn henkilon-muokkausoikeus-toimikunnan-kautta?
   [kayttaja-map henkiloid kayttaja-oid]
   (let [henkilon-toimikunnat (filter jasenyys-voimassa? (ttk-arkisto/hae-toimikuntien-jasenyydet henkiloid))]
@@ -190,12 +184,22 @@
 (def toimikuntatoiminnot
   `{:sopimus_lisays  #(or (yllapitaja?) (toimikunnan-muokkausoikeus? %))})
 
+(defn hae-muokattavat-jasenesitys []
+  (when (:jarjesto *current-user-authmap*)
+    (seq (henkilo-arkisto/hae-jarjeston-esitetyt-henkilot (:jarjesto *current-user-authmap*)))))
+
+(defn saako-muokata-jasenesitys? [henkiloid x]
+  (let [henkilot (flatten (hae-muokattavat-jasenesitys))]
+    (true? (some #(= henkiloid (:henkiloid %)) henkilot))))
+ 
+; käyttäjätunnus joka annetaan parametrina ei ole "current user" vaan käyttäjä johon henkilö assosioituu
+; tavallinen käyttäjä ei saa assosioida uudelleen henkilöä johonkin toiseen käyttäjätunnukseen.
 (def henkilotoiminnot
   `{:henkilo_paivitys #(or (yllapitaja?)
                            (omien-tietojen-muokkausoikeus? *current-user-authmap* (:henkiloid %) (:kayttaja %))
                            (henkilon-muokkausoikeus-toimikunnan-kautta? *current-user-authmap* (int-arvo (:henkiloid %)) (:kayttaja %))
-)})                           
-;                           (not (henkilolla-voimassaolevia-jasenyyksia? (int-arvo (:henkiloid %)))))})
+                           (saako-muokata-jasenesitys? (int-arvo (:henkiloid %)) (:kayttaja %))
+)})
 
 (def toiminnot (conj yllapitotoiminnot kayttajatoiminnot toimikuntatoiminnot sopimustoiminnot henkilotoiminnot))
 
@@ -222,7 +226,11 @@
   (let [kayttajan-toimikunnat (filter jasenyys-voimassa? (:toimikunta kayttajan-tiedot))
         toimikunnat-joihin-muokkausrooli (filter #(some toimikunnan-muokkaus-roolit [(:rooli %)]) kayttajan-toimikunnat)
         muokattaviin-toimikuntiin-kuuluvat-henkilot (filter jasenyys-voimassa? (ttk-arkisto/hae-toimikuntien-henkilot (map :tkunta toimikunnat-joihin-muokkausrooli)))
-        kaikki-muokattavat-henkilot (distinct (conj muokattaviin-toimikuntiin-kuuluvat-henkilot (select-keys kayttajan-tiedot [:henkiloid])))]
+        jasenesitetyt-henkilot (hae-muokattavat-jasenesitys)
+        kaikki-muokattavat-henkilot (distinct 
+                                      (flatten (conj muokattaviin-toimikuntiin-kuuluvat-henkilot 
+                                                 (select-keys kayttajan-tiedot [:henkiloid])
+                                                 jasenesitetyt-henkilot)))]
     (-> kayttajan-tiedot
         (assoc :henkilo kaikki-muokattavat-henkilot)
         (update-in [:henkilo] lisaa-kayttajan-oikeudet henkilo-oikeudet henkilotoiminnot :henkiloid))))

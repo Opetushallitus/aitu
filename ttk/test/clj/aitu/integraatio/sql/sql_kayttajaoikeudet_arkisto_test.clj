@@ -15,6 +15,8 @@
 (ns aitu.integraatio.sql.sql-kayttajaoikeudet-arkisto-test
   (:require [clojure.test :refer [deftest testing is are use-fixtures]]
             [aitu.infra.kayttajaoikeudet-arkisto :as arkisto :refer :all]
+            [aitu.toimiala.kayttajaoikeudet :as ko :refer :all]
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aitu.test-timeutil :refer [vuoden-kuluttua]]
             [aitu.integraatio.sql.test-data-util :refer :all]
             [korma.core :as sql]
@@ -53,3 +55,19 @@
     (let [jasenyys-map (arkisto/hae-jasenyys-ja-sopimukset testikayttaja-oid)
           jasen-toimikunnat (set (filter #(not (nil? %)) (map :tkunta (:jasenyys jasenyys-map))))]
       (is (= jasen-toimikunnat (set ["T12345" "T11111"]))))))
+
+;kayttaja-tiedot  {:oid OID.T-9999, :kayttajan_nimi Jäsen Järjestö, :henkiloid -1000, :roolitunnus JARJESTO, :toimikunta (), :jarjesto -1, :jarjestamissopimus ()}  .. 
+;((-1000) {:henkiloid -1000})  jea jea
+; (({:henkiloid -1000}) {:henkiloid -1000}) 
+(deftest ^:integraatio kayttajaoikeudet-jasenesitys-test
+  (binding [*current-user-authmap* 
+            {:oid "OID.T-9999"
+             :henkiloid "-1000"
+             :jarjesto -1
+             :roolitunnus (:jarjesto kayttajaroolit)}]
+    (let [oikeudet (arkisto/hae-oikeudet)]
+      
+    (println "muokattavat jäsenesitys: " (hae-muokattavat-jasenesitys)))))
+;    (println "liitetyt: " (liita-kayttajan-henkilo-oikeudet 
+    
+  
