@@ -17,29 +17,20 @@
               [aitu.toimiala.henkilo :refer :all]
               [aitu.integraatio.sql.test-data-util :refer [default-henkilo]]))
 
-; tarpeeton testi
-;(deftest piilota-salaiset-henkiloilta-yllapitaja-test
-;  (testing "Testataan kenttien säilyminen ylläpitäjä tason käyttäjällä"
-;    (let [henkilo (assoc default-henkilo :sahkoposti_julkinen true)]
-;      (with-redefs [aitu.toimiala.kayttajaoikeudet/yllapitaja? (constantly true)]
-;        (is (= [henkilo henkilo] (piilota-salaiset-henkiloilta [henkilo henkilo])))))))
-
 (deftest piilota-salaiset-henkiloilta-kayttaja-test
   (testing "Testataan kenttien poistuminen normaalilla käyttäjällä"
     (let [henkilo (assoc default-henkilo :sahkoposti_julkinen true)]
-      (with-redefs [aitu.toimiala.kayttajaoikeudet/yllapitaja? (constantly false)]
-        (let [rajoitettu-henkilo (dissoc henkilo :osoite :postinumero :postitoimipaikka :puhelin :lisatiedot)]
-          (is (= [rajoitettu-henkilo rajoitettu-henkilo]
-                 (piilota-salaiset-henkiloilta [henkilo henkilo]))))))))
+      (let [rajoitettu-henkilo (dissoc henkilo :osoite :postinumero :postitoimipaikka :puhelin :lisatiedot)]
+        (is (= [rajoitettu-henkilo rajoitettu-henkilo]
+               (piilota-salaiset-henkiloilta [henkilo henkilo])))))))
 
 (deftest piilota-salaiset-avaimelta-kayttaja-test
   (testing "Testataan kenttien poistuminen normaalilla käyttäjällä sisemmältä avaimelta"
     (let [henkilo (assoc default-henkilo :sahkoposti_julkinen true)
           avainrakenne {:jasenyys [henkilo henkilo]}]
-      (with-redefs [aitu.toimiala.kayttajaoikeudet/yllapitaja? (constantly false)]
-        (let [rajoitettu-henkilo (dissoc henkilo :osoite :postinumero :postitoimipaikka :puhelin :lisatiedot)]
-          (is (= [rajoitettu-henkilo rajoitettu-henkilo]
-                 (:jasenyys (piilota-salaiset avainrakenne :jasenyys)))))))))
+      (let [rajoitettu-henkilo (dissoc henkilo :osoite :postinumero :postitoimipaikka :puhelin :lisatiedot)]
+        (is (= [rajoitettu-henkilo rajoitettu-henkilo]
+               (:jasenyys (piilota-salaiset avainrakenne :jasenyys))))))))
 
 (deftest poista-salaiset-henkilolta-ei-sahkopostia-test
   (testing "Testataan kenttien poistaminen käyttäjällä"
