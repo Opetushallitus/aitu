@@ -116,12 +116,16 @@
     <kokemusvuodet arvo="jasen.henkilo.kokemusvuodet" muokattavissa="muokkausTila"></kokemusvuodet>
   </fieldset>
 </section>
+
+
 <section class="info-section">
-  <fieldset class="lisatiedot">
-    <label>[[lisatiedot]]</label>
-    <p ng-hide="muokkausTila" ng-repeat="rivi in (jasen.henkilo.lisatiedot | rivit)">{{rivi}}</p>
-    <textarea ng-hide="!muokkausTila" ng-model="jasen.henkilo.lisatiedot"></textarea>
-  </fieldset>
+  <auth-toiminto auth-blokki sallitut-roolit="['YLLAPITAJA']">
+    <fieldset class="lisatiedot">
+      <label>[[lisatiedot]]</label>
+      <p ng-hide="muokkausTila" ng-repeat="rivi in (jasen.henkilo.lisatiedot | rivit)">{{rivi}}</p>
+      <textarea ng-hide="!muokkausTila" ng-model="jasen.henkilo.lisatiedot"></textarea>
+    </fieldset>
+  </auth-toiminto>
 </section>
 
 [[/i18n.yleiset]]

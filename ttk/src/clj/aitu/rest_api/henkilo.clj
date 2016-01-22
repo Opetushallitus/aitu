@@ -72,14 +72,23 @@
                                          henkilokenttien-jarjestys)
                            "henkilot.csv")))
 
+(defn tarkista-paivitettavat-kentat
+  "Tarkistaa että järjestö-käyttäjä ei yritä päivittää kenttiä, joiden käsittely ei ole sallittua"
+  [henkilodto]
+  (when (= (:roolitunnus kayttajaoikeudet/*current-user-authmap*) "JARJESTO")
+    (cond 
+      (:kayttaja_oid henkilodto)
+        (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi asettaa kayttaja_oid-tietoa"))
+      (:lisatiedot henkilodto)
+        (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi käsitellä lisätieto-kenttää")))))
+    
+
 (defroutes* reitit
   (POST* "/" [& henkilodto]
     :kayttooikeus :henkilo_lisays
     (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
       (s/validate skeema/HenkilonTiedot henkilodto)
-      (if (and (= (:roolitunnus kayttajaoikeudet/*current-user-authmap*) "JARJESTO")
-               (:kayttaja_oid henkilodto))
-        (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi asettaa kayttaja_oid-tietoa")))
+      (tarkista-paivitettavat-kentat henkilodto)
       (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
         (json-response uusi-henkilo))))
 
@@ -148,5 +157,6 @@
                         :kokemusvuodet kokemusvuodet}]
         (validoi henkilodto (henkilon-validointisaannot id kayttaja-oid) ((i18n/tekstit) :validointi)
           (s/validate skeema/Henkilo henkilodto)
+          (tarkista-paivitettavat-kentat henkilodto)
           (arkisto/paivita! henkilodto)
           (json-response henkilodto)))))

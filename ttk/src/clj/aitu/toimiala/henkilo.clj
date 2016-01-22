@@ -20,13 +20,15 @@
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto])
   (:import org.joda.time.DateTime))
 
+(def ei-julkiset-kentat [:lisatiedot :syntymavuosi])
+
 (defn poista-salaiset-henkilolta
   "Poistaa yhden henkilön ei julkisiksi määritellyt kentät"
   [henkilo]
-  (cond-> henkilo
-    (not (:puhelin_julkinen henkilo)) (dissoc :puhelin)
-    (not (:osoite_julkinen henkilo)) (dissoc :osoite :postinumero :postitoimipaikka)
-    true (dissoc :lisatiedot :syntymavuosi)))
+  (let [yhteystiedot (cond-> henkilo
+                       (not (:puhelin_julkinen henkilo)) (dissoc :puhelin)
+                       (not (:osoite_julkinen henkilo)) (dissoc :osoite :postinumero :postitoimipaikka))]
+    (apply dissoc yhteystiedot ei-julkiset-kentat)))
 
 (defn piilota-salaiset-henkiloilta
   "Tyhjentää salaiseksi määritellyt kentät henkilöiltä"
