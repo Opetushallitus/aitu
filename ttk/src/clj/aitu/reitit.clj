@@ -89,13 +89,14 @@
     (c/routes)))
 
 (defn reitit [asetukset]
-  (api
-    (let [base-url (get-in asetukset [:server :base-url])]
-      (swagger-ui "/api-docs" :swagger-docs (str (service-path base-url) "/swagger.json")))
+  (let [base-url (get-in asetukset [:server :base-url])]
+    (api
+      (swagger-ui "/api-docs" :swagger-docs (str (service-path base-url) "/swagger.json"))
 
-    (swagger-docs
-      {:info {:title "AITU API"
-              :description "AITUn rajapinnat. Sisältää sekä integraatiorajapinnat muihin järjestelmiin, että Aitun sisäiseen käyttöön tarkoitetut rajapinnat."}})
+      (swagger-docs
+        {:basePath  (str (service-path base-url))
+         :info {:title "AITU API"
+                :description "AITUn rajapinnat. Sisältää sekä integraatiorajapinnat muihin järjestelmiin, että Aitun sisäiseen käyttöön tarkoitetut rajapinnat."}})
     (context* "/api/ttk"  [] aitu.rest-api.ttk/raportti-reitit) 
     (context* "/api/ttk" [] aitu.rest-api.ttk/paatos-reitit)
     (context* "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
@@ -160,4 +161,4 @@
                                            (assoc-in [:ldap-auth-server :password] "*****")
                                            pprint))
                             :build-id @build-id)))
-    (r/not-found "Not found")))
+    (r/not-found "Not found"))))
