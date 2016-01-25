@@ -82,8 +82,21 @@
   [jarjestoid]  
   (sql/select :henkilo
     (sql/fields :henkiloid)
-    (sql/where (and {:jarjesto jarjestoid}
-                 (sql/raw "(not exists (select 42 from jasenyys j where j.henkiloid = henkilo.henkiloid and j.status='nimitetty'))")))))
+    (sql/where 
+      (and
+        (or 
+          {:henkilo.jarjesto jarjestoid}
+          {:henkilo.jarjesto [in (sql/subselect :jarjesto
+                                  (sql/fields :jarjestoid)
+                                  (sql/where {:keskusjarjestoid jarjestoid}))]})
+        (sql/raw "(not exists (select 42 from jasenyys j where j.henkiloid = henkilo.henkiloid and j.status='nimitetty'))")))))
+
+;  (some->
+;    (hae-henkilo-jarjestolla kayttajan-jarjesto)
+;    (sql/with jasenyys
+;      (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
+;    (sql/where {:henkiloid id})
+;    sql/exec
 
 (defn yhdista-henkilot-ja-jasenyydet
   [henkilot jasenyydet]

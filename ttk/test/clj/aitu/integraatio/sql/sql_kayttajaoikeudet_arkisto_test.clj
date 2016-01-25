@@ -66,3 +66,5 @@
     (let [oikeudet (arkisto/hae-oikeudet)]
       (is (= #{{:henkiloid -1000} {:henkiloid -1001}}
             (set (hae-muokattavat-jasenesitys)))))))
+ 
+
