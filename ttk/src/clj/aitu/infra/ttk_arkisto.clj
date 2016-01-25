@@ -23,6 +23,7 @@
             [aitu.auditlog :as auditlog]
             [clojure.set :refer [rename-keys]]
             [oph.common.util.util :refer :all]
+            [oph.korma.common :as sql-util]
             [clojure.string :refer [blank? split]]
             [clojure-csv.core :refer [write-csv]])
   (:use [aitu.integraatio.sql.korma]))
@@ -137,8 +138,8 @@
 (defn hae
   "Hakee toimikunnan diaarinumeron perusteella"
   [diaarinumero]
-  (let [toimikunta (first
-                     (sql/select
+  (let [toimikunta ; (sql-util/select-unique
+        (first (sql/select 
                        tutkintotoimikunta
                        (sql/fields :tkunta :diaarinumero :nimi_fi :nimi_sv :sahkoposti :kielisyys
                                    :tilikoodi :toimiala :toimikausi_alku :toimikausi_loppu
@@ -204,7 +205,7 @@
   [diaarinumero, ttk :- skeema/ToimikunnanTiedot]
   (auditlog/tutkintotoimikunta-operaatio! :paivitys (:tkunta ttk) diaarinumero)
   (let [ttk-ro (dissoc ttk :tilikoodi)]
-    (sql/update tutkintotoimikunta
+    (sql-util/update-unique tutkintotoimikunta
       (sql/set-fields ttk-ro)
       (sql/where {:diaarinumero diaarinumero}))))
 
@@ -223,7 +224,7 @@
 (defn ^:test-api poista!
   "Poistaa toimikunnan"
   [tkunta]
-  (sql/delete tutkintotoimikunta
+  (sql-util/delete-unique tutkintotoimikunta
     (sql/where {:tkunta tkunta})))
 
 (defn lisaa-jasen!
@@ -241,22 +242,20 @@
 (defn hae-jasen
   "Hakee toimikunnan jäsenen jasenyysid:n perusteella"
   [jasenyysid]
-  (first
-    (sql/select jasenyys
-      (sql/where {:jasenyys_id jasenyysid}))))
+  (sql-util/select-unique jasenyys (sql/where {:jasenyys_id jasenyysid})))
 
 (defn hae-jasen-ja-henkilo
   "Hakee toimikunnan jäsenen henkilötietoineen jasenyysid:n perusteella"
   [jasenyysid]
-  (first
-    (sql/select jasenyys
-      (sql/fields :alkupvm :loppupvm :rooli :edustus :jasenyys_id :henkiloid)
-      (sql/with henkilo
-        (sql/fields :etunimi :sukunimi :sahkoposti :sahkoposti_julkinen :aidinkieli)
-        (sql/with jarjesto
-          (sql/fields [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv])))
-      (sql/where {:jasenyys_id jasenyysid}))))
+  (sql-util/select-unique jasenyys
+    (sql/fields :alkupvm :loppupvm :rooli :edustus :jasenyys_id :henkiloid)
+    (sql/with henkilo
+      (sql/fields :etunimi :sukunimi :sahkoposti :sahkoposti_julkinen :aidinkieli)
+      (sql/with jarjesto
+        (sql/fields [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv])))
+    (sql/where {:jasenyys_id jasenyysid})))
 
+; TODO primary key on pelkkä jäsenyysid
 (defn ^:private poista-jasenyys!
   [tkunta jasenyys_id]
   (auditlog/jasenyys-operaatio! :poisto tkunta jasenyys_id)
@@ -266,10 +265,9 @@
 (defn ^:private paivita-jasenyys!
   [tkunta jasen]
   (auditlog/jasenyys-operaatio! :paivitys tkunta (:jasenyys_id jasen))
-  (sql/update jasenyys
+  (sql-util/update-unique jasenyys
     (sql/set-fields jasen)
-    (sql/where {:toimikunta tkunta
-                :jasenyys_id (:jasenyys_id jasen)})))
+    (sql/where {:jasenyys_id (:jasenyys_id jasen)})))
 
 (defn paivita-tai-poista-jasenyys!
   "Päivittää tai poistaa jäsenyyden tiedot"

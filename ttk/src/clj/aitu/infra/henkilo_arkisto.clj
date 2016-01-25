@@ -19,6 +19,7 @@
             [aitu.toimiala.henkilo :refer :all]
             [aitu.toimiala.skeema :refer [HenkiloTaiTiedot Henkilo]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
+            [oph.korma.common :as sql-util]
             [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
             [aitu.auditlog :as auditlog]
             [clojure.string :refer [blank?]])
@@ -84,7 +85,7 @@
                  {:henkilo.jarjesto [in (sql/subselect :jarjesto
                                           (sql/fields :jarjestoid)
                                           (sql/where {:keskusjarjestoid jarjestoid}))]})))
-      
+
 (defn hae-jarjeston-esitetyt-henkilot
   [jarjestoid]  
   (sql/select :henkilo
@@ -134,10 +135,8 @@
 (defn hae
   "Hakee henkilön id:n perusteella"
   [id]
-  (->
-    (sql/select henkilo
-      (sql/where {:henkiloid id}))
-    first))
+  (sql-util/select-unique-or-nil henkilo
+      (sql/where {:henkiloid id})))
 
 (defn ^:private eriyta-jarjesto
   "Eriyttää henkilön järjestötiedon omaan mappiin"
@@ -155,7 +154,7 @@
       (sql/with keskusjarjesto
         (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
     (cond->
-      (some? kayttajan-jarjesto)                                           (select-rajaa-jarjestolla kayttajan-jarjesto))))
+      (some? kayttajan-jarjesto) (select-rajaa-jarjestolla kayttajan-jarjesto))))
 
 (defn hae-hlo-ja-ttk
   "Hakee henkilön ja toimikuntien jäsenyystiedot id:n perusteella"
@@ -174,14 +173,14 @@
   "Päivittää henkilön tiedot"
   [paivitettava-henkilo :- Henkilo]
   (auditlog/henkilo-operaatio! :paivitys (:henkiloid paivitettava-henkilo))
-  (sql/update henkilo
+  (sql-util/update-unique henkilo
     (sql/set-fields paivitettava-henkilo)
     (sql/where {:henkiloid (:henkiloid paivitettava-henkilo)})))
 
 (defn ^:test-api poista!
   "Poistaa henkilön tiedot"
   [id]
-  (sql/delete henkilo
+  (sql-util/delete-unique henkilo
     (sql/where {:henkiloid id})))
 
 (defn hae-hlo-nimella
