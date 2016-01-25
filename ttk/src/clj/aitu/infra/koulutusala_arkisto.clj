@@ -15,7 +15,7 @@
 (ns aitu.infra.koulutusala-arkisto
   (:require [korma.core :as sql]
             korma.db
-            [aitu.integraatio.sql.koulutusala :as kaytava]
+            [oph.korma.common :as sql-util]
             [aitu.toimiala.koulutusala :as domain])
   (:use [aitu.integraatio.sql.korma]))
 
@@ -65,6 +65,8 @@
                                     (assoc koulutusala :opintoalat opintoalat)))))
 
 (defn hae
-  "Hakee koulutusalan koodin perusteella"
+  "Hakee koulutusala-taulun rivin koodin perusteella"
   [koodi]
-  (kaytava/hae koodi))
+  (sql-util/select-unique koulutusala
+    (sql/where {:koulutusala_tkkoodi koodi})))
+ 
