@@ -14,7 +14,7 @@
 
 (ns aitu.infra.opintoala-arkisto
   (:require [aitu.infra.koulutusala-arkisto :as koulutusala-arkisto]
-            [aitu.integraatio.sql.opintoala :as opintoala-kaytava]
+            [oph.korma.common :as sql-util]
             [aitu.toimiala.opintoala :as domain]
             [korma.core :as sql])
   (:use [aitu.integraatio.sql.korma]))
@@ -49,13 +49,20 @@
   []
   (sql/select opintoala))
 
+
+(defn ^:private hae-opintoala
+  "Hakee opintoala-taulun rivin koodin perusteella"
+  [koodi]
+  (sql-util/select-unique-or-nil opintoala
+    (sql/where {:opintoala_tkkoodi koodi})))
+
 (defn hae
   "Hakee opintoalan koodin perusteella"
   [koodi]
-  (let [opintoala (opintoala-kaytava/hae koodi)
+  (let [opintoala (hae-opintoala koodi)
         koulutusala (koulutusala-arkisto/hae (:koulutusala_tkkoodi opintoala))]
     (some-> opintoala
-            (assoc :koulutusala koulutusala))))
+      (assoc :koulutusala koulutusala))))
 
 (defn hae-termilla
   "Hakee opintoalat joiden nimestä löytyy annettu termi"

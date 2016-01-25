@@ -67,6 +67,6 @@
 (defn hae
   "Hakee koulutusala-taulun rivin koodin perusteella"
   [koodi]
-  (sql-util/select-unique koulutusala
+  (sql-util/select-unique-or-nil koulutusala
     (sql/where {:koulutusala_tkkoodi koodi})))
  

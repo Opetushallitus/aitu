@@ -14,28 +14,27 @@
 
 (ns aitu.infra.tiedote-arkisto
   (:require  [korma.core :as sql]
-             [aitu.auditlog :as auditlog])
+             [aitu.auditlog :as auditlog]
+             [oph.korma.common :as sql-util])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae
   "Hakee tiedotteen."
   [tiedoteid]
-  (first
-    (sql/select tiedote
-      (sql/where {:tiedoteid tiedoteid}))))
-
-(defn poista-ja-lisaa!
-  "Poistaa vanhan tiedotteen ja lisää uuden"
-  [tiedoteid teksti]
-  (auditlog/tiedote-operaatio! :lisays tiedoteid)
-  (sql/delete tiedote
-    (sql/where {:tiedoteid tiedoteid}))
-  (sql/insert tiedote
-    (sql/values (assoc teksti :tiedoteid tiedoteid))))
+  (sql-util/select-unique tiedote
+    (sql/where {:tiedoteid tiedoteid})))
 
 (defn poista!
   "Poistaa tiedotteen."
   [tiedoteid]
   (auditlog/tiedote-operaatio! :poisto tiedoteid)
-  (sql/delete tiedote
+  (sql-util/delete-unique tiedote
     (sql/where {:tiedoteid tiedoteid})))
+
+(defn poista-ja-lisaa!
+  "Poistaa vanhan tiedotteen ja lisää uuden"
+  [tiedoteid teksti]
+  (auditlog/tiedote-operaatio! :lisays tiedoteid)
+  (poista! tiedoteid)
+  (sql/insert tiedote
+    (sql/values (assoc teksti :tiedoteid tiedoteid))))

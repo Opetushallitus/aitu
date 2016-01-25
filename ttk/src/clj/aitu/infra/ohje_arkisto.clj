@@ -14,15 +14,15 @@
 
 (ns aitu.infra.ohje-arkisto
   (:require  [korma.core :as sql]
-             [aitu.auditlog :as auditlog])
+             [aitu.auditlog :as auditlog]
+             [oph.korma.common :as sql-util])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae
   "Hakee ohjeen id:n perusteella."
   [ohjetunniste]
-  (first
-    (sql/select ohje
-      (sql/where {:ohjetunniste ohjetunniste}))))
+  (sql-util/select-unique ohje
+    (sql/where {:ohjetunniste ohjetunniste})))
 
 (defn muokkaa-tai-luo-uusi!
   "Muokkaa ohjetta tai luo uuden jos tunnisteelle ei löydy ohjetta"
