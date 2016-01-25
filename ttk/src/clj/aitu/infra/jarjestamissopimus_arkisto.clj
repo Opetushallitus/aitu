@@ -17,6 +17,7 @@
   (:require  korma.db
              [korma.core :as sql]
              [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists]]
+             [oph.korma.common :as sql-util]
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
@@ -406,7 +407,7 @@
   "Asettaa poistettu flagin järjestämissuunnitelmalle"
   [jarjestamissuunnitelma_id]
   (auditlog/tutkinnon-suunnitelma-operaatio! :poisto jarjestamissuunnitelma_id)
-  (sql/update jarjestamissuunnitelma
+  (sql-util/update-unique jarjestamissuunnitelma
     (sql/set-fields {:poistettu true})
     (sql/where {:jarjestamissuunnitelma_id jarjestamissuunnitelma_id})))
 
@@ -431,43 +432,34 @@
 (defn hae-suunnitelma
   "Hakuu järjestämissuunnitelman"
   [jarjestamissuunnitelma_id]
-  {:post [(not (nil? %))]}
-  (first
-    (sql/select jarjestamissuunnitelma
-      (sql/fields :jarjestamissuunnitelma
-                  :jarjestamissuunnitelma_filename
-                  :jarjestamissuunnitelma_content_type)
-      (sql/where {:jarjestamissuunnitelma_id jarjestamissuunnitelma_id}))))
+  (sql-util/select-unique jarjestamissuunnitelma
+    (sql/fields :jarjestamissuunnitelma
+                :jarjestamissuunnitelma_filename
+                :jarjestamissuunnitelma_content_type)
+    (sql/where {:jarjestamissuunnitelma_id jarjestamissuunnitelma_id})))
 
 (defn hae-jarjestamissopimusid-sopimuksen-tutkinnolle
   "Hakee järjestämissopimusid:n sopimuksen tutkinnolle"
   [sopimus_ja_tutkinto_id]
-  (some-> (sql/select sopimus-ja-tutkinto
-            (sql/where {:sopimus_ja_tutkinto_id sopimus_ja_tutkinto_id}))
-    first
-    :jarjestamissopimusid))
+  (:jarjestamissopimusid (sql-util/select-unique sopimus-ja-tutkinto
+                                   (sql/where {:sopimus_ja_tutkinto_id sopimus_ja_tutkinto_id}))))
 
 (defn hae-jarjestamissopimusid-jarjestamissuunnitelmalle
   "Hakee järjestämissopimusid:n järjestämissuunnitelmalle"
   [jarjestamissuunnitelma_id]
-  (some->
-    (sql/select jarjestamissuunnitelma
-      (sql/fields :sopimus_ja_tutkinto)
-      (sql/where {:jarjestamissuunnitelma_id jarjestamissuunnitelma_id}))
-    first
-    :sopimus_ja_tutkinto
-    hae-jarjestamissopimusid-sopimuksen-tutkinnolle))
+  (hae-jarjestamissopimusid-sopimuksen-tutkinnolle
+    (:sopimus_ja_tutkinto (sql-util/select-unique jarjestamissuunnitelma
+       (sql/fields :sopimus_ja_tutkinto)
+       (sql/where {:jarjestamissuunnitelma_id jarjestamissuunnitelma_id})))))
 
 (defn hae-liite
   "Hakee sopimuksen liitteen"
   [sopimuksen_liite_id]
-  {:post [(not (nil? %))]}
-  (first
-    (sql/select sopimuksen-liite
-      (sql/fields :sopimuksen_liite
-                  :sopimuksen_liite_filename
-                  :sopimuksen_liite_content_type)
-      (sql/where {:sopimuksen_liite_id sopimuksen_liite_id}))))
+  (sql-util/select-unique sopimuksen-liite
+    (sql/fields :sopimuksen_liite
+      :sopimuksen_liite_filename
+      :sopimuksen_liite_content_type)
+    (sql/where {:sopimuksen_liite_id sopimuksen_liite_id})))
 
 (defn lisaa-liite-tutkinnolle!
   "Lisää sopimuksen liitteen tutkinnolle"
@@ -491,27 +483,21 @@
     (sql/set-fields {:poistettu true})
     (sql/where {:sopimuksen_liite_id sopimuksen_liite_id})))
 
-
 (defn hae-jarjestamissopimusid-sopimuksen-liitteelle
   "Hakee järjestämissopimusid:n sopimuksen liitteelle"
   [sopimuksen_liite_id]
-  (some->
-    (sql/select sopimuksen-liite
-      (sql/fields :sopimus_ja_tutkinto)
-      (sql/where {:sopimuksen_liite_id sopimuksen_liite_id}))
-    first
-    :sopimus_ja_tutkinto
-    hae-jarjestamissopimusid-sopimuksen-tutkinnolle))
+  (hae-jarjestamissopimusid-sopimuksen-tutkinnolle
+    (:sopimus_ja_tutkinto
+      (sql-util/select-unique sopimuksen-liite
+        (sql/fields :sopimus_ja_tutkinto)
+        (sql/where {:sopimuksen_liite_id sopimuksen_liite_id})))))
 
 (defn hae-jarjestamissopimuksen-toimikunta
   "Hakee toimikunnan tkunta-tunnisteen järjestämissopimusid:llä"
   [jarjestamissopimusid]
-  (some->
-    (sql/select jarjestamissopimus
-      (sql/fields :toimikunta)
-      (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
-    first
-    :toimikunta))
+  (:toimikunta (sql-util/select-unique jarjestamissopimus
+                 (sql/fields :toimikunta)
+                 (sql/where {:jarjestamissopimusid jarjestamissopimusid}))))
 
 (defn hae-sopimukset-csv
   "Hakee järjestämissopimukset hakuehdoilla"
