@@ -78,25 +78,20 @@
                          {:henkilo.etunimi [ilike nimi]}
                          {:henkilo.sukunimi [ilike nimi]})))))))
 
+(defn ^:private select-rajaa-jarjestolla [q jarjestoid]
+  (sql/where q (or 
+                 {:henkilo.jarjesto jarjestoid}
+                 {:henkilo.jarjesto [in (sql/subselect :jarjesto
+                                          (sql/fields :jarjestoid)
+                                          (sql/where {:keskusjarjestoid jarjestoid}))]})))
+      
 (defn hae-jarjeston-esitetyt-henkilot
   [jarjestoid]  
   (sql/select :henkilo
-    (sql/fields :henkiloid)
-    (sql/where 
-      (and
-        (or 
-          {:henkilo.jarjesto jarjestoid}
-          {:henkilo.jarjesto [in (sql/subselect :jarjesto
-                                  (sql/fields :jarjestoid)
-                                  (sql/where {:keskusjarjestoid jarjestoid}))]})
-        (sql/raw "(not exists (select 42 from jasenyys j where j.henkiloid = henkilo.henkiloid and j.status='nimitetty'))")))))
-
-;  (some->
-;    (hae-henkilo-jarjestolla kayttajan-jarjesto)
-;    (sql/with jasenyys
-;      (sql/fields :alkupvm :loppupvm :muutettuaika :rooli :edustus :toimikunta :status))
-;    (sql/where {:henkiloid id})
-;    sql/exec
+    (sql/fields :henkiloid)    
+    (select-rajaa-jarjestolla jarjestoid)
+    (sql/where (sql/raw "(not exists (select 42 from jasenyys j where j.henkiloid = henkilo.henkiloid and j.status='nimitetty'))"))))
+ 
 
 (defn yhdista-henkilot-ja-jasenyydet
   [henkilot jasenyydet]
@@ -160,10 +155,7 @@
       (sql/with keskusjarjesto
         (sql/fields [:nimi_fi :keskusjarjesto_nimi])))
     (cond->
-      (some? kayttajan-jarjesto) (sql/where (or {:henkilo.jarjesto kayttajan-jarjesto}
-                                                {:henkilo.jarjesto [in (sql/subselect :jarjesto
-                                                                         (sql/fields :jarjestoid)
-                                                                         (sql/where {:keskusjarjestoid kayttajan-jarjesto}))]})))))
+      (some? kayttajan-jarjesto)                                           (select-rajaa-jarjestolla kayttajan-jarjesto))))
 
 (defn hae-hlo-ja-ttk
   "Hakee henkilön ja toimikuntien jäsenyystiedot id:n perusteella"
@@ -209,10 +201,7 @@
                     (sql/modifier "DISTINCT")
                     (sql/fields :etunimi :sukunimi)
                     (cond->
-                      (some? kayttajan-jarjesto) (sql/where (or {:henkilo.jarjesto kayttajan-jarjesto}
-                                                                {:henkilo.jarjesto [in (sql/subselect :jarjesto
-                                                                                         (sql/fields :jarjestoid)
-                                                                                         (sql/where {:keskusjarjestoid kayttajan-jarjesto}))]})))
+                      (some? kayttajan-jarjesto) (select-rajaa-jarjestolla kayttajan-jarjesto))
                     (sql/order :etunimi)
                     (sql/order :sukunimi)
                     sql/exec)
