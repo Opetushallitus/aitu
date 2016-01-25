@@ -15,6 +15,7 @@
 (ns aitu.infra.jarjesto-arkisto
   (:require  korma.db
              [korma.core :as sql]
+             [oph.korma.common :as sql-util]
              [oph.common.util.util :refer [sisaltaako-kentat?]]
              [oph.korma.common :refer [rajaa-kentilla]])
   (:use [aitu.integraatio.sql.korma]))
@@ -40,12 +41,12 @@
 
 (defn ^:test-api poista!
   [jarjestoid]
-  (sql/delete jarjesto
+  (sql-util/delete-unique jarjesto
     (sql/where {:jarjestoid jarjestoid})))
 
 (defn ^:integration-api paivita!
   [data]
-  (sql/update jarjesto
+  (sql-util/update-unique jarjesto
     (sql/set-fields (dissoc data :jarjestoid))
     (sql/where {:jarjestoid (:jarjestoid data)})))
 

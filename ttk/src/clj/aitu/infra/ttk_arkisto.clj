@@ -28,23 +28,23 @@
             [clojure-csv.core :refer [write-csv]])
   (:use [aitu.integraatio.sql.korma]))
 
+; TODO: unique? 
+(defn hae-avaimella
+  "Hakee toimikunnan pääavaimella"
+  [tkunta]
+  (sql-util/select-unique-or-nil tutkintotoimikunta
+      (sql/where {:tkunta tkunta})))
+
 (defn hae-toimikunnan-diaarinumero
   "Hakee toimikunnan diaarinumeron"
   [tkunta]
-  (some-> (sql/select tutkintotoimikunta
-            (sql/fields :diaarinumero)
-            (sql/where {:tkunta tkunta}))
-    first
-    :diaarinumero))
+  (:diaarinumero (hae-avaimella tkunta)))
 
 (defn hae-toimikunnan-tunniste
   "Hakee toimikunnan tkunta tunnisteen diaarinumerolla"
   [diaarinumero]
-  (some-> (sql/select tutkintotoimikunta
-            (sql/fields :tkunta)
-            (sql/where {:diaarinumero diaarinumero}))
-    first
-    :tkunta))
+  (:tkunta (sql-util/select-unique tutkintotoimikunta
+              (sql/where {:diaarinumero diaarinumero}))))
 
 (defn ^:test-api tyhjenna!
   "Tyhjentää arkiston."
