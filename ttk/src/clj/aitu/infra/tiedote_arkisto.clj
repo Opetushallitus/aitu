@@ -28,7 +28,7 @@
   "Poistaa tiedotteen."
   [tiedoteid]
   (auditlog/tiedote-operaatio! :poisto tiedoteid)
-  (sql-util/delete-unique tiedote
+  (sql/delete tiedote
     (sql/where {:tiedoteid tiedoteid})))
 
 (defn poista-ja-lisaa!
