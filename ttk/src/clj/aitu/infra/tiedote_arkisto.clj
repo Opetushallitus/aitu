@@ -21,7 +21,7 @@
 (defn hae
   "Hakee tiedotteen."
   [tiedoteid]
-  (sql-util/select-unique tiedote
+  (sql-util/select-unique-or-nil tiedote
     (sql/where {:tiedoteid tiedoteid})))
 
 (defn poista!
