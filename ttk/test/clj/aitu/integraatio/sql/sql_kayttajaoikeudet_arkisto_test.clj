@@ -56,9 +56,7 @@
           jasen-toimikunnat (set (filter #(not (nil? %)) (map :tkunta (:jasenyys jasenyys-map))))]
       (is (= jasen-toimikunnat (set ["T12345" "T11111"]))))))
 
-;kayttaja-tiedot  {:oid OID.T-9999, :kayttajan_nimi Jäsen Järjestö, :henkiloid -1000, :roolitunnus JARJESTO, :toimikunta (), :jarjesto -1, :jarjestamissopimus ()}  .. 
-;((-1000) {:henkiloid -1000})  jea jea
-; (({:henkiloid -1000}) {:henkiloid -1000}) 
+
 (deftest ^:integraatio kayttajaoikeudet-jasenesitys-test
   (binding [*current-user-authmap* 
             {:oid "OID.T-9999"
@@ -66,8 +64,5 @@
              :jarjesto -1
              :roolitunnus (:jarjesto kayttajaroolit)}]
     (let [oikeudet (arkisto/hae-oikeudet)]
-      
-    (println "muokattavat jäsenesitys: " (hae-muokattavat-jasenesitys)))))
-;    (println "liitetyt: " (liita-kayttajan-henkilo-oikeudet 
-    
-  
+      (is (= #{{:henkiloid -1000} {:henkiloid -1001}}
+            (set (hae-muokattavat-jasenesitys)))))))
