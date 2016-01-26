@@ -14,14 +14,14 @@
 
 (ns aitu.integraatio.sql.toimikunta
   (:require korma.db
-            [korma.core :as sql])
+            [korma.core :as sql]
+            [oph.korma.common :as sql-util])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae
   "Hakee toimikunnan pääavaimella"
   [tkunta]
-  (first
-    (sql/select
-      tutkintotoimikunta
-      (sql/where {:tkunta tkunta}))))
+  (sql-util/select-unique-or-nil
+    tutkintotoimikunta
+    (sql/where {:tkunta tkunta})))
 

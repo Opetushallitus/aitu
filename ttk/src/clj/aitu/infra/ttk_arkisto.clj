@@ -138,25 +138,23 @@
 (defn hae
   "Hakee toimikunnan diaarinumeron perusteella"
   [diaarinumero]
-  (let [toimikunta ; (sql-util/select-unique
-        (first (sql/select 
-                       tutkintotoimikunta
-                       (sql/fields :tkunta :diaarinumero :nimi_fi :nimi_sv :sahkoposti :kielisyys
-                                   :tilikoodi :toimiala :toimikausi_alku :toimikausi_loppu
-                                   :luotu_kayttaja :luotuaika :muutettu_kayttaja :muutettuaika)
-                       (sql/with toimikausi
-                         (sql/fields :alkupvm :loppupvm :voimassa))
-                       (sql/with jasenyys
-                         (sql/fields :alkupvm :loppupvm :rooli :edustus :jasenyys_id :henkiloid :status :nimityspaiva)
-                         (sql/with henkilo
-                           (sql/fields :etunimi :sukunimi :sahkoposti :sahkoposti_julkinen :aidinkieli)
-                           (sql/with jarjesto
-                             (sql/fields [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv]))))
-                       (sql/with nayttotutkinto
-                         (sql/fields :nimi_fi :nimi_sv :tutkintotunnus)
-                         (sql/with opintoala
-                           (sql/fields [:selite_fi :opintoala_nimi_fi] [:selite_sv :opintoala_nimi_sv])))
-                       (sql/where {:diaarinumero diaarinumero})))
+  (let [toimikunta (sql-util/select-unique-or-nil tutkintotoimikunta
+                     (sql/fields :tkunta :diaarinumero :nimi_fi :nimi_sv :sahkoposti :kielisyys
+                                 :tilikoodi :toimiala :toimikausi_alku :toimikausi_loppu
+                                 :luotu_kayttaja :luotuaika :muutettu_kayttaja :muutettuaika)
+                     (sql/with toimikausi
+                       (sql/fields :alkupvm :loppupvm :voimassa))
+                     (sql/with jasenyys
+                       (sql/fields :alkupvm :loppupvm :rooli :edustus :jasenyys_id :henkiloid :status :nimityspaiva)
+                       (sql/with henkilo
+                         (sql/fields :etunimi :sukunimi :sahkoposti :sahkoposti_julkinen :aidinkieli)
+                         (sql/with jarjesto
+                           (sql/fields [:nimi_fi :jarjesto_nimi_fi] [:nimi_sv :jarjesto_nimi_sv]))))
+                     (sql/with nayttotutkinto
+                       (sql/fields :nimi_fi :nimi_sv :tutkintotunnus)
+                       (sql/with opintoala
+                         (sql/fields [:selite_fi :opintoala_nimi_fi] [:selite_sv :opintoala_nimi_sv])))
+                     (sql/where {:diaarinumero diaarinumero}))
         jarjestamissopimukset (sopimus-arkisto/hae-toimikunnan-sopimukset (:tkunta toimikunta))]
     (some-> toimikunta
             (assoc :jarjestamissopimus jarjestamissopimukset)

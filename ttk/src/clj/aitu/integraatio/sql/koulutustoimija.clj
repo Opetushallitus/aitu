@@ -14,18 +14,18 @@
 
 (ns aitu.integraatio.sql.koulutustoimija
   (:require korma.db
-            [korma.core :as sql])
+            [korma.core :as sql]
+            [oph.korma.common :as sql-util])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae
   "Hakee koulutustoimijan y-tunnuksen perusteella"
   [y-tunnus]
-  (first
-    (sql/select
-      koulutustoimija
-      (sql/fields :ytunnus :nimi_fi :nimi_sv
-                  :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
-      (sql/where {:ytunnus y-tunnus}))))
+  (sql-util/select-unique-or-nil
+    koulutustoimija
+    (sql/fields :ytunnus :nimi_fi :nimi_sv
+                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
+    (sql/where {:ytunnus y-tunnus})))
 
 (defn hae-koulutustoimijan-oppilaitokset
   [y-tunnus]

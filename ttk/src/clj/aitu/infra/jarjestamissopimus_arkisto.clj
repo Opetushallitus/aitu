@@ -16,7 +16,7 @@
   (:import org.apache.commons.io.FileUtils)
   (:require  korma.db
              [korma.core :as sql]
-             [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists]]
+             [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists some-value-with]]
              [oph.korma.common :as sql-util]
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
@@ -415,7 +415,7 @@
   "Lisää järjestämissuunnitelman kantaan."
   [jarjestamissopimusid tutkintoversio jarjestamissuunnitelma_content_type jarjestamissuunnitelma_filename]
   (let [sopimus-ja-tutkinto-lista (hae-sopimuksen-tutkinnot jarjestamissopimusid)
-        sopimus-ja-tutkinto (first (filter #(= (:tutkintoversio %) tutkintoversio) sopimus-ja-tutkinto-lista))
+        sopimus-ja-tutkinto (some-value-with :tutkintoversio tutkintoversio sopimus-ja-tutkinto-lista)
         sopimus_ja_tutkinto_id (:sopimus_ja_tutkinto_id sopimus-ja-tutkinto)]
     (sql/insert jarjestamissuunnitelma
       (sql/values {:sopimus_ja_tutkinto sopimus_ja_tutkinto_id

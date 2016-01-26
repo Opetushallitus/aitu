@@ -29,8 +29,8 @@
 Koodin arvo laitetaan arvokentta-avaimen alle."
   [koodi arvokentta]
   (when koodi
-    (let [metadata_fi (first (filter #(= "FI" (:kieli %)) (:metadata koodi)))
-          metadata_sv (first (filter #(= "SV" (:kieli %)) (:metadata koodi)))]
+    (let [metadata_fi (some-value-with :kieli "FI" (:metadata koodi))
+          metadata_sv (some-value-with :kieli "SV" (:metadata koodi))]
       {:nimi_fi (:nimi metadata_fi)
        :nimi_sv (:nimi metadata_sv)
        :kuvaus_fi (:kuvaus metadata_fi)
