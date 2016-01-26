@@ -20,30 +20,30 @@
 
 (deftest ^:integraatio tarkista-puuttuvat-triggerit
   (testing "tarkistetaan että kaikilla omilla tauluilla on ainakin joku update/insert triggeri"
-    (let [flyway-taulu "schema_version"
-          vialliset-taulut 
-          (tietokanta-fixture #(sql/exec-raw
-                                 (str "select table_name from information_schema.tables" 
-                                   " where not exists ("
-                                   " select * from pg_class left outer join pg_trigger on tgrelid=pg_class.oid"
-                                   " where tgtype in(7,19) and relname = table_name) "
-                                   " and table_type='BASE TABLE' and table_schema='public' "
-                                   " and table_name != '" flyway-taulu "'"
-                                   " order by table_name") :results))]
-      (when-not  (empty? vialliset-taulut)
-        (println ".. ehkä haluaisit kirjoittaa jotain tällaista?")
-        (doseq [taulu-map vialliset-taulut]
-          (let [taulu (:table_name taulu-map)]
-            (println (str "alter table " taulu " add column muutettu_kayttaja varchar(80) NOT NULL references kayttaja(oid);"))
-            (println (str "alter table " taulu " add column luotu_kayttaja varchar(80) NOT NULL references kayttaja(oid);"))
-            (println (str "alter table " taulu " add column muutettuaika timestamptz NOT NULL;"))
-            (println (str "alter table " taulu " add column luotuaika timestamptz NOT NULL;"))
-            (println (str "create trigger " taulu "_update before update on " taulu " for each row execute procedure update_stamp() ;"))
-            (println (str "create trigger " taulu "l_insert before insert on " taulu " for each row execute procedure update_created() ;"))
-            (println (str "create trigger " taulu "m_insert before insert on " taulu " for each row execute procedure update_stamp() ;"))
-            (println (str "create trigger " taulu "_mu_update before update on " taulu " for each row execute procedure update_modifier() ;"))
-            (println (str "create trigger " taulu "_mu_insert before insert on " taulu " for each row execute procedure update_modifier() ;"))
-            (println (str "create trigger " taulu "_cu_insert before insert on " taulu " for each row execute procedure update_creator() ;")))))
-      (is (empty? vialliset-taulut) (str "viallisia tauluja! " vialliset-taulut)))))
+    (tietokanta-fixture
+      #(let [flyway-taulu "schema_version"
+            vialliset-taulut (sql/exec-raw
+                               (str "select table_name from information_schema.tables" 
+                                 " where not exists ("
+                                 " select * from pg_class left outer join pg_trigger on tgrelid=pg_class.oid"
+                                 " where tgtype in(7,19) and relname = table_name) "
+                                 " and table_type='BASE TABLE' and table_schema='public' "
+                                 " and table_name != '" flyway-taulu "'"
+                                 " order by table_name") :results)]
+        (when-not  (empty? vialliset-taulut)
+          (println ".. ehkä haluaisit kirjoittaa jotain tällaista?")
+          (doseq [taulu-map vialliset-taulut]
+            (let [taulu (:table_name taulu-map)]
+              (println (str "alter table " taulu " add column muutettu_kayttaja varchar(80) NOT NULL references kayttaja(oid);"))
+              (println (str "alter table " taulu " add column luotu_kayttaja varchar(80) NOT NULL references kayttaja(oid);"))
+              (println (str "alter table " taulu " add column muutettuaika timestamptz NOT NULL;"))
+              (println (str "alter table " taulu " add column luotuaika timestamptz NOT NULL;"))
+              (println (str "create trigger " taulu "_update before update on " taulu " for each row execute procedure update_stamp() ;"))
+              (println (str "create trigger " taulu "l_insert before insert on " taulu " for each row execute procedure update_created() ;"))
+              (println (str "create trigger " taulu "m_insert before insert on " taulu " for each row execute procedure update_stamp() ;"))
+              (println (str "create trigger " taulu "_mu_update before update on " taulu " for each row execute procedure update_modifier() ;"))
+              (println (str "create trigger " taulu "_mu_insert before insert on " taulu " for each row execute procedure update_modifier() ;"))
+              (println (str "create trigger " taulu "_cu_insert before insert on " taulu " for each row execute procedure update_creator() ;")))))
+        (is (empty? vialliset-taulut) (str "viallisia tauluja! " vialliset-taulut))))))
 
    
