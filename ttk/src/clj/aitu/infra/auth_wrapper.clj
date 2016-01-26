@@ -12,6 +12,8 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
+; Deprecated. Oikeampi tapa on Aipalissa, kts. aipal.infra.kayttaja.middleware
+
 (ns aitu.infra.auth-wrapper
   "Authentication middleware. Sitoo käyttäjätunnuksen requestille ennen kuin tietokantayhteys on avattu."
   (:require [ring.util.response :refer [redirect]]
