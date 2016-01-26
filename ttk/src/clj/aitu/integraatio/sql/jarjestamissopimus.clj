@@ -14,8 +14,7 @@
 
 (ns aitu.integraatio.sql.jarjestamissopimus
   (:require korma.db
-            [korma.core :as sql]
-            [oph.korma.common :as sql-util])
+            [korma.core :as sql])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn ^:private jarjestamissopimuksen-rajatut-kentat
@@ -33,11 +32,12 @@
 (defn hae
   "Hakee järjestämissopimus-taulun rivin jarjestamissopimusid:n perusteella"
   [jarjestamissopimusid]
-  (sql-util/select-unique-or-nil
-    jarjestamissopimus
-    (jarjestamissopimuksen-kentat)
-    (sql/where {:jarjestamissopimusid jarjestamissopimusid
-                :poistettu false})))
+  (first
+    (sql/select
+      jarjestamissopimus
+      (jarjestamissopimuksen-kentat)
+      (sql/where {:jarjestamissopimusid jarjestamissopimusid
+                  :poistettu false}))))
 
 (defn hae-toimikunnan-sopimukset
   "Hakee toimikuntaan liittyvät järjestämissopimus-taulun rivit"

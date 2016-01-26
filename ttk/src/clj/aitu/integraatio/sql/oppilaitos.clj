@@ -14,18 +14,18 @@
 
 (ns aitu.integraatio.sql.oppilaitos
   (:require korma.db
-            [korma.core :as sql]
-            [oph.korma.common :as sql-util])
+            [korma.core :as sql])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae
   "Hakee oppilaitoksen oppilaitoskoodin perusteella"
   [oppilaitoskoodi]
-  (sql-util/select-unique-or-nil
-    oppilaitos
-    (sql/fields :oppilaitoskoodi :nimi :kieli
-                :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue :koulutustoimija)
-    (sql/where {:oppilaitoskoodi oppilaitoskoodi})))
+  (first
+    (sql/select
+      oppilaitos
+      (sql/fields :oppilaitoskoodi :nimi :kieli
+                  :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite :alue :koulutustoimija)
+      (sql/where {:oppilaitoskoodi oppilaitoskoodi}))))
 
 (defn hae-oppilaitoksen-toimipaikat
   "Hakee oppilaitoksen toimipaikat"

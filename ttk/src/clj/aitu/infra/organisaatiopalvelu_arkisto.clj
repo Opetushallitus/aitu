@@ -14,16 +14,16 @@
 
 (ns aitu.infra.organisaatiopalvelu-arkisto
   (:require [korma.core :as sql]
-            [aitu.integraatio.sql.korma :refer :all]
-            [oph.korma.common :refer [select-unique-or-nil]]))
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn hae-viimeisin-paivitys
   []
   (:paivitetty
-    (select-unique-or-nil organisaatiopalvelu_log
-      (sql/order :id :desc)
-      (sql/limit 1)
-      (sql/fields :paivitetty))))
+    (first
+      (sql/select organisaatiopalvelu_log
+        (sql/order :id :desc)
+        (sql/limit 1)
+        (sql/fields :paivitetty)))))
 
 (defn ^:integration-api tallenna-paivitys!
   [ajankohta]

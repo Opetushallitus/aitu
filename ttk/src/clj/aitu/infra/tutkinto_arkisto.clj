@@ -241,15 +241,16 @@
 
 (defn hae-tutkinto
   [tutkintotunnus]
-  (sql-util/select-unique-or-nil
-    nayttotutkinto
-    (sql/with uusin-versio)
-    (sql/with tutkintotyyppi
-      (sql/fields [:selite_fi :tyyppi_selite_fi]
-                  [:selite_sv :tyyppi_selite_sv]))
-    (sql/with tutkintotoimikunta
-      (sql/with toimikausi))
-    (sql/where {:tutkintotunnus tutkintotunnus})))
+  (first
+    (sql/select
+      nayttotutkinto
+      (sql/with uusin-versio)
+      (sql/with tutkintotyyppi
+        (sql/fields [:selite_fi :tyyppi_selite_fi]
+                    [:selite_sv :tyyppi_selite_sv]))
+      (sql/with tutkintotoimikunta
+        (sql/with toimikausi))
+      (sql/where {:tutkintotunnus tutkintotunnus}))))
 
 (defn hae-peruste [diaarinumero]
   (sql-util/select-unique-or-nil tutkintoversio

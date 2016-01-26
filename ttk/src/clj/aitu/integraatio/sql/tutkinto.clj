@@ -14,32 +14,34 @@
 
 (ns aitu.integraatio.sql.tutkinto
   (:require korma.db
-            [korma.core :as sql]
-            [oph.korma.common :as sql-util])
+            [korma.core :as sql])
   (:use [aitu.integraatio.sql.korma]))
 
 (defn hae
   "Hae näyttötutkinto tutkintotunnuksen perusteella"
   [tutkintotunnus]
-  (sql-util/select-unique-or-nil
-    nayttotutkinto
-    (sql/where {:tutkintotunnus tutkintotunnus})))
+  (first
+    (sql/select
+      nayttotutkinto
+      (sql/where {:tutkintotunnus tutkintotunnus}))))
 
 (defn hae-tutkintoversio
   "Hae tutkintoversio tutkintoversio-id:n perusteella"
   [tutkintoversio_id]
-  (sql-util/select-unique-or-nil
-    tutkintoversio
-    (sql/with nayttotutkinto
-      (sql/fields :opintoala :nimi_fi :nimi_sv :tyyppi :tutkintotaso :uusin_versio_id))
-    (sql/where {:tutkintoversio_id tutkintoversio_id})))
+  (first
+   (sql/select
+     tutkintoversio
+     (sql/with nayttotutkinto
+       (sql/fields :opintoala :nimi_fi :nimi_sv :tyyppi :tutkintotaso :uusin_versio_id))
+     (sql/where {:tutkintoversio_id tutkintoversio_id}))))
 
 (defn hae-tutkintoversio-ja-tutkinnonosat
   "Hakee tutkintoversion ja siihen liittyvät tutkinnonosat ja osaamisalat"
   [tutkintoversio_id]
-  (sql-util/select-unique-or-nil tutkintoversio
-    (sql/with nayttotutkinto)
-    (sql/with tutkinto-ja-tutkinnonosa
-      (sql/with tutkinnonosa))
-    (sql/with osaamisala)
-    (sql/where {:tutkintoversio_id tutkintoversio_id})))
+  (first
+    (sql/select tutkintoversio
+      (sql/with nayttotutkinto)
+      (sql/with tutkinto-ja-tutkinnonosa
+        (sql/with tutkinnonosa))
+      (sql/with osaamisala)
+      (sql/where {:tutkintoversio_id tutkintoversio_id}))))
