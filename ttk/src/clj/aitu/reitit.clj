@@ -13,7 +13,7 @@
             [aitu.asetukset :refer [build-id kehitysmoodi? service-path]]
             [aitu.compojure-util :as cu :refer [GET*]]
             [aitu.infra.i18n :as i18n]
-            [aitu.infra.status :refer [status]]
+            [oph.common.infra.status :refer [status]]
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
             [aitu.toimiala.skeema :refer :all]
             [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
