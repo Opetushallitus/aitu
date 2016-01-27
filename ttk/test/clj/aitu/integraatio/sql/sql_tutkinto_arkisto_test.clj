@@ -23,15 +23,15 @@
 (use-fixtures :each tietokanta-fixture)
 
 (deftest ^:integraatio sql-crud-lisaa!
-  "Testaa crud operaatiot tietokantaan. Aiheuttaa kannan tyhjennyksen tällä hetkellä."
-  (lisaa-koulutus-ja-opintoala!)
-  (let [arkisto-count (count (arkisto/hae-kaikki))]
-    (lisaa-tutkinto! {:tutkintotunnus "545445"})
-    (is (= (count (arkisto/hae-kaikki)) (inc arkisto-count)))))
+  (testing "Testaa crud operaatiot tietokantaan. Aiheuttaa kannan tyhjennyksen tällä hetkellä."
+    (lisaa-koulutus-ja-opintoala!)
+    (let [arkisto-count (count (arkisto/hae-kaikki))]
+      (lisaa-tutkinto! {:tutkintotunnus "545445"})
+      (is (= (count (arkisto/hae-kaikki)) (inc arkisto-count))))))
 
 (deftest ^:integraatio hae-test
-  "Pitäisi tulla nil olemattomalla tutkintotunnuksella"
-  (is (nil? (arkisto/hae "qwerty"))))
+  (testing "Pitäisi tulla nil olemattomalla tutkintotunnuksella"
+    (is (nil? (arkisto/hae "qwerty")))))
 
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
   (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA"}

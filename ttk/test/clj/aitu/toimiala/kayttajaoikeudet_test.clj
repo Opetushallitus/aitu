@@ -54,11 +54,11 @@
   ([kayttaja operaatio tkunta]
    (saako-tehda? kayttaja operaatio tkunta)))
 
-(deftest vain-lueteltu-oikeus-kelpaa []
+(deftest vain-lueteltu-oikeus-kelpaa
    (is (thrown? Throwable
           (saako-tehda? (kayttaja-map) :trolol-laulanta nil))))
 
-(deftest ei-ole-paallekkaisia-oikeus-tunnisteita []
+(deftest ei-ole-paallekkaisia-oikeus-tunnisteita
   (is (empty? (intersection (set (keys kayttajatoiminnot)) (set (keys yllapitotoiminnot))))))
 
 (deftest toiminnot-test

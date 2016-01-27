@@ -17,7 +17,7 @@
             [aitu.toimiala.jarjestamissopimus :refer :all]
             [clj-time.core :as time]))
 
-(deftest jarjestamissopimus-validointi []
+(deftest jarjestamissopimus-validointi
    (is (jarjestamissopimus? {:sopimusnumero "12345"
                              :koulutustoimija "9999999-9"
                              :tutkintotilaisuuksista_vastaava_oppilaitos "2013/01/001"

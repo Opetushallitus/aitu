@@ -34,27 +34,27 @@
  (binding [ko/*current-user-authmap* {:roolitunnus (:yllapitaja kayttajaroolit)}]
    (f)))
 
-(deftest yllapitaja-saa-lisata-toimikunnan []
+(deftest yllapitaja-saa-lisata-toimikunnan
   (let [crout (eval sample-admin-api)
         response (with-admin-rights #(crout (rmock/request :post "/toimikunta")))]
     (is (= (:status response) 200))))
 
-(deftest kayttaja-ei-saa-lisata-toimikuntaa []
+(deftest kayttaja-ei-saa-lisata-toimikuntaa
   (let [crout (eval sample-admin-api)]
     (is (thrown? Throwable
                  (with-user-rights #(crout (rmock/request :post "/toimikunta")))))))
 
-(deftest kayttaja-saa-katsoa-oman-toimikuntansa-tiedot []
+(deftest kayttaja-saa-katsoa-oman-toimikuntansa-tiedot
   (let [crout (eval sample-user-api)
         response (with-user-rights #(crout (rmock/request :get "/toimikunta/123")))]
     (is (= (:status response) 200))))
 
-(deftest yllapitaja-saa-katsoa-toimikunnan-tiedot []
+(deftest yllapitaja-saa-katsoa-toimikunnan-tiedot
   (let [crout (eval sample-user-api)
         response (with-admin-rights #(crout (rmock/request :get "/toimikunta/123")))]
     (is (= (:status response) 200))))
 
-(deftest kayttaja-saa-katsoa-toisen-toimikunnan-tietoja []
+(deftest kayttaja-saa-katsoa-toisen-toimikunnan-tietoja
   (let [crout (eval sample-user-api)
         response (with-user-rights #(crout (rmock/request :get "/toimikunta/451")))]
     (is (= (:status response) 200))))

@@ -253,7 +253,6 @@
                                   (sql/where {:jarjestamissopimus.voimassa true})
                                   (sql/group :tutkintoversio.tutkintotunnus :jarjestamissopimus.koulutustoimija))
         koulutustoimija->tutkinnot (group-by :koulutustoimija sopimukset-ja-tutkinnot)]
-    koulutustoimija->tutkinnot
     (map-values #(map (fn [m] (dissoc m :koulutustoimija)) %) koulutustoimija->tutkinnot)))
 
 (defn hae-kaikki-osoitepalvelulle

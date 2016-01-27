@@ -35,7 +35,7 @@
           "tutkinnon voimassaolon siirtymäaika on päättynyt" {:voimassa_alkupvm menneisyydessa
                                                               :siirtymaajan_loppupvm menneisyydessa} false))))
 
-(deftest taydenna-siirtymaajan-paattyminen-test []
+(deftest taydenna-siirtymaajan-paattyminen-test
   (testing
     "siirtymäajan päättymisen päivittäminen:"
     (testing
@@ -51,8 +51,8 @@
             tutkinto {:siirtymaajan_loppupvm loppupvm}]
         (testing
           "lisää tutkinnon siirtymäajan loppupäivämäärän siirtymäajan päättymispäivänä"
-          (is (:siirtymaaika_paattyy (taydenna-siirtymaajan-paattyminen tutkinto))
-              loppupvm))))))
+          (is (= (:siirtymaaika_paattyy (taydenna-siirtymaajan-paattyminen tutkinto))
+                 loppupvm)))))))
 
 (deftest taydenna-tutkinnon-voimassaolo-test
  (testing
