@@ -46,9 +46,11 @@
                  [robert/hooke "1.3.0"]
                  [slingshot "0.10.3"]
                  [stencil "0.3.2" :exclusions [org.clojure/core.cache]]]
+
   :plugins [[lein-cloverage "1.0.2"]
             [test2junit "1.1.0"]
-            [codox "0.6.6"]]
+            [codox "0.6.6"]
+            [jonase/eastwood "0.2.3"]]
   :profiles {:dev {:source-paths ["dev"]
                    :resource-paths ["test-resources"]
                    :dependencies [[org.clojure/tools.namespace "0.2.4"]
