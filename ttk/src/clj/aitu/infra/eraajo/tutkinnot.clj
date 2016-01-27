@@ -142,11 +142,6 @@
     (tallenna-muuttuneet-tutkintonimikkeet! tutkintoversio-id muuttuneet)))
 
 (defn ^:integration-api paivita-tutkinto! [koodistoasetukset tutkinto]
-  (when (:jarjestyskoodistoversio tutkinto)
-    (let [vanha-tutkintoversio (tutkinto-arkisto/hae-tutkinto (:tutkintotunnus tutkinto))
-          jarjestyskoodisto (koodisto/hae-koodisto koodistoasetukset (:osajarjestyskoodisto vanha-tutkintoversio) (:jarjestyskoodistoversio vanha-tutkintoversio))]
-      (tutkinto-arkisto/paivita-tutkintoversio! {:tutkintoversio_id (:tutkintoversio_id vanha-tutkintoversio)
-                                                 :voimassa_loppupvm (:voimassa_loppupvm jarjestyskoodisto)})))
   (let [tutkintotunnus (:tutkintotunnus tutkinto)
         tutkintotiedot (remove-nil-vals (select-keys tutkinto [:nimi_fi :nimi_sv :tyyppi :tutkintotaso :opintoala]))
         versiotiedot (remove-nil-vals (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio]))]
