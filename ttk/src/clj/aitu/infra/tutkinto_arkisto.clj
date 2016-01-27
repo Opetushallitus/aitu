@@ -109,7 +109,7 @@
 
 (defn ^:private hae-tutkinnonosan-id
   [osatunnus tutkintoversio_id]
-  (sql-util/select-unique tutkinnonosa
+  (sql-util/select-unique-or-nil tutkinnonosa
     (sql/join :inner tutkinto-ja-tutkinnonosa {:tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id})
     (sql/fields :tutkinnonosa.tutkinnonosa_id)
     (sql/where {:osatunnus osatunnus
