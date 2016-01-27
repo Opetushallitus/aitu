@@ -40,7 +40,7 @@
 (defn onko-kayttajan-rooli?
   ([kayttaja-map rooli]
     {:pre [(some #{(:roolitunnus kayttaja-map)} (vals kayttajaroolit))]}
-    #spy/p (= #spy/p rooli #spy/p (:roolitunnus kayttaja-map)))
+    (= rooli (:roolitunnus kayttaja-map)))
   ([rooli-kw]
     (onko-kayttajan-rooli? *current-user-authmap* (rooli-kw kayttajaroolit))))
 
