@@ -12,8 +12,9 @@
             [oph.common.util.util :refer [map-by remove-nil-vals]]
             [korma.db :as db]))
 
-(defn uusi [[tutkintotunnus muutos]]
+(defn uusi
   "Jos muutos on uuden tiedon lisääminen, palauttaa uudet tiedot, muuten nil"
+  [[tutkintotunnus muutos]]
   (when (vector? muutos)
     (assoc (first muutos) :tutkintotunnus tutkintotunnus)))
 
@@ -23,8 +24,9 @@
              :when v]
          [k (first v)])))
 
-(defn muuttunut [[tutkintotunnus muutos]]
+(defn muuttunut
   "Jos muutos on tietojen muuttuminen, palauttaa muuttuneet tiedot, muuten nil"
+  [[tutkintotunnus muutos]]
   (when (and (map? muutos)
              (not-every? nil? (vals muutos)))
     (merge {:tutkintotunnus tutkintotunnus}

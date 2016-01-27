@@ -15,8 +15,9 @@
 (ns aitu.toimiala.jarjestamissopimus
   (:require [aitu.toimiala.voimassaolo.jarjestamissopimus :as voimassaolo]))
 
-(defn jarjestamissopimus? [x]
+(defn jarjestamissopimus?
   "Onko järjestämissopimuksen tietosisältö oikeellinen?"
+  [x]
   (and (contains? x :koulutustoimija)
        (contains? x :sopimusnumero)
        (contains? x :alkupvm)

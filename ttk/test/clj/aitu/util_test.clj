@@ -54,25 +54,25 @@
 
 (deftest numerokenttien-etunollien-pakotus-test
   (testing "laittaa vain numerokenttiin etunollapakotuksen"
-    (= (pakota-numerokentat-csv-stringsoluiksi "Nimi;Numero\nfoo123;0123456789\n")
-       "Nimi;Numero\nfoo123;=\"0123456789\"\n")))
+    (is (= (pakota-numerokentat-csv-stringsoluiksi "Nimi;Numero\nfoo123;0123456789\n")
+          "Nimi;Numero\nfoo123;=\"0123456789\"\n"))))
 
 (deftest csv-rivi-soluiksi-test
   (testing "pilkkominen katkaisee solut oikeasta kohtaa"
-    (= (csv-rivi-soluiksi "A;\"B\";\"A\"\"B\"")
-       ["A"
-        "\"B\""
-        "A\"\"B"])
-    (= (csv-rivi-soluiksi "\";\";\"1\"\"2\";\"1;2\"")
-       ["\";\""
-        "\"1\"\"2"
-        "\"1;2\""])
-    (= (csv-rivi-soluiksi "\"\n\";\"12\n34\";\"12\n34;56\";;1234")
-       ["\"\n\""
-        "\"12\n34\""
-        "12\n34;56\""
-        ""
-        "1234"])))
+    (is (= (csv-rivi-soluiksi "A;\"B\";\"A\"\"B\"")
+           ["A"
+            "\"B\""
+            "\"A\"\"B\""]))
+    (is (= (csv-rivi-soluiksi "\";\";\"1\"\"2\";\"1;2\"")
+           ["\";\""
+            "\"1\"\"2\""
+            "\"1;2\""]))
+    (is (= (csv-rivi-soluiksi "\"\n\";\"12\n34\";\"12\n34;56\";;1234")
+           ["\"\n\""
+            "\"12\n34\""
+            "\"12\n34;56\""
+            ""
+            "1234"]))))
 
 (deftest konversiot-toimivat
   (let [a [{:nimi_fi "foo", :truthy true} {:nimi_fi "bar" :truthy false}]
