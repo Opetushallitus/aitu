@@ -17,8 +17,8 @@
              [clojure.test :refer [deftest testing is use-fixtures]]
              [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
              [aitu.integraatio.sql.test-data-util :refer :all]
-             [aitu.infra.haku-arkisto :as arkisto])
-  (:use [aitu.integraatio.sql.korma]))
+             [aitu.infra.haku-arkisto :as arkisto]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 (use-fixtures :each tietokanta-fixture)
 

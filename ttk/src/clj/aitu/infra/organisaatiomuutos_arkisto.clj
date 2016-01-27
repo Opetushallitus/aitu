@@ -18,8 +18,8 @@
             [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
             [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
             [clj-time.core :as time]
-            [oph.korma.common :refer [select-unique-or-nil select-unique]])
-  (:use [aitu.integraatio.sql.korma]))
+            [oph.korma.common :refer [select-unique-or-nil select-unique]]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:integration-api lisaa-organisaatiomuutos! [tyyppi paivamaara & {:keys [koulutustoimija oppilaitos toimipaikka]}]
   (sql/insert organisaatiomuutos

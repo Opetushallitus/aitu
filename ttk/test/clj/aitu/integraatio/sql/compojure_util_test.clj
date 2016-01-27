@@ -14,11 +14,11 @@
 
 (ns aitu.integraatio.sql.compojure-util-test
   "Testataan auth-makron toteutusta. käyttöoikeuksien tarkistusfunktioille on erikseen yksikkötestit"
-  (:require [ring.mock.request :as rmock]
+  (:require [clojure.test :refer :all]
+            [ring.mock.request :as rmock]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.integraatio.sql.test-util :refer :all]
-            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]])
-  (:use clojure.test))
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
 (def sample-admin-api
   '(compojure.core/POST "/toimikunta" []

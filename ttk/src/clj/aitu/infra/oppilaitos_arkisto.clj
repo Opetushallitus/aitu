@@ -18,8 +18,8 @@
              [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [oph.common.util.util :refer [select-and-rename-keys sisaltaako-kentat?]]
-             [clojure.string :refer [blank?]])
-  (:use [aitu.integraatio.sql.korma]))
+             [clojure.string :refer [blank?]]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:test-api poista!
   "Poistaa oppilaitoksen."

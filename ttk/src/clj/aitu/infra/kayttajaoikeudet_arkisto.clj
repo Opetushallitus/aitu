@@ -19,8 +19,8 @@
             [oph.korma.korma-auth :as ka]
             [oph.korma.korma-auth :refer [*current-user-oid*]]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
-            [aitu.toimiala.kayttajaoikeudet :as ko])
-  (:use [aitu.integraatio.sql.korma]))
+            [aitu.toimiala.kayttajaoikeudet :as ko]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 ; TODO: miksi first? Eihän tämä nyt voi toimia oikein??
 (defn hae-jasenyys-ja-sopimukset [kayttajaid]

@@ -21,8 +21,8 @@
             [valip.predicates :refer [present?]]
             [korma.db :as db]
             [aitu.toimiala.skeema :as skeema]
-            [schema.core :as s])
-  (:use aitu.toimiala.henkilo))
+            [schema.core :as s]
+            [aitu.toimiala.henkilo :refer :all]))
 
 (c/defroutes reitit
   (c/DELETE "/:id" [id]

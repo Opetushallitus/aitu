@@ -29,8 +29,8 @@
              [aitu.toimiala.voimassaolo.saanto.jarjestamissopimus :as voimassaolo-saanto]
              [aitu.toimiala.voimassaolo.saanto.osoitepalvelu-jarjestamissopimus :as osoitepalvelu-voimassaolo]
              [clj-time.core :as time]
-             [aitu.auditlog :as auditlog])
-  (:use [aitu.integraatio.sql.korma]))
+             [aitu.auditlog :as auditlog]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:private aseta-oppilaitos-kentta [sopimus]
   (assoc sopimus :oppilaitos (:tutkintotilaisuuksista_vastaava_oppilaitos sopimus)))

@@ -17,8 +17,8 @@
              [korma.core :as sql]
              [oph.korma.common :as sql-util]
              [oph.common.util.util :refer [sisaltaako-kentat?]]
-             [oph.korma.common :refer [rajaa-kentilla]])
-  (:use [aitu.integraatio.sql.korma]))
+             [oph.korma.common :refer [rajaa-kentilla]]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 (defn hae-kaikki []
   (sql/select jarjesto

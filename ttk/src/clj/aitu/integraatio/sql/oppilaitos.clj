@@ -14,8 +14,8 @@
 
 (ns aitu.integraatio.sql.oppilaitos
   (:require korma.db
-            [korma.core :as sql])
-  (:use [aitu.integraatio.sql.korma]))
+            [korma.core :as sql]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn hae
   "Hakee oppilaitoksen oppilaitoskoodin perusteella"

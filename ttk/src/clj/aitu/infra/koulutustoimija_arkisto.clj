@@ -17,8 +17,8 @@
              [oph.common.util.util :refer [select-and-rename-keys sisaltaako-kentat?]]
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
-             [clojure.string :refer [blank?]])
-  (:use [aitu.integraatio.sql.korma]))
+             [clojure.string :refer [blank?]]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:integration-api lisaa!
   [kt]

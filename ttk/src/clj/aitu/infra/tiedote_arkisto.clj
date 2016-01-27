@@ -15,8 +15,8 @@
 (ns aitu.infra.tiedote-arkisto
   (:require  [korma.core :as sql]
              [aitu.auditlog :as auditlog]
-             [oph.korma.common :as sql-util])
-  (:use [aitu.integraatio.sql.korma]))
+             [oph.korma.common :as sql-util]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 (defn hae
   "Hakee tiedotteen."

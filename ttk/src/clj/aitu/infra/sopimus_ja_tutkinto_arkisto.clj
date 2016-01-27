@@ -17,8 +17,8 @@
             [korma.core :as sql]
             [aitu.integraatio.sql.jarjestamissopimus :as sopimus-kaytava]
             [aitu.integraatio.sql.sopimus-ja-tutkinto :as kaytava]
-            [aitu.integraatio.sql.tutkinto :as tutkinto-kaytava])
-  (:use [aitu.integraatio.sql.korma]))
+            [aitu.integraatio.sql.tutkinto :as tutkinto-kaytava]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn liita-sopimus-ja-tutkinto-riviin
   [tutkintoversion-haku-fn sopimus-ja-tutkinto]

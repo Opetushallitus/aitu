@@ -14,8 +14,8 @@
 
 (ns aitu.integraatio.sql.sopimus-ja-tutkinto
   (:require korma.db
-            [korma.core :as sql])
-  (:use [aitu.integraatio.sql.korma]))
+            [korma.core :as sql]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn hae-jarjestamissopimukseen-liittyvat-rivit
   "Hakee järjestämissopimukseen liittyvät sopimus-ja-tutkinto-taulun rivit"
