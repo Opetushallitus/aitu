@@ -80,6 +80,7 @@
     (sql/aggregate (count :*) :maara)
     (sql/where (= :tehty nil))))
 
+; audit-log ?
 (defn merkitse-tehdyksi [organisaatiomuutosid]
   (sql/update organisaatiomuutos
     (sql/set-fields {:tehty (time/today)})
