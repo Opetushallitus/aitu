@@ -25,10 +25,10 @@
   (is (empty? (js-console-log-calls))))
  
 (deftest properties-encoding-test
-  "etsitään merkkejä jotka eivät ole ns. printable charactereita. Ääkköset ovat näitä enkoodaussyistä"
-  (is (empty? (vastaavat-rivit "resources/i18n"
-                               #".*\.properties"
-                               [#"[^\p{Print}\p{Space}]+"]))))
+  (testing "etsitään merkkejä jotka eivät ole ns. printable charactereita. Ääkköset ovat näitä enkoodaussyistä"
+    (is (empty? (vastaavat-rivit "resources/i18n"
+                                 #".*\.properties"
+                                 [#"[^\p{Print}\p{Space}]+"])))))
 
 (defn properties-duplicat-keys? [r]
   (let [dup (doto (oph.util.DuplicateAwareProperties.)
@@ -38,9 +38,9 @@
     duplicates))
 
 (deftest properties-duplicate-keys-test
-  "Etsitään properties tiedostoista tupla-avaimia"
-  (is (empty? (vastaavat-tiedostot "resources/i18n" #".*\.properties"
-                properties-duplicat-keys?))))
+  (testing "Etsitään properties tiedostoista tupla-avaimia"
+    (is (empty? (vastaavat-tiedostot "resources/i18n" #".*\.properties"
+                  properties-duplicat-keys?)))))
 
 (deftest pre-post-oikeassa-paikassa-test
   (is (empty? (vastaavat-muodot "src/clj" pre-post-vaarassa-paikassa?))))
