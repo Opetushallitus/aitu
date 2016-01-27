@@ -24,44 +24,43 @@
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
-(deftest ^:integraatio auth-user-set!
-  "testaa että authorization systeemi audit-trailia varten toimii"
-  []
-  (tietokanta-fixture
-    #(let [henkilo-id (:henkiloid (henkilo-arkisto/lisaa! data/default-henkilo))
-           henkilo (henkilo-arkisto/hae henkilo-id)]
-      (is (= testikayttaja-oid (:muutettu_kayttaja henkilo)))
-      (is (= testikayttaja-oid (:luotu_kayttaja henkilo))))))
+(deftest ^:integraatio auth-user-set! []
+  (testing "testaa että authorization systeemi audit-trailia varten toimii"
+    (tietokanta-fixture
+      #(let [henkilo-id (:henkiloid (henkilo-arkisto/lisaa! data/default-henkilo))
+             henkilo (henkilo-arkisto/hae henkilo-id)]
+        (is (= testikayttaja-oid (:muutettu_kayttaja henkilo)))
+        (is (= testikayttaja-oid (:luotu_kayttaja henkilo)))))))
 
 (defn tietokanta-oper
-  "Annettu käyttäjätunnus sidotaan Kormalle testifunktion ajaksi."
   [f kayttaja]
-  (alusta-korma!)
-  (binding [ka/*current-user-uid* (:uid kayttaja) ; testin aikana eri käyttäjä
-            ka/*current-user-oid* (promise)
-            i18n/*locale* testi-locale
-            *current-user-authmap* kayttaja]
-    (deliver ka/*current-user-oid* (:oid kayttaja))
-    (f)))
+  (testing "Annettu käyttäjätunnus sidotaan Kormalle testifunktion ajaksi."
+    (alusta-korma!)
+    (binding [ka/*current-user-uid* (:uid kayttaja) ; testin aikana eri käyttäjä
+              ka/*current-user-oid* (promise)
+              i18n/*locale* testi-locale
+              *current-user-authmap* kayttaja]
+      (deliver ka/*current-user-oid* (:oid kayttaja))
+      (f))))
 
 (deftest ^:integraatio puuttuva-kayttaja-ei-kelpaa!
-  "Testaa että kannasta puuttuvalla käyttäjätunnuksella ei voi avata kantayhteyksiä."
   []
-  (let [puuttuva-kayttaja {:oid "AKUANKKA"}
-        olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid auth/default-test-user-oid, :uid auth/default-test-user-uid }
-        arbitrary-sql-read henkilo-arkisto/hae-kaikki]
-    (is (thrown? Throwable
-                 (tietokanta-oper
-                   arbitrary-sql-read puuttuva-kayttaja)))
-    ; mutta toimii olemassaolevalla käyttäjätunnuksella
-    (tietokanta-oper
-      arbitrary-sql-read olemassaoleva-kayttaja)))
+  (testing "Testaa että kannasta puuttuvalla käyttäjätunnuksella ei voi avata kantayhteyksiä."
+    (let [puuttuva-kayttaja {:oid "AKUANKKA"}
+          olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid auth/default-test-user-oid, :uid auth/default-test-user-uid }
+          arbitrary-sql-read henkilo-arkisto/hae-kaikki]
+      (is (thrown? Throwable
+                   (tietokanta-oper
+                     arbitrary-sql-read puuttuva-kayttaja)))
+      ; mutta toimii olemassaolevalla käyttäjätunnuksella
+      (tietokanta-oper
+        arbitrary-sql-read olemassaoleva-kayttaja))))
 
 (deftest ^:integraatio lakannut-kayttaja-ei-kelpaa!
-  "Testaa että lakkautetulla käyttäjätunnuksella ei voi avata kantayhteyksiä."
   []
-  (let [lakannut-kayttajatunnus "KONVERSIO"]
-    (is (thrown? Throwable
-                 (tietokanta-fixture-oid
-                   henkilo-arkisto/hae-kaikki lakannut-kayttajatunnus)))))
+  (testing "Testaa että lakkautetulla käyttäjätunnuksella ei voi avata kantayhteyksiä."
+    (let [lakannut-kayttajatunnus "KONVERSIO"]
+      (is (thrown? Throwable
+                   (tietokanta-fixture-oid
+                     henkilo-arkisto/hae-kaikki lakannut-kayttajatunnus))))))
 
