@@ -17,32 +17,22 @@
      [clojure.test :refer :all]
      [aitu.auditlog :as auditlog]
      [oph.korma.korma-auth :as ka]
-     [clojure.tools.logging :as log]))
+     [aitu.log-util :refer :all]))
 
-(defn ^:private log-through
-  "palauttaa auditlogiin kirjoitetun viestin levelin ja sisällön kun kutsutaan funktiota f"
-  [f]
-  (let [log (atom [])]
-    (with-redefs [log/log* (fn [_ level _ msg]
-                             (swap! log conj [level msg]))]
-      (reset! log [])
-      (binding [ka/*current-user-uid* "T-X"]
-        (f)
-        @log))))
-
-(defn ^:private log-validate
+(defn ^:private log-validate-with-mock-user
   [f expected-msg]
-  (is (= expected-msg (log-through f))))
+  (binding [ka/*current-user-uid* "T-X"]
+    (log-validate f expected-msg)))
 
 (deftest test-jarjestamissopimus-paivitys
   (testing "logittaa oikein järjestämissopimuksen päivityksen"
-    (log-validate
+    (log-validate-with-mock-user
       #(auditlog/jarjestamissopimus-paivitys! 123 "12/12")
       [[:info "uid: T-X oper: päivitys kohde: järjestämissopimus meta: ({:sopimusid 123, :diaarinumero \"12/12\"})"]])))
 
 (deftest test-jarjestamissopimus-lisays
   (testing "logittaa oikein järjestämissopimuksen lisäyksen"
-   (log-validate
+   (log-validate-with-mock-user
      #(auditlog/jarjestamissopimus-lisays! 123 "12/12")
      [[:info "uid: T-X oper: lisäys kohde: järjestämissopimus meta: ({:sopimusid 123, :diaarinumero \"12/12\"})"]])))
 

@@ -22,7 +22,8 @@
             [oph.common.infra.i18n :as i18n]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture testikayttaja-oid tietokanta-fixture-oid testi-locale alusta-korma!]]
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
-            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
+            [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
+            [aitu.log-util :refer [log-through]]))
 
 (deftest ^:integraatio auth-user-set!
   (testing "testaa että authorization systeemi audit-trailia varten toimii"
@@ -58,6 +59,6 @@
 (deftest ^:integraatio lakannut-kayttaja-ei-kelpaa!
   (testing "Testaa että lakkautetulla käyttäjätunnuksella ei voi avata kantayhteyksiä."
     (let [lakannut-kayttajatunnus "KONVERSIO"]
-      (is (thrown? Throwable
-                   (tietokanta-fixture-oid
-                     henkilo-arkisto/hae-kaikki lakannut-kayttajatunnus))))))
+      (is (= [:error "validate-user epäonnistui"] (last (log-through 
+                                                          #(tietokanta-fixture-oid
+                                                            henkilo-arkisto/hae-kaikki lakannut-kayttajatunnus lakannut-kayttajatunnus))))))))
