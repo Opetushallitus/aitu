@@ -22,8 +22,8 @@
             [oph.korma.common :as sql-util]
             [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
             [aitu.auditlog :as auditlog]
-            [clojure.string :refer [blank?]])
-  (:use [aitu.integraatio.sql.korma]))
+            [clojure.string :refer [blank?]]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:test-api tyhjenna!
   "Tyhjentää arkiston."

@@ -89,35 +89,35 @@
                           :tutkintoversio_id 34567}))
 
 (deftest ^:integraatio lisaa-sopimus-test!
-  "Testaa että sopimuksen lisääminen onnistuu."
-  (lisaa-testidata!)
-  (let [jarjestamissopimusid (:jarjestamissopimusid (arkisto/lisaa! (arbitrary-sopimus)))
-        sopimus (arkisto/hae jarjestamissopimusid)]
-    (is (= (:sopimusnumero sopimus) "1234"))))
+  (testing "Testaa että sopimuksen lisääminen onnistuu."
+    (lisaa-testidata!)
+    (let [jarjestamissopimusid (:jarjestamissopimusid (arkisto/lisaa! (arbitrary-sopimus)))
+          sopimus (arkisto/hae jarjestamissopimusid)]
+      (is (= (:sopimusnumero sopimus) "1234")))))
 
 (deftest ^:integraatio paivita-sopimus-test-idt-muokattu!
-  "Testaa että sopimuksen päivittäminen onnistuu, jos sopimus_ja_tutkinto_id:t ovat sopimukselle kuuluvia. Päivittäminen ei onnistu jos id:t eivät kuulu sopimukselle."
-  (lisaa-testidata!)
-  (let [jarjestamissopimusid (:jarjestamissopimusid (arkisto/lisaa! (arbitrary-sopimus)))
-        _ (arkisto/lisaa-tutkinnot-sopimukselle! jarjestamissopimusid [12345, 23456])
-        sopimus (arkisto/hae jarjestamissopimusid)
-        paivitettava_sopimus (assoc (arbitrary-sopimus) :jarjestamissopimusid jarjestamissopimusid)]
-    (is (thrown? Throwable
-          (arkisto/paivita! paivitettava_sopimus [{:sopimus_ja_tutkinto_id 32123} {:sopimus_ja_tutkinto_id 54322}])))
-    (arkisto/paivita! paivitettava_sopimus [{:sopimus_ja_tutkinto_id (get-in sopimus [:sopimus_ja_tutkinto 0 :sopimus_ja_tutkinto_id])}
-                                            {:sopimus_ja_tutkinto_id (get-in sopimus [:sopimus_ja_tutkinto 1 :sopimus_ja_tutkinto_id])}])))
+  (testing "Testaa että sopimuksen päivittäminen onnistuu, jos sopimus_ja_tutkinto_id:t ovat sopimukselle kuuluvia. Päivittäminen ei onnistu jos id:t eivät kuulu sopimukselle."
+    (lisaa-testidata!)
+    (let [jarjestamissopimusid (:jarjestamissopimusid (arkisto/lisaa! (arbitrary-sopimus)))
+          _ (arkisto/lisaa-tutkinnot-sopimukselle! jarjestamissopimusid [12345, 23456])
+          sopimus (arkisto/hae jarjestamissopimusid)
+          paivitettava_sopimus (assoc (arbitrary-sopimus) :jarjestamissopimusid jarjestamissopimusid)]
+      (is (thrown? Throwable
+            (arkisto/paivita! paivitettava_sopimus [{:sopimus_ja_tutkinto_id 32123} {:sopimus_ja_tutkinto_id 54322}])))
+      (arkisto/paivita! paivitettava_sopimus [{:sopimus_ja_tutkinto_id (get-in sopimus [:sopimus_ja_tutkinto 0 :sopimus_ja_tutkinto_id])}
+                                              {:sopimus_ja_tutkinto_id (get-in sopimus [:sopimus_ja_tutkinto 1 :sopimus_ja_tutkinto_id])}]))))
 
 (deftest ^:integraatio paivita-tutkinnot-test!
-  "Testaa tutkintojen lisäyksen sopimukselle"
-  (lisaa-testidata!)
-  (let [jarjestamissopimusid (:jarjestamissopimusid (arkisto/lisaa! (arbitrary-sopimus)))
-        _ (arkisto/lisaa-tutkinnot-sopimukselle! jarjestamissopimusid [12345, 23456])
-        _ (arkisto/paivita-tutkinnot! jarjestamissopimusid [{:tutkintoversio_id 34567}])
-        sopimus (arkisto/hae jarjestamissopimusid)
-        sopimuksen-tutkintojen-lkm (count (:sopimus_ja_tutkinto sopimus))
-        sopimuksen-tutkintotunnus (-> sopimus :sopimus_ja_tutkinto (first) :tutkintoversio :tutkintotunnus)]
-      (is (= sopimuksen-tutkintojen-lkm 1))
-      (is (= sopimuksen-tutkintotunnus "34567"))))
+  (testing "Testaa tutkintojen lisäyksen sopimukselle"
+    (lisaa-testidata!)
+    (let [jarjestamissopimusid (:jarjestamissopimusid (arkisto/lisaa! (arbitrary-sopimus)))
+          _ (arkisto/lisaa-tutkinnot-sopimukselle! jarjestamissopimusid [12345, 23456])
+          _ (arkisto/paivita-tutkinnot! jarjestamissopimusid [{:tutkintoversio_id 34567}])
+          sopimus (arkisto/hae jarjestamissopimusid)
+          sopimuksen-tutkintojen-lkm (count (:sopimus_ja_tutkinto sopimus))
+          sopimuksen-tutkintotunnus (-> sopimus :sopimus_ja_tutkinto (first) :tutkintoversio :tutkintotunnus)]
+        (is (= sopimuksen-tutkintojen-lkm 1))
+        (is (= sopimuksen-tutkintotunnus "34567")))))
 
 (deftest ^:integraatio paivita-tutkinnot!-auditlog-test
   (testing "paivita-tutkinnot! kirjaa sopimuksen ja tutkinnot auditlogiin"
@@ -134,23 +134,23 @@
         (is (= [:paivitys 99 #{1 2 3}] (first @log)))))))
 
 (deftest ^:integraatio lisaa-ja-poista-suunnitelma-sopimuksen-tutkinnolle!
-  "Lisää järjestämissuunnitelman sopimuksen tutkinnolle"
-  (lisaa-testidata!)
-  (let [jarjestamissopimusid (:jarjestamissopimusid (arkisto/lisaa! (arbitrary-sopimus)))
-        _ (arkisto/lisaa-tutkinnot-sopimukselle!
-            jarjestamissopimusid [12345])]
-    (let [suunnitelma-file (new File "test-file.pdf")
-          _ (.createNewFile suunnitelma-file)
-          suunnitelma {:tempfile suunnitelma-file :filename "test-file.pdf" :content-type "Application/pdf"}
-          sopimus-ja-tutkinto-id (-> (arkisto/hae jarjestamissopimusid) :sopimus_ja_tutkinto (first) :sopimus_ja_tutkinto_id)
-          _ (arkisto/lisaa-suunnitelma-tutkinnolle! sopimus-ja-tutkinto-id suunnitelma)
-          sopimus-ja-tutkinto-suunnitelma (-> (arkisto/hae jarjestamissopimusid) :sopimus_ja_tutkinto (first) (:jarjestamissuunnitelmat) (first))
-          sopimus-ja-tutkinto-suunnitelma-id (:jarjestamissuunnitelma_id sopimus-ja-tutkinto-suunnitelma)
-          _ (arkisto/poista-suunnitelma! sopimus-ja-tutkinto-suunnitelma-id)
-          sopimus-ja-tutkinto-ei-suunnitelmaa (-> (arkisto/hae jarjestamissopimusid) :sopimus_ja_tutkinto (first))
-          _ (FileUtils/forceDelete suunnitelma-file)]
-      (is (= (:jarjestamissuunnitelma_filename sopimus-ja-tutkinto-suunnitelma) "test-file.pdf"))
-      (is (= (count (:jarjestamissuunnitelmat sopimus-ja-tutkinto-ei-suunnitelmaa)) 0)))))
+  (testing "Lisää järjestämissuunnitelman sopimuksen tutkinnolle"
+    (lisaa-testidata!)
+    (let [jarjestamissopimusid (:jarjestamissopimusid (arkisto/lisaa! (arbitrary-sopimus)))
+          _ (arkisto/lisaa-tutkinnot-sopimukselle!
+              jarjestamissopimusid [12345])]
+      (let [suunnitelma-file (new File "test-file.pdf")
+            _ (.createNewFile suunnitelma-file)
+            suunnitelma {:tempfile suunnitelma-file :filename "test-file.pdf" :content-type "Application/pdf"}
+            sopimus-ja-tutkinto-id (-> (arkisto/hae jarjestamissopimusid) :sopimus_ja_tutkinto (first) :sopimus_ja_tutkinto_id)
+            _ (arkisto/lisaa-suunnitelma-tutkinnolle! sopimus-ja-tutkinto-id suunnitelma)
+            sopimus-ja-tutkinto-suunnitelma (-> (arkisto/hae jarjestamissopimusid) :sopimus_ja_tutkinto (first) (:jarjestamissuunnitelmat) (first))
+            sopimus-ja-tutkinto-suunnitelma-id (:jarjestamissuunnitelma_id sopimus-ja-tutkinto-suunnitelma)
+            _ (arkisto/poista-suunnitelma! sopimus-ja-tutkinto-suunnitelma-id)
+            sopimus-ja-tutkinto-ei-suunnitelmaa (-> (arkisto/hae jarjestamissopimusid) :sopimus_ja_tutkinto (first))
+            _ (FileUtils/forceDelete suunnitelma-file)]
+        (is (= (:jarjestamissuunnitelma_filename sopimus-ja-tutkinto-suunnitelma) "test-file.pdf"))
+        (is (= (count (:jarjestamissuunnitelmat sopimus-ja-tutkinto-ei-suunnitelmaa)) 0))))))
 
 (deftest ^:integraatio uniikki-sopimusnumero-test
   (lisaa-testidata!)

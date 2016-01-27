@@ -13,10 +13,10 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.infra.enum-arkisto
-  (:require  korma.db
-             [korma.core :as sql]
-             [clojure.set :refer [subset?]])
-  (:use [aitu.integraatio.sql.korma]))
+  (:require korma.db
+            [korma.core :as sql]
+            [clojure.set :refer [subset?]]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn hae-kaikki
   "Hakee kaikki nimet enum taulusta."

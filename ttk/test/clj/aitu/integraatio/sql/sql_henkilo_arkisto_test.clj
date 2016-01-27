@@ -24,10 +24,10 @@
 (use-fixtures :each tietokanta-fixture)
 
 (deftest ^:integraatio sql-crud-lisaa!
-  "Testaa crud operaatiot tietokantaan. Aiheuttaa kannan tyhjennyksen tällä hetkellä."
-  (let [arkisto-count (count (arkisto/hae-kaikki))]
-    (arkisto/lisaa! data/default-henkilo)
-    (is (= (count (arkisto/hae-kaikki)) (inc arkisto-count)))))
+  (testing "Testaa crud operaatiot tietokantaan. Aiheuttaa kannan tyhjennyksen tällä hetkellä."
+    (let [arkisto-count (count (arkisto/hae-kaikki))]
+      (arkisto/lisaa! data/default-henkilo)
+      (is (= (count (arkisto/hae-kaikki)) (inc arkisto-count))))))
 
 ;; Vaatii fixturen takia tietokannan, joten merkitään integraatiotestiksi
 (deftest ^:integraatio yhdista-henkilot-test
@@ -112,10 +112,10 @@
         _ (lisaa-jasen! {:toimikunta (:tkunta nykyinen-toimikunta)
                          :henkiloid (:henkiloid nykyinen-henkilo)})
 
-        ei-toimikuntaa (lisaa-henkilo! {:etunimi "ei toimikuntaa"})])
-  (is
-    (empty? (clojure.set/difference #{"mennyt" "nykyinen" "ei toimikuntaa"} (set (map :etunimi (arkisto/hae-ehdoilla {})))))
-    "Lisätyt henkilöt löytyvät"))
+        ei-toimikuntaa (lisaa-henkilo! {:etunimi "ei toimikuntaa"})]
+    (is
+      (empty? (clojure.set/difference #{"mennyt" "nykyinen" "ei toimikuntaa"} (set (map :etunimi (arkisto/hae-ehdoilla {})))))
+      "Lisätyt henkilöt löytyvät")))
 
 (deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
   (let [mennyt-toimikunta  (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})
@@ -128,9 +128,9 @@
         _ (lisaa-jasen! {:toimikunta "TK2"
                          :henkiloid (:henkiloid nykyinen-henkilo)})
 
-        ei-toimikuntaa (lisaa-henkilo! {:etunimi "ei toimikuntaa"})])
-  (is (= (set (map :etunimi (arkisto/hae-ehdoilla {:toimikausi "nykyinen"})))
-         #{"nykyinen"})))
+        ei-toimikuntaa (lisaa-henkilo! {:etunimi "ei toimikuntaa"})]
+    (is (= (set (map :etunimi (arkisto/hae-ehdoilla {:toimikausi "nykyinen"})))
+           #{"nykyinen"}))))
 
 (deftest ^:integraatio hae-ehdoilla-toimikunta
   (let [toimikunta-1 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_fi "foo bar baz"})
@@ -148,9 +148,9 @@
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-3)
                          :henkiloid (:henkiloid henkilo-3)})
 
-        ei-toimikuntaa (lisaa-henkilo!)])
-  (is (= (set (map :etunimi (arkisto/hae-ehdoilla {:toimikunta "bar"})))
-         #{"nimi1" "nimi2"})))
+        ei-toimikuntaa (lisaa-henkilo!)]
+    (is (= (set (map :etunimi (arkisto/hae-ehdoilla {:toimikunta "bar"})))
+           #{"nimi1" "nimi2"}))))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
   (lisaa-henkilo! {:henkiloid 1000
@@ -168,10 +168,10 @@
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-1)
                          :henkiloid (:henkiloid henkilo)})
         _ (lisaa-jasen! {:toimikunta (:tkunta toimikunta-2)
-                         :henkiloid (:henkiloid henkilo)})])
-  (is
-    (empty? (clojure.set/difference #{"foo" "bar"} (set (map :toimikunta_fi (arkisto/hae-ehdoilla {})))))
-    "Lisätyt jäsenyydet löytyvät"))
+                         :henkiloid (:henkiloid henkilo)})]
+    (is
+      (empty? (clojure.set/difference #{"foo" "bar"} (set (map :toimikunta_fi (arkisto/hae-ehdoilla {})))))
+      "Lisätyt jäsenyydet löytyvät")))
 
 ; lein test :only aitu.integraatio.sql.sql-henkilo-arkisto-test/hae-esitetty-henkilo
 (deftest ^:integraatio hae-esitetty-henkilo

@@ -16,17 +16,15 @@
   (:require [clojure.test :refer :all]
             [aitu.asetukset :refer :all]))
 
-(deftest lue-asetukset-test []
+(deftest lue-asetukset-test
   (testing "palauttaa tyhjän mapin jos annettua tiedostoa ei löydy"
     (is (= {} (lue-asetukset-tiedostosta "olematon tiedosto")))))
- 
-(deftest service-path-test []
+
+(deftest service-path-test
   (testing "context path from URL"
      (are [url path] (= (service-path url) path)
        "http://localhost" "/"
        "http://localhost:8080" "/"
        "http://foohost/" "/"
        "https://opintopolku.fi/aitu/" "/aitu"
-       "https://mooze.org:6510/k-rad" "/k-rad")     
-     ))
-       
+       "https://mooze.org:6510/k-rad" "/k-rad")))

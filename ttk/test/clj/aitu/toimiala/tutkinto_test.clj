@@ -18,7 +18,7 @@
             [aitu.toimiala.tutkinto :refer :all]
             [oph.common.util.util :refer [time-forever]]))
 
-(deftest tutkinto-validointi []
+(deftest tutkinto-validointi
   (is (tutkinto? {:tutkintotunnus "123456"
                   :nimi_fi "Autoalan perustutkinto"
                   :opintoala 1

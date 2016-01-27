@@ -39,10 +39,9 @@
                      "from " nimi) :results))
 
 (deftest ^:integraatio enum-arvot-kannassa-test
-  "Testaa että lokaaleista löytyvät enum arvojen vastineet ovat kannassa"
-  []
-  (doseq [avain (keys (enum-arvot))]
-    (let [nimi (enum-keyword->nimi avain)
-          kanta-arvot (set (for [arvo (hae-enum-kannasta nimi)] (:nimi arvo)))
-          lokalisoidut (set (for [arvo (keys (avain (enum-arvot)))] (name arvo)))]
-      (is (= kanta-arvot lokalisoidut)))))
+  (testing "Testaa että lokaaleista löytyvät enum arvojen vastineet ovat kannassa"
+    (doseq [avain (keys (enum-arvot))]
+      (let [nimi (enum-keyword->nimi avain)
+            kanta-arvot (set (for [arvo (hae-enum-kannasta nimi)] (:nimi arvo)))
+            lokalisoidut (set (for [arvo (keys (avain (enum-arvot)))] (name arvo)))]
+        (is (= kanta-arvot lokalisoidut))))))

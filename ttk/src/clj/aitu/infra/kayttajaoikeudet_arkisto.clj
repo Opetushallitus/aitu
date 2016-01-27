@@ -19,8 +19,8 @@
             [oph.korma.korma-auth :as ka]
             [oph.korma.korma-auth :refer [*current-user-oid*]]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
-            [aitu.toimiala.kayttajaoikeudet :as ko])
-  (:use [aitu.integraatio.sql.korma]))
+            [aitu.toimiala.kayttajaoikeudet :as ko]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 ; TODO: miksi first? Eihän tämä nyt voi toimia oikein??
 (defn hae-jasenyys-ja-sopimukset [kayttajaid]
@@ -44,7 +44,9 @@
     alkuperainen-kayttaja))
 
 (defn hae-oikeudet
-  ([oid] "Hakee oikeudet kuvaavan tietorakenteen käyttäjätunnuksen tai impersonoidun käyttäjätunnuksen perusteella."
+  "Hakee oikeudet kuvaavan tietorakenteen käyttäjätunnuksen tai impersonoidun käyttäjätunnuksen perusteella.
+   Ilman parametriä hakee sisäänkirjautuneen käyttäjän oikeudet."
+  ([oid]
     (db/transaction
       (let [alkuperainen-kayttaja (kayttaja-arkisto/hae oid)
             kayttaja (impersonoitu-kayttaja alkuperainen-kayttaja)
@@ -63,7 +65,7 @@
                                                 :toimikausi_loppu]) jasenyys))
          :jarjesto (:jarjesto kayttaja)
          :jarjestamissopimus (set (flatten (map :jarjestamissopimus jasenyys)))})))
-  ([] "Hakee sisäänkirjautuneen käyttäjän oikeudet"
+  ([]
     (db/transaction
       (let [userid ka/*current-user-uid*]
         (assert (realized? *current-user-oid*) (str "Ongelma sisäänkirjautumisessa. Käyttäjätunnuksella " userid " ei ole käyttöoikeuksia. (uid -> oid epäonnistui)."))

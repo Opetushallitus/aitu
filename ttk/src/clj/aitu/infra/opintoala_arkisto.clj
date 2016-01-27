@@ -16,8 +16,8 @@
   (:require [aitu.infra.koulutusala-arkisto :as koulutusala-arkisto]
             [oph.korma.common :as sql-util]
             [aitu.toimiala.opintoala :as domain]
-            [korma.core :as sql])
-  (:use [aitu.integraatio.sql.korma]))
+            [korma.core :as sql]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:test-api tyhjenna!
   "Tyhjentää arkiston."

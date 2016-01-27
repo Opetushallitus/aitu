@@ -31,11 +31,10 @@
   (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero)))
 
 (deftest ^:integraatio sql-crud-lisaa!
-  "Testaa crud operaatiot tietokantaan. Aiheuttaa kannan tyhjennyksen tällä hetkellä."
-  []
-  (let [ttk-count (count (arkisto/hae-kaikki))]
-    (lisaa-toimikunta!)
-    (is (= (count (arkisto/hae-kaikki)) (inc ttk-count)))))
+  (testing "Testaa crud operaatiot tietokantaan. Aiheuttaa kannan tyhjennyksen tällä hetkellä."
+    (let [ttk-count (count (arkisto/hae-kaikki))]
+      (lisaa-toimikunta!)
+      (is (= (count (arkisto/hae-kaikki)) (inc ttk-count))))))
 
 ;(deftest ^:integraatio hae-ttk-test
 ;  []
@@ -43,40 +42,38 @@
 ;    (is (nil? (hae-ja-taydenna "123/456/7890")))))
 
 (deftest ^:integraatio poista-jasenyys-test!
-  "Testaa jäsenyyden poistamisen"
-  []
-  (let [tkunta "T12345"
-        diaarinumero "2013/01/001"]
-    (lisaa-toimikunta! {:diaarinumero diaarinumero, :tkunta tkunta})
-    (lisaa-henkilo! {:henkiloid -1234})
-    (let [alkuperainen-jasen (lisaa-jasen! {:henkiloid -1234, :toimikunta tkunta, :loppupvm (vuoden-kuluttua)})
-          alkuperainen-tilanne (hae-ja-taydenna diaarinumero)
-          poistettava-jasen (assoc alkuperainen-jasen :poistettu true)
-          _ (arkisto/paivita-tai-poista-jasenyys! diaarinumero poistettava-jasen)
-          uusi-tilanne (hae-ja-taydenna diaarinumero)]
-      (testing "henkilö on alussa jäsenenä toimikunnassa"
-        (is (= (-> alkuperainen-tilanne :jasenyys first :henkiloid)
-                   (:henkiloid alkuperainen-jasen))))
-      (testing "poiston jälkeen henkilö ei ole jäsenenä toimikunnassa"
-        (is (nil? (some-> uusi-tilanne :jasenyys first :henkiloid)))))))
+  (testing "Testaa jäsenyyden poistamisen"
+    (let [tkunta "T12345"
+          diaarinumero "2013/01/001"]
+      (lisaa-toimikunta! {:diaarinumero diaarinumero, :tkunta tkunta})
+      (lisaa-henkilo! {:henkiloid -1234})
+      (let [alkuperainen-jasen (lisaa-jasen! {:henkiloid -1234, :toimikunta tkunta, :loppupvm (vuoden-kuluttua)})
+            alkuperainen-tilanne (hae-ja-taydenna diaarinumero)
+            poistettava-jasen (assoc alkuperainen-jasen :poistettu true)
+            _ (arkisto/paivita-tai-poista-jasenyys! diaarinumero poistettava-jasen)
+            uusi-tilanne (hae-ja-taydenna diaarinumero)]
+        (testing "henkilö on alussa jäsenenä toimikunnassa"
+          (is (= (-> alkuperainen-tilanne :jasenyys first :henkiloid)
+                     (:henkiloid alkuperainen-jasen))))
+        (testing "poiston jälkeen henkilö ei ole jäsenenä toimikunnassa"
+          (is (nil? (some-> uusi-tilanne :jasenyys first :henkiloid))))))))
 
 (deftest ^:integraatio paivita-jasenen-tietoja-test!
-  "Testaa jäsenyyden edustus ja rooli tietojen päivittämisen"
-  []
-  (let [tkunta "T12345"
-        diaarinumero "2013/01/001"]
-    (lisaa-toimikunta! {:tkunta tkunta, :diaarinumero diaarinumero})
-    (lisaa-henkilo! {:henkiloid -1234})
-    (let [alkuperainen-jasen (lisaa-jasen! {:toimikunta tkunta, :henkiloid -1234, :edustus "opettaja", :rooli "jasen", :alkupvm (kuukausi-sitten), :loppupvm (vuoden-kuluttua)})
-          paivitettava-jasen (assoc alkuperainen-jasen :edustus "asiantuntija" :rooli "sihteeri")
-          _ (arkisto/paivita-tai-poista-jasenyys! diaarinumero paivitettava-jasen)
-          paivitetty-jasen (-> (hae-ja-taydenna diaarinumero)
-                             :jasenyys
-                             first)]
-      (testing "päivityksen jälkeen edustus on muuttunut"
-        (is (= (:edustus paivitettava-jasen) (:edustus paivitetty-jasen))))
-      (testing "päivitysen jälkeen rooli on muuttunut"
-        (is (= (:rooli paivitettava-jasen) (:rooli paivitetty-jasen)))))))
+  (testing "Testaa jäsenyyden edustus ja rooli tietojen päivittämisen"
+    (let [tkunta "T12345"
+          diaarinumero "2013/01/001"]
+      (lisaa-toimikunta! {:tkunta tkunta, :diaarinumero diaarinumero})
+      (lisaa-henkilo! {:henkiloid -1234})
+      (let [alkuperainen-jasen (lisaa-jasen! {:toimikunta tkunta, :henkiloid -1234, :edustus "opettaja", :rooli "jasen", :alkupvm (kuukausi-sitten), :loppupvm (vuoden-kuluttua)})
+            paivitettava-jasen (assoc alkuperainen-jasen :edustus "asiantuntija" :rooli "sihteeri")
+            _ (arkisto/paivita-tai-poista-jasenyys! diaarinumero paivitettava-jasen)
+            paivitetty-jasen (-> (hae-ja-taydenna diaarinumero)
+                               :jasenyys
+                               first)]
+        (testing "päivityksen jälkeen edustus on muuttunut"
+          (is (= (:edustus paivitettava-jasen) (:edustus paivitetty-jasen))))
+        (testing "päivitysen jälkeen rooli on muuttunut"
+          (is (= (:rooli paivitettava-jasen) (:rooli paivitetty-jasen))))))))
 
 ;; Ilman hakuehtoja hae-ehdoilla palauttaa kaikki toimikunnat
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
@@ -204,55 +201,50 @@
         (is (every? #(and (contains? % :nimi_fi) (contains? % :nimi_sv)) osumat-sv))))))
 
 (deftest ^:integraatio lisaa-uusi-jasenyys-test!
-  "Testaa jäsenyyden lisääminen"
-  []
-  (lisaa-toimikunta! {:tkunta "T12345", :diaarinumero "2013/01/001"})
-  (lisaa-henkilo! {:henkiloid -1234})
-  (let [alkuperainen-tilanne (hae-ja-taydenna "2013/01/001")]
-    (testing "lisäyksen jälkeen jäsenyys on liitettynä toimikuntaan"
-      ;; kun
-      (lisaa-jasen! {:toimikunta "T12345", :henkiloid -1234})
-      ;; niin
-      (let [uusi-tilanne (hae-ja-taydenna "2013/01/001")]
-        (is (= ( + 1 (count (:jasenyys alkuperainen-tilanne)))
-               (count (:jasenyys uusi-tilanne)))) ))))
+  (testing "Testaa jäsenyyden lisääminen"
+    (lisaa-toimikunta! {:tkunta "T12345", :diaarinumero "2013/01/001"})
+    (lisaa-henkilo! {:henkiloid -1234})
+    (let [alkuperainen-tilanne (hae-ja-taydenna "2013/01/001")]
+      (testing "lisäyksen jälkeen jäsenyys on liitettynä toimikuntaan"
+        ;; kun
+        (lisaa-jasen! {:toimikunta "T12345", :henkiloid -1234})
+        ;; niin
+        (let [uusi-tilanne (hae-ja-taydenna "2013/01/001")]
+          (is (= ( + 1 (count (:jasenyys alkuperainen-tilanne)))
+                 (count (:jasenyys uusi-tilanne)))) )))))
 
 (deftest ^:integraatio muokkaa-toimikunnan-perustietoja-test!
-  "Testaa toimikunnan perustietojen muokkaaminen"
-  []
-  (let [alkuperainen-toimikunta (lisaa-toimikunta! {:diaarinumero "2013/01/001", :kielisyys "fi"})]
-    ;; Kun
-    (arkisto/paivita! (:diaarinumero alkuperainen-toimikunta) (assoc alkuperainen-toimikunta :kielisyys "sv"))
-    ;; Niin
-    (let [uusi-tilanne (hae-ja-taydenna "2013/01/001")]
-      (is (not= (:kielisyys uusi-tilanne) (:kielisyys alkuperainen-toimikunta))))))
+  (testing "Testaa toimikunnan perustietojen muokkaaminen"
+    (let [alkuperainen-toimikunta (lisaa-toimikunta! {:diaarinumero "2013/01/001", :kielisyys "fi"})]
+      ;; Kun
+      (arkisto/paivita! (:diaarinumero alkuperainen-toimikunta) (assoc alkuperainen-toimikunta :kielisyys "sv"))
+      ;; Niin
+      (let [uusi-tilanne (hae-ja-taydenna "2013/01/001")]
+        (is (not= (:kielisyys uusi-tilanne) (:kielisyys alkuperainen-toimikunta)))))))
 
 (deftest ^:integraatio muokkaa-toimikunnan-sahkoposti-test!
-  "Testaa toimikunnan sähköpostiosoitteen muokkaaminen"
-  []
-  (let [alkuperainen-toimikunta (lisaa-toimikunta! {:diaarinumero "2013/01/001", :sahkoposti "vanha@posti.fi"})]
-    ;; Kun
-    (arkisto/paivita! (:diaarinumero alkuperainen-toimikunta) (assoc alkuperainen-toimikunta :sahkoposti "uusi@mail.com"))
-    ;; Niin
-    (let [uusi-tilanne (hae-ja-taydenna "2013/01/001")]
-      (is (not= (:sahkoposti uusi-tilanne) (:sahkoposti alkuperainen-toimikunta))))))
+  (testing "Testaa toimikunnan sähköpostiosoitteen muokkaaminen"
+    (let [alkuperainen-toimikunta (lisaa-toimikunta! {:diaarinumero "2013/01/001", :sahkoposti "vanha@posti.fi"})]
+      ;; Kun
+      (arkisto/paivita! (:diaarinumero alkuperainen-toimikunta) (assoc alkuperainen-toimikunta :sahkoposti "uusi@mail.com"))
+      ;; Niin
+      (let [uusi-tilanne (hae-ja-taydenna "2013/01/001")]
+        (is (not= (:sahkoposti uusi-tilanne) (:sahkoposti alkuperainen-toimikunta)))))))
 
 (deftest ^:integraatio jasenyyden-voimassaolo-vanhalla-toimikunnalla-test!
-  "Testaa jäsenyyden voimassaolon vanhalla toimikunnalla"
-  []
-  (lisaa-toimikunta! {:tkunta "T12345", :diaarinumero "2013/01/001", :toimikausi_alku menneisyydessa, :toimikausi_loppu menneisyydessa})
-  (lisaa-henkilo! {:henkiloid -1111})
-  (let [jasen (lisaa-jasen! {:toimikunta "T12345", :henkiloid -1111, :alkupvm menneisyydessa, :loppupvm tulevaisuudessa})]
-    ;; Niin
-    (let [haettu-toimikunta (hae-ja-taydenna "2013/01/001")]
-      (is (false? (:voimassa (first (:jasenyys haettu-toimikunta))))))))
+  (testing "Testaa jäsenyyden voimassaolon vanhalla toimikunnalla"
+    (lisaa-toimikunta! {:tkunta "T12345", :diaarinumero "2013/01/001", :toimikausi_alku menneisyydessa, :toimikausi_loppu menneisyydessa})
+    (lisaa-henkilo! {:henkiloid -1111})
+    (let [jasen (lisaa-jasen! {:toimikunta "T12345", :henkiloid -1111, :alkupvm menneisyydessa, :loppupvm tulevaisuudessa})]
+      ;; Niin
+      (let [haettu-toimikunta (hae-ja-taydenna "2013/01/001")]
+        (is (false? (:voimassa (first (:jasenyys haettu-toimikunta)))))))))
 
 (deftest ^:integraatio jasenyyden-voimassaolo-voimassaolevalla-toimikunnalla-test!
-  "Testaa jäsenyyden voimassaolon voimassaolevalla toimikunnalla"
-  []
-  (lisaa-toimikunta! {:tkunta "T12345", :diaarinumero "2013/01/001", :toimikausi_alku menneisyydessa, :toimikausi_loppu tulevaisuudessa})
-  (lisaa-henkilo! {:henkiloid -1111})
-  (let [jasen (lisaa-jasen! {:toimikunta "T12345", :henkiloid -1111, :alkupvm menneisyydessa, :loppupvm tulevaisuudessa})]
-    ;; Niin
-    (let [haettu-toimikunta (hae-ja-taydenna "2013/01/001")]
-      (is (true? (:voimassa (first (:jasenyys haettu-toimikunta))))))))
+  (testing "Testaa jäsenyyden voimassaolon voimassaolevalla toimikunnalla"
+    (lisaa-toimikunta! {:tkunta "T12345", :diaarinumero "2013/01/001", :toimikausi_alku menneisyydessa, :toimikausi_loppu tulevaisuudessa})
+    (lisaa-henkilo! {:henkiloid -1111})
+    (let [jasen (lisaa-jasen! {:toimikunta "T12345", :henkiloid -1111, :alkupvm menneisyydessa, :loppupvm tulevaisuudessa})]
+      ;; Niin
+      (let [haettu-toimikunta (hae-ja-taydenna "2013/01/001")]
+        (is (true? (:voimassa (first (:jasenyys haettu-toimikunta)))))))))

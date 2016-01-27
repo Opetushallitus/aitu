@@ -29,8 +29,8 @@
              [aitu.toimiala.voimassaolo.saanto.jarjestamissopimus :as voimassaolo-saanto]
              [aitu.toimiala.voimassaolo.saanto.osoitepalvelu-jarjestamissopimus :as osoitepalvelu-voimassaolo]
              [clj-time.core :as time]
-             [aitu.auditlog :as auditlog])
-  (:use [aitu.integraatio.sql.korma]))
+             [aitu.auditlog :as auditlog]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:private aseta-oppilaitos-kentta [sopimus]
   (assoc sopimus :oppilaitos (:tutkintotilaisuuksista_vastaava_oppilaitos sopimus)))
@@ -253,7 +253,6 @@
                                   (sql/where {:jarjestamissopimus.voimassa true})
                                   (sql/group :tutkintoversio.tutkintotunnus :jarjestamissopimus.koulutustoimija))
         koulutustoimija->tutkinnot (group-by :koulutustoimija sopimukset-ja-tutkinnot)]
-    koulutustoimija->tutkinnot
     (map-values #(map (fn [m] (dissoc m :koulutustoimija)) %) koulutustoimija->tutkinnot)))
 
 (defn hae-kaikki-osoitepalvelulle

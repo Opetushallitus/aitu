@@ -13,8 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.infra.peruste-arkisto
-  (:require [korma.core :as sql])
-  (:use [aitu.integraatio.sql.korma]))
+  (:require [korma.core :as sql]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:test-api lisaa!
   "Lisää tutkinnon perusteen arkistoon."

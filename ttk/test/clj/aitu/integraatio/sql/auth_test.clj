@@ -24,7 +24,7 @@
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
-(deftest ^:integraatio auth-user-set! []
+(deftest ^:integraatio auth-user-set!
   (testing "testaa että authorization systeemi audit-trailia varten toimii"
     (tietokanta-fixture
       #(let [henkilo-id (:henkiloid (henkilo-arkisto/lisaa! data/default-henkilo))
@@ -44,7 +44,6 @@
       (f))))
 
 (deftest ^:integraatio puuttuva-kayttaja-ei-kelpaa!
-  []
   (testing "Testaa että kannasta puuttuvalla käyttäjätunnuksella ei voi avata kantayhteyksiä."
     (let [puuttuva-kayttaja {:oid "AKUANKKA"}
           olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid auth/default-test-user-oid, :uid auth/default-test-user-uid }
@@ -57,10 +56,8 @@
         arbitrary-sql-read olemassaoleva-kayttaja))))
 
 (deftest ^:integraatio lakannut-kayttaja-ei-kelpaa!
-  []
   (testing "Testaa että lakkautetulla käyttäjätunnuksella ei voi avata kantayhteyksiä."
     (let [lakannut-kayttajatunnus "KONVERSIO"]
       (is (thrown? Throwable
                    (tietokanta-fixture-oid
                      henkilo-arkisto/hae-kaikki lakannut-kayttajatunnus))))))
-

@@ -14,8 +14,8 @@
 
 (ns aitu.infra.haku-arkisto
   (:require  [korma.core :as sql]
-             [clojure.string :as s])
-  (:use [aitu.integraatio.sql.korma]))
+             [clojure.string :as s]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 (def hakutiedot [{:url "/toimikunta/*/tiedot"
                   :url-kentta "diaarinumero"

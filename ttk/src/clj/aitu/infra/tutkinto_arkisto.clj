@@ -21,8 +21,8 @@
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [oph.korma.common :as sql-util]
             [clojure.string :refer [blank?]]
-            [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo])
-  (:use [aitu.integraatio.sql.korma]))
+            [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:test-api tyhjenna!
   "Tyhjentää arkiston."

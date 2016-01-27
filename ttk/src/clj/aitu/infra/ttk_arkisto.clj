@@ -25,8 +25,8 @@
             [oph.common.util.util :refer :all]
             [oph.korma.common :as sql-util]
             [clojure.string :refer [blank? split]]
-            [clojure-csv.core :refer [write-csv]])
-  (:use [aitu.integraatio.sql.korma]))
+            [clojure-csv.core :refer [write-csv]]
+            [aitu.integraatio.sql.korma :refer :all]))
 
 ; TODO: unique? 
 (defn hae-avaimella
