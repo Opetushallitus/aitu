@@ -40,7 +40,7 @@
 (defn onko-kayttajan-rooli?
   ([kayttaja-map rooli]
     {:pre [(some #{(:roolitunnus kayttaja-map)} (vals kayttajaroolit))]}
-    (= rooli (:roolitunnus kayttaja-map)))
+    #spy/p (= #spy/p rooli #spy/p (:roolitunnus kayttaja-map)))
   ([rooli-kw]
     (onko-kayttajan-rooli? *current-user-authmap* (rooli-kw kayttajaroolit))))
 
@@ -88,12 +88,12 @@
     (some #(= % roolitunnus) roolitunnukset)))
 
 (defn osoitepalvelu-kayttaja? [] 
-  (or (onko-kayttajan-rooli? :osoitepalvelu))
-      (onko-kayttajan-rooli? :yllapitaja))
+  (or (onko-kayttajan-rooli? :osoitepalvelu)
+      (onko-kayttajan-rooli? :yllapitaja)))
 
 (defn aipal-kayttaja? [] 
-  (or (onko-kayttajan-rooli? :aipal))
-      (onko-kayttajan-rooli? :yllapitaja ))
+  (or (onko-kayttajan-rooli? :aipal)
+      (onko-kayttajan-rooli? :yllapitaja)))
 
 (defn jarjesto-kayttaja? [] 
   (onko-kayttajan-rooli? :jarjesto))
