@@ -98,6 +98,7 @@
       (map #(select-keys % (:avaimet ehdot)) toimikunnat)
       toimikunnat)))
 
+; TODO: toimikausiarkistossa on tämä sama funktio.
 (defn hae-toimikaudet []
   (sql/select toimikausi
      (sql/order :alkupvm :asc)))
@@ -230,7 +231,7 @@
 (defn lisaa-jasen!
   "Lisää toimikunnan jäsenen"
   [toimikunnan_henkilo]
-  (auditlog/jasenyys-operaatio! :lisays (:tkunta toimikunnan_henkilo) (:jasenyys_id toimikunnan_henkilo))
+  (auditlog/jasenyys-operaatio! :lisays (:toimikunta toimikunnan_henkilo) (:jasenyys_id toimikunnan_henkilo))
   (sql/insert jasenyys
     (sql/values toimikunnan_henkilo)))
 
