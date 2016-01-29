@@ -19,11 +19,13 @@
       (is (= "foo" (:vapaateksti_kokemus (first not-csv)))))))
 
 (defn ^:private lisaa-jasenesitys!
-  [status]
-  (let [henkilo (lisaa-henkilo!)]
-    (lisaa-jasen! {:toimikunta "Gulo gulo" :henkiloid (:henkiloid henkilo) 
-                   :status status :vapaateksti_kokemus "foo"
-                   :esittaja -1})))
+  ([status] 
+    (lisaa-jasenesitys! status {}))
+  ([status hlo]
+    (let [henkilo (lisaa-henkilo! hlo)]
+      (lisaa-jasen! {:toimikunta "Gulo gulo" :henkiloid (:henkiloid henkilo) 
+                     :status status :vapaateksti_kokemus "foo"
+                     :esittaja -1}))))
   
 (deftest ^:integraatio testaa-yhteenveto-laskentalogiikka
   (testing "testataan yhteenveto-taulukon numeroiden laskennan logiikka, happy case"
@@ -43,4 +45,14 @@
       (is (= yhteensa-j2-kaikki {:nimitetty_miehia 0, :nimitetty_sv 0, :nimitetty_naisia 0, :nimi_fi "Lattaraudan taivutuksen testitoimikunta", :nimitetty_fi 0, 
                                  :nimi_sv "Ruotsalaisen lattaraudan testitoimikunta", :esitetty_fi 0, :esitetty_naisia 0, :esitetty_miehia 0, :diaarinumero "80186/8086", :esitetty_sv 0}))
    )))
-     
+
+(deftest ^:integraatio kaksikielisten-summaus
+  (testing "kaksikieliset henkilöt pitäisi laskea sekä suomenkielisten että ruotsinkielisten yhteismäärään."
+    (let [_ (lisaa-jasenesitys! "esitetty" {:aidinkieli "fi"})
+          _ (lisaa-jasenesitys! "esitetty" {:aidinkieli "sv"})
+          _ (lisaa-jasenesitys! "esitetty" {:aidinkieli "2k"})
+          yhteensa (first (arkisto/hae-yhteenveto -1 (hae-tuleva-toimikausi) false))]
+
+      (is (= yhteensa  {:nimitetty_miehia 0, :nimitetty_sv 0, :nimitetty_naisia 0, :nimi_fi "Aavasaksalainen testitoimikunta", :nimitetty_fi 0, 
+                    :nimi_sv "Aakkosissa Aavasaksa asettuu alkuun", :esitetty_fi 2, :esitetty_naisia 0, :esitetty_miehia 3, :diaarinumero "6510/6502", :esitetty_sv 2}))
+   )))
