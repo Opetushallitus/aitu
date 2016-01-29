@@ -104,6 +104,7 @@
                                                                                     (sql/modifier "DISTINCT")
                                                                                     (sql/fields :jasenyys.toimikunta)
                                                                                     (sql/where {:jasenyys.esittaja [not= nil]}))]}))
+      (sql/order :tutkintotoimikunta.nimi_fi)
       sql/exec)))
 
 (defn poista! [jasenyys_id]
