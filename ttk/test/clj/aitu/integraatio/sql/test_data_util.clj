@@ -113,6 +113,11 @@
     (doto (merge (default-toimikunta) toimikunta)
       toimikunta-arkisto/lisaa!)))
 
+(defn hae-tuleva-toimikausi
+  []
+  (let [id (:toimikausi_id (last (filter #(false? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
+  id))
+
 (defn hae-vanha-toimikausi
   []
   (let [id (:toimikausi_id (first (filter #(false? (:voimassa %)) (ttk-arkisto/hae-toimikaudet))))]
