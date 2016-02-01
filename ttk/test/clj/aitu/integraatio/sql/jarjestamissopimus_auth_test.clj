@@ -67,11 +67,6 @@
   (with-user-rights
     #(operaatio-onnistuu autorisoi-liitteen-luku "1")))
 
-(deftest  ^:integraatio suunnitelman-luku-ei-onnistu-jos-ei-toimikunnan-jasen
-  (lisaa-jarjestamissopimus-toimikunnalle! "T12345")
-  (with-user-rights
-    #(operaatio-ei-onnistu autorisoi-liitteen-luku "2")))
-
 (deftest ^:integraatio oph-katselija-jarjestamissopimus-auth-test
   (lisaa-jarjestamissopimus-toimikunnalle! "T12345")
   (let [oph-katselija-kayttaja {:roolitunnus (:oph-katselija kayttajaroolit)}]
