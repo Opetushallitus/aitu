@@ -56,9 +56,8 @@
           jasen-toimikunnat (set (filter #(not (nil? %)) (map :tkunta (:jasenyys jasenyys-map))))]
       (is (= jasen-toimikunnat (set ["T12345" "T11111"]))))))
 
-
 (deftest ^:integraatio kayttajaoikeudet-jasenesitys-test
-  (binding [*current-user-authmap* 
+  (binding [*current-user-authmap*
             {:oid "OID.T-9999"
              :henkiloid "-1000"
              :jarjesto -1
@@ -66,5 +65,3 @@
     (let [oikeudet (arkisto/hae-oikeudet)]
       (is (= #{{:henkiloid -1000} {:henkiloid -1001}}
             (set (hae-muokattavat-jasenesitys)))))))
- 
-

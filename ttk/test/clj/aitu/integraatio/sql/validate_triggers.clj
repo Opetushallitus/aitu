@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.integraatio.sql.validate-triggers  
+(ns aitu.integraatio.sql.validate-triggers
   (:require
     [clojure.test :refer [deftest testing is use-fixtures]]
     [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]

@@ -120,7 +120,7 @@
   [tutkintoversio_id jarjestysnumero osa]
   (let [osa (sql/insert tutkinnonosa
               (sql/values (assoc osa
-                                 :versio (sql/sqlfn coalesce 
+                                 :versio (sql/sqlfn coalesce
                                                     (sql/subselect tutkinnonosa
                                                       (sql/fields (sql/raw "max(versio)+1"))
                                                       (sql/where {:osatunnus (:osatunnus osa)}))
@@ -142,7 +142,7 @@
         (sql/set-fields {:jarjestysnumero jarjestysnumero})
         (sql/where {:tutkintoversio tutkintoversio_id
                     :tutkinnonosa (:tutkinnonosa_id vanha-osa)})))
-    (lisaa-tutkinnon-osa! tutkintoversio_id jarjestysnumero (-> 
+    (lisaa-tutkinnon-osa! tutkintoversio_id jarjestysnumero (->
                                                               (hae-tutkinnonosan-uusin-versio (:osatunnus osa))
                                                               (merge osa)
                                                               (update-in [:versio] (fnil inc 0))
@@ -175,7 +175,7 @@
 (defn ^:integration-api paivita-osaamisala!
   "Lisää uuden version osaamisalasta"
   [oala]
-  (let [vanha-ala (hae-osaamisalan-uusin-versio (:osaamisalatunnus oala))] 
+  (let [vanha-ala (hae-osaamisalan-uusin-versio (:osaamisalatunnus oala))]
     (if (= (:tutkintoversio vanha-ala) (:tutkintoversio oala))
       (sql-util/update-unique osaamisala
         (sql/set-fields oala)

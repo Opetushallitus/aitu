@@ -24,7 +24,6 @@
   "Sallittu tiedostotyyppi sopimuksen liitteeksi"
   (str (java.lang.System/getProperty "user.dir") "/grimlock_suunnitelma.jpg"))
 
-
 (defn avaa-sopimuksen-muokkaussivu [jarjestamissopimusid]
   (avaa (sopimussivu jarjestamissopimusid))
   (w/click "button[ng-click=\"muokkaa('sopimus')\"]")
@@ -120,7 +119,6 @@
 (defn nayttotutkintomestari-kentan-arvo
   [luokka]
   (hae-teksti-jquery-selektorilla (str "$('." luokka " fieldset > div:contains(\"Näyttötutkintomestari:\")')")))
-
 
 (deftest ^:no-ie jarjestamissopimuksen-muokkaussivu-test
   (testing "Järjestämissopimuksen muokkausivu aukeaa kun painaa muokkaa nappia sopimuksen tietosivulta"

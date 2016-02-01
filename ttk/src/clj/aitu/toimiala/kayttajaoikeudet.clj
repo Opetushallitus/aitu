@@ -50,7 +50,7 @@
 
 (defn yllapitaja? []
   (onko-kayttajan-rooli? :yllapitaja))
- 
+
 (defn oph-katselija? []
   (onko-kayttajan-rooli? :oph-katselija))
 
@@ -87,28 +87,28 @@
         roolitunnukset (vals (select-keys kayttajaroolit ihmiskayttajat))]
     (some #(= % roolitunnus) roolitunnukset)))
 
-(defn osoitepalvelu-kayttaja? [] 
+(defn osoitepalvelu-kayttaja? []
   (or (onko-kayttajan-rooli? :osoitepalvelu)
       (onko-kayttajan-rooli? :yllapitaja)))
 
-(defn aipal-kayttaja? [] 
+(defn aipal-kayttaja? []
   (or (onko-kayttajan-rooli? :aipal)
       (onko-kayttajan-rooli? :yllapitaja)))
 
-(defn jarjesto-kayttaja? [] 
+(defn jarjesto-kayttaja? []
   (onko-kayttajan-rooli? :jarjesto))
 
-(def sallittu-kaikille 
+(def sallittu-kaikille
   "Sallittu kaikille, ilman autentikointia. Tätä on tarkoitus käyttää vain julkisesti saatavilla olevien tietojen välittämiseen."
   (constantly true))
 
 (defn sallittu-yllapitajalle-ja-jarjestolle [& _] (or (yllapitaja?) (jarjesto-kayttaja?)))
 
-(defn toimikunnan-katselu? 
+(defn toimikunnan-katselu?
   "Sallittu muille käyttäjille, mutta ei järjestökäyttäjälle."
   ([x] (toimikunnan-katselu?))
   ([]
-    (and (aitu-kayttaja?)      
+    (and (aitu-kayttaja?)
       (let [roolitunnus (:roolitunnus *current-user-authmap*)]
         (not (= roolitunnus (:jarjesto kayttajaroolit)))))))
 
@@ -180,7 +180,6 @@
     :suunnitelma_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
     :sopimuksen_liite_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))})
 
-
 (def toimikuntatoiminnot
   `{:sopimus_lisays  #(or (yllapitaja?) (toimikunnan-muokkausoikeus? %))})
 
@@ -191,7 +190,7 @@
 (defn saako-muokata-jasenesitys? [henkiloid x]
   (let [henkilot (flatten (hae-muokattavat-jasenesitys))]
     (true? (some #(= henkiloid (:henkiloid %)) henkilot))))
- 
+
 ; käyttäjätunnus joka annetaan parametrina ei ole "current user" vaan käyttäjä johon henkilö assosioituu
 ; tavallinen käyttäjä ei saa assosioida uudelleen henkilöä johonkin toiseen käyttäjätunnukseen.
 (def henkilotoiminnot
@@ -227,8 +226,8 @@
         toimikunnat-joihin-muokkausrooli (filter #(some toimikunnan-muokkaus-roolit [(:rooli %)]) kayttajan-toimikunnat)
         muokattaviin-toimikuntiin-kuuluvat-henkilot (filter jasenyys-voimassa? (ttk-arkisto/hae-toimikuntien-henkilot (map :tkunta toimikunnat-joihin-muokkausrooli)))
         jasenesitetyt-henkilot (hae-muokattavat-jasenesitys)
-        kaikki-muokattavat-henkilot (distinct 
-                                      (flatten (conj muokattaviin-toimikuntiin-kuuluvat-henkilot 
+        kaikki-muokattavat-henkilot (distinct
+                                      (flatten (conj muokattaviin-toimikuntiin-kuuluvat-henkilot
                                                  (select-keys kayttajan-tiedot [:henkiloid])
                                                  jasenesitetyt-henkilot)))]
     (-> kayttajan-tiedot

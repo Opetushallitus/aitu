@@ -18,7 +18,6 @@
             [aitu.toimiala.jarjestamissopimus :as sopimus]
             [aitu.toimiala.voimassaolo.toimikunta :as voimassaolo]))
 
-; TODO miksi some? milloin on hyvä että toimikunta on nil? 
 (defn taydenna-toimikunta
   "Täydentää toimikunnan tiedot, kuten voimassaolo"
   [toimikunta]

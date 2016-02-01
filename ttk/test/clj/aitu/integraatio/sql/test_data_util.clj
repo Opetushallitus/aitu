@@ -142,7 +142,6 @@
       (lisaa-toimikunta! tk)))
   ([] (lisaa-toimikunta-voimassaolevalle-kaudelle! (default-toimikunta))))
 
-
 (def default-henkilo {:etunimi "Taimi"
                       :sukunimi "Pilvilinna"
                       :organisaatio "organisaatio"

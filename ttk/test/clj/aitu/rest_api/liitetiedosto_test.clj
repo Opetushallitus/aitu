@@ -3,7 +3,7 @@
     [clojure.test :refer :all]
     [aitu.rest-api.session-util :refer :all]
     [peridot.core :as peridot]))
- 
+
 (deftest ^:integraatio vaaraa-tiedostotyyppia-ei-saa-lapi
   (let [crout (init-peridot!)
         file (clojure.java.io/file "test-resources/angband.zip")]

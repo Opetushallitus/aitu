@@ -44,7 +44,7 @@
      [:kayttaja_oid #(or (kayttaja-arkisto/kayttaja-liitetty-henkiloon? henkiloid %) ; käyttäjä liitetty tähän henkilöön
                        (not (kayttaja-arkisto/kayttaja-liitetty-johonkin-henkiloon? %))) ; tai ei mihinkään henkilöön
       ; validointiviesti
-      [:kayttaja-kaytossa (henkilon-nimi 
+      [:kayttaja-kaytossa (henkilon-nimi
                             (when kayttaja-oid
                               (kayttaja-arkisto/hae-kayttajaan-liitetty-henkilo kayttaja-oid)))]])))
 
@@ -76,12 +76,11 @@
   "Tarkistaa että järjestö-käyttäjä ei yritä päivittää kenttiä, joiden käsittely ei ole sallittua"
   [henkilodto]
   (when (= (:roolitunnus kayttajaoikeudet/*current-user-authmap*) "JARJESTO")
-    (cond 
+    (cond
       (:kayttaja_oid henkilodto)
         (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi asettaa kayttaja_oid-tietoa"))
       (:lisatiedot henkilodto)
         (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi käsitellä lisätieto-kenttää")))))
-    
 
 (defroutes* reitit
   (POST* "/" [& henkilodto]
@@ -115,7 +114,7 @@
 
   (GET* "/:henkiloid" [henkiloid]
     :kayttooikeus :henkilo_haku
-    (json-response (henkilo/taydenna-henkilo 
+    (json-response (henkilo/taydenna-henkilo
                      (piilota-salaiset-kentat (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid) (:jarjesto kayttajaoikeudet/*current-user-authmap*))))))
 
   (GET* "/nimi/:etunimi/:sukunimi" [etunimi sukunimi]

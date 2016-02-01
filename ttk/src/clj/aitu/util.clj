@@ -114,7 +114,7 @@
 
 (defn convert-values
   ([m value-map] (clojure.walk/postwalk #(get value-map % %) m))
-  ([m] (convert-values m type-mapping))) 
+  ([m] (convert-values m type-mapping)))
 
 (defn csv-rivi-soluiksi [csv-rivi]
   (string/split csv-rivi #"\;(?=([^\"]*\"[^\"]*\")*(?![^\"]*\"))"))

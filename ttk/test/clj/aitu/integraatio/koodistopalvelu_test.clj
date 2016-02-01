@@ -18,7 +18,6 @@
             [aitu.integraatio.koodistopalvelu :refer :all]
             [aitu.util :refer :all]))
 
-
 ;; Muoto jossa data tulee tutkinto-arkistosta
 (def tutkinto {:tutkintotunnus "1"
                :voimassa_alkupvm (time/local-date 2014 1 1)

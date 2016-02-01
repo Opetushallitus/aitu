@@ -9,7 +9,7 @@
 (deftest ^:integraatio hae-csv-toimii
   (testing "hakee jäsenesitysten tiedot csv-muodossa"
     (let [henkilo (lisaa-henkilo! {:lisatiedot "fubar"})
-          jasenyys (lisaa-jasen! {:toimikunta "Gulo gulo" :henkiloid (:henkiloid henkilo) 
+          jasenyys (lisaa-jasen! {:toimikunta "Gulo gulo" :henkiloid (:henkiloid henkilo)
                                   :status "esitetty" :vapaateksti_kokemus "foo"
                                   :esittaja -1})
           csv (arkisto/hae -1 {} true)

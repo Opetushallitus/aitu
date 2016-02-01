@@ -34,7 +34,7 @@
                    :request-method method
                    :params params))
 
-(defn mock-request 
+(defn mock-request
   "Autentikoitu testikäyttäjä ja fake CSRF-token."
   ([app url method params user-map]
     (with-auth-user
@@ -43,7 +43,7 @@
          :headers { "x-xsrf-token" "token"
                     "uid" (:uid user-map)}
          :cookies { "XSRF-TOKEN" {:value "token"}}
-         :params params) 
+         :params params)
       user-map))
   ([app url method params]
     (mock-request app url method params default-usermap)))
@@ -58,5 +58,3 @@
 
 (defn body-json [response]
   (cheshire/parse-string (:body response) true))
-
-    

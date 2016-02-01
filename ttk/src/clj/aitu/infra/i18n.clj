@@ -20,7 +20,7 @@
             [compojure.core :as c]
             [oph.common.util.util :refer [pisteavaimet->puu]]
             [oph.common.infra.i18n :refer [*locale*]]))
- 
+
 (defn tekstit []
   (ResourceBundle/clearCache)
   (let [bundle (ResourceBundle/getBundle "i18n/tekstit" ^Locale *locale*)]

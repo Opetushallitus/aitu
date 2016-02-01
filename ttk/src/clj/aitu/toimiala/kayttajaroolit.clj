@@ -14,7 +14,7 @@
 
 (ns aitu.toimiala.kayttajaroolit)
 
-(def ihmiskayttajat 
+(def ihmiskayttajat
   #{:kayttaja :yllapitaja :oph-katselija :jarjesto})
 
 (def jarjestelmat

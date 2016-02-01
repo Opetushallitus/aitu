@@ -26,7 +26,7 @@
 
 (defn kayttaja-liitetty-henkiloon?
   [henkiloid oid]
-  (and 
+  (and
     (not (nil? oid))
     (= oid (:kayttaja_oid (select-unique-or-nil taulut/henkilo
                             (sql/where {:henkiloid henkiloid})

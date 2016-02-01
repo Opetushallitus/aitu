@@ -80,19 +80,18 @@
                          {:henkilo.sukunimi [ilike nimi]})))))))
 
 (defn ^:private select-rajaa-jarjestolla [q jarjestoid]
-  (sql/where q (or 
+  (sql/where q (or
                  {:henkilo.jarjesto jarjestoid}
                  {:henkilo.jarjesto [in (sql/subselect :jarjesto
                                           (sql/fields :jarjestoid)
                                           (sql/where {:keskusjarjestoid jarjestoid}))]})))
 
 (defn hae-jarjeston-esitetyt-henkilot
-  [jarjestoid]  
+  [jarjestoid]
   (sql/select :henkilo
-    (sql/fields :henkiloid)    
+    (sql/fields :henkiloid)
     (select-rajaa-jarjestolla jarjestoid)
     (sql/where (sql/raw "(not exists (select 42 from jasenyys j where j.henkiloid = henkilo.henkiloid and j.status='nimitetty'))"))))
- 
 
 (defn yhdista-henkilot-ja-jasenyydet
   [henkilot jasenyydet]
@@ -131,7 +130,7 @@
   []
   (hae-henkilot-toimikaudella "tuleva"))
 
-; TODO: unique? 
+; TODO: unique?
 (defn hae
   "Hakee henkilön id:n perusteella"
   [id]

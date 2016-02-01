@@ -43,7 +43,6 @@
   (fn [arvo]
     (if arvo (time/within? alkupvm loppupvm arvo) true)))
 
-
 (defn validoi-ei-paallekkain
   "Palauttaa predikaattifunktion, joka testaa ettei validoitava arvo ole päällekkäin annettujen päivämäärävälien kanssa"
   [valit]

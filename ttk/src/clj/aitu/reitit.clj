@@ -97,7 +97,7 @@
         {:basePath  (str (service-path base-url))
          :info {:title "AITU API"
                 :description "AITUn rajapinnat. Sisältää sekä integraatiorajapinnat muihin järjestelmiin, että Aitun sisäiseen käyttöön tarkoitetut rajapinnat."}})
-    (context* "/api/ttk"  [] aitu.rest-api.ttk/raportti-reitit) 
+    (context* "/api/ttk"  [] aitu.rest-api.ttk/raportti-reitit)
     (context* "/api/ttk" [] aitu.rest-api.ttk/paatos-reitit)
     (context* "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
     (context* "/api/henkilo" [] aitu.rest-api.henkilo/raportti-reitit)

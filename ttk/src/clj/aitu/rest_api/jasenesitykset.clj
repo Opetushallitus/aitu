@@ -72,7 +72,6 @@
             (map #(apply dissoc % csv-poistettavat-kentat))
             (map #(update % :luotuaika time-coerce/to-local-date))
             (map #(update % :muutettuaika time-coerce/to-local-date)))
- 
           henkilo/piilota-salaiset-henkiloilta
           convert-values
           (muodosta-csv kenttien-jarjestys sarakkeiden-otsikot)

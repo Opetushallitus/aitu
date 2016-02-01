@@ -37,12 +37,12 @@
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (arkisto/hae-julkiset-tiedot)))
   (GET* "/haku" [termi :as req]
-    :summary "Hakee kaikki koulutustoimijat joiden nimi sisältää annetun termin" 
+    :summary "Hakee kaikki koulutustoimijat joiden nimi sisältää annetun termin"
     :return [KoulutustoimijaLinkki]
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (arkisto/hae-termilla termi)))
-  (GET* "/nimet" req 
-    :summary "Hakee listan koulutustoimijoiden nimistä" 
+  (GET* "/nimet" req
+    :summary "Hakee listan koulutustoimijoiden nimistä"
     :kayttooikeus :yleinen-rest-api
     :return [KoulutustoimijaLinkki]
     (cachable-response req (arkisto/hae-nimet)))
@@ -52,7 +52,7 @@
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (arkisto/hae ytunnus)))
   (GET* "/haku/ala" [tunnus :as req]
-    :summary "Hakee kaikki koulutustoimijat joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu" 
+    :summary "Hakee kaikki koulutustoimijat joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
     :return [KoulutustoimijaLista]
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus}))))

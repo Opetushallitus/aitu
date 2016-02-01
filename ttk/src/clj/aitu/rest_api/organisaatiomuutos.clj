@@ -19,7 +19,6 @@
             [oph.common.util.http-util :refer [json-response]]
             [aitu.toimiala.skeema :refer :all]))
 
-
 (defroutes* reitit
   (GET* "/" []
     :kayttooikeus :organisaatiomuutos

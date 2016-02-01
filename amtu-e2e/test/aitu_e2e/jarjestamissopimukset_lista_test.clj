@@ -49,7 +49,6 @@
                   :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
                                          :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]})
 
-
 (defn perustiedot-vanhalla-tutkinnolla []
   (update-in perustiedot
     [:tutkinnot 0]

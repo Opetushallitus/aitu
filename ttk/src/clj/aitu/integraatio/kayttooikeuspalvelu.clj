@@ -34,7 +34,6 @@
    (:aipal kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "AIPALREAD")]
    (:jarjesto kayttajaroolit) [(aitu-ryhma-cn jarjesto-organisaatio "TYOELAMAJARJESTO")]})
 
-
 (defn ryhma-cn-filter [ryhma-cn]
   {:filter (str "cn=" ryhma-cn)})
 

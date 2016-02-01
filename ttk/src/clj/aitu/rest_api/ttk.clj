@@ -58,7 +58,6 @@
                (:toimikausi_loppu tutkintotoimikunta)) :virheellinen-voimassaolon-loppupvm]
    [:alkupvm (val/validoi-ei-sisalla-aikavaleja entiset-jasenyydet (:loppupvm jasen)) :virheellinen-jasenyyden-voimassaolo]])
 
-
 (defn toimikunnan-jasenyys [toimikunta jasen]
   (let [alkupvm (:alkupvm jasen)
         loppupvm (:loppupvm jasen)

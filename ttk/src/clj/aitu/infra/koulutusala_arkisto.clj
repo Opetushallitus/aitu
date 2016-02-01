@@ -69,4 +69,3 @@
   [koodi]
   (sql-util/select-unique-or-nil koulutusala
     (sql/where {:koulutusala_tkkoodi koodi})))
- 

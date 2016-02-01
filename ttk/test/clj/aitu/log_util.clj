@@ -23,7 +23,7 @@
   (let [log (atom [])]
     (with-redefs [log/log* (fn [_ level _ msg]
                              (swap! log conj [level msg]))]
-      (reset! log [])      
+      (reset! log [])
       (f)
       @log)))
 

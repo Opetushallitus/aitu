@@ -225,7 +225,6 @@
                                                   (oppilaitos-arkisto/paivita! uusi-oppilaitos))))
     (oppilaitos-arkisto/laske-voimassaolo!)))
 
-
 (defn ^:integration-api ^:private paivita-toimipaikat! [koodit]
   (let [oid->oppilaitoskoodi (into {} (for [o (oppilaitos-arkisto/hae-kaikki)]
                                         [(:oid o) (:oppilaitoskoodi o)]))
@@ -267,7 +266,7 @@
 
 (def ^:private keskusjarjesto-oidit #{"1.2.246.562.10.64191728270" ;; STTK
                                       "1.2.246.562.10.52547716042" ;; MTA
-                                      "1.2.246.562.10.77037285505" ;; Akava 
+                                      "1.2.246.562.10.77037285505" ;; Akava
                                       "1.2.246.562.10.28194798254" ;; Yrittäjät
                                       "1.2.246.562.10.37965376161" ;; SAK
                                       "1.2.246.562.10.98301593353" ;; EK

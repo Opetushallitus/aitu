@@ -52,7 +52,7 @@
   (is (thrown? Throwable
                (autorisoi-henkilon-lisays))))
 
-(deftest ^:integraatio henkilon-lisays []
+(deftest ^:integraatio henkilon-lisays
   (testing "Ylläpitäjä voi lisätä henkilön"
     (with-user-rights
       yllapitaja-auth-map
@@ -66,7 +66,7 @@
       oph-katselija-auth-map
       #(henkilon-lisays-ei-onnistu))))
 
-(deftest ^:integraatio henkilon-paivitys []
+(deftest ^:integraatio henkilon-paivitys
   (lisaa-testidata!)
   (testing "Ylläpitäjä voi päivittää henkilön tietoja"
     (with-user-rights
@@ -100,5 +100,3 @@
     (with-user-rights
       (kayttaja-auth-map)
       #(henkilon-paivitys-ei-onnistu -4))))
-
-

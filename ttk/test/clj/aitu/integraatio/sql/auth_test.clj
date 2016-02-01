@@ -59,6 +59,6 @@
 (deftest ^:integraatio lakannut-kayttaja-ei-kelpaa!
   (testing "Testaa että lakkautetulla käyttäjätunnuksella ei voi avata kantayhteyksiä."
     (let [lakannut-kayttajatunnus "KONVERSIO"]
-      (is (= [:error "validate-user epäonnistui"] (last (log-through 
+      (is (= [:error "validate-user epäonnistui"] (last (log-through
                                                           #(tietokanta-fixture-oid
                                                             henkilo-arkisto/hae-kaikki lakannut-kayttajatunnus lakannut-kayttajatunnus))))))))

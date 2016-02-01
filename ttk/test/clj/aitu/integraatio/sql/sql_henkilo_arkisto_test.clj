@@ -102,7 +102,7 @@
         (is (= henkiloita-voimassa henkiloita-voimassa-alussa))))))
 
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
-  (let [mennyt-toimikunta (lisaa-toimikunta-vanhalle-kaudelle!) 
+  (let [mennyt-toimikunta (lisaa-toimikunta-vanhalle-kaudelle!)
         mennyt-henkilo (lisaa-henkilo! {:etunimi "mennyt"})
         _ (lisaa-jasen! {:toimikunta (:tkunta mennyt-toimikunta)
                          :henkiloid (:henkiloid mennyt-henkilo)})
@@ -183,7 +183,7 @@
     (lisaa-jasen! {:toimikunta (:tkunta toimikunta-1)
                    :henkiloid 1000})
     (is (= #{-1000 -1001} (set (map :henkiloid (arkisto/hae-jarjeston-esitetyt-henkilot -1)))))))
- 
+
 (deftest ^:integraatio hae-esitetty-henkilo-jasenjarjestosta
   (let [toimikunta-1 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_fi "foo"})]
     (lisaa-henkilo! {:henkiloid 1000

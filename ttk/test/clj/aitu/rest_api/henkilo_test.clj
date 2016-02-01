@@ -13,7 +13,7 @@
 
 (deftest ^:integraatio henkilo-haku-kenttien-nakyvyydet
   (let [crout (init-peridot!)]
-    (try 
+    (try
       (with-auth-user
         #(db/transaction
            (let ; [toimikunta-1 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_fi "foo"})]
@@ -31,7 +31,6 @@
                            (mock-request "/api/henkilo/-1000" :get {}))
           response-jarj-lisatty (-> (peridot/session crout)
                                   (mock-request "/api/henkilo/1000" :get {} jarjesto-usermap))]
-      
       (is (nil? (get (body-json (:response response-jarj-omat)) :puhelin)))
       (is (= "050-TIUKKA-PAIKKA" (get (body-json (:response response-admin)) :puhelin)))
       (is (nil? (get (body-json (:response response-jarj-lisatty)) :puhelin)))

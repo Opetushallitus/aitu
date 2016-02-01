@@ -49,7 +49,6 @@
   (reset! palvelin ((ns-resolve 'aitu.palvelin 'kaynnista!) (repl-asetukset)))
   nil)
 
-
 (defn ^:private sammuta! []
   {:pre [@palvelin]
    :post [(not @palvelin)]}

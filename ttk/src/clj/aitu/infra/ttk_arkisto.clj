@@ -28,7 +28,7 @@
             [clojure-csv.core :refer [write-csv]]
             [aitu.integraatio.sql.korma :refer :all]))
 
-; TODO: unique? 
+; TODO: unique?
 (defn hae-avaimella
   "Hakee toimikunnan pääavaimella"
   [tkunta]
@@ -75,11 +75,11 @@
   [ehdot]
   (let [nimi (str "%" (:nimi ehdot) "%")
         kielisyydet (split (:kielisyys ehdot "") #",")
-        toimikunnat (-> 
+        toimikunnat (->
                       (sql/select* tutkintotoimikunta)
                       (sql/with toimikausi)
                       (cond->
-                        (not (blank? (:tunnus ehdot))) (sql/where 
+                        (not (blank? (:tunnus ehdot))) (sql/where
                                                          (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
                                                                              (sql/with nayttotutkinto
                                                                                (sql/with opintoala))
@@ -140,7 +140,7 @@
   "Hakee toimikunnan diaarinumeron perusteella"
   [diaarinumero]
   (let [toimikunta ; (sql-util/select-unique
-        (first (sql/select 
+        (first (sql/select
                        tutkintotoimikunta
                        (sql/fields :tkunta :diaarinumero :nimi_fi :nimi_sv :sahkoposti :kielisyys
                                    :tilikoodi :toimiala :toimikausi_alku :toimikausi_loppu

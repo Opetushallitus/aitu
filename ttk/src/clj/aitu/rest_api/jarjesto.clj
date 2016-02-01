@@ -26,4 +26,3 @@
   (GET* "/haku/omat" [termi :as req]
     :kayttooikeus :jasenesitykset
     (cachable-json-response req (arkisto/hae-termilla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
- 

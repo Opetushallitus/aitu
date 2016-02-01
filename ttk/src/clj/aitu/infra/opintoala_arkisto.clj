@@ -49,7 +49,6 @@
   []
   (sql/select opintoala))
 
-
 (defn ^:private hae-opintoala
   "Hakee opintoala-taulun rivin koodin perusteella"
   [koodi]

@@ -28,7 +28,6 @@
   (let [loppupvm (or (:loppupvm jarjestamissopimus) util/time-forever)]
     (not (util/pvm-tuleva-tai-tanaan? loppupvm))))
 
-
 (defn joku-tutkinto-voimassa?
   [tutkinnot]
   (or (empty? tutkinnot)
