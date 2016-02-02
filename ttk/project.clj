@@ -58,8 +58,8 @@
                                   [ring-mock "0.1.5"]]}
              :uberjar {:main aitu.palvelin
                        :aot [aitu.palvelin]}}
-  :source-paths ["src/clj" "../../clojure-utils/src/clj"]
-  :java-source-paths ["src/java" "../../clojure-utils/src/java"]
+  :source-paths ["src/clj" "clojure-utils/src/clj"]
+  :java-source-paths ["src/java" "clojure-utils/src/java"]
   :javac-options ["-target" "1.7" "-source" "1.7"]
   :test-paths ["test/clj"]
   :test-selectors {:kaikki (constantly true)
