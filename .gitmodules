@@ -1,0 +1,3 @@
+[submodule "ttk/clojure-utils"]
+	path = ttk/clojure-utils
+	url = https://github.com/opetushallitus/clojure-utils
