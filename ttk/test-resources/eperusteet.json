@@ -1,0 +1,1308 @@
+{
+  "data" : [ {
+    "id" : 509690,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Ammattisukeltajan ammattitutkinto",
+      "sv" : "Yrkesexamen för yrkesdykare",
+      "_id" : "1240627"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Ammattisukeltajan ammattitutkinto",
+        "sv" : "Yrkesexamen för yrkesdykare",
+        "en" : "Commercial Diver, FQ",
+        "_id" : "1240625"
+      },
+      "koulutuskoodiArvo" : "355201",
+      "koulutuskoodiUri" : "koulutus_355201",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_501"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Ammattisukeltajat hoitavat vesistörakentamisen vedenalaiset työtehtävät. Ammattisukellus on osa rakennusteollisuuden, teollisuuden ja voimalaitosten sekä järvi- ja meriliikenteen vedenalaisten työtehtävien erikoisosaamista.</p>\n\n<p>Kaupallinen sukeltaminen tarjoaa työuran henkilöille, jotka ovat fyysisesti, psyykkisesti ja teknisesti valmentautuneet sukellusammattiin. Ammattisukeltajalta vaaditaan erityistä persoonallisuutta ja mielenlaatua sekä lisäksi älykkyyttä vastata työn haasteisiin henkisen paineen alaisena.</p>\n\n<p>Ammattisukeltaja käyttää pääsääntöisesti sukelluskypärää, johon hengitysilma johdetaan pintailmaletkussa hengitysilmasäiliöstä ja -kompressorista. Työ- turvallisuuteen vaikuttavat monet tekniset laitteet ja niiden toiminta, sukellusolosuhteet ja työtehtävien vaativuus. Tämä edellyttää ammattisukeltajalta monipuolista rakennus- ja sukellustekniikoiden hallintaa.</p>\n\n<p>Ammattisukeltaja osaa suunnitella ja perustaa sukellustyömaan osaksi rakennustyömaata. Hän osaa laatia tarkastusraportin, jossa selvitetään rakentamisen kannalta olennaiset kohteen lähtötiedot. Hän osaa laatia suunnitelmat työmenetelmistä ja valita tarkoituksenmukaiset työvälineet. Ammattisukeltaja noudattaa sukellusaikataulukoita ja pitää sukelluskirjanpitoa.</p>\n\n<p>Ammattisukeltajan ammattitaitovaatimukset noudattavat EDTC:n (European Diving Technology Commitee) sopimaa luokitusta ja standardeja sekä niveltyvät IDSA:n (International Diving Schools Assosiation) laatimaan koulutusstandardiin.</p>\n\n<p>Ammattisukeltajan ammattitutkinnon pakollisten osien ja yhden valinnaisenosan suorittaminen tarkoittaa työministeriön päätöksen 674/1996 ja asetuksen127/2002 4 § 2 momentin mukaista ammattisukeltajan ammattitutkinnonsoveltuvaa osaa</p>\n\n<p> </p>",
+      "_id" : "1240712"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "26/011/2006",
+    "voimassaoloAlkaa" : 1149109200000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1439541414239,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 930360,
+    "globalVersion" : {
+      "aikaleima" : 1453291229259
+    },
+    "nimi" : {
+      "fi" : "Arboristin ammattitutkinto",
+      "sv" : "Yrkesexamen för arborist",
+      "_id" : "1153971"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Arboristin ammattitutkinto",
+        "sv" : "Yrkesexamen för arborist",
+        "en" : "Arboriculture, FQ",
+        "_id" : "1153970"
+      },
+      "koulutuskoodiArvo" : "364308",
+      "koulutuskoodiUri" : "koulutus_364308",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_602"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Arboristin ammattitutkinnon suorittaneella on ammattitaito suunnitella ja toteuttaa yksittäisten puiden ja puuryhmien perustamis- ja istutus- sekä muita puun elinkaaren ja toiminnallisen merkityksen mukaisia toimenpiteitä. Arboristin ammattitutkinnon suorittanut osaa valmistella ja toteuttaa toimeksiannon sekä arvioida työjälkeään. Tutkinnon suorittanut osaa tehdä puiden rakenne- ja hoitoleikkauksia sekä latvuksen pienennys- ja muotoleikkauksia. Tutkinnon suorittanut osaa huolehtia työmaan ja työtehtävien turvallisuudesta sekä pelastaa loukkaantuneen puusta. Tutkinnon suorittanut osaa tehdä puiden kuntoarvioinnin ja poistaa puita eri tekniikoin.</p>\n\n<p>Tutkinnon suorittaja voi suunnata ammatillista osaamistaan taajametsien hoitamiseen, puiden arvon määrittämiseen, vaativiin puunpoistoihin, suurten puiden siirtoon tai puiden lisäysaineiston hankkimiseen liittyviin tehtäviin. Tutkinnon suorittaja voi suunnata osaamistaan myös alan työtehtäviin opastamiseen tai yrittäjänä toimimiseen.</p>\n\n<p>Arboristin ammattitutkinnon suorittanut voi toimia tehtävissä, joissa edistetään puiden terveyttä sekä ympäristön viihtyisyyttä ja turvallisuutta. Arboristin ammattitutkinnon suorittanut voi toimia kaupunkien, kuntien, seurakuntien, taloyhtiöiden sekä muiden rakennetun ympäristön puita ja taajamametsiä hallinnoivien yhteisöjen palveluksessa tai hän voi olla itsenäinen yrittäjä.</p>",
+      "_id" : "1315918"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "29/011/2015",
+    "voimassaoloAlkaa" : 1438376400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1453291229259,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 1000203,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Aseseppäkisällin ammattitutkinto",
+      "sv" : "Yrkesexamen för vapensmedsgesäll",
+      "_id" : "1115838"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Aseseppäkisällin ammattitutkinto",
+        "sv" : "Yrkesexamen för vapensmedsgesäll",
+        "en" : "Gunsmith, FQ",
+        "_id" : "1115837"
+      },
+      "koulutuskoodiArvo" : "324101",
+      "koulutuskoodiUri" : "koulutus_324101",
+      "koulutusalakoodi" : "koulutusalaoph2002_2",
+      "opintoalakoodi" : "opintoalaoph2002_201"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Tutkinnon suorittanut: osaa toimia asealalla voimassa olevien asealan lakien, asetusten ja muiden määräysten ja ohjeiden mukaisesti, osaa koota aseen, osaa suunnitella työprosessin, osaa valita oikeat tekniset ratkaisut, materiaalit ja valmistusmenetelmät hallitsee asiakaspalvelun, osaa myydä asealan tuoteita ja palveluja, osaa hoitaa ja kehittää asiakkuuksia, osaa kertoa asiakkaalle hänen lainmukaiset oikeutensa ja velvollisuutens,a osaa noudattaa asiakastyössään asealan eettisiä periaatteita ja erityispiirteitä.</p>\n\n<p>Aseen korjaaminen ja huolto -osan suorittanut: osaa korjata ja huoltaa aseen, aseen osan tai osakokonisuuden.</p>\n\n<p>Ampumaratatoiminta-osan suorittanut: osaa järjestää yhdistysmuotoista tai kaupallista ampumaratatoimintaa.</p>\n\n<p>Asealan yrittäjänä toimiminen -osan suorittanut: osaa arvioida omia yrittäjävalmiuksiaan, osaa hinnoitella tuotteensa ja palvelunsa oikein ja kilpailukykyisesti.</p>\n\n<p>Työssä oppimisen ohjaaminen -tutkinnon osan suorittanut: osaa suunnitella ja toteuttaa työssäoppimisprosessin, osaa olla oppimisen ohjaajana ja arvioida oppimista.</p>\n\n<p>Tutkinnon suorittanut voi työskennellä asealan yrittäjänä, työntekijänä tai asealan ohjaustehtävissä.</p>",
+      "_id" : "1116391"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "50/011/2012",
+    "voimassaoloAlkaa" : 1356991200000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1433145382280,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 611,
+    "globalVersion" : {
+      "aikaleima" : 1450343463796
+    },
+    "nimi" : {
+      "fi" : "Audiovisuaalisen viestinnän perustutkinto",
+      "sv" : "Grundexamen i audiovisuell kommunikation",
+      "_id" : "552122"
+    },
+    "koulutustyyppi" : "koulutustyyppi_1",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Audiovisuaalisen viestinnän perustutkinto",
+        "sv" : "Grundexamen i audiovisuell kommunikation",
+        "en" : "Audiovisual Communication, VQ",
+        "_id" : "552121"
+      },
+      "koulutuskoodiArvo" : "321602",
+      "koulutuskoodiUri" : "koulutus_321602",
+      "koulutusalakoodi" : "koulutusalaoph2002_2",
+      "opintoalakoodi" : "opintoalaoph2002_202"
+    } ],
+    "kielet" : [ "sv", "fi" ],
+    "kuvaus" : {
+      "fi" : "Alalla tuotetaan elokuvia sekä video-, radio- ja tv-ohjelmia. Tekninen kehitys on luonut uusmedian ja sen tuotteet: multimediat, interaktiiviset ohjelmat, web-sivut, DVDelokuvat, pelit ja wap-palvelut. Alalla tarvitaan sekä ammatillisia moniosaajia että erityisosaajia.",
+      "sv" : "<p>I branschen produceras filmer och video-, radio- och tv-program. Med den tekniska utvecklingen har vi fått nya medier och tillhörande produkter: multimedier, interaktiva program, webbsidor, dvd-filmer, spel och waptjänster. Inom branschen behövs såväl personer med ett brett kunnande som personer med ett mer specialiserat kunnande.</p>",
+      "_id" : "1108776"
+    },
+    "maarayskirje" : {
+      "id" : 1378225,
+      "url" : { }
+    },
+    "diaarinumero" : "38/011/2014",
+    "voimassaoloAlkaa" : 1438376400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : 1414447200000,
+    "muokattu" : 1450343463796,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ "32/011/2010" ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    }, {
+      "suoritustapakoodi" : "ops",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    } ]
+  }, {
+    "id" : 612,
+    "globalVersion" : {
+      "aikaleima" : 1450344682370
+    },
+    "nimi" : {
+      "fi" : "Autoalan perustutkinto",
+      "sv" : "Grundexamen inom bilbranschen",
+      "_id" : "285308"
+    },
+    "koulutustyyppi" : "koulutustyyppi_1",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Autoalan perustutkinto",
+        "sv" : "Grundexamen inom bilbranschen",
+        "en" : "Vehicle Technology, VQ",
+        "_id" : "285307"
+      },
+      "koulutuskoodiArvo" : "351301",
+      "koulutuskoodiUri" : "koulutus_351301",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_509"
+    } ],
+    "kielet" : [ "sv", "fi" ],
+    "kuvaus" : {
+      "fi" : "Autoalan toimintaympäristö on kansainvälinen ja verkostoitunut. Alalla tarvitaan monenlaisia ja monipuolisia osaajia.\nAsiakaslähtöisyys ja palvelun laadun merkitys korostuu kaikissa tehtävissä. Edellytyksinä ovat alan monipuolinen osaaminen, teknisten taitojen soveltaminen sekä hyvät asiakaspalvelu- ja yhteistyötaidot. Haasteina ovat uuden tekniikan jatkuva seuraaminen ja soveltaminen sekä materiaalien uudelleenkäyttö.",
+      "sv" : "Arbetsmiljön i bilbranschen är internationell och organiserad i nätverk. Det behövs personer med mångsidiga kunskaper av olika typ. Kundinriktning och servicekvalitet är viktigt i alla arbetsuppgifter. Framgång förutsätter mångsidig kännedom om branschen, förmåga att tillämpa tekniska färdigheter samt goda kundbetjänings- och samarbetsfärdigheter. Utmaningar är den kontinuerliga tekniska utvecklingen inom branschen samt återvinning och återanvändning av material.",
+      "_id" : "735380"
+    },
+    "maarayskirje" : {
+      "id" : 1386303,
+      "url" : { }
+    },
+    "diaarinumero" : "39/011/2014",
+    "voimassaoloAlkaa" : 1438376400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : 1415052000000,
+    "muokattu" : 1450344682370,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ "30/011/2009" ],
+    "osaamisalat" : [ {
+      "nimi" : {
+        "fi" : "Automyynnin osaamisala",
+        "sv" : "Kompetensområdet för bilförsäljning",
+        "_id" : "614936"
+      },
+      "arvo" : "1527",
+      "uri" : "osaamisala_1527"
+    }, {
+      "nimi" : {
+        "fi" : "Moottorikäyttöisten pienkoneiden korjauksen osaamisala",
+        "sv" : "Kompetensområde för reparation av motordrivna småmaskiner",
+        "_id" : "614939"
+      },
+      "arvo" : "1622",
+      "uri" : "osaamisala_1622"
+    }, {
+      "nimi" : {
+        "fi" : "Automaalauksen osaamisala",
+        "sv" : "Kompetensområdet för billackering",
+        "_id" : "614935"
+      },
+      "arvo" : "1526",
+      "uri" : "osaamisala_1526"
+    }, {
+      "nimi" : {
+        "fi" : "Varaosamyynnin osaamisala",
+        "sv" : "Kompetensområdet för reservdelsförsäljning",
+        "_id" : "614938"
+      },
+      "arvo" : "1529",
+      "uri" : "osaamisala_1529"
+    }, {
+      "nimi" : {
+        "fi" : "Autokorinkorjauksen osaamisala",
+        "sv" : "Kompetensområdet för bilplåtslagning",
+        "_id" : "614934"
+      },
+      "arvo" : "1525",
+      "uri" : "osaamisala_1525"
+    }, {
+      "nimi" : {
+        "fi" : "Autotekniikan osaamisala",
+        "sv" : "Kompetensområdet för bilteknik",
+        "_id" : "614937"
+      },
+      "arvo" : "1528",
+      "uri" : "osaamisala_1528"
+    } ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "ops",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    }, {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    } ]
+  }, {
+    "id" : 1013059,
+    "globalVersion" : {
+      "aikaleima" : 1453919154784
+    },
+    "nimi" : {
+      "fi" : "Autoalan työnjohdon erikoisammattitutkinto",
+      "sv" : "Specialyrkesexamen för arbetsledning inom bilbranschen",
+      "_id" : "1116965"
+    },
+    "koulutustyyppi" : "koulutustyyppi_12",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Autoalan työnjohdon erikoisammattitutkinto",
+        "sv" : "Specialyrkesexamen för arbetsledning inom bilbranschen",
+        "en" : "Supervisor Vehicle Tech., SQ",
+        "_id" : "1116963"
+      },
+      "koulutuskoodiArvo" : "357305",
+      "koulutuskoodiUri" : "koulutus_357305",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_509"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Tutkinnon suorittanut tuntee yleiset johtamisperiaatteet, pystyy kannustavaan esimiestyöskentelyyn ja edistää organisaation yhteistoiminnallisuutta, tunnistaa vastuualueensa henkilöstön ammatilliset valmiudet ja kehittämistarpeet ja osaa asettaa työryhmälleen tavoitteet, ottaa johtamisessa huomioon tuote- ja henkilöstöriskit sekä korjaamotoiminnan työsuojelu-, turvallisuus- ja ympäristömääräykset, tuntee työlainsäädännön ja korjaamoalan työehtosopimuksen keskeisen sisällön sekä työnantajan ja työntekijän oikeudet ja velvoitteet, tuntee korjaamopalvelujen yleiset markkinointitavat, kaupankäynnin lainsäädännön, sopimusehdot ja sopimuskäytännön, hallitsee myynnin ja asiakaspalvelun, osaa käyttää asiakaspalautetta oman toiminnan kehittämiseen, pystyy arvioimaan omaa työskentelyään ja laatimaan itselleen tavoite- ja kehittymissuunnitelman, osaa käyttää yrityksen ohjaus- ja tietojärjestelmiä sekä laatia erilaisia asiakirjoja ja raportteja, hallitsee yksikkönsä työprosessin rakenteen, osaa suunnitella ja ohjata toimintaa ja hyödyntää tarvittavia resursseja, tuntee korjaamon kannattavuuteen vaikuttavat tekijät ja osaa hinnoitella palvelut kannattavasti, pystyy osallistumaan vastuualueensa budjetin laadintaan ja ymmärtää tuloslaskelman, osaa laatia investointisuunnitelmia ja osallistua hankintojen valmisteluun, osaa viestiä ja neuvotella, selviytyy työssä tarvittavasta viestinnästä ja teknisestä informaatiosta myös vieraalla kielellä. Tutkinnon suorittanut hallitsee valitsemansa osan tiedot ja taidot.</p>\n\n<p>Tutkinnon suorittaneet voivat työskennellä erilaisissa esimiestehtävissä autoalan korjaamoiden organisaatioissa.</p>\n\n<p> </p>",
+      "_id" : "1429566"
+    },
+    "maarayskirje" : {
+      "id" : 1424266,
+      "url" : { }
+    },
+    "diaarinumero" : "40/011/2001",
+    "voimassaoloAlkaa" : 993934800000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1453919154784,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 845880,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Auto- ja kuljetusalan työnjohdon ammattitutkinto",
+      "sv" : "Yrkesexamen för arbetsledning inom bil- och transportbranschen",
+      "_id" : "1188251"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Auto- ja kuljetusalan työnjohdon ammattitutkinto",
+        "sv" : "Yrkesexamen för arbetsledning inom bil- och transportbranschen",
+        "_id" : "1188250"
+      },
+      "koulutuskoodiArvo" : "354315",
+      "koulutuskoodiUri" : "koulutus_354315",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_509"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p><em>Auto- ja kuljetusalan työnjohdon ammattitutkinnon, autoalan työnjohtajan osaamisalan</em>, suorittaneella on autoalan työnjohdollisessa tehtävässä edellytettävä ammattitaito. Tutkinnon suorittanut osaa toimia työnjohtajana itsenäisesti ottamalla huomioon työssään autoalaa säätelevät lait, asetukset ja määräykset. Työnjohtajana toimiessaan hän noudattaa hyvän esimiestyön ja johtamisen periaatteita. Hän osaa suunnitella ja organisoida oman vastuualueensa toimintaa ja resursseja laadukkaasti ja kustannustehokkaasti ja ottaa huomioon työturvallisuuden, riskienhallinnan ja inhimilliset tekijät. Tutkinnon suorittaneella on kokonaisnäkemys autoalasta ja sen mahdollisuuksista sekä omasta työnjohdollisesta roolistaan autoalan asiakaslähtöisten palvelujen toteuttajana.</p>\n\n<p>Tutkinnon suorittaja voi suunnata osaamistaan Autoalan työnjohtajana toimiminen ja Asiakaspalvelutoimintojen suunnittelu ja organisointi -tutkinnon osien lisäksi Ajoneuvokorjaamon toimintojen organisointiin tai Ajoneuvo- tai varaosamyynnin toimintojen organisointiin, Varasto- tai terminaalitoimintojen organisointiin tai omaan vastuualueeseen tai yritykseen keskeisesti kytkeytyvän Kehitystehtävän suunnitteluun. Tutkinnon suorittanut osaa toimia autoalalla työnjohdollisessa tehtävässä kehittäen omia esimiestaitojaan. Valintojensa mukaisesti hän osaa suunnitella ja organisoida asiakaspalvelutoimintoja, organisoida ajoneuvokorjaamon tai ajoneuvo- tai varaosamyyntiä tai suunnitella toimintaa kehittävän kehitystehtävän.</p>\n\n<p><em>Auto- ja kuljetusalan työnjohdon ammattitutkinnon, kuljetusalan työnjohtajan osaamisalan</em>, suorittaneella on kuljetusalan työnjohdollisissa tehtävissä edellytettävä ammattitaito. Tutkinnon suorittanut osaa toimia työnjohtajana itsenäisesti ottamalla huomioon työssään kuljetusalaa säätelevät lait, asetukset ja määräykset. Työnjohtajana toimiessaan hän noudattaa hyvän esimiestyön ja johtamisen periaatteita. Hän osaa suunnitella ja organisoida oman vastuualueensa kuljetustoimintoja ja resursseja laadukkaasti ja kustannustehokkaasti ja ottaa huomioon työturvallisuuden, riskienhallinnan ja inhimilliset tekijät. Tutkinnon suorittaneella on kokonaisnäkemys kuljetusalasta ja sen mahdollisuuksista sekä omasta työnjohdollisesta roolistaan kuljetusalan asiakaslähtöisten palvelujen toteuttajana.</p>\n\n<p>Tutkinnon suorittaja voi suunnata osaamistaan pakollisten tutkinnon osien Kuljetusalan työnjohtajana toimiminen ja Kuljetustoimintojen suunnittelu ja organisointi lisäksi Ajoneuvokorjaamon toimintojen organisointiin tai Varasto- tai terminaalitoimintojen organisointiin tai omaan vastuualueeseen tai yritykseen keskeisesti kytkeytyvän Kehitystehtävän suunnitteluun. Valintojensa mukaisesti tutkinnon suorittanut osaa toimia kuljetusalalla työnjohdollisessa tehtävässä kehittäen omia esimiestaitojaan ja oman vastuualueensa toimintoja. Hän osaa suunnitella ja organisoida kuljetustoimintoja sekä organisoida ajoneuvokorjaamo- tai varasto- tai terminaalitoimintoja tai suunnitella toimintaa kehittävän kehitystehtävän.</p>\n\n<p>Auto- ja kuljetusalan työnjohdon ammattitutkinnon, autoalan työnjohtajan osaamisalan, suorittanut voi toimia työntekijänä, toimihenkilönä, yrittäjänä tai itsenäisenä ammatinharjoittajana autoalan organisaatioissa ja yrityksissä. Tutkinnon suorittanut voi toimia työnjohtajana, hallityönjohtajana, myynnin työnjohtajana, varaosamyynnin työnjohtajana, tiiminvetäjänä, huoltoneuvojana tai autoalan asiantuntija-, suunnittelu- ja kehitystehtävissä.</p>\n\n<p>Auto- ja kuljetusalan työnjohdon ammattitutkinnon, kuljetusalan työnjohtajan osaamisalan, suorittanut voi toimia työntekijänä, toimihenkilönä, yrittäjänä tai itsenäisenä ammatinharjoittajana kuljetusalan organisaatioissa ja yrityksissä. Tutkinnon suorittanut voi toimia työnjohtajana, kuljetussuunnittelijana, liikenne-esimiehenä, ajojärjestelijänä, vuorovalvojana, tiiminvetäjänä tai kuljetusalan asiantuntija-, suunnittelu- ja kehitystehtävissä.</p>",
+      "_id" : "1190528"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "30/011/2015",
+    "voimassaoloAlkaa" : 1438376400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1448545946569,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ {
+      "nimi" : {
+        "fi" : "Autoalan työnjohtaja",
+        "_id" : "1189333"
+      },
+      "arvo" : "3067",
+      "uri" : "osaamisala_3067"
+    }, {
+      "nimi" : {
+        "fi" : "Kuljetusalan työnjohtaja",
+        "_id" : "1189334"
+      },
+      "arvo" : "3068",
+      "uri" : "osaamisala_3068"
+    } ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    } ]
+  }, {
+    "id" : 515490,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Automaatioasentajan ammattitutkinto",
+      "sv" : "Yrkesexamen för automationsmontör",
+      "_id" : "995247"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Automaatioasentajan ammattitutkinto",
+        "sv" : "Yrkesexamen för automationsmontör",
+        "en" : "Automation Assembler, FQ",
+        "_id" : "995246"
+      },
+      "koulutuskoodiArvo" : "354401",
+      "koulutuskoodiUri" : "koulutus_354401",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_503"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Tutkinnon suorittanut osaa valintojen mukaan tehdä prosessi- tai kappaletavara- tai rakennusautomaatioon liittyvät automaatioalan asennus-, käyttöönotto-, korjaus- ja huoltotyöt itsenäisesti ja työryhmän jäsenenä voimassaolevien määräysten ja ohjeiden mukaisesti sekä suunnitella oman työnsä. Hän hallitsee tehtäviin liittyvien materiaalien ja työvälineiden käytön ja käsittelyn sekä oikeat työmenetelmät ja ottaa toiminnassaan huomioon energiatehokkuuden ja kokonaistaloudellisuuden. Hän hallitsee vianetsinnän ja osaa hyödyntää vianetsintään sekä kunnossapitojärjestelmään liittyviä ohjelmia. Hän kykenee hyödyntämään tieto- ja viestintätekniikkaa tiedon hankinnassa sekä osaa käyttää yleisiä toimisto-ohjelmia ja työtehtävien edellyttämiä muita ohjelmia. Hän osaa tehdä käyttöönotot yhteistyössä käyttöhenkilökunnan kanssa ja antaa käytönopastuksen, sekä tehdä tarvittavat dokumentit. Hän hallitsee työnaikaisen työ- ja sähkötyöturvallisuuden ja osaa tarkastaa työnsä niin, että automaatioasennuksen lopputulos on toimiva, turvallinen ja tarkoituksenmukainen prosessin luotettavan toiminnan kannalta. Hän on suorittanut sähköturvallisuustutkinnon (ST3).</p>",
+      "_id" : "995245"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "3/011/2013",
+    "voimassaoloAlkaa" : 1370034000000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1439547687945,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ "45/011/2003" ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 515491,
+    "globalVersion" : {
+      "aikaleima" : 1453919336897
+    },
+    "nimi" : {
+      "fi" : "Automaatioyliasentajan erikoisammattitutkinto",
+      "sv" : "Specialyrkesexamen för automationsövermontör",
+      "_id" : "1152221"
+    },
+    "koulutustyyppi" : "koulutustyyppi_12",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Automaatioyliasentajan erikoisammattitutkinto",
+        "sv" : "Specialyrkesexamen för automationsövermontör",
+        "en" : "Automation Assembler, SQ",
+        "_id" : "1152220"
+      },
+      "koulutuskoodiArvo" : "357401",
+      "koulutuskoodiUri" : "koulutus_357401",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_503"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Tutkinnon suorittanut hallitsee automaatiojärjestelmän rakenteet, logiikkaohjelmoinnin, väylätekniikan, käyttöliittymät, sähkömoottorit ja moottorikäytöt, sähkön jakelujärjestelmät, sähkötekniikan ja mekaniikka-asennukset. Hän tekee sähkötyöt määräysten mukaisesti sekä huolehtii työskentelyn ja loppukäyttäjän turvallisuudesta. Hänellä on sähköturvallisuustutkinto (ST2). Hän hallitsee automaatiojärjestelmän käyttöönotot ja huoltotoiminnan mittauksineen ja dokumentointeineen tai työnjohdon (aikataulutus, henkilöresurssointi, riskit, kustannukset, tulosvastuu, laadunvarmistus, sopimusten teko, johtaminen, tuotannonohjaus). Hän osaa perehdyttää ja opastaa työhön. Lisäksi hän hallitsee yhden seuraavista alueista: kappaletavara-automaatio, prosessiautomaatio, rakennusautomaatio tai CNC -tekniikka.</p>\n\n<p>Tutkinnon suorittanut voi työskennellä automaatioasentajana valitsemansa erityisalan vaativissa tehtävissä.</p>",
+      "_id" : "1153418"
+    },
+    "maarayskirje" : {
+      "id" : 1424268,
+      "url" : { }
+    },
+    "diaarinumero" : "9/011/2008",
+    "voimassaoloAlkaa" : 1205791200000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1453919336897,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ "34/011/1994" ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 1013051,
+    "globalVersion" : {
+      "aikaleima" : 1453960475200
+    },
+    "nimi" : {
+      "fi" : "Baarimestarin erikoisammattitutkinto",
+      "sv" : "Specialyrkesexamen för barmästare",
+      "_id" : "1211421"
+    },
+    "koulutustyyppi" : "koulutustyyppi_12",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Baarimestarin erikoisammattitutkinto",
+        "sv" : "Specialyrkesexamen för barmästare",
+        "en" : "Bartender, SQ",
+        "_id" : "1211339"
+      },
+      "koulutuskoodiArvo" : "387101",
+      "koulutuskoodiUri" : "koulutus_387101",
+      "koulutusalakoodi" : "koulutusalaoph2002_8",
+      "opintoalakoodi" : "opintoalaoph2002_802"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Tutkinnon suorittanut tuntee baarissa myytävät alkoholittomat ja alkoholipitoiset juomatuotteet sekä hän tuntee baarin koneet, laitteet, perustyövälineet ja lasit. Tutkinnon suorittanut hallitsee ruokatarjoilun perusteet sekä osaa esitellä, suositella, valmistaa ja tarjoilla kotimaisia ja kansainvälisiä juomasekoituksia eri palvelutilanteissa. Tutkinnon suorittanut selviytyy palvelusta suomen tai ruotsin kielen lisäksi sujuvasti englanniksi ja auttavasti jollain muulla kielellä. Tutkinnon suorittanut tuntee katetuottoajattelun ja hinnoittelun periaatteet sekä osaa käsitellä maksuvälineitä ja tehdä myyntitilitykset. Tutkinnon suorittanut osaa tehdä osastonsa inventointiin, varastokirjanpitoon ja varaston kiertoon liittyvät rutiinit. Lisäksi tutkinnon suorittanut ymmärtää sidosryhmäkontaktien sekä toimivan työyhteisön ja kansainvälisten trendien merkityksen baaritoiminnan kehittämisessä. Tutkinnon suorittanut osaa suunnitella eri tilanteisiin ja teemoihin liittyvää kampanjointia sekä hän tuntee käytettävissä olevat kilpailukeinot. Työryhmän vetäjänä tutkinnon suorittanut osoittaa esimiestaitoja, työehtosopimusten tuntemusta ja työvuorolistan laadintaan kuuluvaa osaamista. Tutkinnon suorittanut hyödyntää työssään asiakaspalautetta sekä hän kykenee antamaan ja ottamaan vastaan palautetta työyhteisössään. Tutkinnon suorittaneet voivat työskennellä erityyppisten hotellien ja ravintoloiden asiakaspalvelutehtävissä.</p>",
+      "_id" : "1211422"
+    },
+    "maarayskirje" : {
+      "id" : 1424269,
+      "url" : { }
+    },
+    "diaarinumero" : "40/011/2004",
+    "voimassaoloAlkaa" : 1104530400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1453960475200,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 683236,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Bioenergia-alan ammattitutkinto",
+      "sv" : "Yrkesexamen inom bioenergibranschen",
+      "_id" : "1189160"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Bioenergia-alan ammattitutkinto",
+        "sv" : "Yrkesexamen inom bioenergibranschen",
+        "en" : "Bio-Energy, FQ",
+        "_id" : "1189078"
+      },
+      "koulutuskoodiArvo" : "364304",
+      "koulutuskoodiUri" : "koulutus_364304",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_604"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Bioenergia-alan ammattitutkinnon suorittanut tuntee kestävän kehityksen periaatteet ja bioenergian tuotannon ekologiaan ja monimuotoisuuteen vaikuttavat tekijät. Hän hallitsee bioenergia-alan käsitteet, muuntokertoimet ja laskelmat, tuntee biopolttoaineet ja raaka-aineen materiaalivirrat sekä tietää energiatuotannon ja jalostuksen pääperiaatteet sekä hallitsee asiakaspalvelun ja yhteistyön. Tutkinnon suorittanut tietää valitsemansa osan mukaisen energiakasvin ominaisuudet ja niiden hyödyntämisen, tuntee valitsemansa osan mukaisen toiminnan ekologiset perusteet ja säädökset, osaa suunnitella työn ja toteuttaa sen tarvittavilla koneilla ja laitteilla sekä osaa käyttää ja huoltaa valitsemansa tutkinnon osan jalostuslaitokset ja käytettävät koneet. Yrittäjyysosan valinnut tietää yrittäjyyden edellytykset ja mahdollisuudet sekä tietää taloudellisen toiminnan perusteet.</p>\n\n<p>Tutkinnon suorittaneet voivat työskennellä bioenergiaraaka-aineen tuottajina, korjaajina tai jalostajina toisen palveluksessa tai itsenäisinä yrittäjinä.</p>",
+      "_id" : "1200332"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "3/011/2008",
+    "voimassaoloAlkaa" : 1204322400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1435130789567,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 1013052,
+    "globalVersion" : {
+      "aikaleima" : 1453187300543
+    },
+    "nimi" : {
+      "fi" : "Dieettikokin erikoisammattitutkinto",
+      "sv" : "Specialyrkesexamen för dietkock",
+      "_id" : "1211877"
+    },
+    "koulutustyyppi" : "koulutustyyppi_12",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Dieettikokin erikoisammattitutkinto",
+        "sv" : "Specialyrkesexamen för dietkock",
+        "en" : "Dietary Cook, SQ",
+        "_id" : "1211875"
+      },
+      "koulutuskoodiArvo" : "387102",
+      "koulutuskoodiUri" : "koulutus_387102",
+      "koulutusalakoodi" : "koulutusalaoph2002_8",
+      "opintoalakoodi" : "opintoalaoph2002_802"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Tutkinnon suorittanut hallitsee tavallisimpien ruokavalioiden lisäksi sairaalan tai muun hoitolaitoksen erityisruokavaliot ja tutkimusruokavaliot. Tutkinnon suorittanut tuntee monipuolisesti erityiselintarvikkeet ja ravintovalmisteet sekä hän osaa muuntaa perusruokalistan dieettiruokatuotantoon sopivaksi. Tutkinnon suorittanut tuntee sairaalan tai hoitolaitoksen ruokailuun vaikuttavat suositukset. Tutkinnon suorittanut kykenee atk:ta käyttäen tarkistamaan ruokavalioiden tavallisimmat ravintoaineet ja analysoimaan erityisruokavalioiden kriittiset ravintoaineet. Tutkinnon suorittanut toimii asiakaslähtöisesti ja ottaa huomioon kulttuurin ja uskonnon vaikutukset ruokavalioihin. Hän osaa suunnitella ja kehittää yhteistyössä muun henkilökunnan kanssa dieettiannoksia sekä ateria- ja ruokalistakokonaisuuksia. Tutkinnon suorittanut tietää hinnanmuodostuksen perusteet sekä osaa laskea annosten ja ateriakokonaisuuksien kustannukset. Tutkinnon suorittanut ottaa huomioon laatu- ja kannattavuustavoitteet suunnitellessaan ja valmistaessaan dieettiruokia. Lisäksi tutkinnon suorittanut selviytyy asiakaspalvelutilanteista yhdellä vieraalla kielellä ja pystyy hyödyntämään työssään vieraskielistä ammattikirjallisuutta ja tietotekniikkaa. Tutkinnon suorittanut hallitsee suuntautumisensa mukaan joko ravintolan tai suurtalouden ruokatuotannon. Hän pystyy neuvomaan asiakkaita ja konsultoimaan dieettiruokatuotantoon liittyvissä tilanteissa. Tutkinnon suorittaneet voivat työskennellä erityisruokavalioiden valmistajina ja asiantuntijoina erilaisissa ruokatuotantoyksiköissä, muun muassa suurtalouksissa, ravintoloissa, sairaaloissa, vanhainkodeissa, kouluissa ja päiväkodeissa.</p>",
+      "_id" : "1211876"
+    },
+    "maarayskirje" : {
+      "id" : 1429680,
+      "url" : { }
+    },
+    "diaarinumero" : "44/011/2005",
+    "voimassaoloAlkaa" : 1134597600000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1453187300543,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 33825,
+    "globalVersion" : {
+      "aikaleima" : 1450345032514
+    },
+    "nimi" : {
+      "fi" : "Elintarvikealan perustutkinto",
+      "sv" : "Grundexamen inom livsmedelsbranschen",
+      "_id" : "552410"
+    },
+    "koulutustyyppi" : "koulutustyyppi_1",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Elintarvikealan perustutkinto",
+        "sv" : "Grundexamen inom livsmedelsbranschen",
+        "en" : "Food Production, VQ",
+        "_id" : "552259"
+      },
+      "koulutuskoodiArvo" : "352101",
+      "koulutuskoodiUri" : "koulutus_352101",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_506"
+    } ],
+    "kielet" : [ "sv", "fi" ],
+    "kuvaus" : {
+      "fi" : "Elintarvikealaan sisältyvät meijeri- ja elintarviketeollisuus, joka jakautuu leipomo-, liha-, eines-, makeis-, mylly- ja panimoteollisuuteen. Alalla toimivien on tunnettava elintarviketeknologiaa, alkutuotantoa ja raaka-aineiden koostumus. Teknisen ammattitaidon lisäksi tarvitaan kykyä oppia jatkuvasti uutta, hahmottaa kokonaisuuksia ja työskennellä yhdessä toisten kanssa. Elintarvikevalvonnan\nsiirtyminen viranomaisilta yritysten omavalvonnaksi on lisännyt työn vaativuutta ja vastuullisuutta.",
+      "sv" : "<p>Till livsmedelsbranschen hör mejeri- och livsmedelsindustrin, som indelas i bageri-, kött-, färdigmats-, sötsaks-, kvarn- och bryggeriindustri. De som verkar i branschen ska känna till livsmedelsteknologin, primärproduktionen och råvarornas sammansättning. Förutom teknisk yrkesskicklighet behövs förmåga att kontinuerligt lära sig nytt, uppfatta helheter och samarbeta med andra. Övergången från myndigheternas livsmedelskontroll till egenkontroll i företagen gör arbetet alltmera fordrande och ansvarsfullt.</p>",
+      "_id" : "1290597"
+    },
+    "maarayskirje" : {
+      "id" : 1386304,
+      "url" : { }
+    },
+    "diaarinumero" : "40/011/2014",
+    "voimassaoloAlkaa" : 1438376400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : 1414447200000,
+    "muokattu" : 1450345032514,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ "20/011/2009" ],
+    "osaamisalat" : [ {
+      "nimi" : {
+        "fi" : "Elintarviketeknologian osaamisala",
+        "sv" : "Kompetensområde för livsmedelsteknologi",
+        "_id" : "614930"
+      },
+      "arvo" : "1549",
+      "uri" : "osaamisala_1549"
+    }, {
+      "nimi" : {
+        "fi" : "Meijerialan osaamisala",
+        "sv" : "Kompetensområde för mejeribranschen",
+        "_id" : "614933"
+      },
+      "arvo" : "1552",
+      "uri" : "osaamisala_1552"
+    }, {
+      "nimi" : {
+        "fi" : "Liha-alan osaamisala",
+        "sv" : "Kompetensområde för köttbranschen",
+        "_id" : "614932"
+      },
+      "arvo" : "1551",
+      "uri" : "osaamisala_1551"
+    }, {
+      "nimi" : {
+        "fi" : "Leipomoalan osaamisala",
+        "sv" : "Kompetensområde för bageribranscen",
+        "_id" : "614931"
+      },
+      "arvo" : "1550",
+      "uri" : "osaamisala_1550"
+    } ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    }, {
+      "suoritustapakoodi" : "ops",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    } ]
+  }, {
+    "id" : 931999,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Elintarvikejalostajan ammattitutkinto",
+      "sv" : "Yrkesexamen för livsmedelsförädlare",
+      "_id" : "1204784"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Elintarvikejalostajan ammattitutkinto",
+        "sv" : "Yrkesexamen för livsmedelsförädlare",
+        "en" : "Food Processing, FQ",
+        "_id" : "1204782"
+      },
+      "koulutuskoodiArvo" : "355104",
+      "koulutuskoodiUri" : "koulutus_355104",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_506"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Tutkinnon suorittanut osaa valvoa valmistamiensa tuotteiden turvallisuutta sekä tehdä mittauksia ja ottaa näytteitä. Tutkinnon suorittanut hallitsee hygieeniset työskentelytavat ja osaa käsitellä oikein elintarvikkeita. Tutkinnon suorittanut osaa käyttää työssä tarvittavia koneita ja laitteita sekä valita raaka-aineet ja hoitaa varastoinnin oikein. Yritystoiminnan suunnittelu - tutkinnon osan valinnut tuntee omat yrittäjävalmiutensa, tietää yrittäjyyden riskit ja mahdollisuudet sekä osaa suunnitella ja esittää oman liikeideansa ja liiketoimintasuunnitelman. Yritystoiminnan kehittäminen -tutkinnon osan valinnut osaa arvioida omia kehitystarpeitaan yrittäjänä ja kehittää liikeideaansa sekä arvioida ja kehittää keskeisiä toimintasuunnitelmia. Elintarviketuotanto -tutkinnon osan valinnut osaa työskennellä elintarvikkeiden valmistusympäristössä. Rehutuotanto-tutkinnon osan valinnut osaa työskennellä rehujen tai lemmikkieläinruokien valmistusympäristössä. Pakkaamotoiminnat-tutkinnon osan valinnut osaa työskennellä pakkaamoympäristössä. Myllytuotanto-tutkinnon osan valinnut osaa työskennellä myllytuotteiden valmistusympäristössä. Juomatuotanto-tutkinnon osan valinnut osaa työskennellä juomien ja alkoholijuomien valmistusympäristössä. Tuotekehityskoeajot-tutkinnon osan valinnut osaa työskennellä elintarvikkeiden, rehujen tai lemmikkieläinruokien valmistusympäristössä tuotekehityksen koe-erien valmistuksessa. Elintarvikkeiden lähettämötoiminnot -tutkinnon osan valinnut osaa työskennellä elintarvikkeiden, rehujen tai lemmikkieläinruokien lähettämöissä. Tutkinnon suorittanut voi työskennellä elintarvikejalostuksen perustehtävissä tai itsenäisenä yrittäjänä.</p>",
+      "_id" : "1204783"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "36/011/2013",
+    "voimassaoloAlkaa" : 1388527200000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1444632105213,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 932170,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Elintarviketeollisuuden ammattitutkinto",
+      "sv" : "Yrkesexamen inom livsmedelsindustrin",
+      "_id" : "1204244"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Elintarviketeollisuuden ammattitutkinto",
+        "sv" : "Yrkesexamen inom livsmedelsindustrin",
+        "en" : "Food Industry, FQ",
+        "_id" : "1204243"
+      },
+      "koulutuskoodiArvo" : "355105",
+      "koulutuskoodiUri" : "koulutus_355105",
+      "koulutusalakoodi" : "koulutusalaoph2002_5",
+      "opintoalakoodi" : "opintoalaoph2002_506"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Elintarviketeollisuuden ammattitutkinto on tarkoitettu henkilöille, jotka toimivat elintarviketeollisuuden eri toimialoilla tuotteiden valmistus- ja/tai pakkaamo-, lähettämö- ja varastointitoiminnoissa. Suoritettuaan Elintarviketeollisuuden ammattitutkinnon tutkinnon suorittajalla on laaja-alaiset taidot työskennellä omalla toimialallaan elintarviketeollisuudessa ja hänellä on hyvät edellytykset ylläpitää ja kehittää omaa toimintaansa. Hänellä on myös valmiudet ja kyky muuntaa ja soveltaa taitojaan itsenäisesti, vaihtelevissa tilanteissa ja toimintaympäristöissä. Hän osaa itsenäisesti huomioida säädösmuutokset ja annetut ohjeet sekä soveltaa niitä käytännön työskentelyyn.</p>",
+      "_id" : "1205592"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "33/011/2013",
+    "voimassaoloAlkaa" : 1388527200000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1435219962048,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ {
+      "nimi" : {
+        "fi" : "Rehutuotannon osaamisala",
+        "_id" : "1205537"
+      },
+      "arvo" : "3072",
+      "uri" : "osaamisala_3072"
+    }, {
+      "nimi" : {
+        "fi" : "Teollisen pakkaamisen osaamisala",
+        "_id" : "1205538"
+      },
+      "arvo" : "3073",
+      "uri" : "osaamisala_3073"
+    }, {
+      "nimi" : {
+        "fi" : "Myllytuotannon osaamisala",
+        "_id" : "1205539"
+      },
+      "arvo" : "3074",
+      "uri" : "osaamisala_3074"
+    }, {
+      "nimi" : {
+        "fi" : "Elintarviketuotannon osaamisala",
+        "_id" : "1205590"
+      },
+      "arvo" : "3071",
+      "uri" : "osaamisala_3071"
+    }, {
+      "nimi" : {
+        "fi" : "Juomatuotannon osaamisala",
+        "_id" : "1205591"
+      },
+      "arvo" : "3075",
+      "uri" : "osaamisala_3075"
+    } ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 207452,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Eläintenhoitajan ammattitutkinto",
+      "sv" : "Yrkesexamen för djurskötare",
+      "_id" : "261563"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Eläintenhoitajan ammattitutkinto",
+        "sv" : "Yrkesexamen för djurskötare",
+        "en" : "Animal Attendant, FQ",
+        "_id" : "261562"
+      },
+      "koulutuskoodiArvo" : "364902",
+      "koulutuskoodiUri" : "koulutus_364902",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_699"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Eläintenhoitaja ammattitutkinnossa on kahdeksan osaamisalaa.</p>\n\n<p>Klinikkaeläinhoitamisen osaamisalan tutkinnon osat ovat:</p>\n\n<ul>\n\t<li>eläinten hoito ja hyvinvoinnista huolehtiminen eläinklinikalla</li>\n\t<li>kliinisen hoitotyön tekeminen eläinklinikalla</li>\n\t<li>klinikkaeläinhoitajan asiakaspalvelu- ja työelämätaidot.</li>\n</ul>\n\n<p>Koe-eläinhoitamisen osaamisalan tutkinnon osat ovat:</p>\n\n<ul>\n\t<li>koe-eläinten hoito ja hyvinvoinnista huolehtiminen</li>\n\t<li>koe-eläintutkimuksissa avustaminen</li>\n\t<li>koe-eläinhoitajan asiakaspalvelu- ja työelämätaidot.</li>\n</ul>\n\n<p>Eläintarhaeläinten hoitamisen osaamisalan tutkinnon osat ovat:</p>\n\n<ul>\n\t<li>eläintarhaeläinten hoito ja hyvinvoinnista huolehtiminen</li>\n\t<li>eläintarhaympäristöstä huolehtiminen</li>\n\t<li>eläintarhaeläinten hoitajan asiakaspalvelu- ja työelämätaidot.</li>\n</ul>\n\n<p>Eläinkaupan osaamisalan tutkinnon osat ovat</p>\n\n<ul>\n\t<li>eläinkaupan eläinten hoito ja hyvinvoinnista huolehtiminen</li>\n\t<li>asiakaspalvelu- ja työelämätaidot eläinkaupassa.</li>\n</ul>\n\n<p>Eläinhoitolan osaamisalan tutkinnon osat ovat:</p>\n\n<ul>\n\t<li>eläinten hoito ja hyvinvoinnista huolehtiminen eläinhoitolassa</li>\n\t<li>asiakaspalvelu- ja työelämätaidot eläinhoitolassa.</li>\n</ul>\n\n<p>Koirahieronnan osaamisalan tutkinnon osat ovat:</p>\n\n<ul>\n\t<li>koiran hoito ja hieronta</li>\n\t<li>koirahierojan asiakaspalvelu- ja työelämätaidot.</li>\n</ul>\n\n<p>Eläinten kouluttamisen osaamisalan tutkinnon osat ovat:</p>\n\n<ul>\n\t<li>eläinten hoito ja kouluttaminen</li>\n\t<li>eläintenkouluttajan asiakaspalvelu- ja työelämätaidot.</li>\n</ul>\n\n<p>Eläinten trimmaamisen osaamisalan tutkinnon osat ovat:</p>\n\n<ul>\n\t<li>eläinten hoito ja trimmaaminen</li>\n\t<li>trimmaajan asiakaspalvelu- ja työelämätaidot.</li>\n</ul>\n\n<p>Jos osaamisalassa on vain kaksi pakollista tutkinnon osaa, on suorittajan valittava lisäksi valinnaisena eläinalan yritystoiminta tutkinnon osa, tutkinnon osa toisesta perus-, ammatti- tai erikoisammattitutkinnosta tai yksi toisen osaamisalan pakollinen osa lukuunottamatta asiakaspalvelu- ja työelämätaidot -osaa.</p>\n\n<p>Tutkinnon suorittanut osaa käsitellä eläimiä, osaa eläinten perushoidon ja huolehtia niiden hyvinvoinnista, tuntee eläinten lajikohtaisen käyttäyttäytymisen, tuntee ja tunnistaa eläinsairauksia ja -tauteja, tuntee alan säädökset, ohjeet ja työturvallisuusvaatimukset, osaa avustaa eläinlääkäriä hoitotoimenpiteissä, osaa käyttää välineitä, koneita ja laitteita oikein ja huoltaa ne, osaa hoitaa asiakaspalvelun, osaa pitää tilat puhtaina ja turvallisina sekä osaa suunnitella työnsä ja ratkaista ongelmia itsenäisesti.</p>\n\n<p>Tutkinnon suorittanut voi työskennellä valitsemansa osaamisalan mukaisesti eläinsairaaloissa, eläinlääkäreiden vastaanotoilla, koe-eläinlaitoksissa, eläintarhoissa ja -puistoissa, eläinkaupoissa, eläinhoitoloissa, lemmikkiliikkeissä, eläinkoulutusyrityksissä tai koirahieronnan tai eläinten trimmaamisen tehtävissä.</p>",
+      "_id" : "1028360"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "40/011/2012",
+    "voimassaoloAlkaa" : 1354312800000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1434447818089,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ "42/011/2009" ],
+    "osaamisalat" : [ {
+      "nimi" : {
+        "fi" : "Eläinhoitolan osaamisala",
+        "sv" : "Kompetensområdet för djurpensionat",
+        "_id" : "862420"
+      },
+      "arvo" : "2012",
+      "uri" : "osaamisala_2012"
+    }, {
+      "nimi" : {
+        "fi" : "Koe-eläinhoitamisen osaamisala",
+        "sv" : "Kompetensområdet för skötsel av försöksdjur",
+        "_id" : "862348"
+      },
+      "arvo" : "2009",
+      "uri" : "osaamisala_2009"
+    }, {
+      "nimi" : {
+        "fi" : "Eläinten trimmaamisen osaamisala",
+        "sv" : "Kompetensområdet för trimning av djur",
+        "_id" : "862343"
+      },
+      "arvo" : "2015",
+      "uri" : "osaamisala_2015"
+    }, {
+      "nimi" : {
+        "fi" : "Eläinkaupan osaamisala",
+        "sv" : "Kompetensområdet för djuraffärer",
+        "_id" : "862345"
+      },
+      "arvo" : "2011",
+      "uri" : "osaamisala_2011"
+    }, {
+      "nimi" : {
+        "fi" : "Klinikkaeläinhoitamisen osaamisala",
+        "sv" : "Kompetensområdet för djurskötsel på kliniker",
+        "_id" : "862346"
+      },
+      "arvo" : "2008",
+      "uri" : "osaamisala_2008"
+    }, {
+      "nimi" : {
+        "fi" : "Eläinten kouluttamisen osaamisala",
+        "sv" : "Kompetensområdet för träning av djur",
+        "_id" : "862347"
+      },
+      "arvo" : "2014",
+      "uri" : "osaamisala_2014"
+    }, {
+      "nimi" : {
+        "fi" : "Eläintarhaeläinten hoitamisen osaamisala",
+        "sv" : "Kompetensområdet för skötsel av djurparksdjur",
+        "_id" : "862349"
+      },
+      "arvo" : "2010",
+      "uri" : "osaamisala_2010"
+    }, {
+      "nimi" : {
+        "fi" : "Koirahieronnan osaamisala",
+        "sv" : "Kompetensområdet för hundmassage",
+        "_id" : "862344"
+      },
+      "arvo" : "2013",
+      "uri" : "osaamisala_2013"
+    } ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 666693,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Erä- ja luonto-oppaan ammattitutkinto",
+      "sv" : "Yrkesexamen för vildmarks- och naturguide",
+      "_id" : "1213985"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Erä- ja luonto-oppaan ammattitutkinto",
+        "sv" : "Yrkesexamen för vildmarks- och naturguide",
+        "en" : "Hiking, Nature Guide Serv., FQ",
+        "_id" : "1213983"
+      },
+      "koulutuskoodiArvo" : "364904",
+      "koulutuskoodiUri" : "koulutus_364904",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_605"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Erä- ja luonto-oppaan ammattitutkinnon suorittanut osaa opastaa, ohjata ja organisoida erilaisia ryhmiä turvallisesti ja laadukkaasti kesä- ja talviolosuhteissa. Hän hallitsee maastossa tarvittavat erätaidot: suunnistuksen, tulenteon, ruoanlaiton ja yöpymisen valmistelun, osaa valita itselleen ja ryhmälle oikeat välineet ja varusteet sekä huoltaa ne. Hän osaa laatia turvallisuussuunnitelmat ja huolehtia ryhmän turvallisuudesta kaikissa olosuhteissa tai olosuhteiden muuttuessa, osaa toimia ryhmän oppaana ja johtajana, osaa soveltaa luontotuntemustaan ja ympäristötietouttaan kertoessaan paikallisesta luonnosta ja osaa tuotteistaa ja hinnoitella palvelunsa ottaa huomioon asiakasryhmän toiveet, kulttuuritaustan ja perinteet. Hän osaa toimia kestävän kehityksen mukaisesti, noudattaa alan sopimuksista ja säännöksistä ja toimii yhteistyössä muiden matkailu-alan toimijoiden kanssa. Tutkinnon suorittanut hallitsee valitsemiensa tutkinnon osien mukaisen erikoistuneen osaamisen.</p>\n\n<p>Tutkinnon suorittaja voi työskennellä erä- ja luonto-ohjelmien ohjaajana sekä retkien ja vaellusten vetäjänä muun muassa matkailu-, virkistys- ja hyvinvointipalveluja tarjoavissa organisaatioissa.</p>",
+      "_id" : "1213984"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "25/011/2012",
+    "voimassaoloAlkaa" : 1343768400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1435565998628,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 419551,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Esiopetuksen opetussuunnitelman perusteet 2014",
+      "sv" : "Grunderna för förskoleundervisningens läroplan 2014",
+      "_id" : "881328"
+    },
+    "koulutustyyppi" : "koulutustyyppi_15",
+    "koulutukset" : [ ],
+    "kielet" : [ "sv", "fi" ],
+    "kuvaus" : {
+      "sv" : "Grunderna för förskoleundervisningens läroplan",
+      "_id" : "881327"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "102/011/2014",
+    "voimassaoloAlkaa" : 1420063200000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1438683761131,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ]
+  }, {
+    "id" : 516214,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Finanssialan ammattitutkinto",
+      "sv" : "Yrkesexamen inom finansbranschen",
+      "_id" : "1331548"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Finanssialan ammattitutkinto",
+        "sv" : "Yrkesexamen inom finansbranschen",
+        "en" : "Finanssialan ammattitutkinto",
+        "_id" : "1331546"
+      },
+      "koulutuskoodiArvo" : "334115",
+      "koulutuskoodiUri" : "koulutus_334115",
+      "koulutusalakoodi" : "koulutusalaoph2002_3",
+      "opintoalakoodi" : "opintoalaoph2002_301"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p><strong>Tutkinnon suorittaneen osaaminen</strong></p>\n\n<p>Finanssialan ammattitutkinnon suorittaneella on finanssialan ammattityöntekijältä edellytettävä ammattitaito rahoituksen, säästämisen ja sijoittamisen, pankkialan päivitäisasioinnin palvelujen, riskivakuuttamisen, korvauspalvelujen, eläkevakuuttamisen tai back office -toimintojen alalta. Tutkinnon suorittaneella on kokonaisnäkemys finanssialasta ja sen toimijoista. Hän tuntee alan säädökset ja ohjeet sekä toimii niiden ja pankki- tai vakuutusalaisuuden mukaisesti. Hän seuraa alan muutoksia ja kehittää omaa osaamistaan ja työtään.</p>\n\n<p><strong>Työtehtäviä, joissa tutkinnon suorittanut voi toimia</strong></p>\n\n<p>Finanssialan ammattitutkinnon suorittanut voi toimia eri palvelukanavissa finanssialan organisaatioissa tai niitä tukevissa organisaatioissa asiakaspalvelu,asiantuntija- tai tukipalvelutehtävissä.</p>",
+      "_id" : "1331547"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "23/011/2014",
+    "voimassaoloAlkaa" : 1414792800000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : 1412110800000,
+    "muokattu" : 1444924449862,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 666695,
+    "globalVersion" : {
+      "aikaleima" : 1453187439478
+    },
+    "nimi" : {
+      "fi" : "Floristimestarin erikoisammattitutkinto",
+      "sv" : "Specialyrkesexamen för floristmästare",
+      "_id" : "1199604"
+    },
+    "koulutustyyppi" : "koulutustyyppi_12",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Floristimestarin erikoisammattitutkinto",
+        "sv" : "Specialyrkesexamen för floristmästare",
+        "en" : "Floristry, SQ",
+        "_id" : "1199602"
+      },
+      "koulutuskoodiArvo" : "367201",
+      "koulutuskoodiUri" : "koulutus_367201",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_602"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Floristimestarin erikoisammattitutkinnon suorittaneella on floristisen alan laajaa asiantuntijuutta edellyttävä ammattitaito. Tutkinnon suorittanut osaa suunnitella floristisen alan asiantuntijapalvelun kohderyhmälle ja toteuttaa sen. Hän osaa toimia floristisen alan asiantuntijana sekä alan ammattilaisille että kuluttajille. Tutkinnon suorittaneella on vahva kokonaisnäkemys floristisesta alasta ja sen kehitysmahdollisuuksista. Hän kehittää floristisen alan tuotekokonaisuuksia.</p>\n\n<p> </p>\n\n<p>Tutkinnon suorittaja voi suunnata osaamistaan esimiestehtäviin, yritystoiminnan kehittämiseen, kansainväliseen ostotoimintaan, floristiseen käsityötaitoon tai tilasuunniteluun. Valintojensa mukaisesti tutkinnon suorittanut osaa toimia floristisen alan yrityksessä esimiestehtävissä kehittäen johtamistaitojaan, yritystoiminnan kehittämis- ja markkinointitehtävissä tai kansainvälisen ostotoiminnan tehtävissä osana alan liiketoimintaa. Hän tuntee alaa koskevat työsuojelusäädökset ja määräykset sekä osaa soveltaa niitä sekä toimia sidosryhmäyhteistyössä. Erikoistuessaan käsityötaidon kehittämiseen tutkinnon suorittaja osaa suunnitella ja valmistaa floristisen mestarityön, joka osoittaa korkeatasoista käsityötaitoa ja sommittelun teorioiden soveltamista. Tilasuunnittelun tutkinnon osan suorittanut osaa analysoida tilan piirteet ja laatia tilaan markkinointia tukevan tilasuunnitelman, jossa hyödynnetään floristista materiaalia.</p>\n\n<p> </p>\n\n<p>Floristimestarin erikoisammattitutkinnon suorittanut voi toimia työntekijänä, yrittäjänä tai itsenäisenä ammatinharjoittajana. Tutkinnon suorittanut voi toimia esimiehenä, koulutustehtävissä, alan tuotekehitystehtävissä tai alan yritystoiminnan kehittämistehtävissä.</p>",
+      "_id" : "1429567"
+    },
+    "maarayskirje" : {
+      "id" : 1429681,
+      "url" : { }
+    },
+    "diaarinumero" : "35/011/2014",
+    "voimassaoloAlkaa" : 1412110800000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1453187439478,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 666696,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Floristin ammattitutkinto",
+      "sv" : "Yrkesexamen för florist",
+      "_id" : "1198208"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Floristin ammattitutkinto",
+        "sv" : "Yrkesexamen för florist",
+        "en" : "Floristry, FQ",
+        "_id" : "1198206"
+      },
+      "koulutuskoodiArvo" : "364201",
+      "koulutuskoodiUri" : "koulutus_364201",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_602"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Floristin ammattitutkinnon suorittanut osaa palvella asiakkaita asiantuntevasti ja luontevasti. Hän osaa esitellä alan tuotteita ja erikoisuuksia ja neuvoa asiakkaita valinnoissa, osaa suunnitella tilattuja kukkasidontatöitä, osaa hankkia tarvittavat materiaalit ja käsitellä niitä oikein, osaa tehdä kukkasidontatöitä ja tekstata kortit ja pakata työt oikein. Hän osaa suunnitella markkinointia, myymälän esillepanon ja kalustuksen sekä toteuttaa nämä sekä osaa arvioida ja kehittää markkinointia. Tutkinnon suorittanut, joka on valinnut kasveilla stailaaminen -tutkinnon osan, osaa suunnitella ja toteuttaa tilan stailauksen kasveilla itsenäisesti. Tutkinnon suorittanut, joka on valinnut juhlakoristelun suunnitteleminen ja toteuttaminen -tutkinnon osan, osaa selvittää tilaisuuden taustat, käytettävät resurssit ja asiakkaan toiveet. Hän osaa suunnitella juhlatilan floraalista materiaalia hyödyntävän koristelun ja toteuttaa sen. Tutkinnon suorittanut, joka on valinnut yrittäjänä toimiminen floristisella alalla -tutkinnon osan, osaa arvioida yrittäjävalmiuksiaan ja alan liiketoimintaympäristöä. Hän osaa laatia liiketoimintasuunnitelman, valita sopivimman yritysmuodon, käynnistää yrityksen ja toimia yrittäjänä. Tutkinnon suorittanut, joka on valinnut floristisen alan kilpailijan toimiminen -tutkinnon osan, osaa valmentautua kilpailuun, suunnitella kilpailutöitä ja harjoitella niihin. Hän osaa osallistua kansallisiin ja kansainvälisiin kilpailuihin. Tutkinnon suorittanut, joka on valinnut työpaikkaohjaaminen kukkakauppa-alalla -tutkinnon osan, osaa suunnitella työpaikalla järjestettävän koulutuksen sekä ammattiosaamisen näytön tai tutkintotilaisuuden. Hän osaa ohjata ja opastaa opiskelijaa sekä arvioida osaamista.</p>\n\n<p>Tutkinnon suorittaneet voivat työskennellä kukkakaupassa, kukkatalossa tai puutarhamyymälässä yrittäjänä, työyhteisön jäsenenä tai freelancerina.</p>",
+      "_id" : "1200755"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "10/011/2013",
+    "voimassaoloAlkaa" : 1375304400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1435132637243,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 666697,
+    "globalVersion" : {
+      "aikaleima" : 1453187631166
+    },
+    "nimi" : {
+      "fi" : "Golfkenttämestarin erikoisammattitutkinto",
+      "sv" : "Specialyrkesexamen för golfbanemästare",
+      "_id" : "1191620"
+    },
+    "koulutustyyppi" : "koulutustyyppi_12",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Golfkenttämestarin erikoisammattitutkinto",
+        "sv" : "Specialyrkesexamen för golfbanemästare",
+        "en" : "Golf Course Maintenance, SQ",
+        "_id" : "1191518"
+      },
+      "koulutuskoodiArvo" : "367904",
+      "koulutuskoodiUri" : "koulutus_367904",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_699"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Golfkenttämestarin erikoisammattitutkinnon suorittanut osaa säädellä kasvualustan kasvutekijöitä sekä hallitsee mekaaniset hoitotyöt siten, että pystyy laatimaan kentälle hoitosuunnitelmat ja seuraamaan niiden toteutumista. Hän osaa suunnitella ja toteuttaa golfkentän pelialueista tasapainoisen kokonaisuuden ja säädellä kentän vaikeustasoa ja hallitsee golfkentän kilpailulliset tasovaatimukset ja tuntee kentän tasoituskelpoisuuteen vaikuttavat tekijät. Hän tuntee kentän rakentamisessa käytettävät materiaalit ja niiden ominaisuudet sekä hallitsee golfväylän rakenteet. Tutkinnon suorittanut tuntee rakentamisen ja rakennuttamisen käsitteistön sekä osaa toimia kentän rakentamis- ja korjaustöiden valvojana ja hallitsee golfkentän kastelu- ja kuivatusjärjestelmien toiminnan. Hän osaa toimia oman työorganisaationsa tavoitteiden sekä taloudellisten toimintaperiaatteiden mukaisesti, osaa suunnitella, organisoida ja johtaa työt joustavasti sekä seurata niiden toteutumista ja taloutta ja on perehtynyt golfkentän rakentamisen ympäristövaikutuksiin ja pystyy toteuttamaan Suomen Golfliiton ympäristöjärjestelmää. Tutkinnon suorittanut hallitsee esimiestyössä tarvittavat viestintä-, vuorovaikutus- ja neuvottelutaidot, osaa toimia työnopastajana ja työpaikkaohjaajana ja on perehtynyt asiakaslähtöiseen palvelutoimintaan. Hän osaa toimia golfkentän tiedottajana sekä osaa tarkastella oman ammattialansa tarjoamia yritysmahdollisuuksia ja arvioida omia mahdollisuuksiaan yrittäjänä.</p>\n\n<p>Tutkinnon suorittaneet pystyvät toimimaan golfkentän hoidossa työntekijöinä tai itsenäisinä yrittäjinä.</p>",
+      "_id" : "1200437"
+    },
+    "maarayskirje" : {
+      "id" : 1429682,
+      "url" : { }
+    },
+    "diaarinumero" : "15/011/2007",
+    "voimassaoloAlkaa" : 1185915600000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1453187631166,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 666698,
+    "globalVersion" : {
+      "aikaleima" : 1448625321561
+    },
+    "nimi" : {
+      "fi" : "Golfkentänhoitajan ammattitutkinto",
+      "sv" : "Yrkesexamen för skötare av golfbana",
+      "_id" : "1190330"
+    },
+    "koulutustyyppi" : "koulutustyyppi_11",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Golfkentänhoitajan ammattitutkinto",
+        "sv" : "Yrkesexamen för skötare av golfbana",
+        "en" : "Golf Course Maintenance, FQ",
+        "_id" : "1190208"
+      },
+      "koulutuskoodiArvo" : "364901",
+      "koulutuskoodiUri" : "koulutus_364901",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_699"
+    } ],
+    "kielet" : [ "fi" ],
+    "kuvaus" : {
+      "fi" : "<p>Golfkentänhoitajan ammattitutkinnon suorittanut tuntee kasvutekijät ja kasvien kasvuun vaikuttamisen keinot, tuntee golfkentän kasvilajit sekä sen heinälajien ominaisuudet, kasvuvaatimukset ja käyttökohteet, tuntee eri pelialueet ja niiden yleiset pelilliset ja hoidolliset periaatteet sekä osaa leikata ne eri leikkuutavoilla ja -menetelmillä. Tutkinnon suorittanut osaa tehdä kentän mekaaniset hoitotyöt ja hoitolannoitukset eri menetelmillä, tuntee kasvinsuojelun yleiset periaatteet ja osaa tehdä kasvinsuojelutyöt. Hän tuntee golfkentän erilaiset koneet ja niiden tyypillisen työjäljen sekä osaa käyttää koneita niin, että työjälki on muotoilultaan, tarkkuudeltaan ja ulkonäöltään tavoitteen mukainen ja kentän pelattavuutta edistävä. Tutkinnon suorittaja osaa tehdä golfkentän esteisiin liittyvät sekä reuna-alueiden kasvillisuuden hoitotyöt, ottaa golfpelin säännöt huomioon huolehtiessaan kenttäalueen pelikunnosta. Hän osaa tehdä koneiden päivittäiset tarkastukset, huollot ja säädöt, osaa huoltaa ja kunnostaa golfkentän kalusteet ja hallitsee niiden turvallisen asettelun kentällä. Tutkinnon suorittanut osaa käyttää ja hoitaa golfkentän kuivatus- ja sadetusjärjestelmiä, tuntee golfkentän eri osien ja kerroksien rakenteet ja materiaalit sekä niiden ominaisuudet ja pystyy avustamaan kentän eri osien rakentamisessa ja uudistamisessa käyttäen golfkentän kalustoon kuuluvia koneita, laitteita ja työvälineitä. Hän ottaa huomioon työturvallisuus- ja ympäristönsuojelunäkökohdat sekä toimii asiakaslähtöisesti ja taloudellisesti sekä yhteisesti sovittujen periaatteiden mukaisesti.</p>\n\n<p>Tutkinnon suorittanut voi toimia golfkentänhoitajana joko työntekijänä tai itsenäisenä yrittäjänä.</p>",
+      "_id" : "1200436"
+    },
+    "maarayskirje" : null,
+    "diaarinumero" : "40/011/2006",
+    "voimassaoloAlkaa" : 1164924000000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : null,
+    "muokattu" : 1435131176697,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : null
+    } ]
+  }, {
+    "id" : 613,
+    "globalVersion" : {
+      "aikaleima" : 1450442531632
+    },
+    "nimi" : {
+      "fi" : "Hammastekniikan perustutkinto",
+      "sv" : "Grundexamen i tandteknik",
+      "_id" : "552444"
+    },
+    "koulutustyyppi" : "koulutustyyppi_1",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Hammastekniikan perustutkinto",
+        "sv" : "Grundexamen i tandteknik",
+        "en" : "Dental Technology, VQ",
+        "_id" : "552443"
+      },
+      "koulutuskoodiArvo" : "371109",
+      "koulutuskoodiUri" : "koulutus_371109",
+      "koulutusalakoodi" : "koulutusalaoph2002_7",
+      "opintoalakoodi" : "opintoalaoph2002_704"
+    } ],
+    "kielet" : [ "sv", "fi" ],
+    "kuvaus" : null,
+    "maarayskirje" : {
+      "id" : 1391455,
+      "url" : { }
+    },
+    "diaarinumero" : "41/011/2014",
+    "voimassaoloAlkaa" : 1438376400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : 1414447200000,
+    "muokattu" : 1450442531632,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ "12/011/2010" ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    }, {
+      "suoritustapakoodi" : "ops",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    } ]
+  }, {
+    "id" : 614,
+    "globalVersion" : {
+      "aikaleima" : 1450441620332
+    },
+    "nimi" : {
+      "fi" : "Hevostalouden perustutkinto",
+      "sv" : "Grundexamen inom hästhushållning",
+      "_id" : "291596"
+    },
+    "koulutustyyppi" : "koulutustyyppi_1",
+    "koulutukset" : [ {
+      "nimi" : {
+        "fi" : "Hevostalouden perustutkinto",
+        "sv" : "Grundexamen inom hästhushållning",
+        "en" : "Horse Management, VQ",
+        "_id" : "291595"
+      },
+      "koulutuskoodiArvo" : "361104",
+      "koulutuskoodiUri" : "koulutus_361104",
+      "koulutusalakoodi" : "koulutusalaoph2002_6",
+      "opintoalakoodi" : "opintoalaoph2002_601"
+    } ],
+    "kielet" : [ "sv", "fi" ],
+    "kuvaus" : {
+      "fi" : "Hevostenhoitajan työ sisältää hevosten hoitamisen lisäksi entistä enemmän asiakaspalvelua. Ratsastuksenohjaajilla on usein vastuullaan tallin toiminnan ja hevosten hoidon organisointi ja tallityöt. Alalla voi erikoistua hevosten kengittämiseen, varusteiden valmistamiseen ja huoltoon, monipuolisiin hevospalvelujen tarjoamiseen tai hevoskasvatukseen.\nHevostenhoitajat hoitavat hevosia esimerkiksi ratsu- ja ravitalleilla. Ratsastuksenohjaajat toimivat ratsastuksenopettajien apuna ratsastuskouluissa ja usein myös yrittäjänä.",
+      "sv" : "<p>I ridinstruktörens arbete ingår förutom hästskötsel också kundbetjäning i allt högre grad. Ridinstruktörer ansvarar ofta för stallarbeten samt organiserandet av stallets verksamhet och skötseln av hästarna. Inom hästbranschen kan man specialisera sig på hovslageri, tillverkning och reparation av hästmundering, mångsidig hästservice eller hästuppfödning. Hästskötarna sköter hästar t.ex. i rid- och travstall. Ridinstruktörer assisterar ridlärare vid ridskolor och arbetar också ofta som egenföretagare.</p>",
+      "_id" : "1103142"
+    },
+    "maarayskirje" : {
+      "id" : 1391319,
+      "url" : { }
+    },
+    "diaarinumero" : "42/011/2014",
+    "voimassaoloAlkaa" : 1438376400000,
+    "siirtymaPaattyy" : null,
+    "voimassaoloLoppuu" : null,
+    "paatospvm" : 1415829600000,
+    "muokattu" : 1450441620332,
+    "tila" : "valmis",
+    "tyyppi" : "normaali",
+    "korvattavatDiaarinumerot" : [ "24/011/2009" ],
+    "osaamisalat" : [ ],
+    "suoritustavat" : [ {
+      "suoritustapakoodi" : "ops",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    }, {
+      "suoritustapakoodi" : "naytto",
+      "laajuusYksikko" : "OSAAMISPISTE"
+    } ]
+  } ],
+  "sivuja" : 1,
+  "kokonaismäärä" : 25,
+  "sivukoko" : 25,
+  "sivu" : 0
+}
