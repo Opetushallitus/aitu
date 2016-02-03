@@ -263,6 +263,12 @@
     (sql/order :luotuaika :desc)
     (sql/limit 1)))
 
+(defn hae-tutkintoversiot
+  "Hakee kaikki tietyn tutkinnon tutkintoversiot"
+  [tutkintotunnus]
+  (sql/select tutkintoversio
+    (sql/where {:tutkintotunnus tutkintotunnus})))
+
 (defn hae
   "Hakee tutkinnon tunnuksen perusteella"
   [tutkintotunnus]
