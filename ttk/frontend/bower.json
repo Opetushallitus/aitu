@@ -19,7 +19,7 @@
     "ngUpload": "0.5.11",
     "select2": "3.4.8",
     "stacktrace": "0.6.0",
-    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.30"
+    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.2.0"
   },
   "resolutions": {
     "lodash": "2.4.1"
