@@ -39,7 +39,7 @@
     `(~method ~path ~params ~@(apply concat swagger-args)
        (autorisoitu-transaktio ~(:kayttooikeus kw-args) ~(:konteksti kw-args) ~@(apply concat body)))))
 
-(defmacro GET* [& args] `(api compojure.api.core/GET* ~@args))
-(defmacro POST* [& args] `(api compojure.api.core/POST* ~@args))
-(defmacro PUT* [& args] `(api compojure.api.core/PUT* ~@args))
-(defmacro DELETE* [& args] `(api compojure.api.core/DELETE* ~@args))
+(defmacro GET* [& args] `(api compojure.api.core/GET ~@args))
+(defmacro POST* [& args] `(api compojure.api.core/POST ~@args))
+(defmacro PUT* [& args] `(api compojure.api.core/PUT ~@args))
+(defmacro DELETE* [& args] `(api compojure.api.core/DELETE ~@args))
