@@ -16,10 +16,10 @@
   (:require [aitu.infra.jarjesto-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-json-response]]
             [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/haku/" [termi :as req]
     :kayttooikeus :jasenesitykset
     (cachable-json-response req (arkisto/hae-termilla termi nil)))

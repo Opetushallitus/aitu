@@ -16,9 +16,9 @@
   (:require [aitu.infra.tiedote-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.compojure-util :as cu :refer [GET* POST* DELETE*]]
-            [compojure.api.core :refer [defroutes*]]))
+            [compojure.api.core :refer [defroutes]]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/:tiedoteid" [tiedoteid]
     :kayttooikeus :etusivu
     (let [tiedoteid (Integer/parseInt tiedoteid)

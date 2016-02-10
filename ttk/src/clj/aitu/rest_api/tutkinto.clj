@@ -17,7 +17,7 @@
             [aitu.toimiala.tutkinto :as tutkinto]
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
             [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.http-util :refer [csv-download-response cachable-json-response json-response]]))
 
@@ -27,7 +27,7 @@
                                  :peruste :kieli :ytunnus :koulutustoimija_fi :toimikunta :toimikunta_fi :tilikoodi :toimikausi_alku :toimikausi_loppu
                                  :lukumaara])
 
-(defroutes* raportti-reitit
+(defroutes raportti-reitit
   (GET* "/csv" req
     :kayttooikeus :yleinen-rest-api
     (csv-download-response
@@ -46,7 +46,7 @@
   (select-keys tutkinto [:tutkintotunnus :nimi_fi :nimi_sv :opintoala_nimi_fi :opintoala_nimi_sv
                          :opintoala :tutkintotaso :peruste :voimassa]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" [:as req]
     :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (map (comp rajaa-tutkinnon-kentat voimassaolo/taydenna-tutkinnon-voimassaolo)

@@ -14,10 +14,10 @@
 
 (ns aitu.rest_api.js-log
   (:require [aitu.compojure-util :as cu :refer [POST*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [oph.rest_api.js-log :refer :all]))
 
-(defroutes* reitit
+(defroutes reitit
   (POST* "/virhe" [virheenUrl userAgent virheviesti stackTrace cause]
     :kayttooikeus :logitus
     (logita virheenUrl userAgent virheviesti stackTrace cause)))

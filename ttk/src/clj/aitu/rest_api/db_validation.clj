@@ -2,11 +2,11 @@
   (:require [aitu.integraatio.sql.validationtest :as validationtest]
             [stencil.core :as s]
             [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]))
+            [compojure.api.core :refer [defroutes]]))
 
 (def query-list @validationtest/default-query-list)
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" []
     :summary "Tietosisällön validointikyselyiden tulokset, raportti."
     :kayttooikeus :status

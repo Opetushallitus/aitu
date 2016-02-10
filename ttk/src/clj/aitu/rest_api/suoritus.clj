@@ -15,10 +15,10 @@
 (ns aitu.rest-api.suoritus
   (:require [aitu.infra.suoritus-arkisto :as arkisto]
             [aitu.compojure-util :as cu :refer [GET* POST* DELETE*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" [& ehdot]
     :kayttooikeus :arviointipaatos
     (json-response (arkisto/hae-kaikki ehdot)))

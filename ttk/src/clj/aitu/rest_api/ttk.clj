@@ -30,7 +30,7 @@
                                                json-response parse-iso-date sallittu-jos cachable-response response-or-404
                                                csv-download-response]]
             [aitu.compojure-util :as cu :refer [GET* POST* PUT*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.util :refer [->vector]]
             [clojure.string :as s]))
@@ -110,7 +110,7 @@
 (def raporttikenttien-jarjestys [:diaarinumero :toimikunta_fi :toimikunta_sv :tilikoodi :kielisyys
                                  :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv])
 
-(defroutes* paatos-reitit
+(defroutes paatos-reitit
   (GET* "/paatospohja-oletukset" []
     :kayttooikeus :paatos
     (json-response (:paatospohja-oletukset @asetukset)))
@@ -160,7 +160,7 @@
         (pdf-response pdf (str "muutospaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
         (pdf-response pdf)))))
 
-(defroutes* raportti-reitit
+(defroutes raportti-reitit
   (GET* "/tilastoraportti" [toimikausi]
     :kayttooikeus :raportti
     (csv-download-response (arkisto/hae-tilastot-toimikunnista (Integer/parseInt toimikausi))
@@ -204,7 +204,7 @@
                                          jasenkenttien-jarjestys)
                            "aiemmat-jasenet.csv")))
 
-(defroutes* private-reitit
+(defroutes private-reitit
   (PUT* "/:diaarinumero/jasenet" [diaarinumero jasenet]
     :kayttooikeus :toimikuntajasen_yllapito
     (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
@@ -296,7 +296,7 @@
       (arkisto/paivita-tutkinnot! tkunta nayttotutkinto)
       {:status 200})))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" [tunnus toimikausi :as req]
     :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta tai opintoalasta"
     :return [Toimikuntalista]

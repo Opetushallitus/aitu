@@ -23,9 +23,9 @@
             [oph.common.util.http-util :refer [json-response]]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.compojure-util :as cu :refer [GET* POST*]]
-            [compojure.api.core :refer [defroutes*]]))
+            [compojure.api.core :refer [defroutes]]))
 
-(defroutes* reitit
+(defroutes reitit
   (POST* "/impersonoi" [:as {session :session}, oid]
     :kayttooikeus :impersonointi
     {:status 200

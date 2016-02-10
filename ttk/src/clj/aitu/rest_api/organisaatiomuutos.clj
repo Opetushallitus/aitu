@@ -14,12 +14,12 @@
 
 (ns aitu.rest-api.organisaatiomuutos
   (:require [aitu.compojure-util :as cu :refer [GET* POST*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [aitu.infra.organisaatiomuutos-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.toimiala.skeema :refer :all]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" []
     :kayttooikeus :organisaatiomuutos
     (json-response (arkisto/hae-tekemattomat)))
