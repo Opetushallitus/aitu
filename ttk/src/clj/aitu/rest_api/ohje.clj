@@ -16,9 +16,9 @@
   (:require [aitu.infra.ohje-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.compojure-util :as cu :refer [GET* PUT*]]
-            [compojure.api.core :refer [defroutes*]]))
+            [compojure.api.core :refer [defroutes]]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/:ohjetunniste" [ohjetunniste]
     :kayttooikeus :ohjeet_luku
     (if-let [ohje (arkisto/hae ohjetunniste)]

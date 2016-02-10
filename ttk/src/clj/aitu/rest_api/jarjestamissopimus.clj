@@ -22,7 +22,7 @@
             [valip.predicates :refer [present?]]
             [aitu.toimiala.skeema :as skeema]
             [aitu.compojure-util :as cu :refer [GET* POST* PUT* DELETE*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [aitu.infra.validaatio :refer [validoi-alkupvm-sama-tai-ennen-loppupvm]]
             [aitu.toimiala.jarjestamissopimus :as jarjestamissopimus]
             [aitu.toimiala.voimassaolo.saanto.jarjestamissopimus :as voimassaolo]))
@@ -67,7 +67,7 @@
    :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv :peruste :siirtymaajan_loppupvm :osaamisalat
    :oppilaitoskoodi :oppilaitos :kieli :vastuuhenkilo :vastuuhenkilo_sahkoposti :vastuuhenkilo_puhelin])
 
-(defroutes* raportti-reitit
+(defroutes raportti-reitit
   (GET* "/csv" [voimassa :as req]
     :kayttooikeus :raportointi
     (let [voimassa (not= voimassa "false")]
@@ -85,7 +85,7 @@
      (csv-download-response (muodosta-csv raportti kaikkien-sopimuskenttien-jarjestys)
                             "sopimukset.csv"))))
 
-(defroutes* reitit
+(defroutes reitit
   (POST* "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
     :kayttooikeus :sopimus_lisays
     :konteksti tkunta
@@ -197,7 +197,7 @@
         {:status 200}))))
 
 ; Liitteiden lataukselle omat reitit. Ei csrf tarkistusta.
-(defroutes* liite-lataus-reitit
+(defroutes liite-lataus-reitit
   (GET* "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
     :kayttooikeus :suunnitelma_luku
     :konteksti jarjestamissopimusid

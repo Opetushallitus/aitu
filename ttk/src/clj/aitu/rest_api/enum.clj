@@ -16,9 +16,9 @@
   (:require [aitu.infra.enum-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]))
+            [compojure.api.core :refer [defroutes]]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/:enum" [enum]
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki enum))))

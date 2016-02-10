@@ -16,9 +16,9 @@
   (:require [aitu.infra.opintoala-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]))
+            [compojure.api.core :refer [defroutes]]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/haku" [termi]
     :summary "Koulutusalan haku termillä. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api

@@ -15,10 +15,10 @@
 (ns aitu.rest-api.aipal
   (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(defroutes* reitit
+(defroutes reitit
   ; vanha API - voidaan poistaa kun kaikissa ympäristöissä on uusi API käytössä
   (GET* "/sopimukset" []
     :summary "INTEGRAATIO: Sopimustiedot Aipalia varten"

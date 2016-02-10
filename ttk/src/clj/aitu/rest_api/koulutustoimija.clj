@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.koulutustoimija
   (:require [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]
             [oph.common.util.http-util :refer [csv-download-response cachable-response response-or-404]]
@@ -23,14 +23,14 @@
 
 (def koulutustoimijakenttien-jarjestys [:nimi_fi :nimi_sv :ytunnus :sopimusten_maara])
 
-(defroutes* raportti-reitit
+(defroutes raportti-reitit
   (GET* "/csv" req
     :kayttooikeus :yleinen-rest-api
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet koulutustoimijakenttien-jarjestys))
                                          koulutustoimijakenttien-jarjestys)
                            "koulutustoimijat.csv")))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" req
     :summary "Hakee kaikki koulutustoimijat"
     :return [KoulutustoimijaLista]

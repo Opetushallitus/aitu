@@ -15,10 +15,10 @@
 (ns aitu.rest-api.tutkinnonosa
   (:require [aitu.infra.tutkinnonosa-arkisto :as arkisto]
             [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" [tutkintotunnus]
     :summary "Tutkinnon osat tutkinnon tunnuksen perusteella. (ePerusteet on tietojen master-järjestelmä)"
     :kayttooikeus :yleinen-rest-api

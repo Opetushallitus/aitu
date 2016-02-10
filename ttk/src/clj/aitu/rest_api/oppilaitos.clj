@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.oppilaitos
   (:require [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [aitu.infra.oppilaitos-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-response response-or-404]]
             [aitu.toimiala.skeema :refer :all]
@@ -23,14 +23,14 @@
 
 (def oppilaitoskenttien-jarjestys [:nimi :oppilaitoskoodi :sopimusten_maara])
 
-(defroutes* raportti-reitit
+(defroutes raportti-reitit
   (GET* "/csv" req
     :kayttooikeus :yleinen-rest-api
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet oppilaitoskenttien-jarjestys))
                                          oppilaitoskenttien-jarjestys)
                            "oppilaitokset.csv")))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" [:as req]
     :summary "Hakee kaikki oppilaitokset"
     :return [OppilaitosLista]

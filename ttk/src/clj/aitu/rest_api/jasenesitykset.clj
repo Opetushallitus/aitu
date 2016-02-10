@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.jasenesitykset
   (:require [aitu.compojure-util :as cu :refer [GET* DELETE*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [clj-time.coerce :as time-coerce]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
             [aitu.toimiala.henkilo :as henkilo]
@@ -63,7 +63,7 @@
 
 (def ^:private csv-poistettavat-kentat [:henkiloid :esittaja_henkilo_henkiloid :esittaja_keskusjarjesto_nimi_sv :esittaja :esittaja_jarjesto_nimi_sv :toimikunta :tutkintotoimikunta_nimi_sv :luotu_kayttaja :jasenyys_id])
 
-(defroutes* reitit-csv
+(defroutes reitit-csv
   (GET* "/csv" [& ehdot]
     :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
@@ -77,7 +77,7 @@
           (muodosta-csv kenttien-jarjestys sarakkeiden-otsikot)
           (csv-download-response "jasenesitykset.csv")))))
 
-(defroutes* reitit
+(defroutes reitit
   (GET* "/" [& ehdot]
     :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]

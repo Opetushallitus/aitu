@@ -26,7 +26,7 @@
             [valip.predicates :refer [present? max-length]]
             [ring.util.response :refer [response]]
             [aitu.compojure-util :as cu :refer [GET* POST* PUT*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [defroutes]]
             [schema.core :as s]
             [aitu.util :refer [muodosta-csv]]))
 
@@ -65,7 +65,7 @@
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
 
-(defroutes* raportti-reitit
+(defroutes raportti-reitit
   (GET* "/csv" req
     :kayttooikeus :henkilo_haku
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet henkilokenttien-jarjestys))
@@ -82,7 +82,7 @@
       (:lisatiedot henkilodto)
         (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi käsitellä lisätieto-kenttää")))))
 
-(defroutes* reitit
+(defroutes reitit
   (POST* "/" [& henkilodto]
     :kayttooikeus :henkilo_lisays
     (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
