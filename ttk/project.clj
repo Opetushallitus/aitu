@@ -16,7 +16,7 @@
   :description "Tutkintotoimikuntarekisteri"
   :dependencies [[cas-single-sign-out "0.1.2" :exclusions [clj-cas-client]]
                  [ch.qos.logback/logback-classic "1.0.13"]
-                 [cheshire "5.2.0"]
+                 [cheshire "5.5.0"]
                  [clj-http "1.0.1"]
                  [clj-time "0.6.0"]
                  [clojure-csv/clojure-csv "2.0.1"]
