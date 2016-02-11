@@ -51,7 +51,8 @@
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
             [aitu.integraatio.clamav :as clamav]
             [aitu.infra.eraajo :as eraajo]
-            [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]))
+            [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]
+            [aitu.restructure]))
 
 (schema.core/set-fn-validation! true)
 
