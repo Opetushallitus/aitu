@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.oppilaitos
-  (:require [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes]]
+  (:require [compojure.api.core :refer [GET defroutes]]
             [aitu.infra.oppilaitos-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-response response-or-404]]
             [aitu.toimiala.skeema :refer :all]
@@ -24,32 +23,32 @@
 (def oppilaitoskenttien-jarjestys [:nimi :oppilaitoskoodi :sopimusten_maara])
 
 (defroutes raportti-reitit
-  (GET* "/csv" req
+  (GET "/csv" req
     :kayttooikeus :yleinen-rest-api
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet oppilaitoskenttien-jarjestys))
                                          oppilaitoskenttien-jarjestys)
                            "oppilaitokset.csv")))
 
 (defroutes reitit
-  (GET* "/" [:as req]
+  (GET "/" [:as req]
     :summary "Hakee kaikki oppilaitokset"
     :return [OppilaitosLista]
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (arkisto/hae-kaikki-julkiset-tiedot)))
 
-  (GET*  "/haku" [termi :as req]
+  (GET "/haku" [termi :as req]
     :summary "Hakee kaikki oppilaitokset joiden nimi sisältää annetun termin"
     :return [OppilaitosLinkki]
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (arkisto/hae-termilla termi)))
 
-  (GET* "/:oppilaitoskoodi" [oppilaitoskoodi]
+  (GET "/:oppilaitoskoodi" [oppilaitoskoodi]
     :summary "Hakee oppilaitoksen oppilaitoskoodilla"
     :return OppilaitosLaajatTiedot
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (arkisto/hae oppilaitoskoodi)))
 
-  (GET* "/haku/ala" [tunnus :as req]
+  (GET "/haku/ala" [tunnus :as req]
     :summary "Hakee kaikki oppilaitokset joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
     :return [OppilaitosLista]
     :kayttooikeus :yleinen-rest-api

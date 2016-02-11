@@ -1,13 +1,12 @@
 (ns aitu.rest-api.db-validation
   (:require [aitu.integraatio.sql.validationtest :as validationtest]
             [stencil.core :as s]
-            [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes]]))
+            [compojure.api.core :refer [GET defroutes]]))
 
 (def query-list @validationtest/default-query-list)
 
 (defroutes reitit
-  (GET* "/" []
+  (GET "/" []
     :summary "Tietosisällön validointikyselyiden tulokset, raportti."
     :kayttooikeus :status
     (let [results-raw (validationtest/run-queries! query-list)

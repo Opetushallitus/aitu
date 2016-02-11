@@ -14,20 +14,19 @@
 
 (ns aitu.rest-api.suorittaja
   (:require [aitu.infra.suorittaja-arkisto :as arkisto]
-            [aitu.compojure-util :as cu :refer [GET* POST* PUT* DELETE*]]
-            [compojure.api.core :refer [defroutes]]
+            [compojure.api.core :refer [DELETE GET POST PUT defroutes]]
             [oph.common.util.http-util :refer [json-response]]))
 
 (defroutes reitit
-  (GET* "/" []
+  (GET "/" []
     :kayttooikeus :arviointipaatos
     (json-response (arkisto/hae-kaikki)))
-  (POST* "/" [& form]
+  (POST "/" [& form]
     :kayttooikeus :arviointipaatos
     (json-response (arkisto/lisaa! form)))
-  (PUT* "/:suorittajaid" [suorittajaid & suorittaja]
+  (PUT "/:suorittajaid" [suorittajaid & suorittaja]
     :kayttooikeus :arviointipaatos
     (json-response (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja)))
-  (DELETE* "/:suorittajaid" [suorittajaid]
+  (DELETE "/:suorittajaid" [suorittajaid]
     :kayttooikeus :arviointipaatos
     (arkisto/poista! (Integer/parseInt suorittajaid))))

@@ -16,8 +16,7 @@
   (:require [aitu.infra.tutkinto-arkisto :as arkisto]
             [aitu.toimiala.tutkinto :as tutkinto]
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
-            [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes]]
+            [compojure.api.core :refer [GET defroutes]]
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.http-util :refer [csv-download-response cachable-json-response json-response]]))
 
@@ -28,14 +27,14 @@
                                  :lukumaara])
 
 (defroutes raportti-reitit
-  (GET* "/csv" req
+  (GET "/csv" req
     :kayttooikeus :yleinen-rest-api
     (csv-download-response
       (muodosta-csv (arkisto/hae-ehdoilla
                       (assoc (:params req) :avaimet tutkintokenttien-jarjestys))
                     tutkintokenttien-jarjestys)
       "tutkinnot.csv"))
-  (GET* "/raportti" req
+  (GET "/raportti" req
     :kayttooikeus :raportti
     (csv-download-response
       (muodosta-csv (arkisto/hae-raportti (assoc (:params req) :avaimet raporttikenttien-jarjestys))
@@ -47,16 +46,16 @@
                          :opintoala :tutkintotaso :peruste :voimassa]))
 
 (defroutes reitit
-  (GET* "/" [:as req]
+  (GET "/" [:as req]
     :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (map (comp rajaa-tutkinnon-kentat voimassaolo/taydenna-tutkinnon-voimassaolo)
                                      (arkisto/hae-kaikki))))
-  (GET* "/:tutkintotunnus" [tutkintotunnus]
+  (GET "/:tutkintotunnus" [tutkintotunnus]
     :kayttooikeus :yleinen-rest-api
     (json-response (tutkinto/taydenna-tutkinto (arkisto/hae tutkintotunnus))))
-  (GET* "/haku/osat" [termi :as req]
+  (GET "/haku/osat" [termi :as req]
     :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (arkisto/hae-opintoalat-tutkinnot-osaamisalat-tutkinnonosat termi)))
-  (GET* "/haku/tutkinnot" [termi :as req]
+  (GET "/haku/tutkinnot" [termi :as req]
     :kayttooikeus :yleinen-rest-api
     (cachable-json-response req (arkisto/hae-opintoalat-tutkinnot termi))))

@@ -29,8 +29,7 @@
                                                luo-validoinnin-virhevastaus
                                                json-response parse-iso-date sallittu-jos cachable-response response-or-404
                                                csv-download-response]]
-            [aitu.compojure-util :as cu :refer [GET* POST* PUT*]]
-            [compojure.api.core :refer [defroutes]]
+            [compojure.api.core :refer [GET POST PUT defroutes]]
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.util :refer [->vector]]
             [clojure.string :as s]))
@@ -111,10 +110,10 @@
                                  :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv])
 
 (defroutes paatos-reitit
-  (GET* "/paatospohja-oletukset" []
+  (GET "/paatospohja-oletukset" []
     :kayttooikeus :paatos
     (json-response (:paatospohja-oletukset @asetukset)))
-  (GET* "/:diaarinumero/asettamispaatos" [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
+  (GET "/:diaarinumero/asettamispaatos" [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     :kayttooikeus :paatos
     (let [data {:paivays paivays
                 :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -128,7 +127,7 @@
       (if lataa
         (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
         (pdf-response pdf))))
-  (GET* "/:diaarinumero/taydennyspaatos" [diaarinumero kieli jasen paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
+  (GET "/:diaarinumero/taydennyspaatos" [diaarinumero kieli jasen paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     :kayttooikeus :paatos
     (let [data {:paivays paivays
                 :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -143,7 +142,7 @@
       (if lataa
         (pdf-response pdf (str "taydennyspaatos_" (s/replace diaarinumero \/ \_) ".pdf"))
         (pdf-response pdf))))
-  (GET* "/:diaarinumero/muutospaatos" [diaarinumero kieli jasen korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
+  (GET "/:diaarinumero/muutospaatos" [diaarinumero kieli jasen korvattu paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     :kayttooikeus :paatos
     (let [data {:paivays paivays
                 :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -161,11 +160,11 @@
         (pdf-response pdf)))))
 
 (defroutes raportti-reitit
-  (GET* "/tilastoraportti" [toimikausi]
+  (GET "/tilastoraportti" [toimikausi]
     :kayttooikeus :raportti
     (csv-download-response (arkisto/hae-tilastot-toimikunnista (Integer/parseInt toimikausi))
                            "toimikunnat.csv"))
-  (GET* "/jasenraportti" [toimikausi rooli edustus jarjesto kieli yhteystiedot opintoala]
+  (GET "/jasenraportti" [toimikausi rooli edustus jarjesto kieli yhteystiedot opintoala]
     :kayttooikeus :raportti
     (let [hakuehdot {:toimikausi (Integer/parseInt toimikausi)
                      :rooli (->vector rooli)
@@ -176,36 +175,36 @@
                      :opintoala (->vector opintoala)}]
       (csv-download-response (muodosta-csv (arkisto/hae-jasenyydet-ehdoilla hakuehdot) jasenraporttikenttien-jarjestys)
                              "jasenet.csv")))
-  (GET* "/raportti" [toimikausi kieli opintoala]
+  (GET "/raportti" [toimikausi kieli opintoala]
     :kayttooikeus :raportti
     (let [hakuehdot {:toimikausi (Integer/parseInt toimikausi)
                      :kieli (->vector kieli)
                      :opintoala (->vector opintoala)}]
       (csv-download-response (muodosta-csv (arkisto/hae-toimikuntaraportti hakuehdot) raporttikenttien-jarjestys)
                              "toimikunnat.csv")))
-  (GET* "/csv" req
+  (GET "/csv" req
     :kayttooikeus :toimikunta_haku
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet toimikuntakenttien-jarjestys))
                                          toimikuntakenttien-jarjestys)
                            "toimikunnat.csv"))
-  (GET* "/:tkunta/toimiala" [tkunta]
+  (GET "/:tkunta/toimiala" [tkunta]
     :kayttooikeus :toimikunta_haku
     (csv-download-response (muodosta-csv (tutkinto-arkisto/hae-toimikunnan-toimiala tkunta)
                                          toimialakenttien-jarjestys)
                            "toimiala.csv"))
-  (GET* "/:tkunta/jasenet" [tkunta]
+  (GET "/:tkunta/jasenet" [tkunta]
     :kayttooikeus :toimikunta_haku
     (csv-download-response (muodosta-csv (arkisto/hae-jasenet tkunta)
                                          jasenkenttien-jarjestys)
                            "jasenet.csv"))
-  (GET* "/:tkunta/aiemmat-jasenet" [tkunta]
+  (GET "/:tkunta/aiemmat-jasenet" [tkunta]
     :kayttooikeus :toimikunta_haku
     (csv-download-response (muodosta-csv (arkisto/hae-jasenet tkunta {:voimassa false})
                                          jasenkenttien-jarjestys)
                            "aiemmat-jasenet.csv")))
 
 (defroutes private-reitit
-  (PUT* "/:diaarinumero/jasenet" [diaarinumero jasenet]
+  (PUT "/:diaarinumero/jasenet" [diaarinumero jasenet]
     :kayttooikeus :toimikuntajasen_yllapito
     (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
       (let [toimikunta (arkisto/hae diaarinumero)
@@ -220,9 +219,8 @@
             ((i18n/tekstit) :validointi))
           (paivita-jasenyydet diaarinumero jasenyydet)))))
 
-   (PUT* "/:diaarinumero" [diaarinumero kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti]
-    :kayttooikeus :toimikunta_paivitys
-    :konteksti tkunta
+   (PUT "/:diaarinumero" [diaarinumero kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti]
+    :kayttooikeus [:toimikunta_paivitys tkunta]
     (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
       (let [paivitettava {:diaarinumero diaarinumero
                           :kielisyys kielisyys
@@ -243,7 +241,7 @@
                  (arkisto/paivita! diaarinumero paivitettava)
                  {:status 200}))))
 
-  (POST* "/" [tkunta diaarinumero nimi_fi nimi_sv tilikoodi toimiala toimikausi toimikausi_alku toimikausi_loppu kielisyys sahkoposti]
+  (POST "/" [tkunta diaarinumero nimi_fi nimi_sv tilikoodi toimiala toimikausi toimikausi_alku toimikausi_loppu kielisyys sahkoposti]
     :kayttooikeus :toimikunta_luonti
     (arkisto/lisaa! (merge {:diaarinumero diaarinumero
                             :nimi_fi nimi_fi
@@ -259,7 +257,7 @@
                              {:tkunta tkunta})))
     {:status 200})
 
-  (POST* "/:diaarinumero/jasenet" [diaarinumero henkilo rooli alkupvm loppupvm edustus asiantuntijaksi vapaateksti_kokemus esittaja status]
+  (POST "/:diaarinumero/jasenet" [diaarinumero henkilo rooli alkupvm loppupvm edustus asiantuntijaksi vapaateksti_kokemus esittaja status]
     :kayttooikeus :toimikuntajasen_lisays
     (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
       (if (and
@@ -289,15 +287,14 @@
           ((i18n/tekstit) :validointi)
           (arkisto/lisaa-jasen! jasen)
           {:status 200}))))
-  (POST* "/:tkunta/tutkinnot" [tkunta nayttotutkinto]
-    :kayttooikeus :toimikunta_paivitys
-    :konteksti tkunta
+  (POST "/:tkunta/tutkinnot" [tkunta nayttotutkinto]
+    :kayttooikeus [:toimikunta_paivitys tkunta]
     (sallittu-jos (salli-toimikunnan-paivitys? (arkisto/hae-toimikunnan-diaarinumero tkunta))
       (arkisto/paivita-tutkinnot! tkunta nayttotutkinto)
       {:status 200})))
 
 (defroutes reitit
-  (GET* "/" [tunnus toimikausi :as req]
+  (GET "/" [tunnus toimikausi :as req]
     :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta tai opintoalasta"
     :return [Toimikuntalista]
     :kayttooikeus :toimikunta_haku
@@ -305,20 +302,20 @@
                                                   :toimikausi toimikausi
                                                   :avaimet [:tkunta :diaarinumero :nimi_fi :nimi_sv :kielisyys :tilikoodi :voimassa :toimikausi_alku :toimikausi_loppu]})))
 
-  (GET* ["/:diaarinumero" :diaarinumero #"[0-9%F]+"] [diaarinumero]
+  (GET ["/:diaarinumero" :diaarinumero #"[0-9%F]+"] [diaarinumero]
     :summary "Hakee toimikunnan diaarinumeron perusteella"
     :return ToimikuntaLaajatTiedot
     :kayttooikeus :toimikunta_katselu
     (response-or-404 (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero))))
 
-  (GET* "/haku" [:as req]
+  (GET "/haku" [:as req]
     :summary "Hakee toimikunnat, joiden nimi sisältää annetun termin"
     :query [params TermiParams]
     :return [ToimikunnanHakuTiedot]
     :kayttooikeus :toimikunta_haku
     (cachable-response req (arkisto/hae-toimikaudet-termilla (:termi params) false)))
 
-  (GET* "/haku-uudet" [:as req]
+  (GET "/haku-uudet" [:as req]
     :summary "Hakee uusimman toimikauden toimikunnat, joiden nimi sisältää annetun termin"
     :query [params TermiParams]
     :return [ToimikunnanHakuTiedot]

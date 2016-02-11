@@ -15,12 +15,11 @@
 (ns aitu.rest-api.haku
   (:require [aitu.infra.haku-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes]]))
+            [compojure.api.core :refer [GET defroutes]]))
 
 (defroutes reitit
   ; Regex hoitaa tässä SQL-injektion. Arkisto-koodissa ei ole sanitointia.
-  (GET* ["/:tunnus" :tunnus #"[0-9/]+"] [tunnus]
+  (GET ["/:tunnus" :tunnus #"[0-9/]+"] [tunnus]
     :summary "Pikahaku yksilöivällä tunnuksella eri käsitteisiin"
     :kayttooikeus :etusivu_haku
     (json-response (or (arkisto/hae-tunnuksella-ensimmainen tunnus) {}))))

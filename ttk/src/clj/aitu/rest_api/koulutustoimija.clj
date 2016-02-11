@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.koulutustoimija
-  (:require [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes]]
+  (:require [compojure.api.core :refer [GET defroutes]]
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]
             [oph.common.util.http-util :refer [csv-download-response cachable-response response-or-404]]
@@ -24,34 +23,34 @@
 (def koulutustoimijakenttien-jarjestys [:nimi_fi :nimi_sv :ytunnus :sopimusten_maara])
 
 (defroutes raportti-reitit
-  (GET* "/csv" req
+  (GET "/csv" req
     :kayttooikeus :yleinen-rest-api
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet koulutustoimijakenttien-jarjestys))
                                          koulutustoimijakenttien-jarjestys)
                            "koulutustoimijat.csv")))
 
 (defroutes reitit
-  (GET* "/" req
+  (GET "/" req
     :summary "Hakee kaikki koulutustoimijat"
     :return [KoulutustoimijaLista]
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (arkisto/hae-julkiset-tiedot)))
-  (GET* "/haku" [termi :as req]
+  (GET "/haku" [termi :as req]
     :summary "Hakee kaikki koulutustoimijat joiden nimi sisältää annetun termin"
     :return [KoulutustoimijaLinkki]
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (arkisto/hae-termilla termi)))
-  (GET* "/nimet" req
+  (GET "/nimet" req
     :summary "Hakee listan koulutustoimijoiden nimistä"
     :kayttooikeus :yleinen-rest-api
     :return [KoulutustoimijaLinkki]
     (cachable-response req (arkisto/hae-nimet)))
-  (GET* "/:ytunnus" [ytunnus]
+  (GET "/:ytunnus" [ytunnus]
     :summary "Hakee koulutustoimijan y-tunnuksella"
     :return KoulutustoimijaLaajatTiedot
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (arkisto/hae ytunnus)))
-  (GET* "/haku/ala" [tunnus :as req]
+  (GET "/haku/ala" [tunnus :as req]
     :summary "Hakee kaikki koulutustoimijat joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
     :return [KoulutustoimijaLista]
     :kayttooikeus :yleinen-rest-api

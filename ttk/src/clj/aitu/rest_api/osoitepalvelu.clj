@@ -2,12 +2,11 @@
   (:require [aitu.infra.ttk-arkisto :as ttk-arkisto]
             [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
             [aitu.toimiala.skeema :refer :all]
-            [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes]]
+            [compojure.api.core :refer [GET defroutes]]
             [oph.common.util.http-util :refer [json-response]]))
 
 (defroutes reitit
-  (GET* "/" []
+  (GET "/" []
     :summary "INTEGRAATIO: Hakee osoitepalvelun tarvitsemat tiedot"
     :return Osoitepalvelu
     :kayttooikeus :osoitepalvelu-api
