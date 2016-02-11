@@ -15,11 +15,10 @@
 (ns aitu.rest-api.tiedote
   (:require [aitu.infra.tiedote-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.compojure-util :as cu :refer [GET* POST* DELETE*]]
-            [compojure.api.core :refer [defroutes]]))
+            [compojure.api.core :refer [DELETE GET POST defroutes]]))
 
 (defroutes reitit
-  (GET* "/:tiedoteid" [tiedoteid]
+  (GET "/:tiedoteid" [tiedoteid]
     :kayttooikeus :etusivu
     (let [tiedoteid (Integer/parseInt tiedoteid)
           tiedote (arkisto/hae tiedoteid)]
@@ -28,12 +27,12 @@
             tiedote)
         json-response)))
 
-  (POST* "/:tiedoteid" [tiedoteid teksti_fi teksti_sv]
+  (POST "/:tiedoteid" [tiedoteid teksti_fi teksti_sv]
     :kayttooikeus :tiedote_muokkaus
     (let [tiedote (arkisto/poista-ja-lisaa! (Integer/parseInt tiedoteid) {:teksti_fi teksti_fi :teksti_sv teksti_sv})]
         (json-response tiedote)))
 
-  (DELETE* "/:tiedoteid" [tiedoteid]
+  (DELETE "/:tiedoteid" [tiedoteid]
     :kayttooikeus :tiedote_muokkaus
     (arkisto/poista! (Integer/parseInt tiedoteid))
     {:status 200}))

@@ -3,7 +3,7 @@
             [clojure.tools.logging :as log]
 
             [cheshire.core :as json]
-            [compojure.api.sweet :refer [api context swagger-routes]]
+            [compojure.api.sweet :refer [GET api context swagger-routes]]
             [compojure.core :as c]
             [compojure.route :as r]
             schema.core
@@ -11,7 +11,6 @@
             [stencil.loader :as sl]
 
             [aitu.asetukset :refer [build-id kehitysmoodi? service-path]]
-            [aitu.compojure-util :as cu :refer [GET*]]
             [aitu.infra.i18n :as i18n]
             [oph.common.infra.status :refer [status]]
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
@@ -135,7 +134,7 @@
       (testapi asetukset)
       (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
         (angular-template nimi asetukset))
-      (GET* "/" []
+      (GET "/" []
 
         :kayttooikeus :etusivu
         {:body    (s/render-file "html/ttk" {:build-id     @build-id
@@ -150,7 +149,7 @@
          :status  200
          :headers {"Content-Type" "text/html"
                    "Set-cookie"   (aseta-csrf-token (-> asetukset :server :base-url service-path))}})
-      (GET* "/status" []
+      (GET "/status" []
         :summary "Tietoa Aitun asetuksista palvelimella. Versionumerot yms. ongelmien selvittämistä varten."
         :kayttooikeus :status
         (s/render-file "html/status"

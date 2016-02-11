@@ -22,25 +22,24 @@
             [aitu.infra.kayttajaoikeudet-arkisto :as ko-arkisto]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.toimiala.kayttajaoikeudet :as ko]
-            [aitu.compojure-util :as cu :refer [GET* POST*]]
-            [compojure.api.core :refer [defroutes]]))
+            [compojure.api.core :refer [GET POST defroutes]]))
 
 (defroutes reitit
-  (POST* "/impersonoi" [:as {session :session}, oid]
+  (POST "/impersonoi" [:as {session :session}, oid]
     :kayttooikeus :impersonointi
     {:status 200
      :session (assoc session :impersonoitu-oid oid)})
-  (POST* "/lopeta-impersonointi" {session :session}
+  (POST "/lopeta-impersonointi" {session :session}
     :kayttooikeus :impersonointi-lopetus
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
-  (GET* "/impersonoitava" [termi]
+  (GET "/impersonoitava" [termi]
     :kayttooikeus :impersonointi
     (json-response (arkisto/hae-impersonoitava-termilla termi)))
-  (GET* "/toimikuntakayttajat" [termi]
+  (GET "/toimikuntakayttajat" [termi]
     :kayttooikeus :toimikuntakayttaja-listaus
     (json-response (arkisto/hae-toimikuntakayttajat-termilla termi)))
-  (GET* "/" []
+  (GET "/" []
     :kayttooikeus :kayttajan_tiedot
     (let [oikeudet (ko-arkisto/hae-oikeudet)
           roolitunnus (:roolitunnus oikeudet)]
@@ -52,10 +51,10 @@
             paivita-kayttajan-sopimuskohtaiset-oikeudet
             liita-kayttajan-henkilo-oikeudet
             json-response))))
-  (GET* "/jarjesto" []
+  (GET "/jarjesto" []
     :kayttooikeus :kayttajan_tiedot
     (json-response (or (arkisto/hae-jarjesto (:jarjesto ko/*current-user-authmap*)) {})))
-  (GET* "/:oid" [oid]
+  (GET "/:oid" [oid]
     :kayttooikeus :omat_tiedot
     (json-response (arkisto/hae oid))))
 

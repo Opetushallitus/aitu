@@ -13,20 +13,19 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.organisaatiomuutos
-  (:require [aitu.compojure-util :as cu :refer [GET* POST*]]
-            [compojure.api.core :refer [defroutes]]
+  (:require [compojure.api.core :refer [GET POST defroutes]]
             [aitu.infra.organisaatiomuutos-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
             [aitu.toimiala.skeema :refer :all]))
 
 (defroutes reitit
-  (GET* "/" []
+  (GET "/" []
     :kayttooikeus :organisaatiomuutos
     (json-response (arkisto/hae-tekemattomat)))
-  (GET* "/maara" []
+  (GET "/maara" []
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/tekemattomien-maara)))
-  (POST* "/:id/tehty" [id]
+  (POST "/:id/tehty" [id]
     :kayttooikeus :organisaatiomuutos
     (arkisto/merkitse-tehdyksi (Integer/parseInt id))
     {:status 200}))

@@ -15,14 +15,13 @@
 (ns aitu.rest-api.jarjesto
   (:require [aitu.infra.jarjesto-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-json-response]]
-            [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes]]
+            [compojure.api.core :refer [GET defroutes]]
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]))
 
 (defroutes reitit
-  (GET* "/haku/" [termi :as req]
+  (GET "/haku/" [termi :as req]
     :kayttooikeus :jasenesitykset
     (cachable-json-response req (arkisto/hae-termilla termi nil)))
-  (GET* "/haku/omat" [termi :as req]
+  (GET "/haku/omat" [termi :as req]
     :kayttooikeus :jasenesitykset
     (cachable-json-response req (arkisto/hae-termilla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))

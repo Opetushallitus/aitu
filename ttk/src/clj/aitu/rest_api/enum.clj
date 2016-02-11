@@ -15,10 +15,9 @@
 (ns aitu.rest-api.enum
   (:require [aitu.infra.enum-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes]]))
+            [compojure.api.core :refer [GET defroutes]]))
 
 (defroutes reitit
-  (GET* "/:enum" [enum]
+  (GET "/:enum" [enum]
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki enum))))
