@@ -3,7 +3,7 @@
             [clojure.tools.logging :as log]
 
             [cheshire.core :as json]
-            [compojure.api.sweet :refer [api context swagger-docs swagger-ui]]
+            [compojure.api.sweet :refer [api context swagger-routes]]
             [compojure.core :as c]
             [compojure.route :as r]
             schema.core
@@ -91,12 +91,12 @@
 (defn reitit [asetukset]
   (let [base-url (get-in asetukset [:server :base-url])]
     (api
-      (swagger-ui "/api-docs" :swagger-docs (str (service-path base-url) "/swagger.json"))
-
-      (swagger-docs
-        {:basePath  (str (service-path base-url))
-         :info {:title "AITU API"
-                :description "AITUn rajapinnat. Sisältää sekä integraatiorajapinnat muihin järjestelmiin, että Aitun sisäiseen käyttöön tarkoitetut rajapinnat."}})
+      (swagger-routes
+        {:ui "/api-docs"
+         :spec "/swagger.json"
+         :data {:info {:title "AITU API"
+                       :description "AITUn rajapinnat. Sisältää sekä integraatiorajapinnat muihin järjestelmiin, että Aitun sisäiseen käyttöön tarkoitetut rajapinnat."}
+                :basePath (str (service-path base-url))}})
       (context "/api/ttk"  [] aitu.rest-api.ttk/raportti-reitit)
       (context "/api/ttk" [] aitu.rest-api.ttk/paatos-reitit)
       (context "/api/ttk" [] (wrap-tarkasta-csrf-token aitu.rest-api.ttk/reitit))
