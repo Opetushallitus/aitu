@@ -127,8 +127,10 @@
                      (arkisto/hae-hlo-nimen-osalla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
 
   (PUT "/:henkiloid"
-    [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
-     osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen syntymavuosi kokemusvuodet]
+    []
+    :path-params [henkiloid]
+    :body-params [sukunimi etunimi organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
+                  osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen syntymavuosi kokemusvuodet]
     :kayttooikeus [:henkilo_paivitys {:henkiloid henkiloid, :kayttaja (:oid kayttaja)}]
       (let [id (Integer/parseInt henkiloid)
             kayttaja-oid (:oid kayttaja)

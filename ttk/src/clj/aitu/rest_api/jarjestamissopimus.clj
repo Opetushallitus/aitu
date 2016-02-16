@@ -85,7 +85,8 @@
                             "sopimukset.csv"))))
 
 (defroutes reitit
-  (POST "/:tkunta" [tkunta tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
+  (POST "/:tkunta" [tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
+    :path-params [tkunta]
     :kayttooikeus [:sopimus_lisays tkunta]
     (let [sopimus (merge {:sopimusnumero sopimusnumero
                           :toimikunta tkunta
@@ -103,7 +104,8 @@
                (let [uusi-sopimus (arkisto/lisaa! sopimus)]
                  (json-response uusi-sopimus)))))
 
-  (PUT "/:jarjestamissopimusid" [jarjestamissopimusid sopimusnumero alkupvm loppupvm koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
+  (PUT "/:jarjestamissopimusid" [sopimusnumero alkupvm loppupvm koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
+    :path-params [jarjestamissopimusid]
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
@@ -121,18 +123,21 @@
             (arkisto/paivita! sopimus sopimus_ja_tutkinto)
             (json-response sopimus))))))
 
-  (GET "/:jarjestamissopimusid" [jarjestamissopimusid]
+  (GET "/:jarjestamissopimusid" []
+    :path-params [jarjestamissopimusid]
     :kayttooikeus [:sopimustiedot_luku jarjestamissopimusid]
     (json-response (jarjestamissopimus/taydenna-sopimus (arkisto/hae-ja-liita-tutkinnonosiin-asti (Integer/parseInt jarjestamissopimusid)))))
 
-  (POST "/:jarjestamissopimusid/tutkinnot" [jarjestamissopimusid sopimus_ja_tutkinto]
+  (POST "/:jarjestamissopimusid/tutkinnot" [sopimus_ja_tutkinto]
+    :path-params [jarjestamissopimusid]
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
         (arkisto/paivita-tutkinnot! jarjestamissopimusid_int sopimus_ja_tutkinto)
         {:status 200})))
 
-  (DELETE "/:jarjestamissopimusid" [jarjestamissopimusid]
+  (DELETE "/:jarjestamissopimusid" []
+    :path-params [jarjestamissopimusid]
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos
@@ -140,7 +145,8 @@
         (arkisto/merkitse-sopimus-poistetuksi! jarjestamissopimus_id_int)
         {:status 200})))
 
-  (POST "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
+  (POST "/:jarjestamissopimusid/suunnitelma/:sopimus_ja_tutkinto" [file]
+    :path-params [jarjestamissopimusid sopimus_ja_tutkinto]
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (sallittu-jos (sallittu-tiedostotyyppi? (:content-type file))
       (jos-lapaisee-virustarkistuksen file
@@ -152,7 +158,8 @@
           (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
             (file-upload-response (arkisto/lisaa-suunnitelma-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))))
 
-  (DELETE "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+  (DELETE "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" []
+    :path-params [jarjestamissopimusid jarjestamissuunnitelma_id]
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)
@@ -163,7 +170,8 @@
         (arkisto/poista-suunnitelma! jarjestamissuunnitelma_id_int)
         {:status 200})))
 
-  (POST "/:jarjestamissopimusid/liite/:sopimus_ja_tutkinto" [jarjestamissopimusid sopimus_ja_tutkinto file]
+  (POST "/:jarjestamissopimusid/liite/:sopimus_ja_tutkinto" [file]
+    :path-params [jarjestamissopimusid sopimus_ja_tutkinto]
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (sallittu-jos (sallittu-tiedostotyyppi? (:content-type file))
       (jos-lapaisee-virustarkistuksen file
@@ -175,7 +183,8 @@
           (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
             (file-upload-response (arkisto/lisaa-liite-tutkinnolle! sopimus_ja_tutkinto_id_int file)))))))
 
-  (DELETE "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
+  (DELETE "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" []
+    :path-params [jarjestamissopimusid sopimuksen_liite_id]
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           sopimuksen_liite_id_int (Integer/parseInt sopimuksen_liite_id)
@@ -188,7 +197,8 @@
 
 ; Liitteiden lataukselle omat reitit. Ei csrf tarkistusta.
 (defroutes liite-lataus-reitit
-  (GET "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" [jarjestamissopimusid jarjestamissuunnitelma_id]
+  (GET "/:jarjestamissopimusid/suunnitelma/:jarjestamissuunnitelma_id" []
+    :path-params [jarjestamissopimusid jarjestamissuunnitelma_id]
     :kayttooikeus [:suunnitelma_luku jarjestamissopimusid]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           jarjestamissuunnitelma_id_int (Integer/parseInt jarjestamissuunnitelma_id)
@@ -200,7 +210,8 @@
           content-type (:jarjestamissuunnitelma_content_type suunnitelma)]
       (file-download-response binary-data filename content-type)))
 
-  (GET "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" [jarjestamissopimusid sopimuksen_liite_id]
+  (GET "/:jarjestamissopimusid/liite/:sopimuksen_liite_id" []
+    :path-params [jarjestamissopimusid sopimuksen_liite_id]
     :kayttooikeus [:sopimuksen_liite_luku jarjestamissopimusid]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)
           sopimuksen_liite_id_int (Integer/parseInt sopimuksen_liite_id)
