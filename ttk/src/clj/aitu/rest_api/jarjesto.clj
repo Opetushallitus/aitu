@@ -16,6 +16,7 @@
   (:require [aitu.infra.jarjesto-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-json-response]]
             [compojure.api.core :refer [GET defroutes]]
+            [aitu.restructure]                              ; Pitää ladata ennen rest-api -namespaceja
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]))
 
 (defroutes reitit
