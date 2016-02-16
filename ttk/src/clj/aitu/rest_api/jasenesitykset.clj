@@ -81,7 +81,8 @@
     :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
       (json-response (arkisto/hae jarjesto ehdot false))))
-  (DELETE "/jasenyys/:jasenyysid" [jasenyysid]
+  (DELETE "/jasenyys/:jasenyysid" []
+    :path-params [jasenyysid]
     :kayttooikeus [:jasenesitys-poisto jasenyysid]
     (json-response (arkisto/poista! (Integer/parseInt jasenyysid))))
   (GET "/yhteenveto" [toimikausi vain_jasenesityksia_sisaltavat]

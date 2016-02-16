@@ -219,7 +219,9 @@
             ((i18n/tekstit) :validointi))
           (paivita-jasenyydet diaarinumero jasenyydet)))))
 
-   (PUT "/:diaarinumero" [diaarinumero kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti]
+   (PUT "/:diaarinumero" []
+     :path-params [diaarinumero]
+     :body-params [kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti]
     :kayttooikeus [:toimikunta_paivitys tkunta]
     (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
       (let [paivitettava {:diaarinumero diaarinumero
@@ -287,7 +289,9 @@
           ((i18n/tekstit) :validointi)
           (arkisto/lisaa-jasen! jasen)
           {:status 200}))))
-  (POST "/:tkunta/tutkinnot" [tkunta nayttotutkinto]
+  (POST "/:tkunta/tutkinnot" []
+    :path-params [tkunta]
+    :body-params [nayttotutkinto]
     :kayttooikeus [:toimikunta_paivitys tkunta]
     (sallittu-jos (salli-toimikunnan-paivitys? (arkisto/hae-toimikunnan-diaarinumero tkunta))
       (arkisto/paivita-tutkinnot! tkunta nayttotutkinto)
