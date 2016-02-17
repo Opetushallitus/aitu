@@ -221,7 +221,10 @@
 
    (PUT "/:diaarinumero" []
      :path-params [diaarinumero]
-     :body-params [kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti]
+     :body-params [kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti
+
+                   ; TODO tarpeettomia, pitäisi poistaa frontista
+                   voimassa jasenyys nayttotutkinto muutettu_kayttaja loppupvm luotuaika vanhentunut diaarinumero luotu_kayttaja alkupvm muutettuaika jarjestamissopimus]
     :kayttooikeus [:toimikunta_paivitys tkunta]
     (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
       (let [paivitettava {:diaarinumero diaarinumero
@@ -291,7 +294,10 @@
           {:status 200}))))
   (POST "/:tkunta/tutkinnot" []
     :path-params [tkunta]
-    :body-params [nayttotutkinto]
+    :body-params [nayttotutkinto
+
+                  ; TODO tarpeettomia, pitäisi poistaa frontista
+                  voimassa jasenyys muutettu_kayttaja nimi_fi toimikausi_loppu sahkoposti loppupvm nimi_sv kielisyys tkunta luotuaika vanhentunut diaarinumero luotu_kayttaja toimiala toimikausi_alku alkupvm tilikoodi muutettuaika jarjestamissopimus]
     :kayttooikeus [:toimikunta_paivitys tkunta]
     (sallittu-jos (salli-toimikunnan-paivitys? (arkisto/hae-toimikunnan-diaarinumero tkunta))
       (arkisto/paivita-tutkinnot! tkunta nayttotutkinto)
