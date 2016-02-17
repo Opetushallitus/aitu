@@ -128,11 +128,14 @@
 
   (PUT "/:henkiloid"
     []
-    :path-params [henkiloid]
+    :path-params [henkiloid :- s/Int]
     :body-params [sukunimi etunimi organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
-                  osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen syntymavuosi kokemusvuodet]
+                  osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen syntymavuosi kokemusvuodet
+
+                  ; TODO tarpeettomia, pitäisi poistaa frontista
+                  keskusjarjesto_nimi jasenyys muutettu_kayttaja luotuaika henkiloid :- s/Int luotu_kayttaja jarjesto_nimi_fi muutettuaika jarjesto_nimi_sv]
     :kayttooikeus [:henkilo_paivitys {:henkiloid henkiloid, :kayttaja (:oid kayttaja)}]
-      (let [id (Integer/parseInt henkiloid)
+      (let [id henkiloid
             kayttaja-oid (:oid kayttaja)
             henkilodto {:henkiloid id
                         :kayttaja_oid kayttaja-oid
