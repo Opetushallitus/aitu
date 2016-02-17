@@ -26,9 +26,9 @@
             [aitu.toimiala.skeema :refer :all]
             [aitu.asetukset :refer [asetukset]]
             [oph.common.util.http-util :refer [validoi validoi-entity-saannoilla
-                     luo-validoinnin-virhevastaus
-                     json-response parse-iso-date sallittu-jos cachable-response response-or-404
-                     csv-download-response]]
+                                               luo-validoinnin-virhevastaus
+                                               json-response parse-iso-date sallittu-jos cachable-response response-or-404
+                                               csv-download-response]]
             [aitu.compojure-util :as cu :refer [GET* POST* PUT*]]
             [compojure.api.core :refer [defroutes*]]
             [aitu.util :refer [muodosta-csv]]
