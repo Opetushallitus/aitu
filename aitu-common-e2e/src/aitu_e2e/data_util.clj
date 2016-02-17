@@ -235,6 +235,7 @@
                  "Accept-Language" "fi"
                  "Cookie" "XSRF-TOKEN=e2e-xsrf-token"
                  "X-XSRF-TOKEN" "e2e-xsrf-token"}
+       :throw-entire-message true
        :body (json/generate-string entity)})))
 
 (defn on-olemassa
