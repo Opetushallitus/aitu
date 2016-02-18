@@ -18,6 +18,7 @@
 
 (def jarjestelmakayttaja "JARJESTELMA")
 (def integraatiokayttaja "INTEGRAATIO")
+(def konversiokayttaja "KONVERSIO")
 (def default-test-user-oid "OID.T-1001")
 (def default-test-user-uid "T-1001")
 (def ^:private psql-varname "aitu.kayttaja")

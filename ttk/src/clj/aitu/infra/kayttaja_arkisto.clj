@@ -21,7 +21,9 @@
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [oph.korma.korma-auth :refer [*current-user-uid*
                                           *current-user-oid*
-                                          integraatiokayttaja]]
+                                          integraatiokayttaja
+                                          konversiokayttaja
+                                          jarjestelmakayttaja]]
             [oph.korma.common :refer [select-unique-or-nil select-unique]]))
 
 (defn kayttaja-liitetty-henkiloon?
@@ -50,7 +52,7 @@
 (defn ^:integration-api merkitse-kaikki-vanhentuneiksi! []
   (sql/update taulut/kayttaja
     (sql/set-fields {:voimassa false})
-    (sql/where {:luotu_kayttaja integraatiokayttaja})))
+    (sql/where {:oid [not-in [jarjestelmakayttaja konversiokayttaja integraatiokayttaja]]})))
 
 (defn olemassa? [k]
   (boolean (hae (:oid k))))
