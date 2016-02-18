@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.ttk
-  (:require schema.core
+  (:require [schema.core :as sc]
             [aitu.infra.ttk-arkisto :as arkisto]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.paatos-arkisto :as paatos-arkisto]
@@ -221,30 +221,50 @@
 
    (PUT "/:diaarinumero" []
      :path-params [diaarinumero]
-     :body-params [kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti
+     :body [body {:kielisyys sc/Str
+                  :toimikausi_alku sc/Str
+                  :toimikausi_loppu sc/Str
+                  :nimi_fi sc/Str
+                  :nimi_sv sc/Str
+                  :toimiala sc/Str
+                  :tilikoodi sc/Str
+                  :tkunta sc/Str
+                  :sahkoposti sc/Str
 
-                   ; TODO tarpeettomia, pitäisi poistaa frontista
-                   voimassa jasenyys nayttotutkinto muutettu_kayttaja loppupvm luotuaika vanhentunut diaarinumero luotu_kayttaja alkupvm muutettuaika jarjestamissopimus]
-    :kayttooikeus [:toimikunta_paivitys tkunta]
-    (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
-      (let [paivitettava {:diaarinumero diaarinumero
-                          :kielisyys kielisyys
-                          :nimi_fi nimi_fi
-                          :nimi_sv nimi_sv
-                          :toimikausi_alku (when toimikausi_alku (parse-iso-date toimikausi_alku))
-                          :toimikausi_loppu (when toimikausi_loppu (parse-iso-date toimikausi_loppu))
-                          :toimiala toimiala
-                          :tilikoodi tilikoodi
-                          :tkunta tkunta
-                          :sahkoposti sahkoposti}]
-        (validoi paivitettava
-                 [[:tilikoodi present? :pakollinen]
-                  [:toimikausi_alku #(not (nil? %)) :pakollinen]
-                  [:toimikausi_loppu #(not (nil? %)) :pakollinen]
-                  [:kielisyys present? :pakollinen]]
-                 ((i18n/tekstit) :validointi)
-                 (arkisto/paivita! diaarinumero paivitettava)
-                 {:status 200}))))
+                  ; TODO tarpeettomia, pitäisi poistaa frontista
+                  (sc/optional-key :voimassa) sc/Any
+                  (sc/optional-key :jasenyys) sc/Any
+                  (sc/optional-key :nayttotutkinto) sc/Any
+                  (sc/optional-key :muutettu_kayttaja) sc/Any
+                  (sc/optional-key :loppupvm) sc/Any
+                  (sc/optional-key :luotuaika) sc/Any
+                  (sc/optional-key :vanhentunut) sc/Any
+                  (sc/optional-key :diaarinumero) sc/Any
+                  (sc/optional-key :luotu_kayttaja) sc/Any
+                  (sc/optional-key :alkupvm) sc/Any
+                  (sc/optional-key :muutettuaika) sc/Any
+                  (sc/optional-key :jarjestamissopimus) sc/Any}]
+    :kayttooikeus [:toimikunta_paivitys (:tkunta body)]
+     (let [{:keys [kielisyys toimikausi_alku toimikausi_loppu nimi_fi nimi_sv toimiala tilikoodi tkunta sahkoposti]} body]
+       (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
+                     (let [paivitettava {:diaarinumero diaarinumero
+                                         :kielisyys kielisyys
+                                         :nimi_fi nimi_fi
+                                         :nimi_sv nimi_sv
+                                         :toimikausi_alku (when toimikausi_alku (parse-iso-date toimikausi_alku))
+                                         :toimikausi_loppu (when toimikausi_loppu (parse-iso-date toimikausi_loppu))
+                                         :toimiala toimiala
+                                         :tilikoodi tilikoodi
+                                         :tkunta tkunta
+                                         :sahkoposti sahkoposti}]
+                       (validoi paivitettava
+                                [[:tilikoodi present? :pakollinen]
+                                 [:toimikausi_alku #(not (nil? %)) :pakollinen]
+                                 [:toimikausi_loppu #(not (nil? %)) :pakollinen]
+                                 [:kielisyys present? :pakollinen]]
+                                ((i18n/tekstit) :validointi)
+                                (arkisto/paivita! diaarinumero paivitettava)
+                                {:status 200})))))
 
   (POST "/" [tkunta diaarinumero nimi_fi nimi_sv tilikoodi toimiala toimikausi toimikausi_alku toimikausi_loppu kielisyys sahkoposti]
     :kayttooikeus :toimikunta_luonti
