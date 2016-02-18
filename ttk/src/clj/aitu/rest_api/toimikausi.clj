@@ -14,12 +14,11 @@
 
 (ns aitu.rest-api.toimikausi
   (:require [aitu.infra.toimikausi-arkisto :as arkisto]
-            [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [GET defroutes]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(defroutes* reitit
-  (GET* "/" []
+(defroutes reitit
+  (GET "/" []
     :summary "Palauttaa tutkintotoimikuntien toimikaudet."
     :kayttooikeus :yleinen-rest-api
     (let [toimikaudet (arkisto/hae-kaikki)]

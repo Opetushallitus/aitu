@@ -15,16 +15,15 @@
 (ns aitu.rest-api.ohje
   (:require [aitu.infra.ohje-arkisto :as arkisto]
             [oph.common.util.http-util :refer [json-response]]
-            [aitu.compojure-util :as cu :refer [GET* PUT*]]
-            [compojure.api.core :refer [defroutes*]]))
+            [compojure.api.core :refer [GET PUT defroutes]]))
 
-(defroutes* reitit
-  (GET* "/:ohjetunniste" [ohjetunniste]
+(defroutes reitit
+  (GET "/:ohjetunniste" [ohjetunniste]
     :kayttooikeus :ohjeet_luku
     (if-let [ohje (arkisto/hae ohjetunniste)]
       (json-response ohje)
       {:status 200}))
-  (PUT* "/:ohjetunniste" [ohjetunniste teksti_fi teksti_sv]
+  (PUT "/:ohjetunniste" [ohjetunniste teksti_fi teksti_sv]
     :kayttooikeus :ohje_muokkaus
     (arkisto/muokkaa-tai-luo-uusi! {:ohjetunniste ohjetunniste
                                     :teksti_fi teksti_fi

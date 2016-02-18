@@ -14,27 +14,26 @@
 
 (ns aitu.rest-api.suoritus
   (:require [aitu.infra.suoritus-arkisto :as arkisto]
-            [aitu.compojure-util :as cu :refer [GET* POST* DELETE*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [DELETE GET POST defroutes]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(defroutes* reitit
-  (GET* "/" [& ehdot]
+(defroutes reitit
+  (GET "/" [& ehdot]
     :kayttooikeus :arviointipaatos
     (json-response (arkisto/hae-kaikki ehdot)))
-  (DELETE* "/:suorituskerta-id" [suorituskerta-id]
+  (DELETE "/:suorituskerta-id" [suorituskerta-id]
     :kayttooikeus :arviointipaatos
     (let [suorituskerta-id (Integer/parseInt suorituskerta-id)
           suorituskerta (arkisto/hae suorituskerta-id)]
       (if (= "luonnos" (:tila suorituskerta))
         (json-response (arkisto/poista! suorituskerta-id))
         {:status 403})))
-  (POST* "/" [& suoritus]
+  (POST "/" [& suoritus]
     :kayttooikeus :arviointipaatos
     (json-response (arkisto/lisaa! suoritus)))
-  (POST* "/laheta" [suoritukset]
+  (POST "/laheta" [suoritukset]
     :kayttooikeus :arviointipaatos
     (json-response (arkisto/laheta! suoritukset)))
-  (POST* "/hyvaksy" [suoritukset]
+  (POST "/hyvaksy" [suoritukset]
     :kayttooikeus :arviointipaatos
     (json-response (arkisto/hyvaksy! suoritukset))))

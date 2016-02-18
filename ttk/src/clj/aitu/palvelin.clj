@@ -21,7 +21,7 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.multipart-params :refer [wrap-multipart-params]]
             [ring.middleware.resource :refer [wrap-resource]]
-            [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
+            [ring.middleware.json :refer [wrap-json-response]]
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.session.memory :refer [memory-store]]
             [ring.util.request :refer [path-info request-url]]
@@ -51,7 +51,8 @@
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
             [aitu.integraatio.clamav :as clamav]
             [aitu.infra.eraajo :as eraajo]
-            [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]))
+            [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]
+            [aitu.restructure]))
 
 (schema.core/set-fn-validation! true)
 
@@ -132,7 +133,6 @@
     (-> reitit
     wrap-json-response
     wrap-keyword-params
-    wrap-json-params
     (i18n/wrap-locale
       :ei-redirectia #"/api.*|/scan.*"
       :base-url (-> asetukset :server :base-url))

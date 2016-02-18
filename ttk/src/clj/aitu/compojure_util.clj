@@ -28,18 +28,3 @@
   [toiminto konteksti & body]
   (let [auth-map ko/toiminnot]
       `(oph-cjure/autorisoi ~auth-map ~toiminto ~konteksti ~@body)))
-
-(defmacro api [method path params & body]
-  (let [[kw-args body] (split-with (comp keyword? first) (partition-all 2 body))
-        kw-args (apply hash-map (apply concat kw-args))
-        auth-info (str "Käyttöoikeus " (:kayttooikeus kw-args) " , konteksti: " (or (:konteksti kw-args) "N/A"))
-        swagger-args (update (dissoc kw-args :kayttooikeus :konteksti)
-                       :description #(str % (str " \n\n " auth-info)))]
-    (assert (:kayttooikeus kw-args) "Käyttöoikeutta ei ole määritelty")
-    `(~method ~path ~params ~@(apply concat swagger-args)
-       (autorisoitu-transaktio ~(:kayttooikeus kw-args) ~(:konteksti kw-args) ~@(apply concat body)))))
-
-(defmacro GET* [& args] `(api compojure.api.core/GET* ~@args))
-(defmacro POST* [& args] `(api compojure.api.core/POST* ~@args))
-(defmacro PUT* [& args] `(api compojure.api.core/PUT* ~@args))
-(defmacro DELETE* [& args] `(api compojure.api.core/DELETE* ~@args))

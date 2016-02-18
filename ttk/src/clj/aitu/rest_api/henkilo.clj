@@ -25,8 +25,7 @@
             [oph.common.util.util :refer [uusin-muokkausaika]]
             [valip.predicates :refer [present? max-length]]
             [ring.util.response :refer [response]]
-            [aitu.compojure-util :as cu :refer [GET* POST* PUT*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [GET POST PUT defroutes]]
             [schema.core :as s]
             [aitu.util :refer [muodosta-csv]]))
 
@@ -65,8 +64,8 @@
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
 
-(defroutes* raportti-reitit
-  (GET* "/csv" req
+(defroutes raportti-reitit
+  (GET "/csv" req
     :kayttooikeus :henkilo_haku
     (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet henkilokenttien-jarjestys))
                                          henkilokenttien-jarjestys)
@@ -82,8 +81,8 @@
       (:lisatiedot henkilodto)
         (throw (IllegalArgumentException. "JARJESTO-roolilla henkilölle ei voi käsitellä lisätieto-kenttää")))))
 
-(defroutes* reitit
-  (POST* "/" [& henkilodto]
+(defroutes reitit
+  (POST "/" [& henkilodto]
     :kayttooikeus :henkilo_lisays
     (validoi henkilodto (henkilon-validointisaannot) ((i18n/tekstit) :validointi)
       (s/validate skeema/HenkilonTiedot henkilodto)
@@ -91,7 +90,7 @@
       (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
         (json-response uusi-henkilo))))
 
-  (GET* "/" [toimikausi :as req]
+  (GET "/" [toimikausi :as req]
     :kayttooikeus :henkilo_haku
     (let [henkilot (case toimikausi
                      "nykyinen_voimassa" (arkisto/hae-nykyiset-voimassa)
@@ -112,27 +111,31 @@
          :headers (get-cache-headers henkilot-muokattu)}
         {:status 304})))
 
-  (GET* "/:henkiloid" [henkiloid]
+  (GET "/:henkiloid" [henkiloid]
     :kayttooikeus :henkilo_haku
     (json-response (henkilo/taydenna-henkilo
                      (piilota-salaiset-kentat (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid) (:jarjesto kayttajaoikeudet/*current-user-authmap*))))))
 
-  (GET* "/nimi/:etunimi/:sukunimi" [etunimi sukunimi]
+  (GET "/nimi/:etunimi/:sukunimi" [etunimi sukunimi]
     :kayttooikeus :henkilo_haku
     (json-response (piilota-salaiset-kentat
                      (arkisto/hae-hlo-nimella etunimi sukunimi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
 
-  (GET* "/nimi/" [termi]
+  (GET "/nimi/" [termi]
     :kayttooikeus :henkilo_haku
     (json-response (piilota-salaiset-kentat
                      (arkisto/hae-hlo-nimen-osalla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
 
-  (PUT* "/:henkiloid"
-    [sukunimi etunimi henkiloid organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
-     osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen syntymavuosi kokemusvuodet]
-    :kayttooikeus :henkilo_paivitys
-    :konteksti {:henkiloid henkiloid, :kayttaja (:oid kayttaja)}
-      (let [id (Integer/parseInt henkiloid)
+  (PUT "/:henkiloid"
+    []
+    :path-params [henkiloid :- s/Int]
+    :body-params [sukunimi etunimi organisaatio jarjesto keskusjarjesto aidinkieli sukupuoli sahkoposti puhelin kayttaja
+                  osoite postinumero postitoimipaikka lisatiedot nayttomestari sahkoposti_julkinen osoite_julkinen puhelin_julkinen syntymavuosi kokemusvuodet
+
+                  ; TODO tarpeettomia, pitäisi poistaa frontista
+                  keskusjarjesto_nimi jasenyys muutettu_kayttaja luotuaika henkiloid :- s/Int luotu_kayttaja jarjesto_nimi_fi muutettuaika jarjesto_nimi_sv]
+    :kayttooikeus [:henkilo_paivitys {:henkiloid henkiloid, :kayttaja (:oid kayttaja)}]
+      (let [id henkiloid
             kayttaja-oid (:oid kayttaja)
             henkilodto {:henkiloid id
                         :kayttaja_oid kayttaja-oid

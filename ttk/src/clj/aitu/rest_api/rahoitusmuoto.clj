@@ -14,12 +14,11 @@
 
 (ns aitu.rest-api.rahoitusmuoto
   (:require [aitu.infra.rahoitusmuoto-arkisto :as arkisto]
-            [aitu.compojure-util :as cu :refer [GET*]]
-            [compojure.api.core :refer [defroutes*]]
+            [compojure.api.core :refer [GET defroutes]]
             [oph.common.util.http-util :refer [json-response]]))
 
-(defroutes* reitit
-  (GET* "/" []
+(defroutes reitit
+  (GET "/" []
     :summary "Rahoitusmuodot, joiden kautta koulutusta voidaan järjestää."
     :kayttooikeus :yleinen-rest-api
     (json-response (arkisto/hae-kaikki))))

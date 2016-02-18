@@ -16,7 +16,7 @@
   :description "Tutkintotoimikuntarekisteri"
   :dependencies [[cas-single-sign-out "0.1.2" :exclusions [clj-cas-client]]
                  [ch.qos.logback/logback-classic "1.0.13"]
-                 [cheshire "5.2.0"]
+                 [cheshire "5.5.0"]
                  [clj-http "1.0.1"]
                  [clj-time "0.6.0"]
                  [clojure-csv/clojure-csv "2.0.1"]
@@ -27,7 +27,7 @@
                  [http-kit "2.1.18"]
                  [javax.servlet/servlet-api "2.5"]
                  [korma "0.3.0-RC6"]
-                 [metosin/compojure-api "0.24.2"]
+                 [metosin/compojure-api "1.0.0-RC2"]
                  [org.apache.pdfbox/pdfbox "1.8.8"]
                  [org.clojars.noidi/clj-cas-client "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1" :exclusions [ring]]
                  [org.clojars.pntblnk/clj-ldap "0.0.7"]
