@@ -156,7 +156,7 @@
   (testing "Vanhentuneen toimikunnan muokkaus ei onnistu"
     (with-webdriver
       (with-data toimikuntasivu-testidata
-        (aseta-toimikunta-paattyneeksi (get-in toimikuntasivu-testidata [:toimikunnat 0]))
+        (aseta-toimikunta-paattyneeksi (dissoc (get-in toimikuntasivu-testidata [:toimikunnat 0]) :toimikausi))
         (avaa (toimikunnan-muokkaussivu "98/11/543"))
         (tallenna)
         (is (= (viestin-teksti) "Toimikunnan muokkaus ei onnistunut"))))))
@@ -202,7 +202,7 @@
     (with-webdriver
       (with-data toimikuntasivu-testidata
         (aseta-toimikunta-paattyneeksi
-          (get-in toimikuntasivu-testidata [:toimikunnat 0]))
+          (dissoc (get-in toimikuntasivu-testidata [:toimikunnat 0]) :toimikausi))
         (avaa (toimikuntasivu "98/11/543"))
         (testing "Otsikon perässä on teksti (ei voimassa)"
           (is (= (sivun-otsikko) "ILMASTOINTIALAN TUTKINTOTOIMIKUNTA (EI VOIMASSA)")))
