@@ -1,5 +1,7 @@
 [Näyttötutkintojärjestelmän](http://www.oph.fi/nayttotutkinnot) tutkintotoimikuntarekisteri. Rekisterisovelluksesta käytetään nimeä Aitu ja sen lähdekoodi löytyy tästä repositorysta. Tämän repositoryn sisällön käyttöön liittyvät lisenssiehdot on esitelty tiedostossa LICENSE.
 
+Automaattinen Travis CI ajo: [![Build Status](https://travis-ci.org/Opetushallitus/aitu.svg?branch=master)](https://travis-ci.org/Opetushallitus/aitu)
+
 # Repositoryn sisältö ja rakenne
 
 * **ttk** sisältää varsinaisen sovelluksen 
