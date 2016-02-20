@@ -67,4 +67,6 @@ Tiedostossa ttk/README.md on ohjeita kehitystyöhön enemmän.
 
 # Dokumentaatio
 
-Järjestelmän toimintaan ja arkkitehtuuriin liittyvä yleinen dokumentaatio löytyy [Aitu wiki-sivulta](https://confluence.csc.fi/display/OPHPALV/Tutkintotoimikuntarekisteri) CSC:n julkisesta palvelusta. 
+Järjestelmän toimintaan ja arkkitehtuuriin liittyvä yleinen dokumentaatio löytyy [Aitu wiki-sivulta](https://confluence.csc.fi/display/OPHPALV/Tutkintotoimikuntarekisteri) CSC:n julkisesta palvelusta.
+
+Tietokantadokumentaatio päivittyy automaattisesti tänne: [Aitu tietokannan rakenne](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aitu/)
