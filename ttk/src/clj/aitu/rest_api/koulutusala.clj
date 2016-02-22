@@ -14,11 +14,11 @@
 
 (ns aitu.rest-api.koulutusala
   (:require [aitu.infra.koulutusala-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [cachable-json-response]]
+            [oph.common.util.http-util :refer [cachable-response]]
             [compojure.api.core :refer [GET defroutes]]))
 
 (defroutes reitit
   (GET "/opintoalat" req
     :summary "Koulutusalat. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
-    (cachable-json-response req (arkisto/hae-koulutusalat-ja-opintoalat))))
+    (cachable-response req (arkisto/hae-koulutusalat-ja-opintoalat))))

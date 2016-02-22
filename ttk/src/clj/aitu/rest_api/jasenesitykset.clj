@@ -19,7 +19,7 @@
             [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.util :refer [muodosta-csv convert-values] :as aitu-util]
-            [oph.common.util.http-util :refer [csv-download-response json-response]]))
+            [oph.common.util.http-util :refer [csv-download-response response-or-404]]))
 
 (def ^:private kenttien-jarjestys [:henkiloid :etunimi :sukunimi :asiantuntijaksi :vapaateksti_kokemus
                                    ; Vain jos "Kaikki henkilötiedot" on ruksittu
@@ -80,12 +80,12 @@
   (GET "/" [& ehdot]
     :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
-      (json-response (arkisto/hae jarjesto ehdot false))))
+      (response-or-404 (arkisto/hae jarjesto ehdot false))))
   (DELETE "/jasenyys/:jasenyysid" []
     :path-params [jasenyysid]
     :kayttooikeus [:jasenesitys-poisto jasenyysid]
-    (json-response (arkisto/poista! (Integer/parseInt jasenyysid))))
+    (response-or-404 (arkisto/poista! (Integer/parseInt jasenyysid))))
   (GET "/yhteenveto" [toimikausi vain_jasenesityksia_sisaltavat]
     :kayttooikeus :jasenesitykset
     (let [jarjesto (:jarjesto ko/*current-user-authmap*)]
-      (json-response (arkisto/hae-yhteenveto jarjesto (Integer/parseInt toimikausi) (Boolean/valueOf vain_jasenesityksia_sisaltavat))))))
+      (response-or-404 (arkisto/hae-yhteenveto jarjesto (Integer/parseInt toimikausi) (Boolean/valueOf vain_jasenesityksia_sisaltavat))))))

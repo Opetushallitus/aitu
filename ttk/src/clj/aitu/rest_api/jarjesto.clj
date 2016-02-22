@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.jarjesto
   (:require [aitu.infra.jarjesto-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [cachable-json-response]]
+            [oph.common.util.http-util :refer [cachable-response]]
             [compojure.api.core :refer [GET defroutes]]
             [aitu.restructure]                              ; Pitää ladata ennen rest-api -namespaceja
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]))
@@ -22,7 +22,7 @@
 (defroutes reitit
   (GET "/haku/" [termi :as req]
     :kayttooikeus :jasenesitykset
-    (cachable-json-response req (arkisto/hae-termilla termi nil)))
+    (cachable-response req (arkisto/hae-termilla termi nil)))
   (GET "/haku/omat" [termi :as req]
     :kayttooikeus :jasenesitykset
-    (cachable-json-response req (arkisto/hae-termilla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
+    (cachable-response req (arkisto/hae-termilla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))

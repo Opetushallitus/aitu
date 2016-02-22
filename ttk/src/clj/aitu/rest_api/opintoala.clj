@@ -14,19 +14,19 @@
 
 (ns aitu.rest-api.opintoala
   (:require [aitu.infra.opintoala-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [response-or-404]]
             [compojure.api.core :refer [GET defroutes]]))
 
 (defroutes reitit
   (GET "/haku" [termi]
     :summary "Koulutusalan haku termillä. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
-    (json-response (arkisto/hae-termilla termi)))
+    (response-or-404 (arkisto/hae-termilla termi)))
   (GET "/" []
     :summary "Kaikki opintoalat. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
-    (json-response (arkisto/hae-kaikki)))
+    (response-or-404 (arkisto/hae-kaikki)))
   (GET "/:koodi" [koodi]
     :summary "Opintoala tunnuksella. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
-    (json-response (arkisto/hae koodi))))
+    (response-or-404 (arkisto/hae koodi))))

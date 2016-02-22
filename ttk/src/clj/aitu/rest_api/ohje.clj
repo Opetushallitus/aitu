@@ -14,14 +14,14 @@
 
 (ns aitu.rest-api.ohje
   (:require [aitu.infra.ohje-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [response-or-404]]
             [compojure.api.core :refer [GET PUT defroutes]]))
 
 (defroutes reitit
   (GET "/:ohjetunniste" [ohjetunniste]
     :kayttooikeus :ohjeet_luku
     (if-let [ohje (arkisto/hae ohjetunniste)]
-      (json-response ohje)
+      (response-or-404 ohje)
       {:status 200}))
   (PUT "/:ohjetunniste" [ohjetunniste teksti_fi teksti_sv]
     :kayttooikeus :ohje_muokkaus

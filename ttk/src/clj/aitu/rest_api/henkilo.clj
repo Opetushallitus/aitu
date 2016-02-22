@@ -88,7 +88,7 @@
       (s/validate skeema/HenkilonTiedot henkilodto)
       (tarkista-paivitettavat-kentat henkilodto)
       (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
-        (json-response uusi-henkilo))))
+        (response-or-404 uusi-henkilo))))
 
   (GET "/" [toimikausi :as req]
     :kayttooikeus :henkilo_haku
@@ -113,17 +113,17 @@
 
   (GET "/:henkiloid" [henkiloid]
     :kayttooikeus :henkilo_haku
-    (json-response (henkilo/taydenna-henkilo
+    (response-or-404 (henkilo/taydenna-henkilo
                      (piilota-salaiset-kentat (arkisto/hae-hlo-ja-ttk (Integer/parseInt henkiloid) (:jarjesto kayttajaoikeudet/*current-user-authmap*))))))
 
   (GET "/nimi/:etunimi/:sukunimi" [etunimi sukunimi]
     :kayttooikeus :henkilo_haku
-    (json-response (piilota-salaiset-kentat
+    (response-or-404 (piilota-salaiset-kentat
                      (arkisto/hae-hlo-nimella etunimi sukunimi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
 
   (GET "/nimi/" [termi]
     :kayttooikeus :henkilo_haku
-    (json-response (piilota-salaiset-kentat
+    (response-or-404 (piilota-salaiset-kentat
                      (arkisto/hae-hlo-nimen-osalla termi (:jarjesto kayttajaoikeudet/*current-user-authmap*)))))
 
   (PUT "/:henkiloid"
@@ -161,4 +161,4 @@
           (s/validate skeema/Henkilo henkilodto)
           (tarkista-paivitettavat-kentat henkilodto)
           (arkisto/paivita! henkilodto)
-          (json-response henkilodto)))))
+          (response-or-404 henkilodto)))))

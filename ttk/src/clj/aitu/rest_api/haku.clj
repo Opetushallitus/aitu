@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.haku
   (:require [aitu.infra.haku-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [response-or-404]]
             [compojure.api.core :refer [GET defroutes]]))
 
 (defroutes reitit
@@ -22,4 +22,4 @@
   (GET ["/:tunnus" :tunnus #"[0-9/]+"] [tunnus]
     :summary "Pikahaku yksilöivällä tunnuksella eri käsitteisiin"
     :kayttooikeus :etusivu_haku
-    (json-response (or (arkisto/hae-tunnuksella-ensimmainen tunnus) {}))))
+    (response-or-404 (or (arkisto/hae-tunnuksella-ensimmainen tunnus) {}))))

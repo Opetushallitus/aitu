@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.tiedote
   (:require [aitu.infra.tiedote-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [response-or-404]]
             [compojure.api.core :refer [DELETE GET POST defroutes]]))
 
 (defroutes reitit
@@ -25,12 +25,12 @@
       (-> (if (nil? tiedote)
             {:tiedoteid tiedoteid}
             tiedote)
-        json-response)))
+        response-or-404)))
 
   (POST "/:tiedoteid" [tiedoteid teksti_fi teksti_sv]
     :kayttooikeus :tiedote_muokkaus
     (let [tiedote (arkisto/poista-ja-lisaa! (Integer/parseInt tiedoteid) {:teksti_fi teksti_fi :teksti_sv teksti_sv})]
-        (json-response tiedote)))
+        (response-or-404 tiedote)))
 
   (DELETE "/:tiedoteid" [tiedoteid]
     :kayttooikeus :tiedote_muokkaus

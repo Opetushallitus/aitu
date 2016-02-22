@@ -16,7 +16,6 @@
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap* *impersonoitu-oid* yllapitaja?]]
             [aitu.toimiala.skeema :refer :all]
             [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
-            [oph.common.util.http-util :refer [json-response]]
 
             aitu.rest-api.aipal
             aitu.rest-api.db-validation

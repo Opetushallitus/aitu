@@ -18,7 +18,7 @@
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
             [compojure.api.core :refer [GET defroutes]]
             [aitu.util :refer [muodosta-csv]]
-            [oph.common.util.http-util :refer [csv-download-response cachable-json-response json-response]]))
+            [oph.common.util.http-util :refer [csv-download-response cachable-response response-or-404]]))
 
 (def tutkintokenttien-jarjestys [:tutkintotunnus :nimi_fi :nimi_sv :peruste :opintoala_fi :opintoala_sv])
 
@@ -48,14 +48,14 @@
 (defroutes reitit
   (GET "/" [:as req]
     :kayttooikeus :yleinen-rest-api
-    (cachable-json-response req (map (comp rajaa-tutkinnon-kentat voimassaolo/taydenna-tutkinnon-voimassaolo)
+    (cachable-response req (map (comp rajaa-tutkinnon-kentat voimassaolo/taydenna-tutkinnon-voimassaolo)
                                      (arkisto/hae-kaikki))))
   (GET "/:tutkintotunnus" [tutkintotunnus]
     :kayttooikeus :yleinen-rest-api
-    (json-response (tutkinto/taydenna-tutkinto (arkisto/hae tutkintotunnus))))
+    (response-or-404 (tutkinto/taydenna-tutkinto (arkisto/hae tutkintotunnus))))
   (GET "/haku/osat" [termi :as req]
     :kayttooikeus :yleinen-rest-api
-    (cachable-json-response req (arkisto/hae-opintoalat-tutkinnot-osaamisalat-tutkinnonosat termi)))
+    (cachable-response req (arkisto/hae-opintoalat-tutkinnot-osaamisalat-tutkinnonosat termi)))
   (GET "/haku/tutkinnot" [termi :as req]
     :kayttooikeus :yleinen-rest-api
-    (cachable-json-response req (arkisto/hae-opintoalat-tutkinnot termi))))
+    (cachable-response req (arkisto/hae-opintoalat-tutkinnot termi))))

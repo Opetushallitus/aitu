@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.jarjestamissopimus
-  (:require [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date json-response csv-download-response sallittu-jos]]
+  (:require [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date response-or-404 csv-download-response sallittu-jos]]
             [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jos-lapaisee-virustarkistuksen]]
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.util :refer [->vector]]
@@ -102,7 +102,7 @@
                          (when jarjestamissopimusid {:jarjestamissopimusid jarjestamissopimusid}))]
       (validoi sopimus (luo-sopimuksen-luonnille-validointisaannot sopimus) ((i18n/tekstit) :validointi)
                (let [uusi-sopimus (arkisto/lisaa! sopimus)]
-                 (json-response uusi-sopimus)))))
+                 (response-or-404 uusi-sopimus)))))
 
   (PUT "/:jarjestamissopimusid" [sopimusnumero alkupvm loppupvm koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
     :path-params [jarjestamissopimusid]
@@ -121,12 +121,12 @@
                        :sahkoposti sahkoposti}]
           (validoi sopimus (luo-sopimukselle-validointisaannot sopimus) ((i18n/tekstit) :validointi)
             (arkisto/paivita! sopimus sopimus_ja_tutkinto)
-            (json-response sopimus))))))
+            (response-or-404 sopimus))))))
 
   (GET "/:jarjestamissopimusid" []
     :path-params [jarjestamissopimusid]
     :kayttooikeus [:sopimustiedot_luku jarjestamissopimusid]
-    (json-response (jarjestamissopimus/taydenna-sopimus (arkisto/hae-ja-liita-tutkinnonosiin-asti (Integer/parseInt jarjestamissopimusid)))))
+    (response-or-404 (jarjestamissopimus/taydenna-sopimus (arkisto/hae-ja-liita-tutkinnonosiin-asti (Integer/parseInt jarjestamissopimusid)))))
 
   (POST "/:jarjestamissopimusid/tutkinnot" [sopimus_ja_tutkinto]
     :path-params [jarjestamissopimusid]

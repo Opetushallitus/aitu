@@ -21,7 +21,6 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.multipart-params :refer [wrap-multipart-params]]
             [ring.middleware.resource :refer [wrap-resource]]
-            [ring.middleware.json :refer [wrap-json-response]]
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.session.memory :refer [memory-store]]
             [ring.util.request :refer [path-info request-url]]
@@ -52,7 +51,8 @@
             [aitu.integraatio.clamav :as clamav]
             [aitu.infra.eraajo :as eraajo]
             [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]
-            [aitu.restructure]))
+            aitu.restructure
+            aitu.reitit))
 
 (schema.core/set-fn-validation! true)
 
@@ -127,32 +127,29 @@
       handler)))
 
 (defn app [asetukset]
-  (require 'aitu.reitit)
   (let [session-store (memory-store)
-        reitit ((eval 'aitu.reitit/reitit) asetukset)]
-    (-> reitit
-    wrap-json-response
-    wrap-keyword-params
-    (i18n/wrap-locale
-      :ei-redirectia #"/api.*|/scan.*"
-      :base-url (-> asetukset :server :base-url))
-    (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
-                                :timeout-response (timeout-response asetukset)})
-    (auth-middleware asetukset)
-    log-request-wrapper
+        reitit (aitu.reitit/reitit asetukset)]
+    (->
+      reitit
+      (i18n/wrap-locale
+        :ei-redirectia #"/api.*|/scan.*"
+        :base-url (-> asetukset :server :base-url))
+      (wrap-idle-session-timeout {:timeout (:session-timeout asetukset)
+                                  :timeout-response (timeout-response asetukset)})
+      (auth-middleware asetukset)
+      log-request-wrapper
 
-    (clamav-mock asetukset)
-    wrap-multipart-params
-    wrap-params
-    (wrap-resource "public")
-    wrap-content-type
-    (wrap-frame-options :sameorigin)
-    (wrap-session {:store session-store
-                   :cookie-attrs {:http-only true
-                                  :path (service-path (get-in asetukset [:server :base-url]))
-                                  :secure (not (:development-mode asetukset))}})
-    (wrap-cas-single-sign-out session-store)
-    wrap-poikkeusten-logitus)))
+      (clamav-mock asetukset)
+      wrap-multipart-params
+      (wrap-resource "public")
+      wrap-content-type
+      (wrap-frame-options :sameorigin)
+      (wrap-session {:store session-store
+                     :cookie-attrs {:http-only true
+                                    :path (service-path (get-in asetukset [:server :base-url]))
+                                    :secure (not (:development-mode asetukset))}})
+      (wrap-cas-single-sign-out session-store)
+      wrap-poikkeusten-logitus)))
 
 (defn ^:integration-api kaynnista! [oletus-asetukset]
   (try

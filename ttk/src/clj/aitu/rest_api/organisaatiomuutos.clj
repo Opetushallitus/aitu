@@ -15,16 +15,16 @@
 (ns aitu.rest-api.organisaatiomuutos
   (:require [compojure.api.core :refer [GET POST defroutes]]
             [aitu.infra.organisaatiomuutos-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [response-or-404]]
             [aitu.toimiala.skeema :refer :all]))
 
 (defroutes reitit
   (GET "/" []
     :kayttooikeus :organisaatiomuutos
-    (json-response (arkisto/hae-tekemattomat)))
+    (response-or-404 (arkisto/hae-tekemattomat)))
   (GET "/maara" []
     :kayttooikeus :yleinen-rest-api
-    (json-response (arkisto/tekemattomien-maara)))
+    (response-or-404 (arkisto/tekemattomien-maara)))
   (POST "/:id/tehty" [id]
     :kayttooikeus :organisaatiomuutos
     (arkisto/merkitse-tehdyksi (Integer/parseInt id))

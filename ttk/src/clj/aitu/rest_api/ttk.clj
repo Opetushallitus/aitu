@@ -27,7 +27,7 @@
             [aitu.asetukset :refer [asetukset]]
             [oph.common.util.http-util :refer [validoi validoi-entity-saannoilla
                                                luo-validoinnin-virhevastaus
-                                               json-response parse-iso-date sallittu-jos cachable-response response-or-404
+                                               parse-iso-date sallittu-jos cachable-response response-or-404
                                                csv-download-response]]
             [compojure.api.core :refer [GET POST PUT defroutes]]
             [aitu.util :refer [muodosta-csv]]
@@ -112,7 +112,7 @@
 (defroutes paatos-reitit
   (GET "/paatospohja-oletukset" []
     :kayttooikeus :paatos
-    (json-response (:paatospohja-oletukset @asetukset)))
+    (response-or-404 (:paatospohja-oletukset @asetukset)))
   (GET "/:diaarinumero/asettamispaatos" [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     :kayttooikeus :paatos
     (let [data {:paivays paivays
