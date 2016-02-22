@@ -17,8 +17,6 @@
   (:gen-class)
   (:require [clojure.java.io :as io]
             [org.httpkit.server :as hs]
-            [ring.middleware.params :refer [wrap-params]]
-            [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.multipart-params :refer [wrap-multipart-params]]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.session :refer [wrap-session]]
