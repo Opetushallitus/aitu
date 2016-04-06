@@ -68,6 +68,7 @@
   ([]
     (db/transaction
       (let [userid ka/*current-user-uid*]
-        (assert (realized? *current-user-oid*) (str "Ongelma sisäänkirjautumisessa. Käyttäjätunnuksella " userid " ei ole käyttöoikeuksia. (uid -> oid epäonnistui)."))
+        (when-not (realized? *current-user-oid*)
+          (throw (IllegalStateException. (str "Ongelma sisäänkirjautumisessa. Käyttäjätunnuksella " userid " ei ole käyttöoikeuksia. (uid -> oid epäonnistui)."))))
         (hae-oikeudet @*current-user-oid*)))))
 

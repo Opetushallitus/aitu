@@ -37,7 +37,12 @@
       (binding [ka/*current-user-uid* userid
                 ka/*current-user-oid* (promise)
                 ko/*impersonoitu-oid* impersonoitu-oid]
-        (let [kayttajatiedot (kayttajaoikeudet-arkisto/hae-oikeudet)]
-          (log/info "käyttäjä autentikoitu " kayttajatiedot (when ko/*impersonoitu-oid* (str ": impersonoija=" ka/*current-user-uid*)))
-          (binding [ko/*current-user-authmap* kayttajatiedot]
-            (ring-handler request)))))))
+        (try
+          (let [kayttajatiedot (kayttajaoikeudet-arkisto/hae-oikeudet)]
+            (log/info "käyttäjä autentikoitu " kayttajatiedot (when ko/*impersonoitu-oid* (str ": impersonoija=" ka/*current-user-uid*)))
+            (binding [ko/*current-user-authmap* kayttajatiedot]
+              (ring-handler request)))
+          (catch IllegalStateException e
+            {:headers {"Content-Type" "text/plain;charset=utf-8"}
+             :status 403
+             :body (.getMessage e)}))))))
