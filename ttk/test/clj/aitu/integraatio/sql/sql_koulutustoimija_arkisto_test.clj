@@ -24,16 +24,6 @@
 
 (use-fixtures :each tietokanta-fixture)
 
-(defn luo-testidata
-  []
-  (sql/exec-raw (str "insert into koulutustoimija("
-                  "ytunnus,"
-                  "nimi_fi"
-                  ")values("
-                  "'0000000-0',"
-                  "'Koulutustoimijan nimi'"
-                  ")")))
-
 (defn aseta-sopimuksen-toimikunta-vanhentuneeksi
   []
   (sql/exec-raw (str "update tutkintotoimikunta set toimikausi_loppu='2000-12-01' where tkunta='TKUN'")))
@@ -113,7 +103,7 @@
 (deftest ^:integraatio hae-termilla-test
   (let [termi "Koulutustoimijan nimi"
         osumia-alussa (count (arkisto/hae-termilla termi))
-        _ (luo-testidata)
+        _ (lisaa-koulutustoimija! {:nimi_fi termi})
         osumia (count (arkisto/hae-termilla termi))]
     (testing "Koulutustoimija löytyy haettaessa nimellä"
       (is (> osumia osumia-alussa)))))

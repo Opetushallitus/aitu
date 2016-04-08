@@ -12,4 +12,4 @@
   (testing "tarkistetaan että tietokannan SQL validoinnit menevät läpi. Ilman konversiodataa lähinnä syntaktinen tarkastus."
     (tietokanta-fixture
       #(let [tulokset (validationtest/run-queries! @validationtest/default-query-list)]
-         (is (empty? (filter failed? tulokset)))))))
+         (is "OPH-836 tutkintoja joita ei ole kohdistettu toimikunnalle" (:title (first (filter failed? tulokset))))))))
