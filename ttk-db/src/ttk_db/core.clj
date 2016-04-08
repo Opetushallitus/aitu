@@ -59,8 +59,9 @@
 
 (defn luo-testidata!
   [kayttaja-param]
-  (luo-testikayttajat! kayttaja-param)
-  (aja-testidata-sql! kayttaja-param "testitoimikunnat.sql"))
+  (luo-testikayttajat! kayttaja-param)  
+  (aja-testidata-sql! kayttaja-param "testitoimikunnat.sql")
+  (aja-testidata-sql! kayttaja-param "testidata.sql"))
 
 (defn aseta-oikeudet-sovelluskayttajille
   [options]

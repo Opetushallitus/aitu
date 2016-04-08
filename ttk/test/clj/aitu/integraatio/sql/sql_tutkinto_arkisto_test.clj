@@ -34,44 +34,19 @@
     (is (nil? (arkisto/hae "qwerty")))))
 
 (deftest ^:integraatio hae-ehdoilla-tyhjat-ehdot
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA"}
-                                {:opintoalakoodi "OA"})
-  (lisaa-tutkinto! {:tutkintotunnus "T1"
-                    :opintoala "OA"
-                    :uusin_versio_id 1})
-  (lisaa-tutkintoversio! {:tutkintoversio_id 1
-                          :tutkintotunnus "T1"
-                          :voimassa_alkupvm (time/local-date 1900 1 1)
-                          :siirtymaajan_loppupvm (time/local-date 2199 1 1)})
   (lisaa-tutkinto! {:tutkintotunnus "T2"
-                    :opintoala "OA"
+                    :opintoala "202"
                     :uusin_versio_id 2})
   (lisaa-tutkintoversio! {:tutkintoversio_id 2
                           :tutkintotunnus "T2"
                           :voimassa_alkupvm (time/local-date 1900 1 1)
                           :siirtymaajan_loppupvm (time/local-date 1901 1 1)})
   (is (= (set (map :tutkintotunnus (arkisto/hae-ehdoilla {})))
-         #{"T1"})))
+         #{"324601" "327128"})))
 
 (deftest ^:integraatio hae-ehdoilla-voimassaolevat
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA"}
-                                {:opintoalakoodi "OA"})
-  (lisaa-tutkinto! {:tutkintotunnus "T1"
-                    :opintoala "OA"
-                    :uusin_versio_id 1})
-  (lisaa-tutkintoversio! {:tutkintoversio_id 1
-                          :tutkintotunnus "T1"
-                          :voimassa_alkupvm (time/local-date 1900 1 1)
-                          :siirtymaajan_loppupvm (time/local-date 2199 1 1)})
-  (lisaa-tutkinto! {:tutkintotunnus "T2"
-                    :opintoala "OA"
-                    :uusin_versio_id 2})
-  (lisaa-tutkintoversio! {:tutkintoversio_id 2
-                          :tutkintotunnus "T2"
-                          :voimassa_alkupvm (time/local-date 1900 1 1)
-                          :siirtymaajan_loppupvm (time/local-date 1901 1 1)})
   (is (= (set (map :tutkintotunnus (arkisto/hae-ehdoilla {:voimassa "kaikki"})))
-         #{"T1" "T2"})))
+        #{"324601" "327128"})))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
   (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA"}
@@ -97,13 +72,5 @@
          #{"T1" "T2"})))
 
 (deftest ^:integraatio hae-ehdoilla-avaimet
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA"}
-                                {:opintoalakoodi "OA"})
-  (lisaa-tutkinto! {:tutkintotunnus "T1"
-                    :nimi_fi "foo bar baz"
-                    :opintoala "OA"
-                    :uusin_versio_id 1})
-  (lisaa-tutkintoversio! {:tutkintoversio_id 1
-                          :tutkintotunnus "T1"})
   (is (= (arkisto/hae-ehdoilla {:avaimet [:tutkintotunnus]})
-         [{:tutkintotunnus "T1"}])))
+        [{:tutkintotunnus "324601"} {:tutkintotunnus "327128"}])))
