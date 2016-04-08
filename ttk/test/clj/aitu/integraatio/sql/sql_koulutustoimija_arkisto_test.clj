@@ -77,10 +77,6 @@
                                 {:opintoalakoodi "OA1"})
   (lisaa-tutkinto! {:opintoala "OA1"
                     :tutkintotunnus "T1"})
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
-                                {:opintoalakoodi "OA2"})
-  (lisaa-tutkinto! {:opintoala "OA2"
-                    :tutkintotunnus "T2"})
   (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
         o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"})
         sop1 (lisaa-jarjestamissopimus! kt1 o1)
@@ -90,8 +86,8 @@
         kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
         o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
         sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "T2"})
-        _ (lisaa-tutkinto-sopimukselle! sop2 (:tutkintoversio_id tv2))]
+        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "327128"})
+        _ (lisaa-tutkinto-sopimukselle! sop2 -20000)]
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1"}))
            ["KT1"]))))
 
@@ -100,10 +96,6 @@
                                 {:opintoalakoodi "OA1"})
   (lisaa-tutkinto! {:opintoala "OA1"
                     :tutkintotunnus "T1"})
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
-                                {:opintoalakoodi "OA2"})
-  (lisaa-tutkinto! {:opintoala "OA2"
-                    :tutkintotunnus "T2"})
   (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
         o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"})
         sop1 (lisaa-jarjestamissopimus! kt1 o1)
@@ -113,8 +105,8 @@
         kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
         o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
         sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "T2"})
-        _ (lisaa-tutkinto-sopimukselle! sop2 (:tutkintoversio_id tv2))]
+        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "327128"})
+        _ (lisaa-tutkinto-sopimukselle! sop2 -20000)]
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "OA1"}))
            ["KT1"]))))
 

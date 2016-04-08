@@ -153,33 +153,23 @@
   (lisaa-toimikunta! {:tkunta "TK2"})
   (arkisto/lisaa-tutkinto! {:toimikunta "TK2"
                             :tutkintotunnus "T2"})
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
-                                {:opintoalakoodi "OA2"})
-  (lisaa-tutkinto! {:tutkintotunnus "T3"
-                    :opintoala "OA2"})
-  (lisaa-toimikunta! {:tkunta "TK3"})
-  (arkisto/lisaa-tutkinto! {:toimikunta "TK3"
-                            :tutkintotunnus "T3"})
+
   (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:tunnus "OA1"})))
         #{"TK1" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-tutkinto
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
-                                {:opintoalakoodi "OA1"})
-  (lisaa-tutkinto! {:tutkintotunnus "T1"
-                    :opintoala "OA1"})
   (lisaa-toimikunta! {:tkunta "TK1"})
   (arkisto/lisaa-tutkinto! {:toimikunta "TK1"
-                            :tutkintotunnus "T1"})
+                            :tutkintotunnus "324601"})
   (lisaa-toimikunta! {:tkunta "TK2"})
   (arkisto/lisaa-tutkinto! {:toimikunta "TK2"
-                            :tutkintotunnus "T1"})
+                            :tutkintotunnus "324601"})
   (lisaa-tutkinto! {:tutkintotunnus "T2"
-                    :opintoala "OA1"})
+                    :opintoala "201"})
   (lisaa-toimikunta! {:tkunta "TK3"})
   (arkisto/lisaa-tutkinto! {:toimikunta "TK3"
                             :tutkintotunnus "T2"})
-  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:tunnus "T1"})))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:tunnus "324601"})))
         #{"TK1" "TK2"})))
 
 (deftest ^:integraatio hae-termilla-test
