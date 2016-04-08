@@ -18,18 +18,14 @@ insert into tutkintoversio (tutkintoversio_id, tutkintotunnus, versio, koodistov
 update nayttotutkinto set uusin_versio_id = -10000 where tutkintotunnus = '324601';
 update nayttotutkinto set uusin_versio_id = -20000 where tutkintotunnus = '327128';
 
---insert into tutkinnonosa(osatunnus, nimi_fi, nimi_sv) values
---  ('100001','Audiovisuaalinen tuotanto', 'Audiovisuaalinen tuotanto (sv)'),
---    ('100002','Video- ja elokuvatuotanto', 'Video- ja elokuvatuotanto (sv)'),
---      ('100003','Televisiotuotanto', 'Televisiotuotanto (sv)');
+insert into toimikunta_ja_tutkinto(toimikunta, tutkintotunnus)
+  values ('Gulo gulo', '324601');
 
---insert into tutkinnonosa_ja_peruste(osa, peruste, jarjestys, tyyppi)
---values ('100001', (select peruste_id from peruste where diaarinumero = '41/011/2005'), 1, 'pakollinen'),
--- ('100002', (select peruste_id from peruste where diaarinumero = '41/011/2005'), 2, 'pakollinen'),
---  ('100003', (select peruste_id from peruste where diaarinumero = '41/011/2005'), 3, 'pakollinen');
+insert into jarjestamissopimus (jarjestamissopimusid, sopimusnumero, toimikunta, sopijatoimikunta, voimassa)
+  values (-324601, '123456', 'Gulo gulo', 'Gulo gulo', true);
 
---insert into osaamisala (osaamisalatunnus, nimi_fi, nimi_sv) values ('2002', 'Kuvauksen ja valaisun osaamisala', '');
---insert into osaamisala (osaamisalatunnus, nimi_fi, nimi_sv) values ('2003', 'Mediatyön osaamisala', '');
+insert into sopimus_ja_tutkinto(jarjestamissopimusid, tutkintoversio)
+  values (-324601, -10000);
 
 
 
