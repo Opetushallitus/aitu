@@ -17,6 +17,7 @@
              :refer [defjob]]
             [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
+            [korma.db :as db]
             [oph.korma.korma-auth
              :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
             [aitu.infra.jarjesto-arkisto :as jarjesto-arkisto]
@@ -36,13 +37,14 @@
             ;; promisen. Koska tätä funktiota ei kutsuta HTTP-pyynnön
             ;; käsittelijästä, meidän täytyy luoda promise itse.
             *current-user-oid* (promise)]
-    (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
-    (kayttaja-arkisto/merkitse-kaikki-vanhentuneiksi!)
-    (let [oid->jarjesto-id (into {} (for [jarjesto (jarjesto-arkisto/hae-kaikki)]
-                                      [(:oid jarjesto) (:jarjestoid jarjesto)]))]
-      (kayttaja-arkisto/paivita!
-        (apply concat (for [rooli roolit-jarjestyksessa]
-                        (kop/kayttajat kayttooikeuspalvelu (get kayttajaroolit rooli) oid->jarjesto-id)))))))
+    (db/transaction
+      (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
+      (kayttaja-arkisto/merkitse-kaikki-vanhentuneiksi!)
+      (let [oid->jarjesto-id (into {} (for [jarjesto (jarjesto-arkisto/hae-kaikki)]
+                                        [(:oid jarjesto) (:jarjestoid jarjesto)]))]
+        (kayttaja-arkisto/paivita!
+          (apply concat (for [rooli roolit-jarjestyksessa]
+                          (kop/kayttajat kayttooikeuspalvelu (get kayttajaroolit rooli) oid->jarjesto-id))))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
