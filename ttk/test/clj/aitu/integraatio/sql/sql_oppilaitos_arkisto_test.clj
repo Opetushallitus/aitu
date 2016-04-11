@@ -80,7 +80,6 @@
         o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"
                                :oppilaitoskoodi "OL1"})
         sop1 (lisaa-jarjestamissopimus! kt1 o1)
-        tv1 (lisaa-tutkintoversio! {:tutkintotunnus "324601"})
         _ (lisaa-tutkinto-sopimukselle! sop1 -10000)
 
         kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
@@ -101,7 +100,6 @@
         o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"
                                :oppilaitoskoodi "OL1"})
         sop1 (lisaa-jarjestamissopimus! kt1 o1)
-        tv1 (lisaa-tutkintoversio! {:tutkintotunnus "324601"})
         _ (lisaa-tutkinto-sopimukselle! sop1 -10000)
 
         kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})

@@ -76,7 +76,6 @@
         kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
         o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
         sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "327128"})
         _ (lisaa-tutkinto-sopimukselle! sop2 -20000)]
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1"}))
            ["KT1"]))))
@@ -95,7 +94,6 @@
         kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
         o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
         sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "327128"})
         _ (lisaa-tutkinto-sopimukselle! sop2 -20000)]
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "OA1"}))
            ["KT1"]))))
