@@ -96,6 +96,7 @@
                             :kuvaus "Byggnadsbranschen, grundexamen"}]
                 :voimassaLoppuPvm "2013-12-31"
                 :voimassaAlkuPvm "1997-01-01"
+                :versio 1
                 :koodiArvo "352201"
                 :koodiUri "koulutus_352201"
                 :koodisto {:organisaatioOid "1.2.246.562.10.00000000001"
@@ -106,6 +107,7 @@
              :nimi_sv "Byggnadsbranschen, grundexamen"
              :kuvaus_fi "Rakennusalan perustutkinto"
              :kuvaus_sv "Byggnadsbranschen, grundexamen"
+             :versio 1
              :koodiUri "koulutus_352201"
              :tutkintotunnus "352201"
              :voimassa_alkupvm (time/local-date 1997 1 1)

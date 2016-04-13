@@ -36,6 +36,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
        :kuvaus_fi (:kuvaus metadata_fi)
        :kuvaus_sv (:kuvaus metadata_sv)
        :koodiUri (:koodiUri koodi)
+       :versio (:versio koodi)
        arvokentta (:koodiArvo koodi)
        :voimassa_alkupvm (or (some-> (:voimassaAlkuPvm koodi) parse-ymd) (clj-time.core/local-date 2199 1 1))
        :voimassa_loppupvm (or (some-> (:voimassaLoppuPvm koodi) parse-ymd) (clj-time.core/local-date 2199 1 1))})))
@@ -154,7 +155,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (assoc opintoala :koulutusala_tkkoodi (:koodiArvo koulutusala))))
 
 (defn ^:private hae-alakoodit
-  [asetukset koodi] (get-json-from-url (str (:url asetukset) "relaatio/sisaltyy-alakoodit/" (:koodiUri koodi))))
+  [asetukset koodi] (get-json-from-url (str (:url asetukset) "relaatio/sisaltyy-alakoodit/" (:koodiUri koodi) "?koodiVersio=" (:versio koodi))))
 
 (defn lisaa-alakoodien-data
   [asetukset tutkinto]
@@ -309,11 +310,11 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
                     (map #(select-keys % (conj tutkinnon-kentat :tutkinnonosat :osaamisalat :tutkintonimikkeet))))
         tutkinnonosat (->> tutkinnot
                         (mapcat :tutkinnonosat)
-                        (map #(dissoc % :jarjestysnumero :koodiUri :kuvaus_fi :kuvaus_sv))
+                        (map #(dissoc % :versio :jarjestysnumero :koodiUri :kuvaus_fi :kuvaus_sv))
                         (map-by :osatunnus))
         osaamisalat (->> tutkinnot
                         (mapcat :osaamisalat)
-                        (map #(dissoc % :koodiUri :kuvaus_fi :kuvaus_sv))
+                        (map #(dissoc % :versio :koodiUri :kuvaus_fi :kuvaus_sv))
                         (map-by :osaamisalatunnus))
         tutkintonimikkeet (->> tutkinnot
                             (mapcat :tutkintonimikkeet)
@@ -364,7 +365,7 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
                                                               :voimassa_alkupvm (:voimassa_alkupvm koulutusala)
                                                               :voimassa_loppupvm (:voimassa_loppupvm koulutusala)}]))
         uudet (map-by :koulutusala_tkkoodi
-                      (map #(dissoc % :koodiUri) (hae-koulutusalat asetukset)))]
+                      (map #(dissoc % :koodiUri :versio) (hae-koulutusalat asetukset)))]
     (muutokset uudet vanhat)))
 
 (defn hae-opintoala-muutokset
@@ -377,5 +378,5 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
                                                            :voimassa_alkupvm (:voimassa_alkupvm opintoala)
                                                            :voimassa_loppupvm (:voimassa_loppupvm opintoala)}]))
         uudet (map-by :opintoala_tkkoodi
-                      (map #(dissoc % :koodiUri) (hae-opintoalat asetukset)))]
+                      (map #(dissoc % :koodiUri :versio) (hae-opintoalat asetukset)))]
     (muutokset uudet vanhat)))
