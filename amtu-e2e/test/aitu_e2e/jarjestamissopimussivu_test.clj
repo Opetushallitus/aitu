@@ -71,21 +71,21 @@
                                                        :toimikunta "ILMA"
                                                        :sopijatoimikunta "ILMA"
                                                        :koulutustoimija "0000000-0"
-                                                       :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
-                                                       :alkupvm du/menneisyydessa
-                                                       :loppupvm du/tulevaisuudessa}
+                                                       :tutkintotilaisuuksista_vastaava_oppilaitos "12345"}
                                                       {:sopimusnumero "321"
                                                        :jarjestamissopimusid 1231
                                                        :toimikunta "ILMA"
                                                        :sopijatoimikunta "ILMA"
                                                        :koulutustoimija "0000000-0"
-                                                       :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
-                                                       :alkupvm du/menneisyydessa
-                                                       :loppupvm du/tulevaisuudessa}]
+                                                       :tutkintotilaisuuksista_vastaava_oppilaitos "12345"}]
                               :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
-                                                     :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}
+                                                     :sopimus_ja_tutkinto [{:tutkintoversio_id 1
+                                                                            :alkupvm du/menneisyydessa
+                                                                            :loppupvm du/tulevaisuudessa}]}
                                                     {:jarjestamissopimusid 1231
-                                                     :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]});
+                                                     :sopimus_ja_tutkinto [{:tutkintoversio_id 1
+                                                                            :alkupvm du/menneisyydessa
+                                                                            :loppupvm du/tulevaisuudessa}]}]})
 
 (deftest jarjestamissopimussivu-test
   (testing "järjestämissopimussivu"
@@ -155,9 +155,7 @@
 (deftest ei-voimassaoleva-sopimus-test
   (testing "järjestämissopimussivu - ei voimassa"
     (with-webdriver
-      (du/with-data jarjestamissopimus-data
-        (du/aseta-jarjestamissopimus-paattyneeksi
-          (get-in jarjestamissopimus-data [:jarjestamissopimukset 0]))
+      (du/with-data (assoc-in jarjestamissopimus-data [:sopimus_ja_tutkinto 0 :sopimus_ja_tutkinto 0 :loppupvm] du/menneisyydessa)
         (avaa (sopimussivu 1230))
         (testing "Otsikon perässä on teksti (ei voimassa)"
           (is (= (sivun-otsikko) "JÄRJESTÄMISSOPIMUS (EI VOIMASSA)")))))))

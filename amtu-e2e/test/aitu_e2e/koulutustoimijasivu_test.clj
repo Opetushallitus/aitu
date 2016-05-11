@@ -22,8 +22,7 @@
                                         menneisyydessa
                                         tulevaisuudessa
                                         menneisyydessa-kayttoliittyman-muodossa
-                                        tulevaisuudessa-kayttoliittyman-muodossa
-                                        aseta-jarjestamissopimus-paattyneeksi]]
+                                        tulevaisuudessa-kayttoliittyman-muodossa]]
             [aitu-e2e.datatehdas :as dt]
             [clj-time.core :as time]
             [clj-time.format :as time-format]
@@ -81,9 +80,8 @@
           vanhentuva-sopnro (:sopimusnumero vanhentuva-sopimus)
           ei-vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 0])
           ei-vanhentuva-sopnro (:sopimusnumero ei-vanhentuva-sopimus)]
-      (with-data testidata
+      (with-data (assoc-in testidata [:sopimus_ja_tutkinto 1 :sopimus_ja_tutkinto 0 :loppupvm] menneisyydessa)
         (testing "pitäisi näyttaa listoissa uudet ja vanhat koulutustoimijan sopimukset"
-          (aseta-jarjestamissopimus-paattyneeksi vanhentuva-sopimus)
           ;; Kun
           (avaa (koulutustoimijasivu y-tunnus))
           (w/click nayta-vanhat-selector)

@@ -44,8 +44,6 @@
         (with-cleaned-data jarjestamissopimus-data
           (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
           (syota-kenttaan "sopimus.sopimusnumero" "8742")
-          (syota-pvm "sopimus.alkupvm" "24.03.1980")
-          (syota-pvm "sopimus.loppupvm" "01.01.2199")
           (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (odota-angular-pyyntoa)
@@ -54,7 +52,6 @@
           (tallenna)
           (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
           (is (= (elementin-teksti "sopimus.sopimusnumero") "8742"))
-          (is (= (css-elementin-teksti ".e2e-sopimus-alkupvm") "24.03.1980 - 01.01.2199"))
           (is (= (css-elementin-teksti ".e2e-sopimus-sopijatoimikunta-nimi") "Testialan tutkintotoimikunta (2013)"))
           (is (= (css-elementin-teksti ".e2e-sopimus-toimikunta-nimi") "Testialan tutkintotoimikunta (2013)"))
           (is (= (css-elementin-teksti ".e2e-sopimus-koulutustoimija-nimi") "Hanhivaaran kaupunki"))
@@ -65,8 +62,6 @@
         (with-cleaned-data jarjestamissopimus-data
           (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
           (syota-kenttaan "sopimus.sopimusnumero" "123")
-          (syota-pvm "sopimus.alkupvm" "24.03.1980")
-          (syota-pvm "sopimus.loppupvm" "01.01.2199")
           (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (odota-angular-pyyntoa)
@@ -84,8 +79,6 @@
                                        :toimikausi 2})
           (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
           (syota-kenttaan "sopimus.sopimusnumero" "8742")
-          (syota-pvm "sopimus.alkupvm" "24.03.1980")
-          (syota-pvm "sopimus.loppupvm" "01.01.2199")
           (valitse-select2-optio "sopimus.toimikunta" "tkunta", "Toinen toimikunta")
           (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
@@ -101,7 +94,6 @@
       (with-webdriver
         (with-data jarjestamissopimus-data
           (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
-          (syota-pvm "sopimus.alkupvm" " ")
           (odota-angular-pyyntoa)
           (is (not (tallennus-nappi-aktiivinen?))))))))
 

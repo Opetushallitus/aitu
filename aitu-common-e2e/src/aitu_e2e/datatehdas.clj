@@ -89,18 +89,18 @@
         :tutkintotilaisuuksista_vastaava_oppilaitos oppilaitostunnus
         :jarjestamissopimusid jarjestamissopimusid
         :sopimusnumero sopimusnumero
-        :alkupvm menneisyydessa
-        :loppupvm tulevaisuudessa
         :voimassa true}
        :sopimus_ja_tutkinto
        {:jarjestamissopimusid jarjestamissopimusid
-        :sopimus_ja_tutkinto [{:tutkintoversio_id tutkintoversio-id}]}}))
+        :sopimus_ja_tutkinto [{:tutkintoversio_id tutkintoversio-id
+                               :alkupvm menneisyydessa
+                               :loppupvm tulevaisuudessa}]}}))
   ([y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio]
     (setup-voimassaoleva-jarjestamissopimus (uusi-sopimusnumero!) y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)))
 
 (defn setup-lakannut-jarjestamissopimus [sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio]
   (-> (setup-voimassaoleva-jarjestamissopimus sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)
-    (assoc-in [:jarjestamissopimukset :loppupvm] menneisyydessa)
+    (assoc-in [:sopimus_ja_tutkinto :sopimus_ja_tutkinto :loppupvm] menneisyydessa)
     (assoc-in [:jarjestamissopimukset :voimassa] false)))
 
 

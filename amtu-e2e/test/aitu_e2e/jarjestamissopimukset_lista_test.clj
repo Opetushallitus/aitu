@@ -19,8 +19,7 @@
             [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data
                                         menneisyydessa
-                                        tulevaisuudessa
-                                        aseta-jarjestamissopimus-paattyneeksi]]
+                                        tulevaisuudessa]]
             [aitu-e2e.tutkintosivu-test :refer [tutkintosivu]]
             [aitu-e2e.datatehdas :as dt]
             [aitu-e2e.toimikuntasivu-test :refer [toimikuntasivu]]))
@@ -47,7 +46,9 @@
                                            :koulutustoimija "0000000-0"
                                            :tutkintotilaisuuksista_vastaava_oppilaitos "12345"}]
                   :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
-                                         :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]})
+                                         :sopimus_ja_tutkinto [{:tutkintoversio_id 1
+                                                                :alkupvm menneisyydessa
+                                                                :loppupvm tulevaisuudessa}]}]})
 
 (defn perustiedot-vanhalla-tutkinnolla []
   (update-in perustiedot
@@ -74,8 +75,7 @@
   (testing testattava-sivu
     (with-webdriver
       (let [vanhentuva-sopimus (dt/setup-voimassaoleva-jarjestamissopimus "1234" "0000000-0" "12345"  "ILMA" 1)]
-        (with-data (dt/merge-datamaps perustiedot vanhentuva-sopimus)
-          (aseta-jarjestamissopimus-paattyneeksi (:jarjestamissopimukset vanhentuva-sopimus))
+        (with-data (assoc-in (dt/merge-datamaps perustiedot vanhentuva-sopimus) [:sopimus_ja_tutkinto 0 :sopimus_ja_tutkinto 0 :loppupvm] menneisyydessa)
           (testing "kun vanhoja järjestämissopimuksia löytyy"
             (avaa (testattava-sivu-fn))
             (testing "Pitäisi näyttää järjestämissopimukset omissa taulukoissaan"
@@ -154,8 +154,7 @@
       "tutkinto ei ole voimassa:"
       (with-webdriver
         (let [vanhentuva-sopimus (dt/setup-voimassaoleva-jarjestamissopimus "1234" "0000000-0" "12345"  "ILMA" 1)]
-          (with-data (dt/merge-datamaps (perustiedot-vanhalla-tutkinnolla) vanhentuva-sopimus)
-            (aseta-jarjestamissopimus-paattyneeksi (:jarjestamissopimukset vanhentuva-sopimus))
+          (with-data (assoc-in (dt/merge-datamaps (perustiedot-vanhalla-tutkinnolla) vanhentuva-sopimus) [:sopimus_ja_tutkinto 0 :sopimus_ja_tutkinto 0 :loppupvm] menneisyydessa)
             (avaa (tutkintosivu "TU1"))
             (testing "pitäisi näyttää kaikki sopimukset nykyisten sopimusten listalla"
               (is (= (nykyisten-jarjestamissopimusten-lkm) 2))

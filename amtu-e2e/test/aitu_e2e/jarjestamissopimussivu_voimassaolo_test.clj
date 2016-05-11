@@ -19,8 +19,7 @@
             [aitu-e2e.aitu-util :refer :all]
             [aitu-e2e.data-util :refer [with-data
                                         menneisyydessa
-                                        tulevaisuudessa
-                                        aseta-jarjestamissopimus-paattyneeksi]]))
+                                        tulevaisuudessa]]))
 
 (defn sopimussivu [jarjestamissopimusid] (str "/fi/#/sopimus/" jarjestamissopimusid "/tiedot"))
 
@@ -82,9 +81,7 @@
     (with-webdriver
       (testing
         "ei olla sopimuksen voimassaoloajalla:"
-        (with-data jarjestamissopimussivu-data
-          (aseta-jarjestamissopimus-paattyneeksi
-            (get-in jarjestamissopimussivu-data [:jarjestamissopimukset 0]))
+        (with-data (assoc-in jarjestamissopimussivu-data [:sopimus_ja_tutkinto 0 :sopimus_ja_tutkinto 0 :loppupvm] menneisyydessa)
           (avaa (sopimussivu 1230))
           (testing
             "sopimus ei ole voimassa"
@@ -104,4 +101,4 @@
           (avaa (sopimussivu 1230))
           (testing
             "sopimus on voimassa"
-            (is (= (sivun-otsikko) "JÄRJESTÄMISSOPIMUS"))))))))
+            (is (= (sivun-otsikko) "JÄRJESTÄMISSOPIMUS (EI VOIMASSA)"))))))))

@@ -16,7 +16,8 @@
   (:import org.apache.commons.io.FileUtils)
   (:require  korma.db
              [korma.core :as sql]
-             [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists]]
+             [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists max-date min-date]]
+             [oph.common.util.http-util :refer [parse-iso-date]]
              [oph.korma.common :as sql-util]
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
@@ -65,10 +66,20 @@
 (defn ^:integration-api paivita-sopimuksen-voimassaolo!
   "Päivittää annetulla id:llä olevan sopimuksen voimassaolotiedon"
   [jarjestamissopimusid]
-  (let [sopimus (voimassaolo-saanto/taydenna-sopimuksen-voimassaolo
-                  (voimassaolo/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
-                    (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid)))]
-    (aseta-sopimuksen-voimassaolo! jarjestamissopimusid (:voimassa sopimus))))
+  (let [tutkinnot (sql/select sopimus-ja-tutkinto
+                              (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
+        alkupvm (when-let [paivat (seq (keep :alkupvm tutkinnot))]
+                  (apply min-date paivat))
+        loppupvm (when (and (seq tutkinnot)
+                            (every? :loppupvm tutkinnot))
+                   (apply max-date (keep :loppupvm tutkinnot)))]
+    (sql/update jarjestamissopimus
+                (sql/set-fields {:alkupvm alkupvm, :loppupvm loppupvm})
+      (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
+    (let [sopimus (voimassaolo-saanto/taydenna-sopimuksen-voimassaolo
+                    (voimassaolo/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
+                      (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid)))]
+      (aseta-sopimuksen-voimassaolo! jarjestamissopimusid (:voimassa sopimus)))))
 
 (defn merkitse-sopimus-poistetuksi!
   "Asettaa sopimukselle poistettu -flagin"
@@ -149,7 +160,9 @@
    :sahkoposti_vara (:sahkoposti_vara sopimus_ja_tutkinto)
    :nayttomestari_vara (:nayttomestari_vara sopimus_ja_tutkinto)
    :lisatiedot_vara (:lisatiedot_vara sopimus_ja_tutkinto)
-   :kieli (:kieli sopimus_ja_tutkinto)})
+   :kieli (:kieli sopimus_ja_tutkinto)
+   :alkupvm (:alkupvm sopimus_ja_tutkinto)
+   :loppupvm (:loppupvm sopimus_ja_tutkinto)})
 
 (defn paivita!
   "Päivittää sopimuksen tiedot"
@@ -353,15 +366,15 @@
 
 (defn lisaa-tutkinnot-sopimukselle!
   "Lisää tutkinnot sopimukselle"
-  [jarjestamissopimusid tutkintoversiot]
-  (let [tutkintoversiot (map #(if (map? %) % {:tutkintoversio %})
-                             tutkintoversiot)]
-    (auditlog/sopimuksen-tutkinnot-operaatio! :lisays jarjestamissopimusid (map :tutkintoversio tutkintoversiot))
+  [jarjestamissopimusid lisattavat]
+  (let [lisattavat (map #(if (map? %) % {:tutkintoversio %})
+                             lisattavat)]
+    (auditlog/sopimuksen-tutkinnot-operaatio! :lisays jarjestamissopimusid (map :tutkintoversio lisattavat))
     (let [sopimus-tutkinto-liitokset
           (doall
-            (for [tutkintoversio tutkintoversiot]
+            (for [lisattava lisattavat]
               (sql/insert sopimus-ja-tutkinto
-                (sql/values (assoc tutkintoversio
+                (sql/values (assoc (select-keys lisattava [:alkupvm :loppupvm :tutkintoversio])
                                    :jarjestamissopimusid jarjestamissopimusid)))))]
       ;; Triggeröidään muutos myös sopimustaulussa että muokkaajan tiedot tallentuvat myös sinne
       (sql/update jarjestamissopimus
@@ -385,7 +398,7 @@
         lisattavat (clojure.set/difference uudet-tutkintoversiot vanhat-tutkintoversiot)]
     (auditlog/sopimuksen-tutkinnot-operaatio! :paivitys jarjestamissopimusid uudet-tutkintoversiot)
     (poista-tutkinnot-sopimukselta! jarjestamissopimusid poistettavat)
-    (lisaa-tutkinnot-sopimukselle! jarjestamissopimusid lisattavat)
+    (lisaa-tutkinnot-sopimukselle! jarjestamissopimusid (filter (comp lisattavat :tutkintoversio) (map #(clojure.set/rename-keys % {:tutkintoversio_id :tutkintoversio}) sopimus_ja_tutkinto)))
     (paivita-sopimuksen-voimassaolo! jarjestamissopimusid)))
 
 (defn lisaa-suunnitelma-tutkinnolle!

@@ -88,13 +88,11 @@
                             :toimikunta "ILMA"
                             :sopijatoimikunta "ILMA"
                             :tutkintotilaisuuksista_vastaava_oppilaitos "12345"
-                            :koulutustoimija "0000000-0"
-                            ;; Sopimuksen täytyy olla voimassa, muuten
-                            ;; tutkintojen lisäys ei onnistu.
-                            :alkupvm "2014-07-03"
-                            :loppupvm "2099-01-01"}]
+                            :koulutustoimija "0000000-0"}]
    :sopimus_ja_tutkinto [{:jarjestamissopimusid 1230
-                          :sopimus_ja_tutkinto [{:tutkintoversio_id 1}]}]})
+                          :sopimus_ja_tutkinto [{:tutkintoversio_id 1
+                                                 :alkupvm "2014-07-03"
+                                                 :loppupvm "2099-01-01"}]}]})
 
 (deftest toimikuntasivu-test
   (testing "toimikuntasivu"

@@ -35,9 +35,7 @@
    [:sopimusnumero (validoi-uniikki-sopimusnumero sopimus) :ei-uniikki]
    [:toimikunta present? :pakollinen]
    [:koulutustoimija present? :pakollinen]
-   [:tutkintotilaisuuksista_vastaava_oppilaitos present? :pakollinen]
-   [:alkupvm #(not (nil? %)) :pakollinen]
-   [:alkupvm (validoi-alkupvm-sama-tai-ennen-loppupvm (:loppupvm sopimus)) :virheellinen-voimassaolon-alkupvm]])
+   [:tutkintotilaisuuksista_vastaava_oppilaitos present? :pakollinen]])
 
 (defn luo-sopimuksen-luonnille-validointisaannot [sopimus]
   (conj (luo-sopimukselle-validointisaannot sopimus)
@@ -85,7 +83,7 @@
                             "sopimukset.csv"))))
 
 (defroutes reitit
-  (POST "/:tkunta" [tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero alkupvm loppupvm jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
+  (POST "/:tkunta" [tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
     :path-params [tkunta]
     :kayttooikeus [:sopimus_lisays tkunta]
     (let [sopimus (merge {:sopimusnumero sopimusnumero
@@ -93,8 +91,6 @@
                           :sopijatoimikunta (paljas-tai-kentan-arvo sopijatoimikunta :tkunta)
                           :koulutustoimija (paljas-tai-kentan-arvo koulutustoimija :ytunnus)
                           :tutkintotilaisuuksista_vastaava_oppilaitos (paljas-tai-kentan-arvo tutkintotilaisuuksista_vastaava_oppilaitos :oppilaitoskoodi)
-                          :alkupvm (if alkupvm (parse-iso-date alkupvm) nil)
-                          :loppupvm (if loppupvm (parse-iso-date loppupvm) nil)
                           :vastuuhenkilo vastuuhenkilo
                           :puhelin puhelin
                           :sahkoposti sahkoposti
@@ -104,24 +100,28 @@
                (let [uusi-sopimus (arkisto/lisaa! sopimus)]
                  (response-or-404 uusi-sopimus)))))
 
-  (PUT "/:jarjestamissopimusid" [sopimusnumero alkupvm loppupvm koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
+  (PUT "/:jarjestamissopimusid" [sopimusnumero koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos toimikunta sopimus_ja_tutkinto vastuuhenkilo sahkoposti puhelin]
     :path-params [jarjestamissopimusid]
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (let [jarjestamissopimus_id_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimus_id_int)
         (let [sopimus {:jarjestamissopimusid jarjestamissopimus_id_int
                        :sopimusnumero sopimusnumero
-                       :alkupvm (when alkupvm (parse-iso-date alkupvm))
-                       :loppupvm (when loppupvm (parse-iso-date loppupvm))
                        :koulutustoimija  (paljas-tai-kentan-arvo koulutustoimija :ytunnus)
                        :tutkintotilaisuuksista_vastaava_oppilaitos (paljas-tai-kentan-arvo tutkintotilaisuuksista_vastaava_oppilaitos :oppilaitoskoodi)
                        :toimikunta (paljas-tai-kentan-arvo toimikunta :tkunta)
                        :vastuuhenkilo vastuuhenkilo
                        :puhelin puhelin
-                       :sahkoposti sahkoposti}]
+                       :sahkoposti sahkoposti}
+              sopimus_ja_tutkinto (map (fn [st]
+                                         (-> st
+                                           (update :alkupvm parse-iso-date)
+                                           (update :loppupvm parse-iso-date)))
+                                       sopimus_ja_tutkinto)]
           (validoi sopimus (luo-sopimukselle-validointisaannot sopimus) ((i18n/tekstit) :validointi)
-            (arkisto/paivita! sopimus sopimus_ja_tutkinto)
-            (response-or-404 sopimus))))))
+            (validoi {:sopimus_ja_tutkinto sopimus_ja_tutkinto} [[:sopimus_ja_tutkinto (fn [st] (every? #((validoi-alkupvm-sama-tai-ennen-loppupvm (:loppupvm %)) (:alkupvm %)) st)) :virheellinen-voimassaolon-alkupvm]]
+              (arkisto/paivita! sopimus sopimus_ja_tutkinto)
+              (response-or-404 sopimus)))))))
 
   (GET "/:jarjestamissopimusid" []
     :path-params [jarjestamissopimusid]
@@ -133,7 +133,10 @@
     :kayttooikeus [:sopimustiedot_paivitys jarjestamissopimusid]
     (let [jarjestamissopimusid_int (Integer/parseInt jarjestamissopimusid)]
       (sallittu-jos (salli-sopimuksen-paivitys? jarjestamissopimusid_int)
-        (arkisto/paivita-tutkinnot! jarjestamissopimusid_int sopimus_ja_tutkinto)
+        (arkisto/paivita-tutkinnot! jarjestamissopimusid_int (for [rivi sopimus_ja_tutkinto]
+                                                               (-> rivi
+                                                                 (update :alkupvm parse-iso-date)
+                                                                 (update :loppupvm parse-iso-date))))
         {:status 200})))
 
   (DELETE "/:jarjestamissopimusid" []

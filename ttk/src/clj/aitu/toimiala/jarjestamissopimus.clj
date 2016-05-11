@@ -20,7 +20,6 @@
   [x]
   (and (contains? x :koulutustoimija)
        (contains? x :sopimusnumero)
-       (contains? x :alkupvm)
        (contains? x :toimikunta)))
 
 (defn liita-tutkinnon-nimi-ja-tunnus [sopimus-ja-tutkinto]

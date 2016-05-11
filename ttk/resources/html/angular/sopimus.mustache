@@ -63,8 +63,6 @@
       <ohje class="right" tunniste="sopimuksen-muokkaus-sopimusnumero"></ohje>
       <input ng-required="true" type="text" ng-model="sopimus.sopimusnumero" maxlength="25"></input>
     </fieldset>
-    <pvm-valitsin pakollinen="true" valittu-pvm="sopimus.alkupvm" otsikko="[[alkupvm]]"></pvm-valitsin>
-    <pvm-valitsin valittu-pvm="sopimus.loppupvm" otsikko="[[loppupvm]]"></pvm-valitsin>
     <fieldset>
       <label>[[yhteyshenkilon_nimi]]</label>
       <input type="text" ng-model="sopimus.vastuuhenkilo"></input>
@@ -136,6 +134,13 @@
         <label>[[siirtymaaika-paattyy]]</label>
         <p class="tyhja-">{{sopimusJaTutkinto.tutkintoversio.siirtymaaika_paattyy}}</p>
       </fieldset>
+      <fieldset ng-hide="muokkausTila">
+        <label>[[voimassa]]</label>
+        <p class="e2e-sopimus-alkupvm">{{sopimusJaTutkinto.alkupvm | voimassaoloAika: sopimusJaTutkinto.loppupvm}}</p>
+      </fieldset>
+      <pvm-valitsin ng-show="muokkausTila" pakollinen="true" valittu-pvm="sopimusJaTutkinto.alkupvm" otsikko="[[alkupvm]]"></pvm-valitsin>
+      <pvm-valitsin ng-show="muokkausTila" valittu-pvm="sopimusJaTutkinto.loppupvm" otsikko="[[loppupvm]]"></pvm-valitsin>
+      <br />
       <sopimuksen-tutkinnon-vastuuhenkilo
         class="vastuuhenkilo"
         muokkaus="muokkausTila"

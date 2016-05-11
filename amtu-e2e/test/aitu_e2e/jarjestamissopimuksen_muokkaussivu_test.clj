@@ -137,8 +137,8 @@
       (with-webdriver
         (du/with-data jarjestamissopimus-data
           (avaa-sopimuksen-muokkaussivu 1230)
-          (syota-pvm "sopimus.alkupvm" "24.03.1980")
-          (syota-pvm "sopimus.loppupvm" "01.02.2199")
+          (syota-pvm "sopimusJaTutkinto.alkupvm" "24.03.1980")
+          (syota-pvm "sopimusJaTutkinto.loppupvm" "01.02.2199")
           (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus" "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (syota-kenttaan "sopimus.vastuuhenkilo" "Roope Ankka")
@@ -186,15 +186,15 @@
     (with-webdriver
       (du/with-data jarjestamissopimus-data
         (avaa-sopimuksen-muokkaussivu 1230)
-        (syota-pvm "sopimus.alkupvm" "")
+        (syota-pvm "sopimusJaTutkinto.alkupvm" "")
         (odota-angular-pyyntoa)
         (is (= (not (tallennus-nappi-aktiivinen?)))))))
   (testing "Jarjestamissopimuksen muokkaus ei onnistu, alkupvm loppupvm:n jälkeen"
     (with-webdriver
       (du/with-data jarjestamissopimus-data
         (avaa-sopimuksen-muokkaussivu 1230)
-        (syota-pvm "sopimus.alkupvm" "01.02.2009")
-        (syota-pvm "sopimus.loppupvm" "24.03.1980")
+        (syota-pvm "sopimusJaTutkinto.alkupvm" "01.02.2009")
+        (syota-pvm "sopimusJaTutkinto.loppupvm" "24.03.1980")
         (odota-angular-pyyntoa)
         (tallenna)
         (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut")))))
@@ -296,9 +296,7 @@
 (deftest ei-voimassaoleva-sopimus-test
   (testing "Vanhan järjestämissopimuksen muokkaus ei onnistu"
     (with-webdriver
-      (du/with-data jarjestamissopimus-data
-        (du/aseta-jarjestamissopimus-paattyneeksi
-          (get-in jarjestamissopimus-data [:jarjestamissopimukset 0]))
+      (du/with-data (assoc-in jarjestamissopimus-data [:sopimus_ja_tutkinto 0 :sopimus_ja_tutkinto 0 :loppupvm] du/menneisyydessa)
         (siirry-sopimuksen-muokkaussivulle 1230)
         (tallenna)
         (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut"))))))

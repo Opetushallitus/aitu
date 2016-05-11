@@ -21,7 +21,7 @@
   [jarjestamissopimus]
   (let [alkupvm (:alkupvm jarjestamissopimus)
         loppupvm (or (:loppupvm jarjestamissopimus) util/time-forever)]
-    (and (util/pvm-mennyt-tai-tanaan? alkupvm) (util/pvm-tuleva-tai-tanaan? loppupvm))))
+    (and (some? alkupvm) (util/pvm-mennyt-tai-tanaan? alkupvm) (util/pvm-tuleva-tai-tanaan? loppupvm))))
 
 (defn sopimuksen-loppupvm-menneisyydessa?
   [jarjestamissopimus]
