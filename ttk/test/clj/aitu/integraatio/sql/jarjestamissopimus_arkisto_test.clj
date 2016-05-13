@@ -41,8 +41,6 @@
    :sopijatoimikunta "TKUN"
    :koulutustoimija "KT1"
    :tutkintotilaisuuksista_vastaava_oppilaitos "OP1"
-   :alkupvm (parse-local-date (formatters :year-month-day) "2013-02-01")
-   :loppupvm (parse-local-date (formatters :year-month-day) "2099-02-01")
    :sopimusnumero "1234"})
 
 (defn lisaa-testidata! []

@@ -48,11 +48,14 @@
          #{"OL1" "OL2"})))
 
 (deftest ^:integraatio hae-ehdoilla-sopimuksia
+  (lisaa-koulutus-ja-opintoala!)
   (let [kt (lisaa-koulutustoimija! {:ytunnus "KT1"})
         ol (lisaa-oppilaitos! {:koulutustoimija "KT1"
                                :nimi "Oppilaitos1"
-                               :oppilaitoskoodi "OL1"})]
-    (lisaa-jarjestamissopimus! kt ol)
+                               :oppilaitoskoodi "OL1"})
+        tv (lisaa-tutkinto-ja-versio! "111111")
+        js (lisaa-jarjestamissopimus! kt ol)]
+    (lisaa-tutkinto-sopimukselle! js tv)
     (lisaa-oppilaitos! {:koulutustoimija "KT1"
                         :nimi "Oppilaitos1"})
     (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "kylla"
@@ -60,10 +63,13 @@
            ["OL1"]))))
 
 (deftest ^:integraatio hae-ehdoilla-ei-sopimuksia
+  (lisaa-koulutus-ja-opintoala!)
   (let [kt (lisaa-koulutustoimija! {:ytunnus "KT1"})
         ol (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                               :nimi "Oppilaitos1"})]
-    (lisaa-jarjestamissopimus! kt ol)
+                               :nimi "Oppilaitos1"})
+        tv (lisaa-tutkinto-ja-versio! "111111")
+        js (lisaa-jarjestamissopimus! kt ol)]
+    (lisaa-tutkinto-sopimukselle! js tv)
     (lisaa-oppilaitos! {:koulutustoimija "KT1"
                         :nimi "Oppilaitos1"
                         :oppilaitoskoodi "OL1"})

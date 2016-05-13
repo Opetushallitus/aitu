@@ -215,7 +215,6 @@
     (let [i (swap! seuraava-indeksi inc)]
       {:jarjestamissopimusid i
        :sopimusnumero (str "ABCDEF01234567890" i)
-       :alkupvm (time/date-time 2011 1 1)
        :voimassa true})))
 
 (defn lisaa-jarjestamissopimus!
@@ -255,9 +254,14 @@
   (lisaa-tutkinto! {:tutkintotunnus tutkintotunnus})
   (:tutkintoversio_id (lisaa-tutkintoversio! {:tutkintotunnus tutkintotunnus})))
 
-(defn lisaa-tutkinto-sopimukselle! [sopimus tutkintoversio-id]
-  (first (jarjestamissopimus-arkisto/lisaa-tutkinnot-sopimukselle!
-           (:jarjestamissopimusid sopimus) [tutkintoversio-id])))
+(defn lisaa-tutkinto-sopimukselle!
+  ([sopimus tutkintoversio-id]
+    (lisaa-tutkinto-sopimukselle! sopimus tutkintoversio-id (time/local-date 2011 1 1) (time/local-date 2199 1 1)))
+  ([sopimus tutkintoversio-id alkupvm loppupvm]
+    (first (jarjestamissopimus-arkisto/lisaa-tutkinnot-sopimukselle!
+             (:jarjestamissopimusid sopimus) [{:tutkintoversio tutkintoversio-id
+                                               :alkupvm alkupvm
+                                               :loppupvm loppupvm}]))))
 
 (defn lisaa-osaamisala-sopimus-tutkinto-liitokseen [sopimus-tutkinto-liitos osaamisala-id toimipaikkakoodi]
   (update-in sopimus-tutkinto-liitos [:sopimus_ja_tutkinto_ja_osaamisala]

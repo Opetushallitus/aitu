@@ -374,12 +374,9 @@
           (doall
             (for [lisattava lisattavat]
               (sql/insert sopimus-ja-tutkinto
-                (sql/values (assoc (select-keys lisattava [:alkupvm :loppupvm :tutkintoversio])
+                (sql/values (assoc (select-keys lisattava [:alkupvm :loppupvm :tutkintoversio :kieli])
                                    :jarjestamissopimusid jarjestamissopimusid)))))]
-      ;; Triggeröidään muutos myös sopimustaulussa että muokkaajan tiedot tallentuvat myös sinne
-      (sql/update jarjestamissopimus
-        (sql/set-fields {:muutettuaika (time/now)})
-        (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
+      (paivita-sopimuksen-voimassaolo! jarjestamissopimusid)
       sopimus-tutkinto-liitokset)))
 
 (defn hae-sopimuksen-tutkinnot

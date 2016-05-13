@@ -29,8 +29,11 @@
 (defn lisaa-jarjestamissopimus-toimikunnalle! [tkunta]
   (let [kt (lisaa-koulutustoimija!)
         ol (lisaa-oppilaitos! {:koulutustoimija (:ytunnus kt)})
-        tk (lisaa-toimikunta! {:tkunta tkunta})]
-    (lisaa-jarjestamissopimus! kt ol tk {:jarjestamissopimusid 1})))
+        tk (lisaa-toimikunta! {:tkunta tkunta})
+        _ (lisaa-koulutus-ja-opintoala!)
+        tutkintoversio-id (lisaa-tutkinto-ja-versio! "111111")
+        js (lisaa-jarjestamissopimus! kt ol tk {:jarjestamissopimusid 1})]
+    (lisaa-tutkinto-sopimukselle! js tutkintoversio-id)))
 
 (deftest ^:integraatio sopimuksen-paivitys-onnistuu-toimikunnan-jasenelta
   (lisaa-jarjestamissopimus-toimikunnalle! "T12345")
