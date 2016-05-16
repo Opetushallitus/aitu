@@ -100,7 +100,7 @@
 
 (defn setup-lakannut-jarjestamissopimus [sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio]
   (-> (setup-voimassaoleva-jarjestamissopimus sopimusnumero y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)
-    (assoc-in [:sopimus_ja_tutkinto :sopimus_ja_tutkinto :loppupvm] menneisyydessa)
+    (assoc-in [:sopimus_ja_tutkinto :sopimus_ja_tutkinto 0 :loppupvm] menneisyydessa)
     (assoc-in [:jarjestamissopimukset :voimassa] false)))
 
 
