@@ -821,9 +821,9 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
           $scope.paatosPDF.diaarinumero = diaari.diaarinumero;
 
           window.tulostaPaatos = {
-            paatosPDFUrl : '../../api/ttk/'+encodeURIComponent(diaari.diaarinumero)+'/'+type+'paatos?'+ $.param($scope.paatosPDF)
+            paatosPDFUrl : ophBaseUrl + '/api/ttk/'+encodeURIComponent(diaari.diaarinumero)+'/'+type+'paatos?'+ $.param($scope.paatosPDF)
           };
-          $scope.paatosIframeSrc = "../pdf-viewer/pdf-viewer/viewer.html?nocache="+nocache;
+          $scope.paatosIframeSrc = ophBaseUrl + "/pdf-viewer/pdf-viewer/viewer.html?nocache="+nocache;
         };
 
         $scope.lataaPDF = function() {
