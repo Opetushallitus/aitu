@@ -62,7 +62,9 @@ angular.module('koulutustoimijat', ['ngRoute'])
       }
 
       function haeKoulutustoimijat() {
-        $scope.kaikkiKoulutustoimijat = KoulutustoimijaHakuResource.query({tunnus: $scope.search.ala && $scope.search.ala.tunnus});
+        $scope.kaikkiKoulutustoimijat = 
+        	KoulutustoimijaHakuResource.query({tunnus: $scope.search.ala && $scope.search.ala.tunnus,
+        									   sopimuksia: $scope.search.sopimuksia});
       }
     }
   ])

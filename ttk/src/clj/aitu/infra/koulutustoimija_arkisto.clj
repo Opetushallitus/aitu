@@ -107,11 +107,14 @@
                                                                                                            (or {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}
                                                                                                                {:osaamisala.osaamisalatunnus (:tunnus ehdot)}
                                                                                                                {:tutkinnonosa.osatunnus (:tunnus ehdot)}
-                                                                                                               {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}))))))
+                                                                                                               {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)})
+                                                                                                           ;)))))
+                                                                                                           (if (= (:sopimuksia ehdot) "kylla") (= :jarjestamissopimus.voimassa true) true))))))
                              (not (blank? (:nimi ehdot))) (sql/where (or {:nimi_fi [ilike nimi]}
                                                                          {:nimi_sv [ilike nimi]}))
                              (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
-                             (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0)))
+                             (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
+                              )
                            (sql/order :nimi_fi :ASC)
                            sql/exec)]
     (if (:avaimet ehdot)
