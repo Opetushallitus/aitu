@@ -41,19 +41,7 @@
   (is (= (set (map :ytunnus (arkisto/hae-ehdoilla {:nimi "bar"})))
          #{"KT1" "KT2"})))
 
-(deftest ^:integraatio hae-ehdoilla-sopimuksia
-  (lisaa-koulutus-ja-opintoala!)
-  (let [kt (lisaa-koulutustoimija! {:ytunnus "KT1"
-                                    :nimi_fi "KT"})
-        ol (lisaa-oppilaitos! {:koulutustoimija "KT1"})
-        tv (lisaa-tutkinto-ja-versio! "111111")
-        js (lisaa-jarjestamissopimus! kt ol)]
-    (lisaa-tutkinto-sopimukselle! js tv)
-    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:sopimuksia "kylla"
-                                                :nimi "KT"}))
-           ["KT1"]))))
-
-(deftest ^:integraatio hae-ehdoilla-ei-sopimuksia
+(deftest ^:integraatio hae-ehdoillasopimuksia
   (lisaa-koulutustoimija! {:ytunnus "KT2"
                            :nimi_fi "KT"})
   (lisaa-koulutus-ja-opintoala!)
@@ -66,7 +54,10 @@
     (lisaa-tutkinto-sopimukselle! js tv)
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:sopimuksia "ei"
                                                 :nimi "KT"}))
-           ["KT2"]))))
+           ["KT2"]))
+    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:sopimuksia "kylla"
+                                                :nimi "KT"}))
+          ["KT1"]))))
 
 (deftest ^:integraatio hae-ehdoilla-tutkinto
   (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
