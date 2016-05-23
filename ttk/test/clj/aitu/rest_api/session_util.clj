@@ -8,6 +8,8 @@
     [cheshire.core :as cheshire]
     [oph.korma.korma-auth :as ka]
     [oph.korma.korma-auth :as auth]
+    [korma.db :as db]
+    [infra.test.data :as testdata]    
     [oph.common.infra.i18n :as i18n]
     [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
     [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
@@ -58,3 +60,18 @@
 
 (defn body-json [response]
   (cheshire/parse-string (slurp (:body response)) true))
+
+
+(defn run-with-db 
+  ([dataf testf]
+    (run-with-db dataf testf default-usermap))
+  ([dataf testf usermap]
+    (try
+      (with-auth-user
+        #(db/transaction
+           (dataf)) usermap)
+      (testf)
+      (finally
+        (with-auth-user
+          #(db/transaction
+             (testdata/tyhjenna-testidata! (:oid usermap))))))))

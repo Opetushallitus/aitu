@@ -59,41 +59,31 @@
                                                 :nimi "KT"}))
           ["KT1"]))))
 
+(defn kaksi-sopimusta-testidata! []
+  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
+                                {:opintoalakoodi "OA1"})
+  (lisaa-tutkinto! {:opintoala "OA1"
+                    :tutkintotunnus "T1"})
+  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
+        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"})
+        sop1 (lisaa-jarjestamissopimus! kt1 o1)
+        tv1 (lisaa-tutkintoversio! {:tutkintotunnus "T1"})
+        _ (lisaa-tutkinto-sopimukselle! sop1 (:tutkintoversio_id tv1))
+
+        kt2 (lisaa-koulutustoimija! {:ytunnus "KT2" :nimi_fi "Testiopisto" })
+        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
+        sop2 (lisaa-jarjestamissopimus! kt2 o2)
+        _ (lisaa-tutkinto-sopimukselle! sop2 -20000)]))
+  
 (deftest ^:integraatio hae-ehdoilla-tutkinto
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
-                                {:opintoalakoodi "OA1"})
-  (lisaa-tutkinto! {:opintoala "OA1"
-                    :tutkintotunnus "T1"})
-  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
-        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"})
-        sop1 (lisaa-jarjestamissopimus! kt1 o1)
-        tv1 (lisaa-tutkintoversio! {:tutkintotunnus "T1"})
-        _ (lisaa-tutkinto-sopimukselle! sop1 (:tutkintoversio_id tv1))
+  (kaksi-sopimusta-testidata!)
 
-        kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
-        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
-        sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        _ (lisaa-tutkinto-sopimukselle! sop2 -20000)]
+  (testing "tutkintotunnuksella haku"
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1"}))
-           ["KT1"]))))
-
-(deftest ^:integraatio hae-ehdoilla-opintoala
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
-                                {:opintoalakoodi "OA1"})
-  (lisaa-tutkinto! {:opintoala "OA1"
-                    :tutkintotunnus "T1"})
-  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
-        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"})
-        sop1 (lisaa-jarjestamissopimus! kt1 o1)
-        tv1 (lisaa-tutkintoversio! {:tutkintotunnus "T1"})
-        _ (lisaa-tutkinto-sopimukselle! sop1 (:tutkintoversio_id tv1))
-
-        kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
-        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
-        sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        _ (lisaa-tutkinto-sopimukselle! sop2 -20000)]
+           ["KT1"])))
+  (testing "opintoalan tunnuksella haku"
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "OA1"}))
-           ["KT1"]))))
+           ["KT1"]))) )
 
 (deftest ^:integraatio hae-termilla-test
   (let [termi "Koulutustoimijan nimi"

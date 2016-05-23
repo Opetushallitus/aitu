@@ -54,7 +54,5 @@
     :summary "Hakee kaikki koulutustoimijat joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
     :return [KoulutustoimijaLista]
     :kayttooikeus :yleinen-rest-api
-    (println "requ " (:params req))
-;    (cachable-response req (arkisto/hae-ehdoilla {:tunnus nil}))))
     (cachable-response req (arkisto/hae-ehdoilla {:tunnus (:tunnus (:params req))
                                                   :sopimuksia (:sopimuksia (:params req))})))) ; TODO: default
