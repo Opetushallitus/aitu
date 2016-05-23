@@ -51,7 +51,7 @@ angular.module('koulutustoimijat', ['ngRoute'])
       $scope.koulutustoimijat = [];
       $scope.search = {nimi: "", ala: {tunnus: ""}, sopimuksia: "kylla"};
       $scope.$watch('search.nimi', suodataKoulutustoimijat);
-      $scope.$watch('search.sopimuksia', suodataKoulutustoimijat);
+      $scope.$watch('search.sopimuksia', haeKoulutustoimijat);
       $scope.$watch('search.ala', haeKoulutustoimijat);
       $scope.$watchCollection('kaikkiKoulutustoimijat', suodataKoulutustoimijat);
 
