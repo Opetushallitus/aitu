@@ -2,22 +2,24 @@
 *{{toimikunta.nimi_fi}}*
 
 
-	Opetushallitus on päättänyt ammatillisesta aikuiskoulutuksesta annetun lain (631/1998) 7 §:n ja ammatillisesta aikuiskoulutuksesta annetun asetuksen (812/1998) 2 §:n nojalla asettaa tutkintotoimikunnan seuraavasti:
+	Utbildningsstyrelsen har med stöd av 7 § i lagen (631/1998) och 2 § i förordningen (812/1998) om yrkesinriktad vuxenutbildning beslutat att tillsätta en examenskommission enligt följande:
 
-*Toimiala (sv)*{{#toimikunta.toimiala}}	{{.}}
+*Bransch*{{#toimikunta.toimiala}}	{{.}}
 {{/toimikunta.toimiala}}
 
-*Toimialue (sv)*	Valtakunnallinen (sv)
+	Till examenskommissionens verksamhetsområde hör dessutom eventuellt, övriga examina och kompetensområden för examen som motsvarar eller närmast motsvarar de examina och kompetensområden för examen som är nämnda i verksamhetsområdet. Dessa examina och kompetensområden finns inte i den i kraft varande förordningen om examensstrukturen, utgiven av undervisnings. och kulturministeriet, men de kan avläggas inom ramen för en reglerad eller bestämd övergångsperiod.
 
-*Kieli (sv)*	{{toimikunta.kieli}}
+*Verksamhetsområde*	Riksomfattande
 
-*Toimikausi (sv)*	{{toimikunta.alkupvm}} - {{toimikunta.loppupvm}}
+*Språk*	{{toimikunta.kieli}}
 
-*Toimikunnan numero (sv)*	{{toimikunta.tilikoodi}}
+*Mandatperiod*	{{toimikunta.alkupvm}} - {{toimikunta.loppupvm}}
 
-*Kokoonpano (sv)*
+*Kommissionens nummer*	{{toimikunta.tilikoodi}}
 
-*Jäsenet (sv)*{{#toimikunta.jasen}}	_{{edustus}}_
+*Sammansättning*	Personerna i examenskommissionerna är utnämnda enligt förslagen man fått av de organisationer som finns uppräknade i listan För kännedom.
+
+*Medlemmar*{{#toimikunta.jasen}}	_{{edustus}}_
 
 {{#jasen}}
 	*{{nimi}}*
@@ -43,8 +45,8 @@
 
 
 
-JAKELU (sv){{#jakelu}}	{{.}}
+SÄNDLISTA{{#jakelu}}	{{.}}
 {{/jakelu}}
 
-TIEDOKSI (sv){{#tiedoksi}}	{{.}}
+FÖR KÄNNEDOM{{#tiedoksi}}	{{.}}
 {{/tiedoksi}}

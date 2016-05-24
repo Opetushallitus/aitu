@@ -71,7 +71,13 @@
                          {:edustus (case kieli :fi "Muut toimikuntaan kuuluvat" :sv "Muut toimikuntaan kuuluvat (sv)")
                           :jasen (mapcat edustus->jasenet ["asiantuntija" "muu"])}])
         toimiala (for [tutkinto (:nayttotutkinto toimikunta)]
-                   (lokalisoi tutkinto :nimi kieli))]
+                   (lokalisoi tutkinto :nimi kieli))
+        jakelu (concat (for [{:keys [sukunimi etunimi]} (sort-by (juxt :sukunimi :etunimi) (:jasenyys toimikunta))]
+                         (str etunimi \space sukunimi))
+                       (:jakelu data))
+        tiedoksi (concat (sort (for [jasen (:jasenyys toimikunta)]
+                                 (lokalisoi jasen :jarjesto_nimi kieli)))
+                         (:tiedoksi data))]
     (luo-paatos kieli
                 {:teksti "PÄÄTÖS"
                  :paivays (:paivays data)
@@ -79,7 +85,9 @@
                 :asettamispaatos
                 (assoc data :toimikunta (assoc toimikunta :jasen jasenet
                                                           :kieli (muotoile-kieli kieli (:kielisyys toimikunta))
-                                                          :toimiala toimiala)))))
+                                                          :toimiala toimiala)
+                            :jakelu jakelu
+                            :tiedoksi tiedoksi))))
 
 (defn luo-taydennyspaatos [kieli diaarinumero data]
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
