@@ -48,8 +48,9 @@
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (arkisto/hae oppilaitoskoodi)))
 
-  (GET "/haku/ala" [tunnus :as req]
+  (GET "/haku/ala" [tunnus sopimuksia :as req]
     :summary "Hakee kaikki oppilaitokset joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
     :return [OppilaitosLista]
     :kayttooikeus :yleinen-rest-api
-    (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus}))))
+    (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus
+                                                  :sopimuksia sopimuksia}))))

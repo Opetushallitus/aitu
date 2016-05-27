@@ -132,7 +132,8 @@
                                                                                                         (or {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}
                                                                                                             {:osaamisala.osaamisalatunnus (:tunnus ehdot)}
                                                                                                             {:tutkinnonosa.osatunnus (:tunnus ehdot)}
-                                                                                                            {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}))))))
+                                                                                                            {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)})
+                                                                                                        {:jarjestamissopimus.voimassa true})))))
                           (not (blank? (:nimi ehdot))) (sql/where {:nimi [ilike nimi]})
                           (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
                           (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0)))
