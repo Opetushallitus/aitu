@@ -33,11 +33,13 @@
                                                                                          :tunnus ""}))
              ]
         (is (= '() (body-json (:response ei-tuloksia))))
-        (is (= '({:nimi_fi "Testikoulutustoimijan nimi", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1}) (body-json (:response tuloksia))))
+        (is (= '({:nimi_fi "bar bar", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1}
+                 {:nimi_fi "Testiopisto KT4", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT4", :sopimusten_maara 0}
+                  ) (body-json (:response tuloksia))))
         (println (body-json (:response tutkinto-ei-sopimuksia)))
-        (is (= 211 (count (body-json (:response kaikki)))))
-        (is (= '({:nimi_fi "Testikoulutustoimijan nimi", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1} 
-                  {:nimi_fi "Testiopisto", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT2", :sopimusten_maara 1})
+        (is (= 3 (count (body-json (:response kaikki)))))
+        (is (= '({:nimi_fi "bar bar", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1} 
+                  {:nimi_fi "Testiopisto BAR", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT2", :sopimusten_maara 1})
               (body-json (:response kaikki-voimassaolevat))))
          ))))
   

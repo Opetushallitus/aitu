@@ -78,21 +78,15 @@
   "Hakee kaikki hakuehtoja vastaavat koulutustoimijat. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
   [ehdot]
   
-  ; TODO: kysely pitäisi kirjoittaa inner joiniksi siten että koulutustoimijalla on aina oltava joku sopimus, vaikka se ei olisikaan enää voimassa.
-  ; voimassaolevien lukumäärä lasketaan, mutta sen voi tehdä case + sum funktiolla
-  
-  
   (let [nimi (str "%" (:nimi ehdot) "%")
         koulutustoimijat (->
                            (sql/select* koulutustoimija)
                            (sql/join :inner :jarjestamissopimus ; inner -> ei koulutustoimijoita, joilla ei ole koskaan ollut sopimusta.
                                      (and (= :koulutustoimija.ytunnus :jarjestamissopimus.koulutustoimija)
-;                                          (= :jarjestamissopimus.voimassa true)
                                           (= :jarjestamissopimus.poistettu false)))
                            (sql/fields :ytunnus :nimi_fi :nimi_sv)
                            (sql/aggregate (sum (sql/raw "case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END")) :sopimusten_maara)
-                           (sql/aggregate (sum (sql/raw "case WHEN jarjestamissopimus.voimassa=false THEN 1 ELSE 0 END")) :eivoimassalkm)
-;                           (sql/aggregate (count :jarjestamissopimus.jarjestamissopimusid) :sopimusten_maara)
+;                           (sql/aggregate (sum (sql/raw "case WHEN jarjestamissopimus.voimassa=false THEN 1 ELSE 0 END")) :eivoimassalkm)
                            (sql/group :ytunnus :nimi_fi :nimi_sv)
                            (cond->
                              (not (blank? (:tunnus ehdot))) (sql/where (sql/sqlfn exists (sql/subselect jarjestamissopimus
@@ -121,12 +115,10 @@
                                                                                                            )))
                              (not (blank? (:nimi ehdot))) (sql/where (or {:nimi_fi [ilike nimi]}
                                                                          {:nimi_sv [ilike nimi]}))
-                             ; TODO: tämä ehto vain jos ei ole rajattu tunnuksella?
+                             ; TODO: tämä ehto vain jos ei ole rajattu tunnuksella? 
+                             ; nyt toimijaa ei tule hakuun jos haetaan T1 + ei sopimuksia ja toimijalla on vanha T1-sopimus, mutta voimassaoleva T2-sopimus? Ei liene hyvä asia.
                              (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
                              (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
-                             ;         having sum(case when voimassa then 1 else 0 end) > 0;
-                           ;  (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
-                           ;  (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
                               )
                            (sql/order :nimi_fi :ASC)
                            sql/exec)]
