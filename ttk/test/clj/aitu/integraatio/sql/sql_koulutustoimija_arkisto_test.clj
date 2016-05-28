@@ -16,8 +16,10 @@
   (:require [clojure.test :refer [deftest testing is use-fixtures]]
             [korma.core :as sql]
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
+            [clj-time.core :as time]
             [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
+            [aitu.test-timeutil :refer [menneisyydessa]]
             [aitu.integraatio.sql.test-data-util :refer :all]
             [aitu.integraatio.sql.jarjestamissopimus-arkisto-test :as jarjestamissopimus-arkisto-test]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]))
@@ -73,16 +75,25 @@
         kt2 (lisaa-koulutustoimija! {:ytunnus "KT2" :nimi_fi "Testiopisto" })
         o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
         sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        _ (lisaa-tutkinto-sopimukselle! sop2 -20000)]))
+        _ (lisaa-tutkinto-sopimukselle! sop2 -20000)
+        
+        kt3 (lisaa-koulutustoimija! {:ytunnus "KT3" :nimi_fi "Testiopisto KT3" })
+              
+        kt4 (lisaa-koulutustoimija! {:ytunnus "KT4" :nimi_fi "Testiopisto KT4" })
+        o4 (lisaa-oppilaitos! {:koulutustoimija "KT4"})
+        sop4 (lisaa-jarjestamissopimus! kt4 o4 {:voimassa false :loppupvm menneisyydessa}) ; TODO: nämä overridataan koska sopimus_ja_tutkinto voimassaolo määrää asian. Sinänsä siis oikein kyllä.
+        _ (lisaa-tutkinto-sopimukselle! sop4 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa) ;TODO: Tähän voimassaolo menneisyydessä
+        
+        ]))
   
 (deftest ^:integraatio hae-ehdoilla-tutkinto
   (kaksi-sopimusta-testidata!)
 
   (testing "tutkintotunnuksella haku"
-    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1"}))
+    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "kylla"}))
            ["KT1"])))
   (testing "opintoalan tunnuksella haku"
-    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "OA1"}))
+    (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "OA1" :sopimuksia "kylla"}))
            ["KT1"]))) )
 
 (deftest ^:integraatio hae-termilla-test

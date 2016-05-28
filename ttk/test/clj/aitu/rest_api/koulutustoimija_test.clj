@@ -21,6 +21,10 @@
              tuloksia (-> (peridot/session crout)
                         (mock-request "/api/koulutustoimija/haku/ala" :get {:sopimuksia "kaikki"
                                                                             :tunnus "T1"}))
+             tutkinto-ei-sopimuksia (-> (peridot/session crout)
+                                      (mock-request "/api/koulutustoimija/haku/ala" :get {:sopimuksia "ei"
+                                                                                          :tunnus "T1"}))
+
              kaikki (-> (peridot/session crout)
                       (mock-request "/api/koulutustoimija/haku/ala" :get {:sopimuksia "kaikki"
                                                                           :tunnus ""}))
@@ -30,7 +34,8 @@
              ]
         (is (= '() (body-json (:response ei-tuloksia))))
         (is (= '({:nimi_fi "Testikoulutustoimijan nimi", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1}) (body-json (:response tuloksia))))
-        (is (= 209 (count (body-json (:response kaikki)))))
+        (println (body-json (:response tutkinto-ei-sopimuksia)))
+        (is (= 211 (count (body-json (:response kaikki)))))
         (is (= '({:nimi_fi "Testikoulutustoimijan nimi", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1} 
                   {:nimi_fi "Testiopisto", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT2", :sopimusten_maara 1})
               (body-json (:response kaikki-voimassaolevat))))

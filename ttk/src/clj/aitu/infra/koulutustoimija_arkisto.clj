@@ -77,15 +77,22 @@
 (defn hae-ehdoilla
   "Hakee kaikki hakuehtoja vastaavat koulutustoimijat. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
   [ehdot]
+  
+  ; TODO: kysely pitäisi kirjoittaa inner joiniksi siten että koulutustoimijalla on aina oltava joku sopimus, vaikka se ei olisikaan enää voimassa.
+  ; voimassaolevien lukumäärä lasketaan, mutta sen voi tehdä case + sum funktiolla
+  
+  
   (let [nimi (str "%" (:nimi ehdot) "%")
         koulutustoimijat (->
                            (sql/select* koulutustoimija)
-                           (sql/join :left :jarjestamissopimus
+                           (sql/join :inner :jarjestamissopimus ; inner -> ei koulutustoimijoita, joilla ei ole koskaan ollut sopimusta.
                                      (and (= :koulutustoimija.ytunnus :jarjestamissopimus.koulutustoimija)
-                                          (= :jarjestamissopimus.voimassa true)
+;                                          (= :jarjestamissopimus.voimassa true)
                                           (= :jarjestamissopimus.poistettu false)))
                            (sql/fields :ytunnus :nimi_fi :nimi_sv)
-                           (sql/aggregate (count :jarjestamissopimus.jarjestamissopimusid) :sopimusten_maara)
+                           (sql/aggregate (sum (sql/raw "case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END")) :sopimusten_maara)
+                           (sql/aggregate (sum (sql/raw "case WHEN jarjestamissopimus.voimassa=false THEN 1 ELSE 0 END")) :eivoimassalkm)
+;                           (sql/aggregate (count :jarjestamissopimus.jarjestamissopimusid) :sopimusten_maara)
                            (sql/group :ytunnus :nimi_fi :nimi_sv)
                            (cond->
                              (not (blank? (:tunnus ehdot))) (sql/where (sql/sqlfn exists (sql/subselect jarjestamissopimus
@@ -107,11 +114,14 @@
                                                                                                            (or {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}
                                                                                                                {:osaamisala.osaamisalatunnus (:tunnus ehdot)}
                                                                                                                {:tutkinnonosa.osatunnus (:tunnus ehdot)}
-                                                                                                               {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)})
-                                                                                                           ;)))))
-                                                                                                           (if (= (:sopimuksia ehdot) "kylla") (= :jarjestamissopimus.voimassa true) true))))))
+                                                                                                               {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)})))
+                                                                                           (sql/where {:jarjestamissopimus.voimassa (get {"kaikki" :jarjestamissopimus.voimassa
+                                                                                                                                          "ei" false
+                                                                                                                                          "kylla" true} (:sopimuksia ehdot) :jarjestamissopimuksia.voimassa)})
+                                                                                                           )))
                              (not (blank? (:nimi ehdot))) (sql/where (or {:nimi_fi [ilike nimi]}
                                                                          {:nimi_sv [ilike nimi]}))
+                             ; TODO: tämä ehto vain jos ei ole rajattu tunnuksella?
                              (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
                              (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
                               )
