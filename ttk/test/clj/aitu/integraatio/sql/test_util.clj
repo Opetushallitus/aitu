@@ -52,6 +52,16 @@
           asetukset (lue-asetukset dev-asetukset)]
       (alusta-korma! asetukset))))
 
+(defn with-db
+  [f]
+  (let [pool (alusta-korma!)]
+    ; avataan transaktio joka on voimassa koko kutsun (f) ajan
+    (db/transaction
+      (try
+        (f)
+        (finally
+          (-> pool :pool :datasource .close))))))
+
 (defn tietokanta-fixture-oid
   "Annettu käyttäjätunnus sidotaan Kormalle testifunktion ajaksi."
   [f oid uid]
