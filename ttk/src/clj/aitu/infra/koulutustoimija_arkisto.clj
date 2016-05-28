@@ -122,8 +122,11 @@
                              (not (blank? (:nimi ehdot))) (sql/where (or {:nimi_fi [ilike nimi]}
                                                                          {:nimi_sv [ilike nimi]}))
                              ; TODO: tämä ehto vain jos ei ole rajattu tunnuksella?
-                             (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
-                             (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
+                             (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
+                             (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
+                             ;         having sum(case when voimassa then 1 else 0 end) > 0;
+                           ;  (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
+                           ;  (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
                               )
                            (sql/order :nimi_fi :ASC)
                            sql/exec)]
