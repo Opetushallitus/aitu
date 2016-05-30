@@ -47,23 +47,22 @@
           (is (subset? #{"aaAnkkalinnan kaupunki" "aaHanhivaaran kaupunki"}
                        (set (nakyvat-koulutustoimijat)))))
 
-        (testing "pitäisi näyttaa lista koulutustoimijoista joilla ei ole järjestämissopimusta"
+        (testing "pitäisi näyttaa lista koulutustoimijoista, joilla ei ole järjestämissopimusta, mutta on ollut aikaisemmin."
           ;; Kun
           (avaa koulutustoimijalista)
           (valitse-ei-sopimuksia)
           ;; Niin
-          (is (subset? #{"aaRuikonperän koulutuskuntayhtymä"}
-                       (set (nakyvat-koulutustoimijat)))))
+          (is (empty? (set (nakyvat-koulutustoimijat)))))
 
         (testing "pitäisi näyttaa lista kaikista koulutustoimijoista"
           ;; Kun
           (avaa koulutustoimijalista)
           (valitse-nayta-kaikki)
           ;; Niin
-          (is (subset? #{"aaRuikonperän koulutuskuntayhtymä" "aaAnkkalinnan kaupunki" "aaHanhivaaran kaupunki"}
+          (is (subset? #{"aaAnkkalinnan kaupunki" "aaHanhivaaran kaupunki"}
                        (set (nakyvat-koulutustoimijat)))))
 
-        (testing "Pitäisi näyttää lista koulutustoimijoista joilla on tietyn opintoalan tutkinto vastuulla"
+        (testing "Pitäisi näyttää lista koulutustoimijoista, joilla on tietyn opintoalan tutkinto vastuulla"
           ;; Kun
           (avaa koulutustoimijalista)
           (valitse-select2-optio "search.ala" "tunnus" "Sähköala")
