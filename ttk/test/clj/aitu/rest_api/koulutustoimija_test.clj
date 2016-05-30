@@ -3,7 +3,7 @@
     [clojure.test :refer :all]
     [peridot.core :as peridot]
     [oph.korma.korma-auth :as auth]
-    [aitu.integraatio.sql.sql-koulutustoimija-arkisto-test :refer [kaksi-sopimusta-testidata!]]
+    [aitu.integraatio.sql.sql-koulutustoimija-arkisto-test :refer [kt-testidata!]]
     [aitu.integraatio.sql.test-data-util :refer :all]
     [aitu.rest-api.session-util :refer :all]))
 
@@ -14,7 +14,7 @@
 
 (deftest ^:integraatio koulutustoimija-haku
   (let [crout (init-peridot!)]
-    (run-with-db kaksi-sopimusta-testidata!
+    (run-with-db kt-testidata!
       #(let [ei-tuloksia (-> (peridot/session crout)
                            (mock-request "/api/koulutustoimija/haku/ala" :get {:sopimuksia "kylla"
                                                                                :tunnus "324601"}))

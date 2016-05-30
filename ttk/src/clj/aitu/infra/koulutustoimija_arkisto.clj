@@ -111,21 +111,7 @@
                                                                                                                {:osaamisala.osaamisalatunnus (:tunnus ehdot)}
                                                                                                                {:tutkinnonosa.osatunnus (:tunnus ehdot)}
                                                                                                                {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)})))
-                                                                                           ;(#(if (= (:sopimuksia ehdot) "ei")
-                                                                                            ;   (sql/where % 
-                                                                                            ;    (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
-                                                                                            ;      (> (sql/raw "current_date") :sopimus_ja_tutkinto.loppupvm)))
-                                                                                            ;   %))
-
-;                                                                                               (sql/where  
-;                                                                                                (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
- ;                                                                                                 (> (sql/raw "current_date") :sopimus_ja_tutkinto.loppupvm)))
-
-; (sql/where 
-;   (if (= (:sopimuksia ehdot) "kylla")
-;     (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
-;          (<= (sql/raw "current_date") :sopimus_ja_tutkinto.loppupvm))
-;     true)) ; alkupvm <= current date <= loppupvm
+     
                                                                                                (cond->   
                                                                                                  sop-kylla
                                                                                                    (sql/where (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
@@ -133,18 +119,10 @@
                                                                                                   sop-ei
                                                                                                      (sql/where (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
                                                                                                                   (> (sql/raw "current_date") :sopimus_ja_tutkinto.loppupvm))) ; alkupvm <= current_date && current date > loppupvm
-                                                                                                   )
-                                                                                                 
-                                                                                           
-;                                                                                           (sql/where {:jarjestamissopimus.voimassa (get {"kaikki" :jarjestamissopimus.voimassa
-;                                                                                                                                          "ei" false
-;                                                                                                                                          "kylla" true} (:sopimuksia ehdot) :jarjestamissopimuksia.voimassa)})
-                                                                                           
-                                                                                                           )))
+                                                                                                   ))))
                              (not (blank? (:nimi ehdot))) (sql/where (or {:nimi_fi [ilike nimi]}
                                                                          {:nimi_sv [ilike nimi]}))
-                             ; TODO: tämä ehto vain jos ei ole rajattu tunnuksella? 
-                             ; nyt toimijaa ei tule hakuun jos haetaan T1 + ei sopimuksia ja toimijalla on vanha T1-sopimus, mutta voimassaoleva T2-sopimus? Ei liene hyvä asia.
+                             ; tämä ehto vain jos ei ole rajattu tunnuksella
                              (and (blank? (:tunnus ehdot)) sop-kylla) (sql/having (> (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
                              (and (blank? (:tunnus ehdot)) sop-ei) (sql/having (= (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
                               )

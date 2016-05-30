@@ -52,7 +52,9 @@
                                                 :nimi "KT"}))
           ["KT1"]))))
 
-(defn kaksi-sopimusta-testidata! []
+(defn kt-testidata!
+  "Toiminnallisen määrittelyn mukainen testidata. Kts. https://confluence.csc.fi/display/OPHPALV/Koulutustoimijahaku"
+  []
   (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA1"}
                                 {:opintoalakoodi "OA1"})
   (lisaa-tutkinto! {:opintoala "OA1"
@@ -84,7 +86,7 @@
         ]))
   
 (deftest ^:integraatio hae-ehdoilla-tutkinto
-  (kaksi-sopimusta-testidata!)
+  (kt-testidata!)
 
   (testing "tutkintotunnuksella haku"
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "kylla"}))
@@ -97,7 +99,7 @@
 
 (deftest ^:integraatio hae-nimen-avulla
   (testing "nimihaku toimii ja on case insensitive"
-    (kaksi-sopimusta-testidata!)
+    (kt-testidata!)
     (is (= (set (map :ytunnus (arkisto/hae-ehdoilla {:nimi "bar"})))
            #{"KT1" "KT2"}))))
 

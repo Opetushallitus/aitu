@@ -52,6 +52,7 @@
           asetukset (lue-asetukset dev-asetukset)]
       (alusta-korma! asetukset))))
 
+; (user/with-testikayttaja (aitu.integraatio.sql.test-util/with-db #(println (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "ei"}))))
 (defn with-db
   [f]
   (let [pool (alusta-korma!)]
