@@ -423,6 +423,28 @@
   (sql/delete nayttotutkinto
     (sql/where {:tutkintotunnus tutkintotunnus})))
 
+(defn hae-perusteen-tutkinnonosat [tutkintoversio-id]
+  (sql/select tutkinnonosa
+    (sql/where {:tutkintoversio tutkintoversio-id})))
+
+(defn ^:integration-api paivita-osaamisalat!
+  "Päivittää tutkinnon perusteen osaamisalat"
+  [peruste]
+  (let [tutkintoversio-id (:tutkintoversio_id (hae-peruste (:diaarinumero peruste)))
+        osatunnus->id (into {} (for [osa (hae-perusteen-tutkinnonosat tutkintoversio-id)]
+                                 [(:osatunnus osa) (:tutkinnonosa_id osa)]))]
+    (doseq [oala (:osaamisalat peruste)]
+      (paivita-osaamisala! osatunnus->id (assoc (select-keys oala [:nimi_fi :nimi_sv :osaamisalatunnus])
+                                                :tutkintoversio tutkintoversio-id)))))
+
+(defn ^:integration-api paivita-tutkinnonosat!
+  "Päivittää tutkinnon perusteen tutkinnonosat"
+  [peruste]
+  (let [tutkintoversio (hae-peruste (:diaarinumero peruste))]
+    (doseq [osa (:tutkinnonosat peruste)]
+      (sql-util/insert-or-update tutkinnonosa [:osatunnus :tutkintoversio] (assoc (select-keys osa [:osatunnus :nimi_fi :nimi_sv :jarjestysnumero])
+                                                                                  :tutkintoversio (:tutkintoversio_id tutkintoversio))))))
+
 (defn hae-viimeisin-eperusteet-paivitys []
   (:paivitetty (sql-util/select-unique-or-nil eperusteet-log
                  (sql/order :paivitetty :desc)
