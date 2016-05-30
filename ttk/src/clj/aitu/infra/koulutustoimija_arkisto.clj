@@ -97,10 +97,8 @@
                                                                                                      (= :tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus))
                                                                                            (sql/join :left opintoala
                                                                                                      (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
-                                                                                           (sql/join :left tutkinto-ja-tutkinnonosa
-                                                                                                     (= :tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio))
                                                                                            (sql/join :left tutkinnonosa
-                                                                                                     (= :tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id))
+                                                                                                     (= :tutkintoversio.tutkintoversio_id :tutkinnonosa.tutkintoversio))
                                                                                            (sql/join :left osaamisala
                                                                                                      (= :tutkintoversio.tutkintoversio_id :osaamisala.tutkintoversio))
                                                                                            (sql/where (and {:jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus}

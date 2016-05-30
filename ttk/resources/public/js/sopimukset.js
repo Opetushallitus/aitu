@@ -142,7 +142,7 @@
             otsikko = i18n.jarjestamissopimus['koko-tutkinto'];
           } else {
             if (tutkinnonOsia > 0) {
-              osat.push(i18n.jarjestamissopimus['tutkinnon-osia'] + ': ' + tutkinnonOsia + '/' + sopimusJaTutkinto.tutkintoversio.tutkinto_ja_tutkinnonosa.length);
+              osat.push(i18n.jarjestamissopimus['tutkinnon-osia'] + ': ' + tutkinnonOsia + '/' + sopimusJaTutkinto.tutkintoversio.tutkinnonosa.length);
             }
             if (osaamisAloja > 0) {
               osat.push(i18n.jarjestamissopimus['osaamisaloja'] + ': ' + osaamisAloja + '/' + sopimusJaTutkinto.tutkintoversio.osaamisala.length);

@@ -50,21 +50,16 @@
                                                          (when tutkintotaso
                                                            {:tutkintotaso tutkintotaso})))
       {:status 200}))
-  (c/POST "/tutkinnonosa" [tutkintoversio osatunnus versio nimi kuvaus jarjestysnumero]
+  (c/POST "/tutkinnonosa" [tutkintoversio osatunnus nimi jarjestysnumero]
     (db/transaction
       (tutkinto-arkisto/lisaa-tutkinnon-osa! tutkintoversio jarjestysnumero {:osatunnus osatunnus
-                                                                             :nimi_fi nimi
-                                                                             :versio versio
-                                                                             :kuvaus kuvaus}))
+                                                                             :nimi_fi nimi}))
     {:status 200})
-  (c/POST "/osaamisala" [tutkintoversio osaamisalatunnus versio nimi kuvaus voimassa_alkupvm]
+  (c/POST "/osaamisala" [tutkintoversio osaamisalatunnus nimi]
     (db/transaction
       (tutkinto-arkisto/lisaa-osaamisala! {:osaamisalatunnus osaamisalatunnus
                                            :tutkintoversio tutkintoversio
-                                           :nimi_fi nimi
-                                           :versio versio
-                                           :kuvaus kuvaus
-                                           :voimassa_alkupvm (parse-iso-date voimassa_alkupvm)}))
+                                           :nimi_fi nimi}))
     {:status 200})
   (c/DELETE "/tutkinnonosa/:osatunnus" [osatunnus]
     (db/transaction
