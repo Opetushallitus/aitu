@@ -35,11 +35,15 @@
         (is (= '() (body-json (:response ei-tuloksia))))
         (is (= '({:nimi_fi "bar bar", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1}
                  {:nimi_fi "Testiopisto KT4", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT4", :sopimusten_maara 0}
+                 {:nimi_fi "Testiopisto KT5", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT5", :sopimusten_maara 1}
                   ) (body-json (:response tuloksia))))
+        ; TODO: loppuun
         (println (body-json (:response tutkinto-ei-sopimuksia)))
-        (is (= 3 (count (body-json (:response kaikki)))))
+        (is (= 4 (count (body-json (:response kaikki)))))
         (is (= '({:nimi_fi "bar bar", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1} 
-                  {:nimi_fi "Testiopisto BAR", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT2", :sopimusten_maara 1})
+                  {:nimi_fi "Testiopisto BAR", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT2", :sopimusten_maara 1}
+                  {:nimi_fi "Testiopisto KT5", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT5", :sopimusten_maara 1}
+                  )              
               (body-json (:response kaikki-voimassaolevat))))
          ))))
   

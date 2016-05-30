@@ -72,8 +72,14 @@
               
         kt4 (lisaa-koulutustoimija! {:ytunnus "KT4" :nimi_fi "Testiopisto KT4" })
         o4 (lisaa-oppilaitos! {:koulutustoimija "KT4"})
-        sop4 (lisaa-jarjestamissopimus! kt4 o4 {:voimassa false :loppupvm menneisyydessa}) ; TODO: nämä overridataan koska sopimus_ja_tutkinto voimassaolo määrää asian. Sinänsä siis oikein kyllä.
-        _ (lisaa-tutkinto-sopimukselle! sop4 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa) ;TODO: Tähän voimassaolo menneisyydessä
+        sop4 (lisaa-jarjestamissopimus! kt4 o4 {:voimassa false :loppupvm menneisyydessa}) ;  nämä overridataan koska sopimus_ja_tutkinto voimassaolo määrää asian. Sinänsä siis oikein kyllä.
+        _ (lisaa-tutkinto-sopimukselle! sop4 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa)
+        
+        kt5 (lisaa-koulutustoimija! {:ytunnus "KT5" :nimi_fi "Testiopisto KT5" })
+        o5 (lisaa-oppilaitos! {:koulutustoimija "KT5"})
+        sop5 (lisaa-jarjestamissopimus! kt5 o5)
+        _ (lisaa-tutkinto-sopimukselle! sop5 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa)
+        _ (lisaa-tutkinto-sopimukselle! sop5 -20000) ; tutkintotunnus "327128"
         
         ]))
   
@@ -82,7 +88,9 @@
 
   (testing "tutkintotunnuksella haku"
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "kylla"}))
-           ["KT1"])))
+           ["KT1"]))
+    (is (= (set (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "327128" :sopimuksia "kylla"})))
+         #{"KT2" "KT5"})))
   (testing "opintoalan tunnuksella haku"
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "OA1" :sopimuksia "kylla"}))
            ["KT1"]))) )
