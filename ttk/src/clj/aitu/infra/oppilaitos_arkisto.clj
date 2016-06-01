@@ -102,14 +102,16 @@
   "Hakee kaikki ehtoja vastaavat oppilaitokset. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
   [ehdot]
   (let [nimi (str "%" (:nimi ehdot) "%")
+        sop-kylla (= (:sopimuksia ehdot) "kylla")
+        sop-ei (= (:sopimuksia ehdot) "ei")
+
         oppilaitokset (->
                         (sql/select* oppilaitos)
-                        (sql/join :left :jarjestamissopimus
-                                  (and (= :oppilaitos.oppilaitoskoodi :jarjestamissopimus.tutkintotilaisuuksista_vastaava_oppilaitos)
-                                       (= :jarjestamissopimus.voimassa true)))
+                        (sql/join :inner :jarjestamissopimus
+                                  (= :oppilaitos.oppilaitoskoodi :jarjestamissopimus.tutkintotilaisuuksista_vastaava_oppilaitos))
                         (sql/fields :oppilaitoskoodi :nimi :kieli :koulutustoimija :alue :muutettu_kayttaja :luotu_kayttaja :muutettuaika
                                     :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
-                        (sql/aggregate (count :jarjestamissopimus.jarjestamissopimusid) :sopimusten_maara)
+                        (sql/aggregate (sum (sql/raw "case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END")) :sopimusten_maara)
                         (sql/group :oppilaitoskoodi :nimi :kieli :koulutustoimija :alue :muutettu_kayttaja :luotu_kayttaja :muutettuaika
                                    :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
                         (cond->
@@ -133,10 +135,20 @@
                                                                                                             {:osaamisala.osaamisalatunnus (:tunnus ehdot)}
                                                                                                             {:tutkinnonosa.osatunnus (:tunnus ehdot)}
                                                                                                             {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)})
-                                                                                                        {:jarjestamissopimus.voimassa true})))))
+                                                                                                       ))
+                                                                                        (cond->   
+                                                                                          sop-kylla
+                                                                                            (sql/where (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
+                                                                                                         (<= (sql/raw "current_date") :sopimus_ja_tutkinto.loppupvm))) ; alkupvm <= current date <= loppupvm
+                                                                                          sop-ei
+                                                                                            (sql/where (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
+                                                                                                         (> (sql/raw "current_date") :sopimus_ja_tutkinto.loppupvm))) ; alkupvm <= current_date && current date > loppupvm
+                                                                                                   ))))
                           (not (blank? (:nimi ehdot))) (sql/where {:nimi [ilike nimi]})
-                          (= (:sopimuksia ehdot) "kylla") (sql/having (> (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0))
-                          (= (:sopimuksia ehdot) "ei") (sql/having (= (sql/sqlfn count :jarjestamissopimus.jarjestamissopimusid) 0)))
+                          ; tämä ehto vain jos ei ole rajattu tunnuksella
+                          (and (blank? (:tunnus ehdot)) sop-kylla) (sql/having (> (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
+                          (and (blank? (:tunnus ehdot)) sop-ei) (sql/having (= (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
+                          )
                         (sql/order :nimi :ASC)
                         sql/exec)]
     (if (:avaimet ehdot)

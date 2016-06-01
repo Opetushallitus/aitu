@@ -60,25 +60,25 @@
   (lisaa-tutkinto! {:opintoala "OA1"
                     :tutkintotunnus "T1"})
   (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1" :nimi_fi "bar bar"})
-        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"})
+        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1" :nimi "Oppilaitos o1 bar bar" :oppilaitoskoodi "OL1"})
         sop1 (lisaa-jarjestamissopimus! kt1 o1)
         tv1 (lisaa-tutkintoversio! {:tutkintotunnus "T1"})
         _ (lisaa-tutkinto-sopimukselle! sop1 (:tutkintoversio_id tv1))
 
         kt2 (lisaa-koulutustoimija! {:ytunnus "KT2" :nimi_fi "Testiopisto BAR" })
-        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"})
+        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2" :nimi "Oppilaitos o2 BAR" :oppilaitoskoodi "OL2"})
         sop2 (lisaa-jarjestamissopimus! kt2 o2)
         _ (lisaa-tutkinto-sopimukselle! sop2 -20000)
         
         kt3 (lisaa-koulutustoimija! {:ytunnus "KT3" :nimi_fi "Testiopisto KT3" })
               
         kt4 (lisaa-koulutustoimija! {:ytunnus "KT4" :nimi_fi "Testiopisto KT4" })
-        o4 (lisaa-oppilaitos! {:koulutustoimija "KT4"})
+        o4 (lisaa-oppilaitos! {:koulutustoimija "KT4" :nimi "Oppilaitos o4" :oppilaitoskoodi "OL4"})
         sop4 (lisaa-jarjestamissopimus! kt4 o4 {:voimassa false :loppupvm menneisyydessa}) ;  nämä overridataan koska sopimus_ja_tutkinto voimassaolo määrää asian. Sinänsä siis oikein kyllä.
         _ (lisaa-tutkinto-sopimukselle! sop4 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa)
         
         kt5 (lisaa-koulutustoimija! {:ytunnus "KT5" :nimi_fi "Testiopisto KT5" })
-        o5 (lisaa-oppilaitos! {:koulutustoimija "KT5"})
+        o5 (lisaa-oppilaitos! {:koulutustoimija "KT5" :nimi "Oppilaitos o2" :oppilaitoskoodi "OL5"})
         sop5 (lisaa-jarjestamissopimus! kt5 o5)
         _ (lisaa-tutkinto-sopimukselle! sop5 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa)
         _ (lisaa-tutkinto-sopimukselle! sop5 -20000) ; tutkintotunnus "327128"

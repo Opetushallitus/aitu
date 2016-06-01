@@ -18,6 +18,7 @@
             [korma.core :as sql]
             [aitu.infra.oppilaitos-arkisto :as arkisto]
             [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
+            [aitu.integraatio.sql.sql-koulutustoimija-arkisto-test :refer [kt-testidata!]]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [aitu.integraatio.sql.test-data-util :refer :all]
             [aitu.integraatio.sql.jarjestamissopimus-arkisto-test :as jarjestamissopimus-arkisto-test]))
@@ -36,16 +37,10 @@
   (sql/exec-raw (str "update tutkintotoimikunta set toimikausi_loppu='2000-12-01' where tkunta='TKUN'")))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
-  (lisaa-koulutustoimija! {:ytunnus "KT1"})
-  (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                      :oppilaitoskoodi "OL1"
-                      :nimi "foo bar baz"})
-  (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                      :oppilaitoskoodi "OL2"
-                      :nimi "FÅÅ BAR BAZ"})
-  (lisaa-oppilaitos! {:koulutustoimija "KT1"})
-  (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:nimi "bar"})))
-         #{"OL1" "OL2"})))
+  (kt-testidata!)
+  (testing "nimellä haku ei välitä isoista ja pienistä kirjaimista"
+    (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:nimi "bar"})))
+           #{"OL1" "OL2"}))))
 
 (deftest ^:integraatio hae-ehdoilla-sopimuksia
   (lisaa-koulutus-ja-opintoala!)
@@ -73,9 +68,8 @@
     (lisaa-oppilaitos! {:koulutustoimija "KT1"
                         :nimi "Oppilaitos1"
                         :oppilaitoskoodi "OL1"})
-    (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "ei"
-                                                        :nimi "Oppilaitos1"}))
-           ["OL1"]))))
+    (is (empty? (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "ei"
+                                                             :nimi "Oppilaitos1"}))))))
 
 (deftest ^:integraatio hae-ehdoilla-tutkinto
   (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
