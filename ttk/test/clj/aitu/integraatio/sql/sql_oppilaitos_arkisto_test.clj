@@ -43,53 +43,23 @@
            #{"OL1" "OL2"}))))
 
 (deftest ^:integraatio hae-ehdoilla-sopimuksia
-  (lisaa-koulutus-ja-opintoala!)
-  (let [kt (lisaa-koulutustoimija! {:ytunnus "KT1"})
-        ol (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                               :nimi "Oppilaitos1"
-                               :oppilaitoskoodi "OL1"})
-        tv (lisaa-tutkinto-ja-versio! "111111")
-        js (lisaa-jarjestamissopimus! kt ol)]
-    (lisaa-tutkinto-sopimukselle! js tv)
-    (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                        :nimi "Oppilaitos1"})
-    (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "kylla"
-                                                        :nimi "Oppilaitos1"}))
-           ["OL1"]))))
-
-(deftest ^:integraatio hae-ehdoilla-ei-sopimuksia
-  (lisaa-koulutus-ja-opintoala!)
-  (let [kt (lisaa-koulutustoimija! {:ytunnus "KT1"})
-        ol (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                               :nimi "Oppilaitos1"})
-        tv (lisaa-tutkinto-ja-versio! "111111")
-        js (lisaa-jarjestamissopimus! kt ol)]
-    (lisaa-tutkinto-sopimukselle! js tv)
-    (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                        :nimi "Oppilaitos1"
-                        :oppilaitoskoodi "OL1"})
-    (is (empty? (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "ei"
-                                                             :nimi "Oppilaitos1"}))))))
-
+  (kt-testidata!)
+  (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "kylla"
+                                                           :nimi "Oppilaitos"})))
+         #{"OL1" "OL2" "OL5"}))
+  (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "ei"
+                                                           :nimi "Oppilaitos"})))
+        #{"OL4"}))
+  (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "kaikki"
+                                                           :nimi "Oppilaitos"})))
+        #{"OL1" "OL2" "OL4" "OL5"})))
+ 
 (deftest ^:integraatio hae-ehdoilla-tutkinto
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
-                                {:opintoalakoodi "OA2"})
-  (lisaa-tutkinto! {:opintoala "OA2"
-                    :tutkintotunnus "T2"})
-  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
-        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                               :oppilaitoskoodi "OL1"})
-        sop1 (lisaa-jarjestamissopimus! kt1 o1)
-        _ (lisaa-tutkinto-sopimukselle! sop1 -10000)
-
-        kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
-        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"
-                               :oppilaitoskoodi "OL2"})
-        sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "T2"})
-        _ (lisaa-tutkinto-sopimukselle! sop2 (:tutkintoversio_id tv2))]
-    (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "324601"}))
-           ["OL1"]))))
+  (kt-testidata!)
+  (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "kylla"}))
+         ["OL1"]))
+  (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "327128" :sopimuksia "kylla"})))
+         #{"OL2" "OL5"})))
 
 (deftest ^:integraatio hae-ehdoilla-opintoala
   (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
