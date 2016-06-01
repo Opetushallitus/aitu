@@ -82,7 +82,7 @@
           (avaa oppilaitoslista)
           (valitse-nayta-kaikki)
           ;; Niin
-          (is (subset? #{"aaRuikonperän multakurkkuopisto" "aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"}
+          (is (subset? #{"aaAnkkalinnan aikuiskoulutuskeskus" "aaHanhivaaran kauppaopisto"}
                        (set (nakyvat-oppilaitokset)))))
 
         (testing "Pitäisi näyttää lista oppilaitoksista joilla on tietyn opintoalan tutkinto vastuulla"
