@@ -56,45 +56,16 @@
  
 (deftest ^:integraatio hae-ehdoilla-tutkinto
   (kt-testidata!)
-  (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "kylla"}))
-         ["OL1"]))
-  (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "327128" :sopimuksia "kylla"})))
-         #{"OL2" "OL5"})))
-
-(deftest ^:integraatio hae-ehdoilla-opintoala
-  (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA2"}
-                                {:opintoalakoodi "OA2"})
-  (lisaa-tutkinto! {:opintoala "OA2"
-                    :tutkintotunnus "T2"})
-  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1"})
-        o1 (lisaa-oppilaitos! {:koulutustoimija "KT1"
-                               :oppilaitoskoodi "OL1"})
-        sop1 (lisaa-jarjestamissopimus! kt1 o1)
-        _ (lisaa-tutkinto-sopimukselle! sop1 -10000)
-
-        kt2 (lisaa-koulutustoimija! {:ytunnus "KT2"})
-        o2 (lisaa-oppilaitos! {:koulutustoimija "KT2"
-                               :oppilaitoskoodi "OL2"})
-        sop2 (lisaa-jarjestamissopimus! kt2 o2)
-        tv2 (lisaa-tutkintoversio! {:tutkintotunnus "T2"})
-        _ (lisaa-tutkinto-sopimukselle! sop2 (:tutkintoversio_id tv2))]
-    (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "202"}))
-           ["OL1"]))))
-
-(deftest ^:integraatio hae-termilla-test
-  (let [termi "Testioppilaitoksen nimi"
-        osumia-alussa (count (arkisto/hae-termilla termi))
-        _ (luo-testidata)
-        osumia (count (arkisto/hae-termilla termi))]
-    (testing "Oppilaitos löytyy haettaessa nimellä"
-      (is (> osumia osumia-alussa)))))
+  (testing "tutkinnon tunnuksella haku toimii"
+    (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "kylla"}))
+           ["OL1"]))
+    (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "327128" :sopimuksia "kylla"})))
+           #{"OL2" "OL5"})))
+  (testing "opintoalan tunnuksella haku toimii"
+    (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "OA1" :sopimuksia "kylla"}))
+         ["OL1"]))))
 
 (deftest ^:integraatio hae-oppilaitoskoodilla-test
-  (lisaa-koulutustoimija! {:ytunnus "KT1"})
-  (let [oppilaitos {:oppilaitoskoodi "12345"
-                    :nimi "Oppilaitos O"
-                    :koulutustoimija "KT1"}
-        _ (arkisto/lisaa! oppilaitos)]
-    (testing "Oppilaitos löytyy haettaessa oppilaitoskoodilla"
-      (is (= (select-keys (arkisto/hae "12345") [:oppilaitoskoodi :nimi])
-             {:oppilaitoskoodi "12345", :nimi "Oppilaitos O"})))))
+  (kt-testidata!)
+  (is (= (select-keys (arkisto/hae "OL1") [:oppilaitoskoodi :nimi])
+         {:oppilaitoskoodi "OL1", :nimi "Oppilaitos o1 bar bar"})))
