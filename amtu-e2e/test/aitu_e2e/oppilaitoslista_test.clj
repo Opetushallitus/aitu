@@ -75,8 +75,7 @@
           (avaa oppilaitoslista)
           (valitse-ei-sopimuksia)
           ;; Niin
-          (is (subset? #{"aaRuikonperän multakurkkuopisto"}
-                       (set (nakyvat-oppilaitokset)))))
+          (is (empty? (set (nakyvat-oppilaitokset)))))
 
         (testing "pitäisi näyttaa lista kaikista oppilaitoksista"
           ;; Kun
