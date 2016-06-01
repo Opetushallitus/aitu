@@ -46,7 +46,7 @@
 
       <fieldset style="width: 61%;">
         <label>[[paatosteksti]]</label>
-        <textarea ng-required="type=='asettamis'" ng-model="paatosPDF.paatosteksti"></textarea>
+        <textarea ng-model="paatosPDF.paatosteksti"></textarea>
       </fieldset>
 
       <section class="info-section">
@@ -73,12 +73,12 @@
 
       <section class="info-section">
         <fieldset>
-          <label class="pakollinen">[[jakelu]]</label>
-          <textarea ng-required="true" ng-model="paatosPDF.jakelu"></textarea>
+          <label>[[jakelu]]</label>
+          <textarea ng-model="paatosPDF.jakelu"></textarea>
         </fieldset>
         <fieldset>
-          <label class="pakollinen">[[tiedoksi]]</label>
-          <textarea ng-required="true" ng-model="paatosPDF.tiedoksi"></textarea>
+          <label>[[tiedoksi]]</label>
+          <textarea ng-model="paatosPDF.tiedoksi"></textarea>
         </fieldset>
       </section>
       <button class="button modal-dialog-button-left" ng-click="hideTulostaPaatosModal()">[[peruuta]]</button>

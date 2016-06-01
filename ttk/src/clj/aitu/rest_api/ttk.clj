@@ -120,8 +120,8 @@
                              :nimi esittelija}
                 :hyvaksyja {:asema (s/split-lines hyvaksyjan_asema)
                             :nimi hyvaksyja}
-                :jakelu (s/split-lines jakelu)
-                :tiedoksi (s/split-lines tiedoksi)
+                :jakelu (when jakelu (s/split-lines jakelu))
+                :tiedoksi (when tiedoksi (s/split-lines tiedoksi))
                 :paatosteksti paatosteksti}
           pdf (paatos-arkisto/luo-asettamispaatos (keyword kieli) diaarinumero data)]
       (if lataa
@@ -134,8 +134,8 @@
                              :nimi esittelija}
                 :hyvaksyja {:asema (s/split-lines hyvaksyjan_asema)
                             :nimi hyvaksyja}
-                :jakelu (s/split-lines jakelu)
-                :tiedoksi (s/split-lines tiedoksi)
+                :jakelu (when (s/split-lines jakelu))
+                :tiedoksi (when (s/split-lines tiedoksi))
                 :jasen jasen
                 :paatosteksti paatosteksti}
           pdf (paatos-arkisto/luo-taydennyspaatos (keyword kieli) diaarinumero data)]
@@ -149,8 +149,8 @@
                              :nimi esittelija}
                 :hyvaksyja {:asema (s/split-lines hyvaksyjan_asema)
                             :nimi hyvaksyja}
-                :jakelu (s/split-lines jakelu)
-                :tiedoksi (s/split-lines tiedoksi)
+                :jakelu (when (s/split-lines jakelu))
+                :tiedoksi (when (s/split-lines tiedoksi))
                 :jasen jasen
                 :korvattu korvattu
                 :paatosteksti paatosteksti}
