@@ -49,37 +49,45 @@
 (defn ^:private muotoile-pvm [pvm]
   (.toString pvm "dd.MM.yyyy"))
 
+(defn ^:private muotoile-nimet [toimikunta]
+  (if (= (:nimi_fi toimikunta) (:nimi_sv toimikunta))
+    (dissoc toimikunta :nimi_sv)
+    toimikunta))
+
 (defn luo-asettamispaatos [kieli diaarinumero data]
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
                                               [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]
                                                :tilikoodi :kielisyys [:toimiala :toimialue] :nayttotutkinto :jasenyys])
                      (update-in [:alkupvm] muotoile-pvm)
-                     (update-in [:loppupvm] muotoile-pvm))
+                     (update-in [:loppupvm] muotoile-pvm)
+                     muotoile-nimet)
         edustus->jasenet (->> (:jasenyys toimikunta)
                            (sort-by (juxt :sukunimi :etunimi))
                            (map (partial muotoile-jasen kieli))
                            (group-by :edustus))
         jasenet (filter (comp seq :jasen)
-                        [{:edustus (case kieli :fi "Työnantajien edustajat" :sv "Työnantajien edustajat (sv)")
+                        [{:edustus (case kieli :fi "Työnantajien edustaja" :sv "Representanter för arbetsgivare")
                           :jasen (edustus->jasenet "tyonantaja")}
-                         {:edustus (case kieli :fi "Työntekijöiden edustajat" :sv "Työntekijöiden edustajat (sv)")
+                         {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
                           :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opettajien edustajat" :sv "Opettajien edustajat (sv)")
+                         {:edustus (case kieli :fi "Opettajien edustaja" :sv "Representanter för lärare")
                           :jasen (edustus->jasenet "opettaja")}
-                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustajat" :sv "Itsenäisten ammatinharjoittajien edustajat (sv)")
+                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
                           :jasen (edustus->jasenet "itsenainen")}
-                         {:edustus (case kieli :fi "Muut toimikuntaan kuuluvat" :sv "Muut toimikuntaan kuuluvat (sv)")
+                         {:edustus (case kieli :fi "Muu toimikuntaan kuuluva" :sv "Övriga")
                           :jasen (mapcat edustus->jasenet ["asiantuntija" "muu"])}])
         toimiala (for [tutkinto (:nayttotutkinto toimikunta)]
                    (lokalisoi tutkinto :nimi kieli))
         jakelu (concat (for [{:keys [sukunimi etunimi]} (sort-by (juxt :sukunimi :etunimi) (:jasenyys toimikunta))]
                          (str etunimi \space sukunimi))
                        (:jakelu data))
-        tiedoksi (concat (sort (for [jasen (:jasenyys toimikunta)]
-                                 (lokalisoi jasen :jarjesto_nimi kieli)))
+        tiedoksi (concat (distinct (sort (for [jasen (:jasenyys toimikunta)
+                                               :let [jarjesto (lokalisoi jasen :jarjesto_nimi kieli)]
+                                               :when jarjesto]
+                                           jarjesto)))
                          (:tiedoksi data))]
     (luo-paatos kieli
-                {:teksti "PÄÄTÖS"
+                {:teksti (case kieli :fi "PÄÄTÖS" :sv "BESLUT")
                  :paivays (:paivays data)
                  :diaarinumero diaarinumero}
                 :asettamispaatos
@@ -93,25 +101,26 @@
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
                                               [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
                      (update-in [:alkupvm] muotoile-pvm)
-                     (update-in [:loppupvm] muotoile-pvm))
+                     (update-in [:loppupvm] muotoile-pvm)
+                     muotoile-nimet)
         jasenet [(ttk-arkisto/hae-jasen-ja-henkilo (Integer/parseInt (:jasen data)))]
         edustus->jasenet (->> jasenet
                            (sort-by (juxt :sukunimi :etunimi))
                            (map (partial muotoile-jasen kieli))
                            (group-by :edustus))
         jasenet (filter (comp seq :jasen)
-                        [{:edustus (case kieli :fi "Työnantajien edustaja" :sv "Työnantajien edustaja (sv)")
+                        [{:edustus (case kieli :fi "Työnantajien edustaja" :sv "Representanter för arbetsgivare")
                           :jasen (edustus->jasenet "tyonantaja")}
-                         {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Työntekijöiden edustaja (sv)")
+                         {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
                           :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opettajien edustaja" :sv "Opettajien edustaja (sv)")
+                         {:edustus (case kieli :fi "Opettajien edustaja" :sv "Representanter för lärare")
                           :jasen (edustus->jasenet "opettaja")}
-                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Itsenäisten ammatinharjoittajien edustaja (sv)")
+                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
                           :jasen (edustus->jasenet "itsenainen")}
-                         {:edustus (case kieli :fi "Muu toimikuntaan kuuluva" :sv "Muu toimikuntaan kuuluva (sv)")
+                         {:edustus (case kieli :fi "Muu toimikuntaan kuuluva" :sv "Övriga")
                           :jasen (mapcat edustus->jasenet ["asiantuntija" "muu"])}])]
     (luo-paatos kieli
-                {:teksti "PÄÄTÖS"
+                {:teksti (case kieli :fi "PÄÄTÖS" :sv "BESLUT")
                  :paivays (:paivays data)
                  :diaarinumero diaarinumero}
                 :taydennyspaatos
@@ -121,26 +130,27 @@
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
                                               [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]])
                      (update-in [:alkupvm] muotoile-pvm)
-                     (update-in [:loppupvm] muotoile-pvm))
+                     (update-in [:loppupvm] muotoile-pvm)
+                     muotoile-nimet)
         jasenet [(ttk-arkisto/hae-jasen-ja-henkilo (Integer/parseInt (:jasen data)))]
         edustus->jasenet (->> jasenet
                            (sort-by (juxt :sukunimi :etunimi))
                            (map (partial muotoile-jasen kieli))
                            (group-by :edustus))
         jasenet (filter (comp seq :jasen)
-                        [{:edustus (case kieli :fi "Työnantajien edustaja" :sv "Työnantajien edustaja (sv)")
+                        [{:edustus (case kieli :fi "Työnantajien edustaja" :sv "Representanter för arbetsgivare")
                           :jasen (edustus->jasenet "tyonantaja")}
-                         {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Työntekijöiden edustaja (sv)")
+                         {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
                           :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opettajien edustaja" :sv "Opettajien edustaja (sv)")
+                         {:edustus (case kieli :fi "Opettajien edustaja" :sv "Representanter för lärare")
                           :jasen (edustus->jasenet "opettaja")}
-                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Itsenäisten ammatinharjoittajien edustaja (sv)")
+                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
                           :jasen (edustus->jasenet "itsenainen")}
-                         {:edustus (case kieli :fi "Muu toimikuntaan kuuluva" :sv "Muu toimikuntaan kuuluva (sv)")
+                         {:edustus (case kieli :fi "Muu toimikuntaan kuuluva" :sv "Övriga")
                           :jasen (mapcat edustus->jasenet ["asiantuntija" "muu"])}])
         korvattu (ttk-arkisto/hae-jasen-ja-henkilo (Integer/parseInt (:korvattu data)))]
     (luo-paatos kieli
-                {:teksti "PÄÄTÖS"
+                {:teksti (case kieli :fi "PÄÄTÖS" :sv "BESLUT")
                  :paivays (:paivays data)
                  :diaarinumero diaarinumero}
                 :muutospaatos
