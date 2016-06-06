@@ -54,14 +54,18 @@
     (dissoc toimikunta :nimi_sv)
     toimikunta))
 
-(defn luo-asettamispaatos [kieli diaarinumero data]
+(defn asettamispaatos->pdf [kieli header data]
+  (luo-paatos kieli header :asettamispaatos data))
+    
+(defn luo-asettamispaatos-data [kieli diaarinumero data]
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
                                               [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]
                                                :tilikoodi :kielisyys [:toimiala :toimialue] :nayttotutkinto :jasenyys])
                      (update-in [:alkupvm] muotoile-pvm)
                      (update-in [:loppupvm] muotoile-pvm)
                      muotoile-nimet)
-        edustus->jasenet (->> (:jasenyys toimikunta)
+        nimitetyt-jasenet (filter #(= "nimitetty" (:status %)) (:jasenyys toimikunta))
+        edustus->jasenet (->> nimitetyt-jasenet
                            (sort-by (juxt :sukunimi :etunimi))
                            (map (partial muotoile-jasen kieli))
                            (group-by :edustus))
@@ -78,24 +82,34 @@
                           :jasen (mapcat edustus->jasenet ["asiantuntija" "muu"])}])
         toimiala (for [tutkinto (:nayttotutkinto toimikunta)]
                    (lokalisoi tutkinto :nimi kieli))
-        jakelu (concat (for [{:keys [sukunimi etunimi]} (sort-by (juxt :sukunimi :etunimi) (:jasenyys toimikunta))]
+        jakelu (concat (for [{:keys [sukunimi etunimi]} (sort-by (juxt :sukunimi :etunimi) nimitetyt-jasenet)]
                          (str etunimi \space sukunimi))
                        (:jakelu data))
-        tiedoksi (concat (distinct (sort (for [jasen (:jasenyys toimikunta)
+        tiedoksi (concat (distinct (sort (for [jasen nimitetyt-jasenet
                                                :let [jarjesto (lokalisoi jasen :jarjesto_nimi kieli)]
                                                :when jarjesto]
                                            jarjesto)))
                          (:tiedoksi data))]
-    (luo-paatos kieli
-                {:teksti (case kieli :fi "PÄÄTÖS" :sv "BESLUT")
-                 :paivays (:paivays data)
-                 :diaarinumero diaarinumero}
-                :asettamispaatos
-                (assoc data :toimikunta (assoc toimikunta :jasen jasenet
-                                                          :kieli (muotoile-kieli kieli (:kielisyys toimikunta))
-                                                          :toimiala toimiala)
-                            :jakelu jakelu
-                            :tiedoksi tiedoksi))))
+    
+    ; paluuarvona tietorakenne PDF-generointia varten
+    {:kieli kieli
+     :header {:teksti (case kieli :fi "PÄÄTÖS" :sv "BESLUT")
+              :paivays (:paivays data)
+              :diaarinumero diaarinumero}
+     :data (assoc data :toimikunta (assoc toimikunta :jasen jasenet
+                                                     :kieli (muotoile-kieli kieli (:kielisyys toimikunta))
+                                                     :toimiala toimiala)
+                       :jakelu jakelu
+                       :tiedoksi tiedoksi)}))
+  
+(defn luo-asettamispaatos [kieli diaarinumero data]
+  (let [pdf-data (luo-asettamispaatos-data kieli diaarinumero data)]
+    (asettamispaatos->pdf (:kieli pdf-data) (:header pdf-data) (:data pdf-data))))
+
+
+(defn asettamispaatos->pdf [kieli header data]
+  (luo-paatos kieli header :asettamispaatos data))
+
 
 (defn luo-taydennyspaatos [kieli diaarinumero data]
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
