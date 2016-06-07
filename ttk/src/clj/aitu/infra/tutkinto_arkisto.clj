@@ -364,6 +364,14 @@
   (let [tutkintoversio-id (:tutkintoversio_id (hae-peruste (:diaarinumero peruste)))
         osatunnus->id (into {} (for [osa (hae-perusteen-tutkinnonosat tutkintoversio-id)]
                                  [(:osatunnus osa) (:tutkinnonosa_id osa)]))]
+    (sql/delete osaamisala-ja-tutkinnonosa
+      (sql/where {:osaamisala [in (sql/subselect osaamisala
+                                    (sql/fields :osaamisala_id)
+                                    (sql/where {:tutkintoversio tutkintoversio-id
+                                                :osaamisalatunnus [not-in (map :osaamisalatunnus (:osaamisalat peruste))]}))]}))
+    (sql/delete osaamisala
+      (sql/where {:tutkintoversio tutkintoversio-id
+                  :osaamisalatunnus [not-in (map :osaamisalatunnus (:osaamisalat peruste))]}))
     (doseq [oala (:osaamisalat peruste)]
       (paivita-osaamisala! osatunnus->id (assoc (select-keys oala [:nimi_fi :nimi_sv :osaamisalatunnus])
                                                 :tutkintoversio tutkintoversio-id)))))
@@ -371,10 +379,18 @@
 (defn ^:integration-api paivita-tutkinnonosat!
   "Päivittää tutkinnon perusteen tutkinnonosat"
   [peruste]
-  (let [tutkintoversio (hae-peruste (:diaarinumero peruste))]
+  (let [tutkintoversio-id (:tutkintoversio_id (hae-peruste (:diaarinumero peruste)))]
+    (sql/delete osaamisala-ja-tutkinnonosa
+      (sql/where {:tutkinnonosa [in (sql/subselect tutkinnonosa
+                                      (sql/fields :tutkinnonosa_id)
+                                      (sql/where {:tutkintoversio tutkintoversio-id
+                                                  :osatunnus [not-in (map :osatunnus (:tutkinnonosat peruste))]}))]}))
+    (sql/delete tutkinnonosa
+      (sql/where {:tutkintoversio tutkintoversio-id
+                  :osatunnus [not-in (map :osatunnus (:tutkinnonosat peruste))]}))
     (doseq [osa (:tutkinnonosat peruste)]
       (sql-util/insert-or-update tutkinnonosa [:osatunnus :tutkintoversio] (assoc (select-keys osa [:osatunnus :nimi_fi :nimi_sv :jarjestysnumero])
-                                                                                  :tutkintoversio (:tutkintoversio_id tutkintoversio))))))
+                                                                                  :tutkintoversio tutkintoversio-id)))))
 
 (defn hae-viimeisin-eperusteet-paivitys []
   (:paivitetty (sql-util/select-unique-or-nil eperusteet-log
