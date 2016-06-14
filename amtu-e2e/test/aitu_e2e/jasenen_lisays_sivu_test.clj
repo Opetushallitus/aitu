@@ -86,7 +86,7 @@
   (paina-siirry-seuraavaan-nappia)
   ;; Kun
   (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
-  (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
+  (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
   (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" alkupvm)
   (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" loppupvm)
   (paina-lisaa-jasen-nappia))
@@ -133,7 +133,7 @@
             (paina-siirry-seuraavaan-nappia)
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
-            (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
+            (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "02.08.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
             (paina-lisaa-jasen-nappia)
@@ -148,7 +148,7 @@
             (paina-siirry-seuraavaan-nappia)
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
-            (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
+            (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
             (paina-lisaa-jasen-nappia)
@@ -177,7 +177,7 @@
             (paina-siirry-seuraavaan-nappia)
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
-            (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
+            (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2016")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "02.08.2016")
             (is (false? (onko-tallenna-nappi-enabloitu? "Lisää jäsen")))))
@@ -188,7 +188,7 @@
             (paina-siirry-seuraavaan-nappia)
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
-            (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
+            (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
             (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "29.07.2013")
             (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
             (is (false? (onko-tallenna-nappi-enabloitu? "Lisää jäsen")))))))))
@@ -215,7 +215,7 @@
           ; Poistetaan .feedback-container testeissä, ettei se ole kenttien päällä (edes hetkellisesti)
           (w/execute-script "$('.feedback-container').remove()")
           (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
-          (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opettajat"})
+          (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
           (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
           (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
           (paina-lisaa-jasen-nappia)
