@@ -74,7 +74,7 @@
                           :jasen (edustus->jasenet "tyonantaja")}
                          {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
                           :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opettajien edustaja" :sv "Representanter för lärare")
+                         {:edustus (case kieli :fi "Opetusalan edustaja" :sv "Representanter för lärare")
                           :jasen (edustus->jasenet "opettaja")}
                          {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
                           :jasen (edustus->jasenet "itsenainen")}
@@ -127,7 +127,7 @@
                           :jasen (edustus->jasenet "tyonantaja")}
                          {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
                           :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opettajien edustaja" :sv "Representanter för lärare")
+                         {:edustus (case kieli :fi "Opetusalan edustaja" :sv "Representanter för lärare")
                           :jasen (edustus->jasenet "opettaja")}
                          {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
                           :jasen (edustus->jasenet "itsenainen")}
@@ -156,7 +156,7 @@
                           :jasen (edustus->jasenet "tyonantaja")}
                          {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
                           :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opettajien edustaja" :sv "Representanter för lärare")
+                         {:edustus (case kieli :fi "Opetusalan edustaja" :sv "Representanter för lärare")
                           :jasen (edustus->jasenet "opettaja")}
                          {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
                           :jasen (edustus->jasenet "itsenainen")}
