@@ -57,6 +57,19 @@
 (defn asettamispaatos->pdf [kieli header data]
   (luo-paatos kieli header :asettamispaatos data))
     
+(defn jasen-nimike-filter [jasenet kieli]
+  (filter (comp seq :jasen)
+          [{:edustus (case kieli :fi "Työnantajien edustajat" :sv "Representanter för arbetsgivare")
+            :jasen (jasenet "tyonantaja")}
+           {:edustus (case kieli :fi "Työntekijöiden edustajat" :sv "Representanter för arbetstagare")
+            :jasen (jasenet "tyontekija")}
+           {:edustus (case kieli :fi "Opetusalan edustajat" :sv "Representanter för lärare")
+            :jasen (jasenet "opettaja")}
+           {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustajat" :sv "Representanter för självständiga yrkesutövare")
+            :jasen (jasenet "itsenainen")}
+           {:edustus (case kieli :fi "Muut toimikuntaan kuuluvat" :sv "Övriga")
+            :jasen (mapcat jasenet ["asiantuntija" "muu"])}]))
+  
 (defn luo-asettamispaatos-data [kieli diaarinumero data]
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
                                               [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]
@@ -69,17 +82,9 @@
                            (sort-by (juxt :sukunimi :etunimi))
                            (map (partial muotoile-jasen kieli))
                            (group-by :edustus))
-        jasenet (filter (comp seq :jasen)
-                        [{:edustus (case kieli :fi "Työnantajien edustaja" :sv "Representanter för arbetsgivare")
-                          :jasen (edustus->jasenet "tyonantaja")}
-                         {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
-                          :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opetusalan edustaja" :sv "Representanter för lärare")
-                          :jasen (edustus->jasenet "opettaja")}
-                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
-                          :jasen (edustus->jasenet "itsenainen")}
-                         {:edustus (case kieli :fi "Muu toimikuntaan kuuluva" :sv "Övriga")
-                          :jasen (mapcat edustus->jasenet ["asiantuntija" "muu"])}])
+
+        jasenet (jasen-nimike-filter edustus->jasenet kieli)
+
         toimiala (for [tutkinto (:nayttotutkinto toimikunta)]
                    (lokalisoi tutkinto :nimi kieli))
         jakelu (concat (for [{:keys [sukunimi etunimi]} (sort-by (juxt :sukunimi :etunimi) nimitetyt-jasenet)]
@@ -123,15 +128,15 @@
                            (map (partial muotoile-jasen kieli))
                            (group-by :edustus))
         jasenet (filter (comp seq :jasen)
-                        [{:edustus (case kieli :fi "Työnantajien edustaja" :sv "Representanter för arbetsgivare")
+                        [{:edustus (case kieli :fi "Työnantajien edustajat" :sv "Representanter för arbetsgivare")
                           :jasen (edustus->jasenet "tyonantaja")}
-                         {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
+                         {:edustus (case kieli :fi "Työntekijöiden edustajat" :sv "Representanter för arbetstagare")
                           :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opetusalan edustaja" :sv "Representanter för lärare")
+                         {:edustus (case kieli :fi "Opetusalan edustajat" :sv "Representanter för lärare")
                           :jasen (edustus->jasenet "opettaja")}
-                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
+                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustajat" :sv "Representanter för självständiga yrkesutövare")
                           :jasen (edustus->jasenet "itsenainen")}
-                         {:edustus (case kieli :fi "Muu toimikuntaan kuuluva" :sv "Övriga")
+                         {:edustus (case kieli :fi "Muut toimikuntaan kuuluvat" :sv "Övriga")
                           :jasen (mapcat edustus->jasenet ["asiantuntija" "muu"])}])]
     (luo-paatos kieli
                 {:teksti (case kieli :fi "PÄÄTÖS" :sv "BESLUT")
@@ -152,15 +157,15 @@
                            (map (partial muotoile-jasen kieli))
                            (group-by :edustus))
         jasenet (filter (comp seq :jasen)
-                        [{:edustus (case kieli :fi "Työnantajien edustaja" :sv "Representanter för arbetsgivare")
+                        [{:edustus (case kieli :fi "Työnantajien edustajat" :sv "Representanter för arbetsgivare")
                           :jasen (edustus->jasenet "tyonantaja")}
-                         {:edustus (case kieli :fi "Työntekijöiden edustaja" :sv "Representanter för arbetstagare")
+                         {:edustus (case kieli :fi "Työntekijöiden edustajat" :sv "Representanter för arbetstagare")
                           :jasen (edustus->jasenet "tyontekija")}
-                         {:edustus (case kieli :fi "Opetusalan edustaja" :sv "Representanter för lärare")
+                         {:edustus (case kieli :fi "Opetusalan edustajat" :sv "Representanter för lärare")
                           :jasen (edustus->jasenet "opettaja")}
-                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustaja" :sv "Representanter för självständiga yrkesutövare")
+                         {:edustus (case kieli :fi "Itsenäisten ammatinharjoittajien edustajat" :sv "Representanter för självständiga yrkesutövare")
                           :jasen (edustus->jasenet "itsenainen")}
-                         {:edustus (case kieli :fi "Muu toimikuntaan kuuluva" :sv "Övriga")
+                         {:edustus (case kieli :fi "Muut toimikuntaan kuuluva" :sv "Övriga")
                           :jasen (mapcat edustus->jasenet ["asiantuntija" "muu"])}])
         korvattu (ttk-arkisto/hae-jasen-ja-henkilo (Integer/parseInt (:korvattu data)))]
     (luo-paatos kieli
