@@ -113,7 +113,7 @@
   (GET "/paatospohja-oletukset" []
     :kayttooikeus :paatos
     (response-or-404 (:paatospohja-oletukset @asetukset)))
-  (GET "/:diaarinumero/asettamispaatos" [diaarinumero kieli paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
+  (GET "/:diaarinumero/asettamispaatos" [diaarinumero kieli tyhjiariveja paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     :kayttooikeus :paatos
     (let [data {:paivays paivays
                 :esittelija {:asema (s/split-lines esittelijan_asema)
@@ -122,7 +122,8 @@
                             :nimi hyvaksyja}
                 :jakelu (when jakelu (s/split-lines jakelu))
                 :tiedoksi (when tiedoksi (s/split-lines tiedoksi))
-                :paatosteksti paatosteksti}
+                :paatosteksti paatosteksti
+                :tyhjiariveja (. Integer parseInt tyhjiariveja)}
           pdf (paatos-arkisto/luo-asettamispaatos (keyword kieli) diaarinumero data)]
       (if lataa
         (pdf-response pdf (str "asettamispaatos_" (s/replace diaarinumero \/ \_) ".pdf"))

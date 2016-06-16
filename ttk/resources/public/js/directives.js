@@ -790,6 +790,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
           success(function(data) {
             $scope.paatosPDF = data;
             $scope.paatosPDF.kieli = kieli;
+            $scope.paatosPDF.tyhjiariveja = 0;
           });
 
         $scope.showTulostaPaatosModal = function (type) {
@@ -800,6 +801,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
 
           if(type!="asettamis"){
             $scope.paatosPDF.paatosteksti = '';
+            $scope.paatosPDF.tyhjiariveja = 0;
           }
         };
 

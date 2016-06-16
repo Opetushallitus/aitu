@@ -105,7 +105,8 @@
                                                      :kieli (muotoile-kieli kieli (:kielisyys toimikunta))
                                                      :toimiala toimiala)
                        :jakelu jakelu
-                       :tiedoksi tiedoksi)}))
+                       :tiedoksi tiedoksi
+                       :paatosteksti (str (apply str (repeat (:tyhjiariveja data) "\n")) (:paatosteksti data)))}))
   
 (defn luo-asettamispaatos [kieli diaarinumero data]
   (let [pdf-data (luo-asettamispaatos-data kieli diaarinumero data)]
