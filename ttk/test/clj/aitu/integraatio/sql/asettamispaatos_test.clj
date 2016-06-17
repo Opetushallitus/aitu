@@ -26,6 +26,7 @@
                                 :nimi "Jaana Johtaja"}
                     :jakelu nil 
                     :tiedoksi nil
+                    :tyhjiariveja 0
                     :paatosteksti paatosteksti}
             pdf (arkisto/luo-asettamispaatos-data :fi diaarinumero data)
             pdf-data (:data pdf)]
