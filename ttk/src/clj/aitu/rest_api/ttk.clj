@@ -112,7 +112,7 @@
 (defroutes paatos-reitit
   ; TODO: ongelma koska ammattisihteeri ei voi tulostaa päätöksiä, mutta toimikunta-sivu ei avaudu ilman tätä 
   (GET "/paatospohja-oletukset" []
-    :kayttooikeus :paatos
+    :kayttooikeus :paatospohja
     (response-or-404 (:paatospohja-oletukset @asetukset)))
   (GET "/:diaarinumero/asettamispaatos" [diaarinumero kieli tyhjiariveja paivays esittelijan_asema esittelija hyvaksyjan_asema hyvaksyja jakelu tiedoksi paatosteksti lataa]
     :kayttooikeus :paatos

@@ -24,19 +24,21 @@ insert into tutkintoversio (tutkintoversio_id, tutkintotunnus, versio, koodistov
   values (-10000, '324601', 1, 1, '38/011/2014', true, to_date('2005-01-01', 'YYYY-MM-DD')),
          (-20000, '327128', 1, 1, '34/011/2010', true, to_date('2005-01-01', 'YYYY-MM-DD'));
 
+insert into koulutustoimija (ytunnus, nimi_fi, osoite, oid, voimassa)
+  values('1060155-5', 'Urheilupainotteinen koulutuskuntayhtymä', 'Mätäslompolontie 24', '1.2.246.562.10.123456789012', true);
+
+insert into oppilaitos (oppilaitoskoodi, nimi, kieli, osoite, oid, koulutustoimija, voimassa)
+  values('54545', 'Suunnistusopisto', 'fi', 'Erantopolku 10', '1.2.246.562.10.851056789012', '1060155-5', true);
+
+         
 update nayttotutkinto set uusin_versio_id = -10000 where tutkintotunnus = '324601';
 update nayttotutkinto set uusin_versio_id = -20000 where tutkintotunnus = '327128';
 
 insert into toimikunta_ja_tutkinto(toimikunta, tutkintotunnus)
   values ('Gulo gulo', '324601');
-
-insert into jarjestamissopimus (jarjestamissopimusid, sopimusnumero, toimikunta, sopijatoimikunta, voimassa)
-  values (-324601, '123456', 'Gulo gulo', 'Gulo gulo', true);
+  
+insert into jarjestamissopimus (jarjestamissopimusid, sopimusnumero, toimikunta, sopijatoimikunta, voimassa, oppilaitos, koulutustoimija)
+  values (-324601, '123456', 'Gulo gulo', 'Gulo gulo', true, '54545', '1060155-5');
 
 insert into sopimus_ja_tutkinto(jarjestamissopimusid, tutkintoversio)
   values (-324601, -10000);
-
-
-
-
-
