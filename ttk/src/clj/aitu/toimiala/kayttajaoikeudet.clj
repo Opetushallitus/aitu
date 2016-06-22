@@ -54,6 +54,10 @@
 (defn oph-katselija? []
   (onko-kayttajan-rooli? :oph-katselija))
 
+(defn paivittaja? []
+  (onko-kayttajan-rooli? :paivittaja))
+  
+
 (defn jasenyys-voimassa? [jasenyys]
   (:voimassa (taydenna-jasenyyden-voimassaolo jasenyys (not (toimikunta-vanhentunut? jasenyys)))))
 
@@ -116,7 +120,7 @@
   "Sallittu ylläpitäjälle ja toimikunnan sihteerille kun ammattisihteerit saadaan."
   ; TODO: Sihteeriroolin käsittely
   [tkunta]
-  (yllapitaja?))
+  (or (yllapitaja?) (paivittaja?)))
 
 (defn sallittu-impersonoidulle [& _]
   (or (yllapitaja?) (not= *impersonoitu-oid* nil)))
@@ -170,18 +174,19 @@
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
   (let [id (int-arvo sopimusid)]
     (or (yllapitaja?)
+        (paivittaja?)
       (let [sopimus (jarjestamissopimus-arkisto/hae id)
             voimassa? (:voimassa sopimus)]
         (and voimassa? (toimikunnan-muokkausoikeus? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta id)))))))
 
 (def sopimustoiminnot
   `{:sopimustiedot_paivitys sopimuksen-muokkaus-sallittu?
-    :sopimustiedot_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
-    :suunnitelma_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
-    :sopimuksen_liite_luku #(or (yllapitaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))})
+    :sopimustiedot_luku #(or (yllapitaja?) (paivittaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
+    :suunnitelma_luku #(or (yllapitaja?) (paivittaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))
+    :sopimuksen_liite_luku #(or (yllapitaja?) (paivittaja?) (oph-katselija?) (toimikunta-jasen? (jarjestamissopimus-arkisto/hae-jarjestamissopimuksen-toimikunta (int-arvo %))))})
 
 (def toimikuntatoiminnot
-  `{:sopimus_lisays  #(or (yllapitaja?) (toimikunnan-muokkausoikeus? %))})
+  `{:sopimus_lisays  #(or (yllapitaja?) (paivittaja?) (toimikunnan-muokkausoikeus? %))})
 
 (defn hae-muokattavat-jasenesitys []
   (when (:jarjesto *current-user-authmap*)

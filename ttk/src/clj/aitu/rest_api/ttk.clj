@@ -110,6 +110,7 @@
                                  :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv])
 
 (defroutes paatos-reitit
+  ; TODO: ongelma koska ammattisihteeri ei voi tulostaa päätöksiä, mutta toimikunta-sivu ei avaudu ilman tätä 
   (GET "/paatospohja-oletukset" []
     :kayttooikeus :paatos
     (response-or-404 (:paatospohja-oletukset @asetukset)))

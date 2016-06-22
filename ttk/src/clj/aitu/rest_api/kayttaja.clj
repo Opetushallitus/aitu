@@ -44,9 +44,10 @@
     (let [oikeudet (ko-arkisto/hae-oikeudet)
           roolitunnus (:roolitunnus oikeudet)]
       (if (or (= roolitunnus (:yllapitaja kayttajaroolit))
+              (= roolitunnus (:paivittaja kayttajaroolit))
               (= roolitunnus (:oph-katselija kayttajaroolit)))
-        (response-or-404 oikeudet)
-        (-> oikeudet
+        (response-or-404 oikeudet) ; roolipohjaiset, kontekstista riippumattomat, oikeudet
+        (-> oikeudet ; kontekstisensitiiviset oikeudet 
             paivita-kayttajan-toimikuntakohtaiset-oikeudet
             paivita-kayttajan-sopimuskohtaiset-oikeudet
             liita-kayttajan-henkilo-oikeudet
