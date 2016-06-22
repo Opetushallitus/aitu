@@ -15,7 +15,7 @@
 (ns aitu.toimiala.kayttajaroolit)
 
 (def ihmiskayttajat
-  #{:kayttaja :yllapitaja :oph-katselija :jarjesto})
+  #{:kayttaja :yllapitaja :oph-katselija :jarjesto :paivittaja})
 
 (def jarjestelmat
   #{:aipal :osoitepalvelu})
@@ -26,4 +26,5 @@
                      :osoitepalvelu "OSOITEPALVELU"
                      :oph-katselija "OPH-KATSELIJA"
                      :aipal "AIPAL"
-                     :jarjesto "JARJESTO"})
+                     :jarjesto "JARJESTO"
+                     :paivittaja "PAIVITTAJA"})

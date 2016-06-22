@@ -20,6 +20,17 @@ givenName: Kalle
 sn: Käyttäjä
 cn: Kalle
 
+dn: uid=aitusihteeri,ou=People,dc=opintopolku,dc=fi
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: aitusihteeri
+employeeNumber: OID.aitusihteeri
+givenName: Orvokki
+sn: Sihteeri
+cn: Orvokki
+
 dn: uid=T-800,ou=People,dc=opintopolku,dc=fi
 objectclass: top
 objectclass: person
@@ -59,6 +70,12 @@ uniqueMember: uid=aitunpaakayttaja,ou=People,dc=opintopolku,dc=fi
 uniqueMember: uid=aitunkayttaja,ou=People,dc=opintopolku,dc=fi
 uniqueMember: uid=T-1001,ou=People,dc=opintopolku,dc=fi
 uniqueMember: uid=T-800,ou=People,dc=opintopolku,dc=fi
+
+dn: cn=APP_AITU_AITU-TMK-JASEN_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
+objectclass: groupOfUniqueNames
+objectclass: top
+cn: APP_AITU_CRUD_1.2.246.562.10.2013121312395140176502
+uniqueMember: uid=aitusihteeri,ou=People,dc=opintopolku,dc=fi
 
 dn: cn=APP_AITU_CRUD_1.2.246.562.10.2013121312395140176502,ou=Groups,dc=opintopolku,dc=fi
 objectclass: groupOfUniqueNames

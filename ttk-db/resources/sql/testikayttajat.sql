@@ -23,3 +23,6 @@ values
 
 insert into kayttaja(oid, etunimi, sukunimi, rooli, voimassa, uid)
 values('OID.OPH-KATSELIJA', 'Oph', 'Katselija', 'OPH-KATSELIJA', true, 'oph-katselija');
+
+insert into kayttaja(uid, oid, etunimi, sukunimi, rooli)
+values ('aitusihteeri', 'OID.aitusihteeri', 'Orvokki', 'Sihteeri', 'PAIVITTAJA');
