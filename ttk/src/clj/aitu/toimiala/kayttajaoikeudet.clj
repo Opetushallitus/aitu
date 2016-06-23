@@ -118,7 +118,6 @@
 
 (defn toimikunnan-paivitys?
   "Sallittu ylläpitäjälle ja toimikunnan sihteerille kun ammattisihteerit saadaan."
-  ; TODO: Sihteeriroolin käsittely
   [tkunta]
   (or (yllapitaja?) (paivittaja?)))
 

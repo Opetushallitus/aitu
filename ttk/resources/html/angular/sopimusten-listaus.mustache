@@ -13,7 +13,7 @@
     </tr>
     </thead>
     <tr ng-repeat="sopimus in sopimuksetJarjestetty">
-      <td><auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA']" oikeus="sopimustiedot_luku" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot" class="e2e-sopimus-sopimusnumero">{{sopimus.sopimusnumero}}</auth-toiminto></td>
+      <td><auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA', 'PAIVITTAJA']" oikeus="sopimustiedot_luku" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot" class="e2e-sopimus-sopimusnumero">{{sopimus.sopimusnumero}}</auth-toiminto></td>
       <td ng-show="naytaTutkinnot">
         <div class="sopimus-ja-tutkinto-rivi" ng-repeat="tutkinto in sopimus.tutkinnot">
           <a href="#/tutkinto/{{tutkinto.tutkintotunnus}}" class="e2e-sopimusjatutkinto-tutkintoversio-nimi">{{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a>

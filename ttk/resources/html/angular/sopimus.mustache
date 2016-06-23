@@ -3,8 +3,8 @@
 <h1 id="sopimus">
   [[jarjestamissopimus.jarjestamissopimus]]
   <span ng-show="sopimus.voimassa === false">([[yleiset.ei-voimassa]])</span>
-  <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon edit-icon muokkaa-sopimusta" ng-click="muokkaa('sopimus')"></auth-toiminto>
-  <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon delete-icon poista-sopimus" ng-click="poista()"></auth-toiminto>
+  <auth-toiminto auth-nappi sallitut-roolit="['PAIVITTAJA']" ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon edit-icon muokkaa-sopimusta" ng-click="muokkaa('sopimus')"></auth-toiminto>
+  <auth-toiminto auth-nappi sallitut-roolit="['PAIVITTAJA']" ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon delete-icon poista-sopimus" ng-click="poista()"></auth-toiminto>
   <ohje tunniste="sopimus"></ohje>
 </h1>
 [[/i18n]]
