@@ -188,6 +188,7 @@
                       tutkintotoimikunta
                       (sql/with jasenyys
                         (sql/fields :alkupvm :loppupvm :rooli :edustus)
+                        (sql/where {:status "nimitetty"})
                         (sql/with henkilo
                           (sql/fields :etunimi :sukunimi :sahkoposti :aidinkieli
                                       :osoite :postinumero :postitoimipaikka))))
