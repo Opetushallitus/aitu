@@ -67,9 +67,11 @@
 (defroutes raportti-reitit
   (GET "/csv" req
     :kayttooikeus :henkilo_haku
-    (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet henkilokenttien-jarjestys))
-                                         henkilokenttien-jarjestys)
-                           "henkilot.csv")))
+    (let [henkilot (->>
+                     (arkisto/hae-ehdoilla (:params req))
+                     piilota-salaiset-kentat
+                     (map #(select-keys % henkilokenttien-jarjestys)))]
+      (csv-download-response (muodosta-csv henkilot henkilokenttien-jarjestys) "henkilot.csv"))))
 
 (defn tarkista-paivitettavat-kentat
   "Tarkistaa että järjestö-käyttäjä ei yritä päivittää kenttiä, joiden käsittely ei ole sallittua"
