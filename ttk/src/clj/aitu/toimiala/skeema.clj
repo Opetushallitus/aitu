@@ -194,9 +194,9 @@
   {:etunimi s/Str
    :sukunimi s/Str
    :sahkoposti (s/maybe s/Str)
-   :osoite (s/maybe s/Str)
-   :postinumero (s/maybe s/Str)
-   :postitoimipaikka (s/maybe s/Str)
+   (s/optional-key :osoite) (s/maybe s/Str)
+   (s/optional-key :postinumero) (s/maybe s/Str)
+   (s/optional-key :postitoimipaikka) (s/maybe s/Str)
    :aidinkieli Kieli
    :rooli Rooli
    :edustus (s/maybe Edustus)

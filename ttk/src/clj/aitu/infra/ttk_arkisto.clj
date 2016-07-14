@@ -16,6 +16,7 @@
   (:require [korma.core :as sql]
             [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
+            [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.skeema :as skeema]
             [aitu.toimiala.voimassaolo.saanto.toimikunta :as voimassaolo]
             [aitu.toimiala.voimassaolo.toimikunta :as toimikunnan-voimassaolo]
@@ -167,8 +168,11 @@
 (defn ^:private rajaa-jasenyyden-kentat
   "Valitsee jäsenyydestä osoitepalvelun tarvitsemat kentät"
   [jasenyys]
-  (select-keys jasenyys [:etunimi :sukunimi :sahkoposti :aidinkieli :rooli
-                         :edustus :osoite :postinumero :postitoimipaikka :voimassa]))
+  (->
+    jasenyys
+    henkilo/poista-salaiset-henkilolta
+    (select-keys [:etunimi :sukunimi :sahkoposti :aidinkieli :rooli
+                  :edustus :osoite :postinumero :postitoimipaikka :voimassa])))
 
 (defn ^:private rajaa-toimikunnan-kentat
   "Valitsee toimikunnasta osoitepalvelun tarvitsemat kentät"
@@ -191,7 +195,8 @@
                         (sql/where {:status "nimitetty"})
                         (sql/with henkilo
                           (sql/fields :etunimi :sukunimi :sahkoposti :aidinkieli
-                                      :osoite :postinumero :postitoimipaikka))))
+                                      :osoite :postinumero :postitoimipaikka
+                                      :osoite_julkinen :sahkoposti_julkinen))))
         :let [taydennetty-toimikunta (toimikunnan-voimassaolo/taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo toimikunta)
               toimikausi (cond
                            (:voimassa taydennetty-toimikunta) :voimassa
