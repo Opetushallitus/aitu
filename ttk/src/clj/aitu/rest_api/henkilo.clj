@@ -62,6 +62,7 @@
       (henkilo/poista-salaiset-henkilolta henkilo))))
 
 (def henkilokenttien-jarjestys [:sukunimi :etunimi :toimikunta_fi :toimikunta_sv :rooli :jasenyys_alku :jasenyys_loppu
+                                :jasenyys_status
                                 :sahkoposti :puhelin :organisaatio :osoite :postinumero :postitoimipaikka :aidinkieli])
 
 (defroutes raportti-reitit
