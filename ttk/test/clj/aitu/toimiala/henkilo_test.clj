@@ -41,5 +41,5 @@
 (deftest poista-salaiset-henkilolta-vain-sahkoposti-test
   (testing "Testataan kenttien poistaminen käyttäjällä"
     (let [henkilo (assoc default-henkilo :osoite_julkinen true :puhelin_julkinen true)
-          rajoitettu-henkilo (dissoc henkilo :lisatiedot)]
+          rajoitettu-henkilo (dissoc henkilo :lisatiedot :sahkoposti)]
       (is (= rajoitettu-henkilo (poista-salaiset-henkilolta henkilo))))))
