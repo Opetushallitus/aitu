@@ -62,6 +62,7 @@
                           :jarjesto_nimi_sv "Järjestö ruotsiksi"
                           :jasenyys_alku "Jäsenyyden alku"
                           :jasenyys_loppu "Jäsenyyden loppu"
+                          :jasenyys_status "Jäsenyyden tila"
                           :kieli "Kieli"
                           :kielisyys "Kielisyys"
                           :koulutustoimija_fi "Koulutustoimija suomeksi"

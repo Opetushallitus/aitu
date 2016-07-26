@@ -44,7 +44,7 @@
   (let [toimikunta (str "%" (:toimikunta ehdot) "%")]
     (->
       (sql/select* jasenyys)
-      (sql/fields :alkupvm :loppupvm :muutettuaika :henkiloid :rooli)
+      (sql/fields :alkupvm :loppupvm :status :muutettuaika :henkiloid :rooli)
       (sql/with tutkintotoimikunta
         (sql/with toimikausi)
         (sql/fields
@@ -219,7 +219,8 @@
                                                :toimikunta_sv (:nimi_sv j)
                                                :rooli (:rooli j)
                                                :jasenyys_alku (:alkupvm j)
-                                               :jasenyys_loppu (:loppupvm j)))
+                                               :jasenyys_loppu (:loppupvm j)
+                                               :jasenyys_status (:status j)))
                                       [h]))
                                   yhdistetyt)
         karsitut-rivit (if (or (:toimikausi ehdot)
