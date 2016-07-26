@@ -66,6 +66,10 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
             });
           });
         };
+        
+        $scope.muokkaaSuoritusta = function(muokattavaSuoritus) {
+        	return alert('Kesken, OPH-1502');        	
+        };
 
         $scope.valitutSuoritukset = function() {
           return _.chain($scope.form).pairs().filter(function(x) { return x[1]; }).map(function(x) { return parseInt(x[0]); }).value();
@@ -81,16 +85,20 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         };
 
         $scope.lahetaHyvaksyttavaksi = function() {
-          var valitutSuoritukset = $scope.valitutSuoritukset();
-          Suoritus.lahetaHyvaksyttavaksi(valitutSuoritukset).then(function() {
-            paivitaSuoritustenTila(valitutSuoritukset, 'ehdotettu');
+          Varmistus.varmista(i18n.arviointipaatokset.esitetaanko_suoritus, i18n.arviointipaatokset.esita_suoritus_teksti, i18n.arviointipaatokset.esita_suoritus).then(function() {
+            var valitutSuoritukset = $scope.valitutSuoritukset();
+            Suoritus.lahetaHyvaksyttavaksi(valitutSuoritukset).then(function() {
+              paivitaSuoritustenTila(valitutSuoritukset, 'ehdotettu');
+            });
           });
         };
 
         $scope.hyvaksy = function() {
-          var valitutSuoritukset = $scope.valitutSuoritukset();
-          Suoritus.hyvaksy(valitutSuoritukset).then(function() {
-            paivitaSuoritustenTila(valitutSuoritukset, 'hyvaksytty');
+          Varmistus.varmista(i18n.arviointipaatokset.hyvaksytaanko_suoritus, i18n.arviointipaatokset.hyvaksy_suoritus_teksti, i18n.arviointipaatokset.hyvaksy_suoritus).then(function() {
+            var valitutSuoritukset = $scope.valitutSuoritukset();
+            Suoritus.hyvaksy(valitutSuoritukset).then(function() {
+              paivitaSuoritustenTila(valitutSuoritukset, 'hyvaksytty');
+            });
           });
         };
 
