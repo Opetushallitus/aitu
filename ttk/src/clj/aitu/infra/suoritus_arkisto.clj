@@ -25,7 +25,7 @@
       (sql/where {:suorituskerta_id suorituskerta-id}))))
 
 (defn hae-kaikki
-  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto]}]
+  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid]}]
   (->
     (sql/select* :suorituskerta)
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
@@ -40,6 +40,7 @@
                 [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv])
     (sql/order :suorituskerta_id :DESC)
     (cond->
+      (seq suorituskertaid) (sql/where {:suorituskerta.suorituskerta_id (Integer/parseInt suorituskertaid)})
       (seq ehdotuspvm_alku) (sql/where {:ehdotusaika [>= (to-sql-date (parse-iso-date ehdotuspvm_alku))]})
       (seq ehdotuspvm_loppu) (sql/where {:ehdotusaika [<= (to-sql-date (parse-iso-date ehdotuspvm_loppu))]})
       (seq hyvaksymispvm_alku) (sql/where {:hyvaksymisaika [>= (to-sql-date (parse-iso-date hyvaksymispvm_alku))]})
