@@ -1,5 +1,7 @@
 {{=[[ ]]=}}
 [[#i18n.arviointipaatokset]]
+[[#i18n.yleiset]]
+
 <form name="form">
 <div class="modal-header">
   <h1 class="modal-title">[[lisaa_suorittaja]]</h1>
@@ -30,8 +32,13 @@
   </div>
 </div>
 
-<div class="modal-footer">
-  <button class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()" ng-disabled="form.$error.required || !(suorittajaForm.hetu || suorittajaForm.oid)">[[tallenna_suorittaja]]</button>
-</div>
+<span>
+  <div class="modal-footer">
+    <button class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()" ng-disabled="form.$error.required || !(suorittajaForm.hetu || suorittajaForm.oid)">[[tallenna_suorittaja]]</button>
+    <button ng-click="peruuta()" class="oikealle">[[peruuta]]</button>
+  </div>
+</span>
+
 </form>
+[[/i18n.yleiset]]
 [[/i18n.arviointipaatokset]]

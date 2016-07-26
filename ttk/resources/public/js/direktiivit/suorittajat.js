@@ -70,5 +70,9 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
     $scope.tallennaSuorittaja = function() {
       $modalInstance.close($scope.suorittajaForm);
     };
+    
+    $scope.peruuta = function() {
+        $modalInstance.dismiss('cancel');
+    };
   }])
 ;
