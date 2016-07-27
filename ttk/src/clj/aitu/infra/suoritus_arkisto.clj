@@ -16,13 +16,13 @@
   (:require  [korma.core :as sql]
              [aitu.auditlog :as auditlog]
              [clj-time.coerce :refer [to-sql-date]]
+             [oph.korma.common :as sql-util]
              [oph.common.util.http-util :refer [parse-iso-date]]))
 
 (defn hae
   [suorituskerta-id]
-  (first
-    (sql/select :suorituskerta
-      (sql/where {:suorituskerta_id suorituskerta-id}))))
+  (sql-util/select-unique :suorituskerta
+    (sql/where {:suorituskerta_id suorituskerta-id})))
 
 
 (defn hae-suoritukset [suorituskerta-id]
