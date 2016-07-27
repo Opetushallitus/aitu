@@ -25,6 +25,11 @@ angular.module('rest.suoritus', [])
           return response.data;
         });
       },
+      haeId: function(id) {
+    	  return $http.get(ophBaseUrl + '/api/suoritus?suorituskertaid=' + id).then(function(response) {
+    		  return response.data;
+    	  });
+      },
       lahetaHyvaksyttavaksi: function(suoritukset) {
         return $http.post(ophBaseUrl + '/api/suoritus/laheta', {suoritukset: suoritukset}).then(function(response) {
           return response.data;

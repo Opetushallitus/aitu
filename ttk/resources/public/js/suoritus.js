@@ -16,9 +16,11 @@ angular.module('suoritus', [])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/lisaa-suoritus', {controller: 'SuoritusController', templateUrl: 'template/suoritus'});
+    $routeProvider.when('/muokkaa-suoritus/:suoritusid', {controller:'SuoritusController', templateUrl:'template/suoritus'});
   }])
 
-  .controller('SuoritusController', ['$location', '$modal', '$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', function($location, $modal, $scope, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
+  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
+   function($routeParams, $location, $modal, $scope, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
     $scope.vuodet = _.range(1, 21);
     $scope.form = {
       osat: []
@@ -31,6 +33,7 @@ angular.module('suoritus', [])
         return result;
       });
     });
+ 
 
     Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
       $scope.rahoitusmuodot = rahoitusmuodot;
@@ -51,6 +54,15 @@ angular.module('suoritus', [])
     Koulutustoimija.haeKaikkiNimet().then(function(koulutustoimijat) {
       $scope.koulutustoimijat = koulutustoimijat;
     });
+    
+    
+    if ($routeParams.suoritusid) {
+        Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
+        	console.log(suoritus);
+        	alert('Ei toimi vielä. OPH-1502, kesken');
+        	$scope.form.rahoitusmuoto = suoritus.rahoitusmuoto;
+        });
+     }
 
     $scope.lisaaTutkinnonosa = function() {
       var modalInstance = $modal.open({

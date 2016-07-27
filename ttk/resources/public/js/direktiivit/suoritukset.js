@@ -20,7 +20,8 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       restrict: 'E',
       templateUrl: 'template/direktiivit/suoritukset',
       scope: {},
-      controller: ['$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suoritus', 'TutkintoResource', 'Varmistus', 'i18n', function($scope, Koulutustoimija, Rahoitusmuoto, Suoritus, TutkintoResource, Varmistus, i18n) {
+      controller: ['$location', '$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suoritus', 'TutkintoResource', 'Varmistus', 'i18n', 
+         function($location, $scope, Koulutustoimija, Rahoitusmuoto, Suoritus, TutkintoResource, Varmistus, i18n) {
         $scope.hakuForm = {};
         $scope.i18n = i18n;
 
@@ -68,7 +69,8 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         };
         
         $scope.muokkaaSuoritusta = function(muokattavaSuoritus) {
-        	return alert('Kesken, OPH-1502');        	
+        	$location.url('/muokkaa-suoritus/' + muokattavaSuoritus.suorituskerta_id);
+        	// return alert('Kesken, OPH-1502');
         };
 
         $scope.valitutSuoritukset = function() {
