@@ -41,7 +41,7 @@ alter table suoritus
 comment on column suoritus.osaamisala is 'Osaamisalaa ei voida aina päätellä tutkinnon osan perusteella.';
  
 alter table suorittaja
-  add column rahoitusmuoto int references rahoitusmuoto(rahoitusmuoto_id);
+  add column rahoitusmuoto int not null references rahoitusmuoto(rahoitusmuoto_id);
   
 
 

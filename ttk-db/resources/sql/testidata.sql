@@ -62,9 +62,9 @@ insert into jarjestamissopimus (jarjestamissopimusid, sopimusnumero, toimikunta,
 insert into sopimus_ja_tutkinto(jarjestamissopimusid, tutkintoversio)
   values (-324601, -10000);
 
-insert into suorittaja (suorittaja_id, etunimi, sukunimi, oid)
-  values (-1, 'Orvokki', 'Opiskelija', 'fan.far.12345');
+insert into suorittaja (suorittaja_id, etunimi, sukunimi, oid, rahoitusmuoto)
+  values (-1, 'Orvokki', 'Opiskelija', 'fan.far.12345', 1);
 
-insert into suorittaja (suorittaja_id, etunimi, sukunimi, oid)
-  values (-2, 'Lieto', 'Lemminkäinen', 'pfft.12345');
+insert into suorittaja (suorittaja_id, etunimi, sukunimi, oid, rahoitusmuoto)
+  values (-2, 'Lieto', 'Lemminkäinen', 'pfft.12345', 2);
 
