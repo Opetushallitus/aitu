@@ -24,6 +24,11 @@
     (sql/select :suorituskerta
       (sql/where {:suorituskerta_id suorituskerta-id}))))
 
+
+(defn hae-suoritukset [suorituskerta-id]
+  (sql/select :suoritus
+     (sql/where {:suorituskerta suorituskerta-id})))
+
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid]}]
   (->
