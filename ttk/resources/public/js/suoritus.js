@@ -59,10 +59,10 @@ angular.module('suoritus', [])
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
         	console.log(suoritus);
         	alert('Ei toimi vielä. OPH-1502, kesken, ');
-        	$scope.form.rahoitusmuoto = suoritus[0].rahoitusmuoto;
-        	$scope.form.suorittaja = suoritus[0].suorittaja;
-        	$scope.form.koulutustoimija = suoritus[0].koulutustoimija;
-        	$scope.form.tutkinto = suoritus[0].tutkinto;
+        	$scope.form.rahoitusmuoto = suoritus.rahoitusmuoto;
+        	$scope.form.suorittaja = suoritus.suorittaja;
+        	$scope.form.koulutustoimija = suoritus.koulutustoimija;
+        	$scope.form.tutkinto = suoritus.tutkinto;
 //        	$scope.form.opiskelijavuosi = suoritus[0].opiskelijavuosi;
         });
      }

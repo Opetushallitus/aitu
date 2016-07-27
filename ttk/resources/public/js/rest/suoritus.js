@@ -26,7 +26,7 @@ angular.module('rest.suoritus', [])
         });
       },
       haeId: function(id) {
-    	  return $http.get(ophBaseUrl + '/api/suoritus?suorituskertaid=' + id).then(function(response) {
+    	  return $http.get(ophBaseUrl + '/api/suoritus/' + id).then(function(response) {
     		  return response.data;
     	  });
       },

@@ -21,6 +21,9 @@
   (GET "/" [& ehdot]
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/hae-kaikki ehdot)))
+  (GET "/:suorituskerta-id" [suorituskerta-id]
+       :kayttooikeus :arviointipaatos
+       (response-or-404 (arkisto/hae-tiedot suorituskerta-id)))
   (DELETE "/:suorituskerta-id" [suorituskerta-id]
     :kayttooikeus :arviointipaatos
     (let [suorituskerta-id (Integer/parseInt suorituskerta-id)

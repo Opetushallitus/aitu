@@ -57,6 +57,12 @@
       (seq tutkinto) (sql/where {:tutkinto tutkinto}))
     sql/exec))
 
+(defn hae-tiedot [suorituskerta-id]
+  (let [perus (hae-kaikki {:suorituskertaid suorituskerta-id})
+        suoritukset (hae-suoritukset (Integer/parseInt suorituskerta-id))]
+     (assoc (first perus) :osat suoritukset)))
+
+
 (defn lisaa!
   [{:keys [jarjestamismuoto koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
     :as suoritus}]
