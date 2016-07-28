@@ -27,6 +27,12 @@
 
 (defn hae-suoritukset [suorituskerta-id]
   (sql/select :suoritus
+    (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :tutkinnonosa))
+    (sql/fields :suoritus_id :arvosana :suorituskerta :tutkinnonosa :arvosanan_korotus :osaamisen_tunnustaminen :kieli :todistus :osaamisala
+                [:tutkinnonosa.osatunnus :osatunnus]
+                [:tutkinnonosa.nimi_fi :nimi]
+ ; TODO: nimi_fi ei ole oikeasti hyvä juttu välttämättä..
+                )
      (sql/where {:suorituskerta suorituskerta-id})))
 
 (defn hae-kaikki

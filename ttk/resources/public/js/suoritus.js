@@ -22,18 +22,6 @@ angular.module('suoritus', [])
   .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
    function($routeParams, $location, $modal, $scope, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
     $scope.vuodet = _.range(1, 21);
-    $scope.form = {
-      osat: []
-    };
-    $scope.osat = [];
-    $scope.$watchCollection('osat', function(osat) {
-      $scope.form.osat = _.map(osat, function(osa) {
-        var result = _.pick(osa, ['arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
-        result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
-        return result;
-      });
-    });
- 
 
     Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
       $scope.rahoitusmuodot = rahoitusmuodot;
@@ -54,6 +42,11 @@ angular.module('suoritus', [])
     Koulutustoimija.haeKaikkiNimet().then(function(koulutustoimijat) {
       $scope.koulutustoimijat = koulutustoimijat;
     });
+
+    $scope.form = {
+      osat: []
+    };
+    $scope.osat = [];
     
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
@@ -63,10 +56,32 @@ angular.module('suoritus', [])
         	$scope.form.suorittaja = suoritus.suorittaja;
         	$scope.form.koulutustoimija = suoritus.koulutustoimija;
         	$scope.form.tutkinto = suoritus.tutkinto;
-//        	$scope.form.opiskelijavuosi = suoritus[0].opiskelijavuosi;
+            $scope.osat = _.map(suoritus.osat, function(osa) {
+                var result = _.pick(osa, ['arvosana', 'kieli', 'todistus']);
+                result.tutkinnonosa = {
+                	tutkinnonosa_id: osa.tutkinnonosa,
+                	tutkinto: suoritus.tutkinto,
+                	osatunnus: osa.osatunnus,
+                	nimi: osa.nimi
+                };
+//                result.tutkinnonosa.tutkinnonosa_id = osa.tutkinnonosa;
+                result.korotus = osa.arvosanan_korotus;
+                result.tunnustaminen = osa.osaamisen_tunnustaminen;
+                console.log(result);
+                return result;
+            });
+            $scope.form.osat = $scope.osat;
         });
-     }
-
+     } 
+    
+     $scope.$watchCollection('osat', function(osat) {
+      $scope.form.osat = _.map(osat, function(osa) {
+        var result = _.pick(osa, ['arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
+        result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
+        return result;
+      });
+    });
+    
     $scope.lisaaTutkinnonosa = function() {
       var modalInstance = $modal.open({
         templateUrl: 'template/modal/suoritus-tutkinnonosa',
