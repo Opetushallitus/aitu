@@ -43,6 +43,7 @@
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
+                :jarjestamismuoto :opiskelijavuosi
                 [:suorittaja.etunimi :suorittaja_etunimi]
                 [:suorittaja.sukunimi :suorittaja_sukunimi]
                 [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]

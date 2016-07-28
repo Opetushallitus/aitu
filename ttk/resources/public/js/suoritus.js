@@ -55,16 +55,24 @@ angular.module('suoritus', [])
         	$scope.form.rahoitusmuoto = suoritus.rahoitusmuoto;
         	$scope.form.suorittaja = suoritus.suorittaja;
         	$scope.form.koulutustoimija = suoritus.koulutustoimija;
+        	$scope.form.opiskelijavuosi = "" + suoritus.opiskelijavuosi;
+        	$scope.form.jarjestamismuoto = suoritus.jarjestamismuoto;
         	$scope.form.tutkinto = suoritus.tutkinto;
             $scope.osat = _.map(suoritus.osat, function(osa) {
                 var result = _.pick(osa, ['arvosana', 'kieli', 'todistus']);
                 result.tutkinnonosa = {
                 	tutkinnonosa_id: osa.tutkinnonosa,
-                	tutkinto: suoritus.tutkinto,
                 	osatunnus: osa.osatunnus,
-                	nimi: osa.nimi
+                	nimi: osa.nimi, // TODO: sv ja fi
+                	nayttotutkinto_nimi_fi: suoritus.tutkinto_nimi_fi,
+                	nayttotutkinto_nimi_sv: suoritus.tutkinto_nimi_sv,
+                	tutkinto: {
+                		nimi: suoritus.tutkinto_nimi_fi,
+                		tutkintotunnus: suoritus.tutkinto,
+                		nimi_fi: suoritus.tutkinto_nimi_fi,
+                		nimi_sv: suoritus.tutkinto_nimi_sv
+                	}
                 };
-//                result.tutkinnonosa.tutkinnonosa_id = osa.tutkinnonosa;
                 result.korotus = osa.arvosanan_korotus;
                 result.tunnustaminen = osa.osaamisen_tunnustaminen;
                 console.log(result);
