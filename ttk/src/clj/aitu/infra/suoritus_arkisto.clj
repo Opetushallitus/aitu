@@ -102,8 +102,7 @@
     ; päivitys
     (do
       (auditlog/suoritus-operaatio! :paivitys {:suorituskerta_id suorituskerta_id})
-      ; TODO: update-unique
-      (sql/update :suorituskerta
+      (sql-util/update-unique :suorituskerta
          (sql/set-fields {:jarjestamismuoto jarjestamismuoto
                           :koulutustoimija koulutustoimija
                           :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
@@ -112,11 +111,15 @@
                           :tutkinto tutkinto})
          (sql/where {:suorituskerta_id suorituskerta_id}))
       ; update osat
+      ; poistetut osat, käsitellään ennen kuin lisätään uusia osia
+      (let [ids (filter #(not (nil? %)) (map :suoritus_id osat))]
+        (sql/delete :suoritus
+          (sql/where {:suorituskerta suorituskerta_id})
+          (sql/where {:suoritus_id [not-in ids]})))
       (doseq [osa osat]
         (if (nil? (:suoritus_id osa))
           (lisaa-suoritus! (assoc osa :suorituskerta_id suorituskerta_id))
-          ; päivitys.. TODO: update-unique
-          (sql/update :suoritus
+          (sql-util/update-unique :suoritus
             (sql/set-fields {:suorituskerta suorituskerta_id
                              :tutkinnonosa (:tutkinnonosa_id osa)
                              :arvosana (:arvosana osa)
@@ -126,15 +129,14 @@
                              :todistus (:todistus osa)})
             (sql/where {:suoritus_id (:suoritus_id osa)})
           )))
-        suoritus
+          suoritus
       )))
 
 (defn laheta!
   [suoritukset]
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
                                            :tila "ehdotettu"})
-    ; TODO: update-unique
-  (sql/update :suorituskerta
+  (sql/update :suorituskerta 
     (sql/set-fields {:tila "ehdotettu"
                      :ehdotusaika (sql/sqlfn now)})
     (sql/where {:suorituskerta_id [in suoritukset]})))
@@ -143,7 +145,6 @@
   [suoritukset]
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
                                            :tila "hyvaksytty"})
-    ; TODO: update-unique
   (sql/update :suorituskerta
     (sql/set-fields {:tila "hyvaksytty"
                      :hyvaksymisaika (sql/sqlfn now)})
@@ -152,7 +153,7 @@
 (defn poista!
   [suorituskerta-id]
   (auditlog/suoritus-operaatio! :poisto {:suoritus-id suorituskerta-id})
-    ; TODO: delete-unique
+  ; TODO: delete-unique olisi siistimpi, mutta REST rajapinta olettaa ilmeisesti saavansa paluuarvona poistetun entityn
   (sql/delete :suorituskerta
     (sql/where {:suorituskerta_id suorituskerta-id
                 :tila "luonnos"})))

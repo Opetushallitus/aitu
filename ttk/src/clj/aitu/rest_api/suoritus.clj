@@ -17,6 +17,7 @@
             [compojure.api.core :refer [DELETE GET POST defroutes]]
             [oph.common.util.http-util :refer [response-or-404]]))
 
+; TODO: tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
 (defroutes reitit
   (GET "/" [& ehdot]
     :kayttooikeus :arviointipaatos
