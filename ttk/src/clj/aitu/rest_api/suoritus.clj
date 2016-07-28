@@ -33,7 +33,7 @@
         {:status 403})))
   (POST "/" [& suoritus]
     :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/lisaa! suoritus)))
+    (response-or-404 (arkisto/lisaa-tai-paivita! suoritus)))
   (POST "/laheta" [suoritukset]
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/laheta! suoritukset)))

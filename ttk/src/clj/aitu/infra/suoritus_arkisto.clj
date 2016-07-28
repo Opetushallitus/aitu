@@ -69,6 +69,15 @@
         suoritukset (hae-suoritukset (Integer/parseInt suorituskerta-id))]
      (assoc (first perus) :osat suoritukset)))
 
+(defn ^:private lisaa-suoritus! [osa]
+  (sql/insert :suoritus
+   (sql/values {:suorituskerta (:suorituskerta_id osa)
+                :tutkinnonosa (:tutkinnonosa_id osa)
+                :arvosana (:arvosana osa)
+                :arvosanan_korotus (:korotus osa)
+                :osaamisen_tunnustaminen (:tunnustaminen osa)
+                :kieli (:kieli osa)
+                :todistus (:todistus osa)})))
 
 (defn lisaa!
   [{:keys [jarjestamismuoto koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
@@ -82,20 +91,49 @@
                                      :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
                                      :koulutustoimija koulutustoimija}))]
     (doseq [osa osat]
-      (sql/insert :suoritus
-        (sql/values {:suorituskerta (:suorituskerta_id suorituskerta)
-                     :tutkinnonosa (:tutkinnonosa_id osa)
-                     :arvosana (:arvosana osa)
-                     :arvosanan_korotus (:korotus osa)
-                     :osaamisen_tunnustaminen (:tunnustaminen osa)
-                     :kieli (:kieli osa)
-                     :todistus (:todistus osa)})))
+      (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta))))
     suorituskerta))
+
+(defn lisaa-tai-paivita!
+  [{:keys [jarjestamismuoto koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id]
+    :as suoritus}]
+  (if (nil? suorituskerta_id)
+    (lisaa! suoritus)
+    ; päivitys
+    (do
+      (auditlog/suoritus-operaatio! :paivitys {:suorituskerta_id suorituskerta_id})
+      ; TODO: update-unique
+      (sql/update :suorituskerta
+         (sql/set-fields {:jarjestamismuoto jarjestamismuoto
+                          :koulutustoimija koulutustoimija
+                          :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
+                          :suorittaja suorittaja
+                          :rahoitusmuoto rahoitusmuoto
+                          :tutkinto tutkinto})
+         (sql/where {:suorituskerta_id suorituskerta_id}))
+      ; update osat
+      (doseq [osa osat]
+        (if (nil? (:suoritus_id osa))
+          (lisaa-suoritus! (assoc osa :suorituskerta_id suorituskerta_id))
+          ; päivitys.. TODO: update-unique
+          (sql/update :suoritus
+            (sql/set-fields {:suorituskerta suorituskerta_id
+                             :tutkinnonosa (:tutkinnonosa_id osa)
+                             :arvosana (:arvosana osa)
+                             :arvosanan_korotus (:korotus osa)
+                             :osaamisen_tunnustaminen (:tunnustaminen osa)
+                             :kieli (:kieli osa)
+                             :todistus (:todistus osa)})
+            (sql/where {:suoritus_id (:suoritus_id osa)})
+          )))
+        suoritus
+      )))
 
 (defn laheta!
   [suoritukset]
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
                                            :tila "ehdotettu"})
+    ; TODO: update-unique
   (sql/update :suorituskerta
     (sql/set-fields {:tila "ehdotettu"
                      :ehdotusaika (sql/sqlfn now)})
@@ -105,6 +143,7 @@
   [suoritukset]
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
                                            :tila "hyvaksytty"})
+    ; TODO: update-unique
   (sql/update :suorituskerta
     (sql/set-fields {:tila "hyvaksytty"
                      :hyvaksymisaika (sql/sqlfn now)})
@@ -113,6 +152,7 @@
 (defn poista!
   [suorituskerta-id]
   (auditlog/suoritus-operaatio! :poisto {:suoritus-id suorituskerta-id})
+    ; TODO: delete-unique
   (sql/delete :suorituskerta
     (sql/where {:suorituskerta_id suorituskerta-id
                 :tila "luonnos"})))

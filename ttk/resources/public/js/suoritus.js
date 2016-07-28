@@ -51,13 +51,14 @@ angular.module('suoritus', [])
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
         	console.log(suoritus);
-        	alert('Ei toimi vielä. OPH-1502, kesken, ');
+        	 
         	$scope.form.rahoitusmuoto = suoritus.rahoitusmuoto;
         	$scope.form.suorittaja = suoritus.suorittaja;
         	$scope.form.koulutustoimija = suoritus.koulutustoimija;
         	$scope.form.opiskelijavuosi = "" + suoritus.opiskelijavuosi;
         	$scope.form.jarjestamismuoto = suoritus.jarjestamismuoto;
         	$scope.form.tutkinto = suoritus.tutkinto;
+        	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.osat = _.map(suoritus.osat, function(osa) {
                 var result = _.pick(osa, ['arvosana', 'kieli', 'todistus']);
                 result.tutkinnonosa = {
@@ -73,6 +74,7 @@ angular.module('suoritus', [])
                 		nimi_sv: suoritus.tutkinto_nimi_sv
                 	}
                 };
+                result.suoritus_id = osa.suoritus_id;
                 result.korotus = osa.arvosanan_korotus;
                 result.tunnustaminen = osa.osaamisen_tunnustaminen;
                 console.log(result);
@@ -86,6 +88,7 @@ angular.module('suoritus', [])
       $scope.form.osat = _.map(osat, function(osa) {
         var result = _.pick(osa, ['arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
         result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
+        result.suoritus_id = osa.suoritus_id;
         return result;
       });
     });
