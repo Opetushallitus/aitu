@@ -36,6 +36,19 @@
                    :request-method method
                    :params params))
 
+(defn mock-json-post
+  "Autentikoitu testikäyttäjä ja fake CSRF-token."
+  [app url json-body]
+  (with-auth-user
+    #(peridot/request app url
+       :request-method :post
+       :headers { "x-xsrf-token" "token"
+                  "uid" (:uid default-usermap)}
+       :cookies { "XSRF-TOKEN" {:value "token"}}
+       :content-type "application/json; charset=utf-8"
+       :body json-body)
+    default-usermap))
+
 (defn mock-request
   "Autentikoitu testikäyttäjä ja fake CSRF-token."
   ([app url method params user-map]
