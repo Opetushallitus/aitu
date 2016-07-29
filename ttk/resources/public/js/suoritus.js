@@ -50,8 +50,6 @@ angular.module('suoritus', [])
     
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
-        	console.log(suoritus);
-        	 
         	$scope.form.rahoitusmuoto = suoritus.rahoitusmuoto;
         	$scope.form.suorittaja = suoritus.suorittaja;
         	$scope.form.koulutustoimija = suoritus.koulutustoimija;
@@ -77,7 +75,6 @@ angular.module('suoritus', [])
                 result.suoritus_id = osa.suoritus_id;
                 result.korotus = osa.arvosanan_korotus;
                 result.tunnustaminen = osa.osaamisen_tunnustaminen;
-                console.log(result);
                 return result;
             });
             $scope.form.osat = $scope.osat;
