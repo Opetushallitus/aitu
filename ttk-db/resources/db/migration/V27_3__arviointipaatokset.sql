@@ -11,7 +11,7 @@ comment on column suorituskerta.jarjestelyt is 'Vapaa kuvaus järjestelyistä, j
 
 create table arvioija (
   nimi varchar(200) not null primary key,
-  rooli varchar(100),
+  rooli varchar(20) references edustus(nimi),
   nayttotutkintomestari boolean not null default false,
   muutettu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
   luotu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
@@ -52,8 +52,3 @@ comment on column suoritus.osaamisala is 'Osaamisalaa ei voida aina päätellä 
  
 alter table suorittaja
   add column rahoitusmuoto int not null references rahoitusmuoto(rahoitusmuoto_id);
-  
-
-
-
-
