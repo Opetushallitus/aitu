@@ -33,8 +33,8 @@
           _ (lisaa-jasenesitys! "nimitetty")
           _ (lisaa-jasenesitys! "peruutettu")
           ; yksi esitetty, yksi nimitetty, yksi peruutettu
-          yhteensa-jarjesto (arkisto/hae-yhteenveto -1 (hae-tuleva-toimikausi) false)
-          yhteensa-kaikki (arkisto/hae-yhteenveto nil (hae-tuleva-toimikausi) false)
+          yhteensa-jarjesto (arkisto/hae-yhteenveto -1 (hae-voimassaoleva-toimikausi) false)
+          yhteensa-kaikki (arkisto/hae-yhteenveto nil (hae-voimassaoleva-toimikausi) false)
           yhteensa-j1 (first yhteensa-jarjesto)
           yhteensa-j1-kaikki (first yhteensa-kaikki)
           yhteensa-j2-kaikki (second yhteensa-kaikki)]
@@ -51,7 +51,7 @@
     (let [_ (lisaa-jasenesitys! "esitetty" {:aidinkieli "fi"})
           _ (lisaa-jasenesitys! "esitetty" {:aidinkieli "sv"})
           _ (lisaa-jasenesitys! "esitetty" {:aidinkieli "2k"})
-          yhteensa (first (arkisto/hae-yhteenveto -1 (hae-tuleva-toimikausi) false))]
+          yhteensa (first (arkisto/hae-yhteenveto -1 (hae-voimassaoleva-toimikausi) false))]
 
       (is (= yhteensa  {:nimitetty_miehia 0, :nimitetty_sv 0, :nimitetty_naisia 0, :nimi_fi "Aavasaksalainen testitoimikunta", :nimitetty_fi 0, 
                     :nimi_sv "Aakkosissa Aavasaksa asettuu alkuun", :esitetty_fi 2, :esitetty_naisia 0, :esitetty_miehia 3, :diaarinumero "6510/6502", :esitetty_sv 2}))
