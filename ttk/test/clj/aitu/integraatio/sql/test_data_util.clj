@@ -101,7 +101,7 @@
        :nimi_sv "Testitoimikunnan nimi (sv)"
        :tilikoodi (str i)
        :toimiala "toimiala"
-       :toimikausi_id 2 ; voimassaoleva toimikausi
+       :toimikausi_id 3 ; voimassaoleva toimikausi
        :kielisyys "fi"
        :sahkoposti "toimikunta@email.fi"
        :toimikausi_alku (kuukausi-sitten)

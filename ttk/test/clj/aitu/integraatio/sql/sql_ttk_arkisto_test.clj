@@ -98,8 +98,8 @@
 (deftest ^:integraatio hae-ehdoilla-nykyinen-toimikausi
   (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})
   (lisaa-toimikunta-voimassaolevalle-kaudelle! {:tkunta "TK2"})
-  (is (= (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "nykyinen"}))
-         ["TK2"])))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:toimikausi "nykyinen"})))
+         #{"Gulo gulo" "Lynx lynx" "TK2"})))
 
 (deftest ^:integraatio hae-ehdoilla-muu-toimikausi
   (lisaa-toimikunta-vanhalle-kaudelle! {:tkunta "TK1"})
