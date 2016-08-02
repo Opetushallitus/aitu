@@ -139,10 +139,10 @@
                                                                                         (cond->   
                                                                                           sop-kylla
                                                                                             (sql/where (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
-                                                                                                         (<= (sql/raw "current_date") :sopimus_ja_tutkinto.loppupvm))) ; alkupvm <= current date <= loppupvm
+                                                                                                            (<= (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")) )))  ; alkupvm <= current date <= loppupvm
                                                                                           sop-ei
                                                                                             (sql/where (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
-                                                                                                         (> (sql/raw "current_date") :sopimus_ja_tutkinto.loppupvm))) ; alkupvm <= current_date && current date > loppupvm
+                                                                                                         (> (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")) ))) ; alkupvm <= current_date && current date > loppupvm
                                                                                                    ))))
                           (not (blank? (:nimi ehdot))) (sql/where {:nimi [ilike nimi]})
                           ; tämä ehto vain jos ei ole rajattu tunnuksella
