@@ -91,7 +91,8 @@
     (auditlog/jarjestamissopimus-poisto! sopimusid diaarinumero))
 
   (sql/update jarjestamissopimus
-    (sql/set-fields {:poistettu true})
+    (sql/set-fields {:poistettu true
+                     :voimassa false})
     (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
   (sql/update sopimus-ja-tutkinto
     (sql/set-fields {:poistettu true})
