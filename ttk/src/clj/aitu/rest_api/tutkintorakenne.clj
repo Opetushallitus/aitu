@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.tutkintorakenne
   (:require [aitu.infra.tutkintorakenne-arkisto :as arkisto]
+            aitu.restructure
             [compojure.api.core :refer [GET defroutes]]
             [oph.common.util.http-util :refer [cachable-response]]))
 

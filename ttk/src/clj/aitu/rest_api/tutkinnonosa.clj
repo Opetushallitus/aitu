@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.tutkinnonosa
   (:require [aitu.infra.tutkinnonosa-arkisto :as arkisto]
+            aitu.restructure
             [compojure.api.core :refer [GET defroutes]]
             [oph.common.util.http-util :refer [response-or-404]]))
 

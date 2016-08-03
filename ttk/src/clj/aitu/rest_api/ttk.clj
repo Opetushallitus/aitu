@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.ttk
   (:require [schema.core :as sc]
+            aitu.restructure
             [aitu.infra.ttk-arkisto :as arkisto]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.paatos-arkisto :as paatos-arkisto]
@@ -110,7 +111,7 @@
                                  :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv])
 
 (defroutes paatos-reitit
-  ; TODO: ongelma koska ammattisihteeri ei voi tulostaa päätöksiä, mutta toimikunta-sivu ei avaudu ilman tätä 
+  ; TODO: ongelma koska ammattisihteeri ei voi tulostaa päätöksiä, mutta toimikunta-sivu ei avaudu ilman tätä
   (GET "/paatospohja-oletukset" []
     :kayttooikeus :paatospohja
     (response-or-404 (:paatospohja-oletukset @asetukset)))

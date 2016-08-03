@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.aipal
   (:require [aitu.infra.jarjestamissopimus-arkisto :as jarjestamissopimus-arkisto]
+            aitu.restructure
             [compojure.api.core :refer [GET defroutes]]
             [oph.common.util.http-util :refer [response-or-404]]))
 

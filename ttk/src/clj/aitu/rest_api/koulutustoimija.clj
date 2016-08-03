@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.koulutustoimija
   (:require [compojure.api.core :refer [GET defroutes]]
+            aitu.restructure
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
             [aitu.toimiala.koulutustoimija :as koulutustoimija]
             [oph.common.util.http-util :refer [csv-download-response cachable-response response-or-404]]
