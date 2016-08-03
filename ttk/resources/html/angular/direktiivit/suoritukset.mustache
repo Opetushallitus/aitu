@@ -103,7 +103,7 @@
         <span ng-if="hakuForm.tila === 'ehdotettu'">[[hyvaksy]]</span>
       </div>
     </div>
-    <div class="table-row" ng-repeat="suoritus in suoritukset |filter:{tila: hakuForm.tila}">
+    <div class="table-row" ng-repeat="suoritus in suoritukset|filter:filterTila(hakuForm.tila)">
       <div class="table-cell">{{ suoritus.suorittaja_etunimi }}</div>
       <div class="table-cell">{{ suoritus.suorittaja_sukunimi }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</div>
