@@ -18,6 +18,7 @@
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.util :refer [->vector]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
+            [aitu.infra.ttk-arkisto :as toimikunta-arkisto]
             [aitu.infra.i18n :as i18n]
             [valip.predicates :refer [present?]]
             [aitu.toimiala.skeema :as skeema]
@@ -86,7 +87,8 @@
   (POST "/:tkunta" [tutkintotunnus toimikunta sopijatoimikunta koulutustoimija tutkintotilaisuuksista_vastaava_oppilaitos sopimusnumero jarjestamissopimusid vastuuhenkilo sahkoposti puhelin voimassa]
     :path-params [tkunta]
     :kayttooikeus [:sopimus_lisays tkunta]
-    (let [sopimus (merge {:sopimusnumero sopimusnumero
+    (let [sopimusnumero_gen (toimikunta-arkisto/uusi-sopimusnumero tkunta)
+          sopimus (merge {:sopimusnumero sopimusnumero_gen
                           :toimikunta tkunta
                           :sopijatoimikunta (paljas-tai-kentan-arvo sopijatoimikunta :tkunta)
                           :koulutustoimija (paljas-tai-kentan-arvo koulutustoimija :ytunnus)

@@ -11,11 +11,9 @@
 [[#i18n.jarjestamissopimus]]
 <div ng-hide="muokkausTila" class="sopimus">
   <div>
-    <fieldset>
-      <label>[[sopimusnumero]]</label>
-      <ohje class="right" tunniste="sopimuksen-tiedot-sopimusnumero"></ohje>
-      <p>{{sopimus.sopimusnumero}}</p>
-    </fieldset>
+    <label>[[sopimusnumero]]</label>
+    <ohje class="right" tunniste="sopimuksen-tiedot-sopimusnumero"></ohje>
+    <p>{{sopimus.sopimusnumero}}</p>
     <fieldset>
       <label>[[voimassa]]</label>
       <p class="e2e-sopimus-alkupvm">{{sopimus.alkupvm | voimassaoloAika: sopimus.loppupvm}}</p>
@@ -58,11 +56,9 @@
 
 <div ng-show="muokkausTila" class="sopimusMuokkaus">
   <form name="sopimuksenMuokkausForm">
-    <fieldset>
       <label class="pakollinen">[[sopimusnumero]]</label>
       <ohje class="right" tunniste="sopimuksen-muokkaus-sopimusnumero"></ohje>
-      <input ng-required="true" type="text" ng-model="sopimus.sopimusnumero" maxlength="25"></input>
-    </fieldset>
+      <p>{{sopimus.sopimusnumero}}</p>
     <fieldset>
       <label>[[yhteyshenkilon_nimi]]</label>
       <input type="text" ng-model="sopimus.vastuuhenkilo"></input>

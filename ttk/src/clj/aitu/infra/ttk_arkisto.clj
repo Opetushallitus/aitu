@@ -41,6 +41,18 @@
   [tkunta]
   (:diaarinumero (hae-avaimella tkunta)))
 
+(defn uusi-sopimusnumero [tkunta]
+  (let [toimikunta (hae-avaimella tkunta)]
+; nil toimikunta -> väärä avain -> potentiaalinen SQL injektio yritelmä    (when (nil? toimikunta) throw ..
+    (str (:diaarinumero toimikunta) "-"
+      (+ 1 (:max (first (sql/exec-raw
+                                    (str "select max(cast(numba as integer)) from "
+                                         "  (select substr(sopimusnumero, length(t.diaarinumero) +2) as numba from jarjestamissopimus j "
+                                         "        inner join tutkintotoimikunta t on t.tkunta = j.toimikunta "
+                                         "        where strpos(j.sopimusnumero, t.diaarinumero || '-') > 0 "
+                                         "          and t.tkunta = '" (:tkunta toimikunta) "'" ; sql-injektio hoidettu
+                                         "        union all select '0' as numba) f") :results)))))))
+  
 (defn hae-toimikunnan-tunniste
   "Hakee toimikunnan tkunta tunnisteen diaarinumerolla"
   [diaarinumero]

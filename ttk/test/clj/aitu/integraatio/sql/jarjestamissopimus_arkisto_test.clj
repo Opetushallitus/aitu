@@ -18,6 +18,7 @@
   (:require [clojure.test :refer :all]
             [clojure.walk :refer [postwalk]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
+            [aitu.infra.ttk-arkisto :as toimikunta-arkisto]
             [aitu.toimiala.jarjestamissopimus :refer :all]
             [korma.core :as sql]
             [clj-time.format :refer [formatters parse-local-date]]
@@ -62,6 +63,7 @@
                      ")"))
   (sql/exec-raw (str "insert into tutkintotoimikunta("
                      "tkunta,"
+                     "diaarinumero,"
                      "nimi_fi,nimi_sv,"
                      "kielisyys,"
                      "toimikausi_id,"
@@ -69,6 +71,7 @@
                      "toimikausi_loppu"
                      ")values("
                      "'TKUN',"
+                     "'68000/68020',"
                      "'nimi','nimi',"
                      "'fi',"
                      "2,"
@@ -85,6 +88,15 @@
   (lisaa-tutkinto! {:tutkintotunnus "34567"})
   (lisaa-tutkintoversio! {:tutkintotunnus "34567"
                           :tutkintoversio_id 34567}))
+
+(deftest ^:integraatio sopimusnumero-test!
+  (testing "Testaa että sopimusnumeron automaattinen generointi toimii."
+    (lisaa-testidata!)
+    (let [sop_nro (toimikunta-arkisto/uusi-sopimusnumero "TKUN")
+          sop (merge (arbitrary-sopimus) {:sopimusnumero sop_nro})
+          _ (arkisto/lisaa! sop)
+          sop_nro_seuraava (toimikunta-arkisto/uusi-sopimusnumero "TKUN")]
+      (is (= sop_nro_seuraava "68000/68020-2")))))
 
 (deftest ^:integraatio lisaa-sopimus-test!
   (testing "Testaa että sopimuksen lisääminen onnistuu."
