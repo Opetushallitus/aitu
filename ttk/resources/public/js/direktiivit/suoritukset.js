@@ -22,7 +22,12 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       scope: {},
       controller: ['$location', '$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suoritus', 'TutkintoResource', 'Varmistus', 'i18n', 
          function($location, $scope, Koulutustoimija, Rahoitusmuoto, Suoritus, TutkintoResource, Varmistus, i18n) {
-        $scope.hakuForm = {};
+        $scope.hakuForm = {tila: null};
+        $scope.filterTila = function(tila) {
+          return function(item) {
+            return tila === null || tila === item.tila;
+          };
+        };
         $scope.i18n = i18n;
 
         $scope.$watch('haeSuorituksia', function(haeSuorituksia) {
