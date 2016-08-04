@@ -111,13 +111,13 @@
         (testing "pitäisi näyttää kielisyys"
           (is (= (enum-elementin-teksti "kieli") "suomi")))
         (testing "pitäisi näyttää toimikausi"
-          (is (= (toimikausi) "01.08.2013 – 31.07.2016")))
+          (is (= (toimikausi) "01.08.2016 – 31.07.2018")))
         (testing "pitäisi näyttää sähköposti"
           (is (= (elementin-teksti "toimikunta.sahkoposti") "toimikunta@mail.fi")))
         (testing "pitäisi näyttää nykyinen jäsen"
            (is (subset? #{"Aku Ankka" "Pelle Peloton"} (set (jasenien-nimet)))))
         (testing "pitäisi näyttää järjestämissopimus"
-                          (is (= (first (jarjestamissopimukset)) "123")))
+                          (is (= (first (jarjestamissopimukset)) "98/11/543-1")))
         (testing "pitäisi näyttää tutkinnot järjestämissopimukselle"
           (is (= (first (sopimuksen-tutkinnot)) "Ilmastointialan tutkinto")))))))
 
@@ -140,7 +140,7 @@
         (testing "pitäisi näyttää kielisyys"
           (is (= (enum-elementin-teksti "kieli") "kaksikielinen")))
         (testing "pitäisi näyttää toimikausi"
-          (is (= (toimikausi) "01.08.2013 – 31.07.2016")))))))
+          (is (= (toimikausi) "01.08.2016 – 31.07.2018")))))))
 
 (deftest toimikuntasivu-muokkaus-test-pakolliset-kentat
   (testing "Toimikuntasivu - pakolliset kentät:"

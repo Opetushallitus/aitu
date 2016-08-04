@@ -93,7 +93,7 @@
        :sopimus_ja_tutkinto
        {:jarjestamissopimusid jarjestamissopimusid
         :sopimus_ja_tutkinto [{:tutkintoversio_id tutkintoversio-id
-                               :alkupvm menneisyydessa
+                               :alkupvm eilen
                                :loppupvm tulevaisuudessa}]}}))
   ([y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio]
     (setup-voimassaoleva-jarjestamissopimus (uusi-sopimusnumero!) y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)))

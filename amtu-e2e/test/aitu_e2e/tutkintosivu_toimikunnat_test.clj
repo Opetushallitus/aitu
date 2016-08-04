@@ -50,7 +50,7 @@
                 (avaa-uudelleenladaten (tutkintosivu "TU1"))
                 ;; Niin
                 (testing "pitäisi näyttää tutkinnosta vastaavan toimikunnan nimen"
-                  (is (= (nykyisten-toimikuntien-nimet) ["Toimikunta (2013)"])))
+                  (is (= (nykyisten-toimikuntien-nimet) ["Toimikunta (2016)"])))
                 (testing "pitäisi näyttää tyhjä vanhojen toimikuntien lista"
                   (is (= (vanhojen-toimikuntien-nimet) []))))))
 
@@ -63,7 +63,7 @@
                     (avaa-uudelleenladaten (tutkintosivu "TU1"))
                     ;; Niin
                     (testing "pitäisi näyttää tutkinnosta vastaavien toimikuntien nimet"
-                      (is (= (set (nykyisten-toimikuntien-nimet)) #{"Toimikunta 1 (2013)" "Toimikunta 2 (2013)"})))
+                      (is (= (set (nykyisten-toimikuntien-nimet)) #{"Toimikunta 1 (2016)" "Toimikunta 2 (2016)"})))
                     (testing "pitäisi näyttää tyhjä vanhojen toimikuntien lista"
                       (is (= (vanhojen-toimikuntien-nimet) []))))))
 
@@ -76,6 +76,6 @@
                 (avaa-uudelleenladaten (tutkintosivu "TU1"))
                 ;; Niin
                 (testing "pitäisi näyttää tutkinnosta vastaavan toimikunnan nimen"
-                  (is (= (nykyisten-toimikuntien-nimet) ["Nykyinen toimikunta (2013)"])))
+                  (is (= (nykyisten-toimikuntien-nimet) ["Nykyinen toimikunta (2016)"])))
                 (testing "pitäisi näyttää vanhan toimikunnan nimen ja toimikauden"
                   (is (= (vanhojen-toimikuntien-nimet) ["Vanha toimikunta (2010)"])))))))))))

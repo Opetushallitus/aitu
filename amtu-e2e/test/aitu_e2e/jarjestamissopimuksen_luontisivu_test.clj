@@ -52,8 +52,8 @@
           (tallenna)
           (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
           (is (= (elementin-teksti "sopimus.sopimusnumero") "8742"))
-          (is (= (css-elementin-teksti ".e2e-sopimus-sopijatoimikunta-nimi") "Testialan tutkintotoimikunta (2013)"))
-          (is (= (css-elementin-teksti ".e2e-sopimus-toimikunta-nimi") "Testialan tutkintotoimikunta (2013)"))
+          (is (= (css-elementin-teksti ".e2e-sopimus-sopijatoimikunta-nimi") "Testialan tutkintotoimikunta (2016)"))
+          (is (= (css-elementin-teksti ".e2e-sopimus-toimikunta-nimi") "Testialan tutkintotoimikunta (2016)"))
           (is (= (css-elementin-teksti ".e2e-sopimus-koulutustoimija-nimi") "Hanhivaaran kaupunki"))
           (is (= (elementin-teksti "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi") "Hanhivaaran urheiluopisto")))))
     (testing
@@ -87,8 +87,8 @@
           (is (= (viestin-teksti) "Järjestämissopimuksen luonti onnistui"))
           (tallenna)
           (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
-          (is (= (css-elementin-teksti ".e2e-sopimus-sopijatoimikunta-nimi") "Toinen toimikunta (2013)"))
-          (is (= (css-elementin-teksti ".e2e-sopimus-toimikunta-nimi") "Toinen toimikunta (2013)")))))
+          (is (= (css-elementin-teksti ".e2e-sopimus-sopijatoimikunta-nimi") "Toinen toimikunta (2016)"))
+          (is (= (css-elementin-teksti ".e2e-sopimus-toimikunta-nimi") "Toinen toimikunta (2016)")))))
     (testing
       "luonti ei onnistu, jos pakollisia tietoja puuttuu"
       (with-webdriver

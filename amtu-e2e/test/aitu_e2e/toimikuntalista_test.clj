@@ -50,8 +50,8 @@
           (avaa toimikuntalista)
           (valitse-toimikausi)
           ;; Niin
-          (is (subset? #{"Ilmastointialan tutkintotoimikunta (2013)"
-                           "Musiikkialan tutkintotoimikunta (2013)"}
+          (is (subset? #{"Ilmastointialan tutkintotoimikunta (2016)"
+                           "Musiikkialan tutkintotoimikunta (2016)"}
                        (nakyvat-toimikunnat))))))))
 
 (deftest toimikuntahaku-test []
@@ -64,14 +64,14 @@
           (valitse-toimikausi)
           (hae-nimella "ilmastointiala")
           ;;Niin
-          (is (= #{"Ilmastointialan tutkintotoimikunta (2013)"} (nakyvat-toimikunnat))))
+          (is (= #{"Ilmastointialan tutkintotoimikunta (2016)"} (nakyvat-toimikunnat))))
         (testing "pitäisi hakea ruotsinkielisellä nimellä"
           ;;Kun
           (avaa toimikuntalista)
           (valitse-toimikausi)
           (hae-nimella "ventilationsbransch")
           ;;Niin
-          (is (= #{"Ilmastointialan tutkintotoimikunta (2013)"} (nakyvat-toimikunnat))))))))
+          (is (= #{"Ilmastointialan tutkintotoimikunta (2016)"} (nakyvat-toimikunnat))))))))
 
 (deftest toimikuntasivu-opintoala-tai-tutkinto-haku-test
   (testing "toimikuntasivu: opintoala tai tutkinto haku:"
@@ -105,10 +105,10 @@
           (valitse-toimikausi)
           (valitse-select2-optio "tutkintoHakuehto" "tunnus" "Opintoala 1")
           (odota-angular-pyyntoa)
-          (is (= #{"Toimikunta 1 (2013)"} (nakyvat-toimikunnat))))
+          (is (= #{"Toimikunta 1 (2016)"} (nakyvat-toimikunnat))))
         (testing "pitäisi näyttää lista toimikunnista joilla on tietty tutkinto vastuulla"
           (avaa toimikuntalista)
           (valitse-toimikausi)
           (valitse-select2-optio "tutkintoHakuehto" "tunnus" "Alan 2 tutkinto")
           (odota-angular-pyyntoa)
-          (is (= #{"Toimikunta 2 (2013)"} (nakyvat-toimikunnat))))))))
+          (is (= #{"Toimikunta 2 (2016)"} (nakyvat-toimikunnat))))))))
