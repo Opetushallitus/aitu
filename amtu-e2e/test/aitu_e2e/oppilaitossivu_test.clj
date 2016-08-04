@@ -85,23 +85,23 @@
        :koulutustoimijat [koulutustoimija]
        :toimikunnat [{:tkunta toimikuntatunnus}]})))
 
-   (deftest oppilaitossivu-sopimukset-test []
-     (with-webdriver
-       ;; Oletetaan, että
-       (let [oppilaitostunnus "12345"
-             testidata (oppilaitossivu-sopimukset-data "0000000-0" oppilaitostunnus)
-             testitutkinto_nimi (:nimi_fi (first (:tutkinnot testidata)))
-             vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 1])
-             vanhentuva-sopnro (:sopimusnumero vanhentuva-sopimus)
-             ei-vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 0])
-             ei-vanhentuva-sopnro (:sopimusnumero ei-vanhentuva-sopimus)]
-         (with-data (assoc-in testidata [:sopimus_ja_tutkinto 1 :sopimus_ja_tutkinto 0 :loppupvm] menneisyydessa)
-           (testing "pitäisi näyttaa listoissa uudet ja vanhat oppilaitoksen sopimukset"
-             ;; Kun
-             (avaa (oppilaitossivu oppilaitostunnus))
-             (w/click nayta-vanhat-selector)
-             ;; Niin
-             (is (= #{[ei-vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " tulevaisuudessa-kayttoliittyman-muodossa)]}
-                    (sopimuslista ".nykyiset-sopimukset")))
-             (is (= #{[vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " menneisyydessa-kayttoliittyman-muodossa)]}
-                    (sopimuslista ".vanhat-sopimukset"))))))))
+(deftest oppilaitossivu-sopimukset-test []
+  (with-webdriver
+    ;; Oletetaan, että
+    (let [oppilaitostunnus "12345"
+          testidata (oppilaitossivu-sopimukset-data "0000000-0" oppilaitostunnus)
+          testitutkinto_nimi (:nimi_fi (first (:tutkinnot testidata)))
+          vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 1])
+          vanhentuva-sopnro (:sopimusnumero vanhentuva-sopimus)
+          ei-vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 0]) 
+          ei-vanhentuva-sopnro "13/04/1-1"] ; (:sopimusnumero ei-vanhentuva-sopimus)]
+      (with-data (assoc-in testidata [:sopimus_ja_tutkinto 1 :sopimus_ja_tutkinto 0 :loppupvm] menneisyydessa)
+        (testing "pitäisi näyttaa listoissa uudet ja vanhat oppilaitoksen sopimukset"
+          ;; Kun
+          (avaa (oppilaitossivu oppilaitostunnus))
+          (w/click nayta-vanhat-selector)
+          ;; Niin
+          (is (= #{[ei-vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " tulevaisuudessa-kayttoliittyman-muodossa)]}
+                 (sopimuslista ".nykyiset-sopimukset")))
+          (is (= #{[vanhentuva-sopnro testitutkinto_nimi (str menneisyydessa-kayttoliittyman-muodossa " – " menneisyydessa-kayttoliittyman-muodossa)]}
+                 (sopimuslista ".vanhat-sopimukset"))))))))
