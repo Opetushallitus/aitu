@@ -42,7 +42,7 @@
       (with-data jarjestamissopimus-data
         (avaa (toimikuntasivu "98/11/543"))
         (testing "Toimikunnan sivulla näkyy alussa oikeat sopimukset."
-          (is (= (nakyvat-sopimukset) ["123" "321"])))
+          (is (= (nakyvat-sopimukset) ["98/11/543-1" "98/11/543-2"])))
         (avaa-jarjestamissopimuksen-sivu)
         (klikkaa-poista-nappia)
         (odota-poistodialogia)
@@ -51,7 +51,7 @@
         (testing "Sopimuksen poistamisen jälkeen siirrytään toimikunnan sivulle"
           (is (= (sivun-otsikko) "TESTIALAN TUTKINTOTOIMIKUNTA")))
         (testing "Toimikunnan sivulla ei näy poistettua sopimusta listattuna"
-          (is (= (nakyvat-sopimukset) ["321"])))))))
+          (is (= (nakyvat-sopimukset) ["98/11/543-2"])))))))
 
 (deftest sopimuksen-poistaminen-peruuta-dialogi-test
   (testing "Järjestämissopimuksen poistaminen ei tapahdu, jos dialogin peruuttaa"
@@ -65,4 +65,4 @@
           (is (= (sivun-otsikko) "JÄRJESTÄMISSOPIMUS")))
         (testing "Toimikunnan sivulla näkyy sopimus"
           (avaa (toimikuntasivu "98/11/543"))
-          (is (= (nakyvat-sopimukset) ["123" "321"])))))))
+          (is (= (nakyvat-sopimukset) ["98/11/543-1" "98/11/543-2"])))))))

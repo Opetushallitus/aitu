@@ -77,7 +77,7 @@
           ;; Kun
           (avaa (henkilosivu 999))
           ;; Niin
-          (is (re-find #"Toimikunta 1 \(2013\)" (listarivi ".nykyiset-jasenyydet" 0)))))))
+          (is (re-find #"Toimikunta 1 \(2016\)" (listarivi ".nykyiset-jasenyydet" 0)))))))
   (testing "henkilönmuokkaussivu"
     (testing "henkilön tietojen muokkaus onnistuu ja näytetään ilmoitus onnistumisesta"
       (with-webdriver
