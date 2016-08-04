@@ -43,7 +43,6 @@
       (with-webdriver
         (with-cleaned-data jarjestamissopimus-data
           (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
-          (syota-kenttaan "sopimus.sopimusnumero" "8742")
           (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
           (odota-angular-pyyntoa)
@@ -51,23 +50,11 @@
           (is (= (viestin-teksti) "Järjestämissopimuksen luonti onnistui"))
           (tallenna)
           (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
-          (is (= (elementin-teksti "sopimus.sopimusnumero") "8742"))
+          (is (= (elementin-teksti "sopimus.sopimusnumero") "98/11/543-3"))
           (is (= (css-elementin-teksti ".e2e-sopimus-sopijatoimikunta-nimi") "Testialan tutkintotoimikunta (2016)"))
           (is (= (css-elementin-teksti ".e2e-sopimus-toimikunta-nimi") "Testialan tutkintotoimikunta (2016)"))
           (is (= (css-elementin-teksti ".e2e-sopimus-koulutustoimija-nimi") "Hanhivaaran kaupunki"))
           (is (= (elementin-teksti "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos.nimi") "Hanhivaaran urheiluopisto")))))
-    (testing
-      "luonti ei onnistu, jos sopimusnumero on käytössä"
-      (with-webdriver
-        (with-cleaned-data jarjestamissopimus-data
-          (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
-          (syota-kenttaan "sopimus.sopimusnumero" "123")
-          (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
-          (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")
-          (odota-angular-pyyntoa)
-          (tallenna)
-          (is (= (viestin-teksti) "Järjestämissopimuksen luonti ei onnistunut"))
-          (-> (viestit-virheellisista-kentista) first (= "Sopimusnumero : Arvon tulee olla uniikki") is))))
     (testing
       "luonti toiselle toimikunnalle onnistuu"
       (with-webdriver
@@ -78,7 +65,6 @@
                                        :diaarinumero "99/12/544"
                                        :toimikausi 3})
           (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
-          (syota-kenttaan "sopimus.sopimusnumero" "8742")
           (valitse-select2-optio "sopimus.toimikunta" "tkunta", "Toinen toimikunta")
           (valitse-select2-optio "sopimus.koulutustoimija" "ytunnus", "Hanhivaaran kaupunki")
           (valitse-select2-optio "sopimus.tutkintotilaisuuksista_vastaava_oppilaitos" "oppilaitoskoodi" "Hanhivaaran urheiluopisto")

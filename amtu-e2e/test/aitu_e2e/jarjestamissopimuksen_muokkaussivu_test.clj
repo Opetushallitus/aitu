@@ -197,25 +197,7 @@
         (syota-pvm "sopimusJaTutkinto.loppupvm" "24.03.1980")
         (odota-angular-pyyntoa)
         (tallenna)
-        (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut")))))
-  (testing "Järjestämissopimuksen muokkaus ei onnistu, jos sopimusnumero käytössä toisella sopimuksella"
-    (with-webdriver
-      (du/with-data jarjestamissopimus-data
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (syota-kenttaan "sopimus.sopimusnumero" "321")
-        (odota-angular-pyyntoa)
-        (tallenna)
-        (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut"))
-        (-> (viestit-virheellisista-kentista) first (= "Sopimusnumero : Arvon tulee olla uniikki") is))))
-  (testing "Järjestämissopimuksen muokkaus onnistuu, jos sopimusnumero vaihdetaan toiseksi uniikiksi merkkijonoksi"
-    (with-webdriver
-      (du/with-data jarjestamissopimus-data
-        (avaa-sopimuksen-muokkaussivu 1230)
-        (syota-kenttaan "sopimus.sopimusnumero" "3210abc")
-        (odota-angular-pyyntoa)
-        (tallenna)
-        (is (= (viestin-teksti) "Järjestämissopimuksen tietoja muokattu"))
-        (is (= (elementin-teksti "sopimus.sopimusnumero") "3210abc"))))))
+        (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut"))))))
 
 (deftest jarjestamissopimus-muokkaussivu-pakolliset-kentat-test
   (testing "Järjestämissopimuksen muokkaussivu - pakolliset kentät:"
