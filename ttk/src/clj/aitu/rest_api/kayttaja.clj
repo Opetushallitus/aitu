@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.kayttaja
   (:require [oph.korma.korma-auth :as ka]
-            aitu.restructure
+            aitu.compojure-util
             [aitu.infra.kayttaja-arkisto :as arkisto]
             [aitu.toimiala.kayttajaoikeudet :refer [paivita-kayttajan-toimikuntakohtaiset-oikeudet
                                                     paivita-kayttajan-sopimuskohtaiset-oikeudet

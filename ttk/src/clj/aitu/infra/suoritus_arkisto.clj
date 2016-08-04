@@ -112,10 +112,10 @@
          (sql/where {:suorituskerta_id suorituskerta_id}))
       ; update osat
       ; poistetut osat, käsitellään ennen kuin lisätään uusia osia
-      (let [ids (filter #(not (nil? %)) (map :suoritus_id osat))]
+      (let [ids (keep :suoritus_id osat)]
         (sql/delete :suoritus
-          (sql/where {:suorituskerta suorituskerta_id})
-          (sql/where {:suoritus_id [not-in ids]})))
+          (sql/where {:suorituskerta suorituskerta_id
+                      :suoritus_id [not-in ids]})))
       (doseq [osa osat]
         (if (nil? (:suoritus_id osa))
           (lisaa-suoritus! (assoc osa :suorituskerta_id suorituskerta_id))
@@ -127,16 +127,14 @@
                              :osaamisen_tunnustaminen (:tunnustaminen osa)
                              :kieli (:kieli osa)
                              :todistus (:todistus osa)})
-            (sql/where {:suoritus_id (:suoritus_id osa)})
-          )))
-          suoritus
-      )))
+            (sql/where {:suoritus_id (:suoritus_id osa)}))))
+      suoritus)))
 
 (defn laheta!
   [suoritukset]
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
                                            :tila "ehdotettu"})
-  (sql/update :suorituskerta 
+  (sql/update :suorituskerta
     (sql/set-fields {:tila "ehdotettu"
                      :ehdotusaika (sql/sqlfn now)})
     (sql/where {:suorituskerta_id [in suoritukset]})))

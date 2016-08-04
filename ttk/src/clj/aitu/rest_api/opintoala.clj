@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.opintoala
   (:require [aitu.infra.opintoala-arkisto :as arkisto]
-            aitu.restructure
+            aitu.compojure-util
             [oph.common.util.http-util :refer [response-or-404]]
             [compojure.api.core :refer [GET defroutes]]))
 

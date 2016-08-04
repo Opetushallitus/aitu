@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.ohje
   (:require [aitu.infra.ohje-arkisto :as arkisto]
-            aitu.restructure
+            aitu.compojure-util
             [oph.common.util.http-util :refer [response-or-404]]
             [compojure.api.core :refer [GET PUT defroutes]]))
 

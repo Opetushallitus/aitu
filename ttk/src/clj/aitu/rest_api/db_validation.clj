@@ -1,6 +1,6 @@
 (ns aitu.rest-api.db-validation
   (:require [aitu.integraatio.sql.validationtest :as validationtest]
-            aitu.restructure
+            aitu.compojure-util
             [stencil.core :as s]
             [compojure.api.core :refer [GET defroutes]]))
 

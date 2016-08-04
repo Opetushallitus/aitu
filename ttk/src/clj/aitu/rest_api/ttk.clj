@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.ttk
   (:require [schema.core :as sc]
-            aitu.restructure
+            aitu.compojure-util
             [aitu.infra.ttk-arkisto :as arkisto]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.paatos-arkisto :as paatos-arkisto]

@@ -19,7 +19,7 @@
             [aitu.infra.i18n :as i18n]
             [oph.common.util.http-util :refer :all]
             [aitu.rest-api.http-util :refer :all]
-            aitu.restructure
+            aitu.compojure-util
             [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
             [aitu.toimiala.skeema :as skeema]

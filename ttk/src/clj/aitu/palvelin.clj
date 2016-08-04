@@ -49,7 +49,7 @@
             [aitu.integraatio.clamav :as clamav]
             [aitu.infra.eraajo :as eraajo]
             [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]
-            aitu.restructure
+            aitu.compojure-util
             aitu.reitit))
 
 (schema.core/set-fn-validation! true)

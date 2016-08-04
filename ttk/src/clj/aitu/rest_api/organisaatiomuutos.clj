@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.organisaatiomuutos
   (:require [compojure.api.core :refer [GET POST defroutes]]
-            aitu.restructure
+            aitu.compojure-util
             [aitu.infra.organisaatiomuutos-arkisto :as arkisto]
             [oph.common.util.http-util :refer [response-or-404]]
             [aitu.toimiala.skeema :refer :all]))
