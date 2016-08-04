@@ -143,7 +143,7 @@
                     :henkilot testi-henkilot
                     :jasenet (vector (first testi-jasenet))}
           (avaa (jasenten-hallinta-sivu "98/11/543"))
-          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.alkupvm" "01.12.2016")
+          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.alkupvm" "02.08.2016")
           (tallenna-jasenet)
           (is (= (viestin-teksti) "Toimikunnan jäseniä muokattu"))))
       (testing "Jos jäsen on toimikunnassa kahteen kertaan, voi voimassaoloaikaa muokata siten että voimassaoloaika ei mene päällekkäin toisen saman henkilön jäsenyyden kanssa."
