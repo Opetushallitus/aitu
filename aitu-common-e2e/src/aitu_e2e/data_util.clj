@@ -39,6 +39,7 @@
                                   paivamaara))
 
 (def kuukausi-sitten (paivamaara-iso-muodossa (time/minus (time/today) (time/months 1))))
+(def eilen (paivamaara-iso-muodossa (time/minus (time/today) (time/days 1))))
 (def tanaan (paivamaara-iso-muodossa (time/today)))
 
 (def menneisyydessa-pvm (time/minus (time/today) (time/days 1)))
@@ -66,18 +67,18 @@
                                     :diaarinumero (str "13/04/" i)
                                     :tilikoodi (str i)
                                     :toimiala (str "Toimiala " i)
-                                    :toimikausi 2
+                                    :toimikausi 3
                                     :kielisyys "fi"
                                     :sahkoposti (str "toimikunta" i "@mail.fi")
-                                    :toimikausi_alku "2013-08-01"
-                                    :toimikausi_loppu "2016-07-31"})})
+                                    :toimikausi_alku "2016-08-01"
+                                    :toimikausi_loppu "2018-07-31"})})
 
 (def jasen-tiedot {:post-fn #(str "/api/ttk/" (urlencode (:diaarinumero %)) "/jasenet")
                    :delete-fn #(str "/api/test/ttk/" (:toimikunta %) "/jasen/" (:henkiloid (:henkilo %)))
                    :default (for [i (iterate inc 1)]
                               {:henkilo {:henkiloid -1}
                                :diaarinumero (str "13/04/" i)
-                               :alkupvm kuukausi-sitten
+                               :alkupvm eilen
                                :loppupvm tulevaisuudessa
                                :rooli "jasen"
                                :edustus "opettaja"
