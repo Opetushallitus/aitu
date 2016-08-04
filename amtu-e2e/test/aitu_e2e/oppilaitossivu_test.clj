@@ -92,7 +92,7 @@
           testidata (oppilaitossivu-sopimukset-data "0000000-0" oppilaitostunnus)
           testitutkinto_nimi (:nimi_fi (first (:tutkinnot testidata)))
           vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 1])
-          vanhentuva-sopnro (:sopimusnumero vanhentuva-sopimus)
+          vanhentuva-sopnro "13/04/1-2" ; (:sopimusnumero vanhentuva-sopimus)
           ei-vanhentuva-sopimus (get-in testidata [:jarjestamissopimukset 0]) 
           ei-vanhentuva-sopnro "13/04/1-1"] ; (:sopimusnumero ei-vanhentuva-sopimus)]
       (with-data (assoc-in testidata [:sopimus_ja_tutkinto 1 :sopimus_ja_tutkinto 0 :loppupvm] menneisyydessa)
