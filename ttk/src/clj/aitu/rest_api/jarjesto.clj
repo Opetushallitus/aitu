@@ -14,7 +14,7 @@
 
 (ns aitu.rest-api.jarjesto
   (:require [aitu.infra.jarjesto-arkisto :as arkisto]
-            aitu.restructure
+            aitu.compojure-util
             [oph.common.util.http-util :refer [cachable-response]]
             [compojure.api.core :refer [GET defroutes]]
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]))

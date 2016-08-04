@@ -14,7 +14,7 @@
 
 (ns aitu.rest_api.js-log
   (:require [compojure.api.core :refer [POST defroutes]]
-            aitu.restructure
+            aitu.compojure-util
             [oph.rest_api.js-log :refer :all]))
 
 (defroutes reitit

@@ -15,7 +15,7 @@
 (ns aitu.rest-api.jarjestamissopimus
   (:require [oph.common.util.http-util :refer [file-download-response file-upload-response validoi parse-iso-date response-or-404 csv-download-response sallittu-jos]]
             [aitu.rest-api.http-util :refer [sallittu-tiedostotyyppi? tarkasta_surrogaattiavaimen_vastaavuus_entiteetiin jos-lapaisee-virustarkistuksen]]
-            aitu.restructure
+            aitu.compojure-util
             [aitu.util :refer [muodosta-csv]]
             [oph.common.util.util :refer [->vector]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]

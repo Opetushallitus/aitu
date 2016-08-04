@@ -14,17 +14,21 @@
 
 (ns aitu.compojure-util
  (:require compojure.api.core
-           [oph.compojure-util :as oph-cjure]
+           [oph.compojure-util :as cu]
            [aitu.toimiala.kayttajaoikeudet :as ko]))
 
-(defmacro autorisoitu-transaktio
-  "Tarkastaa käyttöoikeudet ja hallitsee tietokanta-transaktion"
-  [toiminto konteksti & body]
-  (let [auth-map ko/toiminnot]
-      `(oph-cjure/autorisoitu-transaktio ~auth-map ~toiminto ~konteksti ~@body)))
+;; Käyttöoikeuslaajennos compojure-apin rajapintoihin. Esim:
+;;
+;; :kayttooikeus :jasenesitys-poisto
+;; :kayttooikeus [:jasenesitys-poisto jasenyysid]
+(defmethod compojure.api.meta/restructure-param :kayttooikeus
+  [_ kayttooikeus_spec {:keys [body] :as acc}]
+  (let [[kayttooikeus konteksti] (if (vector? kayttooikeus_spec) kayttooikeus_spec [kayttooikeus_spec])]
+    (-> acc
+      (assoc-in [:swagger :description] (str "Käyttöoikeus " kayttooikeus " , konteksti: " (or konteksti "N/A")))
+      (assoc :body [`(cu/autorisoitu-transaktio ~ko/toiminnot ~kayttooikeus ~konteksti (do ~@body))]))))
 
 (defmacro autorisoi
   "Tarkastaa käyttöoikeudet"
   [toiminto konteksti & body]
-  (let [auth-map ko/toiminnot]
-      `(oph-cjure/autorisoi ~auth-map ~toiminto ~konteksti ~@body)))
+  `(cu/autorisoi ~ko/toiminnot ~toiminto ~konteksti ~@body))
