@@ -14,9 +14,9 @@
 
 (ns aitu.rest-api.jarjesto
   (:require [aitu.infra.jarjesto-arkisto :as arkisto]
+            aitu.restructure
             [oph.common.util.http-util :refer [cachable-response]]
             [compojure.api.core :refer [GET defroutes]]
-            [aitu.restructure]                              ; Pitää ladata ennen rest-api -namespaceja
             [aitu.toimiala.kayttajaoikeudet :as kayttajaoikeudet]))
 
 (defroutes reitit

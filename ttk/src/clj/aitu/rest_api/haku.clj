@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.haku
   (:require [aitu.infra.haku-arkisto :as arkisto]
+            aitu.restructure
             [oph.common.util.http-util :refer [response-or-404]]
             [compojure.api.core :refer [GET defroutes]]))
 

@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.tutkinto
   (:require [aitu.infra.tutkinto-arkisto :as arkisto]
+            aitu.restructure
             [aitu.toimiala.tutkinto :as tutkinto]
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
             [compojure.api.core :refer [GET defroutes]]

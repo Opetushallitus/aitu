@@ -16,6 +16,7 @@
   (:require [compojure.api.core :refer [DELETE GET defroutes]]
             [clj-time.coerce :as time-coerce]
             [aitu.infra.jasenesitykset-arkisto :as arkisto]
+            aitu.restructure
             [aitu.toimiala.henkilo :as henkilo]
             [aitu.toimiala.kayttajaoikeudet :as ko]
             [aitu.util :refer [muodosta-csv convert-values] :as aitu-util]

@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.suorittaja
   (:require [aitu.infra.suorittaja-arkisto :as arkisto]
+            aitu.restructure
             [compojure.api.core :refer [DELETE GET POST PUT defroutes]]
             [oph.common.util.http-util :refer [response-or-404]]))
 

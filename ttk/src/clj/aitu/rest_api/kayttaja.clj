@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.kayttaja
   (:require [oph.korma.korma-auth :as ka]
+            aitu.restructure
             [aitu.infra.kayttaja-arkisto :as arkisto]
             [aitu.toimiala.kayttajaoikeudet :refer [paivita-kayttajan-toimikuntakohtaiset-oikeudet
                                                     paivita-kayttajan-sopimuskohtaiset-oikeudet
@@ -47,7 +48,7 @@
               (= roolitunnus (:paivittaja kayttajaroolit))
               (= roolitunnus (:oph-katselija kayttajaroolit)))
         (response-or-404 oikeudet) ; roolipohjaiset, kontekstista riippumattomat, oikeudet
-        (-> oikeudet ; kontekstisensitiiviset oikeudet 
+        (-> oikeudet ; kontekstisensitiiviset oikeudet
             paivita-kayttajan-toimikuntakohtaiset-oikeudet
             paivita-kayttajan-sopimuskohtaiset-oikeudet
             liita-kayttajan-henkilo-oikeudet

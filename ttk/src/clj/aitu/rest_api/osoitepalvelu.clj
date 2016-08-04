@@ -1,5 +1,6 @@
 (ns aitu.rest-api.osoitepalvelu
   (:require [aitu.infra.ttk-arkisto :as ttk-arkisto]
+            aitu.restructure
             [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
             [aitu.toimiala.skeema :refer :all]
             [compojure.api.core :refer [GET defroutes]]

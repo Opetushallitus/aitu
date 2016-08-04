@@ -14,6 +14,7 @@
 
 (ns aitu.rest-api.oppilaitos
   (:require [compojure.api.core :refer [GET defroutes]]
+            aitu.restructure
             [aitu.infra.oppilaitos-arkisto :as arkisto]
             [oph.common.util.http-util :refer [cachable-response response-or-404]]
             [aitu.toimiala.skeema :refer :all]
