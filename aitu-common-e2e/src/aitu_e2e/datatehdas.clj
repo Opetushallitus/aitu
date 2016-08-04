@@ -14,7 +14,7 @@
 
 (ns aitu-e2e.datatehdas
   (:require
-    [aitu-e2e.data-util :refer [menneisyydessa tulevaisuudessa]]))
+    [aitu-e2e.data-util :refer [menneisyydessa tulevaisuudessa eilen]]))
 
 (defn tunnusgeneraattori
   ([f]

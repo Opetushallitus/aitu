@@ -81,7 +81,7 @@
             (is (= (css-elementin-teksti ".e2e-tutkinto-tyyppi_selite") "Paras tutkinto")))
           (testing "pitäisi näyttää järjestämissopimukset"
             ;; Niin
-            (is (= (first (jarjestamissopimukset)) "123" )))
+            (is (= (first (jarjestamissopimukset)) "13/04/1-1" )))
           (testing "pitäisi näyttää uusin tutkinnonperuste"
             ;;Niin
             (is (= (elementin-teksti "tutkinto.peruste") "1/2/3")))
