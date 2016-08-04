@@ -80,7 +80,7 @@
                                    :toimiala "Toimiala 1"
                                    :tkunta "ILMA"
                                    :kielisyys "fi"
-                                   :toimikausi 2}]
+                                   :toimikausi 3}]
                     :jasenet [{:toimikunta "ILMA"
                                :henkilo {:henkiloid 998}
                                :diaarinumero "98/11/543"}

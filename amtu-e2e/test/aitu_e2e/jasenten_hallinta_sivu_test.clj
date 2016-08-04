@@ -51,7 +51,7 @@
 (def testi-toimikunnat [{:nimi_fi "Ilmastointialan tutkintotoimikunta"
                         :diaarinumero "98/11/543"
                         :tkunta "ILMA"
-                        :toimikausi 2}])
+                        :toimikausi 3}])
 (def testi-henkilot [{:henkiloid 998
                       :sukunimi "Ankka"
                       :etunimi "Aku"},

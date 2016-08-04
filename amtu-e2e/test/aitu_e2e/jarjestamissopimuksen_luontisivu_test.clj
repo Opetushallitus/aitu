@@ -76,7 +76,7 @@
                                       conj
                                       {:nimi_fi "Toinen toimikunta"
                                        :diaarinumero "99/12/544"
-                                       :toimikausi 2})
+                                       :toimikausi 3})
           (avaa-sopimuksen-luontisivu-toimikunnalle "98/11/543")
           (syota-kenttaan "sopimus.sopimusnumero" "8742")
           (valitse-select2-optio "sopimus.toimikunta" "tkunta", "Toinen toimikunta")

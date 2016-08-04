@@ -30,7 +30,7 @@
                                :toimiala "Toimiala 1"
                                :tkunta "ILMA"
                                :kielisyys "fi"
-                               :toimikausi 2}]
+                               :toimikausi 3}]
                 :koulutusalat [{:selite_fi "Testi koulutusala"
                                 :koodi "KA1"}]
                 :opintoalat [{:selite_fi "Testi opintoala"

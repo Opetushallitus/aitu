@@ -32,7 +32,7 @@
                                              :toimiala "Toimiala 1"
                                              :tkunta "ILMA"
                                              :kielisyys "fi"
-                                             :toimikausi 2}]
+                                             :toimikausi 3}]
                               :henkilot [{:henkiloid 998
                                           :sukunimi "Ankka"
                                           :etunimi "Aku"}]

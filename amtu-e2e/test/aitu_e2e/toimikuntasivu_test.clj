@@ -52,8 +52,8 @@
                   :tkunta "ILMA"
                   :kielisyys "fi"
                   :sahkoposti "toimikunta@mail.fi"
-                  :toimikausi_alku "2013-08-01"
-                  :toimikausi 2}]
+                  :toimikausi_alku "2016-08-01"
+                  :toimikausi 3}]
    :henkilot [{:henkiloid 998
                :sukunimi "Ankka"
                :etunimi "Aku"},
@@ -166,7 +166,7 @@
       (with-data
         {:toimikunnat [{:diaarinumero "98/11/543"
                         :sahkoposti "vanha@posti.fi"
-                        :toimikausi 2}]}
+                        :toimikausi 3}]}
         ;; Kun
         (avaa (toimikunnan-muokkaussivu "98/11/543"))
         (syota-kenttaan "toimikunta.sahkoposti" "uusi@mail.com")

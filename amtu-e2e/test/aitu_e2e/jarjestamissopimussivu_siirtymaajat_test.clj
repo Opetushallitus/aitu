@@ -43,7 +43,7 @@
       ;; Oletetaan, että
       (with-data
         {:toimikunnat [{:tkunta "TTK1"
-                        :toimikausi 2}]
+                        :toimikausi 3}]
          :koulutustoimijat [{:ytunnus "0000000-0"}]
          :oppilaitokset [{:oppilaitoskoodi "12345"
                           :koulutustoimija "0000000-0"}]
