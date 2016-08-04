@@ -105,15 +105,15 @@
                                   (w/find-elements)
                                   (first)
                                   (w/text))]
-            (is (= sopimusnumero "123"))))
+            (is (= sopimusnumero "98/11/543-1"))))
 
         (testing "toimikunnan nimi näkyy sivulla"
           (let [toimikunnan-nimi (w/text (w/find-element {:css ".e2e-sopimus-toimikunta-nimi"}))]
-            (is (= toimikunnan-nimi "Testialan tutkintotoimikunta (2013)"))))
+            (is (= toimikunnan-nimi "Testialan tutkintotoimikunta (2016)"))))
 
         (testing "sopijatoimikunnan nimi näkyy sivulla"
           (let [toimikunnan-nimi (w/text (w/find-element {:css ".e2e-sopimus-sopijatoimikunta-nimi"}))]
-            (is (= toimikunnan-nimi "Testialan tutkintotoimikunta (2013)"))))
+            (is (= toimikunnan-nimi "Testialan tutkintotoimikunta (2016)"))))
 
         (testing "oppilaitoksen nimi näkyy sivulla"
           (let [oppilaitoksen-nimi (w/text (w/find-element {:css ".e2e-sopimus-koulutustoimija-nimi"}))]

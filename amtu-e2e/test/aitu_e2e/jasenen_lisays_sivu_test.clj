@@ -134,8 +134,8 @@
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
-            (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "02.08.2013")
-            (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
+            (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "02.08.2016")
+            (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2018")
             (paina-lisaa-jasen-nappia)
             ;; Niin
             (is (= #{"Aku Ankka" "Mikki Hiiri" "Simo Sisu"}
@@ -149,8 +149,8 @@
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
-            (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
-            (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
+            (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2016")
+            (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2018")
             (paina-lisaa-jasen-nappia)
             ;; Niin
             (is (= #{"Aku Ankka" "Mikki Hiiri" "Simo Sisu"}
@@ -158,16 +158,16 @@
             (poista [{:toimikunta "ILMA" :henkiloid 997}] jasenen-poisto-fn)))
         (testing "Ei onnistu jos henkilöllä jo jäsenyys toimikunnassa jonka voimassaolo päällekkäin lisättävän jäsenyyden voimassaolon kanssa"
           (with-webdriver
-            (lisaa-testijasen-toimikuntaan "01.08.2013" "10.09.2013")
+            (lisaa-testijasen-toimikuntaan "01.08.2016" "10.09.2016")
             (is (= (viestin-teksti) "Jäsen luotu"))
-            (lisaa-testijasen-toimikuntaan "01.08.2013" "31.07.2014")
+            (lisaa-testijasen-toimikuntaan "01.08.2016" "31.07.2017")
             (is (= (viestin-teksti) "Jäsenen luonti ei onnistunut"))
             (poista [{:toimikunta "ILMA" :henkiloid 997}] jasenen-poisto-fn)))
         (testing "Onnistuu jos henkilöllä jo jäsenyys toimikunnassa jonka voimassaolo ei mene päällekkäin lisättävän jäsenyyden voimassaolon kanssa"
           (with-webdriver
-            (lisaa-testijasen-toimikuntaan "01.08.2013" "10.09.2013")
+            (lisaa-testijasen-toimikuntaan "01.08.2016" "10.09.2016")
             (is (= (viestin-teksti) "Jäsen luotu"))
-            (lisaa-testijasen-toimikuntaan "11.09.2013" "31.07.2014")
+            (lisaa-testijasen-toimikuntaan "11.09.2016" "31.07.2017")
             (is (= (viestin-teksti) "Jäsen luotu"))
             (poista [{:toimikunta "ILMA" :henkiloid 997}] jasenen-poisto-fn)))
         (testing "Tallennus nappi disabloituu, jos alkupvm toimikauden lopun jälkeen"
@@ -178,8 +178,8 @@
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
-            (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2016")
-            (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "02.08.2016")
+            (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2018")
+            (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "02.08.2018")
             (is (false? (onko-tallenna-nappi-enabloitu? "Lisää jäsen")))))
         (testing "Tallennus nappi disabloituu, jos alkupvm ennen toimikauden alkua"
           (with-webdriver
@@ -189,8 +189,8 @@
             ;; Kun
             (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
             (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
-            (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "29.07.2013")
-            (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
+            (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "29.07.2016")
+            (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2018")
             (is (false? (onko-tallenna-nappi-enabloitu? "Lisää jäsen")))))))))
 
 (deftest ^:no-ie uuden-henkilon-lisays-jaseneksi-test
@@ -216,8 +216,8 @@
           (w/execute-script "$('.feedback-container').remove()")
           (w/select-option {:css "span[nimi*=\"rooli\"] > select"} {:text "sihteeri"})
           (w/select-option {:css "span[nimi*=\"edustus\"] > select"} {:text "opetusalan edustajat"})
-          (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2013")
-          (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2016")
+          (kirjoita-pvm-valitsin-kenttaan "jasen.alkupvm" "01.08.2016")
+          (kirjoita-pvm-valitsin-kenttaan "jasen.loppupvm" "31.07.2018")
           (paina-lisaa-jasen-nappia)
           ;; Niin
           (is (= (set (voimassaolevat-jasenet))
