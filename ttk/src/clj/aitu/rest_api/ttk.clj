@@ -328,7 +328,7 @@
 
 (defroutes reitit
   (GET "/" [tunnus toimikausi :as req]
-    :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta tai opintoalasta"
+    :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta, opintoalasta, osaamisalasta tai tutkinnonosasta"
     :return [Toimikuntalista]
     :kayttooikeus :toimikunta_haku
     (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus
