@@ -193,7 +193,7 @@
 (s/defschema Osoitepalvelu-Jasenyys
   {:etunimi s/Str
    :sukunimi s/Str
-   :sahkoposti (s/maybe s/Str)
+   (s/optional-key :sahkoposti) (s/maybe s/Str)
    (s/optional-key :osoite) (s/maybe s/Str)
    (s/optional-key :postinumero) (s/maybe s/Str)
    (s/optional-key :postitoimipaikka) (s/maybe s/Str)
