@@ -51,11 +51,13 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       $scope.koulutusalat = KoulutusalaResource.query();
       $scope.tutkinnot = [];
       $scope.tutkintoHakuehto = {'nimi': '',
+                                 'osaamisala': '',
                                  'voimassaolo': 'voimassaolevat',
                                  'opintoala': '',
                                  'tutkintotaso': ''};
 
       $scope.$watch('tutkintoHakuehto.nimi', suodataTutkinnot);
+      $scope.$watch('tutkintoHakuehto.osaamisala', suodataTutkinnot);
       $scope.$watch('tutkintoHakuehto.voimassaolo', suodataTutkinnot);
       $scope.$watch('tutkintoHakuehto.opintoala', suodataTutkinnot);
       $scope.$watch('tutkintoHakuehto.tutkintotaso', suodataTutkinnot);
@@ -69,6 +71,14 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
 
       function suodataTutkinnot() {
         var filtered = $filter('suomiJaRuotsi')($scope.kaikkiTutkinnot, 'nimi', $scope.tutkintoHakuehto.nimi);
+        var osaamisalaHakuehto = $scope.tutkintoHakuehto.osaamisala.toLowerCase();
+        if($scope.tutkintoHakuehto.osaamisala !== '') {
+          filtered = _.filter(filtered, function(tutkinto) {
+            return _.some(tutkinto.osaamisala, function(osaamisala) {
+              return osaamisala.nimi_fi.toLowerCase().indexOf(osaamisalaHakuehto) !== -1 || osaamisala.nimi_sv.toLowerCase().indexOf(osaamisalaHakuehto) !== -1;
+            });
+          });
+        }
         if($scope.tutkintoHakuehto.voimassaolo == 'voimassaolevat') {
           filtered = $filter('voimassaOlevat')(filtered, true);
         }

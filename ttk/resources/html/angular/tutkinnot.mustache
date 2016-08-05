@@ -8,6 +8,10 @@
     <input type="text" ng-model="tutkintoHakuehto.nimi" class="search-with-autocomplete">
   </fieldset>
   <fieldset class="search-field">
+    <label>[[osaamisala]]</label>
+    <input type="text" ng-model="tutkintoHakuehto.osaamisala" class="search-with-autocomplete">
+  </fieldset>
+  <fieldset class="search-field">
     <label>[[opintoala]]</label>
 	<select id="opintoala" class="no-print" ng-model="tutkintoHakuehto.opintoala">
       <option value=""></option>
@@ -29,11 +33,12 @@
   </fieldset>
 </form>
 <div class="search-results" lataus-indikaattori metodi-idt="['tutkintolistaus']" viesti="[[tutkintoja-ladataan]]" virheviesti="[[tutkintojen-lataus-epaonnistui]]" yrita-uudelleen="haeTutkinnot()">
-  <hakutulokset tuloksia-sivulla="10" otsikot="['[[tutkintotunnus]]', '[[peruste]]', '[[nimi]]', '[[opintoala]]']" hakutulokset="tutkinnot">
+  <hakutulokset tuloksia-sivulla="10" otsikot="['[[tutkintotunnus]]', '[[peruste]]', '[[nimi]]', '[[opintoala]]', '[[osaamisalat]]']" hakutulokset="tutkinnot">
     <div class="table-cell">{{hakutulos.tutkintotunnus}}</div>
     <div class="table-cell">{{hakutulos.peruste}}</div>
     <div class="table-cell"><a href="#/tutkinto/{{hakutulos.tutkintotunnus}}" class="e2e-hakutulos-nimi">{{hakutulos.nimi | lokalisoi:hakutulos:'nimi'}}</a></div>
     <div class="table-cell">{{hakutulos.opintoala_nimi | lokalisoi:hakutulos:'opintoala_nimi'}}</div>
+    <div class="table-cell"><ul class="osaamisalat"><li ng-repeat="osaamisala in hakutulos.osaamisala">{{osaamisala.nimi | lokalisoi:osaamisala:'nimi'}}</li></ul></div>
   </hakutulokset>
   <div>
     <a ng-href="[[base-url]]/api/tutkinto/csv?nimi={{tutkintoHakuehto.nimi}}&voimassaolo={{tutkintoHakuehto.voimassaolo}}"

@@ -44,13 +44,13 @@
 
 (defn rajaa-tutkinnon-kentat [tutkinto]
   (select-keys tutkinto [:tutkintotunnus :nimi_fi :nimi_sv :opintoala_nimi_fi :opintoala_nimi_sv
-                         :opintoala :tutkintotaso :peruste :voimassa]))
+                         :opintoala :tutkintotaso :peruste :voimassa :osaamisala]))
 
 (defroutes reitit
   (GET "/" [:as req]
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (map (comp rajaa-tutkinnon-kentat voimassaolo/taydenna-tutkinnon-voimassaolo)
-                                     (arkisto/hae-kaikki))))
+                                     (arkisto/hae-tutkinnot-ja-osaamisalat))))
   (GET "/:tutkintotunnus" [tutkintotunnus]
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (tutkinto/taydenna-tutkinto (arkisto/hae tutkintotunnus))))

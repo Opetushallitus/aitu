@@ -33,7 +33,7 @@
    (:oph-katselija kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "READ")]
    (:aipal kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "AIPALREAD")]
    (:jarjesto kayttajaroolit) [(aitu-ryhma-cn jarjesto-organisaatio "TYOELAMAJARJESTO")]
-   (:paivittaja kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "APP_AITU_AITU-TMK-JASEN")]})
+   (:paivittaja kayttajaroolit) [(aitu-ryhma-cn aitu-organisaatio "AITU-TMK-JASEN")]})
 
 (defn ryhma-cn-filter [ryhma-cn]
   {:filter (str "cn=" ryhma-cn)})

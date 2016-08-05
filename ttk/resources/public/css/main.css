@@ -258,8 +258,8 @@ a.button.button-with-icon.add-icon-white:after {
   background-repeat: no-repeat;
 }
 
-.no-svg button.button-with-icon.add-icon-white:after,
-.no-svg a.button.button-with-icon.add-icon-white:after {
+.no-svg button.button-with-icon.add-icon-white:after, .no-svg
+a.button.button-with-icon.add-icon-white:after {
   background-image: url("../img/oph-icon-sprite.png");
 }
 
@@ -277,8 +277,8 @@ a.button.button-with-icon.add-user-icon:after {
   background-repeat: no-repeat;
 }
 
-.no-svg button.button-with-icon.add-user-icon:after,
-.no-svg a.button.button-with-icon.add-user-icon:after {
+.no-svg button.button-with-icon.add-user-icon:after, .no-svg
+a.button.button-with-icon.add-user-icon:after {
   background-image: url("../img/oph-icon-sprite.png");
 }
 
@@ -2205,6 +2205,15 @@ ul.valitut-tutkinnot li a:after {
 
 .no-svg .valitut-tutkinnot-otsikko:before {
   background-image: url("../img/oph-icon-sprite.png");
+}
+
+ul.osaamisalat {
+  padding: 0;
+  margin: 0;
+}
+
+ul.osaamisalat li {
+  list-style: none;
 }
 
 .merkitse-tehdyksi {

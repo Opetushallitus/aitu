@@ -52,7 +52,7 @@
                                          "        where strpos(j.sopimusnumero, t.diaarinumero || '-') > 0 "
                                          "          and t.tkunta = '" (:tkunta toimikunta) "'" ; sql-injektio hoidettu
                                          "        union all select '0' as numba) f") :results)))))))
-  
+
 (defn hae-toimikunnan-tunniste
   "Hakee toimikunnan tkunta tunnisteen diaarinumerolla"
   [diaarinumero]
@@ -94,11 +94,16 @@
                       (cond->
                         (not (blank? (:tunnus ehdot))) (sql/where
                                                          (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
-                                                                             (sql/with nayttotutkinto
-                                                                               (sql/with opintoala))
+                                                                             (sql/join :inner nayttotutkinto {:toimikunta_ja_tutkinto.tutkintotunnus :nayttotutkinto.tutkintotunnus})
+                                                                             (sql/join :inner tutkintoversio {:tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus})
+                                                                             (sql/join :left tutkinto-ja-tutkinnonosa {:tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio})
+                                                                             (sql/join :left tutkinnonosa {:tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id})
+                                                                             (sql/join :left osaamisala {:tutkintoversio.tutkintoversio_id :osaamisala.tutkintoversio})
                                                                              (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
-                                                                                             (or {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}
-                                                                                                 {:opintoala.opintoala_tkkoodi (:tunnus ehdot)}))))))
+                                                                                             (or {:nayttotutkinto.opintoala (:tunnus ehdot)}
+                                                                                                 {:osaamisala.osaamisalatunnus (:tunnus ehdot)}
+                                                                                                 {:tutkinnonosa.osatunnus (:tunnus ehdot)}
+                                                                                                 {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}))))))
                         (not (blank? (:nimi ehdot))) (sql/where (or {:nimi_fi [ilike nimi]}
                                                                     {:nimi_sv [ilike nimi]}))
                         (not (blank? (:kielisyys ehdot))) (sql/where {:kielisyys [in kielisyydet]})
