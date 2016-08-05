@@ -3,7 +3,7 @@
 [[#i18n.yleiset]]
 
 <h1 ng-hide="muokkausTila">{{jasen.henkilo.etunimi}} {{jasen.henkilo.sukunimi}}
-  <auth-toiminto auth-nappi ng-show="!muokkausTila" oikeus="henkilo_paivitys" konteksti="henkilo" entity-id="{{jasen.henkilo.henkiloid}}" class="icon edit-icon" ng-click="muokkaa()"></auth-toiminto>
+  <auth-toiminto auth-nappi sallitut-roolit="['PAIVITTAJA']" ng-show="!muokkausTila" oikeus="henkilo_paivitys" konteksti="henkilo" entity-id="{{jasen.henkilo.henkiloid}}" class="icon edit-icon" ng-click="muokkaa()"></auth-toiminto>
 </h1>
 <form name="henkiloForm">
 <ng-include src="'template/henkilo-partial'"></ng-include>

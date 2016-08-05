@@ -54,9 +54,9 @@
     (update-in [:jasenyydet] (partial map #(select-keys % [:nimi_fi :nimi_sv :diaarinumero :toimikausi_alku :toimikausi_loppu])))))
 
 (defn piilota-salaiset-kentat
-  "Piilottaa osan tietokentistä jos käyttäjä ei ole ylläpitäjä"
+  "Piilottaa osan tietokentistä jos käyttäjä ei ole ylläpitäjä tai OPH-sihteeri"
   [henkilo]
-  (if (kayttajaoikeudet/yllapitaja?)
+  (if (or (kayttajaoikeudet/yllapitaja?) (kayttajaoikeudet/paivittaja?))
     henkilo
     (if (seq? henkilo)
       (henkilo/piilota-salaiset-henkiloilta henkilo)
