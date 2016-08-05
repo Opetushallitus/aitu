@@ -32,8 +32,7 @@ script:
  - cd ..
  - cd ttk
  - lein test
- - cd ../db-docs
- - generate-schemadocs.sh
+ - cd ../db-docs && ./generate-schemadocs.sh
 
 after_script:
   - ls -latr schemadocs
