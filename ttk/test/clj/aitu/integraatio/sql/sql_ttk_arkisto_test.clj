@@ -145,11 +145,13 @@
                                 {:opintoalakoodi "OA1"})
   (lisaa-tutkinto! {:tutkintotunnus "T1"
                     :opintoala "OA1"})
+  (lisaa-tutkintoversio! {:tutkintotunnus "T1"})
   (lisaa-toimikunta! {:tkunta "TK1"})
   (arkisto/lisaa-tutkinto! {:toimikunta "TK1"
                             :tutkintotunnus "T1"})
   (lisaa-tutkinto! {:tutkintotunnus "T2"
                     :opintoala "OA1"})
+  (lisaa-tutkintoversio! {:tutkintotunnus "T2"})
   (lisaa-toimikunta! {:tkunta "TK2"})
   (arkisto/lisaa-tutkinto! {:toimikunta "TK2"
                             :tutkintotunnus "T2"})
