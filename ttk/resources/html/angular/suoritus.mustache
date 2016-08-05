@@ -18,7 +18,7 @@
       </select>
     </fieldset>
   </div>
-
+ 
   <div>
     <fieldset>
       <label>[[jarjestamismuoto]]</label>
@@ -27,7 +27,7 @@
         <option value="oppisopimuskoulutus">[[oppisopimuskoulutus]]</option>
       </select>
     </fieldset>
-
+  
     <fieldset>
       <label>[[rahoitusmuoto]]</label>
       <select ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot" ng-model="form.rahoitusmuoto" required></select>
@@ -39,12 +39,26 @@
       <label>[[tutkinto_jarjestaja]]</label>
       <select ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat" ng-model="form.koulutustoimija" required></select>
     </fieldset>
+    <fieldset>
+      <label>[[valmistava_koulutus]]</label>
+      <input type="checkbox" ng-model="form.valmistava_koulutus" >
+    </fieldset>
   </div>
 
     <div>
       <fieldset>
         <label>[[tutkinto]]</label>
         <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkinto" required></select>
+      </fieldset>
+      <fieldset>
+        <label>[[jarjestelyt]]</label>
+        <input type="text" ng-model="form.jarjestelyt"></input>
+      </fieldset>
+    </div>
+    <div>
+      <fieldset>
+        <label>[[paikka]]</label>
+        <input type="text" ng-model="form.paikka"></input>
       </fieldset>
     </div>
 

@@ -30,6 +30,9 @@
    "jarjestamismuoto" "oppisopimuskoulutus"
    "rahoitusmuoto" 3
    "koulutustoimija" "0208430-8"
+   "valmistava_koulutus" true
+   "paikka" "Yöttäjän harjoitusalue"
+   "jarjestelyt" "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "   
    "tutkinto" "327128"})
 
 (def suoritus-result
@@ -37,7 +40,10 @@
   :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto", :suorittaja -1, 
   :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :koulutustoimija "0208430-8", 
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
-  :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
+  :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.",
+  :valmistava_koulutus true
+  :paikka "Yöttäjän harjoitusalue"
+  :jarjestelyt "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "     
   :suorittaja_etunimi "Orvokki"})
    
 

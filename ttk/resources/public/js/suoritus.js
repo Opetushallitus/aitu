@@ -55,6 +55,9 @@ angular.module('suoritus', [])
         	$scope.form.koulutustoimija = suoritus.koulutustoimija;
         	$scope.form.opiskelijavuosi = "" + suoritus.opiskelijavuosi;
         	$scope.form.jarjestamismuoto = suoritus.jarjestamismuoto;
+        	$scope.form.jarjestelyt = suoritus.jarjestelyt;
+        	$scope.form.paikka = suoritus.paikka;
+        	$scope.form.valmistava_koulutus = suoritus.valmistava_koulutus;
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.osat = _.map(suoritus.osat, function(osa) {

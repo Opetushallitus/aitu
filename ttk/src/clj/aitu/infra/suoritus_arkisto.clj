@@ -44,6 +44,7 @@
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
                 :jarjestamismuoto :opiskelijavuosi
+                :valmistava_koulutus :paikka :jarjestelyt
                 [:suorittaja.etunimi :suorittaja_etunimi]
                 [:suorittaja.sukunimi :suorittaja_sukunimi]
                 [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
@@ -80,7 +81,7 @@
                 :todistus (:todistus osa)})))
 
 (defn lisaa!
-  [{:keys [jarjestamismuoto koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
+  [{:keys [jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
     :as suoritus}]
   (auditlog/suoritus-operaatio! :lisays suoritus)
   (let [suorituskerta (sql/insert :suorituskerta
@@ -88,6 +89,9 @@
                                      :rahoitusmuoto   rahoitusmuoto
                                      :suorittaja      suorittaja
                                      :jarjestamismuoto jarjestamismuoto
+                                     :valmistava_koulutus valmistava_koulutus
+                                     :paikka paikka
+                                     :jarjestelyt jarjestelyt
                                      :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
                                      :koulutustoimija koulutustoimija}))]
     (doseq [osa osat]
@@ -95,7 +99,7 @@
     suorituskerta))
 
 (defn lisaa-tai-paivita!
-  [{:keys [jarjestamismuoto koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id]
+  [{:keys [jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id]
     :as suoritus}]
   (if (nil? suorituskerta_id)
     (lisaa! suoritus)
@@ -104,6 +108,9 @@
       (auditlog/suoritus-operaatio! :paivitys {:suorituskerta_id suorituskerta_id})
       (sql-util/update-unique :suorituskerta
          (sql/set-fields {:jarjestamismuoto jarjestamismuoto
+                          :valmistava_koulutus valmistava_koulutus
+                          :paikka paikka
+                          :jarjestelyt jarjestelyt
                           :koulutustoimija koulutustoimija
                           :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
                           :suorittaja suorittaja
