@@ -60,3 +60,11 @@ ul.valitut-tutkinnot {
   @include icon-before(-20px, 7px) {@include small-check-icon;}
   margin-left: 20px;
 }
+
+ul.osaamisalat {
+  padding:0;
+  margin:0;
+  li {
+    list-style: none;
+  }
+}
