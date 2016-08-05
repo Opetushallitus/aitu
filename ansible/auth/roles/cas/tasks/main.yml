@@ -7,4 +7,5 @@
     copy: src=override.properties dest=/usr/share/tomcat/oph-configuration
   - name: Kopioi CAS
     copy: src=cas-server-webapp-3.5.2.war dest=/usr/share/tomcat/webapps
-
+  - name: Päivitä NSS, jotta SSL handshake toimii
+    yum: name=nss state=latest
