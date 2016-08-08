@@ -42,7 +42,11 @@ insert into tutkinto_ja_tutkinnonosa (jarjestysnumero, tutkintoversio, tutkinnon
   insert into tutkinto_ja_tutkinnonosa (jarjestysnumero, tutkintoversio, tutkinnonosa)
   values (3, -20000, -10003);
 
-         
+insert into osaamisala (osaamisala_id, osaamisalatunnus, nimi_fi, voimassa_alkupvm, voimassa_loppupvm, versio, tutkintoversio, koodistoversio)
+   values (-20001, '9876', 'Käsityöyrittäjyyden osaamisala (keksitty)', to_date('2013-12-17', 'YYYY-MM-DD'), to_date('2199-01-01', 'YYYY-MM-DD'), 1, -20000, 1);
+insert into osaamisala (osaamisala_id, osaamisalatunnus, nimi_fi, voimassa_alkupvm, voimassa_loppupvm, versio, tutkintoversio, koodistoversio)
+   values (-20002, '9875', 'Käsityöopettajan osaamisala (keksitty)', to_date('2013-12-17', 'YYYY-MM-DD'), to_date('2199-01-01', 'YYYY-MM-DD'), 1, -20000, 1);
+    
 insert into koulutustoimija (ytunnus, nimi_fi, osoite, oid, voimassa)
   values('1060155-5', 'Urheilupainotteinen koulutuskuntayhtymä', 'Mätäslompolontie 24', '1.2.246.562.10.123456789012', true);
 
