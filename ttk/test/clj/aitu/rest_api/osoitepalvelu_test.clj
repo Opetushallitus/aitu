@@ -13,8 +13,7 @@
    :oppilaitokset []})
 
 (deftest ^:integraatio osoitepalvelu-api
-  (let [crout (init-peridot!)
-        skerta (fn [suoritus] (dissoc suoritus :suorituskerta_id))]
+  (let [crout (init-peridot!)]
     (run-with-db (constantly true)
       #(let [s (peridot/session crout)
              osoitteet (mock-request s "/api/osoitepalvelu" :get {})
