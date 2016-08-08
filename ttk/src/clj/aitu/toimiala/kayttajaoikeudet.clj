@@ -56,7 +56,6 @@
 
 (defn paivittaja? []
   (onko-kayttajan-rooli? :paivittaja))
-  
 
 (defn jasenyys-voimassa? [jasenyys]
   (:voimassa (taydenna-jasenyyden-voimassaolo jasenyys (not (toimikunta-vanhentunut? jasenyys)))))
@@ -200,6 +199,7 @@
 ; tavallinen käyttäjä ei saa assosioida uudelleen henkilöä johonkin toiseen käyttäjätunnukseen.
 (def henkilotoiminnot
   `{:henkilo_paivitys #(or (yllapitaja?)
+                           (paivittaja?)
                            (omien-tietojen-muokkausoikeus? *current-user-authmap* (:henkiloid %) (:kayttaja %))
                            (henkilon-muokkausoikeus-toimikunnan-kautta? *current-user-authmap* (int-arvo (:henkiloid %)) (:kayttaja %))
                            (saako-muokata-jasenesitys? (int-arvo (:henkiloid %)) (:kayttaja %))

@@ -2,7 +2,7 @@
 [[#i18n.yleiset]]
 [[#i18n.toimikunta]]
 <h1>
-  <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimikuntaa" ng-click="muokkaa()"></auth-toiminto>
+  <auth-toiminto ng-show="salliMuokkaus()" auth-nappi sallitut-roolit="['PAIVITTAJA']" oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimikuntaa" ng-click="muokkaa()"></auth-toiminto>
   <span ng-show="!luontiTila">{{toimikunta.nimi | lokalisoi:toimikunta:'nimi'}}</span>
   <span ng-show="luontiTila">[[luo-uusi]]</span>
   <span ng-show="toimikunta.voimassa === false">([[ei-voimassa]])</span>
@@ -65,7 +65,7 @@
 <div ng-hide="muokkausTila">
   <div>
     <div class="list-controls">
-        <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimialaa" ng-click="muokkaaToimialaa()"></auth-toiminto>
+        <auth-toiminto ng-show="salliMuokkaus()" auth-nappi sallitut-roolit="['PAIVITTAJA']" oikeus="toimikunta_paivitys" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon edit-icon muokkaa-toimialaa" ng-click="muokkaaToimialaa()"></auth-toiminto>
     </div>
     <h2>[[tutkintotoimikunnan-toimiala]]</h2>
     <table jarjestettava-taulukko="toimikunta.nayttotutkinto" jarjestetty-data="tutkintoJarjestetty">
@@ -118,7 +118,7 @@
 
   <div>
     <div class="list-controls">
-      <auth-toiminto ng-show="salliMuokkaus()" auth-nappi oikeus="sopimus_lisays" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon add-icon lisaa-sopimus" ng-click="siirrySopimuksenLuontiin()"></auth-toiminto>
+      <auth-toiminto ng-show="salliMuokkaus()" auth-nappi sallitut-roolit="['PAIVITTAJA']" oikeus="sopimus_lisays" konteksti="toimikunta" entity-id="{{toimikunta.tkunta}}" class="icon add-icon lisaa-sopimus" ng-click="siirrySopimuksenLuontiin()"></auth-toiminto>
     </div>
     <sopimusten-listaus class="nykyiset-sopimukset"
                         otsikko="'[[i18n.jarjestamissopimus.jarjestamissopimukset]]'"
