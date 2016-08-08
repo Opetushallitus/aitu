@@ -229,6 +229,16 @@
       (sql/fields [:selite_fi :opintoala_nimi_fi] [:selite_sv :opintoala_nimi_sv]))
     (sql/with tutkintotoimikunta)))
 
+(defn hae-osaamisalat [tutkintotunnus]
+  (first
+    (sql/select nayttotutkinto
+       (sql/fields :tutkintotunnus :opintoala)
+        (sql/with uusin-versio
+          (sql/fields :tutkintoversio_id :peruste)
+          (sql/with osaamisala
+            (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus)))
+       (sql/where {:nayttotutkinto.tutkintotunnus tutkintotunnus}))))
+  
 (defn hae-tutkinnot-tutkinnonosat-osaamisalat
   "Hakee kaikkien tutkintojen sekä niihin liittyvien tutkinnonosien ja osaamisalojen uusimman version."
   []
