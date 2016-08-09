@@ -62,7 +62,7 @@ angular.module('suoritus', [])
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.osat = _.map(suoritus.osat, function(osa) {
-                var result = _.pick(osa, ['arvosana', 'kieli', 'todistus']);
+                var result = _.pick(osa, ['arvosana', 'kieli', 'todistus', 'suoritus_id']);
                 result.tutkinnonosa = {
                 	tutkinnonosa_id: osa.tutkinnonosa,
                 	osatunnus: osa.osatunnus,
@@ -77,7 +77,6 @@ angular.module('suoritus', [])
                 	}
                 };
                 result.osaamisala_id = osa.osaamisala;
-                result.suoritus_id = osa.suoritus_id;
                 result.korotus = osa.arvosanan_korotus;
                 result.tunnustaminen = osa.osaamisen_tunnustaminen;
                 return result;
@@ -88,10 +87,8 @@ angular.module('suoritus', [])
     
      $scope.$watchCollection('osat', function(osat) {
       $scope.form.osat = _.map(osat, function(osa) {
-        var result = _.pick(osa, ['osaamisala', 'arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
+        var result = _.pick(osa, ['osaamisala', 'arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen', 'osaamisala_id', 'suoritus_id']);
         result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
-        result.osaamisala_id = osa.osaamisala_id;
-        result.suoritus_id = osa.suoritus_id;
         return result;
       });
      });
