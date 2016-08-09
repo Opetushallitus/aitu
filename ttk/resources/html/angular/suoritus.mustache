@@ -44,21 +44,22 @@
       <input type="checkbox" ng-model="form.valmistava_koulutus" >
     </fieldset>
   </div>
-
-    <div>
-      <fieldset>
+  <div>
+    <fieldset>
         <label>[[tutkinto]]</label>
         <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkinto" required></select>
       </fieldset>
+  </div>
+  <div>
+
       <fieldset>
         <label>[[jarjestelyt]]</label>
-        <input type="text" ng-model="form.jarjestelyt"></input>
+        <textarea ng-model="form.jarjestelyt"></textarea>
       </fieldset>
-    </div>
-    <div>
+
       <fieldset>
         <label>[[paikka]]</label>
-        <input type="text" ng-model="form.paikka"></input>
+        <textarea ng-model="form.paikka"></textarea>
       </fieldset>
     </div>
 
