@@ -70,32 +70,28 @@
         suoritukset (hae-suoritukset (Integer/parseInt suorituskerta-id))]
      (assoc (first perus) :osat suoritukset)))
 
+(defn osa->suoritus-db [osa]
+  {:suorituskerta (:suorituskerta_id osa)
+   :tutkinnonosa (:tutkinnonosa_id osa)
+   :arvosana (:arvosana osa)
+   :arvosanan_korotus (:arvosanan_korotus osa)
+   :osaamisen_tunnustaminen (:osaamisen_tunnustaminen osa)
+   :osaamisala (:osaamisala_id osa)
+   :kieli (:kieli osa)
+   :todistus (:todistus osa)})
+
 (defn ^:private lisaa-suoritus! [osa]
   (sql/insert :suoritus
-   (sql/values {:suorituskerta (:suorituskerta_id osa)
-                :tutkinnonosa (:tutkinnonosa_id osa)
-                :arvosana (:arvosana osa)
-                :arvosanan_korotus (:arvosanan_korotus osa)
-                :osaamisen_tunnustaminen (:osaamisen_tunnustaminen osa)
-                :osaamisala (:osaamisala_id osa)
-                :kieli (:kieli osa)
-                :todistus (:todistus osa)})))
+   (sql/values (osa->suoritus-db osa))))
 
 (defn lisaa!
-  [{:keys [jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat]
-    :as suoritus}]
+  [suoritus]
   (auditlog/suoritus-operaatio! :lisays suoritus)
   (let [suorituskerta (sql/insert :suorituskerta
-                        (sql/values {:tutkinto        tutkinto
-                                     :rahoitusmuoto   rahoitusmuoto
-                                     :suorittaja      suorittaja
-                                     :jarjestamismuoto jarjestamismuoto
-                                     :valmistava_koulutus valmistava_koulutus
-                                     :paikka paikka
-                                     :jarjestelyt jarjestelyt
-                                     :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
-                                     :koulutustoimija koulutustoimija}))]
-    (doseq [osa osat]
+                        (sql/values (-> suoritus
+                                      (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
+                                      (assoc  :opiskelijavuosi (Integer/parseInt (:opiskelijavuosi suoritus))))))]
+    (doseq [osa (:osat suoritus)]
       (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta))))
     suorituskerta))
 
@@ -108,15 +104,9 @@
     (do
       (auditlog/suoritus-operaatio! :paivitys {:suorituskerta_id suorituskerta_id})
       (sql-util/update-unique :suorituskerta
-         (sql/set-fields {:jarjestamismuoto jarjestamismuoto
-                          :valmistava_koulutus valmistava_koulutus
-                          :paikka paikka
-                          :jarjestelyt jarjestelyt
-                          :koulutustoimija koulutustoimija
-                          :opiskelijavuosi (Integer/parseInt opiskelijavuosi)
-                          :suorittaja suorittaja
-                          :rahoitusmuoto rahoitusmuoto
-                          :tutkinto tutkinto})
+         (sql/set-fields (-> suoritus
+                           (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
+                           (assoc  :opiskelijavuosi (Integer/parseInt (:opiskelijavuosi suoritus)))))
          (sql/where {:suorituskerta_id suorituskerta_id}))
       ; update osat
       ; poistetut osat, käsitellään ennen kuin lisätään uusia osia
@@ -128,14 +118,7 @@
         (if (nil? (:suoritus_id osa))
           (lisaa-suoritus! (assoc osa :suorituskerta_id suorituskerta_id))
           (sql-util/update-unique :suoritus
-            (sql/set-fields {:suorituskerta suorituskerta_id
-                             :tutkinnonosa (:tutkinnonosa_id osa)
-                             :arvosana (:arvosana osa)
-                             :arvosanan_korotus (:arvosanan_korotus osa)
-                             :osaamisala (:osaamisala_id osa)
-                             :osaamisen_tunnustaminen (:osaamisen_tunnustaminen osa)
-                             :kieli (:kieli osa)
-                             :todistus (:todistus osa)})
+            (sql/set-fields (osa->suoritus-db osa))
             (sql/where {:suoritus_id (:suoritus_id osa)}))))
       suoritus)))
 
