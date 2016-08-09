@@ -447,7 +447,8 @@
                                                                 (sql/with henkilo)
                                                                 (sql/with tutkintotoimikunta)
                                                                 (sql/fields :toimikunta :henkilo.sukupuoli)
-                                                                (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi-id}))))
+                                                                (sql/where {:tutkintotoimikunta.toimikausi_id toimikausi-id
+                                                                            :jasenyys.rooli [not-in ["sihteeri" "ulkopuolinensihteeri"]]}))))
         toimikunnat (->>
                       (sql/select tutkintotoimikunta
                         (sql/with toimikausi)
