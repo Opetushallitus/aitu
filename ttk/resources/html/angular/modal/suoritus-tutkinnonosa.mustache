@@ -19,6 +19,11 @@
       <label>[[tutkinnon_osa]]</label>
       <select ng-options="tutkinnonosa.osatunnus + ' ' + (tutkinnonosa | lokalisoiKentta:'nimi') for tutkinnonosa in tutkinnonosat" ng-model="form.tutkinnonosa" required></select>
     </fieldset>
+    <fieldset>
+     <label>[[osaamisala]]</label>
+     <select ng-options="osaamisala.osaamisalatunnus as osaamisala.osaamisalatunnus + ' ' + (osaamisala | lokalisoiKentta:'nimi') for osaamisala in osaamisalat" ng-model="form.osaamisala" required></select>
+   </fieldset>
+    
   </div>
 
   <fieldset>
@@ -40,7 +45,7 @@
     <label>[[osaamisen_tunnustaminen]]</label>
     <input type="checkbox" ng-model="form.tunnustaminen">
   </fieldset>
-
+      
   <fieldset>
     <label>[[suorituskieli]]</label>
     [[#i18n.enum.kieli-arvo]]

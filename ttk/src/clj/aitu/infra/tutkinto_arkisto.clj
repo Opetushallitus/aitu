@@ -236,7 +236,7 @@
         (sql/with uusin-versio
           (sql/fields :tutkintoversio_id :peruste)
           (sql/with osaamisala
-            (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus)))
+            (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :osaamisala_id)))
        (sql/where {:nayttotutkinto.tutkintotunnus tutkintotunnus}))))
   
 (defn hae-tutkinnot-tutkinnonosat-osaamisalat

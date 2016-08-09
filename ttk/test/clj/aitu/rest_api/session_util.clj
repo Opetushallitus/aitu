@@ -1,5 +1,6 @@
 (ns aitu.rest-api.session-util
     (:require
+    aitu.compojure-util
     [aitu.integraatio.sql.test-util :refer [tietokanta-fixture alusta-korma!]]
     [aitu.integraatio.sql.test-util :refer :all]
     [aitu.asetukset :refer [lue-asetukset oletusasetukset]]

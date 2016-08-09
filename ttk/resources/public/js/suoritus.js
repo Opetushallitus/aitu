@@ -19,8 +19,8 @@ angular.module('suoritus', [])
     $routeProvider.when('/muokkaa-suoritus/:suoritusid', {controller:'SuoritusController', templateUrl:'template/suoritus'});
   }])
 
-  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
-   function($routeParams, $location, $modal, $scope, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
+  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Osaamisala', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
+   function($routeParams, $location, $modal, $scope, Osaamisala, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
     $scope.vuodet = _.range(1, 21);
 
     Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
@@ -34,7 +34,7 @@ angular.module('suoritus', [])
     Tutkinnonosa.haeKaikki().then(function(tutkinnonosat) {
       $scope.tutkinnonosat = tutkinnonosat;
     });
-
+    
     TutkintoResource.query(function(tutkinnot) {
       $scope.tutkinnot = tutkinnot;
     });
@@ -65,6 +65,7 @@ angular.module('suoritus', [])
                 result.tutkinnonosa = {
                 	tutkinnonosa_id: osa.tutkinnonosa,
                 	osatunnus: osa.osatunnus,
+                	osaamisala: osa.osaamisala_id,
                 	nimi: osa.nimi, // TODO: sv ja fi
                 	nayttotutkinto_nimi_fi: suoritus.tutkinto_nimi_fi,
                 	nayttotutkinto_nimi_sv: suoritus.tutkinto_nimi_sv,
@@ -78,6 +79,7 @@ angular.module('suoritus', [])
                 result.suoritus_id = osa.suoritus_id;
                 result.korotus = osa.arvosanan_korotus;
                 result.tunnustaminen = osa.osaamisen_tunnustaminen;
+                result.osaamisala = osa.osaamisala_id;
                 return result;
             });
             $scope.form.osat = $scope.osat;
@@ -86,8 +88,9 @@ angular.module('suoritus', [])
     
      $scope.$watchCollection('osat', function(osat) {
       $scope.form.osat = _.map(osat, function(osa) {
-        var result = _.pick(osa, ['arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
+        var result = _.pick(osa, ['osaamisala','arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
         result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
+//        result.osaamisala_id = osa.osaamisala.osaamisala_id;
         result.suoritus_id = osa.suoritus_id;
         return result;
       });
@@ -135,13 +138,15 @@ angular.module('suoritus', [])
     };
   }])
 
-  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Tutkinnonosa', 'tutkinnot', 'tutkinto', function($modalInstance, $scope, Tutkinnonosa, tutkinnot, tutkinto) {
+  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Osaamisala', 'Tutkinnonosa', 'tutkinnot', 'tutkinto', 
+                                                      function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkinto) {
     $scope.form = {
       arvosana: 'hyvaksytty',
       korotus: false,
       kieli: 'fi',
       todistus: false,
-      tunnustaminen: false
+      tunnustaminen: false,
+      osaamisala: null
     };
     $scope.tutkinto = tutkinto;
 
@@ -151,6 +156,9 @@ angular.module('suoritus', [])
       if (tutkinto !== undefined) {
         Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
           $scope.tutkinnonosat = tutkinnonosat;
+        });
+        Osaamisala.hae(tutkinto).then(function(osaamisalat) {
+          $scope.osaamisalat = osaamisalat.osaamisala;
         });
       }
     });

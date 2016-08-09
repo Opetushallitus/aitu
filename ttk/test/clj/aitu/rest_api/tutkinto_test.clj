@@ -11,8 +11,8 @@
 
 (def osaamisalat-reply
   {:tutkintotunnus "327128", :opintoala "201", :tutkintoversio_id -20000, :peruste "34/011/2010", 
-   :osaamisala [{:nimi_fi "Käsityöyrittäjyyden osaamisala (keksitty)", :nimi_sv nil, :osaamisalatunnus "9876"} 
-                {:nimi_fi "Käsityöopettajan osaamisala (keksitty)", :nimi_sv nil, :osaamisalatunnus "9875"}]})
+   :osaamisala [{:nimi_fi "Käsityöyrittäjyyden osaamisala (keksitty)", :nimi_sv nil, :osaamisalatunnus "9876" :osaamisala_id -20001} 
+                {:nimi_fi "Käsityöopettajan osaamisala (keksitty)", :nimi_sv nil, :osaamisalatunnus "9875" :osaamisala_id -20002}]})
 
 (deftest ^:integraatio osaamisalat-api
   (let [crout (init-peridot!)]

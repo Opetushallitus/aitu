@@ -48,6 +48,7 @@ angular.module('ttk', [
   'rest.suorittaja',
   'rest.suoritus',
   'rest.tutkinnonosa',
+  'rest.osaamisala',
   'sopimukset',
   'suoritus',
   'toimikunnat',

@@ -77,6 +77,7 @@
                 :arvosana (:arvosana osa)
                 :arvosanan_korotus (:korotus osa)
                 :osaamisen_tunnustaminen (:tunnustaminen osa)
+                :osaamisala (:osaamisala_id osa)
                 :kieli (:kieli osa)
                 :todistus (:todistus osa)})))
 
@@ -131,6 +132,7 @@
                              :tutkinnonosa (:tutkinnonosa_id osa)
                              :arvosana (:arvosana osa)
                              :arvosanan_korotus (:korotus osa)
+                             :osaamisala (:osaamisala_id osa)
                              :osaamisen_tunnustaminen (:tunnustaminen osa)
                              :kieli (:kieli osa)
                              :todistus (:todistus osa)})
