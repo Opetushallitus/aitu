@@ -80,8 +80,8 @@
         <div class="table-cell">{{ osa.tutkinnonosa.osatunnus }} {{ osa.tutkinnonosa | lokalisoiKentta:'nimi' }}</div>
         <div class="table-cell">{{ osa.tutkinnonosa | lokalisoiKentta:'nayttotutkinto_nimi' }}</div>
         <div class="table-cell">{{ osa.arvosana }}</div>
-        <div class="table-cell">{{ osa.korotus | muotoileBoolean }}</div>
-        <div class="table-cell">{{ osa.tunnustaminen | muotoileBoolean }}</div>
+        <div class="table-cell">{{ osa.arvosanan_korotus | muotoileBoolean }}</div>
+        <div class="table-cell">{{ osa.osaamisen_tunnustaminen | muotoileBoolean }}</div>
         <div class="table-cell"><enum-arvo nimi="kieli" arvo="osa.kieli"></enum-arvo></div>
         <div class="table-cell"><button class="icon delete-icon" ng-click="poistaOsa(osa)"></button></div>
       </div>

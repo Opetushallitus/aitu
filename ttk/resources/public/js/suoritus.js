@@ -47,7 +47,7 @@ angular.module('suoritus', [])
       osat: []
     };
     $scope.osat = [];
-    $scope.form.valmistava_koulutus = false;
+    $scope.valmistava_koulutus = false;
     
     // ladataan editoitavaksi
     if ($routeParams.suoritusid) {
@@ -63,7 +63,7 @@ angular.module('suoritus', [])
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.osat = _.map(suoritus.osat, function(osa) {
-                var result = _.pick(osa, ['arvosana', 'kieli', 'todistus', 'suoritus_id']);
+                var result = _.pick(osa, ['arvosana', 'kieli', 'todistus', 'suoritus_id','arvosanan_korotus','osaamisen_tunnustaminen']);
                 result.tutkinnonosa = {
                 	tutkinnonosa_id: osa.tutkinnonosa,
                 	osatunnus: osa.osatunnus,
@@ -78,8 +78,6 @@ angular.module('suoritus', [])
                 	}
                 };
                 result.osaamisala_id = osa.osaamisala;
-                result.korotus = osa.arvosanan_korotus;
-                result.tunnustaminen = osa.osaamisen_tunnustaminen;
                 return result;
             });
             $scope.form.osat = $scope.osat;
@@ -88,7 +86,7 @@ angular.module('suoritus', [])
     
      $scope.$watchCollection('osat', function(osat) {
       $scope.form.osat = _.map(osat, function(osa) {
-        var result = _.pick(osa, ['osaamisala', 'arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen', 'osaamisala_id', 'suoritus_id']);
+        var result = _.pick(osa, ['osaamisala', 'arvosana', 'arvosanan_korotus', 'kieli', 'todistus', 'osaamisen_tunnustaminen', 'osaamisala_id', 'suoritus_id']);
         result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
         return result;
       });
@@ -105,9 +103,9 @@ angular.module('suoritus', [])
       });
 
       modalInstance.result.then(function(uusiOsa) {
-        if (uusiOsa.tunnustaminen) {
+        if (uusiOsa.osaamisen_tunnustaminen) {
           uusiOsa.arvosana = null;
-          uusiOsa.korotus = false;
+          uusiOsa.arvosanan_korotus = false;
         }
         uusiOsa.osaamisala_id = uusiOsa.osaamisala;
         if (!_.find($scope.osat, function(osa) {
@@ -141,10 +139,10 @@ angular.module('suoritus', [])
                                                       function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkinto) {
     $scope.form = {
       arvosana: 'hyvaksytty',
-      korotus: false,
+      arvosanan_korotus: false,
       kieli: 'fi',
       todistus: false,
-      tunnustaminen: false,
+      osaamisen_tunnustaminen: false,
       osaamisala_id: null,
       osaamisala: null
     };
