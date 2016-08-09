@@ -113,7 +113,7 @@
 <div class="accordion-container">
   <div ng-show="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0" class="accordion" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto" oletuksena-auki="{{muokkausTila}}" accordion>
     <div class="accordion-header e2e-tutkintoversio" id="tutkinto{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">
-        {{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}} {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}} {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}}
+        {{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}} {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}} {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}} – {{sopimusJaTutkinto.tutkintoversio.peruste}}
         <button ng-show="salliMuokkaus()" class="icon edit-icon" style="float: right; margin: 0 5px 5px 0; " ng-click="muokkaa('tutkinto'+sopimusJaTutkinto.tutkintoversio.tutkintotunnus)"></button>
     </div>
     <div class="accordion-body">
