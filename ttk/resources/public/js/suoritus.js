@@ -48,6 +48,7 @@ angular.module('suoritus', [])
     };
     $scope.osat = [];
     
+    // ladataan editoitavaksi
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
         	$scope.form.rahoitusmuoto = suoritus.rahoitusmuoto;
@@ -65,7 +66,6 @@ angular.module('suoritus', [])
                 result.tutkinnonosa = {
                 	tutkinnonosa_id: osa.tutkinnonosa,
                 	osatunnus: osa.osatunnus,
-                	osaamisala: osa.osaamisala_id,
                 	nimi: osa.nimi, // TODO: sv ja fi
                 	nayttotutkinto_nimi_fi: suoritus.tutkinto_nimi_fi,
                 	nayttotutkinto_nimi_sv: suoritus.tutkinto_nimi_sv,
@@ -76,10 +76,10 @@ angular.module('suoritus', [])
                 		nimi_sv: suoritus.tutkinto_nimi_sv
                 	}
                 };
+                result.osaamisala_id = osa.osaamisala;
                 result.suoritus_id = osa.suoritus_id;
                 result.korotus = osa.arvosanan_korotus;
                 result.tunnustaminen = osa.osaamisen_tunnustaminen;
-                result.osaamisala = osa.osaamisala_id;
                 return result;
             });
             $scope.form.osat = $scope.osat;
@@ -88,14 +88,14 @@ angular.module('suoritus', [])
     
      $scope.$watchCollection('osat', function(osat) {
       $scope.form.osat = _.map(osat, function(osa) {
-        var result = _.pick(osa, ['osaamisala','arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
+        var result = _.pick(osa, ['osaamisala', 'arvosana', 'korotus', 'kieli', 'todistus', 'tunnustaminen']);
         result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
-//        result.osaamisala_id = osa.osaamisala.osaamisala_id;
+        result.osaamisala_id = osa.osaamisala_id;
         result.suoritus_id = osa.suoritus_id;
         return result;
       });
-    });
-    
+     });
+     
     $scope.lisaaTutkinnonosa = function() {
       var modalInstance = $modal.open({
         templateUrl: 'template/modal/suoritus-tutkinnonosa',
@@ -111,6 +111,7 @@ angular.module('suoritus', [])
           uusiOsa.arvosana = null;
           uusiOsa.korotus = false;
         }
+        uusiOsa.osaamisala_id = uusiOsa.osaamisala;
         if (!_.find($scope.osat, function(osa) {
             return osa.tutkinnonosa.tutkinnonosa_id === uusiOsa.tutkinnonosa.tutkinnonosa_id;
           })) {
@@ -146,6 +147,7 @@ angular.module('suoritus', [])
       kieli: 'fi',
       todistus: false,
       tunnustaminen: false,
+      osaamisala_id: null,
       osaamisala: null
     };
     $scope.tutkinto = tutkinto;

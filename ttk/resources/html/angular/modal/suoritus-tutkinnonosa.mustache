@@ -21,7 +21,7 @@
     </fieldset>
     <fieldset>
      <label>[[osaamisala]]</label>
-     <select ng-options="osaamisala.osaamisalatunnus as osaamisala.osaamisalatunnus + ' ' + (osaamisala | lokalisoiKentta:'nimi') for osaamisala in osaamisalat" ng-model="form.osaamisala" required></select>
+     <select ng-options="osaamisala.osaamisala_id as osaamisala.osaamisalatunnus + ' ' + (osaamisala | lokalisoiKentta:'nimi') for osaamisala in osaamisalat track by osaamisala.osaamisala_id" ng-model="form.osaamisala" required></select>
    </fieldset>
     
   </div>
