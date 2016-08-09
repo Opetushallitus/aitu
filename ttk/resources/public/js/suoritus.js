@@ -47,7 +47,7 @@ angular.module('suoritus', [])
       osat: []
     };
     $scope.osat = [];
-    $scope.valmistava_koulutus = false;
+    $scope.form.valmistava_koulutus = false;
     
     // ladataan editoitavaksi
     if ($routeParams.suoritusid) {
