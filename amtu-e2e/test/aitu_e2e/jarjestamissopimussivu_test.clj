@@ -139,7 +139,7 @@
           (testing "tutkinnot näkyvät sivulla"
             (-> tutkinnot
               (w/text)
-              (= "TU1 Testialan tutkinto (koko tutkinto)")
+              (= "TU1 Testialan tutkinto (koko tutkinto) – 123/04/13")
               (is)))
           (testing "tutkinnon detaljit ovat aluksi poissa näkyvistä"
             (is (not (w/visible? (tutkinnon-perusteen-diaarinumero)))))
