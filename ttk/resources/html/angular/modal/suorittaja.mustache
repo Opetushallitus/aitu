@@ -25,6 +25,13 @@
       <label for="oidInput">OID</label>
       <input id="oidInput" type="text" ng-model="suorittajaForm.oid">
     </fieldset>
+      <fieldset>
+        <label>[[rahoitusmuoto]]</label>
+        <select ng-model="suorittajaForm.rahoitusmuoto_id" ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot">
+          <option value=""></option>
+        </select>
+      </fieldset>
+    
   </div>
   <div ng-if="suorittajaForm.suorittaja_id">
     <div>[[muokattu_viimeksi]] {{ suorittajaForm.muutettuaika | date:'dd.MM.yyyy HH:mm' }}</div>

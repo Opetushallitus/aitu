@@ -20,7 +20,10 @@
   []
   (sql/select :suorittaja
     (sql/join :kayttaja (= :kayttaja.oid :muutettu_kayttaja))
+    (sql/join :rahoitusmuoto (= :rahoitusmuoto.rahoitusmuoto_id :rahoitusmuoto))
     (sql/fields :suorittaja_id :etunimi :sukunimi :hetu :oid :muutettuaika
+                [:rahoitusmuoto.rahoitusmuoto :rahoitusmuoto_nimi]
+                [:rahoitusmuoto.rahoitusmuoto_id :rahoitusmuoto_id]
                 [(sql/sqlfn "concat" :kayttaja.etunimi " " :kayttaja.sukunimi) :muutettu_nimi])
     (sql/order :suorittaja_id :DESC)))
 
@@ -28,7 +31,9 @@
   [form]
   (auditlog/suorittaja-operaatio! :lisays (dissoc form :hetu :oid))
   (sql/insert :suorittaja
-    (sql/values (select-keys form [:etunimi :sukunimi :hetu :oid]))))
+    (sql/values (-> form
+                  (assoc :rahoitusmuoto (:rahoitusmuoto_id form))
+                  (select-keys  [:rahoitusmuoto :etunimi :sukunimi :hetu :oid])))))
 
 (defn poista!
   [suorittajaid]
@@ -40,5 +45,7 @@
   [suorittajaid suorittaja]
   (auditlog/suorittaja-operaatio! :paivitys (assoc suorittaja :suorittaja_id suorittajaid))
   (sql/update :suorittaja
-    (sql/set-fields (select-keys suorittaja [:etunimi :sukunimi :hetu :oid]))
+    (sql/set-fields (-> suorittaja
+                      (assoc :rahoitusmuoto (:rahoitusmuoto_id suorittaja))
+                      (select-keys [:rahoitusmuoto :etunimi :sukunimi :hetu :oid])))
     (sql/where {:suorittaja_id suorittajaid})))

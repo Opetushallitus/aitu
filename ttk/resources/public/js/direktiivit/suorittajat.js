@@ -19,8 +19,9 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
     return {
       restrict: 'E',
       templateUrl: 'template/direktiivit/suorittajat',
-      scope: {},
-      controller: ['$modal', '$scope', 'Suorittaja', 'Varmistus', 'i18n', function($modal, $scope, Suorittaja, Varmistus, i18n) {
+      scope: {}, 
+      controller: ['$modal', '$scope', 'Suorittaja', 'Varmistus', 'i18n', 
+                   function($modal, $scope,  Suorittaja, Varmistus, i18n) {
         $scope.muokkaaSuorittajaa = function(suorittaja) {
           var modalInstance = $modal.open({
             templateUrl: 'template/modal/suorittaja',
@@ -61,7 +62,13 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
     }
   }])
 
-  .controller('LisaaSuorittajaModalController', ['$modalInstance', '$scope', 'suorittaja', function($modalInstance, $scope, suorittaja) {
+  .controller('LisaaSuorittajaModalController', ['$modalInstance', '$scope', 'suorittaja', 'Rahoitusmuoto',
+                                                 function($modalInstance, $scope, suorittaja, Rahoitusmuoto) {
+
+	    Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
+	        $scope.rahoitusmuodot = rahoitusmuodot;
+	      });
+	    
     $scope.suorittajaForm = {};
     if (suorittaja) {
       $scope.suorittajaForm = _.cloneDeep(suorittaja);
