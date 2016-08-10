@@ -67,4 +67,4 @@
         (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
 
         (is (= (set (map w/text (w/find-elements {:css ".e2e-tutkintoversio"})))
-          #{"TU1 Testialan tutkinto (koko tutkinto)", "TU2 Testialan tutkinto2 (koko tutkinto)"}))))))
+          #{"TU1 Testialan tutkinto (koko tutkinto) – 123/04/13", "TU2 Testialan tutkinto2 (koko tutkinto) – 123/04/14"}))))))

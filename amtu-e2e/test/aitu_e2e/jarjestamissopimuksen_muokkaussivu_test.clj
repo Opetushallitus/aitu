@@ -268,7 +268,7 @@
         (odota-angular-pyyntoa)
         (avaa-tutkinnon-tiedot)
         (is (= (set (map w/text (w/find-elements {:css ".e2e-tutkintoversio"})))
-                #{"TU1 Testialan tutkinto (tutkinnon osia: 2/2, osaamisaloja: 1/1)"}))
+                #{"TU1 Testialan tutkinto (tutkinnon osia: 2/2, osaamisaloja: 1/1) – 123/04/13"}))
         (is (= (set (map w/text (w/find-elements {:css ".e2e-valittututkinnonosa-nimi"}))) (set (map :nimi testi-tutkinnonosat))))
         (is (= (map w/text (w/find-elements {:css ".e2e-valittuosaamisala-nimi"})) [(:nimi testi-osaamisala)]))
         (is (= (count (w/find-elements {:text "Sopimukseen kuuluvat tutkinnon osat (2/2)"})) 1))
