@@ -9,7 +9,7 @@
   <h3 ng-if="muutos.tyyppi == 'poistunut'">[[poistunut-organisaatio]]</h3>
 
   <a ng-if="muutos.koulutustoimija" ng-href="#/koulutustoimija/{{muutos.koulutustoimija.ytunnus}}/tiedot">{{muutos.koulutustoimija.nimi | lokalisoi:muutos.koulutustoimija:'nimi'}}</a>
-  <a ng-if="muutos.oppilaitos" ng-href="#/oppilaitos/{{muutos.oppilaitos.oppilaitoskoodi}}">{{muutos.oppilaitos.nimi}}</a>
+  <a ng-if="muutos.oppilaitos" ng-href="#/oppilaitos/{{muutos.oppilaitos.oppilaitoskoodi}}/tiedot">{{muutos.oppilaitos.nimi}}</a>
   <a ng-if="muutos.toimipaikka" ng-href="#/toimipaikka/{{muutos.toimipaikka.toimipaikkakoodi}}">{{muutos.toimipaikka.nimi}}</a>
 </div>
 
