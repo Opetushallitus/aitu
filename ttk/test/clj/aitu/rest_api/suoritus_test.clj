@@ -17,6 +17,7 @@
   :paikka "Yöttäjän harjoitusalue"
   :jarjestelyt "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "     
   :suorittaja_etunimi "Orvokki"})
+ 
 
 (def suoritus-base
   {"osat" [{"arvosana" "hyvaksytty"
@@ -78,4 +79,45 @@
         (is (= '("Orvokki", "Lieto") (map :etunimi (body-json (:response suorittajat)))))
         (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))
         (is (= (rip-suoritusid suoritus-result) (rip-suoritusid suoritus-resp)))
+        ))))
+
+(deftest ^:integraatio suoritus-haku
+  (let [haku-map {:koulutustoimija "0208430-8"
+                  :tutkinto "327128"}
+        crout (init-peridot!)]
+    (run-with-db (constantly true)
+      #(let [s (peridot/session crout)
+             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-base))
+             suorituksia (mock-request s "/api/suoritus" :get haku-map)
+             suorituslista-resp (body-json (:response suorituksia))
+             skerta-id (some :suorituskerta_id suorituslista-resp)
+             ei-suorituksia (mock-request s "/api/suoritus" :get (assoc haku-map :rahoitusmuoto 4))
+             poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
+             ]
+        (is (= '() (body-json (:response ei-suorituksia))))
+        (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))
+        ))))
+  
+(deftest ^:integraatio suoritus-haku-suorittajalla
+  (let [haku-vals ["Orvok" "kelija" "Orvokki", "fan.far.12345"]
+        haku-notfound [ "Jörmungandr" "fan.far.1"]
+        crout (init-peridot!)]
+    (run-with-db (constantly true)
+      #(let [s (peridot/session crout)
+             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-base))
+             suorituksia (mock-request s "/api/suoritus" :get {})
+             suorituslista-resp (body-json (:response suorituksia))
+             skerta-id (some :suorituskerta_id suorituslista-resp)]
+         (testing "testaan opiskelijalla hakua erilaisilla kriteereillä.." 
+                  (doseq [crit haku-vals]
+                    (let [suorituslista-resp  (body-json (:response (mock-request s "/api/suoritus" :get {:suorittaja crit})))]
+                      (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))                      
+                    )))
+         (testing "testataan opiskelijalla hakua"
+                  (doseq [crit haku-notfound]
+                    (let [ei-suorituksia  (mock-request s "/api/suoritus" :get {:suorittaja crit})]
+                      (is (= '() (body-json (:response ei-suorituksia))))
+                    )))
+           
+           (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
         ))))

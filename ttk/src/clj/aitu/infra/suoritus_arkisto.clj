@@ -36,7 +36,7 @@
      (sql/where {:suorituskerta suorituskerta-id})))
 
 (defn hae-kaikki
-  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid]}]
+  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid suorittaja]}]
   (->
     (sql/select* :suorituskerta)
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
@@ -61,9 +61,15 @@
       (seq jarjestamismuoto) (sql/where {:jarjestamismuoto jarjestamismuoto})
       (seq koulutustoimija) (sql/where {:koulutustoimija koulutustoimija})
       (seq rahoitusmuoto) (sql/where {:rahoitusmuoto (Integer/parseInt rahoitusmuoto)})
+      (not (clojure.string/blank? suorittaja))   (sql/where (or {:suorittaja.hetu suorittaja}
+                                                                {:suorittaja.oid suorittaja}
+                                                                {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
+                                                                {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
+
       (seq tila) (sql/where {:tila tila})
       (seq tutkinto) (sql/where {:tutkinto tutkinto}))
     sql/exec))
+
 
 (defn hae-tiedot [suorituskerta-id]
   (let [perus (hae-kaikki {:suorituskertaid suorituskerta-id})
