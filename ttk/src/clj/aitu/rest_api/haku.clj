@@ -23,9 +23,7 @@
     :summary "Pikahaku yksilöivällä tunnuksella eri käsitteisiin"
     :kayttooikeus :etusivu_haku
     
-    (let [_ (println "lollerson " ehdot)
-          _ (println "kelpaa ?" (re-matches #"[0-9/\-]+" (:tunnus ehdot)))
-          respo
+    (let [respo
           ; HUOM: Regex hoitaa tässä SQL-injektion. Arkisto-koodissa ei ole sanitointia.
           (if (nil? (re-matches #"[0-9/\-]+" (:tunnus ehdot)))
             {} ; kiellettyjä merkkejä
