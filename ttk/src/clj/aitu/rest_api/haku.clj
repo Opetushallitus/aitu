@@ -19,8 +19,16 @@
             [compojure.api.core :refer [GET defroutes]]))
 
 (defroutes reitit
-  ; Regex hoitaa tässä SQL-injektion. Arkisto-koodissa ei ole sanitointia.
-  (GET ["/:tunnus" :tunnus #"[0-9/]+"] [tunnus]
+  (GET "/" [& ehdot]
     :summary "Pikahaku yksilöivällä tunnuksella eri käsitteisiin"
     :kayttooikeus :etusivu_haku
-    (response-or-404 (or (arkisto/hae-tunnuksella-ensimmainen tunnus) {}))))
+    
+    (let [_ (println "lollerson " ehdot)
+          _ (println "kelpaa ?" (re-matches #"[0-9/\-]+" (:tunnus ehdot)))
+          respo
+          ; HUOM: Regex hoitaa tässä SQL-injektion. Arkisto-koodissa ei ole sanitointia.
+          (if (nil? (re-matches #"[0-9/\-]+" (:tunnus ehdot)))
+            {} ; kiellettyjä merkkejä
+            (arkisto/hae-tunnuksella-ensimmainen (:tunnus ehdot))
+            )]
+      (response-or-404 respo))))

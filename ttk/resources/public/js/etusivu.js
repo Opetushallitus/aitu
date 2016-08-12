@@ -13,15 +13,15 @@
 // European Union Public Licence for more details.
 
 angular.module('etusivu', [])
-
-  .factory('hakuResource', ['$resource', 'i18n', function($resource, i18n) {
-    return $resource(ophBaseUrl + '/api/haku/:tunnus', {'tunnus': '@tunnus'}, {
-      get: {
-        method: 'GET',
-        i18n: 'etusivu'
-      }
-    });
-  }])
+      
+  .factory('hakuResource', ['$resource', 'i18n', function($resource, i18n) {	  
+	  return $resource(ophBaseUrl + '/api/haku', {'tunnus': '@tunnus'}, {
+		  get: {
+			  method: 'GET',
+			  i18n: 'etusivu'
+		  }
+	  });	
+  	}])
 
   .controller('etusivuController', ['$scope',  '$rootScope', '$location', 'hakuResource', 'organisaatiomuutosResource', function($scope, $rootScope, $location, hakuResource, organisaatiomuutosResource) {
     $scope.hakuehto = '';
