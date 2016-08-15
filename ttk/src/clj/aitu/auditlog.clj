@@ -126,3 +126,7 @@
   [operaatio tiedot]
   {:pre [(contains? operaatiot operaatio)]}
   (kirjoita! :suoritus operaatio tiedot))
+
+(defn lisaa-arvioija!
+  [tiedot] 
+  (kirjoita! :arvioija :lisays tiedot))

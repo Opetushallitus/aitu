@@ -18,6 +18,7 @@
             [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
 
             aitu.rest-api.aipal
+            aitu.rest-api.arvioija
             aitu.rest-api.db-validation
             aitu.rest-api.enum
             aitu.rest-api.haku
@@ -130,6 +131,7 @@
       (context "/api/jasenesitykset" [] aitu.rest-api.jasenesitykset/reitit-csv)
       (context "/api/jasenesitykset" [] :middleware [wrap-tarkasta-csrf-token] aitu.rest-api.jasenesitykset/reitit)
       (context "/api/aipal" [] aitu.rest-api.aipal/reitit)
+      (context "/api/arvioija" [] :middleware [wrap-tarkasta-csrf-token] aitu.rest-api.arvioija/reitit)
       (testapi asetukset)
       (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
         (angular-template nimi asetukset))

@@ -22,7 +22,7 @@
     [korma.core :as sql]
     [korma.sql.engine :as eng]))
 
-(declare toimikausi henkilo tutkintotoimikunta jasenyys
+(declare arvioija toimikausi henkilo tutkintotoimikunta jasenyys
          nayttotutkinto opintoala koulutusala jarjestamissopimus
          sopimus-ja-tutkinto sopimus-ja-tutkinto-ja-tutkinnonosa
          sopimus-ja-tutkinto-ja-osaamisala oppilaitos kieli
@@ -30,6 +30,9 @@
          keskusjarjesto tutkinnonosa osaamisala jarjestamissuunnitelma
          toimipaikka tutkintoversio uusin-versio tutkinto-ja-tutkinnonosa
          sopimuksen-liite koulutustoimija organisaatiomuutos)
+
+(defentity arvioija
+  (sql/pk :nimi))
 
 (defentity toimikausi
   (sql/pk :toimikausi_id))
