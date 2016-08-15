@@ -15,7 +15,7 @@
   :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.",
   :valmistava_koulutus true
   :paikka "Yöttäjän harjoitusalue"
-  :jarjestelyt "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "     
+  :jarjestelyt "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "
   :suorittaja_etunimi "Orvokki"})
  
 
@@ -31,6 +31,7 @@
    "opiskelijavuosi" "8"
    "jarjestamismuoto" "oppisopimuskoulutus"
    "rahoitusmuoto" 3
+   :arvioijat [{:arvioija_id -1}]
    "koulutustoimija" "0208430-8"
    "valmistava_koulutus" true
    "paikka" "Yöttäjän harjoitusalue"
@@ -43,6 +44,7 @@
    :osat [{:osaamisen_tunnustaminen false, :arvosanan_korotus true, :osatunnus "990001", 
            :todistus true, :osaamisala -20002, :kieli "fi", :nimi "Käsityöyrityksen johtaminen", 
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
+   :arvioijat [{:arvioija_id -1 :nimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false}]
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
    :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
    :koulutustoimija "0208430-8", :suorittaja_sukunimi "Opiskelija", 

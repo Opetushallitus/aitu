@@ -32,7 +32,7 @@
          sopimuksen-liite koulutustoimija organisaatiomuutos)
 
 (defentity arvioija
-  (sql/pk :nimi))
+  (sql/pk :arvioija_id))
 
 (defentity toimikausi
   (sql/pk :toimikausi_id))

@@ -22,7 +22,7 @@
   "Hakee arvioijia nimen perusteella."
   [nimi]
   (sql/select arvioija
-    (sql/fields :nimi :rooli :nayttotutkintomestari)              
+    (sql/fields :arvioija_id :nimi :rooli :nayttotutkintomestari)              
     (sql/where {:nimi [sql-util/ilike (str "%" nimi "%")]})))
 
 (defn lisaa!
