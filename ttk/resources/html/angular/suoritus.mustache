@@ -61,11 +61,17 @@
       <textarea ng-model="form.paikka"></textarea>
     </fieldset>
   </div>
-  <div class="table">
-     <button class="button-with-icon add-icon-white float-right" ng-click="lisaaArvioija()">[[lisaa_arvioija]]</button>
-     <div class="table-header">[[arvioijat]]</div>
+  
+  <button class="button-with-icon add-icon-white float-right" ng-click="lisaaArvioija()">[[lisaa_arvioija]]</button>
+   <div class="table">
+
+     <div class="table-header">        
+       <div class="table-cell">[[arvioijat]]</div>
+       <div class="table-cell"></div>
+     </div>
      <div class="table-row" ng-repeat="arvioija in form.arvioijat track by $index">
        <div class="table-cell">{{ arvioija.nimi }} ( {{ arvioija.rooli }} )</div>
+       <div class="table-cell"><button class="icon delete-icon" ng-click="poistaArvioija(arvioija)"></button></div>
      </div>
   </div>
 

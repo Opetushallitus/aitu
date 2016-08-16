@@ -122,6 +122,14 @@ angular.module('suoritus', [])
         }
       });
     };
+
+    $scope.poistaArvioija = function(poistettavaArvioija) {
+//      Varmistus.varmista(i18n.arviointipaatokset.poistetaanko_tutkinnonosa, i18n.arviointipaatokset.poista_tutkinnonosa_teksti, i18n.arviointipaatokset.poista_tutkinnonosa).then(function() {
+        _.remove($scope.form.arvioijat, function(arvioija) {
+          return arvioija.arvioija_id === poistettavaArvioija.arvioija_id;
+//        });
+      });
+    };
     
     $scope.lisaaArvioija = function() {
         var modalInstance = $modal.open({
