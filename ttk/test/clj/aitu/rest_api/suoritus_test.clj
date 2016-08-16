@@ -37,6 +37,10 @@
    "paikka" "Yöttäjän harjoitusalue"
    "jarjestelyt" "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "   
    "tutkinto" "327128"})
+
+(def suoritus-diff 
+  {"arvioijat" [{:arvioija_id -2 :nimi "Seppo Ilmarinen" :rooli "itsenainen" :nayttotutkintomestari true}]
+   "rahoitusmuoto" 2})
  
 (def suoritus-result
   {:tila "luonnos", :jarjestelyt "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. ", 
@@ -75,8 +79,13 @@
              skerta-id (some :suorituskerta_id suorituslista-resp)
              suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
              suoritus-resp (body-json (:response suoritustiedot))
+             ; update
+             paivitys-map (assoc (merge suoritus-resp suoritus-diff) :suorituskerta_id  skerta-id )
+             kirjaa-paivitys (mock-json-post s "/api/suoritus" (cheshire/generate-string paivitys-map))
+             suoritustiedot-paivitys (mock-request s (str "/api/suoritus/" skerta-id) :get {})
              poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
              ]
+         (println "!!!!.." (body-json (:response suoritustiedot-paivitys)))
         (is (= '() (body-json (:response ei-suorituksia))))
         (is (= '("Orvokki", "Lieto") (map :etunimi (body-json (:response suorittajat)))))
         (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))
