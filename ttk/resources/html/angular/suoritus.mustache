@@ -48,20 +48,26 @@
     <fieldset>
         <label>[[tutkinto]]</label>
         <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkinto" required></select>
-      </fieldset>
+    </fieldset>
   </div>
   <div>
+    <fieldset>
+      <label>[[jarjestelyt]]</label>
+      <textarea ng-model="form.jarjestelyt"></textarea>
+    </fieldset>
 
-      <fieldset>
-        <label>[[jarjestelyt]]</label>
-        <textarea ng-model="form.jarjestelyt"></textarea>
-      </fieldset>
-
-      <fieldset>
-        <label>[[paikka]]</label>
-        <textarea ng-model="form.paikka"></textarea>
-      </fieldset>
-    </div>
+    <fieldset>
+      <label>[[paikka]]</label>
+      <textarea ng-model="form.paikka"></textarea>
+    </fieldset>
+  </div>
+  <div class="table">
+     <button class="button-with-icon add-icon-white float-right" ng-click="lisaaArvioija()">[[lisaa_arvioija]]</button>
+     <div class="table-header">[[arvioijat]]</div>
+     <div class="table-row" ng-repeat="arvioija in form.arvioijat track by $index">
+       <div class="table-cell">{{ arvioija.nimi }} ( {{ arvioija.rooli }} )</div>
+     </div>
+  </div>
 
     <h2>[[tutkinnon_osat]]</h2>
 

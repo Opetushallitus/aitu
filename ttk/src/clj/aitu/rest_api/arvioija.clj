@@ -15,10 +15,14 @@
 (ns aitu.rest-api.arvioija
     (:require [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
               aitu.compojure-util
-              [compojure.api.core :refer [GET defroutes]]
+              [compojure.api.core :refer [GET POST defroutes]]
               [oph.common.util.http-util :refer [response-or-404]]))
 
 (defroutes reitit
+  (POST "/" [& form]
+    :kayttooikeus :arviointipaatos
+    (response-or-404 (arvioija-arkisto/lisaa! form)))
+  
   (GET "/haku" [& ehdot]
     :summary "Arvioijien haku"
     :kayttooikeus :arviointipaatos

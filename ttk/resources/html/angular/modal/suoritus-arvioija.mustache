@@ -1,0 +1,22 @@
+{{=[[ ]]=}}
+[[#i18n.yleiset]]
+[[#i18n.arviointipaatokset]]
+<form name="arvioijaForm">
+<div class="modal-header">
+  <h1 class="modal-title">[[lisaa_arvioija]]</h1>
+</div>
+
+<div class="modal-body">
+  <fieldset>
+    <label>[[arvioija]]</label>
+    <select ng-options="arvioija.arvioija_id as arvioija.nimi + ' ' + arvioija.rooli for arvioija in arvioijat track by arvioija.arvioija_id" ng-model="form.arvioija_id"></select>
+  </fieldset>
+</div>
+
+<div class="modal-footer">
+  <button class="button-with-icon add-icon-white" ng-click="ok()" ng-disabled="osaForm.$invalid">[[lisaa_arvioija]]</button>
+  <button ng-click="sulje()">[[peruuta]]</button>
+</div>
+</form>
+[[/i18n.arviointipaatokset]]
+[[/i18n.yleiset]]

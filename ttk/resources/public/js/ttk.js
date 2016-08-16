@@ -45,6 +45,7 @@ angular.module('ttk', [
   'rest.kayttaja',
   'rest.koulutustoimija',
   'rest.rahoitusmuoto',
+  'rest.arvioija',
   'rest.suorittaja',
   'rest.suoritus',
   'rest.tutkinnonosa',

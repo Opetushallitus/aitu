@@ -43,7 +43,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
 
         Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
           $scope.rahoitusmuodot = rahoitusmuodot;
-        });
+        });        
 
         TutkintoResource.query(function(tutkinnot) {
           $scope.tutkinnot = tutkinnot;
@@ -75,7 +75,6 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         
         $scope.muokkaaSuoritusta = function(muokattavaSuoritus) {
         	$location.url('/muokkaa-suoritus/' + muokattavaSuoritus.suorituskerta_id);
-        	// return alert('Kesken, OPH-1502');
         };
 
         $scope.valitutSuoritukset = function() {

@@ -19,8 +19,8 @@ angular.module('suoritus', [])
     $routeProvider.when('/muokkaa-suoritus/:suoritusid', {controller:'SuoritusController', templateUrl:'template/suoritus'});
   }])
 
-  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Osaamisala', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
-   function($routeParams, $location, $modal, $scope, Osaamisala, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
+  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
+   function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
     $scope.vuodet = _.range(1, 21);
 
     Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
@@ -34,6 +34,10 @@ angular.module('suoritus', [])
     Tutkinnonosa.haeKaikki().then(function(tutkinnonosat) {
       $scope.tutkinnonosat = tutkinnonosat;
     });
+
+    Arvioija.haeKaikki().then(function(arvioijat) {
+      $scope.arvioijat = arvioijat;
+    });
     
     TutkintoResource.query(function(tutkinnot) {
       $scope.tutkinnot = tutkinnot;
@@ -44,11 +48,12 @@ angular.module('suoritus', [])
     });
 
     $scope.form = {
-      osat: []
+      osat: [],
+      arvioijat: []
     };
     $scope.osat = [];
     $scope.form.valmistava_koulutus = false;
-    
+
     // ladataan editoitavaksi
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
@@ -62,6 +67,8 @@ angular.module('suoritus', [])
         	$scope.form.valmistava_koulutus = suoritus.valmistava_koulutus;
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
+            $scope.form.arvioijat = suoritus.arvioijat;
+            //$scope.arvioijat = suoritus.arvioijat;
             $scope.osat = _.map(suoritus.osat, function(osa) {
                 var result = _.pick(osa, ['arvosana', 'kieli', 'todistus', 'suoritus_id','arvosanan_korotus','osaamisen_tunnustaminen']);
                 result.tutkinnonosa = {
@@ -115,6 +122,33 @@ angular.module('suoritus', [])
         }
       });
     };
+    
+    $scope.lisaaArvioija = function() {
+        var modalInstance = $modal.open({
+          templateUrl: 'template/modal/suoritus-arvioija',
+          controller: 'SuoritusArvioijaModalController',
+          resolve: {
+           arvioijat: function() { return $scope.arvioijat; }
+          }
+        });
+
+        modalInstance.result.then(function(uusiArvioija) {
+            if (!_.find($scope.form.arvioijat, function(arvioija) {
+            	// ei tuplata samaa arvioijaa
+                return arvioija.arvioija_id === uusiArvioija.arvioija_id;
+             })) {
+               var foArvioija = _.find($scope.arvioijat, function(arvioija) {
+                   return arvioija.arvioija_id === uusiArvioija.arvioija_id; 
+               });
+               if (!foArvioija) {
+                 // TODO: täysin uusi arvioija
+                 $scope.form.arvioijat.push(uusiArvioija);
+               } else {
+            	   $scope.form.arvioijat.push(foArvioija);
+               }
+            }
+        });
+      };
 
     $scope.poistaOsa = function(poistettavaOsa) {
       Varmistus.varmista(i18n.arviointipaatokset.poistetaanko_tutkinnonosa, i18n.arviointipaatokset.poista_tutkinnonosa_teksti, i18n.arviointipaatokset.poista_tutkinnonosa).then(function() {
@@ -135,6 +169,20 @@ angular.module('suoritus', [])
     };
   }])
 
+  .controller('SuoritusArvioijaModalController', ['$modalInstance', '$scope', 'Arvioija','arvioijat',
+                                                  function($modalInstance, $scope, Arvioija, arvioijat) {
+
+    $scope.arvioijat = arvioijat;
+
+	$scope.ok = function() {
+	  $modalInstance.close($scope.form);
+	};
+
+    $scope.sulje = function() {
+      $modalInstance.dismiss();
+    };
+	}])
+   
   .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Osaamisala', 'Tutkinnonosa', 'tutkinnot', 'tutkinto', 
                                                       function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkinto) {
     $scope.form = {

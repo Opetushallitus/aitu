@@ -128,14 +128,14 @@
          (sql/where {:suorituskerta_id suorituskerta_id}))
       
       ; update arvioijat
-      (let [ids (keep :arvioija_id arvioijat)]
-        (sql/delete :suorituskerta_arvioija
-          (sql/where {:suorituskerta suorituskerta_id
-                      :arvioija_id [not-in ids]})))
+      (sql/delete :suorituskerta_arvioija
+        (sql/where {:suorituskerta_id suorituskerta_id}))
+      
       (doseq [arvioija arvioijat]
+        (println " arvioija " arvioija)
         (sql/insert :suorituskerta_arvioija
-          (sql/values [{:suorituskerta_id suorituskerta_id}
-                       {:arvioija_id (:arvioija_id arvioija)}])))
+          (sql/values {:suorituskerta_id suorituskerta_id
+                       :arvioija_id (:arvioija_id arvioija)})))
       
       ; update osat
       ; poistetut osat, käsitellään ennen kuin lisätään uusia osia
