@@ -22,12 +22,12 @@
   "Hakee arvioijia nimen perusteella."
   [nimi]
   (sql/select arvioija
-    (sql/fields :arvioija_id :nimi :rooli :nayttotutkintomestari)              
+    (sql/fields :arvioija_id :nimi :rooli :nayttotutkintomestari)
     (sql/where {:nimi [sql-util/ilike (str "%" nimi "%")]})))
 
 (defn lisaa!
   "lisää uuden arvioijan"
   [uusi-arvioija]
-  (auditlog/lisaa-arvioija! (:nimi uusi-arvioija))
-   (sql/insert arvioija
-     (sql/values uusi-arvioija)))
+  (auditlog/lisaa-arvioija! uusi-arvioija)
+  (sql/insert arvioija
+    (sql/values uusi-arvioija)))

@@ -13,6 +13,26 @@
   </fieldset>
 </div>
 
+<div>
+  <fieldset>
+    <label>[[arvioija_nimi]]</label>
+    <input id="nimiInput" type="text" ng-model="form.nimi">
+  </fieldset>  
+  <fieldset>
+    <label>[[nayttotutkintomestari]]</label>
+    <input type="checkbox" ng-model="form.nayttotutkintomestari">
+  </fieldset>
+  <fieldset>
+    <label>[[arvioija_rooli]]</label>
+    <select ng-model="form.rooli">'itsenainen', 'opettaja','tyonantaja','tyontekija'
+      <option value="itsenainen">itsenainen</option>
+      <option value="opettaja">opettaja</option>
+      <option value="tyonantaja">tyonantaja</option>
+      <option value="tyontekija">tyontekija</option>
+    </select>
+  </fieldset>  
+</div>
+
 <div class="modal-footer">
   <button class="button-with-icon add-icon-white" ng-click="ok()" ng-disabled="osaForm.$invalid">[[lisaa_arvioija]]</button>
   <button ng-click="sulje()">[[peruuta]]</button>

@@ -17,6 +17,7 @@
              [aitu.auditlog :as auditlog]
              [clj-time.coerce :refer [to-sql-date]]
              [oph.korma.common :as sql-util]
+             [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
              [oph.common.util.http-util :refer [parse-iso-date]]))
 
 
@@ -139,9 +140,11 @@
         (sql/where {:suorituskerta_id suorituskerta_id}))
       
       (doseq [arvioija arvioijat]
-        (sql/insert :suorituskerta_arvioija
-          (sql/values {:suorituskerta_id suorituskerta_id
-                       :arvioija_id (:arvioija_id arvioija)})))
+        (let [arvioija-id (or (:arvioija_id arvioija)
+                              (:arvioija_id (arvioija-arkisto/lisaa! arvioija)))]
+          (sql/insert :suorituskerta_arvioija
+            (sql/values {:suorituskerta_id suorituskerta_id
+                         :arvioija_id arvioija-id}))))
       
       ; update osat
       ; poistetut osat, käsitellään ennen kuin lisätään uusia osia
