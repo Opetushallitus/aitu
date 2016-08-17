@@ -124,6 +124,23 @@
         handler)
       handler)))
 
+(defn wrap-korjaa-httpkit-header
+  "Middleware joka korjaa httpkitin parsimat headerit.
+   HTTP-speksin mukaan useampi samanniminen header pitää yhdistää pilkulla erotetuksi merkkijonoksi,
+   mutta httpkit tekee niistä listan."
+  [handler]
+  (fn [request]
+    (->
+      request
+      (update :headers (fn [headers]
+                         (reduce-kv (fn [h k v]
+                                      (assoc h k (if (list? v)
+                                                   (clojure.string/join ", " v)
+                                                   v)))
+                                    {}
+                                    headers)))
+      handler)))
+
 (defn app [asetukset]
   (let [session-store (memory-store)
         reitit (aitu.reitit/reitit asetukset)]
@@ -147,7 +164,8 @@
                                     :path (service-path (get-in asetukset [:server :base-url]))
                                     :secure (not (:development-mode asetukset))}})
       (wrap-cas-single-sign-out session-store)
-      wrap-poikkeusten-logitus)))
+      wrap-poikkeusten-logitus
+      wrap-korjaa-httpkit-header)))
 
 (defn ^:integration-api kaynnista! [oletus-asetukset]
   (try
