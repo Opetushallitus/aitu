@@ -16,11 +16,6 @@ delete from organisaatiomuutos where toimipaikka in (select toimipaikkakoodi fro
   inner join oppilaitos o on o.oppilaitoskoodi = t.oppilaitos
   inner join poistettavat_koulutustoimijat pk on pk.koulutustoimija = o.koulutustoimija);
 
-delete from toimipaikka where oppilaitos in (select oppilaitoskoodi from oppilaitos o
-inner join poistettavat_koulutustoimijat pk on pk.koulutustoimija = o.koulutustoimija)
-and toimipaikkakoodi != '0246101';
-
-
 select * from sopimus_ja_tutkinto st
  inner join jarjestamissopimus j on j.jarjestamissopimusid = st.jarjestamissopimusid
  inner join sopimus_ja_tutkinto_ja_tutkinnonosa stt on stt.sopimus_ja_tutkinto = st.sopimus_ja_tutkinto_id
@@ -29,6 +24,17 @@ select * from sopimus_ja_tutkinto st
   inner join poistettavat_koulutustoimijat pk on pk.koulutustoimija = o.koulutustoimija)
  and j.voimassa = true; 
  
+
+
+delete from sopimus_ja_tutkinto_ja_tutkinnonosa sto
+  where sto.sopimus_ja_tutkinto in 
+  (select sopimus_ja_tutkinto_id from sopimus_ja_tutkinto st
+   inner join toimipaikka t on t.toimipaikkakoodi = sto.toimipaikka
+   inner join oppilaitos o on o.oppilaitoskoodi = t.oppilaitos
+   inner join poistettavat_koulutustoimijat pk on pk.koulutustoimija = o.koulutustoimija
+   where not exists (select * from jarjestamissopimus j where j.jarjestamissopimusid = st.jarjestamissopimusid
+   and j.voimassa = true));
+   
 delete from sopimus_ja_tutkinto st
   where st.sopimus_ja_tutkinto_id in 
   (select sopimus_ja_tutkinto from sopimus_ja_tutkinto_ja_tutkinnonosa stt
@@ -37,18 +43,22 @@ delete from sopimus_ja_tutkinto st
    inner join poistettavat_koulutustoimijat pk on pk.koulutustoimija = o.koulutustoimija)
    and not exists (select * from jarjestamissopimus j where j.jarjestamissopimusid = st.jarjestamissopimusid
    and j.voimassa = true);
- 
+
+delete from toimipaikka where oppilaitos in (select oppilaitoskoodi from oppilaitos o
+inner join poistettavat_koulutustoimijat pk on pk.koulutustoimija = o.koulutustoimija)
+and toimipaikkakoodi != '0246101';
+
 select * from jarjestamissopimus j
  where j.oppilaitos in (select oppilaitoskoodi from oppilaitos o
  inner join  poistettavat_koulutustoimijat pk on pk.koulutustoimija = o.koulutustoimija);
-
+ 
 delete from oppilaitos  where koulutustoimija in (select koulutustoimija from poistettavat_koulutustoimijat)
-and oppilaitoskoodi not in('01482', '02461');
+and oppilaitoskoodi not in('01482', '02461', '10043');
 
 delete from organisaatiomuutos where koulutustoimija in  (select koulutustoimija from poistettavat_koulutustoimijat);
 
 delete from koulutustoimija where ytunnus in (select koulutustoimija from poistettavat_koulutustoimijat)
-and ytunnus not in ('0964971-1', '0243437-1');
+and ytunnus not in ('0964971-1', '0243437-1', '1905652-2');
 
 
 drop table poistettavat_koulutustoimijat;
