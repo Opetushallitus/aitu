@@ -16,7 +16,7 @@
   (:import org.apache.commons.io.FileUtils)
   (:require  korma.db
              [korma.core :as sql]
-             [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists max-date min-date]]
+             [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists max-date min-date map-by]]
              [oph.common.util.http-util :refer [parse-iso-date]]
              [oph.korma.common :as sql-util]
              [aitu.toimiala.jarjestamissopimus :as domain]
@@ -272,24 +272,26 @@
 (defn hae-kaikki-osoitepalvelulle
   "Hakee kaikki järjestämissopimukset ja niihin liittyvät tutkinnot osoitepalvelua varten"
   []
-  (remove nil? (for [sopimus (sql/select jarjestamissopimus
-                               (sql/with sopimus-ja-tutkinto
-                                 (sql/with tutkintoversio
-                                   (sql/with nayttotutkinto
-                                     (sql/with opintoala))))
-                               (sql/where {:jarjestamissopimus.poistettu false}))]
-                (some-> sopimus
-                  (update-in [:toimikunta] toimikunta-kaytava/hae)
-                  osoitepalvelu-voimassaolo/taydenna-sopimuksen-voimassaolo
-                  (#(when (:voimassa %) %))
-                  (select-and-rename-keys [[:sopimus_ja_tutkinto :tutkinnot]
-                                           :toimikunta
-                                           :vastuuhenkilo
-                                           :sahkoposti
-                                           :tutkintotilaisuuksista_vastaava_oppilaitos
-                                           :koulutustoimija])
-                  (update-in [:toimikunta] :tkunta)
-                  (update-in [:tutkinnot] #(map rajaa-tutkinnon-kentat %))))))
+  (let [sopimuksen-tutkinnot (group-by :jarjestamissopimusid (sql/select sopimus-ja-tutkinto
+                                                               (sql/with tutkintoversio
+                                                                 (sql/with nayttotutkinto
+                                                                   (sql/with opintoala)))))
+        toimikunnat (map-by :tkunta (sql/select tutkintotoimikunta))]
+    (remove nil? (for [sopimus (sql/select jarjestamissopimus
+                                 (sql/where {:jarjestamissopimus.poistettu false}))]
+                   (some-> sopimus
+                     (assoc :tutkinnot (get sopimuksen-tutkinnot (:jarjestamissopimusid sopimus)))
+                     (update :toimikunta toimikunnat)
+                     osoitepalvelu-voimassaolo/taydenna-sopimuksen-voimassaolo
+                     (#(when (:voimassa %) %))
+                     (select-keys [:tutkinnot
+                                   :toimikunta
+                                   :vastuuhenkilo
+                                   :sahkoposti
+                                   :tutkintotilaisuuksista_vastaava_oppilaitos
+                                   :koulutustoimija])
+                     (update :toimikunta :tkunta)
+                     (update :tutkinnot #(map rajaa-tutkinnon-kentat %)))))))
 
 (defn hae
   "Hakee järjestämissopimuksen ja siihen liittyvät tiedot"
