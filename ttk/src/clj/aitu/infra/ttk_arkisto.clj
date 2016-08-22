@@ -490,6 +490,7 @@
                    (and {:alkupvm [<= (sql/sqlfn now)]}
                         (or {:loppupvm [>= (sql/sqlfn now)]}
                             {:loppupvm nil}))))
+    (sql/where {:jasenyys.status "nimitetty"})
     (sql/order :henkilo.sukunimi)
     (sql/order :henkilo.etunimi)
     (sql/fields [:tutkintotoimikunta.nimi_fi :toimikunta] :tutkintotoimikunta.tilikoodi
