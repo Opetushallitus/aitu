@@ -149,10 +149,10 @@
       (testing "Jos jäsen on toimikunnassa kahteen kertaan, voi voimassaoloaikaa muokata siten että voimassaoloaika ei mene päällekkäin toisen saman henkilön jäsenyyden kanssa."
         (with-data {:toimikunnat testi-toimikunnat
                     :henkilot testi-henkilot
-                    :jasenet [(testi-jasen-maaratty-alku-ja-loppupvm "01.08.2016" "20.08.2016")
-                              (testi-jasen-maaratty-alku-ja-loppupvm "01.09.2016" "20.09.2016")]}
+                    :jasenet [(testi-jasen-maaratty-alku-ja-loppupvm "01.08.2017" "20.08.2017")
+                              (testi-jasen-maaratty-alku-ja-loppupvm "01.09.2017" "20.09.2017")]}
           (avaa (jasenten-hallinta-sivu "98/11/543"))
-          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.alkupvm" "02.08.2016")
+          (kirjoita-pvm-valitsin-kenttaan "Aku Ankka" 0 "henkilo.alkupvm" "02.08.2017")
           (tallenna-jasenet)
           (is (= (viestin-teksti) "Toimikunnan jäseniä muokattu"))))
       (testing "Jos jäsen on toimikunnassa kahteen kertaan, voimassaolon muokkaus ei onnistu jos päällekkäisiä voimassaoloja."
