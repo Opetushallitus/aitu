@@ -81,8 +81,6 @@
 
   (fn [request]
       (let [cas-handler (auth/wrap-sessionuser handler)
-            anon-auth-handler (anon-auth/auth-cas-user cas-handler ka/default-test-user-uid)
-            fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
             auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]
       (cond
         (some #(.startsWith (path-info request) %) swagger-resources)
@@ -90,11 +88,11 @@
             (log/info "swagger API docs are public, no auth")
             (handler request))
         (and (kehitysmoodi? asetukset) (not (:enabled (:cas-auth-server asetukset))))
-          (do
+          (let [anon-auth-handler (anon-auth/auth-cas-user cas-handler ka/default-test-user-uid)]
            (log/info "development, no CAS")
            (anon-auth-handler request))
         (and (kehitysmoodi? asetukset) ((:headers request) "uid"))
-          (do
+          (let [fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))]
             (log/info "development, fake CAS")
             (fake-auth-handler request))
         :else (auth-handler request)))))
