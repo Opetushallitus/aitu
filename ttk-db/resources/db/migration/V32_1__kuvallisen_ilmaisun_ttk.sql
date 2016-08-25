@@ -1,0 +1,1 @@
+delete from tutkintotoimikunta where diaarinumero = '31/042/2015';
