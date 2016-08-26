@@ -156,6 +156,7 @@
     :ohjeet_luku aitu-kayttaja?
     :toimikunta_haku aitu-kayttaja?
     :toimikunta_katselu toimikunnan-katselu?
+    :jarjestamissopimus_export #(or (yllapitaja?) (paivittaja?))
     :etusivu aitu-kayttaja?
     :henkilo_haku aitu-kayttaja?
     :yleinen-rest-api sallittu-kaikille ; erikoistapaus, julkinen data voi olla autentikoinnin ulkopuolella
