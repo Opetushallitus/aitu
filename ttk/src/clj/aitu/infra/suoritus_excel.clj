@@ -33,14 +33,17 @@
                ]
          )))))
 
-(defn ^:private set-or-create-cell! [sheet n val type]
-  (let [cellref (org.apache.poi.ss.util.CellReference. n)
-        r (.getRow cellref)
-        col (int (.getCol cellref))
-        rows (row-seq sheet)
-        row (nth rows r)
-        cell (or (select-cell n sheet) (.createCell row col type))]
-    (set-cell! cell val)))
+(defn ^:private set-or-create-cell! 
+  ([sheet n val type]
+    (let [cellref (org.apache.poi.ss.util.CellReference. n)
+          r (.getRow cellref)
+          col (int (.getCol cellref))
+          rows (row-seq sheet)
+          row (nth rows r)
+          cell (or (select-cell n sheet) (.createCell row col type))]
+      (set-cell! cell val)))
+  ([sheet n val]
+    (set-or-create-cell! sheet n val org.apache.poi.ss.usermodel.Cell/CELL_TYPE_STRING)))
 
 (def osacolumns ["C", "D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
                  "AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
@@ -54,10 +57,10 @@
              (let [tutkintotunnus (first tutkinto)
                    tutkinnonosat (second tutkinto)
                    row (+ 2 i)]
-               (set-or-create-cell! sheet (str "A" row) tutkintotunnus org.apache.poi.ss.usermodel.Cell/CELL_TYPE_STRING)
+               (set-or-create-cell! sheet (str "A" row) tutkintotunnus)
                (doall (map-indexed (fn [ind tutkinnonosa]
                                      (let [colstr (nth osacolumns ind)]
-                                       (set-or-create-cell! sheet (str colstr row) tutkinnonosa org.apache.poi.ss.usermodel.Cell/CELL_TYPE_STRING)))
+                                       (set-or-create-cell! sheet (str colstr row) tutkinnonosa)))
                                    tutkinnonosat))))
                         tutkintorakenne))))
       
@@ -65,12 +68,23 @@
   (let [suorittajat (->>  (suorittaja-arkisto/hae-kaikki)
            (map #(assoc % :nimi (str (:etunimi %) " " (:sukunimi %) " (" (:oid %) ")"))  )
            (sort-by :nimi))]
-  (doseq [opiskelija suorittajat]
-    (let [xls-row [(:nimi opiskelija)
-                   (str (:suorittaja_id opiskelija))
-                   (:oid opiskelija)
-                   (:hetu opiskelija)]]
+    (doseq [opiskelija suorittajat]
+      (let [xls-row [(:nimi opiskelija)
+                     (str (:suorittaja_id opiskelija))
+                     (:oid opiskelija)
+                     (:hetu opiskelija)
+                     (:rahoitusmuoto_nimi opiskelija)]]
+                          
       (add-row! sheet xls-row)))))
+;    (doall (map-indexed (fn [r opiskelija]
+;                          (println " .. " opiskelija )
+;                          (let [row (+ 3 r)] 
+;                            (set-or-create-cell! sheet (str "A" row) (:nimi opiskelija))
+;                            (set-or-create-cell! sheet (str "B" row) (str (:suorittaja_id opiskelija)))
+;                            (set-or-create-cell! sheet (str "C" row) (:oid opiskelija))
+                           ; (set-or-create-cell! sheet (str "D" row) (:hetu opiskelija))
+;                            (set-or-create-cell! sheet (str "E" row) (:rahoitusmuoto_nimi opiskelija))
+;                          )) suorittajat))))
                
 ; TODO: 
 ;(user/with-testikayttaja 
@@ -78,14 +92,52 @@
 ;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
   
 (defn luo-excel []
-  (let [import (load-workbook  "resources/tutosat_export_base.xlsx")
-        tutosat (select-sheet "tutkinnonosat" import)
-        opiskelijat (select-sheet "Opiskelijat" import)]
-    (map-tutkintorakenne! tutosat)
+  (let [export (load-workbook  "resources/tutosat_export_base.xlsx")
+        tutosat (select-sheet "tutkinnonosat" export)
+        opiskelijat (select-sheet "Opiskelijat" export)]
+    ; (map-tutkintorakenne! tutosat)
     (map-opiskelijat! opiskelijat)
-     import))
-      
-      
- 
-        
-        
+     export))
+
+(defn ^:private get-cell-str [rowref col]
+  (let [cell (.getCell rowref col)]
+    (when (not (nil? cell)) (.getStringCellValue cell))))
+    
+(defn ^:private get-cell-num [rowref col]
+  (let [cell (.getCell rowref col)]
+    (when (not (nil? cell)) (.getNumericCellValue cell))))
+    
+(defn luo-opiskelijat! [sheet]
+  (let [rivit (row-seq sheet)
+        opiskelijat (nthrest rivit 1)]
+    (doseq [opiskelija opiskelijat]
+      (let [id (get-cell-str opiskelija 1)
+            nimi (get-cell-str opiskelija 0)
+            oid (get-cell-str opiskelija 2)
+            hetu (get-cell-str opiskelija 3)
+            rahoitusmuoto (get-cell-num opiskelija 5)]
+        (when (and (empty? id) (not (empty? nimi)))
+;          (println "uusi opiskelija!! " nimi " . " rahoitusmuoto)
+          (let [nimet (clojure.string/split nimi #" ")]
+            (suorittaja-arkisto/lisaa! {:etunimi (first nimet)
+                                        :sukunimi (second nimet)
+                                        :hetu hetu
+                                        :rahoitusmuoto_id (int rahoitusmuoto)
+                                        :oid oid})
+                                        ))))))
+    
+(defn lue-excel! []
+  (let [import (load-workbook "tutosat_taydennetty2.xlsx")
+        suoritukset-sheet (select-sheet "Suoritukset" import)
+        rivit (row-seq suoritukset-sheet)
+        suoritukset (nthrest rivit 3)]
+    (luo-opiskelijat! (select-sheet "Opiskelijat" import))
+    
+    (doseq [suoritus suoritukset]
+      (let [nimisolu (.getCell suoritus 1)
+            nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
+        (when (not (empty? nimi))
+;          (println "..  " nimi " .. ")
+          (let [suorittaja-id (.getNumericCellValue (.getCell suoritus 2))]
+;            (println ".. " suorittaja-id)))))))
+))))))
