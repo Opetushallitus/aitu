@@ -47,11 +47,6 @@
                  "BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
                  "CA","CB","CC","CD","CE","CF","CG","CH","CI","CJ","CK","CL","CM","CN","CO","CP","CQ","CR","CS","CT","CU","CV","CW","CX","CY","CZ"
                  "DA","DB","DC","DD","DE","DF","DG","DH","DI","DJ","DK","DL","DM","DN","DO","DP","DQ","DR","DS","DT","DU","DV","DW","DX","DY","DZ"])
-               
-; TODO: 
-;(user/with-testikayttaja 
-;     (let [wb (luo-excel)]
-;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
 
 (defn ^:private map-tutkintorakenne! [sheet]
   (let [tutkintorakenne (hae-osarakenne)]
@@ -66,10 +61,28 @@
                                    tutkinnonosat))))
                         tutkintorakenne))))
       
+(defn ^:private map-opiskelijat! [sheet]
+  (let [suorittajat (->>  (suorittaja-arkisto/hae-kaikki)
+           (map #(assoc % :nimi (str (:etunimi %) " " (:sukunimi %) " (" (:oid %) ")"))  )
+           (sort-by :nimi))]
+  (doseq [opiskelija suorittajat]
+    (let [xls-row [(:nimi opiskelija)
+                   (str (:suorittaja_id opiskelija))
+                   (:oid opiskelija)
+                   (:hetu opiskelija)]]
+      (add-row! sheet xls-row)))))
+               
+; TODO: 
+;(user/with-testikayttaja 
+;     (let [wb (luo-excel)]
+;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
+  
 (defn luo-excel []
   (let [import (load-workbook  "resources/tutosat_export_base.xlsx")
-        tutosat (select-sheet "tutkinnonosat" import)]
+        tutosat (select-sheet "tutkinnonosat" import)
+        opiskelijat (select-sheet "Opiskelijat" import)]
     (map-tutkintorakenne! tutosat)
+    (map-opiskelijat! opiskelijat)
      import))
       
       
