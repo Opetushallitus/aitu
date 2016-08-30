@@ -39,8 +39,7 @@
     (let [cellref (org.apache.poi.ss.util.CellReference. n)
           r (.getRow cellref)
           col (int (.getCol cellref))
-          rows (row-seq sheet)
-          row (nth rows r)
+          row (or (.getRow sheet r) (.createRow sheet r))
           cell (or (select-cell n sheet) (.createCell row col type))]
       (set-cell! cell val)))
   ([sheet n val]
@@ -69,22 +68,14 @@
   (let [suorittajat (->>  (suorittaja-arkisto/hae-kaikki)
            (map #(assoc % :nimi (str (:etunimi %) " " (:sukunimi %) " (" (:oid %) ")"))  )
            (sort-by :nimi))]
-    (doseq [opiskelija suorittajat]
-      (let [xls-row [(:nimi opiskelija)
-                     (str (:suorittaja_id opiskelija))
-                     (:oid opiskelija)
-                     (:hetu opiskelija)
-                     (:rahoitusmuoto_nimi opiskelija)]]
-                          
-      (add-row! sheet xls-row)))))
-;    (doall (map-indexed (fn [r opiskelija]
-;                          (let [row (+ 3 r)] 
-;                            (set-or-create-cell! sheet (str "A" row) (:nimi opiskelija))
-;                            (set-or-create-cell! sheet (str "B" row) (str (:suorittaja_id opiskelija)))
-;                            (set-or-create-cell! sheet (str "C" row) (:oid opiskelija))
-                           ; (set-or-create-cell! sheet (str "D" row) (:hetu opiskelija))
-;                            (set-or-create-cell! sheet (str "E" row) (:rahoitusmuoto_nimi opiskelija))
-;                          )) suorittajat))))
+    (doall (map-indexed (fn [r opiskelija]
+                          (let [row (+ 3 r)] 
+                            (set-or-create-cell! sheet (str "A" row) (:nimi opiskelija))
+                            (set-or-create-cell! sheet (str "B" row) (str (:suorittaja_id opiskelija)))
+                            (set-or-create-cell! sheet (str "C" row) (:oid opiskelija))
+                            (set-or-create-cell! sheet (str "D" row) (:hetu opiskelija))
+                            (set-or-create-cell! sheet (str "E" row) (:rahoitusmuoto_nimi opiskelija))
+                          )) suorittajat))))
                
 ; TODO: 
 ;(user/with-testikayttaja 
@@ -95,7 +86,7 @@
   (let [export (load-workbook  "resources/tutosat_export_base.xlsx")
         tutosat (select-sheet "tutkinnonosat" export)
         opiskelijat (select-sheet "Opiskelijat" export)]
-    ; (map-tutkintorakenne! tutosat)
+     (map-tutkintorakenne! tutosat)
     (map-opiskelijat! opiskelijat)
      export))
 
