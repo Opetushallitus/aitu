@@ -35,6 +35,7 @@
                  [org.clojure/core.cache "0.6.4"]
                  [org.clojure/data.zip "0.1.1"]
                  [org.clojure/tools.logging "0.2.6"]
+                 [org.flatland/useful "0.11.5"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.slf4j/slf4j-log4j12 "1.7.1"]
                  [peridot "0.4.2"]

@@ -15,7 +15,9 @@
 (ns aitu.infra.tutkintorakenne-arkisto
   (:require korma.db
             [korma.core :as sql]
+            [flatland.useful.seq :refer [groupings]]
             [aitu.integraatio.sql.korma :refer :all]
+            [oph.common.util.util :refer [select-and-rename-keys]]
             [clj-time.core :as ctime]))
 
 (defn tutkinto-voimassa? [tutkinto]
@@ -32,9 +34,23 @@
 
 (defn hae
   "Hakee tutkintorakenteen"
-  []
-  (suodata-tyhjat-alat
-    (sql/select koulutusala
-      (sql/with opintoala
-        (sql/with nayttotutkinto
-          (sql/with uusin-versio))))))
+  [peruste?]
+  (let [tutkinnot (sql/select tutkintoversio
+                    (sql/join :inner nayttotutkinto {:tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus})
+                    (sql/join :inner opintoala {:nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi})
+                    (sql/join :inner koulutusala {:opintoala.koulutusala_tkkoodi :koulutusala.koulutusala_tkkoodi})
+                    (sql/where (or peruste? {:nayttotutkinto.uusin_versio_id :tutkintoversio.tutkintoversio_id}))
+                    (sql/fields :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv :tutkintoversio.peruste :nayttotutkinto.tutkintotunnus :tutkintoversio.siirtymaajan_loppupvm :tutkintoversio.tutkintoversio_id
+                                :opintoala.selite_fi :opintoala.selite_sv :opintoala.opintoala_tkkoodi
+                                [:koulutusala.selite_fi :koulutusala_selite_fi] [:koulutusala.selite_sv :koulutusala_selite_sv] :koulutusala.koulutusala_tkkoodi)
+                    (sql/order :nayttotutkinto.nimi_fi)
+                    (sql/order :tutkintoversio.peruste))
+        opintoalat (sort-by :opintoala_tkkoodi (for [[opintoala tutkinnot] (groupings #(select-keys % [:selite_fi :selite_sv :opintoala_tkkoodi :koulutusala_selite_fi :koulutusala_selite_sv :koulutusala_tkkoodi])
+                                                                                      #(select-keys % [:nimi_fi :nimi_sv :peruste :tutkintotunnus :siirtymaajan_loppupvm :tutkintoversio_id])
+                                                                                      tutkinnot)]
+                                                 (assoc opintoala :nayttotutkinto tutkinnot)))
+        koulutusalat (sort-by :koulutusala_tkkoodi (for [[koulutusala opintoalat] (groupings #(select-and-rename-keys % [[:koulutusala_selite_fi :selite_fi] [:koulutusala_selite_sv :selite_sv] :koulutusala_tkkoodi])
+                                                                                             #(select-keys % [:selite_fi :selite_sv :opintoala_tkkoodi :nayttotutkinto])
+                                                                                             opintoalat)]
+                                                     (assoc koulutusala :opintoala opintoalat)))]
+    (suodata-tyhjat-alat koulutusalat)))
