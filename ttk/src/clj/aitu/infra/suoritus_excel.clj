@@ -16,6 +16,7 @@
    (:require [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
              [aitu.infra.tutkinnonosa-arkisto :as tutosa-arkisto]
              [aitu.infra.suorittaja-arkisto :as suorittaja-arkisto]
+             [aitu.auditlog :as auditlog]
              [dk.ative.docjure.spreadsheet :refer :all]))
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
@@ -77,7 +78,6 @@
                           
       (add-row! sheet xls-row)))))
 ;    (doall (map-indexed (fn [r opiskelija]
-;                          (println " .. " opiskelija )
 ;                          (let [row (+ 3 r)] 
 ;                            (set-or-create-cell! sheet (str "A" row) (:nimi opiskelija))
 ;                            (set-or-create-cell! sheet (str "B" row) (str (:suorittaja_id opiskelija)))
@@ -107,7 +107,7 @@
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell)) (.getNumericCellValue cell))))
     
-(defn luo-opiskelijat! [sheet]
+(defn ^:private luo-opiskelijat! [sheet]
   (let [rivit (row-seq sheet)
         opiskelijat (nthrest rivit 1)]
     (doseq [opiskelija opiskelijat]
@@ -117,7 +117,6 @@
             hetu (get-cell-str opiskelija 3)
             rahoitusmuoto (get-cell-num opiskelija 5)]
         (when (and (empty? id) (not (empty? nimi)))
-;          (println "uusi opiskelija!! " nimi " . " rahoitusmuoto)
           (let [nimet (clojure.string/split nimi #" ")]
             (suorittaja-arkisto/lisaa! {:etunimi (first nimet)
                                         :sukunimi (second nimet)
@@ -127,6 +126,7 @@
                                         ))))))
     
 (defn lue-excel! []
+  (auditlog/lue-suoritukset-excel!)
   (let [import (load-workbook "tutosat_taydennetty2.xlsx")
         suoritukset-sheet (select-sheet "Suoritukset" import)
         rivit (row-seq suoritukset-sheet)
@@ -137,7 +137,5 @@
       (let [nimisolu (.getCell suoritus 1)
             nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
         (when (not (empty? nimi))
-;          (println "..  " nimi " .. ")
           (let [suorittaja-id (.getNumericCellValue (.getCell suoritus 2))]
-;            (println ".. " suorittaja-id)))))))
 ))))))
