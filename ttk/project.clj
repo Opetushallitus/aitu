@@ -45,6 +45,7 @@
                  [ring/ring-session-timeout "0.1.0"]
                  [robert/hooke "1.3.0"]
                  [slingshot "0.10.3"]
+                 [dk.ative/docjure "1.10.0"]
                  [stencil "0.3.2" :exclusions [org.clojure/core.cache]]]
 
   :plugins [[lein-cloverage "1.0.2"]
