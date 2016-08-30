@@ -23,7 +23,7 @@
        (contains? x :toimikunta)))
 
 (defn liita-tutkinnon-nimi-ja-tunnus [sopimus-ja-tutkinto]
-  (merge sopimus-ja-tutkinto (select-keys (:tutkintoversio sopimus-ja-tutkinto) [:nimi_fi :nimi_sv :tutkintotunnus :tutkintoversio_id])))
+  (merge sopimus-ja-tutkinto (select-keys (:tutkintoversio sopimus-ja-tutkinto) [:nimi_fi :nimi_sv :tutkintotunnus :tutkintoversio_id :peruste])))
 
 (defn taydenna-sopimus
   "Täydentää jarjestamissopimuksen tiedot, kuten voimassaolo"

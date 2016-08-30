@@ -19,7 +19,7 @@
             [oph.common.util.http-util :refer [cachable-response]]))
 
 (defroutes reitit
-  (GET "/" [:as req]
-    :summary "Palauttaa tutkintorakenteen. (ePerusteet master-järjestelmä)"
+  (GET "/" [peruste :as req]
+    :summary "Palauttaa tutkintorakenteen. Jos peruste=true, alimmalla tasolla on erikseen jokainen peruste, muuten jokainen tutkinto. (ePerusteet master-järjestelmä)"
     :kayttooikeus :yleinen-rest-api
-    (cachable-response req (arkisto/hae))))
+    (cachable-response req (arkisto/hae (Boolean/valueOf peruste)))))

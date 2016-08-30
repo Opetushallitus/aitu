@@ -24,7 +24,7 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       };
     }
 
-    var resolve = {resource : 'toimikuntaResource', config : controllerConfig };
+    var resolve = {resource : 'toimikuntaResource', config : controllerConfig, peruste: function() { return false; } };
 
     $routeProvider.
       when('/search-toimikunta', {controller:'ToimikunnatController', templateUrl:'template/toimikunnat'}).
