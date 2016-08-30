@@ -15,6 +15,7 @@
 (ns aitu.infra.suoritus-excel
    (:require [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
              [aitu.infra.tutkinnonosa-arkisto :as tutosa-arkisto]
+             [aitu.infra.suorittaja-arkisto :as suorittaja-arkisto]
              [dk.ative.docjure.spreadsheet :refer :all]))
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
@@ -32,7 +33,7 @@
                ]
          )))))
 
-(defn set-or-create-cell! [sheet n val type]
+(defn ^:private set-or-create-cell! [sheet n val type]
   (let [cellref (org.apache.poi.ss.util.CellReference. n)
         r (.getRow cellref)
         col (int (.getCol cellref))
@@ -52,24 +53,23 @@
 ;     (let [wb (luo-excel)]
 ;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
 
+(defn ^:private map-tutkintorakenne! [sheet]
+  (let [tutkintorakenne (hae-osarakenne)]
+    (doall (map-indexed (fn [i tutkinto]
+             (let [tutkintotunnus (first tutkinto)
+                   tutkinnonosat (second tutkinto)
+                   row (+ 2 i)]
+               (set-or-create-cell! sheet (str "A" row) tutkintotunnus org.apache.poi.ss.usermodel.Cell/CELL_TYPE_STRING)
+               (doall (map-indexed (fn [ind tutkinnonosa]
+                                     (let [colstr (nth osacolumns ind)]
+                                       (set-or-create-cell! sheet (str colstr row) tutkinnonosa org.apache.poi.ss.usermodel.Cell/CELL_TYPE_STRING)))
+                                   tutkinnonosat))))
+                        tutkintorakenne))))
+      
 (defn luo-excel []
   (let [import (load-workbook  "resources/tutosat_export_base.xlsx")
-        tutosat (select-sheet "tutkinnonosat" import)
-        rivit (row-seq tutosat)
-        tutkintorakenne (hae-osarakenne)]
-    (loop [tutkintorakenne tutkintorakenne
-           i 2]
-      (let [tutkinto (first tutkintorakenne)
-            tutkintotunnus (first tutkinto)
-            tutkinnonosat (second tutkinto)]
-        (set-or-create-cell! tutosat (str "A" i) tutkintotunnus org.apache.poi.ss.usermodel.Cell/CELL_TYPE_STRING)
-        (doall (map-indexed (fn [ind tutkinnonosa]
-                              (let [colstr (nth osacolumns ind)]
-                                (set-or-create-cell! tutosat (str colstr i) tutkinnonosa org.apache.poi.ss.usermodel.Cell/CELL_TYPE_STRING)))
-                            tutkinnonosat))
-        (when (next tutkintorakenne) (recur (rest tutkintorakenne)
-                                            (inc i)))))
-    
+        tutosat (select-sheet "tutkinnonosat" import)]
+    (map-tutkintorakenne! tutosat)
      import))
       
       
