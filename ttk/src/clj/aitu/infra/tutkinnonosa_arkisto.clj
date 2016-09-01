@@ -15,6 +15,14 @@
 (ns aitu.infra.tutkinnonosa-arkisto
   (:require [korma.core :as sql]))
 
+(defn hae-kaikki-uusimmat []
+  (sql/select :tutkinnonosa
+    (sql/where
+      (not (sql/sqlfn exists 
+             (sql/subselect :tutkinnonosa 
+                            (sql/where (and (> :tutkinnonosa.versio :versio)
+                                            (= :tutkinnonosa.osatunnus :osatunnus)))))))))
+
 (defn hae
   [tutkintotunnus]
   (->

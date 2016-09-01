@@ -14,8 +14,10 @@
 
 (ns aitu.infra.suoritus-excel
    (:require [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
+             [clojure.tools.logging :as log]
              [aitu.infra.tutkinnonosa-arkisto :as tutosa-arkisto]
              [aitu.infra.suorittaja-arkisto :as suorittaja-arkisto]
+             [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
              [aitu.auditlog :as auditlog]
              [dk.ative.docjure.spreadsheet :refer :all]))
 
@@ -109,24 +111,79 @@
             rahoitusmuoto (get-cell-num opiskelija 5)]
         (when (and (empty? id) (not (empty? nimi)))
           (let [nimet (clojure.string/split nimi #" ")]
+            (log/info "lisätään uusi opiskelija " nimi)
             (suorittaja-arkisto/lisaa! {:etunimi (first nimet)
                                         :sukunimi (second nimet)
                                         :hetu hetu
                                         :rahoitusmuoto_id (int rahoitusmuoto)
                                         :oid oid})
                                         ))))))
-    
-(defn lue-excel! []
-  (auditlog/lue-suoritukset-excel!)
-  (let [import (load-workbook "tutosat_taydennetty2.xlsx")
-        suoritukset-sheet (select-sheet "Suoritukset" import)
-        rivit (row-seq suoritukset-sheet)
-        suoritukset (nthrest rivit 3)]
-    (luo-opiskelijat! (select-sheet "Opiskelijat" import))
-    
+
+(defn parse-osatunnus [osa]
+  (let [start (.lastIndexOf osa "(")
+        end (.lastIndexOf osa ")")]
+    (when (or (= start -1)
+              (= end -1))
+      (throw (IllegalArgumentException. (str "Virheellinen osatunnus: " osa))))
+    (.substring osa (+ 1 start) end)))
+        
+(defn parse-boolean [str]
+  (let [m {"Kyllä" true
+           "Ei" false}
+        v (get m str)]
+    (when (nil? v)
+      (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " str))))
+    v))
+  
+(defn ^:private luo-suoritukset! [sheet]
+  (let [rivit (row-seq sheet)
+        suoritukset (nthrest rivit 3)
+        suorittajamap (group-by :suorittaja_id (suorittaja-arkisto/hae-kaikki))
+        osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat))]
+ 
+    ; TODO: poista duplikaatit, jotta ei luoda samoja rivejä uudelleen tietokantaan jos sama tiedosto importataan kaksi kertaa
     (doseq [suoritus suoritukset]
       (let [nimisolu (.getCell suoritus 1)
             nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
         (when (not (empty? nimi))
-          (let [suorittaja-id (.getNumericCellValue (.getCell suoritus 2))]
-))))))
+          (let [suorittaja-id (int (.getNumericCellValue (.getCell suoritus 2)))
+                tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
+                osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
+                ; pvm
+                arvosana (int (.getNumericCellValue (.getCell suoritus 7)))
+                todistus (parse-boolean (.getStringCellValue (.getCell suoritus 8)))
+                suorituskerta-map {:suorittaja suorittaja-id
+                                   :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
+                                   :tutkinto tutkintotunnus
+                                   :opiskelijavuosi 1 ; TODO
+                                   :koulutustoimija "1060155-5"; !!  TODO
+                                   :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
+                                   }
+                suoritus-map {:suorittaja_id suorittaja-id
+                              :arvosana arvosana
+                              :todistus todistus
+                              :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
+                              :arvosanan_korotus false ; TODO !! 
+                              :osaamisen_tunnustaminen false ; TODO !!
+                              :kieli "fi" ; TODO !! 
+                              }
+                suoritus-full (merge suorituskerta-map
+                                     {:osat [suoritus-map]})]
+            
+            (suoritus-arkisto/lisaa! suoritus-full)
+            (log/info "Lisätään suorituskerta .." suorituskerta-map)
+            (log/info "Lisätään suoritus .." suoritus-map)
+      ))))))
+
+(defn lue-excel! []
+  (auditlog/lue-suoritukset-excel!)
+  (let [import (load-workbook "tutosat_taydennetty2.xlsx")
+        suoritukset-sheet (select-sheet "Suoritukset" import)]
+    
+    (log/info "Käsitellään opiskelijat")
+    (luo-opiskelijat! (select-sheet "Opiskelijat" import))
+    (log/info "Opiskelijat luettu")
+    
+    (log/info "Käsitellään suoritukset")
+    (luo-suoritukset! suoritukset-sheet)
+    (log/info "Suoritukset käsitelty")))

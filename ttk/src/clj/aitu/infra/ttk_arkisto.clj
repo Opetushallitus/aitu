@@ -205,24 +205,30 @@
 (defn hae-osoitepalvelulle
   "Hakee toimikuntien tiedot osoitepalvelua varten"
   []
-  (for [toimikunta (sql/select
-                      tutkintotoimikunta
-                      (sql/with jasenyys
-                        (sql/fields :alkupvm :loppupvm :rooli :edustus)
-                        (sql/where {:status "nimitetty"})
-                        (sql/with henkilo
-                          (sql/fields :etunimi :sukunimi :sahkoposti :aidinkieli
-                                      :osoite :postinumero :postitoimipaikka
-                                      :osoite_julkinen :sahkoposti_julkinen))))
-        :let [taydennetty-toimikunta (toimikunnan-voimassaolo/taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo toimikunta)
-              toimikausi (cond
-                           (:voimassa taydennetty-toimikunta) :voimassa
-                           (:vanhentunut taydennetty-toimikunta) :mennyt
-                           :else :tuleva)]]
-    (-> taydennetty-toimikunta
-      (assoc :toimikausi toimikausi)
-      rajaa-toimikunnan-kentat
-      (update-in [:jasenyydet] #(map rajaa-jasenyyden-kentat %)))))
+  (let [nykyinen-toimikausi (sql-util/select-unique toimikausi
+                                                    (sql/where  {:toimikausi.voimassa true}))]
+        
+    (for [toimikunta (sql/select
+                        tutkintotoimikunta
+                      
+                        (sql/with jasenyys
+                          (sql/fields :alkupvm :loppupvm :rooli :edustus)
+                          (sql/where {:status "nimitetty"})                        
+                          (sql/with henkilo
+                            (sql/fields :etunimi :sukunimi :sahkoposti :aidinkieli
+                                        :osoite :postinumero :postitoimipaikka
+                                        :osoite_julkinen :sahkoposti_julkinen)))
+                        (sql/where {:toimikausi_id (:toimikausi_id nykyinen-toimikausi)})
+                        )
+          :let [taydennetty-toimikunta (toimikunnan-voimassaolo/taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo toimikunta)
+                toimikausi (cond
+                             (:voimassa taydennetty-toimikunta) :voimassa
+                             (:vanhentunut taydennetty-toimikunta) :mennyt
+                             :else :tuleva)]]
+      (-> taydennetty-toimikunta
+        (assoc :toimikausi toimikausi)
+        rajaa-toimikunnan-kentat
+        (update-in [:jasenyydet] #(map rajaa-jasenyyden-kentat %))))))
 
 (s/defn paivita!
   "Päivittää toimikunnan tiedot"
