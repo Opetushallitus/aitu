@@ -58,11 +58,11 @@
     not))
 
 (def rajattujen-sopimuskenttien-jarjestys
-  [:sopimusnumero :toimikunta_fi :toimikunta_sv :tutkinto_fi :tutkinto_sv :peruste :koulutustoimija_fi :koulutustoimija_sv :alkupvm :loppupvm
+  [:sopimusnumero :toimikunta_fi :toimikunta_sv :tutkinto_fi :tutkinto_sv :peruste :koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_sahkoposti :alkupvm :loppupvm
    :vastuuhenkilo :vastuuhenkilo_sahkoposti :vastuuhenkilo_puhelin])
 
 (def kaikkien-sopimuskenttien-jarjestys
-  [:ytunnus :koulutustoimija_fi :koulutustoimija_sv :diaarinumero :toimikunta_fi :toimikunta_sv :tilikoodi :sopimusnumero :alkupvm :loppupvm
+  [:ytunnus :koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_sahkoposti :diaarinumero :toimikunta_fi :toimikunta_sv :tilikoodi :sopimusnumero :alkupvm :loppupvm
    :opintoalatunnus :opintoala_fi :opintoala_sv :tutkintotunnus :tutkinto_fi :tutkinto_sv :peruste :siirtymaajan_loppupvm :osaamisalat
    :oppilaitoskoodi :oppilaitos :kieli :vastuuhenkilo :vastuuhenkilo_sahkoposti :vastuuhenkilo_puhelin])
 

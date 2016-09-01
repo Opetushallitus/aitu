@@ -530,7 +530,7 @@
                                    (sql/group :sopimus_ja_tutkinto)) :osaamisalat]
                           (= :osaamisalat.sopimus_ja_tutkinto :sopimus_ja_tutkinto.sopimus_ja_tutkinto_id))
                 (sql/fields :jarjestamissopimus.alkupvm :jarjestamissopimus.loppupvm :jarjestamissopimus.sopimusnumero
-                            :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv]
+                            :koulutustoimija.ytunnus  [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv] [:koulutustoimija.sahkoposti :koulutustoimija_sahkoposti]
                             [(sql/raw "case when tutkintoversio.siirtymaajan_loppupvm = '2199-01-01' then null else tutkintoversio.siirtymaajan_loppupvm end") :siirtymaajan_loppupvm]
                             :tutkintotoimikunta.diaarinumero [:tutkintotoimikunta.nimi_fi :toimikunta_fi] [:tutkintotoimikunta.nimi_sv :toimikunta_sv] :tutkintotoimikunta.tilikoodi
                             [:opintoala.opintoala_tkkoodi :opintoalatunnus] [:opintoala.selite_fi :opintoala_fi] [:opintoala.selite_sv :opintoala_sv]
