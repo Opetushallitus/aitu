@@ -175,13 +175,16 @@
             (log/info "Lisätään suoritus .." suoritus-map)
       ))))))
 
-(defn lue-excel! []
+;(user/with-testikayttaja 
+;     (let [wb (load-workbook "tutosat_taydennetty2.xlsx")]
+;       (lue-excel! wb)))
+
+(defn lue-excel! [excel-wb]
   (auditlog/lue-suoritukset-excel!)
-  (let [import (load-workbook "tutosat_taydennetty2.xlsx")
-        suoritukset-sheet (select-sheet "Suoritukset" import)]
+  (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)]
     
     (log/info "Käsitellään opiskelijat")
-    (luo-opiskelijat! (select-sheet "Opiskelijat" import))
+    (luo-opiskelijat! (select-sheet "Opiskelijat" excel-wb))
     (log/info "Opiskelijat luettu")
     
     (log/info "Käsitellään suoritukset")

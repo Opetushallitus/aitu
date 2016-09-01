@@ -130,3 +130,7 @@
 (defn lisaa-arvioija!
   [tiedot] 
   (kirjoita! :arvioija :lisays tiedot))
+
+(defn lue-suoritukset-excel!
+  [] 
+  (kirjoita! :suoritus :lisays {}))
