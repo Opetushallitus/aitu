@@ -53,10 +53,10 @@
     (merge suorituskerta-map
            {:osat [suoritus-map]})))
 
-(deftest ^:integraatio suoritus-duplikaattien-tarkistus
-  (let [l (suoritus-arkisto/lisaa! suoritus)
-        kaikki (suoritus-arkisto/hae-suoritukset)]
-    (println kaikki)))
+;(deftest ^:integraatio suoritus-duplikaattien-tarkistus
+;  (let [l (suoritus-arkisto/lisaa! suoritus)
+;        kaikki (suoritus-arkisto/hae-suoritukset)]
+;    (println kaikki)))
     
 
                  
