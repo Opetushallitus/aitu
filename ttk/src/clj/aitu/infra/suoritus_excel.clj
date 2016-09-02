@@ -134,7 +134,33 @@
     (when (nil? v)
       (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " str))))
     v))
-  
+
+(defn opiskelija-olemassa? [tiedot kaikki-seq]  
+  (let [vertailu-kentat [:hetu :oid]
+        vrt (select-keys tiedot vertailu-kentat)
+        op (filter #(= (select-keys % vertailu-kentat) vrt) kaikki-seq)]
+    (if (empty? op) 
+      false ; Opiskelijaa ei löytynyt hetulla / oid:lla
+      (let [uusi (select-keys tiedot [:etunimi :sukunimi])
+            aiempi  (select-keys (first op) [:etunimi :sukunimi]) ]
+      (if (= aiempi uusi)
+        true ; Opiskelija löytyi, samat nimitiedot
+        (throw (IllegalArgumentException. (str "Samalla hetu/oid tunnisteella on eri niminen henkilö. Uusi henkilö : " uusi " ja vanha: " aiempi))))))))
+ 
+; suorittaja :tutkinto :tutkinnonosa :suorituspvm
+(defn suoritus-olemassa? [tiedot kaikki-seq]
+  (let [vertailu-kentat [:tutkinto :suorittaja :tutkinnonosa]
+        vrt (select-keys tiedot vertailu-kentat)
+        op (filter #(= (select-keys % vertailu-kentat) vrt) kaikki-seq)]
+    (if (empty? op)
+      false ; Identtistä Suoritusta ei löytynyt
+      (let [tarkista-kentat [:arvosana :osaamisen_tunnustaminen :jarjestelyt :paikka :kieli :koulutustoimija]
+            uusi (select-keys tiedot tarkista-kentat)
+            aiemmat (filter #(not= (select-keys % tarkista-kentat) uusi) op)]
+        (if (empty? aiemmat)
+          true ; Aikaisempi kirjaus, samat tiedot
+          (throw (IllegalArgumentException. (str "Samanlainen kirjaus suorituksesta löytyi, mutta eri tiedoilla, Uusi: " uusi ".. ja vanhat: " aiemmat))))))))
+
 (defn ^:private luo-suoritukset! [sheet]
   (let [rivit (row-seq sheet)
         suoritukset (nthrest rivit 3)

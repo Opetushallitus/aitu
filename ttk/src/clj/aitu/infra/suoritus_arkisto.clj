@@ -32,15 +32,23 @@
     (sql/where {:suorituskerta_id suorituskerta-id})))
 
 
-(defn hae-suoritukset [suorituskerta-id]
-  (sql/select :suoritus
-    (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :tutkinnonosa))
-    (sql/fields :suoritus_id :arvosana :suorituskerta :tutkinnonosa :arvosanan_korotus :osaamisen_tunnustaminen :kieli :todistus :osaamisala
-                [:tutkinnonosa.osatunnus :osatunnus]
-                [:tutkinnonosa.nimi_fi :nimi]
+(defn hae-suoritukset 
+  ([suorituskerta-id]
+    (sql/select :suoritus
+      (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :tutkinnonosa))
+      (sql/fields :suoritus_id :arvosana :suorituskerta :tutkinnonosa :arvosanan_korotus :osaamisen_tunnustaminen :kieli :todistus :osaamisala
+                  [:tutkinnonosa.osatunnus :osatunnus]
+                  [:tutkinnonosa.nimi_fi :nimi]
  ; TODO: nimi_fi ei ole oikeasti hyvä juttu välttämättä..
                 )
-     (sql/where {:suorituskerta suorituskerta-id})))
+      (sql/where {:suorituskerta suorituskerta-id})))
+    ([]
+      (sql/select :suorituskerta
+        (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
+        (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
+        (sql/fields :suoritus.tutkinnonosa :suoritus.arvosanan_korotus :suoritus.osaamisen_tunnustaminen :suoritus.kieli :suoritus.todistus :suoritus.osaamisala :suoritus.arvosana
+                    :suorituskerta.suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :paikka :jarjestelyt :jarjestamismuoto :valmistava_koulutus
+                  ))))
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid suorittaja]}]

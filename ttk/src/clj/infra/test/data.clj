@@ -21,7 +21,11 @@
             [aitu.integraatio.sql.korma :refer [kayttaja]]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
-(def taulut ["jarjestamissuunnitelma"
+(def taulut ["arvioija"
+             "suorituskerta_arvioija"
+             "suoritus"
+             "suorituskerta"
+             "jarjestamissuunnitelma"
              "sopimus_ja_tutkinto_ja_osaamisala"
              "sopimuksen_liite"
              "jarjestamissuunnitelma"
