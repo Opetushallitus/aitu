@@ -29,7 +29,7 @@
 (s/defschema Kayttaja (merge {:etunimi s/Str
                               :sukunimi s/Str
                               :oid s/Str
-                              :rooli (s/enum "YLLAPITAJA" "KAYTTAJA")
+                              :rooli (s/enum "YLLAPITAJA" "KAYTTAJA" "PAIVITTAJA")
                               :voimassa Boolean
                               :uid (s/maybe s/Str)
                               :jarjesto (s/maybe s/Int)}
