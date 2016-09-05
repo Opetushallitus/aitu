@@ -22,7 +22,7 @@
 (use-fixtures :each tietokanta-fixture)
 
 ; TODO: ei ole tosiasiallisesti integraatio-testi, mutta sekaantuu niihin Traviksella ja fixture aiheuttaa ongelmia siellä.
-(deftes ^:integraatio parse-osatunnus-toimii
+(deftest ^:integraatio parse-osatunnus-toimii
   (is (= "1234" (parse-osatunnus "fo (1234)")))
   (is (= "12" (parse-osatunnus "kung (fu) (12)")))
   (is (thrown? IllegalArgumentException (parse-osatunnus "Kreegah bundolo")))
