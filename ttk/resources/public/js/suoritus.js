@@ -53,7 +53,8 @@ angular.module('suoritus', [])
     };
     $scope.osat = [];
     $scope.form.valmistava_koulutus = false;
-
+//    $scope.form.suoritusaika = now;
+    
     // ladataan editoitavaksi
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
@@ -65,6 +66,7 @@ angular.module('suoritus', [])
         	$scope.form.jarjestelyt = suoritus.jarjestelyt;
         	$scope.form.paikka = suoritus.paikka;
         	$scope.form.valmistava_koulutus = suoritus.valmistava_koulutus;
+        	$scope.form.suoritusaika = suoritus.suoritusaika;
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.form.arvioijat = suoritus.arvioijat;

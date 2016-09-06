@@ -18,7 +18,8 @@
              [clj-time.coerce :refer [to-sql-date]]
              [oph.korma.common :as sql-util]
              [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
-             [oph.common.util.http-util :refer [parse-iso-date]]))
+             [oph.common.util.http-util :refer [parse-iso-date]]
+             [aitu.integraatio.sql.korma :refer :all]))
 
 
 (defn ->int [str-or-int]
@@ -48,16 +49,18 @@
         (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
         (sql/fields :suoritus.tutkinnonosa :suoritus.arvosanan_korotus :suoritus.osaamisen_tunnustaminen :suoritus.kieli :suoritus.todistus :suoritus.osaamisala :suoritus.arvosana
                     :suorituskerta.suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :paikka :jarjestelyt :jarjestamismuoto :valmistava_koulutus
+                    :suorituskerta.suoritusaika
                   ))))
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid suorittaja]}]
   (->
-    (sql/select* :suorituskerta)
+    (sql/select* suorituskerta)
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
+                :suoritusaika
                 :jarjestamismuoto :opiskelijavuosi
                 :valmistava_koulutus :paikka :jarjestelyt
                 [:suorittaja.etunimi :suorittaja_etunimi]
@@ -116,10 +119,11 @@
 (defn lisaa!
   [suoritus]
   (auditlog/suoritus-operaatio! :lisays suoritus)
-  (let [suorituskerta (sql/insert :suorituskerta
+  (let [suorituskerta (sql/insert suorituskerta
                         (sql/values (-> suoritus
-                                      (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
-                                      (assoc  :opiskelijavuosi (->int (:opiskelijavuosi suoritus))))))]
+                                      (select-keys [:jarjestamismuoto :valmistava_koulutus :suoritusaika :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
+                                      (update :opiskelijavuosi ->int)
+                                      (update :suoritusaika parse-iso-date))))]
     (doseq [osa (:osat suoritus)]
       (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta))))
     (doseq [arvioija (:arvioijat suoritus)]
@@ -137,10 +141,11 @@
     (do
 ;      (auditlog/suoritus-operaatio! :paivitys {:suorituskerta_id suorituskerta_id})
        (auditlog/suoritus-operaatio! :paivitys suoritus)
-      (sql-util/update-unique :suorituskerta
+      (sql-util/update-unique suorituskerta
          (sql/set-fields (-> suoritus
-                           (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
-                           (assoc :opiskelijavuosi (->int (:opiskelijavuosi suoritus)))))
+                           (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
+                           (update :opiskelijavuosi ->int)
+                           (update :suoritusaika parse-iso-date)))
          (sql/where {:suorituskerta_id (->int suorituskerta_id)}))
       
       ; update arvioijat

@@ -29,8 +29,12 @@
          toimikunta-ja-tutkinto tutkintotyyppi peruste jarjesto
          keskusjarjesto tutkinnonosa osaamisala jarjestamissuunnitelma
          toimipaikka tutkintoversio uusin-versio tutkinto-ja-tutkinnonosa
-         sopimuksen-liite koulutustoimija organisaatiomuutos)
+         sopimuksen-liite koulutustoimija organisaatiomuutos
+         suorituskerta)
 
+(defentity suorituskerta
+  (sql/pk :suorituskerta_id))
+  
 (defentity arvioija
   (sql/pk :arvioija_id))
 

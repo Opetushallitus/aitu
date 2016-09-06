@@ -17,7 +17,6 @@
   (:require  korma.db
              [korma.core :as sql]
              [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists max-date min-date map-by]]
-             [oph.common.util.http-util :refer [parse-iso-date]]
              [oph.korma.common :as sql-util]
              [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]

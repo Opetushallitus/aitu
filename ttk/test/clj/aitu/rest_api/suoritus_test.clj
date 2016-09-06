@@ -10,7 +10,8 @@
 (def suorituslista-result
   {:tila "luonnos", :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", :hyvaksymisaika nil, 
   :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto", :suorittaja -1, 
-  :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :koulutustoimija "0208430-8", 
+  :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :koulutustoimija "0208430-8",
+  :suoritusaika "2016-09-01"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
   :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.",
   :valmistava_koulutus true
@@ -31,6 +32,7 @@
    "opiskelijavuosi" "8"
    "jarjestamismuoto" "oppisopimuskoulutus"
    "rahoitusmuoto" 3
+   "suoritusaika"  "01.09.2016"  
    :arvioijat [{:arvioija_id -1}]
    "koulutustoimija" "0208430-8"
    "valmistava_koulutus" true
@@ -45,6 +47,7 @@
 (def suoritus-result
   {:tila "luonnos", :jarjestelyt "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. ", 
    :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", 
+   :suoritusaika "2016-09-01"
    :osat [{:osaamisen_tunnustaminen false, :arvosanan_korotus true, :osatunnus "990001", 
            :todistus true, :osaamisala -20002, :kieli "fi", :nimi "Käsityöyrityksen johtaminen", 
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
@@ -85,7 +88,6 @@
              suoritustiedot-paivitys (mock-request s (str "/api/suoritus/" skerta-id) :get {})
              poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
              ]
-         (println "!!!!.." (body-json (:response suoritustiedot-paivitys)))
         (is (= '() (body-json (:response ei-suorituksia))))
         (is (= '("Orvokki", "Lieto") (map :etunimi (body-json (:response suorittajat)))))
         (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))
