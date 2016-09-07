@@ -382,6 +382,7 @@
                   :henkilo.organisaatio :henkilo.osoite :henkilo.postitoimipaikka :henkilo.postinumero)
       (sql/where {:toimikunta tkunta
                   :loppupvm [(if (:voimassa ehdot true) >= <) (sql/sqlfn now)]})
+      (sql/where {:status "nimitetty"})
       (sql/order :henkilo.sukunimi)
       (sql/order :henkilo.etunimi))))
 
