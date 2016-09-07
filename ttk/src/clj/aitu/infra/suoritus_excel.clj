@@ -100,9 +100,28 @@
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell)) (.getNumericCellValue cell))))
     
+(defn ^:private tarkista-opiskelija-tiedot [oid hetu rahoitusmuoto]
+  (when (nil? rahoitusmuoto) (throw (IllegalArgumentException. "Rahoitusmuoto ei voi olla tyhjä")))
+  (when (and (nil? oid) (nil? hetu)) (throw (IllegalArgumentException. "Hetu tai Oid pitää olla.")))
+  (when (and (not (nil? hetu)) (not (= 11 (count hetu)))) (throw (IllegalArgumentException. "Hetun pitää olla 11 merkkiä pitkä."))))
+
+(defn opiskelija-olemassa? [tiedot kaikki-seq]  
+  (let [vertailu-kentat [:hetu :oid]
+        vrt (select-keys tiedot vertailu-kentat)
+        op (filter #(= (select-keys % vertailu-kentat) vrt) kaikki-seq)]
+    (if (empty? op) 
+      false ; Opiskelijaa ei löytynyt hetulla / oid:lla
+      (let [uusi (select-keys tiedot [:etunimi :sukunimi])
+            aiempi  (select-keys (first op) [:etunimi :sukunimi]) ]
+      (if (= aiempi uusi)
+        true ; Opiskelija löytyi, samat nimitiedot
+        (throw (IllegalArgumentException. (str "Samalla hetu/oid tunnisteella on eri niminen henkilö. Uusi henkilö : " uusi " ja vanha: " aiempi))))))))
+ 
+
 (defn ^:private luo-opiskelijat! [sheet]
   (let [rivit (row-seq sheet)
-        opiskelijat (nthrest rivit 1)]
+        opiskelijat (nthrest rivit 1)
+        db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
     (doseq [opiskelija opiskelijat]
       (let [id (get-cell-str opiskelija 1)
             nimi (get-cell-str opiskelija 0)
@@ -111,13 +130,17 @@
             rahoitusmuoto (get-cell-num opiskelija 5)]
         (when (and (empty? id) (not (empty? nimi)))
           (let [nimet (clojure.string/split nimi #" ")]
-            (log/info "lisätään uusi opiskelija " nimi)
-            (suorittaja-arkisto/lisaa! {:etunimi (first nimet)
-                                        :sukunimi (second nimet)
-                                        :hetu hetu
-                                        :rahoitusmuoto_id (int rahoitusmuoto)
-                                        :oid oid})
-                                        ))))))
+            (log/info "käsitellään uusi opiskelija " nimi)            
+            (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
+            (let [uusi-opiskelija {:etunimi (first nimet)
+                                  :sukunimi (second nimet)
+                                  :hetu hetu
+                                  :rahoitusmuoto_id (int rahoitusmuoto)
+                                  :oid oid}]
+              (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
+                (suorittaja-arkisto/lisaa! uusi-opiskelija)
+                ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
+                                          ))))))))
 
 (defn parse-osatunnus [osa]
   (let [start (.lastIndexOf osa "(")
@@ -135,18 +158,6 @@
       (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " str))))
     v))
 
-(defn opiskelija-olemassa? [tiedot kaikki-seq]  
-  (let [vertailu-kentat [:hetu :oid]
-        vrt (select-keys tiedot vertailu-kentat)
-        op (filter #(= (select-keys % vertailu-kentat) vrt) kaikki-seq)]
-    (if (empty? op) 
-      false ; Opiskelijaa ei löytynyt hetulla / oid:lla
-      (let [uusi (select-keys tiedot [:etunimi :sukunimi])
-            aiempi  (select-keys (first op) [:etunimi :sukunimi]) ]
-      (if (= aiempi uusi)
-        true ; Opiskelija löytyi, samat nimitiedot
-        (throw (IllegalArgumentException. (str "Samalla hetu/oid tunnisteella on eri niminen henkilö. Uusi henkilö : " uusi " ja vanha: " aiempi))))))))
- 
 ; suorittaja :tutkinto :tutkinnonosa :suorituspvm
 (defn suoritus-olemassa? [tiedot kaikki-seq]
   (let [vertailu-kentat [:tutkinto :suorittaja :tutkinnonosa]
@@ -172,6 +183,7 @@
       (let [nimisolu (.getCell suoritus 1)
             nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
         (when (not (empty? nimi))
+          (log/info "..")
           (let [suorittaja-id (int (.getNumericCellValue (.getCell suoritus 2)))
                 tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
                 osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
@@ -196,9 +208,9 @@
                 suoritus-full (merge suorituskerta-map
                                      {:osat [suoritus-map]})]
             
-            (suoritus-arkisto/lisaa! suoritus-full)
             (log/info "Lisätään suorituskerta .." suorituskerta-map)
             (log/info "Lisätään suoritus .." suoritus-map)
+            (suoritus-arkisto/lisaa! suoritus-full)
       ))))))
 
 ;(user/with-testikayttaja 
