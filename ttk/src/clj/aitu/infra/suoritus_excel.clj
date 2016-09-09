@@ -124,23 +124,23 @@
         db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
     (doseq [opiskelija opiskelijat]
       (let [id (get-cell-str opiskelija 1)
-            nimi (get-cell-str opiskelija 0)
-            oid (get-cell-str opiskelija 2)
-            hetu (get-cell-str opiskelija 3)
-            rahoitusmuoto (get-cell-num opiskelija 5)]
+            nimi (get-cell-str opiskelija 0)]
         (when (and (empty? id) (not (empty? nimi)))
-          (let [nimet (clojure.string/split nimi #" ")]
-            (log/info "käsitellään uusi opiskelija " nimi)            
-            (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
-            (let [uusi-opiskelija {:etunimi (first nimet)
-                                  :sukunimi (second nimet)
-                                  :hetu hetu
-                                  :rahoitusmuoto_id (int rahoitusmuoto)
-                                  :oid oid}]
-              (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
-                (suorittaja-arkisto/lisaa! uusi-opiskelija)
-                ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
-                                          ))))))))
+          (let [oid (get-cell-str opiskelija 2)
+                hetu (get-cell-str opiskelija 3)
+                rahoitusmuoto (get-cell-num opiskelija 5)]
+            (let [nimet (clojure.string/split nimi #" ")]
+              (log/info "käsitellään uusi opiskelija " nimi)            
+              (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
+              (let [uusi-opiskelija {:etunimi (first nimet)
+                                    :sukunimi (second nimet)
+                                    :hetu hetu
+                                    :rahoitusmuoto_id (int rahoitusmuoto)
+                                    :oid oid}]
+                (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
+                  (suorittaja-arkisto/lisaa! uusi-opiskelija)
+                  ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
+                                            )))))))))
 
 (defn parse-osatunnus [osa]
   (let [start (.lastIndexOf osa "(")
@@ -172,6 +172,13 @@
           true ; Aikaisempi kirjaus, samat tiedot
           (throw (IllegalArgumentException. (str "Samanlainen kirjaus suorituksesta löytyi, mutta eri tiedoilla, Uusi: " uusi ".. ja vanhat: " aiemmat))))))))
 
+(defn ^:private tarkista-suorittaja-id [cell]
+  (try 
+    (int (.getNumericCellValue cell))
+    (catch IllegalStateException e
+      (throw (IllegalArgumentException. "Suorittaja-id solun arvoa ei voitu tulkita.")))))
+
+
 (defn ^:private luo-suoritukset! [sheet]
   (let [rivit (row-seq sheet)
         suoritukset (nthrest rivit 3)
@@ -184,7 +191,7 @@
             nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
         (when (not (empty? nimi))
           (log/info "..")
-          (let [suorittaja-id (int (.getNumericCellValue (.getCell suoritus 2)))
+          (let [suorittaja-id (tarkista-suorittaja-id (.getCell suoritus 2))
                 tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
                 osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
                 ; pvm

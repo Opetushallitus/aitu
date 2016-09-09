@@ -49,7 +49,7 @@
         (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
         (sql/fields :suoritus.tutkinnonosa :suoritus.arvosanan_korotus :suoritus.osaamisen_tunnustaminen :suoritus.kieli :suoritus.todistus :suoritus.osaamisala :suoritus.arvosana
                     :suorituskerta.suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :paikka :jarjestelyt :jarjestamismuoto :valmistava_koulutus
-                    :suorituskerta.suoritusaika
+                    :suorituskerta.suoritusaika_alku :suorituskerta.suoritusaika_loppu
                   ))))
 
 (defn hae-kaikki
@@ -60,7 +60,7 @@
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
-                :suoritusaika
+                :suoritusaika_alku :suoritusaika_loppu
                 :jarjestamismuoto :opiskelijavuosi
                 :valmistava_koulutus :paikka :jarjestelyt
                 [:suorittaja.etunimi :suorittaja_etunimi]
@@ -121,9 +121,10 @@
   (auditlog/suoritus-operaatio! :lisays suoritus)
   (let [suorituskerta (sql/insert suorituskerta
                         (sql/values (-> suoritus
-                                      (select-keys [:jarjestamismuoto :valmistava_koulutus :suoritusaika :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
+                                      (select-keys [:jarjestamismuoto :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
                                       (update :opiskelijavuosi ->int)
-                                      (update :suoritusaika parse-iso-date))))]
+                                      (update :suoritusaika_alku parse-iso-date)
+                                      (update :suoritusaika_loppu parse-iso-date))))]
     (doseq [osa (:osat suoritus)]
       (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta))))
     (doseq [arvioija (:arvioijat suoritus)]
@@ -143,9 +144,10 @@
        (auditlog/suoritus-operaatio! :paivitys suoritus)
       (sql-util/update-unique suorituskerta
          (sql/set-fields (-> suoritus
-                           (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
+                           (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
                            (update :opiskelijavuosi ->int)
-                           (update :suoritusaika parse-iso-date)))
+                           (update :suoritusaika_alku parse-iso-date)
+                           (update :suoritusaika_loppu parse-iso-date)))
          (sql/where {:suorituskerta_id (->int suorituskerta_id)}))
       
       ; update arvioijat

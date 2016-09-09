@@ -50,7 +50,10 @@
         <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkinto" required></select>
     </fieldset>
     <fieldset>
-       <pvm-valitsin  pakollinen="true" valittu-pvm="form.suoritusaika" otsikko="[[suoritusaika]]"></pvm-valitsin>
+       <pvm-valitsin  pakollinen="true" valittu-pvm="form.suoritusaika_alku" otsikko="[[suoritusaika_alku]]"></pvm-valitsin>
+    </fieldset>
+    <fieldset>
+       <pvm-valitsin  pakollinen="true" valittu-pvm="form.suoritusaika_loppu" otsikko="[[suoritusaika_loppu]]"></pvm-valitsin>
     </fieldset>
   </div>
   <div>
