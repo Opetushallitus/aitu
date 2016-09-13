@@ -189,7 +189,7 @@
 
 (defn ^:private luo-suoritukset! [sheet]
   (let [rivit (row-seq sheet)
-        suoritukset (nthrest rivit 3)
+        suoritukset (nthrest rivit 4)
         suorittajamap (group-by :suorittaja_id (suorittaja-arkisto/hae-kaikki))
         osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat))]
  
@@ -198,11 +198,12 @@
       (let [nimisolu (.getCell suoritus 1)
             nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
         (when (not (empty? nimi))
-          (log/info "..")
+          (log/info ".. " nimi)
           (let [suorittaja-id (tarkista-suorittaja-id (.getCell suoritus 2))
                 tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
                 osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
                 ; pvm
+                ; suoritus-alkupvm 
                 arvosana (int (.getNumericCellValue (.getCell suoritus 7)))
                 todistus (parse-boolean (.getStringCellValue (.getCell suoritus 8)))
                 suorituskerta-map {:suorittaja suorittaja-id
@@ -210,6 +211,8 @@
                                    :tutkinto tutkintotunnus
                                    :opiskelijavuosi 1 ; TODO
                                    :koulutustoimija "1060155-5"; !!  TODO
+                                   :suoritusaika_alku "2016-09-01" ; !! TODO
+                                   :suoritusaika_loppu "2016-09-01" ; !! TODO
                                    :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
                                    }
                 suoritus-map {:suorittaja_id suorittaja-id
