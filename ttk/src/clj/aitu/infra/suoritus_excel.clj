@@ -23,16 +23,17 @@
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
-(defn hae-osarakenne []
-  (let [tutkinnot (map :tutkintotunnus (sort-by :tutkintotunnus (tutkinto-arkisto/hae-kaikki)))
+; järjestetty tutkinnon nimen mukaan
+(defn hae-osarakenne [] ; (juxt :tutkintotunnus :peruste)
+  (let [tutkinnot (sort-by (juxt :nimi_fi :peruste :tutkintoversio_id) (tutkinto-arkisto/hae-kaikki-suoritettavat-versiot)) ; TODO: nimi_fi parametroitava
       replacef #(-> %
                     (clojure.string/replace "\n" "")
                     (clojure.string/replace "\u2011" "-")
                     (clojure.string/replace "\u2013" "-"))]
   (into [] 
      (for [tutkinto tutkinnot]
-       (let [osat (tutosa-arkisto/hae tutkinto)]
-         [tutkinto (map #(str (replacef (:nimi_fi %)) " (" (:osatunnus %) ")") osat)
+       (let [osat (tutosa-arkisto/hae-versiolla (:tutkintoversio_id tutkinto))]
+         [tutkinto (map #(str (replacef (:nimi_fi %)) " (" (:osatunnus %) ")") osat) ; TODO: nimi_fi parametroitava
                ]
          )))))
 
@@ -53,18 +54,36 @@
                  "CA","CB","CC","CD","CE","CF","CG","CH","CI","CJ","CK","CL","CM","CN","CO","CP","CQ","CR","CS","CT","CU","CV","CW","CX","CY","CZ"
                  "DA","DB","DC","DD","DE","DF","DG","DH","DI","DJ","DK","DL","DM","DN","DO","DP","DQ","DR","DS","DT","DU","DV","DW","DX","DY","DZ"])
 
-(defn ^:private map-tutkintorakenne! [sheet]
-  (let [tutkintorakenne (hae-osarakenne)]
+; Tutkinnot tulevat aakkosjärjestykseen nimen mukaan tutkinnot-välilehdelle, jotta niiden valitseminen on käyttäjälle loogista
+(defn ^:private map-tutkinnot! [tutkinnot-sheet tut-aakkosjarjestys]
+  (doall (map-indexed (fn [i tutkinto]
+           (let [tutkinto-map (first tutkinto)
+                 tutkintotunnus (:tutkintotunnus tutkinto-map)
+                 tutkinto-nimi (:nimi_fi tutkinto-map) ; TODO: nimi_sv, param
+                 tutkinto-yhd (str (:tutkintotunnus tutkinto-map) " (" (:peruste tutkinto-map) ")" " (" (:tutkintoversio_id tutkinto-map) ")")
+                 row (+ 2 i)]
+             (set-or-create-cell! tutkinnot-sheet (str "A" row) (str tutkinto-nimi " " tutkinto-yhd))
+             (set-or-create-cell! tutkinnot-sheet (str "B" row) tutkintotunnus)
+             (set-or-create-cell! tutkinnot-sheet (str "C" row) (:peruste tutkinto-map))
+             (set-or-create-cell! tutkinnot-sheet (str "D" row) (:tutkintoversio_id tutkinto-map))
+             (set-or-create-cell! tutkinnot-sheet (str "E" row) tutkinto-nimi)
+             )) tut-aakkosjarjestys)))
+                          
+(defn ^:private map-tutkintorakenne! [tutosat-sheet tutkinnot-sheet]
+  (let [tutkintorakenne (hae-osarakenne)
+        versio-jarj (sort-by #(:tutkintoversio_id (first %)) tutkintorakenne) ]
+    (map-tutkinnot! tutkinnot-sheet tutkintorakenne)
     (doall (map-indexed (fn [i tutkinto]
-             (let [tutkintotunnus (first tutkinto)
+             (let [tutkinto-map (first tutkinto)
                    tutkinnonosat (second tutkinto)
                    row (+ 2 i)]
-               (set-or-create-cell! sheet (str "A" row) tutkintotunnus)
+
+               (set-or-create-cell! tutosat-sheet (str "A" row) (:tutkintoversio_id tutkinto-map))
                (doall (map-indexed (fn [ind tutkinnonosa]
                                      (let [colstr (nth osacolumns ind)]
-                                       (set-or-create-cell! sheet (str colstr row) tutkinnonosa)))
+                                       (set-or-create-cell! tutosat-sheet (str colstr row) tutkinnonosa)))
                                    tutkinnonosat))))
-                        tutkintorakenne))))
+                        versio-jarj))))
       
 (defn ^:private map-opiskelijat! [sheet]
   (let [suorittajat (->>  (suorittaja-arkisto/hae-kaikki)
@@ -79,18 +98,7 @@
                             (set-or-create-cell! sheet (str "E" row) (:rahoitusmuoto_nimi opiskelija))
                           )) suorittajat))))
                
-; TODO: 
-;(user/with-testikayttaja 
-;     (let [wb (luo-excel)]
-;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
-  
-(defn luo-excel []
-  (let [export (load-workbook  "resources/tutosat_export_base.xlsx")
-        tutosat (select-sheet "tutkinnonosat" export)
-        opiskelijat (select-sheet "Opiskelijat" export)]
-     (map-tutkintorakenne! tutosat)
-    (map-opiskelijat! opiskelijat)
-     export))
+
 
 (defn ^:private get-cell-str [rowref col]
   (let [cell (.getCell rowref col)]
@@ -130,7 +138,7 @@
                 hetu (get-cell-str opiskelija 3)
                 rahoitusmuoto (get-cell-num opiskelija 5)]
             (let [nimet (clojure.string/split nimi #" ")]
-              (log/info "käsitellään uusi opiskelija " nimi)            
+              (log/info "käsitellään uusi opiskelija " nimi)
               (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
               (let [uusi-opiskelija {:etunimi (first nimet)
                                     :sukunimi (second nimet)
@@ -235,3 +243,17 @@
     (log/info "Käsitellään suoritukset")
     (luo-suoritukset! suoritukset-sheet)
     (log/info "Suoritukset käsitelty")))
+
+; TODO: 
+;(user/with-testikayttaja 
+;     (let [wb (luo-excel)]
+;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
+  
+(defn luo-excel []
+  (let [export (load-workbook  "resources/tutosat_export_base.xlsx")
+        tutosat (select-sheet "tutkinnonosat" export)
+        tutkinnot (select-sheet "tutkinnot" export)
+        opiskelijat (select-sheet "Opiskelijat" export)]
+     (map-tutkintorakenne! tutosat tutkinnot)
+    (map-opiskelijat! opiskelijat)
+     export))

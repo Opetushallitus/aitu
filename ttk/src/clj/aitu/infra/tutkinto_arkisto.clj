@@ -218,6 +218,15 @@
       (sql/fields [:selite_fi :opintoala_nimi_fi] [:selite_sv :opintoala_nimi_sv]))
     (sql/with tutkintotoimikunta)))
 
+(defn hae-kaikki-suoritettavat-versiot
+  "Hakee kaikkien tutkintojen kaikki versiot, joihin voi vielä kirjata suorituksia."
+  []
+  (sql/select nayttotutkinto
+    (sql/join tutkintoversio)
+    (sql/where (> :tutkintoversio.siirtymaajan_loppupvm (sql/raw "current_date")))
+    (sql/fields :tutkintoversio.tutkintoversio_id :tutkintotunnus :nimi_fi :nimi_sv :tutkintoversio.siirtymaajan_loppupvm :tutkintoversio.voimassa_loppupvm :tutkintoversio.peruste)
+    ))
+
 (defn hae-tutkinnot-ja-osaamisalat
   "Hakee kaikkien tutkintojen sekä niihin liittyvien osaamisalojen uusimman version"
   []
