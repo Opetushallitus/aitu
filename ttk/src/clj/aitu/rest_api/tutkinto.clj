@@ -62,4 +62,4 @@
     (cachable-response req (arkisto/hae-opintoalat-tutkinnot termi)))
   (GET "/osaamisalat/:tutkintotunnus" [tutkintotunnus]
     :kayttooikeus :yleinen-rest-api
-    (response-or-404 (arkisto/hae-osaamisalat "327128"))))
+    (response-or-404 (arkisto/hae-osaamisalat tutkintotunnus))))
