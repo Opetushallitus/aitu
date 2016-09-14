@@ -101,12 +101,25 @@ angular.module('suoritus', [])
         return result;
       });
      });
+
+     $scope.muokkaaOsa = function(muokattavaOsa) {
+    	 var modalInstance = $modal.open({
+             templateUrl: 'template/modal/suoritus-tutkinnonosa',
+             controller: 'SuoritusTutkinnonosaModalController',
+             resolve: {
+               osa: function() {return muokattavaOsa; },
+               tutkinnot: function() { return $scope.tutkinnot; },
+               tutkinto: function() { return $scope.form.tutkinto; }
+             }
+    	 });
+     };
      
     $scope.lisaaTutkinnonosa = function() {
       var modalInstance = $modal.open({
         templateUrl: 'template/modal/suoritus-tutkinnonosa',
         controller: 'SuoritusTutkinnonosaModalController',
         resolve: {
+          osa: function() {return null; },
           tutkinnot: function() { return $scope.tutkinnot; },
           tutkinto: function() { return $scope.form.tutkinto; }
         }
@@ -194,31 +207,51 @@ angular.module('suoritus', [])
     };
 	}])
    
-  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Osaamisala', 'Tutkinnonosa', 'tutkinnot', 'tutkinto', 
-                                                      function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkinto) {
-    $scope.form = {
-      arvosana: 'hyvaksytty',
-      arvosanan_korotus: false,
-      kieli: 'fi',
-      todistus: false,
-      osaamisen_tunnustaminen: false,
-      osaamisala_id: null,
-      osaamisala: null
-    };
-    $scope.tutkinto = tutkinto;
-
-    $scope.tutkinnot = tutkinnot;
+  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Osaamisala', 'Tutkinnonosa', 'tutkinnot', 'tutkinto', 'osa', 
+                                                      function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkinto, osa) {
+	  $scope.tutkinnot = tutkinnot;
+	  if (osa == null) {
+		  $scope.form = {
+		    arvosana: 'hyvaksytty',
+		    arvosanan_korotus: false,
+		    kieli: 'fi',
+		    todistus: false,
+		    osaamisen_tunnustaminen: false,
+		    osaamisala_id: null,
+		    osaamisala: null
+		  };
+		  $scope.tutkinto = tutkinto;
+	  } else { // TODO: select-fields
+		  console.log("set the controls..");
+		  console.log(".. " + JSON.stringify(osa));		  
+		  $scope.form = {
+    	     arvosana: osa.arvosana,
+		     arvosanan_korotus: osa.arvosanan_korotus,
+		     kieli: osa.kieli,
+		     todistus: osa.todistus,
+		     osaamisen_tunnustaminen: osa.osaamisen_tunnustaminen,
+		     osaamisala_id: osa.osaamisala_id,
+		     osaamisala: null
+		  };
+		  $scope.tutkinto = osa.tutkinnonosa.tutkinto.tutkintotunnus;
+		  $scope.tutkinnonosa = osa.tutkinnonosa;
+	  }
 
     $scope.$watch('tutkinto', function(tutkinto) {
       if (tutkinto !== undefined) {
         Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
           $scope.tutkinnonosat = tutkinnonosat;
+          $scope.form.tutkinnonosa = _.find($scope.tutkinnonosat, 'tutkinnonosa_id', $scope.tutkinnonosa);
         });
         Osaamisala.hae(tutkinto).then(function(osaamisalat) {
           $scope.osaamisalat = osaamisalat.osaamisala;
         });
       }
     });
+    
+//    if (osa && osa.tutkinnonosa && osa.tutkinnonosa.osatunnus) {
+//    	$scope.form.tutkinnonosa=osa.tutkinnonosa;
+ //   }
 
     $scope.ok = function() {
       $modalInstance.close($scope.form);
