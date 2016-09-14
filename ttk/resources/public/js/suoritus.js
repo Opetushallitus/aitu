@@ -222,8 +222,7 @@ angular.module('suoritus', [])
 		  };
 		  $scope.tutkinto = tutkinto;
 	  } else { // TODO: select-fields
-		  console.log("set the controls..");
-		  console.log(".. " + JSON.stringify(osa));		  
+
 		  $scope.form = {
     	     arvosana: osa.arvosana,
 		     arvosanan_korotus: osa.arvosanan_korotus,
