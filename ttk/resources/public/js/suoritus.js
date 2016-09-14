@@ -130,7 +130,7 @@ angular.module('suoritus', [])
           uusiOsa.arvosana = null;
           uusiOsa.arvosanan_korotus = false;
         }
-        uusiOsa.osaamisala_id = uusiOsa.osaamisala;
+        uusiOsa.osaamisala_id = uusiOsa.osaamisala; 
         if (!_.find($scope.osat, function(osa) {
             return osa.tutkinnonosa.tutkinnonosa_id === uusiOsa.tutkinnonosa.tutkinnonosa_id;
           })) {
@@ -157,13 +157,9 @@ angular.module('suoritus', [])
         });
 
         modalInstance.result.then(function(uusiArvioija) {
-            if (!_.find($scope.form.arvioijat, function(arvioija) {
-            	// ei tuplata samaa arvioijaa
-                return arvioija.arvioija_id === uusiArvioija.arvioija_id;
-             })) {
-               var foArvioija = _.find($scope.arvioijat, function(arvioija) {
-                   return arvioija.arvioija_id === uusiArvioija.arvioija_id; 
-               });
+        	// ei tuplata samaa arvioijaa suorituskerralle
+            if (!_.find($scope.form.arvioijat, 'arvioija_id', uusiArvioija)) {
+               var foArvioija = _.find($scope.arvioijat, 'arvioija_id', uusiArvioija);
                if (!foArvioija) {
                  // TODO: täysin uusi arvioija
                  $scope.form.arvioijat.push(uusiArvioija);
