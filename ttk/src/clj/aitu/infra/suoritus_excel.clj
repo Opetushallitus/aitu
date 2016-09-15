@@ -125,11 +125,13 @@
         true ; Opiskelija löytyi, samat nimitiedot
         (throw (IllegalArgumentException. (str "Samalla hetu/oid tunnisteella on eri niminen henkilö. Uusi henkilö : " uusi " ja vanha: " aiempi))))))))
  
-
+; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
+; TODO: virhetilanteessa tullaa ulos throw:lla ja logi jää näyttämättä
 (defn ^:private luo-opiskelijat! [sheet]
   (let [rivit (row-seq sheet)
         opiskelijat (nthrest rivit 1)
-        db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
+        db-opiskelijat (suorittaja-arkisto/hae-kaikki)
+        ui-log (atom [])]
     (doseq [opiskelija opiskelijat]
       (let [id (get-cell-str opiskelija 1)
             nimi (get-cell-str opiskelija 0)]
@@ -139,6 +141,7 @@
                 rahoitusmuoto (get-cell-num opiskelija 5)]
             (let [nimet (clojure.string/split nimi #" ")]
               (log/info "käsitellään uusi opiskelija " nimi)
+              (swap! ui-log conj "Käsitellään uusi opiskelija " nimi)
               (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
               (let [uusi-opiskelija {:etunimi (first nimet)
                                     :sukunimi (second nimet)
@@ -146,9 +149,11 @@
                                     :rahoitusmuoto_id (int rahoitusmuoto)
                                     :oid oid}]
                 (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
+                  (swap! ui-log conj "Lisättiin opiskelija " nimi)
                   (suorittaja-arkisto/lisaa! uusi-opiskelija)
                   ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
-                                            )))))))))
+                                            )))))))
+    @ui-log))
 
 (defn parse-osatunnus [osa]
   (let [start (.lastIndexOf osa "(")
@@ -186,9 +191,11 @@
     (catch IllegalStateException e
       (throw (IllegalArgumentException. "Suorittaja-id solun arvoa ei voitu tulkita.")))))
 
-
+; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
+; TODO: virhetilanteessa tullaa ulos throw:lla ja logi jää näyttämättä
 (defn ^:private luo-suoritukset! [sheet]
-  (let [rivit (row-seq sheet)
+  (let [ui-log (atom [])
+        rivit (row-seq sheet)
         suoritukset (nthrest rivit 4)
         suorittajamap (group-by :suorittaja_id (suorittaja-arkisto/hae-kaikki))
         osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat))]
@@ -199,6 +206,7 @@
             nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
         (when (not (empty? nimi))
           (log/info ".. " nimi)
+          (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
           (let [suorittaja-id (tarkista-suorittaja-id (.getCell suoritus 2))
                 tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
                 osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
@@ -228,24 +236,26 @@
             
             (log/info "Lisätään suorituskerta .." suorituskerta-map)
             (log/info "Lisätään suoritus .." suoritus-map)
+            (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
             (suoritus-arkisto/lisaa! suoritus-full)
-      ))))))
+      ))))
+    @ui-log))
 
 ;(user/with-testikayttaja 
 ;     (let [wb (load-workbook "tutosat_taydennetty2.xlsx")]
 ;       (lue-excel! wb)))
 
+; Palauttaa vektorin, joka sisältää käyttäjälle login
 (defn lue-excel! [excel-wb]
   (auditlog/lue-suoritukset-excel!)
-  (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)]
-    
-    (log/info "Käsitellään opiskelijat")
-    (luo-opiskelijat! (select-sheet "Opiskelijat" excel-wb))
-    (log/info "Opiskelijat luettu")
-    
-    (log/info "Käsitellään suoritukset")
-    (luo-suoritukset! suoritukset-sheet)
-    (log/info "Suoritukset käsitelty")))
+  (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)
+        _ (log/info "Käsitellään opiskelijat")
+        ui-log-opiskelijat (luo-opiskelijat! (select-sheet "Opiskelijat" excel-wb))
+        _ (log/info "Opiskelijat luettu")
+        _ (log/info "Käsitellään suoritukset")
+        ui-log-suoritukset (luo-suoritukset! suoritukset-sheet)
+        _ (log/info "Suoritukset käsitelty")]
+    (conj [] "Käsitellään opiskelijat" ui-log-opiskelijat "Käsitellään suoritukset" ui-log-suoritukset)))
 
 ; TODO: 
 ;(user/with-testikayttaja 

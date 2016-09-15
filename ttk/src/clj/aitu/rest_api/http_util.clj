@@ -16,12 +16,14 @@
   (:require [aitu.integraatio.clamav :as clamav])
   (:import java.io.ByteArrayInputStream))
 
+(def excel-mimetype "application/vnd.ms-excel")
+
 (def allowed-mimetypes
   "Sallitut tiedostotyypit liitetiedostoille"
   #{"application/pdf"
     "image/gif" "image/jpeg" "image/png"
     "text/plain" "text/rtf"
-    "application/vnd.ms-excel" "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    excel-mimetype "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     "application/msword"
     })
 

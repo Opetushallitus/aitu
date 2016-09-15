@@ -16,7 +16,9 @@
   (:require [aitu.infra.suoritus-arkisto :as arkisto]
             aitu.compojure-util
             [compojure.api.core :refer [DELETE GET POST defroutes]]
-            [oph.common.util.http-util :refer [response-or-404]]))
+            [aitu.rest-api.http-util :refer [excel-mimetype jos-lapaisee-virustarkistuksen]]
+            [aitu.infra.suoritus-excel :refer [lue-excel!]]
+            [oph.common.util.http-util :refer [response-or-404 file-upload-response sallittu-jos]]))
 
 ; TODO: tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
 (defroutes reitit
@@ -41,4 +43,9 @@
     (response-or-404 (arkisto/laheta! suoritukset)))
   (POST "/hyvaksy" [suoritukset]
     :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/hyvaksy! suoritukset))))
+    (response-or-404 (arkisto/hyvaksy! suoritukset)))
+  (POST "/excel-lataus" [file]
+    :kayttooikeus :arviointipaatos
+    (sallittu-jos (= excel-mimetype (:content-type file))
+      (jos-lapaisee-virustarkistuksen file
+        (file-upload-response (lue-excel! file))))))
