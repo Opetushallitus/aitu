@@ -28,8 +28,9 @@
 ; :osaamisen_tunnustaminen false, :kieli "fi"}]})
 
 (deftest ^:integraatio excel-import-test
-  (let [wb (load-workbook "tutosat_perus.xlsx")]
-    (lue-excel! wb))
+  (let [wb (load-workbook "test-resources/tutosat_perus.xlsx")
+        ui-log (lue-excel! wb)]
   (= (map (juxt :suorittaja :rahoitusmuoto :tutkinto :koulutustoimija) (suoritus-arkisto/hae-kaikki {}))
-     [-2 2 "327128" "1060155-5"]))
+     [-2 2 "327128" "1060155-5"])
+  (println ui-log)))
   
