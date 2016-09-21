@@ -35,6 +35,6 @@
           (is (= (first perusteet)
                  ["355201" {:diaarinumero "26/011/2006"
                             :eperustetunnus 509690
-                            :voimassa_alkupvm (time/local-date 2006 5 31)
+                            :voimassa_alkupvm (time/local-date 2006 6 1)
                             :voimassa_loppupvm (time/local-date 2199 1 1)
                             :siirtymaajan_loppupvm (time/local-date 2199 1 1)}])))))))
