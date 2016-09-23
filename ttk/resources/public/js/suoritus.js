@@ -23,7 +23,7 @@ angular.module('suoritus', [])
    function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
 
       $scope.uploadValmis = function(r, liitetyyppi) {
-    	 console.log(".." + r);
+
     	 alert('Hejssan\n' + r);
         };
 	  

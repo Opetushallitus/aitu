@@ -219,13 +219,21 @@
        (recur (inc i#)
               items#))))
 
+(defn ^:private parse-kieli [kieli]
+  (get {"Suomi" "fi"
+        "Ruotsi" "sv"
+        "Saame" "se"} kieli))        
+    
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [sheet ui-log]
   (let [rivi (atom 1)
         rivit (row-seq sheet)
+        rivi1 (first rivit)
+        jarjestaja (.getStringCellValue (.getCell rivi1 2)) ; tutkinnon järjestäjän y-tunnus, solu C1 
         suoritukset (nthrest rivit 4)
         suorittajamap (group-by :suorittaja_id (suorittaja-arkisto/hae-kaikki))
-        osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat))]
+        osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat))
+        dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
     (try 
       ; TODO: poista duplikaatit, jotta ei luoda samoja rivejä uudelleen tietokantaan jos sama tiedosto importataan kaksi kertaa
       (doseq [suoritus suoritukset]
@@ -237,26 +245,33 @@
             (let [suorittaja-id (tarkista-suorittaja-id (.getCell suoritus 2))
                   tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
                   osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
-                  ; pvm
-                  ; suoritus-alkupvm 
+                  tunnustamisen-pvm (.getDateCellValue (.getCell suoritus 7)) ; TODO: voi olla tyhjä
+                  suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
+                  suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9))
+                  paikka (.getStringCellValue (.getCell suoritus 10))
+                  jarjestelyt (.getStringCellValue (.getCell suoritus 11))
+                  arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
                   arvosana (int (.getNumericCellValue (.getCell suoritus 13)))
                   todistus (parse-boolean (.getStringCellValue (.getCell suoritus 14)))
+                  suorituskieli (.getStringCellValue (.getCell suoritus 15))
+                  korotus (parse-boolean (.getStringCellValue (.getCell suoritus 16)))
+                  
                   suorituskerta-map {:suorittaja suorittaja-id
                                      :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
                                      :tutkinto tutkintotunnus
                                      :opiskelijavuosi 1 ; TODO
-                                     :koulutustoimija "1060155-5"; !!  TODO
-                                     :suoritusaika_alku "2016-09-01" ; !! TODO
-                                     :suoritusaika_loppu "2016-09-01" ; !! TODO
+                                     :koulutustoimija jarjestaja
+                                     :suoritusaika_alku (.format dformat suoritus-alkupvm)
+                                     :suoritusaika_loppu (.format dformat suoritus-loppupvm)
                                      :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
                                      }
                   suoritus-map {:suorittaja_id suorittaja-id
                                 :arvosana arvosana
                                 :todistus todistus
                                 :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
-                                :arvosanan_korotus false ; TODO !! 
+                                :arvosanan_korotus korotus
                                 :osaamisen_tunnustaminen false ; TODO !!
-                                :kieli "fi" ; TODO !! 
+                                :kieli (parse-kieli suorituskieli)
                                 }
                   suoritus-full (merge suorituskerta-map
                                        {:osat [suoritus-map]})]
