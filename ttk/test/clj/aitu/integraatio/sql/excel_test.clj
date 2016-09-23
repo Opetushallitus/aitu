@@ -27,10 +27,17 @@
 ; :jarjestamismuoto "oppilaitosmuotoinen", :osat [{:suorittaja_id -2, :arvosana 2, :todistus true, :tutkinnonosa -10002, :arvosanan_korotus false, 
 ; :osaamisen_tunnustaminen false, :kieli "fi"}]})
 
+(def luku-result
+ ["Käsitellään opiskelijat.." "Opiskelijat ok." "Käsitellään suoritukset.." 
+  "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Arkeologinen tutkimussukellus" 
+  "Suoritukset ok."])
+
 (deftest ^:integraatio excel-import-test
   (let [wb (load-workbook "test-resources/tutosat_perus.xlsx")
         ui-log (lue-excel! wb)]
+
+    
   (= (map (juxt :suorittaja :rahoitusmuoto :tutkinto :koulutustoimija) (suoritus-arkisto/hae-kaikki {}))
-     [-2 2 "327128" "1060155-5"])
-  (println ui-log)))
+     [-2 2 "355210" "1060155-5"])
+  (= ui-log luku-result)))
   

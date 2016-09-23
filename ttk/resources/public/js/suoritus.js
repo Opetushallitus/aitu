@@ -21,6 +21,12 @@ angular.module('suoritus', [])
 
   .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
    function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
+
+      $scope.uploadValmis = function(r, liitetyyppi) {
+    	 console.log(".." + r);
+    	 alert('Hejssan\n' + r);
+        };
+	  
     $scope.vuodet = _.range(1, 21);
 
     Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {

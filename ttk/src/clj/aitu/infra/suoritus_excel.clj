@@ -24,8 +24,12 @@
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
 ; järjestetty tutkinnon nimen mukaan
-(defn hae-osarakenne [] ; (juxt :tutkintotunnus :peruste)
-  (let [tutkinnot (sort-by (juxt :nimi_fi :peruste :tutkintoversio_id) (tutkinto-arkisto/hae-kaikki-suoritettavat-versiot)) ; TODO: nimi_fi parametroitava
+(defn hae-osarakenne [kieli] ; (juxt :tutkintotunnus :peruste)
+  
+  (let [rakenne (tutkinto-arkisto/hae-kaikki-suoritettavat-versiot)
+        tutkinnot (if (= "fi" kieli)
+                    (sort-by (juxt :nimi_fi :peruste :tutkintoversio_id) rakenne)
+                    (sort-by (juxt :nimi_sv :peruste :tutkintoversio_id) rakenne))
       replacef #(-> %
                     (clojure.string/replace "\n" "")
                     (clojure.string/replace "\u2011" "-")
@@ -33,8 +37,7 @@
   (into [] 
      (for [tutkinto tutkinnot]
        (let [osat (tutosa-arkisto/hae-versiolla (:tutkintoversio_id tutkinto))]
-         [tutkinto (map #(str (replacef (:nimi_fi %)) " (" (:osatunnus %) ")") osat) ; TODO: nimi_fi parametroitava
-               ]
+         [tutkinto (map #(str (replacef (if (= "fi" kieli) (:nimi_fi %) (or (:nimi_sv %) (:nimi_fi %)))) " (" (:osatunnus %) ")") osat)]
          )))))
 
 (defn ^:private set-or-create-cell! 
@@ -55,11 +58,12 @@
                  "DA","DB","DC","DD","DE","DF","DG","DH","DI","DJ","DK","DL","DM","DN","DO","DP","DQ","DR","DS","DT","DU","DV","DW","DX","DY","DZ"])
 
 ; Tutkinnot tulevat aakkosjärjestykseen nimen mukaan tutkinnot-välilehdelle, jotta niiden valitseminen on käyttäjälle loogista
-(defn ^:private map-tutkinnot! [tutkinnot-sheet tut-aakkosjarjestys]
+(defn ^:private map-tutkinnot! 
+  [tutkinnot-sheet tut-aakkosjarjestys kieli]
   (doall (map-indexed (fn [i tutkinto]
            (let [tutkinto-map (first tutkinto)
                  tutkintotunnus (:tutkintotunnus tutkinto-map)
-                 tutkinto-nimi (:nimi_fi tutkinto-map) ; TODO: nimi_sv, param
+                 tutkinto-nimi (if (= "fi" kieli) (:nimi_fi tutkinto-map) (:nimi_sv tutkinto-map))
                  tutkinto-yhd (str (:tutkintotunnus tutkinto-map) " (" (:peruste tutkinto-map) ")" " (" (:tutkintoversio_id tutkinto-map) ")")
                  row (+ 2 i)]
              (set-or-create-cell! tutkinnot-sheet (str "A" row) (str tutkinto-nimi " " tutkinto-yhd))
@@ -69,21 +73,24 @@
              (set-or-create-cell! tutkinnot-sheet (str "E" row) tutkinto-nimi)
              )) tut-aakkosjarjestys)))
                           
-(defn ^:private map-tutkintorakenne! [tutosat-sheet tutkinnot-sheet]
-  (let [tutkintorakenne (hae-osarakenne)
-        versio-jarj (sort-by #(:tutkintoversio_id (first %)) tutkintorakenne) ]
-    (map-tutkinnot! tutkinnot-sheet tutkintorakenne)
-    (doall (map-indexed (fn [i tutkinto]
-             (let [tutkinto-map (first tutkinto)
-                   tutkinnonosat (second tutkinto)
-                   row (+ 2 i)]
-
-               (set-or-create-cell! tutosat-sheet (str "A" row) (:tutkintoversio_id tutkinto-map))
-               (doall (map-indexed (fn [ind tutkinnonosa]
-                                     (let [colstr (nth osacolumns ind)]
-                                       (set-or-create-cell! tutosat-sheet (str colstr row) tutkinnonosa)))
-                                   tutkinnonosat))))
-                        versio-jarj))))
+(defn ^:private map-tutkintorakenne! 
+  ([tutosat-sheet tutkinnot-sheet kieli]
+    (let [tutkintorakenne (hae-osarakenne kieli)
+          versio-jarj (sort-by #(:tutkintoversio_id (first %)) tutkintorakenne) ]
+      (map-tutkinnot! tutkinnot-sheet tutkintorakenne kieli)
+      (doall (map-indexed (fn [i tutkinto]
+               (let [tutkinto-map (first tutkinto)
+                     tutkinnonosat (second tutkinto)
+                     row (+ 2 i)]
+                 (set-or-create-cell! tutosat-sheet (str "A" row) (:tutkintoversio_id tutkinto-map))
+                 ; rivi jää kokonaan tyhjäksi jos tutkintoon ei kuulu tutkinnonosia 
+                 (doall (map-indexed (fn [ind tutkinnonosa]
+                                       (let [colstr (nth osacolumns ind)]
+                                         (set-or-create-cell! tutosat-sheet (str colstr row) tutkinnonosa)))
+                                     tutkinnonosat))))
+                          versio-jarj))))
+  ([tutosat-sheet tutkinnot-sheet]
+    (map-tutkintorakenne! tutosat-sheet tutkinnot-sheet "fi")))
       
 (defn ^:private map-opiskelijat! [sheet]
   (let [suorittajat (->>  (suorittaja-arkisto/hae-kaikki)
@@ -91,11 +98,13 @@
            (sort-by :nimi))]
     (doall (map-indexed (fn [r opiskelija]
                           (let [row (+ 3 r)] 
-                            (set-or-create-cell! sheet (str "A" row) (:nimi opiskelija))
-                            (set-or-create-cell! sheet (str "B" row) (str (:suorittaja_id opiskelija)))
-                            (set-or-create-cell! sheet (str "C" row) (:oid opiskelija))
-                            (set-or-create-cell! sheet (str "D" row) (:hetu opiskelija))
-                            (set-or-create-cell! sheet (str "E" row) (:rahoitusmuoto_nimi opiskelija))
+                            (set-or-create-cell! sheet (str "A" row) (str (:sukunimi opiskelija) " " (:etunimi opiskelija) " (" (:oid opiskelija) ")")) ; Excel-concatenate ei toimi jostain syystä..
+                            (set-or-create-cell! sheet (str "B" row) (:sukunimi opiskelija))
+                            (set-or-create-cell! sheet (str "C" row) (:etunimi opiskelija))
+                            (set-or-create-cell! sheet (str "D" row) (str (:suorittaja_id opiskelija)))
+                            (set-or-create-cell! sheet (str "E" row) (:oid opiskelija))
+                            (set-or-create-cell! sheet (str "F" row) (:hetu opiskelija))
+                            (set-or-create-cell! sheet (str "G" row) (:rahoitusmuoto_nimi opiskelija))
                           )) suorittajat))))
                
 
@@ -126,34 +135,39 @@
         (throw (IllegalArgumentException. (str "Samalla hetu/oid tunnisteella on eri niminen henkilö. Uusi henkilö : " uusi " ja vanha: " aiempi))))))))
  
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
-; TODO: virhetilanteessa tullaa ulos throw:lla ja logi jää näyttämättä
-(defn ^:private luo-opiskelijat! [sheet]
-  (let [rivit (row-seq sheet)
+(defn ^:private luo-opiskelijat! [sheet ui-log]
+  (let [;ui-log (atom [])
+        rivi (atom 1)
+        rivit (row-seq sheet)
         opiskelijat (nthrest rivit 1)
-        db-opiskelijat (suorittaja-arkisto/hae-kaikki)
-        ui-log (atom [])]
-    (doseq [opiskelija opiskelijat]
-      (let [id (get-cell-str opiskelija 1)
-            nimi (get-cell-str opiskelija 0)]
-        (when (and (empty? id) (not (empty? nimi)))
-          (let [oid (get-cell-str opiskelija 2)
-                hetu (get-cell-str opiskelija 3)
-                rahoitusmuoto (get-cell-num opiskelija 5)]
-            (let [nimet (clojure.string/split nimi #" ")]
-              (log/info "käsitellään uusi opiskelija " nimi)
-              (swap! ui-log conj "Käsitellään uusi opiskelija " nimi)
+        db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
+    (try 
+      (doseq [opiskelija opiskelijat]
+        (let [sukunimi (get-cell-str opiskelija 1)
+              etunimi (get-cell-str opiskelija 2)
+              id (get-cell-str opiskelija 3)]
+          (when (and (empty? id) (not (empty? sukunimi)))
+            (let [oid (get-cell-str opiskelija 4)
+                  hetu (get-cell-str opiskelija 5)
+                  rahoitusmuoto (get-cell-num opiskelija 6)]
+              (log/info "käsitellään uusi opiskelija " etunimi " " sukunimi)
+              (swap! ui-log conj "Käsitellään uusi opiskelija " etunimi " " sukunimi)
               (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
-              (let [uusi-opiskelija {:etunimi (first nimet)
-                                    :sukunimi (second nimet)
-                                    :hetu hetu
-                                    :rahoitusmuoto_id (int rahoitusmuoto)
-                                    :oid oid}]
+              (let [uusi-opiskelija {:etunimi etunimi
+                                     :sukunimi sukunimi
+                                     :hetu hetu
+                                     :rahoitusmuoto_id (int rahoitusmuoto)
+                                     :oid oid}]
                 (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
-                  (swap! ui-log conj "Lisättiin opiskelija " nimi)
+                  (swap! ui-log conj "Lisättiin opiskelija " etunimi " " sukunimi)
                   (suorittaja-arkisto/lisaa! uusi-opiskelija)
                   ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
-                                            )))))))
-    @ui-log))
+                                            )))))
+        (swap! rivi inc))
+      (catch Exception e
+        (swap! ui-log conj (str "Poikkeus opiskelijoiden käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
+        (throw e)
+        ))))
 
 (defn parse-osatunnus [osa]
   (let [start (.lastIndexOf osa "(")
@@ -191,82 +205,109 @@
     (catch IllegalStateException e
       (throw (IllegalArgumentException. "Suorittaja-id solun arvoa ei voitu tulkita.")))))
 
+(defmacro prosessoi [sym items & body]
+  `(loop [i# 0
+          [~sym & items#] ~items]
+     (when ~sym
+       (try
+         ~@body
+         (catch Throwable t#
+           (log/error t# "Virhe prosessoinnissa rivillä " i# ", tiedot: " ~sym)
+           (throw (ex-info (str "Virhe rivillä " i#)
+                           {:data ~sym
+                            :exception t#}))))
+       (recur (inc i#)
+              items#))))
+
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
-; TODO: virhetilanteessa tullaa ulos throw:lla ja logi jää näyttämättä
-(defn ^:private luo-suoritukset! [sheet]
-  (let [ui-log (atom [])
+(defn ^:private luo-suoritukset! [sheet ui-log]
+  (let [rivi (atom 1)
         rivit (row-seq sheet)
         suoritukset (nthrest rivit 4)
         suorittajamap (group-by :suorittaja_id (suorittaja-arkisto/hae-kaikki))
         osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat))]
- 
-    ; TODO: poista duplikaatit, jotta ei luoda samoja rivejä uudelleen tietokantaan jos sama tiedosto importataan kaksi kertaa
-    (doseq [suoritus suoritukset]
-      (let [nimisolu (.getCell suoritus 1)
-            nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
-        (when (not (empty? nimi))
-          (log/info ".. " nimi)
-          (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
-          (let [suorittaja-id (tarkista-suorittaja-id (.getCell suoritus 2))
-                tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
-                osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
-                ; pvm
-                ; suoritus-alkupvm 
-                arvosana (int (.getNumericCellValue (.getCell suoritus 7)))
-                todistus (parse-boolean (.getStringCellValue (.getCell suoritus 8)))
-                suorituskerta-map {:suorittaja suorittaja-id
-                                   :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
-                                   :tutkinto tutkintotunnus
-                                   :opiskelijavuosi 1 ; TODO
-                                   :koulutustoimija "1060155-5"; !!  TODO
-                                   :suoritusaika_alku "2016-09-01" ; !! TODO
-                                   :suoritusaika_loppu "2016-09-01" ; !! TODO
-                                   :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
-                                   }
-                suoritus-map {:suorittaja_id suorittaja-id
-                              :arvosana arvosana
-                              :todistus todistus
-                              :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
-                              :arvosanan_korotus false ; TODO !! 
-                              :osaamisen_tunnustaminen false ; TODO !!
-                              :kieli "fi" ; TODO !! 
-                              }
-                suoritus-full (merge suorituskerta-map
-                                     {:osat [suoritus-map]})]
+    (try 
+      ; TODO: poista duplikaatit, jotta ei luoda samoja rivejä uudelleen tietokantaan jos sama tiedosto importataan kaksi kertaa
+      (doseq [suoritus suoritukset]
+        (let [nimisolu (.getCell suoritus 1)
+              nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
+          (when (not (empty? nimi))
+            (log/info ".. " nimi)
+            (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
+            (let [suorittaja-id (tarkista-suorittaja-id (.getCell suoritus 2))
+                  tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
+                  osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
+                  ; pvm
+                  ; suoritus-alkupvm 
+                  arvosana (int (.getNumericCellValue (.getCell suoritus 13)))
+                  todistus (parse-boolean (.getStringCellValue (.getCell suoritus 14)))
+                  suorituskerta-map {:suorittaja suorittaja-id
+                                     :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
+                                     :tutkinto tutkintotunnus
+                                     :opiskelijavuosi 1 ; TODO
+                                     :koulutustoimija "1060155-5"; !!  TODO
+                                     :suoritusaika_alku "2016-09-01" ; !! TODO
+                                     :suoritusaika_loppu "2016-09-01" ; !! TODO
+                                     :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
+                                     }
+                  suoritus-map {:suorittaja_id suorittaja-id
+                                :arvosana arvosana
+                                :todistus todistus
+                                :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
+                                :arvosanan_korotus false ; TODO !! 
+                                :osaamisen_tunnustaminen false ; TODO !!
+                                :kieli "fi" ; TODO !! 
+                                }
+                  suoritus-full (merge suorituskerta-map
+                                       {:osat [suoritus-map]})]
             
-            (log/info "Lisätään suorituskerta .." suorituskerta-map)
-            (log/info "Lisätään suoritus .." suoritus-map)
-            (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-            (suoritus-arkisto/lisaa! suoritus-full)
-      ))))
-    @ui-log))
+              (log/info "Lisätään suorituskerta .." suorituskerta-map)
+              (log/info "Lisätään suoritus .." suoritus-map)
+              (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+              (suoritus-arkisto/lisaa! suoritus-full)
+        )))
+        (swap! rivi inc))
+      (catch Exception e
+        (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tarkista solujen sisältö: " e))
+        (throw e)
+        )
+      )))
 
 ;(user/with-testikayttaja 
 ;     (let [wb (load-workbook "tutosat_taydennetty2.xlsx")]
 ;       (lue-excel! wb)))
 
-; Palauttaa vektorin, joka sisältää käyttäjälle login
+; Palauttaa vektorin, joka sisältää käyttäjälle lokin siitä miten import onnistui
+; sisältää myös virheviestin jos tulee poikkeus siksi että tietoa ei voida tulkita sisäänlukemisen yhteydessä.
 (defn lue-excel! [excel-wb]
   (auditlog/lue-suoritukset-excel!)
-  (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)
-        _ (log/info "Käsitellään opiskelijat")
-        ui-log-opiskelijat (luo-opiskelijat! (select-sheet "Opiskelijat" excel-wb))
-        _ (log/info "Opiskelijat luettu")
-        _ (log/info "Käsitellään suoritukset")
-        ui-log-suoritukset (luo-suoritukset! suoritukset-sheet)
-        _ (log/info "Suoritukset käsitelty")]
-    (conj [] "Käsitellään opiskelijat" ui-log-opiskelijat "Käsitellään suoritukset" ui-log-suoritukset)))
+  (let [ui-log (atom [])]
+    (try
+      (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)
+          _ (log/info "Käsitellään opiskelijat")
+          _ (swap! ui-log conj "Käsitellään opiskelijat..")
+          ui-log-opiskelijat (luo-opiskelijat! (select-sheet "Opiskelijat" excel-wb) ui-log)
+          _ (log/info "Opiskelijat luettu")
+          _ (log/info "Käsitellään suoritukset")
+          _ (swap! ui-log conj (str "Opiskelijat ok. Käsitellään suoritukset.."))
+          ui-log-suoritukset (luo-suoritukset! suoritukset-sheet ui-log)
+          _ (log/info "Suoritukset käsitelty")
+          _ (swap! ui-log conj (str "Suoritukset ok."))]
+        @ui-log)
+      (catch Exception e
+        (log/info "Poikkeus! " )
+        @ui-log))))
 
 ; TODO: 
 ;(user/with-testikayttaja 
-;     (let [wb (luo-excel)]
+;     (let [wb (luo-excel "fi")]
 ;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
   
-(defn luo-excel []
+(defn luo-excel [kieli]
   (let [export (load-workbook  "resources/tutosat_export_base.xlsx")
         tutosat (select-sheet "tutkinnonosat" export)
         tutkinnot (select-sheet "tutkinnot" export)
         opiskelijat (select-sheet "Opiskelijat" export)]
-     (map-tutkintorakenne! tutosat tutkinnot)
+     (map-tutkintorakenne! tutosat tutkinnot kieli)
     (map-opiskelijat! opiskelijat)
      export))
