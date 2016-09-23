@@ -26,12 +26,17 @@
         data
         (recur data (inc sivu))))))
 
+(defn ^:private to-local-date-default-tz
+  [date]
+  (when-let [dt (c/to-date-time date)]
+    (c/to-local-date (time/to-time-zone dt (time/default-time-zone)))))
+
 (defn muotoile-peruste [peruste]
   {:diaarinumero (:diaarinumero peruste)
    :eperustetunnus (:id peruste)
-   :voimassa_alkupvm (c/to-local-date (:voimassaoloAlkaa peruste))
-   :voimassa_loppupvm (or (c/to-local-date (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))
-   :siirtymaajan_loppupvm (or (c/to-local-date (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))
+   :voimassa_alkupvm (to-local-date-default-tz (:voimassaoloAlkaa peruste))
+   :voimassa_loppupvm (or (to-local-date-default-tz (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))
+   :siirtymaajan_loppupvm (or (to-local-date-default-tz (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))
    :tutkinnot (map :koulutuskoodiArvo (:koulutukset peruste))})
 
 (defn hae-perusteet [viimeisin-haku asetukset]
