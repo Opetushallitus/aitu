@@ -185,20 +185,6 @@
       (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " str))))
     v))
 
-; suorittaja :tutkinto :tutkinnonosa :suorituspvm
-(defn suoritus-olemassa? [tiedot kaikki-seq]
-  (let [vertailu-kentat [:tutkinto :suorittaja :tutkinnonosa]
-        vrt (select-keys tiedot vertailu-kentat)
-        op (filter #(= (select-keys % vertailu-kentat) vrt) kaikki-seq)]
-    (if (empty? op)
-      false ; Identtistä Suoritusta ei löytynyt
-      (let [tarkista-kentat [:arvosana :osaamisen_tunnustaminen :jarjestelyt :paikka :kieli :koulutustoimija]
-            uusi (select-keys tiedot tarkista-kentat)
-            aiemmat (filter #(not= (select-keys % tarkista-kentat) uusi) op)]
-        (if (empty? aiemmat)
-          true ; Aikaisempi kirjaus, samat tiedot
-          (throw (IllegalArgumentException. (str "Samanlainen kirjaus suorituksesta löytyi, mutta eri tiedoilla, Uusi: " uusi ".. ja vanhat: " aiemmat))))))))
-
 (defn ^:private tarkista-suorittaja-id [cell]
   (try 
     (int (.getNumericCellValue cell))
@@ -224,6 +210,38 @@
         "Ruotsi" "sv"
         "Saame" "se"} kieli))        
     
+;(set (map #(select-keys % [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija 
+;                                                             :osaamisen_tunnustaminen :arvosanan_korotus :jarjestelyt 
+;                                                             :paikka :arvosana :rahoitusmuoto
+;                                                             :suoritusaika_alku :suoritusaika_loppu
+;                                                             :kieli :osaamisala :todistus
+;                                                             :valmistava_koultuus :arvointikokouksen_pvm
+;                                                             ]) (hae-kaikki-suoritukset "1060155-5")))))
+
+(defn ^:private hae-suoritukset [jarjestaja]
+  (set (map #(select-keys % [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija 
+                             :osaamisen_tunnustaminen :arvosanan_korotus; :jarjestelyt 
+                             ;:paikka 
+                             :arvosana :rahoitusmuoto
+                             ;:suoritusaika_alku :suoritusaika_loppu
+                             :kieli 
+                             ; :osaamisala
+                             :todistus                             
+                             ; :valmistava_koulutus 
+                             ;:arvointikokouksen_pvm
+                             ])
+                             (suoritus-arkisto/hae-kaikki-suoritukset jarjestaja))))
+
+; TODO: loputkin kentät. LocalDate vs. java.util.Date
+(defn ^:private olemassaoleva-suoritus? [suoritus-set suoritus]
+  (let [m (select-keys suoritus [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
+                                 :osaamisen_tunnustaminen :arvosanan_korotus ;järjestelyt
+                                 :arvosana :rahoitusmuoto
+                                ; :suoritusaika_alku :suoritusaika_loppu
+                                 :kieli :todistus])] 
+    (contains? suoritus-set m)))
+  
+  
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [sheet ui-log]
   (let [rivi (atom 1)
@@ -232,8 +250,10 @@
         jarjestaja (.getStringCellValue (.getCell rivi1 2)) ; tutkinnon järjestäjän y-tunnus, solu C1 
         suoritukset (nthrest rivit 4)
         suorittajamap (group-by :suorittaja_id (suorittaja-arkisto/hae-kaikki))
-        osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat))
-        dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
+        osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat)) ; TODO: meneekö tämä oikein? Pitäisikö kohdistua vanhoihin joskus?
+        dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")
+        suoritukset-alussa (hae-suoritukset jarjestaja)] ; Duplikaattirivejä verrataan näihin
+    
     (try 
       ; TODO: poista duplikaatit, jotta ei luoda samoja rivejä uudelleen tietokantaan jos sama tiedosto importataan kaksi kertaa
       (doseq [suoritus suoritukset]
@@ -248,9 +268,9 @@
                   tunnustamisen-pvm (.getDateCellValue (.getCell suoritus 7)) ; TODO: voi olla tyhjä
                   suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
                   suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9))
-                  paikka (.getStringCellValue (.getCell suoritus 10))
-                  jarjestelyt (.getStringCellValue (.getCell suoritus 11))
-                  arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
+                  paikka (.getStringCellValue (.getCell suoritus 10)) ; TODO, käsittely
+                  jarjestelyt (.getStringCellValue (.getCell suoritus 11)) ; TODO, käsittely
+                  arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12)) ; TODO, käsittely
                   arvosana (int (.getNumericCellValue (.getCell suoritus 13)))
                   todistus (parse-boolean (.getStringCellValue (.getCell suoritus 14)))
                   suorituskieli (.getStringCellValue (.getCell suoritus 15))
@@ -275,11 +295,15 @@
                                 }
                   suoritus-full (merge suorituskerta-map
                                        {:osat [suoritus-map]})]
-            
-              (log/info "Lisätään suorituskerta .." suorituskerta-map)
-              (log/info "Lisätään suoritus .." suoritus-map)
-              (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-              (suoritus-arkisto/lisaa! suoritus-full)
+              (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map {:arvosana (str arvosana)}))
+                (do
+                 (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                 (log/info "ohitetaan duplikaatti suoritus"))
+                (do
+                  (log/info "Lisätään suorituskerta .." suorituskerta-map)
+                  (log/info "Lisätään suoritus .." suoritus-map)
+                  (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                  (suoritus-arkisto/lisaa! suoritus-full)))
         )))
         (swap! rivi inc))
       (catch Exception e
@@ -310,7 +334,7 @@
           _ (swap! ui-log conj (str "Suoritukset ok."))]
         @ui-log)
       (catch Exception e
-        (log/info "Poikkeus! " )
+        (log/info "Poikkeus! " e)
         @ui-log))))
 
 ; TODO: 

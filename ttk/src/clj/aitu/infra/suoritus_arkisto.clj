@@ -52,6 +52,22 @@
                     :suorituskerta.suoritusaika_alku :suorituskerta.suoritusaika_loppu
                   ))))
 
+(defn hae-kaikki-suoritukset [koulutustoimija]
+ (sql/select suorituskerta
+   (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
+   (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :jarjestelyt :paikka :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
+               [:suoritus.suoritus_id :suoritus_id]
+               [:suoritus.arvosana :arvosana]
+               [:suoritus.tutkinnonosa :tutkinnonosa]
+               [:suoritus.arvosanan_korotus :arvosanan_korotus]
+               [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
+               [:suoritus.kieli :kieli]
+               [:suoritus.todistus :todistus]
+               [:suoritus.osaamisala :osaamisala]
+               [:suoritus.lisatiedot :lisatiedot])
+   (sql/where (= :koulutustoimija koulutustoimija))))
+ 
+
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid suorittaja]}]
   (->
