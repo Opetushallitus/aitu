@@ -23,8 +23,11 @@ angular.module('suoritus', [])
    function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
 
       $scope.uploadValmis = function(r, liitetyyppi) {
-
-    	 alert('Hejssan\n' + r);
+    	 var s = ""; // TODO: voisi tehdä siistimmin..
+    	 _.forEach(r, function(v) {
+           s += v + "\n"; 
+    	 });
+    	 alert('Hejssan\n\n' + s);
         };
 	  
     $scope.vuodet = _.range(1, 21);

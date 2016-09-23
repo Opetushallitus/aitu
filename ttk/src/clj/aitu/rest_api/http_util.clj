@@ -16,16 +16,15 @@
   (:require [aitu.integraatio.clamav :as clamav])
   (:import java.io.ByteArrayInputStream))
 
-(def excel-mimetype "application/vnd.ms-excel")
+(def excel-mimetypes #{"application/vnd.ms-excel" "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})
 
 (def allowed-mimetypes
   "Sallitut tiedostotyypit liitetiedostoille"
-  #{"application/pdf"
-    "image/gif" "image/jpeg" "image/png"
-    "text/plain" "text/rtf"
-    excel-mimetype "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    "application/msword"
-    })
+  (into #{"application/pdf"
+          "image/gif" "image/jpeg" "image/png"
+          "text/plain" "text/rtf"
+          "application/msword"
+          } excel-mimetypes))
 
 (defn sallittu-tiedostotyyppi? [tyyppi]
   (contains? allowed-mimetypes tyyppi))

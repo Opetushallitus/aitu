@@ -13,12 +13,15 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.suoritus
+  (:import org.apache.commons.io.FileUtils)
   (:require [aitu.infra.suoritus-arkisto :as arkisto]
             aitu.compojure-util
+            [clojure.tools.logging :as log]
             [compojure.api.core :refer [DELETE GET POST defroutes]]
-            [aitu.rest-api.http-util :refer [excel-mimetype jos-lapaisee-virustarkistuksen]]
+            [aitu.rest-api.http-util :refer [excel-mimetypes jos-lapaisee-virustarkistuksen]]
             [aitu.infra.suoritus-excel :refer [lue-excel!]]
-            [oph.common.util.http-util :refer [response-or-404 file-upload-response sallittu-jos]]))
+            [oph.common.util.http-util :refer [response-or-404 file-upload-response sallittu-jos]]
+            [dk.ative.docjure.spreadsheet :refer [load-workbook]]))
 
 ; TODO: tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
 (defroutes reitit
@@ -46,6 +49,11 @@
     (response-or-404 (arkisto/hyvaksy! suoritukset)))
   (POST "/excel-lataus" [file]
     :kayttooikeus :arviointipaatos
-    (sallittu-jos (= excel-mimetype (:content-type file))
-      (jos-lapaisee-virustarkistuksen file
-        (file-upload-response (lue-excel! file))))))
+    (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
+
+    ;    (sallittu-jos (contains? excel-mimetypes (:content-type file))
+;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
+      (let [b (FileUtils/readFileToByteArray (:tempfile file))
+            wb (load-workbook (new java.io.ByteArrayInputStream b))
+            respo (lue-excel! wb)]
+     (file-upload-response respo))))
