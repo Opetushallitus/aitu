@@ -19,6 +19,15 @@ angular.module('arviointipaatokset', [])
   }])
 
   .controller('ArviointipaatoksetController', ['$location', '$scope', function($location, $scope) {
+      $scope.uploadValmis = function(r, liitetyyppi) {
+     	 var s = ""; // TODO: voisi tehdä siistimmin..
+     	 _.forEach(r, function(v) {
+            s += v + "\n"; 
+     	 });
+     	 alert('Hejssan\n\n' + s);
+         };
+ 	  
+         
     $scope.lisaaSuoritus = function() {
       $location.url('/lisaa-suoritus');
     };

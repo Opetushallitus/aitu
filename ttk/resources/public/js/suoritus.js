@@ -21,14 +21,6 @@ angular.module('suoritus', [])
 
   .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
    function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
-
-      $scope.uploadValmis = function(r, liitetyyppi) {
-    	 var s = ""; // TODO: voisi tehdä siistimmin..
-    	 _.forEach(r, function(v) {
-           s += v + "\n"; 
-    	 });
-    	 alert('Hejssan\n\n' + s);
-        };
 	  
     $scope.vuodet = _.range(1, 21);
 
