@@ -24,7 +24,7 @@ angular.module('arviointipaatokset', [])
      	 _.forEach(r, function(v) {
             s += v + "\n"; 
      	 });
-     	 alert('Hejssan\n\n' + s);
+     	 alert('Excelin sisäänluku suoritettu, tulos: \n\n' + s);
          };
  	  
          

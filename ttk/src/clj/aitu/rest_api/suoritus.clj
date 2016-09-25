@@ -19,10 +19,20 @@
             [clojure.tools.logging :as log]
             [compojure.api.core :refer [DELETE GET POST defroutes]]
             [aitu.rest-api.http-util :refer [excel-mimetypes jos-lapaisee-virustarkistuksen]]
-            [aitu.infra.suoritus-excel :refer [lue-excel!]]
-            [oph.common.util.http-util :refer [response-or-404 file-upload-response sallittu-jos]]
-            [dk.ative.docjure.spreadsheet :refer [load-workbook]]))
+            [aitu.infra.suoritus-excel :refer [lue-excel! luo-excel]]
+            [oph.common.util.http-util :refer [response-or-404 file-upload-response file-download-response sallittu-jos]]
+            [dk.ative.docjure.spreadsheet :refer [load-workbook save-workbook-into-stream!]]))
 
+(defroutes reitit-lataus
+  (GET "/excel-luonti" [kieli]
+    :kayttooikeus :arviointipaatos
+    (let [wb (luo-excel kieli)
+          bos (java.io.ByteArrayOutputStream.)
+          _ (save-workbook-into-stream! bos wb)
+          content-type "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          filename "excel-suoritustiedot-template.xlsx"]
+      (file-download-response (.toByteArray bos) filename content-type))))
+  
 ; TODO: tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
 (defroutes reitit
   (GET "/" [& ehdot]
@@ -47,6 +57,7 @@
   (POST "/hyvaksy" [suoritukset]
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/hyvaksy! suoritukset)))
+
   (POST "/excel-lataus" [file]
     :kayttooikeus :arviointipaatos
     (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
