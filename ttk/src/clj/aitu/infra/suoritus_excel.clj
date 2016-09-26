@@ -23,8 +23,15 @@
              [aitu.auditlog :as auditlog]
              [dk.ative.docjure.spreadsheet :refer :all]))
 
+(defn ^:private get-cell-str [rowref col]
+  (let [cell (.getCell rowref col)]
+    (when (not (nil? cell)) (.getStringCellValue cell))))
+    
+(defn ^:private get-cell-num [rowref col]
+  (let [cell (.getCell rowref col)]
+    (when (not (nil? cell)) (.getNumericCellValue cell))))  
         
-(defn parse-boolean [str]
+(defn excel->boolean [str]
   (let [m {"Kyllä" true
            "Ei" false}
         v (get m str)]
@@ -49,6 +56,15 @@
       (throw (IllegalArgumentException. (str "Virheellinen edustettava taho: " rooli))))
     v))
 
+(defn ^:private excel->edustus [edustus]
+  (let [m {"työntekijät" "tyontekija"
+           "työnantajat"  "tyonantaja"
+           "opetusala" "opettaja"
+           "itsenäiset ammatinharjoittajat" "itsenainen"}
+        v (get m edustus)]
+    (when (nil? v)
+      (throw (IllegalArgumentException. (str "Virheellinen edustettava taho: " edustus))))
+    v))
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
@@ -131,6 +147,36 @@
                             (set-or-create-cell! sheet (str "D" row) (bool->excel (:nayttotutkintomestari arvioija)))
                             )) arvioijat))))
 
+(defn ^:private luo-arvioijat! [sheet ui-log]
+  (let [rivi (atom 1)
+        rivit (row-seq sheet)
+        arvioijat (nthrest rivit 1)
+        db-arvioijat (set (map #(select-keys % [:nimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
+    (try 
+      (doseq [arvioija arvioijat]
+        (let [nimi (get-cell-str arvioija 1)]
+          (when (not (empty? nimi))
+            (let [rooli (excel->edustus (get-cell-str arvioija 2))
+                  ntm (excel->boolean (get-cell-str arvioija 3))
+                  uusi-arvioija {:nimi nimi 
+                                 :rooli rooli
+                                 :nayttotutkintomestari ntm}]
+              (if (contains? db-arvioijat uusi-arvioija)
+                (swap! ui-log conj (str "Arvioija on jo olemassa tietokannassa (" nimi ")"))
+                (do
+                  (log/info "Lisätään uusi arvioija " nimi)
+                  (swap! ui-log conj "Lisätään uusi arvioija " nimi)
+                  (arvioija-arkisto/lisaa! uusi-arvioija))
+                  ; TODO: jos sama arvioija on kaksi kertaa excelissä.
+                  ))))
+          (swap! rivi inc))
+      (catch Exception e
+        (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
+        (throw e)
+        ))))
+    
+  
+
 (defn ^:private map-opiskelijat! [sheet]
   (let [suorittajat (->>  (suorittaja-arkisto/hae-kaikki)
            (map #(assoc % :nimi (str (:etunimi %) " " (:sukunimi %) " (" (:oid %) ")"))  )
@@ -148,14 +194,6 @@
                
 
 
-(defn ^:private get-cell-str [rowref col]
-  (let [cell (.getCell rowref col)]
-    (when (not (nil? cell)) (.getStringCellValue cell))))
-    
-(defn ^:private get-cell-num [rowref col]
-  (let [cell (.getCell rowref col)]
-    (when (not (nil? cell)) (.getNumericCellValue cell))))
-    
 (defn ^:private tarkista-opiskelija-tiedot [oid hetu rahoitusmuoto]
   (when (nil? rahoitusmuoto) (throw (IllegalArgumentException. "Rahoitusmuoto ei voi olla tyhjä")))
   (when (and (nil? oid) (nil? hetu)) (throw (IllegalArgumentException. "Hetu tai Oid pitää olla.")))
@@ -303,9 +341,9 @@
                   jarjestelyt (.getStringCellValue (.getCell suoritus 11)) ; TODO, käsittely
                   arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12)) ; TODO, käsittely
                   arvosana (int (.getNumericCellValue (.getCell suoritus 13)))
-                  todistus (parse-boolean (.getStringCellValue (.getCell suoritus 14)))
+                  todistus (excel->boolean (.getStringCellValue (.getCell suoritus 14)))
                   suorituskieli (.getStringCellValue (.getCell suoritus 15))
-                  korotus (parse-boolean (.getStringCellValue (.getCell suoritus 16)))
+                  korotus (excel->boolean (.getStringCellValue (.getCell suoritus 16)))
                   
                   suorituskerta-map {:suorittaja suorittaja-id
                                      :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
@@ -354,6 +392,9 @@
   (let [ui-log (atom [])]
     (try
       (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)
+          _ (log/info "Käsitellään arvioijat")
+          _ (swap! ui-log conj "Käsitellään arvioijat..")
+          ui-log-arvioijat (luo-arvioijat! (select-sheet "Arvioijat" excel-wb) ui-log)
           _ (log/info "Käsitellään opiskelijat")
           _ (swap! ui-log conj "Käsitellään opiskelijat..")
           ui-log-opiskelijat (luo-opiskelijat! (select-sheet "Opiskelijat" excel-wb) ui-log)

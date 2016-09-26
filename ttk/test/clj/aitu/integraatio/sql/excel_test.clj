@@ -28,7 +28,7 @@
 ; :osaamisen_tunnustaminen false, :kieli "fi"}]})
 
 (def luku-result
- ["Käsitellään opiskelijat.." "Opiskelijat ok. Käsitellään suoritukset.." 
+ ["Käsitellään arvioijat.." "Käsitellään opiskelijat.." "Opiskelijat ok. Käsitellään suoritukset.." 
   "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen" 
   "Suoritukset ok."])
 
