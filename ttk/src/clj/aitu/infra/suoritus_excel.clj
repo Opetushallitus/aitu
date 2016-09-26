@@ -343,7 +343,7 @@
 ;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
   
 (defn luo-excel [kieli]
-  (let [export (load-workbook  "resources/tutosat_export_base.xlsx")
+  (let [export (load-workbook-from-resource   "tutosat_export_base.xlsx")
         tutosat (select-sheet "tutkinnonosat" export)
         tutkinnot (select-sheet "tutkinnot" export)
         opiskelijat (select-sheet "Opiskelijat" export)]
