@@ -28,16 +28,16 @@
 ; :osaamisen_tunnustaminen false, :kieli "fi"}]})
 
 (def luku-result
- ["Käsitellään opiskelijat.." "Opiskelijat ok." "Käsitellään suoritukset.." 
-  "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Arkeologinen tutkimussukellus" 
+ ["Käsitellään opiskelijat.." "Opiskelijat ok. Käsitellään suoritukset.." 
+  "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen" 
   "Suoritukset ok."])
 
 (deftest ^:integraatio excel-import-test
   (let [wb (load-workbook "test-resources/tutosat_perus.xlsx")
         ui-log (lue-excel! wb)]
 
-    
-  (= (map (juxt :suorittaja :rahoitusmuoto :tutkinto :koulutustoimija) (suoritus-arkisto/hae-kaikki {}))
-     [-2 2 "355210" "1060155-5"])
-  (= ui-log luku-result)))
+    (println "wat " (map (juxt :suorittaja :rahoitusmuoto :tutkinto :koulutustoimija) (suoritus-arkisto/hae-kaikki {})))
+    (is (= (first (map (juxt :suorittaja :rahoitusmuoto :tutkinto :koulutustoimija) (suoritus-arkisto/hae-kaikki {})))
+           [-2 2 "327128" "1060155-5"]))
+    (is (= ui-log luku-result))))
   
