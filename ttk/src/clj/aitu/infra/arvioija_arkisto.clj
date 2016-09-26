@@ -18,6 +18,11 @@
              [oph.korma.common :as sql-util]
              [aitu.integraatio.sql.korma :refer :all]))
 
+(defn hae-kaikki []
+  (sql/select arvioija
+    (sql/fields :arvioija_id :nimi :rooli :nayttotutkintomestari)              
+    (sql/order :nimi)))
+  
 (defn hae-nimella
   "Hakee arvioijia nimen perusteella."
   [nimi]

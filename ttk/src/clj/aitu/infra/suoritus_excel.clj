@@ -12,14 +12,43 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
+
 (ns aitu.infra.suoritus-excel
    (:require [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
              [clojure.tools.logging :as log]
              [aitu.infra.tutkinnonosa-arkisto :as tutosa-arkisto]
              [aitu.infra.suorittaja-arkisto :as suorittaja-arkisto]
              [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
+             [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
              [aitu.auditlog :as auditlog]
              [dk.ative.docjure.spreadsheet :refer :all]))
+
+        
+(defn parse-boolean [str]
+  (let [m {"Kyllä" true
+           "Ei" false}
+        v (get m str)]
+    (when (nil? v)
+      (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " str))))
+    v))
+
+; TODO: clojuren idiomi mallintaa bijektio? tämä on kömpelöä tarpeettomasti
+
+(defn bool->excel [b]
+  (get {true "Kyllä"
+        false "Ei"}
+       b))
+
+(defn ^:private edustus->excel [rooli]
+  (let [m {"tyontekija" "työntekijät"
+           "tyonantaja" "työnantajat"
+           "opettaja" "opetusala"
+           "itsenainen" "itsenäiset ammatinharjoittajat"}
+        v (get m rooli)]
+    (when (nil? v)
+      (throw (IllegalArgumentException. (str "Virheellinen edustettava taho: " rooli))))
+    v))
+
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
@@ -91,7 +120,17 @@
                           versio-jarj))))
   ([tutosat-sheet tutkinnot-sheet]
     (map-tutkintorakenne! tutosat-sheet tutkinnot-sheet "fi")))
-      
+
+
+(defn ^:private map-arvioijat! [sheet]
+  (let [arvioijat (arvioija-arkisto/hae-kaikki)]
+    (doall (map-indexed (fn [r arvioija]
+                          (let [row (+ 3 r)]
+                            (set-or-create-cell! sheet (str "B" row) (:nimi arvioija))
+                            (set-or-create-cell! sheet (str "C" row) (edustus->excel (:rooli arvioija)))
+                            (set-or-create-cell! sheet (str "D" row) (bool->excel (:nayttotutkintomestari arvioija)))
+                            )) arvioijat))))
+
 (defn ^:private map-opiskelijat! [sheet]
   (let [suorittajat (->>  (suorittaja-arkisto/hae-kaikki)
            (map #(assoc % :nimi (str (:etunimi %) " " (:sukunimi %) " (" (:oid %) ")"))  )
@@ -176,14 +215,6 @@
               (= end -1))
       (throw (IllegalArgumentException. (str "Virheellinen osatunnus: " osa))))
     (.substring osa (+ 1 start) end)))
-        
-(defn parse-boolean [str]
-  (let [m {"Kyllä" true
-           "Ei" false}
-        v (get m str)]
-    (when (nil? v)
-      (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " str))))
-    v))
 
 (defn ^:private tarkista-suorittaja-id [cell]
   (try 
@@ -341,12 +372,14 @@
 ;(user/with-testikayttaja 
 ;     (let [wb (luo-excel "fi")]
 ;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
-  
+
 (defn luo-excel [kieli]
-  (let [export (load-workbook-from-resource   "tutosat_export_base.xlsx")
+  (let [export (load-workbook-from-resource "tutosat_export_base.xlsx")
         tutosat (select-sheet "tutkinnonosat" export)
         tutkinnot (select-sheet "tutkinnot" export)
-        opiskelijat (select-sheet "Opiskelijat" export)]
+        opiskelijat (select-sheet "Opiskelijat" export)
+        arvioijat (select-sheet "Arvioijat" export)]
      (map-tutkintorakenne! tutosat tutkinnot kieli)
-    (map-opiskelijat! opiskelijat)
+     (map-opiskelijat! opiskelijat)
+     (map-arvioijat! arvioijat)
      export))
