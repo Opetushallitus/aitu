@@ -28,6 +28,14 @@
   (is (thrown? IllegalArgumentException (parse-osatunnus "Kreegah bundolo")))
   (is (thrown? IllegalArgumentException (parse-osatunnus "Fo (12"))))
 
+; TODO: ei ole tosiasiallisesti integraatio-testi, mutta sekaantuu niihin Traviksella ja fixture aiheuttaa ongelmia siellä.
+(deftest ^:integraatio parse-osaaamisalatunnus-toimii
+  (is (= 1234 (parse-osaamisala "fo (1234)")))
+  (is (= 12 (parse-osaamisala "kung (fu) (12)")))
+  (is (= nil (parse-osaamisala "Hackerman ()")))
+  (is (thrown? IllegalArgumentException (parse-osaamisala "Kreegah bundolo")))
+  (is (thrown? IllegalArgumentException (parse-osaamisala "Fo (12"))))
+
 (deftest ^:integraatio opiskelija-duplikaattien-tarkistus
   (let [kaikki (suorittaja-arkisto/hae-kaikki)]
     (is (true? (opiskelija-olemassa? {:etunimi "Orvokki" :sukunimi "Opiskelija" :hetu nil :oid "fan.far.12345"} kaikki)))

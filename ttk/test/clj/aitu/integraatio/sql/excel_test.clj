@@ -28,7 +28,8 @@
 ; :osaamisen_tunnustaminen false, :kieli "fi"}]})
 
 (def luku-result
- ["Käsitellään arvioijat.." "Käsitellään opiskelijat.." "Opiskelijat ok. Käsitellään suoritukset.." 
+ ["Käsitellään arvioijat.." "Arvioija on jo olemassa tietokannassa (Seppo Ilmarinen)" 
+  "Arvioija on jo olemassa tietokannassa (Väinämöinen)" "Käsitellään opiskelijat.." "Opiskelijat ok. Käsitellään suoritukset.." 
   "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen" 
   "Suoritukset ok."])
 

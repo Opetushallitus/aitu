@@ -65,6 +65,10 @@
     (when (nil? v)
       (throw (IllegalArgumentException. (str "Virheellinen edustettava taho: " edustus))))
     v))
+  
+(defn ^:private date->LocalDate [date]
+  (when (not (nil? date))
+    (new org.joda.time.LocalDate date)))
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
@@ -269,6 +273,17 @@
       (throw (IllegalArgumentException. (str "Virheellinen osatunnus: " osa))))
     (.substring osa (+ 1 start) end)))
 
+; kuten osatunnus, mutta voi olla tyhjä. Usein onkin
+(defn parse-osaamisala [osaamisala]
+  (let [start (.lastIndexOf osaamisala "(")
+        end (.lastIndexOf osaamisala ")")]
+    (when (or (= start -1)
+              (= end -1))
+      (throw (IllegalArgumentException. (str "Virheellinen osaamisala: " osaamisala))))
+    (let [idstr (.substring osaamisala (+ 1 start) end)]
+      (if (= "" idstr) nil
+        (java.lang.Long/parseLong idstr)))))
+
 (defn ^:private tarkista-suorittaja-id [cell]
   (try 
     (int (.getNumericCellValue cell))
@@ -299,9 +314,9 @@
                              :osaamisen_tunnustaminen :arvosanan_korotus; :jarjestelyt 
                              ;:paikka 
                              :arvosana :rahoitusmuoto
-                             ;:suoritusaika_alku :suoritusaika_loppu
+                             :suoritusaika_alku :suoritusaika_loppu
                              :kieli 
-                             ; :osaamisala
+                             :osaamisala
                              :todistus                             
                              ; :valmistava_koulutus 
                              ;:arvointikokouksen_pvm
@@ -310,13 +325,15 @@
 
 ; TODO: loputkin kentät. LocalDate vs. java.util.Date
 (defn ^:private olemassaoleva-suoritus? [suoritus-set suoritus]
-  (let [m (select-keys suoritus [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
-                                 :osaamisen_tunnustaminen :arvosanan_korotus ;järjestelyt
-                                 :arvosana :rahoitusmuoto
-                                ; :suoritusaika_alku :suoritusaika_loppu
-                                 :kieli :todistus])] 
+  (let [m 
+        (-> (select-keys suoritus [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
+                                   :osaamisen_tunnustaminen :arvosanan_korotus ;järjestelyt ; paikka
+                                   :arvosana :rahoitusmuoto
+                                   :suoritusaika_alku :suoritusaika_loppu
+                                   :kieli :osaamisala :todistus])
+          (update :suoritusaika_alku date->LocalDate)
+          (update :suoritusaika_loppu date->LocalDate))] 
     (contains? suoritus-set m)))
-  
   
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [sheet ui-log]
@@ -340,13 +357,14 @@
             (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
             (let [suorittaja-id (tarkista-suorittaja-id (.getCell suoritus 2))
                   tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
-                  osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 5)))
-                  tunnustamisen-pvm (.getDateCellValue (.getCell suoritus 7)) ; TODO: voi olla tyhjä
+                  osaamisala-id (parse-osaamisala (.getStringCellValue (.getCell suoritus 5)))
+                  osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 6)))
+                  tunnustamisen-pvm (date->LocalDate (.getDateCellValue (.getCell suoritus 7))) ; TODO: voi olla tyhjä
                   suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
                   suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9))
-                  paikka (.getStringCellValue (.getCell suoritus 10)) ; TODO, käsittely
-                  jarjestelyt (.getStringCellValue (.getCell suoritus 11)) ; TODO, käsittely
-                  arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12)) ; TODO, käsittely
+                  paikka (.getStringCellValue (.getCell suoritus 10))
+                  jarjestelyt (.getStringCellValue (.getCell suoritus 11))
+                  arviointikokous-pvm (date->LocalDate (.getDateCellValue (.getCell suoritus 12))) ; TODO, käsittely
                   arvosana (int (.getNumericCellValue (.getCell suoritus 13)))
                   todistus (excel->boolean (.getStringCellValue (.getCell suoritus 14)))
                   suorituskieli (.getStringCellValue (.getCell suoritus 15))
@@ -355,6 +373,8 @@
                   suorituskerta-map {:suorittaja suorittaja-id
                                      :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
                                      :tutkinto tutkintotunnus
+                                     :paikka paikka
+                                     :jarjestelyt jarjestelyt
                                      :opiskelijavuosi 1 ; TODO
                                      :koulutustoimija jarjestaja
                                      :suoritusaika_alku (.format dformat suoritus-alkupvm)
@@ -364,6 +384,7 @@
                   suoritus-map {:suorittaja_id suorittaja-id
                                 :arvosana arvosana
                                 :todistus todistus
+                                :osaamisala osaamisala-id
                                 :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
                                 :arvosanan_korotus korotus
                                 :osaamisen_tunnustaminen false ; TODO !!
