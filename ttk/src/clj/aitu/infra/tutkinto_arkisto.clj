@@ -227,6 +227,14 @@
     (sql/fields :tutkintoversio.tutkintoversio_id :tutkintotunnus :nimi_fi :nimi_sv :tutkintoversio.siirtymaajan_loppupvm :tutkintoversio.voimassa_loppupvm :tutkintoversio.peruste)
     ))
 
+(defn hae-tutkintoversiot-ja-osaamisalat []
+  (sql/select tutkintoversio
+    (sql/with osaamisala
+      (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :voimassa_loppupvm :osaamisala_id))
+    (sql/fields :tutkintoversio_id)
+    (sql/where (> :voimassa_loppupvm (sql/raw "current_date")))
+    (sql/order :tutkintoversio_id))) 
+
 (defn hae-tutkinnot-ja-osaamisalat
   "Hakee kaikkien tutkintojen sekä niihin liittyvien osaamisalojen uusimman version"
   []

@@ -117,7 +117,22 @@
              (set-or-create-cell! tutkinnot-sheet (str "D" row) (:tutkintoversio_id tutkinto-map))
              (set-or-create-cell! tutkinnot-sheet (str "E" row) tutkinto-nimi)
              )) tut-aakkosjarjestys)))
-                          
+
+(defn ^:private map-osaamisalat! 
+  [oalat-sheet kieli]
+  (let [tutkinnot (tutkinto-arkisto/hae-tutkintoversiot-ja-osaamisalat)]
+    (doall (map-indexed (fn [i tutkinto]
+      (let [nimi-fn (fn [o] (if (= "fi" kieli) (:nimi_fi o) (or (:nimi_sv o) (:nimi_fi o))))
+            osaamisalat (sort-by nimi-fn (:osaamisala tutkinto))
+            tutkintoversio (:tutkintoversio_id tutkinto)
+            row (+ 2 i)]
+        (set-or-create-cell! oalat-sheet (str "B" row) tutkintoversio)
+        (doall (map-indexed (fn [ind osaamisala]
+           (let [colstr (nth osacolumns ind)]
+             (set-or-create-cell! oalat-sheet (str colstr row) (str (nimi-fn osaamisala) " (" (:osaamisala_id osaamisala) ")"))))
+               osaamisalat))
+        )) tutkinnot))))
+                              
 (defn ^:private map-tutkintorakenne! 
   ([tutosat-sheet tutkinnot-sheet kieli]
     (let [tutkintorakenne (hae-osarakenne kieli)
@@ -148,7 +163,7 @@
                             )) arvioijat))))
 
 (defn ^:private luo-arvioijat! [sheet ui-log]
-  (let [rivi (atom 1)
+  (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
         rivit (row-seq sheet)
         arvioijat (nthrest rivit 1)
         db-arvioijat (set (map #(select-keys % [:nimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
@@ -214,7 +229,7 @@
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-opiskelijat! [sheet ui-log]
   (let [;ui-log (atom [])
-        rivi (atom 1)
+        rivi (atom 3) ; Käyttäjän näkökulmasta Excelin ensimmäinen tietorivi on rivi 3 
         rivit (row-seq sheet)
         opiskelijat (nthrest rivit 1)
         db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
@@ -278,14 +293,6 @@
   (get {"Suomi" "fi"
         "Ruotsi" "sv"
         "Saame" "se"} kieli))        
-    
-;(set (map #(select-keys % [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija 
-;                                                             :osaamisen_tunnustaminen :arvosanan_korotus :jarjestelyt 
-;                                                             :paikka :arvosana :rahoitusmuoto
-;                                                             :suoritusaika_alku :suoritusaika_loppu
-;                                                             :kieli :osaamisala :todistus
-;                                                             :valmistava_koultuus :arvointikokouksen_pvm
-;                                                             ]) (hae-kaikki-suoritukset "1060155-5")))))
 
 (defn ^:private hae-suoritukset [jarjestaja]
   (set (map #(select-keys % [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija 
@@ -416,11 +423,13 @@
 
 (defn luo-excel [kieli]
   (let [export (load-workbook-from-resource "tutosat_export_base.xlsx")
-        tutosat (select-sheet "tutkinnonosat" export)
-        tutkinnot (select-sheet "tutkinnot" export)
+        tutosat (select-sheet "Tutkinnonosat" export)
+        tutkinnot (select-sheet "Tutkinnot" export)
         opiskelijat (select-sheet "Opiskelijat" export)
-        arvioijat (select-sheet "Arvioijat" export)]
+        arvioijat (select-sheet "Arvioijat" export)
+        osaamisalat (select-sheet "Osaamisalat" export)]
      (map-tutkintorakenne! tutosat tutkinnot kieli)
+     (map-osaamisalat! osaamisalat kieli)
      (map-opiskelijat! opiskelijat)
      (map-arvioijat! arvioijat)
      export))
