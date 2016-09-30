@@ -454,6 +454,7 @@
         osaamisalat (select-sheet "Osaamisalat" export)]
      (map-tutkintorakenne! tutosat tutkinnot kieli)
      (map-osaamisalat! osaamisalat kieli)
-     (map-opiskelijat! opiskelijat)
-     (map-arvioijat! arvioijat)
+     ; HUOM: rivit on kommentoitu pois, koska ne ovat testatessa hyödyllinen juttu, tuotannossa tätä ei haluta!
+     ;(map-opiskelijat! opiskelijat)
+     ;(map-arvioijat! arvioijat)
      export))
