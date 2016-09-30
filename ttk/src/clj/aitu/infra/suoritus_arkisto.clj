@@ -132,14 +132,16 @@
   (sql/insert :suoritus
    (sql/values (osa->suoritus-db osa))))
 
+; TODO: refaktoroi select-fields + update -loitsut
 (defn lisaa!
   [suoritus]
   (auditlog/suoritus-operaatio! :lisays suoritus)
   (let [suorituskerta (sql/insert suorituskerta
                         (sql/values (-> suoritus
-                                      (select-keys [:jarjestamismuoto :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
+                                      (select-keys [:jarjestamismuoto :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu :paikka :jarjestelyt :koulutustoimija :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm])
                                       (update :opiskelijavuosi ->int)
                                       (update :suoritusaika_alku parse-iso-date)
+                                      (update :arviointikokouksen_pvm parse-iso-date)
                                       (update :suoritusaika_loppu parse-iso-date))))]
     (doseq [osa (:osat suoritus)]
       (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta))))
@@ -160,9 +162,10 @@
        (auditlog/suoritus-operaatio! :paivitys suoritus)
       (sql-util/update-unique suorituskerta
          (sql/set-fields (-> suoritus
-                           (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto])
+                           (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm])
                            (update :opiskelijavuosi ->int)
                            (update :suoritusaika_alku parse-iso-date)
+                           (update :arviointikokouksen_pvm parse-iso-date)
                            (update :suoritusaika_loppu parse-iso-date)))
          (sql/where {:suorituskerta_id (->int suorituskerta_id)}))
       

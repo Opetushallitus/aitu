@@ -70,6 +70,10 @@
   (when (not (nil? date))
     (new org.joda.time.LocalDate date)))
 
+(defn ^:private date->iso-date [date]
+  (let [dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
+    (.format dformat date)))   
+
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
 ; järjestetty tutkinnon nimen mukaan
@@ -186,7 +190,6 @@
                   (log/info "Lisätään uusi arvioija " nimi)
                   (swap! ui-log conj "Lisätään uusi arvioija " nimi)
                   (arvioija-arkisto/lisaa! uusi-arvioija))
-                  ; TODO: jos sama arvioija on kaksi kertaa excelissä.
                   ))))
           (swap! rivi inc))
       (catch Exception e
@@ -323,8 +326,9 @@
                              ])
                              (suoritus-arkisto/hae-kaikki-suoritukset jarjestaja))))
 
-; TODO: loputkin kentät. LocalDate vs. java.util.Date
-(defn ^:private olemassaoleva-suoritus? [suoritus-set suoritus]
+(defn ^:private olemassaoleva-suoritus?
+  "Tarkistaa onko suoritus jo annetussa joukossa. Tarkoituksella osa kentistä on vertailun ulkopuolella."
+  [suoritus-set suoritus]
   (let [m 
         (-> (select-keys suoritus [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
                                    :osaamisen_tunnustaminen :arvosanan_korotus ;järjestelyt ; paikka
@@ -337,18 +341,16 @@
   
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [sheet ui-log]
-  (let [rivi (atom 1)
+  (let [rivi (atom 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
         rivit (row-seq sheet)
         rivi1 (first rivit)
         jarjestaja (.getStringCellValue (.getCell rivi1 2)) ; tutkinnon järjestäjän y-tunnus, solu C1 
         suoritukset (nthrest rivit 4)
         suorittajamap (group-by :suorittaja_id (suorittaja-arkisto/hae-kaikki))
         osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat)) ; TODO: meneekö tämä oikein? Pitäisikö kohdistua vanhoihin joskus?
-        dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")
         suoritukset-alussa (hae-suoritukset jarjestaja)] ; Duplikaattirivejä verrataan näihin
     
     (try 
-      ; TODO: poista duplikaatit, jotta ei luoda samoja rivejä uudelleen tietokantaan jos sama tiedosto importataan kaksi kertaa
       (doseq [suoritus suoritukset]
         (let [nimisolu (.getCell suoritus 1)
               nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
@@ -364,7 +366,7 @@
                   suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9))
                   paikka (.getStringCellValue (.getCell suoritus 10))
                   jarjestelyt (.getStringCellValue (.getCell suoritus 11))
-                  arviointikokous-pvm (date->LocalDate (.getDateCellValue (.getCell suoritus 12))) ; TODO, käsittely
+                  arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
                   arvosana (int (.getNumericCellValue (.getCell suoritus 13)))
                   todistus (excel->boolean (.getStringCellValue (.getCell suoritus 14)))
                   suorituskieli (.getStringCellValue (.getCell suoritus 15))
@@ -374,11 +376,12 @@
                                      :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
                                      :tutkinto tutkintotunnus
                                      :paikka paikka
+                                     :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
                                      :jarjestelyt jarjestelyt
                                      :opiskelijavuosi 1 ; TODO
                                      :koulutustoimija jarjestaja
-                                     :suoritusaika_alku (.format dformat suoritus-alkupvm)
-                                     :suoritusaika_loppu (.format dformat suoritus-loppupvm)
+                                     :suoritusaika_alku (date->iso-date suoritus-alkupvm)
+                                     :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
                                      :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
                                      }
                   suoritus-map {:suorittaja_id suorittaja-id
@@ -387,7 +390,7 @@
                                 :osaamisala osaamisala-id
                                 :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
                                 :arvosanan_korotus korotus
-                                :osaamisen_tunnustaminen false ; TODO !!
+                                :osaamisen_tunnustaminen (not (nil? tunnustamisen-pvm)) ; TODO !! pitäisikö muuttaa tietomallia? 
                                 :kieli (parse-kieli suorituskieli)
                                 }
                   suoritus-full (merge suorituskerta-map
