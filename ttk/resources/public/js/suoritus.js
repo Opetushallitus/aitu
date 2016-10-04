@@ -213,7 +213,7 @@ angular.module('suoritus', [])
 		    arvosanan_korotus: false,
 		    kieli: 'fi',
 		    todistus: false,
-		    osaamisen_tunnustaminen: false,
+		    osaamisen_tunnustaminen: null, 
 		    osaamisala_id: null,
 		    osaamisala: null
 		  };

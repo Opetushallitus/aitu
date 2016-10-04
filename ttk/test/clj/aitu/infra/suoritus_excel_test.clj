@@ -56,7 +56,7 @@
                       :todistus false
                       :tutkinnonosa -10003
                       :arvosanan_korotus false  
-                      :osaamisen_tunnustaminen false  
+                      :osaamisen_tunnustaminen nil
                       :kieli "fi"  
                       }]
     (merge suorituskerta-map

@@ -123,7 +123,7 @@
    :tutkinnonosa (or (:tutkinnonosa osa) (:tutkinnonosa_id osa))
    :arvosana (:arvosana osa)
    :arvosanan_korotus (:arvosanan_korotus osa)
-   :osaamisen_tunnustaminen (:osaamisen_tunnustaminen osa)
+   :osaamisen_tunnustaminen (parse-iso-date (:osaamisen_tunnustaminen osa))
    :osaamisala (or (:osaamisala osa) (:osaamisala_id osa))
    :kieli (:kieli osa)
    :todistus (:todistus osa)})

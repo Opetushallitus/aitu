@@ -71,8 +71,9 @@
     (new org.joda.time.LocalDate date)))
 
 (defn ^:private date->iso-date [date]
-  (let [dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
-    (.format dformat date)))   
+  (when (not (nil? date))
+    (let [dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
+      (.format dformat date))))
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
@@ -382,7 +383,7 @@
                   tutkintotunnus (get-cell-str suoritus 4)
                   osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
                   osatunnus (parse-osatunnus (get-cell-str suoritus 6))
-                  tunnustamisen-pvm (date->LocalDate (.getDateCellValue (.getCell suoritus 7))) ; TODO: voi olla tyhjä
+                  tunnustamisen-pvm (.getDateCellValue (.getCell suoritus 7)) ; TODO: voi olla tyhjä
                   suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
                   suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9)) ; TODO: voi olla tyhjä jos osaamisen tunnustaminen
                   paikka (get-cell-str suoritus 10)
@@ -411,7 +412,7 @@
                                 :osaamisala osaamisala-id
                                 :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
                                 :arvosanan_korotus korotus
-                                :osaamisen_tunnustaminen (not (nil? tunnustamisen-pvm)) ; TODO !! pitäisikö muuttaa tietomallia? 
+                                :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 
                                 :kieli (parse-kieli suorituskieli)
                                 }
                   suoritus-full (merge suorituskerta-map
@@ -449,7 +450,7 @@
           ui-log-arvioijat (luo-arvioijat! (select-sheet "Arvioijat" excel-wb) ui-log)
           _ (log/info "Käsitellään opiskelijat")
           _ (swap! ui-log conj "Käsitellään opiskelijat..")
-          ui-log-opiskelijat (luo-opiskelijat! (select-sheet "Opiskelijat" excel-wb) ui-log)
+          ui-log-opiskelijat (luo-opiskelijat! (select-sheet "Tutkinnon suorittajat" excel-wb) ui-log)
           _ (log/info "Opiskelijat luettu")
           _ (log/info "Käsitellään suoritukset")
           _ (swap! ui-log conj (str "Opiskelijat ok. Käsitellään suoritukset.."))
@@ -470,7 +471,7 @@
   (let [export (load-workbook-from-resource "tutosat_export_base.xlsx")
         tutosat (select-sheet "Tutkinnonosat" export)
         tutkinnot (select-sheet "Tutkinnot" export)
-        opiskelijat (select-sheet "Opiskelijat" export)
+        opiskelijat (select-sheet "Tutkinnon suorittajat" export)
         arvioijat (select-sheet "Arvioijat" export)
         osaamisalat (select-sheet "Osaamisalat" export)]
      (map-tutkintorakenne! tutosat tutkinnot kieli)
