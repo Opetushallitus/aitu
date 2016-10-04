@@ -235,8 +235,7 @@
  
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-opiskelijat! [sheet ui-log]
-  (let [;ui-log (atom [])
-        rivi (atom 3) ; Käyttäjän näkökulmasta Excelin ensimmäinen tietorivi on rivi 3 
+  (let [rivi (atom 3) ; Käyttäjän näkökulmasta Excelin ensimmäinen tietorivi on rivi 3 
         rivit (row-seq sheet)
         opiskelijat (nthrest rivit 1)
         db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
@@ -246,11 +245,11 @@
               etunimi (get-cell-str opiskelija 2)
               id (get-cell-str opiskelija 3)]
           (when (and (empty? id) (not (empty? sukunimi)))
+            (log/info (str "käsitellään uusi opiskelija " etunimi " " sukunimi))
+            (swap! ui-log conj (str "Käsitellään uusi opiskelija " etunimi " " sukunimi))
             (let [oid (get-cell-str opiskelija 4)
                   hetu (get-cell-str opiskelija 5)
-                  rahoitusmuoto (get-cell-num opiskelija 6)]
-              (log/info "käsitellään uusi opiskelija " etunimi " " sukunimi)
-              (swap! ui-log conj "Käsitellään uusi opiskelija " etunimi " " sukunimi)
+                  rahoitusmuoto  (get-cell-num opiskelija 7)]
               (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
               (let [uusi-opiskelija {:etunimi etunimi
                                      :sukunimi sukunimi
@@ -258,7 +257,7 @@
                                      :rahoitusmuoto_id (int rahoitusmuoto)
                                      :oid oid}]
                 (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
-                  (swap! ui-log conj "Lisättiin opiskelija " etunimi " " sukunimi)
+                  (swap! ui-log conj (str "Lisättiin opiskelija " etunimi " " sukunimi))
                   (suorittaja-arkisto/lisaa! uusi-opiskelija)
                   ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
                                             )))))
@@ -278,14 +277,16 @@
 
 ; kuten osatunnus, mutta voi olla tyhjä. Usein onkin
 (defn parse-osaamisala [osaamisala]
-  (let [start (.lastIndexOf osaamisala "(")
-        end (.lastIndexOf osaamisala ")")]
-    (when (or (= start -1)
-              (= end -1))
-      (throw (IllegalArgumentException. (str "Virheellinen osaamisala: " osaamisala))))
-    (let [idstr (.substring osaamisala (+ 1 start) end)]
-      (if (= "" idstr) nil
-        (java.lang.Long/parseLong idstr)))))
+  (if (nil? osaamisala) 
+    nil
+    (let [start (.lastIndexOf osaamisala "(")
+          end (.lastIndexOf osaamisala ")")]
+      (when (or (= start -1)
+                (= end -1))
+        (throw (IllegalArgumentException. (str "Virheellinen osaamisala: " osaamisala))))
+      (let [idstr (.substring osaamisala (+ 1 start) end)]
+        (if (= "" idstr) nil
+          (java.lang.Long/parseLong idstr))))))
 
 (defn ^:private tarkista-suorittaja-id [cell]
   (try 
@@ -339,17 +340,34 @@
           (update :suoritusaika_loppu date->LocalDate))] 
     (contains? suoritus-set m)))
   
+(defn ^:private tulkitse-suorittajaid [id-cell
+                                       suorittaja-cell
+                                       suorittajamap
+                                       suorittajat-excelmap]
+  (let [id (tarkista-suorittaja-id id-cell)
+        id-str (.getStringCellValue suorittaja-cell)]
+    (if (= id 0)
+      ; excelissä voi olla useampi duplikaattivaihtoehto -> ongelma
+      (let [l (get suorittajat-excelmap id-str)]
+        (if (= 1 (count l))
+          (:suorittaja_id (first l))
+          (throw (new IllegalArgumentException (str "Opiskelijaa ei voitu tulkita yksikäsitteisesti: " id-str)))))
+      ; helppo case, suorittaja löytyi id:llä
+      id)))
+
+
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [sheet ui-log]
   (let [rivi (atom 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
         rivit (row-seq sheet)
         rivi1 (first rivit)
-        jarjestaja (.getStringCellValue (.getCell rivi1 2)) ; tutkinnon järjestäjän y-tunnus, solu C1 
+        jarjestaja (get-cell-str rivi1 2) ; tutkinnon järjestäjän y-tunnus, solu C1 
         suoritukset (nthrest rivit 4)
-        suorittajamap (group-by :suorittaja_id (suorittaja-arkisto/hae-kaikki))
+        opiskelijat (suorittaja-arkisto/hae-kaikki)
+        suorittajamap (group-by :suorittaja_id opiskelijat)
+        suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
         osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat)) ; TODO: meneekö tämä oikein? Pitäisikö kohdistua vanhoihin joskus?
         suoritukset-alussa (hae-suoritukset jarjestaja)] ; Duplikaattirivejä verrataan näihin
-    
     (try 
       (doseq [suoritus suoritukset]
         (let [nimisolu (.getCell suoritus 1)
@@ -357,20 +375,23 @@
           (when (not (empty? nimi))
             (log/info ".. " nimi)
             (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
-            (let [suorittaja-id (tarkista-suorittaja-id (.getCell suoritus 2))
-                  tutkintotunnus (.getStringCellValue (.getCell suoritus 4))
-                  osaamisala-id (parse-osaamisala (.getStringCellValue (.getCell suoritus 5)))
-                  osatunnus (parse-osatunnus (.getStringCellValue (.getCell suoritus 6)))
+            (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 2)
+                                                       (.getCell suoritus 1)
+                                                       suorittajamap
+                                                       suorittajat-excelmap)
+                  tutkintotunnus (get-cell-str suoritus 4)
+                  osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
+                  osatunnus (parse-osatunnus (get-cell-str suoritus 6))
                   tunnustamisen-pvm (date->LocalDate (.getDateCellValue (.getCell suoritus 7))) ; TODO: voi olla tyhjä
                   suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
-                  suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9))
-                  paikka (.getStringCellValue (.getCell suoritus 10))
-                  jarjestelyt (.getStringCellValue (.getCell suoritus 11))
+                  suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9)) ; TODO: voi olla tyhjä jos osaamisen tunnustaminen
+                  paikka (get-cell-str suoritus 10)
+                  jarjestelyt (get-cell-str suoritus 11)
                   arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
-                  arvosana (int (.getNumericCellValue (.getCell suoritus 13)))
-                  todistus (excel->boolean (.getStringCellValue (.getCell suoritus 14)))
-                  suorituskieli (.getStringCellValue (.getCell suoritus 15))
-                  korotus (excel->boolean (.getStringCellValue (.getCell suoritus 16)))
+                  arvosana (int (.getNumericCellValue (.getCell suoritus 13))) ; TODO: hyväksytty arvosana! 
+                  todistus (excel->boolean (get-cell-str suoritus 14))
+                  suorituskieli (get-cell-str suoritus 15)
+                  korotus (excel->boolean (get-cell-str suoritus 16))
                   
                   suorituskerta-map {:suorittaja suorittaja-id
                                      :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))

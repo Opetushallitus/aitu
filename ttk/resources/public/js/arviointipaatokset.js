@@ -23,11 +23,11 @@ angular.module('arviointipaatokset', [])
      	 var s = ""; // TODO: voisi tehdä siistimmin..
      	 _.forEach(r, function(v) {
             s += v + "\n"; 
-     	 });
-     	 alert('Excelin sisäänluku suoritettu, tulos: \n\n' + s);
-     	 $location.path("/arviointipaatokset");
-     	 $route.reload();
-         };
+      });
+      alert('Excelin sisäänluku suoritettu, tulos: \n\n' + s);
+      $location.path("/arviointipaatokset");
+      $route.reload();
+    };
  	  
          
     $scope.lisaaSuoritus = function() {
