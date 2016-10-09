@@ -20,15 +20,17 @@
 
 (defn hae-kaikki []
   (sql/select arvioija
-    (sql/fields :arvioija_id :nimi :rooli :nayttotutkintomestari)              
-    (sql/order :nimi)))
+    (sql/fields :arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari)              
+    (sql/order :sukunimi)
+    (sql/order :etunimi)))
   
 (defn hae-nimella
   "Hakee arvioijia nimen perusteella."
   [nimi]
   (sql/select arvioija
-    (sql/fields :arvioija_id :nimi :rooli :nayttotutkintomestari)
-    (sql/where {:nimi [sql-util/ilike (str "%" nimi "%")]})))
+    (sql/fields :arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari)
+    (sql/where (or {:sukunimi [sql-util/ilike (str "%" nimi "%")]}
+                   {:etunimi [sql-util/ilike (str "%" nimi "%")]}))))
 
 (defn lisaa!
   "lisää uuden arvioijan"

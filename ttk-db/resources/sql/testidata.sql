@@ -73,6 +73,6 @@ insert into suorittaja (suorittaja_id, etunimi, sukunimi, oid, rahoitusmuoto)
   values (-2, 'Lieto', 'Lemminkäinen', 'pfft.12345', 2);
 
   
-insert into arvioija (arvioija_id, nimi, rooli, nayttotutkintomestari)
-  values (-1, 'Väinämöinen', 'opettaja', false),
-  (-2, 'Seppo Ilmarinen', 'itsenainen', true);
+insert into arvioija (arvioija_id, etunimi, sukunimi, rooli, nayttotutkintomestari)
+  values (-1, 'Väinö', 'Väinämöinen', 'opettaja', false),
+  (-2, 'Seppo', 'Ilmarinen', 'itsenainen', true);

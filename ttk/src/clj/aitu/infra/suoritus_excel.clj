@@ -75,6 +75,16 @@
     (let [dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
       (.format dformat date))))
 
+(defn ^:private excel->arvosana [excel-arvosana]
+  (let [m {"Hyväksytty" "hyvaksytty"
+           "1"  "1"
+           "2" "2"
+           "3" "3"}
+        v (get m excel-arvosana)]
+    (when (nil? v)
+      (throw (IllegalArgumentException. (str "Virheellinen arvosana: " excel-arvosana))))
+    v))  
+
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
 ; järjestetty tutkinnon nimen mukaan
@@ -171,25 +181,63 @@
                             (set-or-create-cell! sheet (str "D" row) (bool->excel (:nayttotutkintomestari arvioija)))
                             )) arvioijat))))
 
-(defn ^:private luo-arvioijat! [sheet ui-log]
+(defn ^:private hae-arvioija-id
+  [nimi excel-arvioijat db-arvioijat]
+  (let [a (first (filter #(= nimi  (str (:etunimi %) " " (:sukunimi %))) excel-arvioijat))
+        a-db (first (filter #(= a (select-keys % [:etunimi :sukunimi :nayttotutkintomestari :rooli])) db-arvioijat))]
+    (:arvioija_id a-db))) 
+    
+(defn ^:private arvioijatiedot 
+  "Tulkitsee arvioijalistan Excelistä ja palauttaa joukkona arvioijat"
+  [sheet ui-log]
   (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
         rivit (row-seq sheet)
         arvioijat (nthrest rivit 1)
-        db-arvioijat (set (map #(select-keys % [:nimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
+        excel-arvioijat (atom #{})]
     (try 
       (doseq [arvioija arvioijat]
-        (let [nimi (get-cell-str arvioija 1)]
-          (when (not (empty? nimi))
+        (let [sukunimi (get-cell-str arvioija 1)
+              etunimi (get-cell-str arvioija 0)]
+          (when (not (empty? sukunimi))
             (let [rooli (excel->edustus (get-cell-str arvioija 2))
                   ntm (excel->boolean (get-cell-str arvioija 3))
-                  uusi-arvioija {:nimi nimi 
+                  uusi-arvioija {:etunimi etunimi
+                                 :sukunimi sukunimi
+                                 :rooli rooli
+                                 :nayttotutkintomestari ntm}]
+              (swap! excel-arvioijat #(conj % uusi-arvioija))
+              )))
+        (swap! rivi inc))
+      (catch Exception e
+        (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
+        (throw e)
+        ))
+    @excel-arvioijat))
+
+; TODO: refaktoroi
+(defn ^:private luo-arvioijat! 
+  "Luo tietokantaan ne arvioijat excelistä, jotka ovat uusia."
+  [sheet ui-log]
+  (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
+        rivit (row-seq sheet)
+        arvioijat (nthrest rivit 1)
+        db-arvioijat (set (map #(select-keys % [:etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
+    (try 
+      (doseq [arvioija arvioijat]
+        (let [sukunimi (get-cell-str arvioija 1)
+              etunimi (get-cell-str arvioija 0)]
+          (when (not (empty? sukunimi))
+            (let [rooli (excel->edustus (get-cell-str arvioija 2))
+                  ntm (excel->boolean (get-cell-str arvioija 3))
+                  uusi-arvioija {:etunimi etunimi
+                                 :sukunimi sukunimi
                                  :rooli rooli
                                  :nayttotutkintomestari ntm}]
               (if (contains? db-arvioijat uusi-arvioija)
-                (swap! ui-log conj (str "Arvioija on jo olemassa tietokannassa (" nimi ")"))
+                (swap! ui-log conj (str "Arvioija on jo olemassa tietokannassa (" sukunimi "," etunimi ")"))
                 (do
-                  (log/info "Lisätään uusi arvioija " nimi)
-                  (swap! ui-log conj "Lisätään uusi arvioija " nimi)
+                  (log/info (str "Lisätään uusi arvioija ("   sukunimi "," etunimi ")"))
+                  (swap! ui-log conj (str "Lisätään uusi arvioija ("   sukunimi "," etunimi ")"))
                   (arvioija-arkisto/lisaa! uusi-arvioija))
                   ))))
           (swap! rivi inc))
@@ -358,7 +406,7 @@
 
 
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
-(defn ^:private luo-suoritukset! [sheet ui-log]
+(defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log]
   (let [rivi (atom 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
         rivit (row-seq sheet)
         rivi1 (first rivit)
@@ -368,8 +416,9 @@
         suorittajamap (group-by :suorittaja_id opiskelijat)
         suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
         osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat)) ; TODO: meneekö tämä oikein? Pitäisikö kohdistua vanhoihin joskus?
-        suoritukset-alussa (hae-suoritukset jarjestaja)] ; Duplikaattirivejä verrataan näihin
-    (try 
+        suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
+        db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
+    (try
       (doseq [suoritus suoritukset]
         (let [nimisolu (.getCell suoritus 1)
               nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
@@ -389,10 +438,18 @@
                   paikka (get-cell-str suoritus 10)
                   jarjestelyt (get-cell-str suoritus 11)
                   arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
-                  arvosana (int (.getNumericCellValue (.getCell suoritus 13))) ; TODO: hyväksytty arvosana! 
+                  arvosana (excel->arvosana (get-cell-str suoritus 13))
                   todistus (excel->boolean (get-cell-str suoritus 14))
                   suorituskieli (get-cell-str suoritus 15)
                   korotus (excel->boolean (get-cell-str suoritus 16))
+                  
+                  arvioija1 (get-cell-str suoritus 18)
+                  arvioija2 (get-cell-str suoritus 19)
+                  arvioija3 (get-cell-str suoritus 20)
+                  _ (log/info ".." arvioija1)
+                  a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
+                  a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
+                  a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
                   
                   suorituskerta-map {:suorittaja suorittaja-id
                                      :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
@@ -405,6 +462,7 @@
                                      :suoritusaika_alku (date->iso-date suoritus-alkupvm)
                                      :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
                                      :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
+                                     :arvioijat (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3})                               
                                      }
                   suoritus-map {:suorittaja_id suorittaja-id
                                 :arvosana arvosana
@@ -417,7 +475,9 @@
                                 }
                   suoritus-full (merge suorituskerta-map
                                        {:osat [suoritus-map]})]
-              (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map {:arvosana (str arvosana)}))
+              (log/info "suoritus.. " suorituskerta-map)
+              
+              (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map))
                 (do
                  (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
                  (log/info "ohitetaan duplikaatti suoritus"))
@@ -425,7 +485,9 @@
                   (log/info "Lisätään suorituskerta .." suorituskerta-map)
                   (log/info "Lisätään suoritus .." suoritus-map)
                   (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-                  (suoritus-arkisto/lisaa! suoritus-full)))
+                  (suoritus-arkisto/lisaa! suoritus-full)
+
+                  ))
         )))
         (swap! rivi inc))
       (catch Exception e
@@ -447,6 +509,7 @@
       (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)
           _ (log/info "Käsitellään arvioijat")
           _ (swap! ui-log conj "Käsitellään arvioijat..")
+          arvioijatiedot (arvioijatiedot (select-sheet "Arvioijat" excel-wb) ui-log)          
           ui-log-arvioijat (luo-arvioijat! (select-sheet "Arvioijat" excel-wb) ui-log)
           _ (log/info "Käsitellään opiskelijat")
           _ (swap! ui-log conj "Käsitellään opiskelijat..")
@@ -454,7 +517,7 @@
           _ (log/info "Opiskelijat luettu")
           _ (log/info "Käsitellään suoritukset")
           _ (swap! ui-log conj (str "Opiskelijat ok. Käsitellään suoritukset.."))
-          ui-log-suoritukset (luo-suoritukset! suoritukset-sheet ui-log)
+          ui-log-suoritukset (luo-suoritukset! arvioijatiedot suoritukset-sheet ui-log)
           _ (log/info "Suoritukset käsitelty")
           _ (swap! ui-log conj (str "Suoritukset ok."))]
         @ui-log)

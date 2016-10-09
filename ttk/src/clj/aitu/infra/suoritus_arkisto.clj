@@ -106,7 +106,7 @@
 
 (defn hae-arvioijat [suorituskerta-id]
   (sql/select :arvioija
-    (sql/fields :nimi :rooli :nayttotutkintomestari :arvioija.arvioija_id)
+    (sql/fields :etunimi :sukunimi :rooli :nayttotutkintomestari :arvioija.arvioija_id)
     (sql/join :suorituskerta_arvioija (= :suorituskerta_arvioija.arvioija_id :arvioija_id))
     (sql/where {:suorituskerta_arvioija.suorituskerta_id suorituskerta-id})))
                

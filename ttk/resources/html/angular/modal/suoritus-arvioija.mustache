@@ -9,15 +9,19 @@
 <div class="modal-body">
   <fieldset>
     <label>[[arvioija]]</label>
-    <select ng-options="arvioija.arvioija_id as arvioija.nimi + ' ' + arvioija.rooli for arvioija in arvioijat track by arvioija.arvioija_id" ng-model="form.arvioija_id"></select>
+    <select ng-options="arvioija.arvioija_id as arvioija.etunimi + ' ' + arvioija.sukunimi + ' ' + arvioija.rooli for arvioija in arvioijat track by arvioija.arvioija_id" ng-model="form.arvioija_id"></select>
   </fieldset>
 </div>
 
 <div>
   <fieldset>
-    <label>[[arvioija_nimi]]</label>
-    <input id="nimiInput" type="text" ng-model="form.nimi">
-  </fieldset>  
+    <label>[[arvioija_etunimi]]</label>
+    <input id="etunimiInput" type="text" ng-model="form.etunimi">
+  </fieldset>
+    <fieldset>
+    <label>[[arvioija_sukunimi]]</label>
+    <input id="sukunimiInput" type="text" ng-model="form.sukunimi">
+  </fieldset>    
   <fieldset>
     <label>[[nayttotutkintomestari]]</label>
     <input type="checkbox" ng-model="form.nayttotutkintomestari">

@@ -1,7 +1,7 @@
---alter table arvioija
---  drop column nimi,
---  add column etunimi varchar(40) not null,
---  add column sukunimi varchar(40) not null;
+alter table arvioija
+  drop column nimi,
+  add column etunimi varchar(40) not null,
+  add column sukunimi varchar(40) not null;
   
 alter table suoritus
   drop column osaamisen_tunnustaminen,

@@ -14,8 +14,8 @@
     (run-with-db (constantly true)
       #(let [s (peridot/session crout)]
          (are [hakuehdot result] (= result (body-json (:response (mock-request s "/api/arvioija/haku" :get hakuehdot))))
-           {:nimi "Ilmarinen"} '({:arvioija_id -2 :nimi "Seppo Ilmarinen" :rooli "itsenainen" :nayttotutkintomestari true})
+           {:nimi "Ilmarinen"} '({:arvioija_id -2 :etunimi "Seppo" :sukunimi "Ilmarinen" :rooli "itsenainen" :nayttotutkintomestari true})
            {:nimi "Iki-turso"} '()
-           {:nimi "äinä"} '({:arvioija_id -1 :nimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false})
+           {:nimi "äinä"} '({:arvioija_id -1 :etunimi "Väinö" :sukunimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false})
            )))))
 
