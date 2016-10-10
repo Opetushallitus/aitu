@@ -26,7 +26,7 @@
             "arvosanan_korotus" true
             "kieli" "fi"
             "todistus" true
-            "osaamisen_tunnustaminen" false
+            "osaamisen_tunnustaminen" nil
             "osaamisala_id" -20002
             "tutkinnonosa_id" -10002}]
    "suorittaja" -1
@@ -43,7 +43,7 @@
    "tutkinto" "327128"})
 
 (def suoritus-diff 
-  {"arvioijat" [{:arvioija_id -2 :nimi "Seppo Ilmarinen" :rooli "itsenainen" :nayttotutkintomestari true}]
+  {"arvioijat" [{:arvioija_id -2 :etunimi "Seppo" :sukunimi "Ilmarinen" :rooli "itsenainen" :nayttotutkintomestari true}]
    "rahoitusmuoto" 2})
  
 (def suoritus-result
@@ -51,10 +51,10 @@
    :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", 
    :suoritusaika_alku "2016-09-01"
    :suoritusaika_loppu "2016-09-01"   
-   :osat [{:osaamisen_tunnustaminen false, :arvosanan_korotus true, :osatunnus "990001", 
+   :osat [{:osaamisen_tunnustaminen nil, :arvosanan_korotus true, :osatunnus "990001", 
            :todistus true, :osaamisala -20002, :kieli "fi", :nimi "Käsityöyrityksen johtaminen", 
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
-   :arvioijat [{:arvioija_id -1 :nimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false}]
+   :arvioijat [{:arvioija_id -1 :etunimi "Väinö" :sukunimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false}]
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
    :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
    :koulutustoimija "0208430-8", :suorittaja_sukunimi "Opiskelija", 
