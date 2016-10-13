@@ -79,11 +79,24 @@
   (let [m {"Hyväksytty" "hyvaksytty"
            "1"  "1"
            "2" "2"
-           "3" "3"}
+           "3" "3"
+           "1.0" "1"
+           "2.0" "2"
+           "3.0" "3"}
         v (get m excel-arvosana)]
     (when (nil? v)
       (throw (IllegalArgumentException. (str "Virheellinen arvosana: " excel-arvosana))))
-    v))  
+    v))
+
+(defn ^:private get-excel-arvosana 
+  "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"
+  [rowref col]
+  (let [cell (.getCell rowref col)]
+    (when (not (nil? cell))
+      (if (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
+        (excel->arvosana (str (.getNumericCellValue cell)))
+        (excel->arvosana (.getStringCellValue cell))))))
+                 
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
@@ -410,7 +423,7 @@
   (let [rivi (atom 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
         rivit (row-seq sheet)
         rivi1 (first rivit)
-        jarjestaja (get-cell-str rivi1 2) ; tutkinnon järjestäjän y-tunnus, solu C1 
+        jarjestaja (get-cell-str rivi1 3) ; tutkinnon järjestäjän y-tunnus, solu D1 
         suoritukset (nthrest rivit 4)
         opiskelijat (suorittaja-arkisto/hae-kaikki)
         suorittajamap (group-by :suorittaja_id opiskelijat)
@@ -438,7 +451,7 @@
                   paikka (get-cell-str suoritus 10)
                   jarjestelyt (get-cell-str suoritus 11)
                   arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
-                  arvosana (excel->arvosana (get-cell-str suoritus 13))
+                  arvosana (get-excel-arvosana suoritus 13)
                   todistus (excel->boolean (get-cell-str suoritus 14))
                   suorituskieli (get-cell-str suoritus 15)
                   korotus (excel->boolean (get-cell-str suoritus 16))
