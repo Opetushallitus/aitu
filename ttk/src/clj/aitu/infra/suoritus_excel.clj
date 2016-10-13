@@ -417,10 +417,10 @@
       ; helppo case, suorittaja löytyi id:llä
       id)))
 
-
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log]
   (let [rivi (atom 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
+        solu (atom "") ; Solureferenssi virheilmoituksiin, jotta käyttäjä saa selvemmin tiedon siitä mikä on vialla.
         rivit (row-seq sheet)
         rivi1 (first rivit)
         jarjestaja (get-cell-str rivi1 3) ; tutkinnon järjestäjän y-tunnus, solu D1 
@@ -442,22 +442,38 @@
                                                        (.getCell suoritus 1)
                                                        suorittajamap
                                                        suorittajat-excelmap)
+                  _ (reset! solu "tutkintotunnus")
                   tutkintotunnus (get-cell-str suoritus 4)
+                  _ (reset! solu "osaamisala") 
                   osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
+                  _ (reset! solu "tutkinnon osa")
                   osatunnus (parse-osatunnus (get-cell-str suoritus 6))
+                  _ (reset! solu "tunnustamisen pvm")
                   tunnustamisen-pvm (.getDateCellValue (.getCell suoritus 7)) ; TODO: voi olla tyhjä
+                  _ (reset! solu "tutkintotilaisuus, alkupvm")
                   suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
+                  _ (reset! solu "tutkintotilaisuus, loppupvm")
                   suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9)) ; TODO: voi olla tyhjä jos osaamisen tunnustaminen
+                  _ (reset! solu "paikka")
                   paikka (get-cell-str suoritus 10)
+                  _ (reset! solu "järjestelyt/työtehtävät")
                   jarjestelyt (get-cell-str suoritus 11)
+                  _ (reset! solu "arviointikokous pvm")
                   arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
+                  _ (reset! solu "arvosana")
                   arvosana (get-excel-arvosana suoritus 13)
+                  _ (reset! solu "todistus")
                   todistus (excel->boolean (get-cell-str suoritus 14))
+                  _ (reset! solu "suorituskieli")
                   suorituskieli (get-cell-str suoritus 15)
+                  _ (reset! solu "arvosanan korotus")
                   korotus (excel->boolean (get-cell-str suoritus 16))
                   
+                  _ (reset! solu "arvioija1")
                   arvioija1 (get-cell-str suoritus 18)
+                  _ (reset! solu "arvioija2")
                   arvioija2 (get-cell-str suoritus 19)
+                  _ (reset! solu "arvioija3")
                   arvioija3 (get-cell-str suoritus 20)
                   _ (log/info ".." arvioija1)
                   a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
@@ -504,7 +520,7 @@
         )))
         (swap! rivi inc))
       (catch Exception e
-        (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tarkista solujen sisältö: " e))
+        (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))
         (throw e)
         )
       )))
