@@ -23,6 +23,13 @@
              [aitu.auditlog :as auditlog]
              [dk.ative.docjure.spreadsheet :refer :all]))
 
+(defn ^:private parse-kieli [kieli]
+  (get {"Suomi" "fi"
+        "Ruotsi" "sv"
+        "Saame" "se"
+        "Englanti" "en"
+        } kieli))
+
 (defn ^:private get-cell-str [rowref col]
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell)) (.getStringCellValue cell))))
@@ -369,11 +376,7 @@
                             :exception t#}))))
        (recur (inc i#)
               items#))))
-
-(defn ^:private parse-kieli [kieli]
-  (get {"Suomi" "fi"
-        "Ruotsi" "sv"
-        "Saame" "se"} kieli))        
+    
 
 (defn ^:private hae-suoritukset [jarjestaja]
   (set (map #(select-keys % [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija 
