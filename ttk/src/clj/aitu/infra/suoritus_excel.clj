@@ -165,7 +165,7 @@
             osaamisalat (sort-by nimi-fn (:osaamisala tutkinto))
             tutkintoversio (:tutkintoversio_id tutkinto)
             row (+ 2 i)]
-        (set-or-create-cell! oalat-sheet (str "B" row) tutkintoversio)
+        (set-or-create-cell! oalat-sheet (str "A" row) tutkintoversio)
         (doall (map-indexed (fn [ind osaamisala]
            (let [colstr (nth osacolumns ind)]
              (set-or-create-cell! oalat-sheet (str colstr row) (str (nimi-fn osaamisala) " (" (:osaamisala_id osaamisala) ")"))))
