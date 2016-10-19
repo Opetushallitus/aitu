@@ -422,111 +422,115 @@
 
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log]
-  (let [rivi (atom 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
-        solu (atom "") ; Solureferenssi virheilmoituksiin, jotta käyttäjä saa selvemmin tiedon siitä mikä on vialla.
-        rivit (row-seq sheet)
-        rivi1 (first rivit)
-        jarjestaja (get-cell-str rivi1 3) ; tutkinnon järjestäjän y-tunnus, solu D1 
-        suoritukset (nthrest rivit 4)
-        opiskelijat (suorittaja-arkisto/hae-kaikki)
-        suorittajamap (group-by :suorittaja_id opiskelijat)
-        suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
-        osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat)) ; TODO: meneekö tämä oikein? Pitäisikö kohdistua vanhoihin joskus?
-        suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
-        db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
+  (let [rivi (atom 1) ; Y-tunnus on rivillä 1.
+        solu (atom "Tutkinnon järjestäjän y-tunnus") ; Solureferenssi virheilmoituksiin, jotta käyttäjä saa selvemmin tiedon siitä mikä on vialla.
+        ]
     (try
-      (doseq [suoritus suoritukset]
-        (let [nimisolu (.getCell suoritus 1)
-              nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
-          (when (not (empty? nimi))
-            (log/info ".. " nimi)
-            (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
-            (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 2)
-                                                       (.getCell suoritus 1)
-                                                       suorittajamap
-                                                       suorittajat-excelmap)
-                  _ (reset! solu "tutkintotunnus")
-                  tutkintotunnus (get-cell-str suoritus 4)
-                  _ (reset! solu "osaamisala") 
-                  osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
-                  _ (reset! solu "tutkinnon osa")
-                  osatunnus (parse-osatunnus (get-cell-str suoritus 6))
-                  _ (reset! solu "tunnustamisen pvm")
-                  tunnustamisen-pvm (.getDateCellValue (.getCell suoritus 7)) ; TODO: voi olla tyhjä
-                  _ (reset! solu "tutkintotilaisuus, alkupvm")
-                  suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
-                  _ (reset! solu "tutkintotilaisuus, loppupvm")
-                  suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9)) ; TODO: voi olla tyhjä jos osaamisen tunnustaminen
-                  _ (reset! solu "paikka")
-                  paikka (get-cell-str suoritus 10)
-                  _ (reset! solu "järjestelyt/työtehtävät")
-                  jarjestelyt (get-cell-str suoritus 11)
-                  _ (reset! solu "arviointikokous pvm")
-                  arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
-                  _ (reset! solu "arvosana")
-                  arvosana (get-excel-arvosana suoritus 13)
-                  _ (reset! solu "todistus")
-                  todistus (excel->boolean (get-cell-str suoritus 14))
-                  _ (reset! solu "suorituskieli")
-                  suorituskieli (get-cell-str suoritus 15)
-                  _ (reset! solu "arvosanan korotus")
-                  korotus (excel->boolean (get-cell-str suoritus 16))
+      (let [rivit (row-seq sheet)
+             rivi1 (first rivit)
+             jarjestaja (get-cell-str rivi1 3) ; tutkinnon järjestäjän y-tunnus, solu D1 
+             suoritukset (nthrest rivit 4)
+             opiskelijat (suorittaja-arkisto/hae-kaikki)
+             suorittajamap (group-by :suorittaja_id opiskelijat)
+             suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
+             osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat)) ; TODO: meneekö tämä oikein? Pitäisikö kohdistua vanhoihin joskus?
+             suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
+             db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
+             _ (reset! rivi 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
+             ]
+        (doseq [suoritus suoritukset]
+          (reset! solu "suorittajan nimi")
+          (let [nimisolu (.getCell suoritus 1)
+                nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
+            (when (not (empty? nimi))
+              (log/info ".. " nimi)
+              (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
+              (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 2)
+                                                         (.getCell suoritus 1)
+                                                         suorittajamap
+                                                         suorittajat-excelmap)
+                    _ (reset! solu "tutkintotunnus")
+                    tutkintotunnus (get-cell-str suoritus 4)
+                    _ (reset! solu "osaamisala") 
+                    osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
+                    _ (reset! solu "tutkinnon osa")
+                    osatunnus (parse-osatunnus (get-cell-str suoritus 6))
+                    _ (reset! solu "tunnustamisen pvm")
+                    tunnustamisen-pvm (.getDateCellValue (.getCell suoritus 7)) ; TODO: voi olla tyhjä
+                    _ (reset! solu "tutkintotilaisuus, alkupvm")
+                    suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
+                    _ (reset! solu "tutkintotilaisuus, loppupvm")
+                    suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9)) ; TODO: voi olla tyhjä jos osaamisen tunnustaminen
+                    _ (reset! solu "paikka")
+                    paikka (get-cell-str suoritus 10)
+                    _ (reset! solu "järjestelyt/työtehtävät")
+                    jarjestelyt (get-cell-str suoritus 11)
+                    _ (reset! solu "arviointikokous pvm")
+                    arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
+                    _ (reset! solu "arvosana")
+                    arvosana (get-excel-arvosana suoritus 13)
+                    _ (reset! solu "todistus")
+                    todistus (excel->boolean (get-cell-str suoritus 14))
+                    _ (reset! solu "suorituskieli")
+                    suorituskieli (get-cell-str suoritus 15)
+                    _ (reset! solu "arvosanan korotus")
+                    korotus (excel->boolean (get-cell-str suoritus 16))
                   
-                  _ (reset! solu "arvioija1")
-                  arvioija1 (get-cell-str suoritus 18)
-                  _ (reset! solu "arvioija2")
-                  arvioija2 (get-cell-str suoritus 19)
-                  _ (reset! solu "arvioija3")
-                  arvioija3 (get-cell-str suoritus 20)
-                  _ (log/info ".." arvioija1)
-                  a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
-                  a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
-                  a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
+                    _ (reset! solu "arvioija1")
+                    arvioija1 (get-cell-str suoritus 18)
+                    _ (reset! solu "arvioija2")
+                    arvioija2 (get-cell-str suoritus 19)
+                    _ (reset! solu "arvioija3")
+                    arvioija3 (get-cell-str suoritus 20)
+                    _ (log/info ".." arvioija1)
+                    a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
+                    a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
+                    a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
                   
-                  suorituskerta-map {:suorittaja suorittaja-id
-                                     :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
-                                     :tutkinto tutkintotunnus
-                                     :paikka paikka
-                                     :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
-                                     :jarjestelyt jarjestelyt
-                                     :opiskelijavuosi 1 ; TODO
-                                     :koulutustoimija jarjestaja
-                                     :suoritusaika_alku (date->iso-date suoritus-alkupvm)
-                                     :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
-                                     :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
-                                     :arvioijat (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3})                               
-                                     }
-                  suoritus-map {:suorittaja_id suorittaja-id
-                                :arvosana arvosana
-                                :todistus todistus
-                                :osaamisala osaamisala-id
-                                :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
-                                :arvosanan_korotus korotus
-                                :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 
-                                :kieli (parse-kieli suorituskieli)
-                                }
-                  suoritus-full (merge suorituskerta-map
-                                       {:osat [suoritus-map]})]
-              (log/info "suoritus.. " suorituskerta-map)
+                    suorituskerta-map {:suorittaja suorittaja-id
+                                       :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
+                                       :tutkinto tutkintotunnus
+                                       :paikka paikka
+                                       :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
+                                       :jarjestelyt jarjestelyt
+                                       :opiskelijavuosi 1 ; TODO
+                                       :koulutustoimija jarjestaja
+                                       :suoritusaika_alku (date->iso-date suoritus-alkupvm)
+                                       :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
+                                       :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
+                                       :arvioijat (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3})                               
+                                       }
+                    suoritus-map {:suorittaja_id suorittaja-id
+                                  :arvosana arvosana
+                                  :todistus todistus
+                                  :osaamisala osaamisala-id
+                                  :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
+                                  :arvosanan_korotus korotus
+                                  :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 
+                                  :kieli (parse-kieli suorituskieli)
+                                  }
+                    suoritus-full (merge suorituskerta-map
+                                         {:osat [suoritus-map]})]
+                (log/info "suoritus.. " suorituskerta-map)
               
-              (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map))
-                (do
-                 (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-                 (log/info "ohitetaan duplikaatti suoritus"))
-                (do
-                  (log/info "Lisätään suorituskerta .." suorituskerta-map)
-                  (log/info "Lisätään suoritus .." suoritus-map)
-                  (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-                  (suoritus-arkisto/lisaa! suoritus-full)
+                (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map))
+                  (do
+                   (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                   (log/info "ohitetaan duplikaatti suoritus"))
+                  (do
+                    (log/info "Lisätään suorituskerta .." suorituskerta-map)
+                    (log/info "Lisätään suoritus .." suoritus-map)
+                    (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                    (suoritus-arkisto/lisaa! suoritus-full)
 
-                  ))
-        )))
-        (swap! rivi inc))
+                    ))
+          )))
+          (swap! rivi inc))
+        )
       (catch Exception e
         (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))
         (throw e)
-        )
-      )))
+        ))))
 
 ;(user/with-testikayttaja 
 ;     (let [wb (load-workbook "tutosat_taydennetty2.xlsx")]
@@ -555,6 +559,7 @@
         @ui-log)
       (catch Exception e
         (log/info "Poikkeus! " e)
+        (swap! ui-log conj (str "Odottamaton virhetilanne: " e))
         @ui-log))))
 
 ; TODO: 
