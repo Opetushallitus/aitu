@@ -1,3 +1,11 @@
+create view toimikuntien_tutkinnot as 
+   select tt.toimikunta, tt.tutkintotunnus, t.nimi_fi, t.nimi_sv, t.kielisyys, t.toimikausi_alku, t.toimikausi_loppu 
+   from toimikunta_ja_tutkinto tt
+   inner join tutkintotoimikunta t on tt.toimikunta = t.tkunta
+   where t.toimikausi_loppu >= now();
+
+comment on view toimikuntien_tutkinnot is 'Toimikuntien vastuulla olevat tutkinnot tällä hetkellä.';
+
 alter table suorituskerta
   add column toimikunta character varying(9) references tutkintotoimikunta(tkunta),
   add column tutkintoversio_id int references tutkintoversio(tutkintoversio_id);

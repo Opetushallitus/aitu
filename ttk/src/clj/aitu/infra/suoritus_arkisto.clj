@@ -130,7 +130,8 @@
 
 (defn kerta->suorituskerta-db [kerta]
   (-> kerta
-    (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm])
+    (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi 
+                  :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta])
     (update :opiskelijavuosi ->int)
     (update :suoritusaika_alku parse-iso-date)
     (update :arviointikokouksen_pvm parse-iso-date)
@@ -147,14 +148,26 @@
                  :tutkintoversio_id tutkintoversio
                  :suorittaja_id suorittaja})))
 
+(defn hae-vastuutoimikunta 
+  "Palauttaa nil jos yksikäsitteistä vastuutoimikuntaa ei löydy tutkinnon ja kielisyyden perusteella."
+  [tutkintotunnus kieli]
+  (let [toimikunnat (sql/select :toimikuntien_tutkinnot
+                      (sql/where (= :tutkintotunnus tutkintotunnus)))]
+    (if (= 1 (count toimikunnat)) 
+      (first toimikunnat)
+      ; kielisyys
+      (let [kielirajatut (filter #(= (:kielisyys %) kieli) toimikunnat)]
+        (when (= 1 (count kielirajatut)) (first kielirajatut))))))
+
+
 (defn lisaa!
   [suoritus]
   (auditlog/suoritus-operaatio! :lisays suoritus)
-  (let [suorituskerta (sql/insert suorituskerta (sql/values (kerta->suorituskerta-db  suoritus)))]
+  (let [suorituskerta (sql/insert suorituskerta (sql/values (kerta->suorituskerta-db suoritus)))]
     (doseq [osa (:osat suoritus)]
       (let [suor (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta)))]
         (when (true? (:kokotutkinto osa))
-          (lisaa-koko-tutkinnon-suoritus! (:suoritus_id suor) (:tutkintoversio suoritus) (:suorittaja suorituskerta)))
+          (lisaa-koko-tutkinnon-suoritus! (:suoritus_id suor) (:tutkintoversio_id suoritus) (:suorittaja suorituskerta)))
       ))
       
     (doseq [arvioija (:arvioijat suoritus)]

@@ -499,11 +499,13 @@
                     a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
                     a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
                   
+                    vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
                     suorituskerta-map {:suorittaja suorittaja-id
                                        :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
                                        :tutkinto tutkintotunnus
-                                       :tutkintoversio tutkintoversio
+                                       :tutkintoversio_id tutkintoversio
                                        :paikka paikka
+                                       :toimikunta vastuutoimikunta
                                        :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
                                        :jarjestelyt jarjestelyt
                                        :opiskelijavuosi 1 ; TODO
