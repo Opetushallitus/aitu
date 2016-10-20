@@ -104,6 +104,15 @@
         (excel->arvosana (str (.getNumericCellValue cell)))
         (excel->arvosana (.getStringCellValue cell))))))
                  
+(defn ^:private get-excel-tutperuste
+  "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"
+  [rowref col]
+  (let [cell (.getCell rowref col)]
+    (when (not (nil? cell))
+      (if (or (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
+              (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_FORMULA))
+        (int (.getNumericCellValue cell))
+        (Integer/parseInt (.getStringCellValue cell))))))
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
@@ -451,6 +460,7 @@
                                                          suorittajat-excelmap)
                     _ (reset! solu "tutkintotunnus")
                     tutkintotunnus (get-cell-str suoritus 4)
+                    tutkintoversio (get-excel-tutperuste suoritus 23)
                     _ (reset! solu "osaamisala") 
                     osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
                     _ (reset! solu "tutkinnon osa")
@@ -470,7 +480,9 @@
                     _ (reset! solu "arvosana")
                     arvosana (get-excel-arvosana suoritus 13)
                     _ (reset! solu "todistus")
-                    todistus (excel->boolean (get-cell-str suoritus 14))
+                    todistus-valinta (get-cell-str suoritus 14)
+                    koko-tutkinto (= "Koko tutkinto" todistus-valinta)
+                    todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
                     _ (reset! solu "suorituskieli")
                     suorituskieli (get-cell-str suoritus 15)
                     _ (reset! solu "arvosanan korotus")
@@ -482,7 +494,7 @@
                     arvioija2 (get-cell-str suoritus 19)
                     _ (reset! solu "arvioija3")
                     arvioija3 (get-cell-str suoritus 20)
-                    _ (log/info ".." arvioija1)
+                    
                     a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
                     a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
                     a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
@@ -490,6 +502,7 @@
                     suorituskerta-map {:suorittaja suorittaja-id
                                        :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
                                        :tutkinto tutkintotunnus
+                                       :tutkintoversio tutkintoversio
                                        :paikka paikka
                                        :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
                                        :jarjestelyt jarjestelyt
@@ -504,6 +517,7 @@
                                   :arvosana arvosana
                                   :todistus todistus
                                   :osaamisala osaamisala-id
+                                  :kokotutkinto koko-tutkinto
                                   :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
                                   :arvosanan_korotus korotus
                                   :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 

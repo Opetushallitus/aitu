@@ -140,12 +140,23 @@
   (sql/insert :suoritus
    (sql/values (osa->suoritus-db osa))))
 
+(defn lisaa-koko-tutkinnon-suoritus! [suoritusid tutkintoversio suorittaja]
+  (auditlog/suoritus-operaatio! :lisays {:kokotutkinto tutkintoversio :suorittaja suorittaja}) 
+  (sql/insert :tutkintosuoritus
+    (sql/values {:suoritus_id  suoritusid
+                 :tutkintoversio_id tutkintoversio
+                 :suorittaja_id suorittaja})))
+
 (defn lisaa!
   [suoritus]
   (auditlog/suoritus-operaatio! :lisays suoritus)
   (let [suorituskerta (sql/insert suorituskerta (sql/values (kerta->suorituskerta-db  suoritus)))]
     (doseq [osa (:osat suoritus)]
-      (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta))))
+      (let [suor (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta)))]
+        (when (true? (:kokotutkinto osa))
+          (lisaa-koko-tutkinnon-suoritus! (:suoritus_id suor) (:tutkintoversio suoritus) (:suorittaja suorituskerta)))
+      ))
+      
     (doseq [arvioija (:arvioijat suoritus)]
       (sql/insert :suorituskerta_arvioija
         (sql/values {:suorituskerta_id (:suorituskerta_id suorituskerta)
