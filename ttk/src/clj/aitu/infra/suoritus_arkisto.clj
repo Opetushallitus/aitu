@@ -49,7 +49,7 @@
         (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
         (sql/fields :suoritus.tutkinnonosa :suoritus.arvosanan_korotus :suoritus.osaamisen_tunnustaminen :suoritus.kieli :suoritus.todistus :suoritus.osaamisala :suoritus.arvosana
                     :suorituskerta.suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :paikka :jarjestelyt :jarjestamismuoto :valmistava_koulutus
-                    :suorituskerta.suoritusaika_alku :suorituskerta.suoritusaika_loppu
+                    :suorituskerta.suoritusaika_alku :suorituskerta.suoritusaika_loppu :suorituskerta.arviointikokouksen_pvm 
                   ))))
 
 (defn hae-kaikki-suoritukset [koulutustoimija]
@@ -76,7 +76,7 @@
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
-                :suoritusaika_alku :suoritusaika_loppu
+                :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
                 :jarjestamismuoto :opiskelijavuosi
                 :valmistava_koulutus :paikka :jarjestelyt
                 [:suorittaja.etunimi :suorittaja_etunimi]
