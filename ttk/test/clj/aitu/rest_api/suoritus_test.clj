@@ -13,6 +13,7 @@
   :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :koulutustoimija "0208430-8",
   :arviointikokouksen_pvm "2016-09-02"
   :suoritusaika_alku "2016-09-01"
+  :toimikunta "Lynx lynx"
   :suoritusaika_loppu "2016-09-01"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
   :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.",
@@ -37,6 +38,7 @@
    "suoritusaika_alku"  "01.09.2016"
    "suoritusaika_loppu"  "01.09.2016"
    :arviointikokouksen_pvm "02.09.2016"
+   :toimikunta "Lynx lynx"
    :arvioijat [{:arvioija_id -1}]
    "koulutustoimija" "0208430-8"
    "valmistava_koulutus" true
@@ -60,6 +62,7 @@
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
    :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
    :koulutustoimija "0208430-8", :arviointikokouksen_pvm "2016-09-02"
+   :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
    :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
    :jarjestamismuoto "oppisopimuskoulutus", 

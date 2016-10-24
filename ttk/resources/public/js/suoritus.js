@@ -19,8 +19,9 @@ angular.module('suoritus', [])
     $routeProvider.when('/muokkaa-suoritus/:suoritusid', {controller:'SuoritusController', templateUrl:'template/suoritus'});
   }])
 
-  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Rahoitusmuoto', 'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
-   function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
+  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Toimikunta', 'Rahoitusmuoto', 
+                                     'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
+   function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Toimikunta, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
 	  
     $scope.vuodet = _.range(1, 21);
 
@@ -47,6 +48,11 @@ angular.module('suoritus', [])
     Koulutustoimija.haeKaikkiNimet().then(function(koulutustoimijat) {
       $scope.koulutustoimijat = koulutustoimijat;
     });
+    
+    Toimikunta.haeKaikki().then(function(tutkintotoimikunnat) {
+        $scope.tutkintotoimikunnat = tutkintotoimikunnat;
+      });
+
 
     $scope.form = {
       osat: [],
@@ -69,6 +75,8 @@ angular.module('suoritus', [])
         	$scope.form.valmistava_koulutus = suoritus.valmistava_koulutus;
         	$scope.form.suoritusaika_alku = suoritus.suoritusaika_alku;
         	$scope.form.suoritusaika_loppu = suoritus.suoritusaika_loppu;
+        	$scope.form.toimikunta = suoritus.toimikunta;
+        	$scope.form.arviointikokouksen_pvm = suoritus.arviointikokouksen_pvm;
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.form.arvioijat = suoritus.arvioijat;

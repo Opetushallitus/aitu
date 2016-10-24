@@ -49,13 +49,14 @@
         (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
         (sql/fields :suoritus.tutkinnonosa :suoritus.arvosanan_korotus :suoritus.osaamisen_tunnustaminen :suoritus.kieli :suoritus.todistus :suoritus.osaamisala :suoritus.arvosana
                     :suorituskerta.suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :paikka :jarjestelyt :jarjestamismuoto :valmistava_koulutus
-                    :suorituskerta.suoritusaika_alku :suorituskerta.suoritusaika_loppu :suorituskerta.arviointikokouksen_pvm 
+                    :suorituskerta.suoritusaika_alku :suorituskerta.suoritusaika_loppu :suorituskerta.arviointikokouksen_pvm :suorituskerta.toimikunta
                   ))))
 
 (defn hae-kaikki-suoritukset [koulutustoimija]
  (sql/select suorituskerta
    (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
-   (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :jarjestelyt :paikka :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
+   (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :jarjestelyt :paikka :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu 
+               :arviointikokouksen_pvm :toimikunta
                [:suoritus.suoritus_id :suoritus_id]
                [:suoritus.arvosana :arvosana]
                [:suoritus.tutkinnonosa :tutkinnonosa]
@@ -76,7 +77,7 @@
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
-                :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
+                :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
                 :jarjestamismuoto :opiskelijavuosi
                 :valmistava_koulutus :paikka :jarjestelyt
                 [:suorittaja.etunimi :suorittaja_etunimi]
