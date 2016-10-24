@@ -72,7 +72,7 @@ angular.module('suoritus', [])
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.form.arvioijat = suoritus.arvioijat;
-            //$scope.arvioijat = suoritus.arvioijat;
+           // $scope.arvioijat = suoritus.arvioijat;
             $scope.osat = _.map(suoritus.osat, function(osa) {
                 var result = _.pick(osa, ['arvosana', 'kieli', 'todistus', 'suoritus_id','arvosanan_korotus','osaamisen_tunnustaminen']);
                 result.tutkinnonosa = {
@@ -157,11 +157,11 @@ angular.module('suoritus', [])
 
         modalInstance.result.then(function(uusiArvioija) {
         	// ei tuplata samaa arvioijaa suorituskerralle
-            if (!_.find($scope.form.arvioijat, 'arvioija_id', uusiArvioija)) {
-               var foArvioija = _.find($scope.arvioijat, 'arvioija_id', uusiArvioija);
+            if (!_.find($scope.form.arvioijat, {'arvioija_id' : uusiArvioija.arvioija_id})) {
+               var foArvioija = _.find($scope.arvioijat, {'arvioija_id' : uusiArvioija.arvioija_id});
                if (!foArvioija) {
-                 // TODO: täysin uusi arvioija
-                 $scope.form.arvioijat.push(uusiArvioija);
+            	   // täysin uusi arvioija
+            	   $scope.form.arvioijat.push(uusiArvioija);
                } else {
             	   $scope.form.arvioijat.push(foArvioija);
                }
