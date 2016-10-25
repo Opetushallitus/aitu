@@ -139,7 +139,7 @@
     (update :suoritusaika_loppu parse-iso-date)))
 
 (defn ^:private lisaa-suoritus! [osa]
-  (sql/insert :suoritus
+  (sql/insert suoritus
    (sql/values (osa->suoritus-db osa))))
 
 (defn lisaa-koko-tutkinnon-suoritus! [suoritusid tutkintoversio suorittaja]

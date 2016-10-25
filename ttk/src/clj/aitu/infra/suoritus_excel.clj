@@ -429,6 +429,11 @@
       ; helppo case, suorittaja löytyi id:llä
       id)))
 
+(defn ^:private date-or-nil [rowref colnum]
+  (let [c (.getCell rowref colnum)]
+    (when (not (nil? c))
+      (.getDateCellValue c))))
+
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log]
   (let [rivi (atom 1) ; Y-tunnus on rivillä 1.
@@ -466,17 +471,17 @@
                     _ (reset! solu "tutkinnon osa")
                     osatunnus (parse-osatunnus (get-cell-str suoritus 6))
                     _ (reset! solu "tunnustamisen pvm")
-                    tunnustamisen-pvm (.getDateCellValue (.getCell suoritus 7)) ; TODO: voi olla tyhjä
-                    _ (reset! solu "tutkintotilaisuus, alkupvm")
-                    suoritus-alkupvm (.getDateCellValue (.getCell suoritus 8))
+                    tunnustamisen-pvm (date-or-nil suoritus 7) ; voi olla tyhjä
+                    _ (reset! solu "tutkintotilaisuus, alkupvm") ; voi olla tyhjä jos osaamisen tunnustaminen
+                    suoritus-alkupvm (date-or-nil suoritus 8)
                     _ (reset! solu "tutkintotilaisuus, loppupvm")
-                    suoritus-loppupvm (.getDateCellValue (.getCell suoritus 9)) ; TODO: voi olla tyhjä jos osaamisen tunnustaminen
+                    suoritus-loppupvm (date-or-nil suoritus 9) ; voi olla tyhjä jos osaamisen tunnustaminen
                     _ (reset! solu "paikka")
                     paikka (get-cell-str suoritus 10)
                     _ (reset! solu "järjestelyt/työtehtävät")
                     jarjestelyt (get-cell-str suoritus 11)
                     _ (reset! solu "arviointikokous pvm")
-                    arviointikokous-pvm (.getDateCellValue (.getCell suoritus 12))
+                    arviointikokous-pvm (date-or-nil suoritus 12) ; voi olla tyhjä jos osaamisen tunnustaminen
                     _ (reset! solu "arvosana")
                     arvosana (get-excel-arvosana suoritus 13)
                     _ (reset! solu "todistus")
@@ -498,7 +503,7 @@
                     a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
                     a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
                     a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
-                  
+
                     vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
                     suorituskerta-map {:suorittaja suorittaja-id
                                        :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
@@ -513,7 +518,7 @@
                                        :suoritusaika_alku (date->iso-date suoritus-alkupvm)
                                        :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
                                        :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
-                                       :arvioijat (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3})                               
+                                       :arvioijat (filter #(not (nil? (:arvioija_id %))) (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3}))
                                        }
                     suoritus-map {:suorittaja_id suorittaja-id
                                   :arvosana arvosana

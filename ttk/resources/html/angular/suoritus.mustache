@@ -49,6 +49,10 @@
         <label>[[tutkinto]]</label>
         <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkinto" required></select>
     </fieldset>
+    <fieldset>
+        <label>[[toimikunta]]</label>
+        <select ng-options="toimikunta.tkunta as toimikunta.diaarinumero + ' ' + (toimikunta | lokalisoiKentta:'nimi') for toimikunta in tutkintotoimikunnat" ng-model="form.toimikunta" required></select>
+    </fieldset>    
   </div>
   <div>
     <fieldset>

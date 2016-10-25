@@ -46,6 +46,49 @@
    "jarjestelyt" "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "   
    "tutkinto" "327128"})
 
+(def suoritus-tunnustaminen
+  {"osat" [{"arvosana" "hyvaksytty"
+            "arvosanan_korotus" false
+            "kieli" "fi"
+            "todistus" true
+            "osaamisen_tunnustaminen" "01.09.2016"
+            "osaamisala_id" -20002
+            "tutkinnonosa_id" -10002}]
+   "suorittaja" -1
+   "opiskelijavuosi" "8"
+   "jarjestamismuoto" "oppisopimuskoulutus"
+   "rahoitusmuoto" 3
+   "suoritusaika_alku" nil
+   "suoritusaika_loppu" nil
+   :arviointikokouksen_pvm nil
+   :toimikunta "Lynx lynx"
+   :arvioijat []
+   "koulutustoimija" "0208430-8"
+   "valmistava_koulutus" true
+   "paikka" nil
+   "jarjestelyt" nil  
+   "tutkinto" "327128"})
+
+(def suoritus-result-tunnustaminen
+  {:tila "luonnos", :jarjestelyt nil
+   :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", 
+   :suoritusaika_alku nil
+   :suoritusaika_loppu nil
+   :osat [{:osaamisen_tunnustaminen "2016-09-01", :arvosanan_korotus false, :osatunnus "990001", 
+           :todistus true, :osaamisala -20002, :kieli "fi", :nimi "Käsityöyrityksen johtaminen", 
+           :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
+   :arvioijat []
+   :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
+   :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
+   :koulutustoimija "0208430-8", :arviointikokouksen_pvm nil
+   :toimikunta "Lynx lynx"
+   :suorittaja_sukunimi "Opiskelija", 
+   :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
+   :jarjestamismuoto "oppisopimuskoulutus", 
+   :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
+   :paikka "Yöttäjän harjoitusalue", 
+   :suorittaja_etunimi "Orvokki"})
+
 (def suoritus-diff 
   {"arvioijat" [{:arvioija_id -2 :etunimi "Seppo" :sukunimi "Ilmarinen" :rooli "itsenainen" :nayttotutkintomestari true}]
    "rahoitusmuoto" 2})
@@ -79,6 +122,26 @@
 (defn rip-skertaid [suorituslista]
   (map #(dissoc % :suorituskerta_id) suorituslista))
   
+(deftest ^:integraatio suoritus-tunnustaminen-flow
+  (let [crout (init-peridot!)]
+    (run-with-db (constantly true)
+      #(let [s (peridot/session crout)
+             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-tunnustaminen))
+             suorituksia (mock-request s "/api/suoritus" :get {})
+             suorituslista-resp (body-json (:response suorituksia))
+             skerta-id (some :suorituskerta_id suorituslista-resp)
+             suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
+             suoritus-resp (body-json (:response suoritustiedot))
+             _ (println suoritus-resp)
+             ; update
+             paivitys-map (assoc (merge suoritus-resp suoritus-diff) :suorituskerta_id  skerta-id )
+             kirjaa-paivitys (mock-json-post s "/api/suoritus" (cheshire/generate-string paivitys-map))
+             suoritustiedot-paivitys (mock-request s (str "/api/suoritus/" skerta-id) :get {})
+             poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
+             ]
+        (is (= (rip-suoritusid suoritus-result-tunnustaminen) (rip-suoritusid suoritus-resp)))
+        ))))
+
 (deftest ^:integraatio suoritus-flow
   (let [crout (init-peridot!)]
     (run-with-db (constantly true)
@@ -143,3 +206,4 @@
            
            (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
         ))))
+

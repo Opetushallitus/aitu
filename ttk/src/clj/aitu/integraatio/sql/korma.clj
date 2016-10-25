@@ -30,11 +30,14 @@
          keskusjarjesto tutkinnonosa osaamisala jarjestamissuunnitelma
          toimipaikka tutkintoversio uusin-versio tutkinto-ja-tutkinnonosa
          sopimuksen-liite koulutustoimija organisaatiomuutos
-         suorituskerta)
+         suorituskerta suoritus)
 
 (defentity suorituskerta
   (sql/pk :suorituskerta_id))
-  
+
+(defentity suoritus
+  (sql/pk :suoritus_id))
+
 (defentity arvioija
   (sql/pk :arvioija_id))
 
