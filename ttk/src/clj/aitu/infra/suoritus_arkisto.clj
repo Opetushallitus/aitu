@@ -210,7 +210,7 @@
       (doseq [osa osat]
         (if (nil? (:suoritus_id osa))
           (lisaa-suoritus! (assoc osa :suorituskerta suorituskerta_id))
-          (sql-util/update-unique :suoritus
+          (sql-util/update-unique suoritus
             (sql/set-fields (osa->suoritus-db (assoc osa :suorituskerta suorituskerta_id)))
             (sql/where {:suoritus_id (:suoritus_id osa)}))))
       suoritus)))
