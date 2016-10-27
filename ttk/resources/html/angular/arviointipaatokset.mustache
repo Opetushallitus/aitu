@@ -3,6 +3,13 @@
 
 <h1>[[arviointipaatokset]]</h1>
 
+<div>
+  [[excel_lataus]]
+        <fieldset>
+          <file-upload api-metodi="{{'[[base-url]]/api/suoritus/excel-lataus'}}" upload-valmis="uploadValmis"></file-upload>
+        </fieldset>
+</div>
+
 <section class="suoritukset">
   <h2>[[suoritukset]]</h2>
   <button class="button-with-icon add-icon-white" ng-click="lisaaSuoritus()">[[lisaa_suoritus]]</button>
@@ -22,11 +29,5 @@
 </div>
 <br/>
 
-<div>
-  [[excel_lataus]]
-        <fieldset>
-          <file-upload api-metodi="{{'[[base-url]]/api/suoritus/excel-lataus'}}" upload-valmis="uploadValmis"></file-upload>
-        </fieldset>
-</div>
 
 [[/i18n.arviointipaatokset]]
