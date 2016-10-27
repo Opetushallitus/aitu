@@ -370,6 +370,11 @@ input[type="text"].ng-invalid-date {
   bottom: 15px;
 }
 
+.modal-scrollable {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
 .modal-dialog-button-left {
   position: absolute;
   left: 15px;
