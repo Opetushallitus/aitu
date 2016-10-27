@@ -86,7 +86,7 @@
    :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
    :jarjestamismuoto "oppisopimuskoulutus", 
    :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
-   :paikka "Yöttäjän harjoitusalue", 
+   :paikka nil,
    :suorittaja_etunimi "Orvokki"})
 
 (def suoritus-diff 

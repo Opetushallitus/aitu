@@ -35,7 +35,7 @@
 
 (defn hae-suoritukset 
   ([suorituskerta-id]
-    (sql/select :suoritus
+    (sql/select suoritus
       (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :tutkinnonosa))
       (sql/fields :suoritus_id :arvosana :suorituskerta :tutkinnonosa :arvosanan_korotus :osaamisen_tunnustaminen :kieli :todistus :osaamisala
                   [:tutkinnonosa.osatunnus :osatunnus]
@@ -54,7 +54,7 @@
 
 (defn hae-kaikki-suoritukset [koulutustoimija]
  (sql/select suorituskerta
-   (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
+   (sql/join suoritus (= :suoritus.suorituskerta :suorituskerta_id))
    (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :jarjestelyt :paikka :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu 
                :arviointikokouksen_pvm :toimikunta
                [:suoritus.suoritus_id :suoritus_id]
