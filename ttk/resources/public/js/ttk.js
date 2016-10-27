@@ -41,6 +41,7 @@ angular.module('ttk', [
   'organisaatiomuutokset',
   'raportit',
   'palvelut.varmistus',
+  'palvelut.viestidialogi',
   'rest.jasenesitykset',
   'rest.kayttaja',
   'rest.koulutustoimija',

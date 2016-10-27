@@ -18,15 +18,12 @@ angular.module('arviointipaatokset', [])
     $routeProvider.when('/arviointipaatokset', {controller: 'ArviointipaatoksetController', templateUrl: 'template/arviointipaatokset'});
   }])
 
-  .controller('ArviointipaatoksetController', ['$location', '$scope', '$route', function($location, $scope, $route) {
+  .controller('ArviointipaatoksetController', ['$location', '$scope', '$route', 'Viestidialogi', function($location, $scope, $route, Viestidialogi) {
+	  
       $scope.uploadValmis = function(r, liitetyyppi) {
-     	 var s = ""; // TODO: voisi tehdä siistimmin..
-     	 _.forEach(r, function(v) {
-            s += v + "\n"; 
-      });
-      alert('Excelin sisäänluku suoritettu, tulos: \n\n' + s);
-      $location.path("/arviointipaatokset");
-      $route.reload();
+    	  Viestidialogi.nayta('Excelin sisäänluku suoritettu, tulos', r, 'Sulje');
+    	  $location.path("/arviointipaatokset");
+    	  $route.reload();
     };
  	  
          
