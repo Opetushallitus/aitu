@@ -44,6 +44,11 @@ angular.module('rest.suoritus', [])
         return $http.delete(ophBaseUrl + '/api/suoritus/' + suoritusId).then(function(response) {
           return response.data;
         });
+      },
+      palauta: function(suoritukset) {
+        return $http.post(ophBaseUrl + '/api/suoritus/palauta', {suoritukset: suoritukset}).then(function(response) {
+          return response.data;
+        });
       }
     };
   }])

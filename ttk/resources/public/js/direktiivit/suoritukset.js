@@ -90,6 +90,15 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
           });
         };
 
+        $scope.palautaLuonnokseksi = function() {
+          Varmistus.varmista(i18n.arviointipaatokset.palautetaanko_suoritus, i18n.arviointipaatokset.palauta_suoritus_teksti, i18n.arviointipaatokset.palauta_suoritus).then(function() {
+            var valitutSuoritukset = $scope.valitutSuoritukset();
+            Suoritus.palauta(valitutSuoritukset).then(function() {
+              paivitaSuoritustenTila(valitutSuoritukset, 'luonnos');
+            });
+          });
+        };
+
         $scope.lahetaHyvaksyttavaksi = function() {
           Varmistus.varmista(i18n.arviointipaatokset.esitetaanko_suoritus, i18n.arviointipaatokset.esita_suoritus_teksti, i18n.arviointipaatokset.esita_suoritus).then(function() {
             var valitutSuoritukset = $scope.valitutSuoritukset();
