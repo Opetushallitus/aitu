@@ -20,7 +20,7 @@
             [sade.validators :as sade-validators]
             [cheshire.core :as cheshire]))
 
-; TODO: luo-validoinnin-virhevastaus mieluummin.. 
+; TODO: luo-validoinnin-virhevastaus mieluummin..  OPH-1877
 (defn hetu-virhevastaus
   []
   {:status 400

@@ -21,9 +21,13 @@ angular.module('rest.suorittaja', [])
         });
       },
       lisaa: function(form) {
-        return $http.post(ophBaseUrl + '/api/suorittaja', form).then(function(response) {
-          return response.data;
-        });
+        return $http.post(ophBaseUrl + '/api/suorittaja', form).then(
+        		function successCallback(response) {
+        			return response.data;
+        		}, function errorCallback(response) {
+        			// {"data":{"errors":["hetu","Viallinen henkilötunnus"]},
+        			alert("Virhe: " + response["data"]["errors"][1]); // TODO: rumaa. OPH-1877
+        			});        		
       },
       poista: function(suorittaja) {
         return $http.delete(ophBaseUrl + '/api/suorittaja/' + suorittaja.suorittaja_id).then(function(response) {
@@ -31,9 +35,13 @@ angular.module('rest.suorittaja', [])
         });
       },
       tallenna: function(suorittaja) {
-        return $http.put(ophBaseUrl + '/api/suorittaja/' + suorittaja.suorittaja_id, suorittaja).then(function(response) {
-          return response.data;
-        });
+        return $http.put(ophBaseUrl + '/api/suorittaja/' + suorittaja.suorittaja_id, suorittaja).then(
+        		function successCallback(response) {
+        			return response.data;
+        		}, function errorCallback(response) {
+        			// {"data":{"errors":["hetu","Viallinen henkilötunnus"]},
+        			alert("Virhe: " + response["data"]["errors"][1]); // TODO: rumaa. OPH-1877
+        			});
       }
     };
   }])

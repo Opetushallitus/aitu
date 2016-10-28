@@ -77,6 +77,5 @@
                kirjaus-respo (:response kirjaa)
                ]
            (println "-... " kirjaus-respo)
-           (is (= 400 (:status kirjaus-respo)))
+           (is (= 400 (:status kirjaus-respo))) 
            (is (= "{\"errors\":[\"hetu\",\"Viallinen henkilötunnus\"]}" (:body kirjaus-respo))))))))
-;           (println kirjaus-respo))))))
