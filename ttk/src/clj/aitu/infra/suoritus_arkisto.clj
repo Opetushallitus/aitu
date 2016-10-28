@@ -23,17 +23,17 @@
 
 
 (defn ->int [str-or-int]
-  (if (integer? str-or-int) 
+  (if (integer? str-or-int)
     str-or-int
     (Integer/parseInt str-or-int)))
-  
+
 (defn hae
   [suorituskerta-id]
   (sql-util/select-unique :suorituskerta
     (sql/where {:suorituskerta_id suorituskerta-id})))
 
 
-(defn hae-suoritukset 
+(defn hae-suoritukset
   ([suorituskerta-id]
     (sql/select suoritus
       (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :tutkinnonosa))
@@ -55,7 +55,7 @@
 (defn hae-kaikki-suoritukset [koulutustoimija]
  (sql/select suorituskerta
    (sql/join suoritus (= :suoritus.suorituskerta :suorituskerta_id))
-   (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :jarjestelyt :paikka :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu 
+   (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :jarjestelyt :paikka :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu
                :arviointikokouksen_pvm :toimikunta
                [:suoritus.suoritus_id :suoritus_id]
                [:suoritus.kokotutkinto :kokotutkinto]
@@ -68,7 +68,7 @@
                [:suoritus.osaamisala :osaamisala]
                [:suoritus.lisatiedot :lisatiedot])
    (sql/where (= :koulutustoimija koulutustoimija))))
- 
+
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid suorittaja]}]
@@ -111,7 +111,7 @@
     (sql/fields :etunimi :sukunimi :rooli :nayttotutkintomestari :arvioija.arvioija_id)
     (sql/join :suorituskerta_arvioija (= :suorituskerta_arvioija.arvioija_id :arvioija_id))
     (sql/where {:suorituskerta_arvioija.suorituskerta_id suorituskerta-id})))
-               
+
 (defn hae-tiedot [suorituskerta-id]
   (let [perus (first (hae-kaikki {:suorituskertaid suorituskerta-id}))
         suoritukset (hae-suoritukset (->int suorituskerta-id))
@@ -133,7 +133,7 @@
 
 (defn kerta->suorituskerta-db [kerta]
   (-> kerta
-    (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi 
+    (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi
                   :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta])
     (update :opiskelijavuosi ->int)
     (update :suoritusaika_alku parse-iso-date)
@@ -145,18 +145,18 @@
    (sql/values (osa->suoritus-db osa))))
 
 (defn lisaa-koko-tutkinnon-suoritus! [suoritusid tutkintoversio suorittaja]
-  (auditlog/suoritus-operaatio! :lisays {:kokotutkinto tutkintoversio :suorittaja suorittaja}) 
+  (auditlog/suoritus-operaatio! :lisays {:kokotutkinto tutkintoversio :suorittaja suorittaja})
   (sql/insert :tutkintosuoritus
     (sql/values {:suoritus_id  suoritusid
                  :tutkintoversio_id tutkintoversio
                  :suorittaja_id suorittaja})))
 
-(defn hae-vastuutoimikunta 
+(defn hae-vastuutoimikunta
   "Palauttaa nil jos yksikäsitteistä vastuutoimikuntaa ei löydy tutkinnon ja kielisyyden perusteella."
   [tutkintotunnus kieli]
   (let [toimikunnat (sql/select :toimikuntien_tutkinnot
                       (sql/where (= :tutkintotunnus tutkintotunnus)))]
-    (if (= 1 (count toimikunnat)) 
+    (if (= 1 (count toimikunnat))
       (first toimikunnat)
       ; kielisyys
       (let [kielirajatut (filter #(= (:kielisyys %) kieli) toimikunnat)]
@@ -172,7 +172,7 @@
         (when (true? (:kokotutkinto osa))
           (lisaa-koko-tutkinnon-suoritus! (:suoritus_id suor) (:tutkintoversio_id suoritus) (:suorittaja suorituskerta)))
       ))
-      
+
     (doseq [arvioija (:arvioijat suoritus)]
       (sql/insert :suorituskerta_arvioija
         (sql/values {:suorituskerta_id (:suorituskerta_id suorituskerta)
@@ -191,18 +191,18 @@
       (sql-util/update-unique suorituskerta
          (sql/set-fields (kerta->suorituskerta-db suoritustiedot))
          (sql/where {:suorituskerta_id (->int suorituskerta_id)}))
-      
+
       ; update arvioijat
       (sql/delete :suorituskerta_arvioija
         (sql/where {:suorituskerta_id suorituskerta_id}))
-      
+
       (doseq [arvioija arvioijat]
         (let [arvioija-id (or (:arvioija_id arvioija)
                               (:arvioija_id (arvioija-arkisto/lisaa! arvioija)))]
           (sql/insert :suorituskerta_arvioija
             (sql/values {:suorituskerta_id suorituskerta_id
                          :arvioija_id arvioija-id}))))
-      
+
       ; update osat
       ; poistetut osat, käsitellään ennen kuin lisätään uusia osia
       (let [ids (keep :suoritus_id osat)]
@@ -223,7 +223,8 @@
                                            :tila "ehdotettu"})
   (sql/update :suorituskerta
     (sql/set-fields {:tila "ehdotettu"
-                     :ehdotusaika (sql/sqlfn now)})
+                     :ehdotusaika (sql/sqlfn now)
+                     :hyvaksymisaika nil})
     (sql/where {:suorituskerta_id [in suoritukset]})))
 
 (defn hyvaksy!
@@ -241,7 +242,17 @@
   ; TODO: delete-unique olisi siistimpi, mutta REST rajapinta olettaa ilmeisesti saavansa paluuarvona poistetun entityn
   (sql/delete :suorituskerta_arvioija
     (sql/where {:suorituskerta_id suorituskerta-id}))
-  
+
   (sql/delete :suorituskerta
     (sql/where {:suorituskerta_id suorituskerta-id
                 :tila "luonnos"})))
+
+(defn palauta!
+  [suoritukset]
+  (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
+                                           :tila "luonnos"})
+  (sql/update :suorituskerta
+    (sql/set-fields {:tila "luonnos"
+                     :hyvaksymisaika nil
+                     :ehdotusaika nil})
+    (sql/where {:suorituskerta_id [in suoritukset]})))

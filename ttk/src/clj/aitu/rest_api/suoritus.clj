@@ -32,7 +32,7 @@
           content-type "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           filename "excel-suoritustiedot-template.xlsx"]
       (file-download-response (.toByteArray bos) filename content-type))))
-  
+
 ; TODO: tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
 (defroutes reitit
   (GET "/" [& ehdot]
@@ -57,6 +57,9 @@
   (POST "/hyvaksy" [suoritukset]
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/hyvaksy! suoritukset)))
+  (POST "/palauta" [suoritukset]
+    :kayttooikeus :arviointipaatos
+    (response-or-404 (arkisto/palauta! suoritukset)))
 
   (POST "/excel-lataus" [file]
     :kayttooikeus :arviointipaatos
