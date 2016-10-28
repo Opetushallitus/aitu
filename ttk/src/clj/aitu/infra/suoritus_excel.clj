@@ -21,7 +21,8 @@
              [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
              [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
              [aitu.auditlog :as auditlog]
-             [dk.ative.docjure.spreadsheet :refer :all]))
+             [dk.ative.docjure.spreadsheet :refer :all]
+             [sade.validators :as sade-validators]))
 
 (defn ^:private parse-kieli [kieli]
   (get {"Suomi" "fi"
@@ -335,8 +336,11 @@
                                      :rahoitusmuoto_id (int rahoitusmuoto)
                                      :oid oid}]
                 (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
-                  (swap! ui-log conj (str "Lisättiin opiskelija " etunimi " " sukunimi))
-                  (suorittaja-arkisto/lisaa! uusi-opiskelija)
+                  (if (and (:hetu uusi-opiskelija) (not (sade-validators/valid-hetu? (:hetu uusi-opiskelija))))
+                    (swap! ui-log conj (str "Henkilötunnus on viallinen : " (:hetu uusi-opiskelija)))
+                    (do
+                      (swap! ui-log conj (str "Lisättiin opiskelija " etunimi " " sukunimi))
+                      (suorittaja-arkisto/lisaa! uusi-opiskelija)))
                   ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
                                             )))))
         (swap! rivi inc))

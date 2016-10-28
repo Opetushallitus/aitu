@@ -42,6 +42,12 @@
 (def uusi-suorittaja
   {"etunimi" "Eero"
    "sukunimi" "Jukola"
+   "hetu" "121212-999R"
+   "rahoitusmuoto_id" 3})
+
+(def uusi-suorittaja-viallinen-hetu
+  {"etunimi" "Eero"
+   "sukunimi" "Jukola"
    "hetu" "987654-999X"
    "rahoitusmuoto_id" 3})
 
@@ -59,5 +65,18 @@
              poisto (mock-request s (str "/api/suorittaja/" uusi-suorittaja-id) :delete nil)
              ]
          (is (= suorittajat-alussa (rip-muutettukentat (body-json (:response suorittajat)))))
-         (is (= "987654-999X" (:hetu kirjaus-respo)))
+         (is (= "121212-999R" (:hetu kirjaus-respo)))
         ))))
+
+(deftest ^:integraatio suorittaja-viallinen-hetu
+  (testing "suorittajan syöttämisessä hetu-tarkistus toimii ja palauttaa virheilmoituksen"
+    (let [crout (init-peridot!)]
+      (run-with-db (constantly true)
+        #(let [s (peridot/session crout)
+               kirjaa (mock-json-post s "/api/suorittaja" (cheshire/generate-string uusi-suorittaja-viallinen-hetu))
+               kirjaus-respo (:response kirjaa)
+               ]
+           (println "-... " kirjaus-respo)
+           (is (= 400 (:status kirjaus-respo)))
+           (is (= "{\"errors\":[\"hetu\",\"Viallinen henkilötunnus\"]}" (:body kirjaus-respo))))))))
+;           (println kirjaus-respo))))))

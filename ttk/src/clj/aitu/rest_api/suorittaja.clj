@@ -16,18 +16,33 @@
   (:require [aitu.infra.suorittaja-arkisto :as arkisto]
             aitu.compojure-util
             [compojure.api.core :refer [DELETE GET POST PUT defroutes]]
-            [oph.common.util.http-util :refer [response-or-404]]))
+            [oph.common.util.http-util :refer [response-or-404 luo-validoinnin-virhevastaus]]
+            [sade.validators :as sade-validators]
+            [cheshire.core :as cheshire]))
+
+; TODO: luo-validoinnin-virhevastaus mieluummin.. 
+(defn hetu-virhevastaus
+  []
+  {:status 400
+   :headers {"Content-Type" "application/json"}
+   :body (cheshire/generate-string
+           {:errors [:hetu "Viallinen henkilötunnus"]})})
 
 (defroutes reitit
   (GET "/" []
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/hae-kaikki)))
-  (POST "/" [& form]
+  (POST "/" [& suorittaja]
     :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/lisaa! form)))
+    (if (and (:hetu suorittaja) (not (sade-validators/valid-hetu? (:hetu suorittaja))))
+      (hetu-virhevastaus)
+      (response-or-404 (arkisto/lisaa! suorittaja))))
   (PUT "/:suorittajaid" [suorittajaid & suorittaja]
     :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja)))
+    ; TODO: hetun validointi
+    (if (and (:hetu suorittaja) (not (sade-validators/valid-hetu? (:hetu suorittaja))))
+      (hetu-virhevastaus)
+      (response-or-404 (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja))))
   (DELETE "/:suorittajaid" [suorittajaid]
     :kayttooikeus :arviointipaatos
     (arkisto/poista! (Integer/parseInt suorittajaid))))
