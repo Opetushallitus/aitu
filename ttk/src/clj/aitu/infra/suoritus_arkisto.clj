@@ -221,7 +221,8 @@
                                            :tila "ehdotettu"})
   (sql/update :suorituskerta
     (sql/set-fields {:tila "ehdotettu"
-                     :ehdotusaika (sql/sqlfn now)})
+                     :ehdotusaika (sql/sqlfn now)
+                     :hyvaksymisaika nil})
     (sql/where {:suorituskerta_id [in suoritukset]})))
 
 (defn hyvaksy!

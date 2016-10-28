@@ -91,13 +91,23 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         };
 
         $scope.palautaLuonnokseksi = function() {
-          Varmistus.varmista(i18n.arviointipaatokset.palautetaanko_suoritus, i18n.arviointipaatokset.palauta_suoritus_teksti, i18n.arviointipaatokset.palauta_suoritus).then(function() {
+          Varmistus.varmista(i18n.arviointipaatokset.palautetaanko_suoritus_luonnokseksi, i18n.arviointipaatokset.palauta_suoritus_luonnokseksi_teksti, i18n.arviointipaatokset.palauta_suoritus_luonnokseksi).then(function() {
             var valitutSuoritukset = $scope.valitutSuoritukset();
             Suoritus.palauta(valitutSuoritukset).then(function() {
               paivitaSuoritustenTila(valitutSuoritukset, 'luonnos');
             });
           });
         };
+
+        $scope.palautaHyvaksyttavaksi = function() {
+          Varmistus.varmista(i18n.arviointipaatokset.palautetaanko_suoritus_hyvaksyttavaksi, i18n.arviointipaatokset.palauta_suoritus_hyvaksyttavaksi_teksti, i18n.arviointipaatokset.palauta_suoritus_hyvaksyttavaksi).then(function() {
+            var valitutSuoritukset = $scope.valitutSuoritukset();
+            Suoritus.lahetaHyvaksyttavaksi(valitutSuoritukset).then(function() {
+              paivitaSuoritustenTila(valitutSuoritukset, 'ehdotettu');
+            });
+          });
+        };
+
 
         $scope.lahetaHyvaksyttavaksi = function() {
           Varmistus.varmista(i18n.arviointipaatokset.esitetaanko_suoritus, i18n.arviointipaatokset.esita_suoritus_teksti, i18n.arviointipaatokset.esita_suoritus).then(function() {
