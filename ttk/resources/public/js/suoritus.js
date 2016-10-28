@@ -82,7 +82,7 @@ angular.module('suoritus', [])
             $scope.form.arvioijat = suoritus.arvioijat;
            // $scope.arvioijat = suoritus.arvioijat;
             $scope.osat = _.map(suoritus.osat, function(osa) {
-                var result = _.pick(osa, ['arvosana', 'kieli', 'todistus', 'suoritus_id','arvosanan_korotus','osaamisen_tunnustaminen']);
+                var result = _.pick(osa, ['arvosana', 'kieli', 'todistus', 'suoritus_id','arvosanan_korotus','osaamisen_tunnustaminen', 'kokotutkinto']);
                 result.tutkinnonosa = {
                 	tutkinnonosa_id: osa.tutkinnonosa,
                 	osatunnus: osa.osatunnus,
@@ -105,7 +105,7 @@ angular.module('suoritus', [])
     
      $scope.$watchCollection('osat', function(osat) {
       $scope.form.osat = _.map(osat, function(osa) {
-        var result = _.pick(osa, ['osaamisala', 'arvosana', 'arvosanan_korotus', 'kieli', 'todistus', 'osaamisen_tunnustaminen', 'osaamisala_id', 'suoritus_id']);
+        var result = _.pick(osa, ['osaamisala', 'arvosana', 'arvosanan_korotus', 'kieli', 'todistus', 'osaamisen_tunnustaminen', 'kokotutkinto', 'osaamisala_id', 'suoritus_id']);
         result.tutkinnonosa_id = osa.tutkinnonosa.tutkinnonosa_id;
         return result;
       });
@@ -121,6 +121,19 @@ angular.module('suoritus', [])
                tutkinto: function() { return $scope.form.tutkinto; }
              }
     	 });
+         modalInstance.result.then(function(muokattuOsa) {
+             if (muokattuOsa.osaamisen_tunnustaminen) {
+            	 muokattuOsa.arvosana = null;
+            	 muokattuOsa.arvosanan_korotus = false;
+             }
+             muokattuOsa.osaamisala_id = muokattuOsa.osaamisala; 
+             // TODO: tämä on vielä rikki.
+             if (!_.find($scope.osat, function(osa) {
+                 return osa.tutkinnonosa.tutkinnonosa_id === muokattuOsa.tutkinnonosa.tutkinnonosa_id;
+               })) {
+                 $scope.osat.push(muokattuOsa);
+               }
+           });
      };
      
     $scope.lisaaTutkinnonosa = function() {
@@ -143,8 +156,8 @@ angular.module('suoritus', [])
         if (!_.find($scope.osat, function(osa) {
             return osa.tutkinnonosa.tutkinnonosa_id === uusiOsa.tutkinnonosa.tutkinnonosa_id;
           })) {
-          $scope.osat.push(uusiOsa);
-        }
+            $scope.osat.push(uusiOsa);
+          }
       });
     };
 
@@ -219,6 +232,7 @@ angular.module('suoritus', [])
 		    arvosanan_korotus: false,
 		    kieli: 'fi',
 		    todistus: false,
+		    kokotutkinto: false,
 		    osaamisen_tunnustaminen: null, 
 		    osaamisala_id: null,
 		    osaamisala: null
@@ -229,6 +243,7 @@ angular.module('suoritus', [])
 		  $scope.form = {
     	     arvosana: osa.arvosana,
 		     arvosanan_korotus: osa.arvosanan_korotus,
+		     kokotutkinto: osa.kokotutkinto,
 		     kieli: osa.kieli,
 		     todistus: osa.todistus,
 		     osaamisen_tunnustaminen: osa.osaamisen_tunnustaminen,
