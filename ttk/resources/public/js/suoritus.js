@@ -127,7 +127,7 @@ angular.module('suoritus', [])
             	 muokattuOsa.arvosanan_korotus = false;
              }
              muokattuOsa.osaamisala_id = muokattuOsa.osaamisala; 
-             // TODO: tämä on vielä rikki.
+             // TODO: tämä on vielä rikki. OPH-1878
              if (!_.find($scope.osat, function(osa) {
                  return osa.tutkinnonosa.tutkinnonosa_id === muokattuOsa.tutkinnonosa.tutkinnonosa_id;
                })) {
