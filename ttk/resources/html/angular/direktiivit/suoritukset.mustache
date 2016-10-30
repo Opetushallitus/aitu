@@ -1,4 +1,5 @@
 {{=[[ ]]=}}
+[[#i18n.yleiset]]
 [[#i18n.arviointipaatokset]]
 <div>
   <h3 ng-click="haeSuorituksia = !haeSuorituksia">[[hae_suorituksia]]</h3>
@@ -10,7 +11,14 @@
         <input type="text" placeholder="[[hae_tutkinnon_suorittaja_placeholder]]" ng-model="hakuForm.suorittaja"></input>
       </fieldset>
     </div>
-
+    <div>
+      <fieldset>
+       <label>[[toimikunta]]</label>
+       <select ng-options="toimikunta.tkunta as toimikunta.diaarinumero + ' ' + (toimikunta | lokalisoiKentta:'nimi') for toimikunta in tutkintotoimikunnat" ng-model="hakuForm.toimikunta" required>
+         <option value=""></option>
+       </select>
+      </fieldset>
+    </div>
     <div>
       <fieldset>
         <label>[[suoritus_ehdotettu]]</label>
@@ -128,3 +136,4 @@
   </form>
 </div>
 [[/i18n.arviointipaatokset]]
+[[/i18n.yleiset]]

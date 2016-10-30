@@ -20,8 +20,8 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       restrict: 'E',
       templateUrl: 'template/direktiivit/suoritukset',
       scope: {},
-      controller: ['$location', '$scope', 'Koulutustoimija', 'Rahoitusmuoto', 'Suoritus', 'TutkintoResource', 'Varmistus', 'i18n', 
-         function($location, $scope, Koulutustoimija, Rahoitusmuoto, Suoritus, TutkintoResource, Varmistus, i18n) {
+      controller: ['$location', '$scope', 'Toimikunta', 'Koulutustoimija', 'Rahoitusmuoto', 'Suoritus', 'TutkintoResource', 'Varmistus', 'i18n', 
+         function($location, $scope, Toimikunta, Koulutustoimija, Rahoitusmuoto, Suoritus, TutkintoResource, Varmistus, i18n) {
         $scope.hakuForm = {tila: null};
         $scope.filterTila = function(tila) {
           return function(item) {
@@ -48,7 +48,11 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         TutkintoResource.query(function(tutkinnot) {
           $scope.tutkinnot = tutkinnot;
         });
-
+        
+        Toimikunta.haeKaikki().then(function(tutkintotoimikunnat) {
+            $scope.tutkintotoimikunnat = tutkintotoimikunnat;
+        });
+        
         $scope.$watch('hakuForm', function(hakuForm) {
           Suoritus.haeKaikki(hakuForm).then(function(suoritukset) {
             $scope.suoritukset = suoritukset;

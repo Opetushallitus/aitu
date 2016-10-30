@@ -71,7 +71,8 @@
 
 
 (defn hae-kaikki
-  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid suorittaja]}]
+  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija 
+           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta]}]
   (->
     (sql/select* suorituskerta)
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
@@ -103,6 +104,7 @@
                                                                 {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
 
       (seq tila) (sql/where {:tila tila})
+      (seq toimikunta) (sql/where {:toimikunta toimikunta})
       (seq tutkinto) (sql/where {:tutkinto tutkinto}))
     sql/exec))
 
