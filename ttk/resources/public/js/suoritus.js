@@ -126,13 +126,17 @@ angular.module('suoritus', [])
             	 muokattuOsa.arvosana = null;
             	 muokattuOsa.arvosanan_korotus = false;
              }
-             muokattuOsa.osaamisala_id = muokattuOsa.osaamisala; 
-             // TODO: tämä on vielä rikki. OPH-1878
-             if (!_.find($scope.osat, function(osa) {
-                 return osa.tutkinnonosa.tutkinnonosa_id === muokattuOsa.tutkinnonosa.tutkinnonosa_id;
-               })) {
-                 $scope.osat.push(muokattuOsa);
-               }
+             muokattuOsa.osaamisala_id = muokattuOsa.osaamisala;
+             muokattuOsa.tutkinnonosa.tutkinto = {tutkintotunnus: $scope.form.tutkinto};
+ 	         var osaInd = _.findIndex($scope.osat, function(osa) {
+ 	            return osa.tutkinnonosa.tutkinnonosa_id === muokattuOsa.tutkinnonosa.tutkinnonosa_id;
+ 	          });
+ 	        if (osaInd === -1) {
+ 	        	// tutkinnon osa muokattu
+ 	            $scope.osat.push(muokattuOsa);
+ 	        } else {
+ 	          $scope.osat[osaInd] = muokattuOsa;
+ 	        }
            });
      };
      
@@ -153,6 +157,7 @@ angular.module('suoritus', [])
           uusiOsa.arvosanan_korotus = false;
         }
         uusiOsa.osaamisala_id = uusiOsa.osaamisala; 
+        uusiOsa.tutkinnonosa.tutkinto = {tutkintotunnus: $scope.form.tutkinto};
         if (!_.find($scope.osat, function(osa) {
             return osa.tutkinnonosa.tutkinnonosa_id === uusiOsa.tutkinnonosa.tutkinnonosa_id;
           })) {
@@ -258,17 +263,13 @@ angular.module('suoritus', [])
       if (tutkinto !== undefined) {
         Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
           $scope.tutkinnonosat = tutkinnonosat;
-          $scope.form.tutkinnonosa = _.find($scope.tutkinnonosat, 'tutkinnonosa_id', $scope.tutkinnonosa);
+          $scope.form.tutkinnonosa = _.find($scope.tutkinnonosat, {'tutkinnonosa_id' : $scope.tutkinnonosa.tutkinnonosa_id});
         });
         Osaamisala.hae(tutkinto).then(function(osaamisalat) {
           $scope.osaamisalat = osaamisalat.osaamisala;
         });
       }
     });
-    
-//    if (osa && osa.tutkinnonosa && osa.tutkinnonosa.osatunnus) {
-//    	$scope.form.tutkinnonosa=osa.tutkinnonosa;
- //   }
 
     $scope.ok = function() {
       $modalInstance.close($scope.form);
