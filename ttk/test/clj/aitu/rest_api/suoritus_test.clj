@@ -9,7 +9,7 @@
 
 (def suorituslista-result
   {:tila "luonnos", :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", :hyvaksymisaika nil, 
-  :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto", :suorittaja -1, :hetu "121212-912X",
+  :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto", :suorittaja -1, 
   :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :koulutustoimija "0208430-8",
   :arviointikokouksen_pvm "2016-09-02"
   :suoritusaika_alku "2016-09-01"
@@ -79,7 +79,7 @@
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat []
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
-   :suorittaja -1, :hetu "121212-912X", :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
+   :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
    :koulutustoimija "0208430-8", :arviointikokouksen_pvm nil
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
@@ -103,7 +103,7 @@
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat [{:arvioija_id -1 :etunimi "Väinö" :sukunimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false}]
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
-   :suorittaja -1, :hetu "121212-912X", :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
+   :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
    :koulutustoimija "0208430-8", :arviointikokouksen_pvm "2016-09-02"
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
