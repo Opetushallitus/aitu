@@ -28,6 +28,13 @@
    :body (cheshire/generate-string
            {:errors [:hetu "Viallinen henkilötunnus"]})})
 
+(defn hetu-kaytossa-virhevastaus
+  []
+  {:status 400
+   :headers {"Content-Type" "application/json"}
+   :body (cheshire/generate-string
+           {:errors [:hetu "Henkilötunnus on toisella opiskelijalla käytössä."]})})
+
 (defroutes reitit
   (GET "/" []
     :kayttooikeus :arviointipaatos
@@ -36,13 +43,16 @@
     :kayttooikeus :arviointipaatos
     (if (and (:hetu suorittaja) (not (sade-validators/valid-hetu? (:hetu suorittaja))))
       (hetu-virhevastaus)
-      (response-or-404 (arkisto/lisaa! suorittaja))))
+      (if (arkisto/hetu-kaytossa? nil (:hetu suorittaja))
+        (hetu-kaytossa-virhevastaus)
+        (response-or-404 (arkisto/lisaa! suorittaja)))))
   (PUT "/:suorittajaid" [suorittajaid & suorittaja]
     :kayttooikeus :arviointipaatos
-    ; TODO: hetun validointi
     (if (and (:hetu suorittaja) (not (sade-validators/valid-hetu? (:hetu suorittaja))))
       (hetu-virhevastaus)
-      (response-or-404 (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja))))
+      (if (arkisto/hetu-kaytossa? (Integer/parseInt suorittajaid) (:hetu suorittaja))
+        (hetu-kaytossa-virhevastaus)
+        (response-or-404 (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja)))))
   (DELETE "/:suorittajaid" [suorittajaid]
     :kayttooikeus :arviointipaatos
     (arkisto/poista! (Integer/parseInt suorittajaid))))

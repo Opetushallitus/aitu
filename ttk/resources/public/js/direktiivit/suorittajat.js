@@ -36,7 +36,7 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
             if (suorittaja === undefined) {
               // uusi
               Suorittaja.lisaa(suorittajaForm).then(function(suorittaja) {
-                $scope.suorittajat.unshift(suorittaja);
+            	  if (suorittaja != undefined) {  $scope.suorittajat.unshift(suorittaja); }
               });
             } else {
               // muokkaus
@@ -65,9 +65,9 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
   .controller('LisaaSuorittajaModalController', ['$modalInstance', '$scope', 'suorittaja', 'Rahoitusmuoto',
                                                  function($modalInstance, $scope, suorittaja, Rahoitusmuoto) {
 
-	    Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
-	        $scope.rahoitusmuodot = rahoitusmuodot;
-	      });
+	Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
+	  $scope.rahoitusmuodot = rahoitusmuodot;
+	});
 	    
     $scope.suorittajaForm = {};
     if (suorittaja) {

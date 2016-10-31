@@ -76,6 +76,5 @@
                kirjaa (mock-json-post s "/api/suorittaja" (cheshire/generate-string uusi-suorittaja-viallinen-hetu))
                kirjaus-respo (:response kirjaa)
                ]
-           (println "-... " kirjaus-respo)
            (is (= 400 (:status kirjaus-respo))) 
            (is (= "{\"errors\":[\"hetu\",\"Viallinen henkilötunnus\"]}" (:body kirjaus-respo))))))))
