@@ -1,5 +1,7 @@
 alter table suorittaja
   drop constraint oidhetu_constraint,
-  add constraint hetu_uniq unique(hetu),
-  add constraint oid_uniq unique(oid),
-  add CONSTRAINT oidhetu_set CHECK ((hetu is not null) or (oid is not null));
+  add CONSTRAINT oidhetu_set CHECK ((hetu <> '') or (oid <> ''));
+
+create unique index hetu_uniq on suorittaja(hetu) where hetu <> '';
+create unique index oid_uniq on suorittaja(oid) where oid <> '';
+
