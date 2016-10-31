@@ -15,7 +15,7 @@
   [{:suorittaja_id -1,
     :etunimi "Orvokki"
     :sukunimi "Opiskelija"
-    :hetu nil
+    :hetu "121212-912X"
     :rahoitusmuoto_nimi "valtionosuus"
     :oid "fan.far.12345"
     :rahoitusmuoto_id 1
@@ -24,7 +24,7 @@
     {:suorittaja_id -2
      :etunimi "Lieto"
      :sukunimi "Lemminkäinen"
-     :hetu nil
+     :hetu "101066-9451"
      :rahoitusmuoto_nimi "oppisopimus"
      :oid "pfft.12345"
      :rahoitusmuoto_id 2
