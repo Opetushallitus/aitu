@@ -74,7 +74,7 @@
    :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", 
    :suoritusaika_alku nil
    :suoritusaika_loppu nil
-   :osat [{:osaamisen_tunnustaminen "2016-09-01", :arvosanan_korotus false, :osatunnus "990001", 
+   :osat [{:osaamisen_tunnustaminen "2016-09-01", :kokotutkinto false, :arvosanan_korotus false, :osatunnus "990001", 
            :todistus true, :osaamisala -20002, :kieli "fi", :nimi "Käsityöyrityksen johtaminen", 
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat []
@@ -98,7 +98,7 @@
    :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", 
    :suoritusaika_alku "2016-09-01"
    :suoritusaika_loppu "2016-09-01"   
-   :osat [{:osaamisen_tunnustaminen nil, :arvosanan_korotus true, :osatunnus "990001", 
+   :osat [{:osaamisen_tunnustaminen nil, :kokotutkinto false, :arvosanan_korotus true, :osatunnus "990001", 
            :todistus true, :osaamisala -20002, :kieli "fi", :nimi "Käsityöyrityksen johtaminen", 
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat [{:arvioija_id -1 :etunimi "Väinö" :sukunimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false}]

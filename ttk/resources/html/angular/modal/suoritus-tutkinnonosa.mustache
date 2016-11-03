@@ -12,7 +12,11 @@
       <label>[[tutkinto]]</label>
       <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="tutkinto" required></select>
      </fieldset>
-  </div>
+    <fieldset>
+      <label>[[muodostaa_kokotutkinto]]</label>
+      <input type="checkbox" ng-model="form.kokotutkinto" ng-disabled="form.osaamisen_tunnustaminen">
+    </fieldset>
+   </div>
 
   <div>
     <fieldset>

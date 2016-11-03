@@ -37,7 +37,7 @@
   ([suorituskerta-id]
     (sql/select suoritus
       (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :tutkinnonosa))
-      (sql/fields :suoritus_id :arvosana :suorituskerta :tutkinnonosa :arvosanan_korotus :osaamisen_tunnustaminen :kieli :todistus :osaamisala
+      (sql/fields :suoritus_id :arvosana :suorituskerta :tutkinnonosa :arvosanan_korotus :osaamisen_tunnustaminen :kieli :todistus :osaamisala :kokotutkinto
                   [:tutkinnonosa.osatunnus :osatunnus]
                   [:tutkinnonosa.nimi_fi :nimi]
  ; TODO: nimi_fi ei ole oikeasti hyvä juttu välttämättä..
@@ -47,7 +47,7 @@
       (sql/select :suorituskerta
         (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
         (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
-        (sql/fields :suoritus.tutkinnonosa :suoritus.arvosanan_korotus :suoritus.osaamisen_tunnustaminen :suoritus.kieli :suoritus.todistus :suoritus.osaamisala :suoritus.arvosana
+        (sql/fields :suoritus.tutkinnonosa :suoritus.arvosanan_korotus :suoritus.osaamisen_tunnustaminen :suoritus.kieli :suoritus.todistus :suoritus.osaamisala :suoritus.arvosana :suoritus.kokotutkinto
                     :suorituskerta.suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :paikka :jarjestelyt :jarjestamismuoto :valmistava_koulutus
                     :suorituskerta.suoritusaika_alku :suorituskerta.suoritusaika_loppu :suorituskerta.arviointikokouksen_pvm :suorituskerta.toimikunta
                   ))))
@@ -58,6 +58,7 @@
    (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :jarjestelyt :paikka :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu
                :arviointikokouksen_pvm :toimikunta
                [:suoritus.suoritus_id :suoritus_id]
+               [:suoritus.kokotutkinto :kokotutkinto]
                [:suoritus.arvosana :arvosana]
                [:suoritus.tutkinnonosa :tutkinnonosa]
                [:suoritus.arvosanan_korotus :arvosanan_korotus]
@@ -70,7 +71,8 @@
 
 
 (defn hae-kaikki
-  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija rahoitusmuoto tila tutkinto suorituskertaid suorittaja]}]
+  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija 
+           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta]}]
   (->
     (sql/select* suorituskerta)
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
@@ -102,6 +104,7 @@
                                                                 {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
 
       (seq tila) (sql/where {:tila tila})
+      (seq toimikunta) (sql/where {:toimikunta toimikunta})
       (seq tutkinto) (sql/where {:tutkinto tutkinto}))
     sql/exec))
 
@@ -123,6 +126,7 @@
   {:suorituskerta (or (:suorituskerta osa) (:suorituskerta_id osa))
    :tutkinnonosa (or (:tutkinnonosa osa) (:tutkinnonosa_id osa))
    :arvosana (:arvosana osa)
+   :kokotutkinto (or (:kokotutkinto osa) false)
    :arvosanan_korotus (:arvosanan_korotus osa)
    :osaamisen_tunnustaminen (parse-iso-date (:osaamisen_tunnustaminen osa))
    :osaamisala (or (:osaamisala osa) (:osaamisala_id osa))
@@ -179,15 +183,15 @@
 
 (defn lisaa-tai-paivita!
   [{:keys [arvioijat jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id]
-    :as suoritus}]
+    :as suoritustiedot}]
   (if (nil? suorituskerta_id)
-    (lisaa! suoritus)
+    (lisaa! suoritustiedot)
     ; päivitys
     (do
 ;      (auditlog/suoritus-operaatio! :paivitys {:suorituskerta_id suorituskerta_id})
-       (auditlog/suoritus-operaatio! :paivitys suoritus)
+       (auditlog/suoritus-operaatio! :paivitys suoritustiedot)
       (sql-util/update-unique suorituskerta
-         (sql/set-fields (kerta->suorituskerta-db  suoritus))
+         (sql/set-fields (kerta->suorituskerta-db suoritustiedot))
          (sql/where {:suorituskerta_id (->int suorituskerta_id)}))
 
       ; update arvioijat
@@ -213,7 +217,7 @@
           (sql-util/update-unique suoritus
             (sql/set-fields (osa->suoritus-db (assoc osa :suorituskerta suorituskerta_id)))
             (sql/where {:suoritus_id (:suoritus_id osa)}))))
-      suoritus)))
+      suoritustiedot)))
 
 (defn laheta!
   [suoritukset]
