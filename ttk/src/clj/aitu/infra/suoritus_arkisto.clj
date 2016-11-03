@@ -108,6 +108,54 @@
       (seq tutkinto) (sql/where {:tutkinto tutkinto}))
     sql/exec))
 
+(defn hae-yhteenveto-raportti
+  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija 
+           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta]}]
+  (let [results
+        (->
+          (sql/select* suorituskerta)
+          (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
+          (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
+          (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :suoritus.tutkinnonosa))
+          (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkintoversio_id))    
+          (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
+          (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
+          (sql/join :left :suorituskerta_arvioija (= :suorituskerta_arvioija.suorituskerta_id :suorituskerta_id))
+          (sql/join :left :arvioija (= :arvioija.arvioija_id :suorituskerta_arvioija.arvioija_id))
+          (sql/with tutkintotoimikunta)
+    
+          (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
+                      :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
+                      :jarjestamismuoto :opiskelijavuosi
+                      :valmistava_koulutus :paikka :jarjestelyt
+                      [:suoritus.todistus :todistus]
+                      [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
+                      [:suoritus.kokotutkinto :kokotutkinto]
+                      [:suorittaja.etunimi :suorittaja_etunimi]
+                      [:suorittaja.sukunimi :suorittaja_sukunimi]
+                      [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
+                      [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
+                      [:tutkintoversio.tutkintotunnus :tutkinto_tutkintotunnus]
+                      [:tutkintoversio.peruste :tutkinto_peruste]
+                      [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
+                      [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                      [:tutkinnonosa.osatunnus :osatunnus]
+                      [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
+                      [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
+                      [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi]
+                      [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv]
+                      [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
+                      [:arvioija.etunimi :arvioija_etunimi]
+                      [:arvioija.sukunimi :arvioija_sukunimi]
+                      [:arvioija.rooli :arvioija_rooli]
+                      )
+          (sql/order :suorituskerta_id :DESC)
+; (group-by #(dissoc % :arvioija_etunimi :arvioija_sukunimi :arvioija_rooli) sql-select..)
+; ja sitten map (.. 
+          sql/exec)]
+    results))
+    
+
 (defn hae-arvioijat [suorituskerta-id]
   (sql/select :arvioija
     (sql/fields :etunimi :sukunimi :rooli :nayttotutkintomestari :arvioija.arvioija_id)

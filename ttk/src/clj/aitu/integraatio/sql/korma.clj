@@ -32,14 +32,6 @@
          sopimuksen-liite koulutustoimija organisaatiomuutos
          suorituskerta suoritus)
 
-(defentity suorituskerta
-  (sql/pk :suorituskerta_id))
-
-(defentity suoritus
-  (sql/pk :suoritus_id))
-
-(defentity arvioija
-  (sql/pk :arvioija_id))
 
 (defentity toimikausi
   (sql/pk :toimikausi_id))
@@ -99,6 +91,17 @@
   (sql/many-to-many nayttotutkinto :toimikunta_ja_tutkinto {:lfk :toimikunta :rfk :tutkintotunnus}))
 
 (defalias sopijatoimikunta tutkintotoimikunta)
+
+(defentity suorituskerta
+  (sql/pk :suorituskerta_id)
+  (sql/belongs-to tutkintotoimikunta
+    {:fk :toimikunta}))
+
+(defentity suoritus
+  (sql/pk :suoritus_id))
+
+(defentity arvioija
+  (sql/pk :arvioija_id))
 
 (defentity rooli
   (sql/pk :nimi))
