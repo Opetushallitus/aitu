@@ -20,6 +20,15 @@ create temporary table osaamisala_tmp as
 select (row_number() over (order by osaamisala_id)) as osaamisala_id, osaamisalatunnus, nimi_fi, nimi_sv, tutkintoversio
 from osaamisala oa1 where oa1.osaamisala_id = (select max(osaamisala_id) from osaamisala oa2 where oa1.tutkintoversio = oa2.tutkintoversio and oa1.osaamisalatunnus = oa2.osaamisalatunnus);
 
+update suorituskerta set tutkintoversio_id = uusin_versio_id from nayttotutkinto where nayttotutkinto.tutkintotunnus = suorituskerta.tutkinto and suorituskerta.tutkintoversio_id is null;
+
+create temporary table suoritus_osaamisala_tmp as
+  select suoritus_id, osaamisalatunnus, sk.tutkintoversio_id from suoritus s
+  inner join osaamisala o on o.osaamisala_id = s.osaamisala
+  inner join suorituskerta sk on sk.suorituskerta_id = s.suorituskerta;
+
+update suoritus set osaamisala = null;
+
 create temporary table sopimus_ja_tutkinto_ja_osaamisala_tmp as
 select distinct osaamisalatunnus, tutkintoversio, sopimus_ja_tutkinto, toimipaikka
 from sopimus_ja_tutkinto_ja_osaamisala sto
@@ -40,6 +49,13 @@ delete from osaamisala;
 insert into osaamisala(osaamisala_id, osaamisalatunnus, nimi_fi, nimi_sv, tutkintoversio)
 select osaamisala_id, osaamisalatunnus, nimi_fi, nimi_sv, tutkintoversio
 from osaamisala_tmp;
+
+update suoritus set osaamisala = osaamisala_id from osaamisala 
+inner join suoritus_osaamisala_tmp on suoritus_osaamisala_tmp.osaamisalatunnus = osaamisala.osaamisalatunnus and
+                                      suoritus_osaamisala_tmp.tutkintoversio_id = osaamisala.tutkintoversio
+where suoritus.suoritus_id = suoritus_osaamisala_tmp.suoritus_id;
+
+drop table suoritus_osaamisala_tmp;
 
 insert into sopimus_ja_tutkinto_ja_osaamisala (sopimus_ja_tutkinto, osaamisala, toimipaikka)
 select sopimus_ja_tutkinto, osaamisala_id as osaamisala, toimipaikka
