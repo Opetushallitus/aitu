@@ -55,6 +55,11 @@
                 :development-mode Boolean
                 :ominaisuus {:proto Boolean}
                 :logback {:properties-file s/Str}
+                :ajastus {:organisaatiopalvelu s/Str
+                          :kayttooikeuspalvelu s/Str
+                          :sopimusten-voimassaolo s/Str
+                          :tutkinnot s/Str
+                          :eperusteet s/Str}
                 :paatospohja-oletukset {:esittelijan_asema s/Str
                                         :esittelija s/Str
                                         :hyvaksyjan_asema s/Str
@@ -104,6 +109,12 @@
                          :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
                          :ominaisuus {:proto false}
                          :logback {:properties-file "resources/logback.xml"}
+                         :ajastus {:organisaatiopalvelu "0 0 3 * * ?" ;; Joka päivä klo 03:00
+                                   :kayttooikeuspalvelu "0 0/5 * * * ?" ;; Viiden minuutin välein
+                                   :sopimusten-voimassaolo "0 0 4 * * ?" ;; Joka päivä klo 04:00
+                                   :tutkinnot "0 0 5 * * ?" ;; Joka päivä klo 05:00
+                                   :eperusteet "0 0 6 * * ?" ;; Joka päivä klo 06:00
+                                   }
                          :paatospohja-oletukset {:esittelijan_asema ""
                                                  :esittelija ""
                                                  :hyvaksyjan_asema ""

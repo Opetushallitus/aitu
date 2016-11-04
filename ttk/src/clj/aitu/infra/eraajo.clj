@@ -32,60 +32,62 @@
            aitu.infra.eraajo.eperusteet.PaivitaPerusteetJob
            aitu.infra.eraajo.tutkinnot.PaivitaTutkinnotJob))
 
+(defn ajastus [asetukset tyyppi]
+  (cron/schedule
+    (cron/cron-schedule (get-in asetukset [:ajastus tyyppi]))))
+
+(def ajastin (promise))
+
 (defn ^:integration-api kaynnista-ajastimet!
-  [kayttooikeuspalvelu organisaatiopalvelu-asetukset eperusteet-asetukset koodistopalvelu-asetukset]
+  [kayttooikeuspalvelu asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
-  (qs/initialize)
+  (when-not (realized? ajastin)
+    (deliver ajastin (qs/initialize)))
   (log/info "Poistetaan vanhat jobit ennen uudelleenkäynnistystä")
-  (qs/clear!)
-  (qs/start)
+  (qs/clear! @ajastin)
+  (qs/start @ajastin)
   (log/info "Eräajomoottori käynnistetty")
   (let [ldap-job (j/build
                    (j/of-type PaivitaKayttajatLdapistaJob)
                    (j/with-identity "paivita-kayttajat-ldapista")
                    (j/using-job-data {"kayttooikeuspalvelu" kayttooikeuspalvelu}))
-        ldap-trigger-5min (t/build
-                            (t/with-identity "5-min-valein")
-                            (t/start-now)
-                            (t/with-schedule (s/schedule
-                                               (s/with-interval-in-minutes 5))))
+        ldap-trigger (t/build
+                       (t/with-identity "ldap")
+                       (t/start-now)
+                       (t/with-schedule (ajastus asetukset :kayttooikeuspalvelu)))
         org-job (j/build
                   (j/of-type PaivitaOrganisaatiotJob)
                   (j/with-identity "paivita-organisaatiot")
-                  (j/using-job-data {"asetukset" organisaatiopalvelu-asetukset}))
-        org-trigger-daily (t/build
-                            (t/with-identity "daily3")
-                            (t/start-now)
-                            (t/with-schedule (cron/schedule
-                                               (cron/cron-schedule "0 0 3 * * ?"))))
+                  (j/using-job-data {"asetukset" (:organisaatiopalvelu asetukset)}))
+        org-trigger (t/build
+                      (t/with-identity "organisaatio")
+                      (t/start-now)
+                      (t/with-schedule (ajastus asetukset :organisaatiopalvelu)))
         sopimus-job (j/build
                       (j/of-type PaivitaSopimustenVoimassaoloJob)
                       (j/with-identity "paivita-sopimusten-voimassaolo"))
-        sopimus-trigger-daily (t/build
-                                (t/with-identity "daily4")
-                                (t/start-now)
-                                (t/with-schedule (cron/schedule
-                                                   (cron/cron-schedule "0 0 4 * * ?"))))
+        sopimus-trigger (t/build
+                          (t/with-identity "sopimus")
+                          (t/start-now)
+                          (t/with-schedule (ajastus asetukset :sopimusten-voimassaolo)))
         tutkinnot-job (j/build
                         (j/of-type PaivitaTutkinnotJob)
-                        (j/using-job-data {"asetukset" koodistopalvelu-asetukset})
+                        (j/using-job-data {"asetukset" (:koodistopalvelu asetukset)})
                         (j/with-identity "paivita-tutkinnot"))
-        tutkinnot-trigger-daily (t/build
-                                  (t/with-identity "daily5")
-                                  (t/start-now)
-                                  (t/with-schedule (cron/schedule
-                                                     (cron/cron-schedule "0 0 5 * * ?"))))
+        tutkinnot-trigger (t/build
+                            (t/with-identity "tutkinnot")
+                            (t/start-now)
+                            (t/with-schedule (ajastus asetukset :tutkinnot)))
         perusteet-job (j/build
                         (j/of-type PaivitaPerusteetJob)
-                        (j/using-job-data {"asetukset" eperusteet-asetukset})
+                        (j/using-job-data {"asetukset" (:eperusteet-palvelu asetukset)})
                         (j/with-identity "paivita-perusteet"))
-        perusteet-trigger-daily (t/build
-                                  (t/with-identity "daily6")
-                                  (t/start-now)
-                                  (t/with-schedule (cron/schedule
-                                                     (cron/cron-schedule "0 0 6 * * ?"))))]
-    (qs/schedule ldap-job ldap-trigger-5min)
-    (qs/schedule org-job org-trigger-daily)
-    (qs/schedule sopimus-job sopimus-trigger-daily)
-    (qs/schedule tutkinnot-job tutkinnot-trigger-daily)
-    (qs/schedule perusteet-job perusteet-trigger-daily)))
+        perusteet-trigger (t/build
+                            (t/with-identity "perusteet")
+                            (t/start-now)
+                            (t/with-schedule (ajastus asetukset :eperusteet)))]
+    (qs/schedule @ajastin ldap-job ldap-trigger)
+    (qs/schedule @ajastin org-job org-trigger)
+    (qs/schedule @ajastin sopimus-job sopimus-trigger)
+    (qs/schedule @ajastin tutkinnot-job tutkinnot-trigger)
+    (qs/schedule @ajastin perusteet-job perusteet-trigger)))
