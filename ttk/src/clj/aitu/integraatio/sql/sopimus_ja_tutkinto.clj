@@ -25,10 +25,10 @@
       sopimus-ja-tutkinto
       (sql/with sopimus-ja-tutkinto-ja-tutkinnonosa
         (sql/with tutkinnonosa
-          (sql/fields :osatunnus :nimi_fi :nimi_sv :versio :tutkinnonosa_id :kuvaus)))
+          (sql/fields :osatunnus :nimi_fi :nimi_sv :tutkinnonosa_id)))
       (sql/with sopimus-ja-tutkinto-ja-osaamisala
         (sql/with osaamisala
-          (sql/fields :osaamisalatunnus :nimi_fi :nimi_sv :versio :voimassa_alkupvm :voimassa_loppupvm :osaamisala_id :tutkintoversio :kuvaus)))
+          (sql/fields :osaamisalatunnus :nimi_fi :nimi_sv :osaamisala_id :tutkintoversio)))
       (sql/where {:jarjestamissopimusid jarjestamissopimusid
                   :poistettu false}))))
 

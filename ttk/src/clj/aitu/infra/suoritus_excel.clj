@@ -451,7 +451,7 @@
              opiskelijat (suorittaja-arkisto/hae-kaikki)
              suorittajamap (group-by :suorittaja_id opiskelijat)
              suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
-             osamap (group-by :osatunnus (tutosa-arkisto/hae-kaikki-uusimmat)) ; TODO: meneekö tämä oikein? Pitäisikö kohdistua vanhoihin joskus?
+             osamap (group-by #(select-keys % [:osatunnus :tutkintoversio]) (tutosa-arkisto/hae-kaikki))
              suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
              db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
              _ (reset! rivi 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
@@ -529,7 +529,7 @@
                                   :todistus todistus
                                   :osaamisala osaamisala-id
                                   :kokotutkinto koko-tutkinto
-                                  :tutkinnonosa (:tutkinnonosa_id (first (get osamap osatunnus)))
+                                  :tutkinnonosa (:tutkinnonosa_id (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))) 
                                   :arvosanan_korotus korotus
                                   :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 
                                   :kieli (parse-kieli suorituskieli)
@@ -545,7 +545,7 @@
                   (do
                     (log/info "Lisätään suorituskerta .." suorituskerta-map)
                     (log/info "Lisätään suoritus .." suoritus-map)
-                    (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                    (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
                     (suoritus-arkisto/lisaa! suoritus-full)
 
                     ))
