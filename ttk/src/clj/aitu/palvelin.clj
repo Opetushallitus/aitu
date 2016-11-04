@@ -102,7 +102,7 @@
 
 (defn ^:integration-api kaynnista-eraajon-ajastimet! [asetukset]
   (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
-    (eraajo/kaynnista-ajastimet! kop (:organisaatiopalvelu asetukset) (:eperusteet-palvelu asetukset) (:koodistopalvelu asetukset))))
+    (eraajo/kaynnista-ajastimet! kop asetukset)))
 
 (defn timeout-response [asetukset]
   {:status 403

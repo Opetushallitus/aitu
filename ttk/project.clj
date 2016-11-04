@@ -20,7 +20,7 @@
                  [clj-http "1.0.1"]
                  [clj-time "0.6.0"]
                  [clojure-csv/clojure-csv "2.0.1"]
-                 [clojurewerkz/quartzite "1.1.0"]
+                 [clojurewerkz/quartzite "2.0.0"]
                  [com.cemerick/valip "0.3.2"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
                  [compojure "1.4.0"]
