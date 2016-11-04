@@ -203,7 +203,7 @@
   []
   (sql/select tutkintoversio
     (sql/with osaamisala
-      (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :voimassa_loppupvm :osaamisala_id))
+      (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :osaamisala_id))
     (sql/fields :tutkintoversio_id)
     (sql/where (> :siirtymaajan_loppupvm (sql/raw "current_date")))
     (sql/order :tutkintoversio_id))) 
