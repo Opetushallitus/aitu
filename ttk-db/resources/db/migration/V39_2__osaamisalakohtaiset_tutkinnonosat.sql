@@ -29,6 +29,16 @@ create temporary table suoritus_osaamisala_tmp as
 
 update suoritus set osaamisala = null;
 
+create temporary table suoritus_tutkinnonosa_tmp as
+  select suoritus_id, osatunnus, sk.tutkintoversio_id from suoritus s
+  inner join tutkinnonosa t on t.tutkinnonosa_id = s.tutkinnonosa
+  inner join suorituskerta sk on sk.suorituskerta_id = s.suorituskerta;
+
+alter table suoritus
+  alter column tutkinnonosa drop not null;
+  
+update suoritus set tutkinnonosa = null;
+
 create temporary table sopimus_ja_tutkinto_ja_osaamisala_tmp as
 select distinct osaamisalatunnus, tutkintoversio, sopimus_ja_tutkinto, toimipaikka
 from sopimus_ja_tutkinto_ja_osaamisala sto
@@ -107,5 +117,17 @@ select setval('tutkinnonosa_id_seq',(select max(tutkinnonosa_id) from tutkinnono
 
 drop table tutkinnonosa_tmp;
 drop table sopimus_ja_tutkinto_ja_tutkinnonosa_tmp;
+
+
+update suoritus set tutkinnonosa = tutkinnonosa_id from tutkinnonosa
+ inner join suoritus_tutkinnonosa_tmp on suoritus_tutkinnonosa_tmp.osatunnus = tutkinnonosa.osatunnus and
+                                          suoritus_tutkinnonosa_tmp.tutkintoversio_id = tutkinnonosa.tutkintoversio;
+
+drop table suoritus_tutkinnonosa_tmp;
+
+alter table suoritus
+  alter column tutkinnonosa set not null;
+
+
 
 insert into eperusteet_log default values;
