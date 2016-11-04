@@ -56,7 +56,7 @@
 
 (defn asettamispaatos->pdf [kieli header data]
   (luo-paatos kieli header :asettamispaatos data))
-
+    
 (defn jasen-nimike-filter [jasenet kieli]
   (filter (comp seq :jasen)
           [{:edustus (case kieli :fi "Työnantajien edustajat" :sv "Representanter för arbetsgivare")
@@ -69,7 +69,7 @@
             :jasen (jasenet "itsenainen")}
            {:edustus (case kieli :fi "Muut toimikuntaan kuuluvat" :sv "Övriga")
             :jasen (mapcat jasenet ["asiantuntija" "muu"])}]))
-
+  
 (defn luo-asettamispaatos-data [kieli diaarinumero data]
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
                                               [:nimi_fi :nimi_sv [:toimikausi_alku :alkupvm] [:toimikausi_loppu :loppupvm]
@@ -90,10 +90,12 @@
         jakelu (concat (for [{:keys [sukunimi etunimi]} (sort-by (juxt :sukunimi :etunimi) nimitetyt-jasenet)]
                          (str etunimi \space sukunimi))
                        (:jakelu data))
-        tiedoksi (concat (sort (for [jasen (:jasenyys toimikunta)]
-                                 (lokalisoi jasen :jarjesto_nimi kieli)))
+        tiedoksi (concat (distinct (sort (for [jasen nimitetyt-jasenet
+                                               :let [jarjesto (lokalisoi jasen :jarjesto_nimi kieli)]
+                                               :when jarjesto]
+                                           jarjesto)))
                          (:tiedoksi data))]
-
+    
     ; paluuarvona tietorakenne PDF-generointia varten
     {:kieli kieli
      :header {:teksti (case kieli :fi "PÄÄTÖS" :sv "BESLUT")
@@ -105,7 +107,7 @@
                        :jakelu jakelu
                        :tiedoksi tiedoksi
                        :paatosteksti (str (apply str (repeat (:tyhjiariveja data) "\n")) (:paatosteksti data)))}))
-
+  
 (defn luo-asettamispaatos [kieli diaarinumero data]
   (let [pdf-data (luo-asettamispaatos-data kieli diaarinumero data)]
     (asettamispaatos->pdf (:kieli pdf-data) (:header pdf-data) (:data pdf-data))))
@@ -113,6 +115,7 @@
 
 (defn asettamispaatos->pdf [kieli header data]
   (luo-paatos kieli header :asettamispaatos data))
+
 
 (defn luo-taydennyspaatos [kieli diaarinumero data]
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
@@ -126,7 +129,7 @@
                            (map (partial muotoile-jasen kieli))
                            (group-by :edustus))
         jasenet (jasen-nimike-filter edustus->jasenet kieli)]
-
+    
     (luo-paatos kieli
                 {:teksti (case kieli :fi "PÄÄTÖS" :sv "BESLUT")
                  :paivays (:paivays data)
