@@ -545,7 +545,7 @@
                   (do
                     (log/info "Lisätään suorituskerta .." suorituskerta-map)
                     (log/info "Lisätään suoritus .." suoritus-map)
-                    (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                    (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
                     (suoritus-arkisto/lisaa! suoritus-full)
 
                     ))

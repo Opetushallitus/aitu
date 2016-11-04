@@ -59,7 +59,7 @@
   (testing "tutkinnon tunnuksella haku toimii"
     (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "kylla"}))
            ["OL1"]))
-    (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "327128" :sopimuksia "kylla"})))
+    (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "927128" :sopimuksia "kylla"})))
            #{"OL2" "OL5"})))
   (testing "opintoalan tunnuksella haku toimii"
     (is (= (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:tunnus "OA1" :sopimuksia "kylla"}))

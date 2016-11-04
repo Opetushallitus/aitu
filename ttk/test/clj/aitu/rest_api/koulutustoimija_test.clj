@@ -17,7 +17,7 @@
     (run-with-db kt-testidata!
       #(let [ei-tuloksia (-> (peridot/session crout)
                            (mock-request "/api/koulutustoimija/haku/ala" :get {:sopimuksia "kylla"
-                                                                               :tunnus "324601"}))
+                                                                               :tunnus "924601"}))
              tuloksia (-> (peridot/session crout)
                         (mock-request "/api/koulutustoimija/haku/ala" :get {:sopimuksia "kaikki"
                                                                             :tunnus "T1"}))

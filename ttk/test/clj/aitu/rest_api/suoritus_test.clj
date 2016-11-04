@@ -10,7 +10,7 @@
 (def suorituslista-result
   {:tila "luonnos", :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", :hyvaksymisaika nil, 
   :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto", :suorittaja -1, 
-  :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :koulutustoimija "0208430-8",
+  :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :koulutustoimija "0208430-8",
   :arviointikokouksen_pvm "2016-09-02"
   :suoritusaika_alku "2016-09-01"
   :toimikunta "Lynx lynx"
@@ -44,7 +44,7 @@
    "valmistava_koulutus" true
    "paikka" "Yöttäjän harjoitusalue"
    "jarjestelyt" "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "   
-   "tutkinto" "327128"})
+   "tutkinto" "927128"})
 
 (def suoritus-tunnustaminen
   {"osat" [{"arvosana" "hyvaksytty"
@@ -67,7 +67,7 @@
    "valmistava_koulutus" true
    "paikka" nil
    "jarjestelyt" nil  
-   "tutkinto" "327128"})
+   "tutkinto" "927128"})
 
 (def suoritus-result-tunnustaminen
   {:tila "luonnos", :jarjestelyt nil
@@ -79,7 +79,7 @@
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat []
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
-   :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
+   :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :valmistava_koulutus true, 
    :koulutustoimija "0208430-8", :arviointikokouksen_pvm nil
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
@@ -103,7 +103,7 @@
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat [{:arvioija_id -1 :etunimi "Väinö" :sukunimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false}]
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
-   :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "327128", :valmistava_koulutus true, 
+   :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :valmistava_koulutus true, 
    :koulutustoimija "0208430-8", :arviointikokouksen_pvm "2016-09-02"
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
@@ -168,7 +168,7 @@
 
 (deftest ^:integraatio suoritus-haku
   (let [haku-map {:koulutustoimija "0208430-8"
-                  :tutkinto "327128"}
+                  :tutkinto "927128"}
         crout (init-peridot!)]
     (run-with-db (constantly true)
       #(let [s (peridot/session crout)

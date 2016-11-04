@@ -13,16 +13,16 @@ insert into opintoala (opintoala_tkkoodi, koulutusala_tkkoodi, selite_fi, selite
  where not exists (select 1 from opintoala where opintoala_tkkoodi = '201');
 
 insert into nayttotutkinto(tutkintotunnus, opintoala, nimi_fi, nimi_sv, tutkintotaso, tyyppi)
- select '324601', '202', 'Audiovisuaalisen viestinnän perustutkinto', 'Audiovisuaalisen viestinnän perustutkinto (sv)', 'ammattitutkinto', '02'
- where not exists (select 1 from nayttotutkinto where tutkintotunnus = '324601');
+ select '924601', '202', 'Audiovisuaalisen viestinnän perustutkinto', 'Audiovisuaalisen viestinnän perustutkinto (sv)', 'ammattitutkinto', '02'
+ where not exists (select 1 from nayttotutkinto where tutkintotunnus = '924601');
 
 insert into nayttotutkinto(tutkintotunnus, opintoala, nimi_fi, nimi_sv, tutkintotaso, tyyppi)
- select '327128', '201', 'Käsityömestarin erikoisammattitutkinto', 'Käsityömestarin erikoisammattitutkinto (sv)', 'erikoisammattitutkinto', '02'
- where not exists (select 1 from nayttotutkinto where tutkintotunnus = '327128');
+ select '927128', '201', 'Käsityömestarin erikoisammattitutkinto', 'Käsityömestarin erikoisammattitutkinto (sv)', 'erikoisammattitutkinto', '02'
+ where not exists (select 1 from nayttotutkinto where tutkintotunnus = '927128');
  
 insert into tutkintoversio (tutkintoversio_id, tutkintotunnus, versio, koodistoversio, peruste, hyvaksytty, voimassa_alkupvm)
-  values (-10000, '324601', 1, 1, '38/011/2014', true, to_date('2005-01-01', 'YYYY-MM-DD')),
-         (-20000, '327128', 1, 1, '34/011/2010', true, to_date('2005-01-01', 'YYYY-MM-DD'));
+  values (-10000, '924601', 1, 1, '38/911/2014', true, to_date('2005-01-01', 'YYYY-MM-DD')),
+         (-20000, '927128', 1, 1, '34/911/2010', true, to_date('2005-01-01', 'YYYY-MM-DD'));
 
 insert into tutkinnonosa (tutkinnonosa_id, osatunnus, nimi_fi, tutkintoversio)
   values(-10001, '990000', 'Tuotteistaminen', -20000);
@@ -48,11 +48,11 @@ insert into oppilaitos (oppilaitoskoodi, nimi, kieli, osoite, oid, koulutustoimi
   values('54545', 'Suunnistusopisto', 'fi', 'Erantopolku 10', '1.2.246.562.10.851056789012', '1060155-5', true);
 
          
-update nayttotutkinto set uusin_versio_id = -10000 where tutkintotunnus = '324601';
-update nayttotutkinto set uusin_versio_id = -20000 where tutkintotunnus = '327128';
+update nayttotutkinto set uusin_versio_id = -10000 where tutkintotunnus = '924601';
+update nayttotutkinto set uusin_versio_id = -20000 where tutkintotunnus = '927128';
 
 insert into toimikunta_ja_tutkinto(toimikunta, tutkintotunnus)
-  values ('Gulo gulo', '324601');
+  values ('Gulo gulo', '924601');
   
 insert into jarjestamissopimus (jarjestamissopimusid, sopimusnumero, toimikunta, sopijatoimikunta, voimassa, oppilaitos, koulutustoimija)
   values (-324601, '123456', 'Gulo gulo', 'Gulo gulo', true, '54545', '1060155-5');
