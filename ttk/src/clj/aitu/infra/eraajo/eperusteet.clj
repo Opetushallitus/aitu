@@ -25,16 +25,15 @@
 (defn valitse-perusteen-kentat [peruste]
   (select-keys peruste [:peruste :eperustetunnus :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm]))
 
-(defn hae-muutokset [viimeisin-haku asetukset]
-  (let [uudet (eperusteet/hae-perusteet viimeisin-haku asetukset)]
-    (for [[tutkintotunnus peruste] uudet
-          :let [diaarinumero (:diaarinumero peruste)
-                tutkinto (tutkinto-arkisto/hae-tutkinto tutkintotunnus)
-                vanha-peruste (tutkinto-arkisto/hae-peruste diaarinumero)
-                peruste (valitse-perusteen-kentat (assoc peruste :peruste diaarinumero))]
-          :when (and tutkinto
-                     (not= peruste (valitse-perusteen-kentat vanha-peruste)))]
-      (assoc peruste :tutkintotunnus (:tutkintotunnus tutkinto)))))
+(defn muuttuneet-perusteet [perusteet]
+  (for [[tutkintotunnus peruste] perusteet
+        :let [diaarinumero (:diaarinumero peruste)
+              tutkinto (tutkinto-arkisto/hae-tutkinto tutkintotunnus)
+              vanha-peruste (tutkinto-arkisto/hae-peruste diaarinumero)
+              peruste (valitse-perusteen-kentat (assoc peruste :peruste diaarinumero))]
+        :when (and tutkinto
+                   (not= peruste (valitse-perusteen-kentat vanha-peruste)))]
+    (assoc peruste :tutkintotunnus (:tutkintotunnus tutkinto))))
 
 (defn ^:integration-api paivita-perusteet! [asetukset]
   (binding [*current-user-uid* integraatiokayttaja
@@ -47,10 +46,14 @@
       (log/info "Päivitetään tutkintojen perusteet ePerusteet-järjestelmästä")
       (let [nyt (time/now)
             viimeisin-haku (tutkinto-arkisto/hae-viimeisin-eperusteet-paivitys)
-            muutokset (hae-muutokset viimeisin-haku asetukset)]
-        (doseq [tutkinto muutokset]
+            perusteet (eperusteet/hae-perusteet viimeisin-haku asetukset)
+            muuttuneet (muuttuneet-perusteet perusteet)]
+        (doseq [tutkinto muuttuneet]
           (log/info "Päivitetään tutkinto" (:tutkintotunnus tutkinto) (:peruste tutkinto))
           (tutkinto-arkisto/paivita-tutkinto! tutkinto))
+        (doseq [[_ peruste] perusteet]
+          (tutkinto-arkisto/paivita-tutkinnonosat! peruste)
+          (tutkinto-arkisto/paivita-osaamisalat! peruste))
         (tutkinto-arkisto/tallenna-viimeisin-eperusteet-paivitys! nyt))
       (log/info "Tutkintojen perusteiden päivitys valmis"))))
 

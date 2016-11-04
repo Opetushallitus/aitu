@@ -46,7 +46,7 @@
 (def suoritus
   (let [suorituskerta-map {:suorittaja -1
                            :rahoitusmuoto 1 
-                           :tutkinto "327128"
+                           :tutkinto "927128"
                            :opiskelijavuosi 1  
                            :koulutustoimija "1060155-5";  
                            :jarjestamismuoto "oppilaitosmuotoinen"  

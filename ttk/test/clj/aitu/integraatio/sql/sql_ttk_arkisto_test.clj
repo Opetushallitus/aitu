@@ -162,13 +162,13 @@
 (deftest ^:integraatio hae-ehdoilla-tutkinto
   (lisaa-toimikunta! {:tkunta "TK2"})
   (arkisto/lisaa-tutkinto! {:toimikunta "TK2"
-                            :tutkintotunnus "324601"})
+                            :tutkintotunnus "924601"})
   (lisaa-tutkinto! {:tutkintotunnus "T2"
                     :opintoala "201"})
   (lisaa-toimikunta! {:tkunta "TK3"})
   (arkisto/lisaa-tutkinto! {:toimikunta "TK3"
                             :tutkintotunnus "T2"})
-  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:tunnus "324601"})))
+  (is (= (set (map :tkunta (arkisto/hae-ehdoilla {:tunnus "924601"})))
         #{"Gulo gulo" "TK2"})))
 
 (deftest ^:integraatio hae-termilla-test

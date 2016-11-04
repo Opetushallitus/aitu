@@ -118,18 +118,9 @@
 
 (defentity tutkinnonosa
   (sql/pk :tutkinnonosa_id)
-  (sql/has-many tutkinto-ja-tutkinnonosa
-    {:fk tutkinnonosa})
-  (sql/has-many sopimus-ja-tutkinto-ja-tutkinnonosa
-    {:fk :tutkinnonosa})
-  (sql/many-to-many tutkintoversio
-    :tutkinto_ja_tutkinnonosa {:lfk :tutkinnonosa, :rfk :tutkintoversio}))
-
-(defentity tutkinto-ja-tutkinnonosa
-  (sql/table :tutkinto_ja_tutkinnonosa)
   (sql/belongs-to tutkintoversio
     {:fk :tutkintoversio})
-  (sql/belongs-to tutkinnonosa
+  (sql/has-many sopimus-ja-tutkinto-ja-tutkinnonosa
     {:fk :tutkinnonosa}))
 
 (defentity tutkintonimike
@@ -175,10 +166,8 @@
     {:fk :tutkintotunnus})
   (sql/has-many sopimus-ja-tutkinto
     {:fk :tutkintoversio})
-  (sql/has-many tutkinto-ja-tutkinnonosa
+  (sql/has-many tutkinnonosa
     {:fk :tutkintoversio})
-  (sql/many-to-many tutkinnonosa
-    :tutkinto_ja_tutkinnonosa {:lfk :tutkintoversio, :rfk :tutkinnonosa})
   (sql/many-to-many tutkintonimike
     :tutkintonimike_ja_tutkintoversio {:lfk :tutkintoversio, :rfk :tutkintonimike})
   (sql/has-many osaamisala
@@ -229,6 +218,13 @@
     {:fk :osaamisala})
   (sql/belongs-to sopimus-ja-tutkinto
     {:fk :sopimus_ja_tutkinto}))
+
+(defentity osaamisala-ja-tutkinnonosa
+  (sql/table :osaamisala_ja_tutkinnonosa)
+  (sql/belongs-to osaamisala
+    {:fk :osaamisala})
+  (sql/belongs-to tutkinnonosa
+    {:fk :tutkinnonosa}))
 
 (defentity jarjestamissuunnitelma
   (sql/table :jarjestamissuunnitelma)

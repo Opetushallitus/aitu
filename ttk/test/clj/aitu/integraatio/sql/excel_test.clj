@@ -41,6 +41,6 @@
         ui-log (lue-excel! wb)]
 
     (is (= (first (map (juxt :suorittaja :rahoitusmuoto :tutkinto :koulutustoimija) (suoritus-arkisto/hae-kaikki {})))
-           [-2 2 "327128" "1060155-5"]))
+           [-2 2 "927128" "1060155-5"]))
     (is (= ui-log luku-result))))
   

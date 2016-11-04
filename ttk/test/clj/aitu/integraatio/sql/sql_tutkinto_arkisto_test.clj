@@ -42,11 +42,11 @@
                           :voimassa_alkupvm (time/local-date 1900 1 1)
                           :siirtymaajan_loppupvm (time/local-date 1901 1 1)})
   (is (= (set (map :tutkintotunnus (arkisto/hae-ehdoilla {})))
-         #{"324601" "327128"})))
+         #{"924601" "927128"})))
 
 (deftest ^:integraatio hae-ehdoilla-voimassaolevat
   (is (= (set (map :tutkintotunnus (arkisto/hae-ehdoilla {:voimassa "kaikki"})))
-        #{"324601" "327128"})))
+        #{"924601" "927128"})))
 
 (deftest ^:integraatio hae-ehdoilla-nimi
   (lisaa-koulutus-ja-opintoala! {:koulutusalakoodi "KA"}
@@ -73,4 +73,4 @@
 
 (deftest ^:integraatio hae-ehdoilla-avaimet
   (is (= (arkisto/hae-ehdoilla {:avaimet [:tutkintotunnus]})
-        [{:tutkintotunnus "324601"} {:tutkintotunnus "327128"}])))
+        [{:tutkintotunnus "924601"} {:tutkintotunnus "927128"}])))

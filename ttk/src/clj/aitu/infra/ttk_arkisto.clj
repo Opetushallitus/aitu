@@ -96,8 +96,7 @@
                                                          (sql/sqlfn exists (sql/subselect toimikunta-ja-tutkinto
                                                                              (sql/join :inner nayttotutkinto {:toimikunta_ja_tutkinto.tutkintotunnus :nayttotutkinto.tutkintotunnus})
                                                                              (sql/join :inner tutkintoversio {:tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus})
-                                                                             (sql/join :left tutkinto-ja-tutkinnonosa {:tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio})
-                                                                             (sql/join :left tutkinnonosa {:tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa.tutkinnonosa_id})
+                                                                             (sql/join :left tutkinnonosa {:tutkintoversio.tutkintoversio_id :tutkinnonosa.tutkintoversio})
                                                                              (sql/join :left osaamisala {:tutkintoversio.tutkintoversio_id :osaamisala.tutkintoversio})
                                                                              (sql/where (and {:toimikunta_ja_tutkinto.toimikunta :tutkintotoimikunta.tkunta}
                                                                                              (or {:nayttotutkinto.opintoala (:tunnus ehdot)}

@@ -253,11 +253,7 @@
         (testing "Kaikki osaamisalat ovat valittuna"
           (is (= (valitut-osaamisalat) #{(:nimi testi-osaamisala)})))
         (testing "Järjestysnumerot näytetään oikein"
-          (is (= (jarjestysnumerot) #{"1" "2"})))
-        (testing "Kuvaukset näytetään oikein tutkinnonosille"
-          (is (= (tutkinnonosien-kuvaukset) (set (map :kuvaus testi-tutkinnonosat)))))
-        (testing "Kuvaukset näytetään oikein osaamisaloille"
-          (is (= (osaamisalojen-kuvaukset) #{(:kuvaus testi-osaamisala)}))))))
+          (is (= (jarjestysnumerot) #{"1" "2"}))))))
   (testing "Tallennus onnistuu ja sopimuksen tiedoissa näkyvät tallennetut tiedot"
     (with-webdriver
       (du/with-data (jarjestamissopimus-data-with-tutkinnon-osat)

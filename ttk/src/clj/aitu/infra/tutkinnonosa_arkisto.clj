@@ -19,9 +19,12 @@
   (sql/select :tutkinnonosa
     (sql/where
       (not (sql/sqlfn exists 
-             (sql/subselect :tutkinnonosa 
-                            (sql/where (and (> :tutkinnonosa.versio :versio)
-                                            (= :tutkinnonosa.osatunnus :osatunnus)))))))))
+        (sql/subselect :tutkinnonosa 
+           (sql/where (and (> :tutkinnonosa.versio :versio)
+                           (= :tutkinnonosa.osatunnus :osatunnus)))))))))
+
+(defn hae-kaikki []
+  (sql/select :tutkinnonosa))
 
 ; TODO: tämä hakee kaikkien versioiden tutkinnon osat tunnuksella. Se ei ole todennäköisesti se mitä kutsuja haluaisi, vaan uusimman version osat.
 ; Pitää käydä läpi paikat joissa tätä kutsutaan, semantiikkaa ei voi muuttaa sokkona.
@@ -29,8 +32,7 @@
   [tutkintotunnus]
   (->
     (sql/select* :tutkinnonosa)
-    (sql/join :tutkinto_ja_tutkinnonosa (= :tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa_id))
-    (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio))
+    (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkinnonosa.tutkintoversio))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
     (sql/fields :osatunnus :nimi_fi :nimi_sv :tutkinnonosa_id
                 [:nayttotutkinto.nimi_fi :nayttotutkinto_nimi_fi]
@@ -42,8 +44,7 @@
   [tutkintoversio-id]
   (->
     (sql/select* :tutkinnonosa)
-    (sql/join :tutkinto_ja_tutkinnonosa (= :tutkinto_ja_tutkinnonosa.tutkinnonosa :tutkinnonosa_id))
-    (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkinto_ja_tutkinnonosa.tutkintoversio))
+    (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkinnonosa.tutkintoversio))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
     (sql/fields :osatunnus :nimi_fi :nimi_sv :tutkinnonosa_id
                 [:nayttotutkinto.nimi_fi :nayttotutkinto_nimi_fi]

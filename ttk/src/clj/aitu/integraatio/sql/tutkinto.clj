@@ -41,7 +41,6 @@
   (first
     (sql/select tutkintoversio
       (sql/with nayttotutkinto)
-      (sql/with tutkinto-ja-tutkinnonosa
-        (sql/with tutkinnonosa))
+      (sql/with tutkinnonosa)
       (sql/with osaamisala)
       (sql/where {:tutkintoversio_id tutkintoversio_id}))))

@@ -81,7 +81,7 @@
         o5 (lisaa-oppilaitos! {:koulutustoimija "KT5" :nimi "Oppilaitos o2" :oppilaitoskoodi "OL5"})
         sop5 (lisaa-jarjestamissopimus! kt5 o5)
         _ (lisaa-tutkinto-sopimukselle! sop5 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa)
-        _ (lisaa-tutkinto-sopimukselle! sop5 -20000) ; tutkintotunnus "327128"
+        _ (lisaa-tutkinto-sopimukselle! sop5 -20000) ; tutkintotunnus "927128"
         
         ]))
   
@@ -91,7 +91,7 @@
   (testing "tutkintotunnuksella haku"
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "kylla"}))
            ["KT1"]))
-    (is (= (set (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "327128" :sopimuksia "kylla"})))
+    (is (= (set (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "927128" :sopimuksia "kylla"})))
          #{"KT2" "KT5"})))
   (testing "opintoalan tunnuksella haku"
     (is (= (map :ytunnus (arkisto/hae-ehdoilla {:tunnus "OA1" :sopimuksia "kylla"}))

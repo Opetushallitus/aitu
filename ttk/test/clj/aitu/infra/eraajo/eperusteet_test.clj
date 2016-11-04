@@ -68,14 +68,13 @@
              :voimassa_loppupvm (time/local-date 2199 1 1)
              :siirtymaajan_loppupvm (time/local-date 2199 1 1)})
 
-(deftest ^:integraatio hae-muutokset-test
+(deftest ^:integraatio muuttuneet-perusteet-test
   (lisaa-testidata!)
-  (with-redefs [aitu.integraatio.eperusteet/hae-perusteet (constantly [[tutkintotunnus ensimmainen]
-                                                                       [tutkintotunnus toinen-vanha]
-                                                                       [tutkintotunnus kolmas]])]
-    (testing "hae-muutokset palauttaa listan muuttuneista ja uusista perusteista"
-      (is (= (map :peruste (hae-muutokset nil nil))
-             [(:diaarinumero ensimmainen) (:diaarinumero kolmas)])))))
+  (testing "muuttuneet-perusteet palauttaa listan muuttuneista ja uusista perusteista"
+    (is (= (map :peruste (muuttuneet-perusteet [[tutkintotunnus ensimmainen]
+                                                [tutkintotunnus toinen-vanha]
+                                                [tutkintotunnus kolmas]]))
+           [(:diaarinumero ensimmainen) (:diaarinumero kolmas)]))))
 
 (deftest ^:integraatio paivita-perusteet-test
   (lisaa-testidata!)
