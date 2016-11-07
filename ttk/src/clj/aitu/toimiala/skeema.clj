@@ -186,6 +186,12 @@
                                                {:jarjestamissopimus [JarjestamissopimusLista]
                                                 :oppilaitokset [OppilaitosLinkki]}))
 
+(s/defschema Suorittaja {(s/optional-key :hetu) s/Str
+                         (s/optional-key :oid) s/Str
+                         :etunimi s/Str
+                         :sukunimi s/Str
+                         :rahoitusmuoto_id s/Int})
+
 (s/defschema Lokalisoitu
   {:fi s/Str
    :sv s/Str})

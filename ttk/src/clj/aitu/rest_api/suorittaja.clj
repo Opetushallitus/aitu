@@ -13,12 +13,14 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.suorittaja
-  (:require [aitu.infra.suorittaja-arkisto :as arkisto]
-            aitu.compojure-util
-            [compojure.api.core :refer [DELETE GET POST PUT defroutes]]
+  (:require [compojure.api.core :refer [DELETE GET POST PUT defroutes]]
+            [cheshire.core :as cheshire]
+            [schema.core :as s]
             [oph.common.util.http-util :refer [response-or-404 luo-validoinnin-virhevastaus]]
             [sade.validators :as sade-validators]
-            [cheshire.core :as cheshire]))
+            aitu.compojure-util
+            [aitu.infra.suorittaja-arkisto :as arkisto]
+            [aitu.toimiala.skeema :refer [Suorittaja]]))
 
 ; TODO: luo-validoinnin-virhevastaus mieluummin..  OPH-1877
 (defn hetu-virhevastaus
@@ -39,8 +41,9 @@
   (GET "/" []
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/hae-kaikki)))
-  (POST "/" [& suorittaja]
+  (POST "/" []
     :kayttooikeus :arviointipaatos
+    :body [suorittaja Suorittaja]
     (if (and (:hetu suorittaja) (not (sade-validators/valid-hetu? (:hetu suorittaja))))
       (hetu-virhevastaus)
       (if (arkisto/hetu-kaytossa? nil (:hetu suorittaja))

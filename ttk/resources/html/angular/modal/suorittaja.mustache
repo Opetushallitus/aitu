@@ -11,27 +11,27 @@
   <div>
     <fieldset>
       <label for="etunimiInput">[[etunimi]]</label>
-      <input id="etunimiInput" type="text" ng-model="suorittajaForm.etunimi" required autofocus>
+      <input id="etunimiInput" type="text" ng-model="suorittajaForm.etunimi" ng-required="true" autofocus>
     </fieldset>
     <fieldset>
       <label for="sukunimiInput">[[sukunimi]]</label>
-      <input id="sukunimiInput" type="text" ng-model="suorittajaForm.sukunimi" required>
+      <input id="sukunimiInput" type="text" ng-model="suorittajaForm.sukunimi" ng-required="true">
     </fieldset>
     <fieldset>
       <label for="hetuInput">[[hetu]]</label>
-      <input id="hetuInput" type="text" ng-model="suorittajaForm.hetu">
+      <input id="hetuInput" type="text" ng-model="suorittajaForm.hetu" ng-required="!suorittajaForm.oid">
     </fieldset>
     <fieldset>
       <label for="oidInput">OID</label>
-      <input id="oidInput" type="text" ng-model="suorittajaForm.oid">
+      <input id="oidInput" type="text" ng-model="suorittajaForm.oid" ng-required="!suorittajaForm.hetu">
     </fieldset>
       <fieldset>
         <label>[[rahoitusmuoto]]</label>
-        <select ng-model="suorittajaForm.rahoitusmuoto_id" ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot">
+        <select ng-required="true" ng-model="suorittajaForm.rahoitusmuoto_id" ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot">
           <option value=""></option>
         </select>
       </fieldset>
-    
+
   </div>
   <div ng-if="suorittajaForm.suorittaja_id">
     <div>[[muokattu_viimeksi]] {{ suorittajaForm.muutettuaika | date:'dd.MM.yyyy HH:mm' }}</div>
@@ -41,7 +41,7 @@
 
 <span>
   <div class="modal-footer">
-    <button class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()" ng-disabled="form.$error.required || !(suorittajaForm.hetu || suorittajaForm.oid)">[[tallenna_suorittaja]]</button>
+    <button class="button-with-icon add-icon-white" ng-click="tallennaSuorittaja()" ng-disabled="form.$error.required">[[tallenna_suorittaja]]</button>
     <button ng-click="peruuta()" class="oikealle">[[peruuta]]</button>
   </div>
 </span>
