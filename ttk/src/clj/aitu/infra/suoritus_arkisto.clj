@@ -71,7 +71,7 @@
 
 
 (defn hae-kaikki
-  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija 
+  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
            rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta]}]
   (->
     (sql/select* suorituskerta)
@@ -109,7 +109,7 @@
     sql/exec))
 
 (defn hae-yhteenveto-raportti
-  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija 
+  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
            rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta]}]
   (let [results
         (->
@@ -117,13 +117,13 @@
           (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
           (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
           (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :suoritus.tutkinnonosa))
-          (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkintoversio_id))    
+          (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkintoversio_id))
           (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
           (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
           (sql/join :left :suorituskerta_arvioija (= :suorituskerta_arvioija.suorituskerta_id :suorituskerta_id))
           (sql/join :left :arvioija (= :arvioija.arvioija_id :suorituskerta_arvioija.arvioija_id))
           (sql/with tutkintotoimikunta)
-    
+
           (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
                       :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
                       :jarjestamismuoto :opiskelijavuosi
@@ -151,10 +151,10 @@
                       )
           (sql/order :suorituskerta_id :DESC)
 ; (group-by #(dissoc % :arvioija_etunimi :arvioija_sukunimi :arvioija_rooli) sql-select..)
-; ja sitten map (.. 
+; ja sitten map (..
           sql/exec)]
     results))
-    
+
 
 (defn hae-arvioijat [suorituskerta-id]
   (sql/select :arvioija
@@ -220,13 +220,14 @@
     (doseq [osa (:osat suoritus)]
       (let [suor (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta)))]
         (when (true? (:kokotutkinto osa))
-          (lisaa-koko-tutkinnon-suoritus! (:suoritus_id suor) (:tutkintoversio_id suoritus) (:suorittaja suorituskerta)))
-      ))
+          (lisaa-koko-tutkinnon-suoritus! (:suoritus_id suor) (:tutkintoversio_id suoritus) (:suorittaja suorituskerta)))))
 
     (doseq [arvioija (:arvioijat suoritus)]
-      (sql/insert :suorituskerta_arvioija
-        (sql/values {:suorituskerta_id (:suorituskerta_id suorituskerta)
-                     :arvioija_id (:arvioija_id arvioija)})))
+      (let [arvioija-id (or (:arvioija_id arvioija)
+                            (:arvioija_id (arvioija-arkisto/lisaa! arvioija)))]
+        (sql/insert :suorituskerta_arvioija
+          (sql/values {:suorituskerta_id (:suorituskerta_id suorituskerta)
+                       :arvioija_id arvioija-id}))))
     suorituskerta))
 
 (defn lisaa-tai-paivita!
