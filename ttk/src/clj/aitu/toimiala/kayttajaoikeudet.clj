@@ -161,14 +161,14 @@
     :henkilo_haku aitu-kayttaja?
     :yleinen-rest-api sallittu-kaikille ; erikoistapaus, julkinen data voi olla autentikoinnin ulkopuolella
     :osoitepalvelu-api osoitepalvelu-kayttaja?
-    :aipal  aipal-kayttaja?
+    :aipal aipal-kayttaja?
     :impersonointi-lopetus sallittu-impersonoidulle
     :henkilo_lisays sallittu-yllapitajalle-ja-jarjestolle
     :toimikuntajasen_lisays sallittu-yllapitajalle-ja-jarjestolle
     :jasenesitykset sallittu-yllapitajalle-ja-jarjestolle
     :paatospohja #(or (yllapitaja?) (paivittaja?))
     :jasenesitys-poisto #(or (yllapitaja?) (jasenesityksen-poisto-sallittu? (int-arvo %)))
-    :arviointipaatos yllapitaja? ; väliaikainen tilanne. pitää määritellä tarkemmin kenelle muille oikeuksia annetaan
+    :arviointipaatos #(or (yllapitaja?) (paivittaja?))
     })
 
 (defn sopimuksen-muokkaus-sallittu? [sopimusid]
