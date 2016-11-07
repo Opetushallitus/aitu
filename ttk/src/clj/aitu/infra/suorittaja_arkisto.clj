@@ -13,18 +13,19 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.infra.suorittaja-arkisto
-  (:require  [korma.core :as sql]
-             [aitu.auditlog :as auditlog]))
+  (:require [clojure.string :as s]
+            [korma.core :as sql]
+            [aitu.auditlog :as auditlog]))
 
 (defn hetu-kaytossa?
   "Onko hetu käytössä jollain toisella opiskelijalla?"
   [suorittajaid hetu]
-  (if (not (empty? hetu))
+  (if-not (s/blank? hetu)
     (< 0 (count (sql/select :suorittaja
                   (sql/where (and (= :hetu hetu)
                                   (not (= :suorittaja_id suorittajaid)))))))
     false))
-    
+
 (defn hae-kaikki
   []
   (sql/select :suorittaja
