@@ -86,13 +86,13 @@
     (testing "paivita-perusteet lisää muutokset tietokantaan"
       (paivita-perusteet! nil)
       (testing "vanhan perusteen päivitys onnistuu"
-        (= (:voimassa_loppupvm (aitu.infra.tutkinto-arkisto/hae-peruste (:diaarinumero ensimmainen)))
+        (= (:voimassa_loppupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero ensimmainen)))
            (:voimassa_loppupvm ensimmainen)))
       (testing "nykyisen perusteen päivitys onnistuu"
-        (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-peruste (:diaarinumero toinen-uusi)))
+        (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero toinen-uusi)))
            (:voimassa_alkupvm toinen-uusi)))
       (testing "uuden perusteen lisääminen onnistuu"
-        (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-peruste (:diaarinumero kolmas)))
+        (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero kolmas)))
            (:voimassa_alkupvm kolmas)))
       (testing "tietokantaan tulee vain yksi uusi peruste"
         (= (count (aitu.infra.tutkinto-arkisto/hae-tutkintoversiot tutkintotunnus))
