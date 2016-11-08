@@ -29,7 +29,7 @@
   (for [[tutkintotunnus peruste] perusteet
         :let [diaarinumero (:diaarinumero peruste)
               tutkinto (tutkinto-arkisto/hae-tutkinto tutkintotunnus)
-              vanha-peruste (tutkinto-arkisto/hae-peruste diaarinumero)
+              vanha-peruste (tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus diaarinumero)
               peruste (valitse-perusteen-kentat (assoc peruste :peruste diaarinumero))]
         :when (and tutkinto
                    (not= peruste (valitse-perusteen-kentat vanha-peruste)))]
