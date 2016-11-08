@@ -127,11 +127,12 @@
       replacef #(-> %
                     (clojure.string/replace "\n" "")
                     (clojure.string/replace "\u2011" "-")
-                    (clojure.string/replace "\u2013" "-"))]
+                    (clojure.string/replace "\u2013" "-"))
+      nimifn #(if (= "fi" kieli) (:nimi_fi %) (or (:nimi_sv %) (:nimi_fi %))) ]
   (into [] 
      (for [tutkinto tutkinnot]
-       (let [osat (tutosa-arkisto/hae-versiolla (:tutkintoversio_id tutkinto))]
-         [tutkinto (map #(str (replacef (if (= "fi" kieli) (:nimi_fi %) (or (:nimi_sv %) (:nimi_fi %)))) " (" (:osatunnus %) ")") osat)]
+       (let [osat (sort-by nimifn (tutosa-arkisto/hae-versiolla (:tutkintoversio_id tutkinto)))]
+         [tutkinto (map #(str (replacef (nimifn %)) " (" (:osatunnus %) ")") osat)]
          )))))
 
 (defn ^:private set-or-create-cell! 
