@@ -85,6 +85,11 @@
                 :valmistava_koulutus :paikka :jarjestelyt
                 [:suorittaja.etunimi :suorittaja_etunimi]
                 [:suorittaja.sukunimi :suorittaja_sukunimi]
+;                [(sql/raw "(case when substring(hetu, 7, 1) = '-'
+;  then to_date(substring(hetu, 1, 4) || '19' || substring(hetu, 5,2), 'DDMMYYYY') 
+;  else to_date(substring(hetu, 1, 4) || '20' || substring(hetu, 5,2), 'DDMMYYYY')
+;  end) as syntpvm
+;                [(sql/sqlfn "concat" :kayttaja.etunimi " " :kayttaja.sukunimi) :muutettu_nimi
                 [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
                 [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
                 [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]

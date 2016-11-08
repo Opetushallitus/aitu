@@ -59,7 +59,7 @@
         <select ng-model="hakuForm.todistus">
           <option ng-value="null"></option>
           <option value="todistus_ei">[[tutkinnon_osan_todistus_ei]]</option>
-          <option value="todistus_kylla">[[tutkinnon_osan_todistus_kyllä]]</option>
+          <option value="todistus_kylla">[[tutkinnon_osan_todistus_kylla]]</option>
           <option value="todistus_kokotutkinto">[[tutkinnon_osan_todistus_kokotutkinto]]</option>
         </select>
       </fieldset>
@@ -121,7 +121,8 @@
       <div class="table-cell">[[etunimi]]</div>
       <div class="table-cell">[[sukunimi]]</div>
       <div class="table-cell">[[tutkinto]]</div>
-      <div class="table-cell">[[ehdotuspaiva]]</div>
+      <div class="table-cell">[[arvosana]]</div>
+      <div class="table-cell">[[arviointikokouksen_pvm]]</div>
       <div class="table-cell">[[kirjauspaiva]]</div>
       <div class="table-cell">[[tutkinto_jarjestaja]]</div>
       <div class="table-cell">[[tila]]</div>
@@ -135,7 +136,8 @@
       <div class="table-cell">{{ suoritus.suorittaja_etunimi }}</div>
       <div class="table-cell">{{ suoritus.suorittaja_sukunimi }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</div>
-      <div class="table-cell">{{ suoritus.ehdotusaika | date:'dd.MM.yyyy' }}</div>
+      <div class="table-cell">{{ suoritus.arvosana }}</div>
+      <div class="table-cell">{{ suoritus.arviointikokouksen_pvm | date:'dd.MM.yyyy' }}</div>
       <div class="table-cell">{{ suoritus.hyvaksymisaika | date:'dd.MM.yyyy' }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'koulutustoimija_nimi' }}</div>
       <div class="table-cell">{{ i18n.arviointipaatokset['tila-' + suoritus.tila] }}</div>
