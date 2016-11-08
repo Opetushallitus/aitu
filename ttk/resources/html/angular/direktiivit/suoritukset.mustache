@@ -55,13 +55,32 @@
     </div>
     <div>
       <fieldset>
+        <label>[[tutkinnon_osan_todistus]]</label>
+        <select ng-model="hakuForm.todistus">
+          <option ng-value="null"></option>
+          <option value="todistus_ei">[[tutkinnon_osan_todistus_ei]]</option>
+          <option value="todistus_kylla">[[tutkinnon_osan_todistus_kyllä]]</option>
+          <option value="todistus_kokotutkinto">[[tutkinnon_osan_todistus_kokotutkinto]]</option>
+        </select>
+      </fieldset>
+      <fieldset>
+        <label>[[suorituskieli]]</label>
+        [[#i18n.enum.kieli-arvo]]
+        <select ng-model="hakuForm.kieli">
+          <option ng-value="null"></option>        
+          <option value="fi">[[fi]]</option>
+          <option value="sv">[[sv]]</option>
+        </select>
+        [[/i18n.enum.kieli-arvo]]
+      </fieldset>      
+    </div>
+    <div>
+      <fieldset>
         <label>[[rahoitusmuoto]]</label>
         <select ng-model="hakuForm.rahoitusmuoto" ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot">
           <option value=""></option>
         </select>
       </fieldset>
-    </div>
-    <div>
       <fieldset>
         <label>[[jarjestamismuoto]]</label>
         <select ng-model="hakuForm.jarjestamismuoto">

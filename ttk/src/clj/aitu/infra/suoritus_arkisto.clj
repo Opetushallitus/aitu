@@ -72,9 +72,10 @@
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
-           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta]}]
+           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta kieli todistus]}]
   (->
     (sql/select* suorituskerta)
+    (sql/join suoritus)
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
@@ -87,8 +88,10 @@
                 [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
                 [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
                 [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
-                [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv])
+                [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                [:suoritus.arvosana :arvosana])
     (sql/order :suorituskerta_id :DESC)
+    (sql/order :suoritus.suoritus_id :DESC)
     (cond->
       (seq suorituskertaid) (sql/where {:suorituskerta.suorituskerta_id (Integer/parseInt suorituskertaid)})
       (seq ehdotuspvm_alku) (sql/where {:ehdotusaika [>= (to-sql-date (parse-iso-date ehdotuspvm_alku))]})
@@ -98,6 +101,10 @@
       (seq jarjestamismuoto) (sql/where {:jarjestamismuoto jarjestamismuoto})
       (seq koulutustoimija) (sql/where {:koulutustoimija koulutustoimija})
       (seq rahoitusmuoto) (sql/where {:rahoitusmuoto (Integer/parseInt rahoitusmuoto)})
+      (seq kieli) (sql/where {:suoritus.kieli kieli})
+      (= "todistus_ei" todistus) (sql/where {:suoritus.todistus false})
+      (= "todistus_kylla" todistus) (sql/where {:suoritus.todistus true})
+      (= "todistus_kokotutkinto" todistus) (sql/where {:suoritus.kokotutkinto true})
       (not (clojure.string/blank? suorittaja))   (sql/where (or {:suorittaja.hetu suorittaja}
                                                                 {:suorittaja.oid suorittaja}
                                                                 {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}

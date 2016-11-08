@@ -14,6 +14,7 @@
   :arviointikokouksen_pvm "2016-09-02"
   :suoritusaika_alku "2016-09-01"
   :toimikunta "Lynx lynx"
+  :arvosana "hyvaksytty"
   :suoritusaika_loppu "2016-09-01"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
   :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.",
@@ -87,6 +88,7 @@
    :jarjestamismuoto "oppisopimuskoulutus", 
    :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
    :paikka nil,
+   :arvosana "hyvaksytty"
    :suorittaja_etunimi "Orvokki"})
 
 (def suoritus-diff 
@@ -110,7 +112,8 @@
    :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
    :jarjestamismuoto "oppisopimuskoulutus", 
    :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
-   :paikka "Yöttäjän harjoitusalue", 
+   :paikka "Yöttäjän harjoitusalue",
+   :arvosana "hyvaksytty"
    :suorittaja_etunimi "Orvokki"})
 
 (defn rip-suoritusid [suoritus]

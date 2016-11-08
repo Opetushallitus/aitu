@@ -94,11 +94,16 @@
 
 (defentity suorituskerta
   (sql/pk :suorituskerta_id)
+  (sql/has-many suoritus 
+    {:fk :suorituskerta})                 
   (sql/belongs-to tutkintotoimikunta
     {:fk :toimikunta}))
 
 (defentity suoritus
-  (sql/pk :suoritus_id))
+  (sql/pk :suoritus_id)
+  (sql/belongs-to suorituskerta {:fk :suorituskerta}))
+
+               
 
 (defentity arvioija
   (sql/pk :arvioija_id))
