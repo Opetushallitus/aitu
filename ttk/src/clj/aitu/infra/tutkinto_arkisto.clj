@@ -63,7 +63,7 @@
                                        (sql/fields :uusin_versio_id)
                                        (sql/where {:tutkintotunnus tutkintotunnus}))))))
 
-(defn ^:private hae-tutkintoversio-perusteella
+(defn hae-tutkintoversio-perusteella
   [tutkintotunnus peruste]
   (sql-util/select-unique-or-nil tutkintoversio
     (sql/where {:peruste peruste
@@ -206,7 +206,7 @@
       (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :osaamisala_id))
     (sql/fields :tutkintoversio_id)
     (sql/where (> :siirtymaajan_loppupvm (sql/raw "current_date")))
-    (sql/order :tutkintoversio_id))) 
+    (sql/order :tutkintoversio_id)))
 
 (defn hae-tutkinnot-ja-osaamisalat
   "Hakee kaikkien tutkintojen sekä niihin liittyvien osaamisalojen uusimman version"
@@ -264,12 +264,6 @@
       (sql/with tutkintotoimikunta
         (sql/with toimikausi))
       (sql/where {:tutkintotunnus tutkintotunnus}))))
-
-(defn hae-peruste [diaarinumero]
-  (sql-util/select-unique-or-nil tutkintoversio
-    (sql/where {:peruste diaarinumero})
-    (sql/order :luotuaika :desc)
-    (sql/limit 1)))
 
 (defn hae-tutkintoversiot
   "Hakee kaikki tietyn tutkinnon tutkintoversiot"
@@ -401,7 +395,7 @@
 (defn ^:integration-api paivita-osaamisalat!
   "Päivittää tutkinnon perusteen osaamisalat"
   [peruste]
-  (let [tutkintoversio-id (:tutkintoversio_id (hae-peruste (:diaarinumero peruste)))
+  (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste)))
         osatunnus->id (into {} (for [osa (hae-perusteen-tutkinnonosat tutkintoversio-id)]
                                  [(:osatunnus osa) (:tutkinnonosa_id osa)]))]
     (sql/delete osaamisala-ja-tutkinnonosa
@@ -419,7 +413,7 @@
 (defn ^:integration-api paivita-tutkinnonosat!
   "Päivittää tutkinnon perusteen tutkinnonosat"
   [peruste]
-  (let [tutkintoversio-id (:tutkintoversio_id (hae-peruste (:diaarinumero peruste)))]
+  (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste)))]
     (sql/delete osaamisala-ja-tutkinnonosa
       (sql/where {:tutkinnonosa [in (sql/subselect tutkinnonosa
                                       (sql/fields :tutkinnonosa_id)

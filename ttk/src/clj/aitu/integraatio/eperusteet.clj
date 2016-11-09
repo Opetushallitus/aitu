@@ -102,4 +102,6 @@
   (for [{peruste-id :id} (lataa-kaikki-sivut (str (:url asetukset) "api/perusteet") {:query-params {:muokattu (c/to-long viimeisin-haku)}})
         :let [peruste (hae-peruste peruste-id asetukset)]
         tutkintotunnus (:tutkinnot peruste)]
-    [tutkintotunnus (dissoc peruste :tutkinnot)]))
+    [tutkintotunnus (-> peruste
+                      (dissoc :tutkinnot)
+                      (assoc :tutkinto tutkintotunnus))]))
