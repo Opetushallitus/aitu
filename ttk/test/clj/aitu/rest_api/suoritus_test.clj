@@ -7,6 +7,7 @@
     [aitu.integraatio.sql.test-data-util :refer :all]
     [aitu.rest-api.session-util :refer :all]))
 
+
 (def suorituslista-result
   {:tila "luonnos", :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", :hyvaksymisaika nil, 
   :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto", :suorittaja -1, 
@@ -14,9 +15,15 @@
   :arviointikokouksen_pvm "2016-09-02"
   :suoritusaika_alku "2016-09-01"
   :toimikunta "Lynx lynx"
+  :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
+  :tutkinnonosa_nimi_sv nil
+  :osaamisala_tunnus "9875" 
+  :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
+  :osaamisala_nimi_sv nil
   :arvosana "hyvaksytty"
   :suoritusaika_loppu "2016-09-01"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
+  :suorittaja_syntymapvm "1912-12-12"
   :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.",
   :valmistava_koulutus true
   :paikka "Yöttäjän harjoitusalue"
@@ -84,11 +91,17 @@
    :koulutustoimija "0208430-8", :arviointikokouksen_pvm nil
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
+   :suorittaja_syntymapvm "1912-12-12"
    :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
    :jarjestamismuoto "oppisopimuskoulutus", 
    :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
    :paikka nil,
    :arvosana "hyvaksytty"
+   :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
+   :tutkinnonosa_nimi_sv nil
+   :osaamisala_tunnus "9875" 
+   :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
+   :osaamisala_nimi_sv nil
    :suorittaja_etunimi "Orvokki"})
 
 (def suoritus-diff 
@@ -114,6 +127,12 @@
    :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
    :paikka "Yöttäjän harjoitusalue",
    :arvosana "hyvaksytty"
+   :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
+   :tutkinnonosa_nimi_sv nil
+   :osaamisala_tunnus "9875"
+   :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
+   :osaamisala_nimi_sv nil  
+   :suorittaja_syntymapvm "1912-12-12"
    :suorittaja_etunimi "Orvokki"})
 
 (defn rip-suoritusid [suoritus]

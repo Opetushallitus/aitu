@@ -101,6 +101,8 @@
 
 (defentity suoritus
   (sql/pk :suoritus_id)
+  (sql/has-one tutkinnonosa {:fk tutkinnonosa})
+  (sql/has-one osaamisala {:fk osaamisala})
   (sql/belongs-to suorituskerta {:fk :suorituskerta}))
 
                
@@ -125,6 +127,7 @@
   (sql/pk :tutkinnonosa_id)
   (sql/belongs-to tutkintoversio
     {:fk :tutkintoversio})
+  (sql/has-many suoritus {:fk tutkinnonosa})
   (sql/has-many sopimus-ja-tutkinto-ja-tutkinnonosa
     {:fk :tutkinnonosa}))
 

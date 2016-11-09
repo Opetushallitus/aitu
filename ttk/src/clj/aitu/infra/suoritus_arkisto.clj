@@ -72,10 +72,12 @@
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
-           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta kieli todistus]}]
+           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta kieli todistus sukupuoli]}]
   (->
     (sql/select* suorituskerta)
     (sql/join suoritus)
+    (sql/join :tutkinnonosa (= :suoritus.tutkinnonosa :tutkinnonosa.tutkinnonosa_id))
+    (sql/join :left :osaamisala (= :suoritus.osaamisala :osaamisala.osaamisala_id))
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
@@ -85,13 +87,14 @@
                 :valmistava_koulutus :paikka :jarjestelyt
                 [:suorittaja.etunimi :suorittaja_etunimi]
                 [:suorittaja.sukunimi :suorittaja_sukunimi]
-;                [(sql/raw "(case when substring(hetu, 7, 1) = '-'
-;  then to_date(substring(hetu, 1, 4) || '19' || substring(hetu, 5,2), 'DDMMYYYY') 
-;  else to_date(substring(hetu, 1, 4) || '20' || substring(hetu, 5,2), 'DDMMYYYY')
-;  end) as syntpvm
-;                [(sql/sqlfn "concat" :kayttaja.etunimi " " :kayttaja.sukunimi) :muutettu_nimi
+                [:suorittaja.syntymapvm :suorittaja_syntymapvm]
                 [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
                 [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
+                [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
+                [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
+                [:osaamisala.nimi_fi :osaamisala_nimi_fi]
+                [:osaamisala.nimi_sv :osaamisala_nimi_sv]
+                [:osaamisala.osaamisalatunnus :osaamisala_tunnus]
                 [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
                 [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
                 [:suoritus.arvosana :arvosana])
@@ -110,6 +113,7 @@
       (= "todistus_ei" todistus) (sql/where {:suoritus.todistus false})
       (= "todistus_kylla" todistus) (sql/where {:suoritus.todistus true})
       (= "todistus_kokotutkinto" todistus) (sql/where {:suoritus.kokotutkinto true})
+      (seq sukupuoli) (sql/where {:suorittaja.sukupuoli sukupuoli})
       (not (clojure.string/blank? suorittaja))   (sql/where (or {:suorittaja.hetu suorittaja}
                                                                 {:suorittaja.oid suorittaja}
                                                                 {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
