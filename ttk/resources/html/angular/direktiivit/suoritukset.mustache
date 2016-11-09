@@ -8,6 +8,7 @@
 
     <div>
       <fieldset>
+        <label>[[hae_tutkinnon_suorittaja_placeholder]]</label>
         <input type="text" placeholder="[[hae_tutkinnon_suorittaja_placeholder]]" ng-model="hakuForm.suorittaja"></input>
       </fieldset>
       <fieldset>
@@ -26,6 +27,12 @@
          <option value=""></option>
        </select>
       </fieldset>
+      <fieldset>
+        <label>[[tutkinto_jarjestaja]]</label>
+        <select ng-model="hakuForm.koulutustoimija" ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat">
+          <option value=""></option>
+        </select>
+      </fieldset>      
     </div>
     <div>
       <fieldset>
@@ -35,23 +42,7 @@
           &nbsp;&nbsp;&nbsp;&nbsp;-
           <pvm-valitsin pakollinen="false" valittu-pvm="hakuForm.ehdotuspvm_loppu" min-pvm="hakuForm.ehdotuspvm_alku" tyhjennettava="true"></pvm-valitsin>
         </div>
-        <div>
-        </div>
       </fieldset>
-      <fieldset>
-        <label>[[tutkinto_jarjestaja]]</label>
-        <select ng-model="hakuForm.koulutustoimija" ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat">
-          <option value=""></option>
-        </select>
-      </fieldset>
-      <fieldset>
-        <label>[[tutkinto]]</label>
-        <select ng-model="hakuForm.tutkinto" ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot">
-          <option value=""></option>
-        </select>
-      </fieldset>
-    </div>
-    <div>
       <fieldset>
         <label>[[suoritus_kirjattu]]</label>
         <div>
@@ -59,6 +50,14 @@
           &nbsp;&nbsp;&nbsp;&nbsp;-
           <pvm-valitsin pakollinen="false" valittu-pvm="hakuForm.hyvaksymispvm_loppu" min-pvm="hakuForm.hyvaksymispvm_alku" tyhjennettava="true"></pvm-valitsin>
         </div>
+      </fieldset>
+    </div>
+    <div>
+      <fieldset>
+        <label>[[tutkinto]]</label>
+        <select ng-model="hakuForm.tutkinto" ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot">
+          <option value=""></option>
+        </select>
       </fieldset>
     </div>
     <div>
@@ -130,6 +129,8 @@
       <div class="table-cell">[[sukunimi]]</div>
       <div class="table-cell">[[syntymapvm]]</div>
       <div class="table-cell">[[tutkinto]]</div>
+      <div class="table-cell">[[tutkinnon_osa]]</div>
+      <div class="table-cell">[[osaamisala]]</div>
       <div class="table-cell">[[arvosana]]</div>
       <div class="table-cell">[[arviointikokouksen_pvm]]</div>
       <div class="table-cell">[[kirjauspaiva]]</div>
@@ -146,6 +147,8 @@
       <div class="table-cell">{{ suoritus.suorittaja_sukunimi }}</div>
       <div class="table-cell">{{ suoritus.suorittaja_syntymapvm | date:'dd.MM.yyyy' }}</div>
       <div class="table-cell">{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</div>
+      <div class="table-cell">{{ suoritus | lokalisoiKentta:'tutkinnonosa_nimi' }}</div>
+      <div class="table-cell">{{ suoritus | lokalisoiKentta:'osaamisala_nimi' }}</div>
       <div class="table-cell">{{ suoritus.arvosana }}</div>
       <div class="table-cell">{{ suoritus.arviointikokouksen_pvm | date:'dd.MM.yyyy' }}</div>
       <div class="table-cell">{{ suoritus.hyvaksymisaika | date:'dd.MM.yyyy' }}</div>
