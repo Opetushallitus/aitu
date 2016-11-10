@@ -17,6 +17,7 @@
   :toimikunta "Lynx lynx"
   :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
   :tutkinnonosa_nimi_sv nil
+   :tutkinnonosa_tutkinnonosa_id -10002
   :osaamisala_tunnus "9875" 
   :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
   :osaamisala_nimi_sv nil
@@ -99,6 +100,7 @@
    :arvosana "hyvaksytty"
    :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
    :tutkinnonosa_nimi_sv nil
+    :tutkinnonosa_tutkinnonosa_id -10002
    :osaamisala_tunnus "9875" 
    :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
    :osaamisala_nimi_sv nil
@@ -129,6 +131,7 @@
    :arvosana "hyvaksytty"
    :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
    :tutkinnonosa_nimi_sv nil
+    :tutkinnonosa_tutkinnonosa_id -10002
    :osaamisala_tunnus "9875"
    :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
    :osaamisala_nimi_sv nil  
