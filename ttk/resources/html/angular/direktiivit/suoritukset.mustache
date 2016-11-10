@@ -59,6 +59,18 @@
           <option value=""></option>
         </select>
       </fieldset>
+      <fieldset>
+        <label>[[tutkinnon_osa]]</label>
+        <select ng-options="tutkinnonosa.tutkinnonosa_id as tutkinnonosa.osatunnus + ' ' + (tutkinnonosa | lokalisoiKentta:'nimi') for tutkinnonosa in tutkinnonosat track by tutkinnonosa.tutkinnonosa_id" ng-model="hakuForm.tutkinnonosa" required>
+          <option value=""></option>
+        </select>
+      </fieldset>
+      <fieldset>
+        <label>[[osaamisala]]</label>
+        <select ng-options="osaamisala.osaamisala_id as osaamisala.osaamisalatunnus + ' ' + (osaamisala | lokalisoiKentta:'nimi') for osaamisala in osaamisalat track by osaamisala.osaamisala_id" ng-model="hakuForm.osaamisala">
+          <option value=""></option>
+        </select>
+      </fieldset>
     </div>
     <div>
       <fieldset>

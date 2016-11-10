@@ -20,8 +20,8 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       restrict: 'E',
       templateUrl: 'template/direktiivit/suoritukset',
       scope: {},
-      controller: ['$location', '$scope', 'Toimikunta', 'Koulutustoimija', 'Rahoitusmuoto', 'Suoritus', 'TutkintoResource', 'Varmistus', 'i18n', 
-         function($location, $scope, Toimikunta, Koulutustoimija, Rahoitusmuoto, Suoritus, TutkintoResource, Varmistus, i18n) {
+      controller: ['$location', '$scope', 'Toimikunta', 'Koulutustoimija', 'Rahoitusmuoto', 'Suoritus', 'TutkintoResource', 'Tutkinnonosa', 'Osaamisala', 'Varmistus', 'i18n', 
+         function($location, $scope, Toimikunta, Koulutustoimija, Rahoitusmuoto, Suoritus, TutkintoResource, Tutkinnonosa, Osaamisala, Varmistus, i18n) {
         $scope.hakuForm = {tila: null};
         $scope.filterTila = function(tila) {
           return function(item) {
@@ -58,6 +58,18 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
             $scope.suoritukset = suoritukset;
           });
         }, true);
+        
+        $scope.$watch('hakuForm.tutkinto', function(tutkinto) {
+            if (tutkinto != undefined) {
+              Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
+                $scope.tutkinnonosat = tutkinnonosat;
+                $scope.hakuForm.tutkinnonosa = _.find($scope.tutkinnonosat, {'tutkinnonosa_id' : $scope.tutkinnonosa.tutkinnonosa_id});
+              });
+              Osaamisala.hae(tutkinto).then(function(osaamisalat) {
+                $scope.osaamisalat = osaamisalat.osaamisala;
+              });
+            }
+          });
 
         $scope.tila = '';
         $scope.form = {};

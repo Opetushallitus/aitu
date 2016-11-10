@@ -72,7 +72,8 @@
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
-           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta kieli todistus sukupuoli]}]
+           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta kieli todistus sukupuoli
+           tutkinnonosa osaamisala]}]
   (->
     (sql/select* suorituskerta)
     (sql/join suoritus)
@@ -92,6 +93,7 @@
                 [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
                 [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
                 [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
+                [:tutkinnonosa.tutkinnonosa_id :tutkinnonosa_tutkinnonosa_id]
                 [:osaamisala.nimi_fi :osaamisala_nimi_fi]
                 [:osaamisala.nimi_sv :osaamisala_nimi_sv]
                 [:osaamisala.osaamisalatunnus :osaamisala_tunnus]
@@ -114,6 +116,8 @@
       (= "todistus_kylla" todistus) (sql/where {:suoritus.todistus true})
       (= "todistus_kokotutkinto" todistus) (sql/where {:suoritus.kokotutkinto true})
       (seq sukupuoli) (sql/where {:suorittaja.sukupuoli sukupuoli})
+      (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
+      (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
       (not (clojure.string/blank? suorittaja))   (sql/where (or {:suorittaja.hetu suorittaja}
                                                                 {:suorittaja.oid suorittaja}
                                                                 {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}

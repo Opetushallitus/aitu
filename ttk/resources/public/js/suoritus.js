@@ -260,7 +260,7 @@ angular.module('suoritus', [])
 	  }
 
     $scope.$watch('tutkinto', function(tutkinto) {
-      if (tutkinto !== undefined) {
+      if (tutkinto != undefined) {
         Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
           $scope.tutkinnonosat = tutkinnonosat;
           $scope.form.tutkinnonosa = _.find($scope.tutkinnonosat, {'tutkinnonosa_id' : $scope.tutkinnonosa.tutkinnonosa_id});
