@@ -5,9 +5,16 @@
 
 <div>
   [[excel_lataus]]
-        <fieldset>
-          <file-upload api-metodi="{{'[[base-url]]/api/suoritus/excel-lataus'}}" upload-valmis="uploadValmis"></file-upload>
-        </fieldset>
+  <fieldset>
+    <file-upload api-metodi="{{'[[base-url]]/api/suoritus/excel-lataus'}}" upload-valmis="uploadValmis"></file-upload>
+  </fieldset>
+</div>
+
+<div>
+  [[excel_luonti]]
+  <br/>
+  <a href="{{'[[base-url]]/api/suoritus/excel-luonti?kieli=fi'}}" target="_blank">Tiedosto suomeksi.</a><br/>
+  <a href="{{'[[base-url]]/api/suoritus/excel-luonti?kieli=sv'}}" target="_blank">Tiedosto ruotsiksi.</a>
 </div>
 
 <section class="suoritukset">
@@ -21,12 +28,6 @@
   <suorittajat></suorittajat>
 </section>
 
-<div>
-  [[excel_luonti]]
-  <br/>
-  <a href="{{'[[base-url]]/api/suoritus/excel-luonti?kieli=fi'}}" target="_blank">Tiedosto suomeksi.</a><br/>
-  <a href="{{'[[base-url]]/api/suoritus/excel-luonti?kieli=sv'}}" target="_blank">Tiedosto ruotsiksi.</a>
-</div>
 <br/>
 
       
