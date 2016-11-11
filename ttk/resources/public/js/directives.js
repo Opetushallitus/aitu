@@ -31,6 +31,8 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       restrict: 'E',
       scope : {
         hakutulokset : "=",
+        hakuTila : "=",
+        tulosform: "=",
         tuloksiaSivulla: "=",
         otsikot: "@"
       },

@@ -104,6 +104,9 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
               suoritus.tila = tila;
             }
           });
+          Suoritus.haeKaikki($scope.hakuForm).then(function(suoritukset) {
+              $scope.suoritukset = suoritukset;
+          });
         };
 
         $scope.palautaLuonnokseksi = function() {
