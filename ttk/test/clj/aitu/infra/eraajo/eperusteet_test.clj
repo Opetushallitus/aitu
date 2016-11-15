@@ -91,10 +91,9 @@
                  (:voimassa_loppupvm ensimmainen)))
           (is (= (:siirtymaajan_loppupvm tut)
                  (:siirtymaajan_loppupvm ensimmainen)))))
-; :siirtymaajan_loppupvm (time/local-date 2017 1 1)      
       (testing "nykyisen perusteen päivitys onnistuu"
-          (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero toinen-uusi)))
-             (:voimassa_alkupvm toinen-uusi)))
+          (is (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero toinen-uusi)))
+                 (:voimassa_alkupvm toinen-uusi))))
       (testing "uuden perusteen lisääminen onnistuu"
         (is (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero kolmas)))
                (:voimassa_alkupvm kolmas))))
