@@ -48,7 +48,7 @@
                   :eperustetunnus 1
                   :voimassa_alkupvm (time/local-date 2015 1 1)
                   :voimassa_loppupvm (time/local-date 2015 7 31)
-                  :siirtymaajan_loppupvm (time/local-date 2199 1 1)})
+                  :siirtymaajan_loppupvm (time/local-date 2017 1 1)})
 
 (def toinen-vanha {:diaarinumero "2/042/2015"
                    :eperustetunnus 2
@@ -86,14 +86,18 @@
     (testing "paivita-perusteet lisää muutokset tietokantaan"
       (paivita-perusteet! nil)
       (testing "vanhan perusteen päivitys onnistuu"
-        (= (:voimassa_loppupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero ensimmainen)))
-           (:voimassa_loppupvm ensimmainen)))
+        (let [tut (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero ensimmainen))]
+          (is (= (:voimassa_loppupvm tut)
+                 (:voimassa_loppupvm ensimmainen)))
+          (is (= (:siirtymaajan_loppupvm tut)
+                 (:siirtymaajan_loppupvm ensimmainen)))))
+; :siirtymaajan_loppupvm (time/local-date 2017 1 1)      
       (testing "nykyisen perusteen päivitys onnistuu"
-        (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero toinen-uusi)))
-           (:voimassa_alkupvm toinen-uusi)))
+          (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero toinen-uusi)))
+             (:voimassa_alkupvm toinen-uusi)))
       (testing "uuden perusteen lisääminen onnistuu"
-        (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero kolmas)))
-           (:voimassa_alkupvm kolmas)))
+        (is (= (:voimassa_alkupvm (aitu.infra.tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus (:diaarinumero kolmas)))
+               (:voimassa_alkupvm kolmas))))
       (testing "tietokantaan tulee vain yksi uusi peruste"
-        (= (count (aitu.infra.tutkinto-arkisto/hae-tutkintoversiot tutkintotunnus))
-           3)))))
+        (is (= (count (aitu.infra.tutkinto-arkisto/hae-tutkintoversiot tutkintotunnus))
+               3))))))

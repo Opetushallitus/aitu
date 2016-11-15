@@ -85,14 +85,17 @@
         tutkinnonosat (map-indexed muotoile-tutkinnonosa (:tutkinnonOsat peruste))
         nayttotutkinto (some-value-with :suoritustapakoodi "naytto" (:suoritustavat peruste))]
     (when nayttotutkinto
+      (when (and (nil? (:siirtymaPaattyy peruste)) (not (nil? (:voimassaoloLoppuu peruste))))
+        (log/warn (str "Tutkinnon " (:id peruste) " siirtymäaikaa ei ole asetettu, voimassaolon päättymispäivä on asetettu. ")))   
       (merge {:diaarinumero (:diaarinumero peruste)
               :eperustetunnus (:id peruste)
               :voimassa_alkupvm (to-local-date (:voimassaoloAlkaa peruste))
               :voimassa_loppupvm (or (to-local-date (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))
-              :siirtymaajan_loppupvm (or (to-local-date (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))
+              :siirtymaajan_loppupvm (or (to-local-date (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))              
               :tutkinnot (map :koulutuskoodiArvo (:koulutukset peruste))
               :tutkinnonosat tutkinnonosat}
-             (muotoile-suoritustapa osa-id->osatunnus osaamisalat nayttotutkinto)))))
+             (muotoile-suoritustapa osa-id->osatunnus osaamisalat nayttotutkinto))
+      )))
 
 (defn hae-peruste [id asetukset]
   (let [peruste-data (get-json-from-url (str (:url asetukset) "api/perusteet/" id "/kaikki"))]

@@ -74,7 +74,8 @@
    Palauttaa tutkintoversion id:n."
   [tutkinto]
   (let [tutkintotiedot (select-keys tutkinto [:nimi_fi :nimi_sv :opintoala :tyyppi :tutkintotaso])
-        versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio :jarjestyskoodistoversio :peruste :eperustetunnus])
+        versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio 
+                                            :siirtymaajan_loppupvm  :jarjestyskoodistoversio :peruste :eperustetunnus])
         tutkintotunnus (:tutkintotunnus tutkinto)
         vanha-versio (hae-tutkintoversio-perusteella tutkintotunnus (:peruste tutkinto))
         uusi-versio (->
@@ -433,7 +434,7 @@
 
 (defn hae-viimeisin-eperusteet-paivitys []
   (:paivitetty (sql-util/select-unique-or-nil eperusteet-log
-                 (sql/order :paivitetty :desc)
+                 (sql/order :id :desc)
                  (sql/limit 1)
                  (sql/fields :paivitetty))))
 
