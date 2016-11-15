@@ -19,5 +19,4 @@
     (run-with-db (constantly true)
       #(let [s (peridot/session crout)
              osaamisalat (mock-request s "/api/tutkinto/osaamisalat/927128" :get {})]
-        (is (= osaamisalat-reply (body-json (:response osaamisalat))))
-        ))))
+        (is (= osaamisalat-reply (body-json (:response osaamisalat))))))))

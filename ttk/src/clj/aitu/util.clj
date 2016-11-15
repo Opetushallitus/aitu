@@ -132,11 +132,11 @@
     "\n"))
 
 (defn muodosta-csv
-  ([data kenttien-jarjestys sarakkeiden-otsikot]
+  ([data kenttien-jarjestys otsikot]
    (pakota-numerokentat-csv-stringsoluiksi
      (write-csv (let [[otsikko-avaimet & arvot] (otsikot-ja-sarakkeet-jarjestykseen data kenttien-jarjestys)]
                   (into [(for [oa otsikko-avaimet]
-                           (or (sarakkeiden-otsikot oa)
+                           (or (otsikot oa)
                                (do
                                  (log/error (str "CSV-tiedoston sarakkeen otsikkoa ei löytynyt avaimella "
                                                  "'" (name oa) "'"))

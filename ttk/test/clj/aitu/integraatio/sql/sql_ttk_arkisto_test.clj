@@ -172,7 +172,6 @@
         #{"Gulo gulo" "TK2"})))
 
 (deftest ^:integraatio hae-termilla-test
-  []
   (testing "pitäisi löytää toimikunta haettaessa suomenkielisellä nimellä"
     (let [termi-fi "Testitoimikunnan nimi"
           termi-sv "Testitoimikunnan nimi (sv)"

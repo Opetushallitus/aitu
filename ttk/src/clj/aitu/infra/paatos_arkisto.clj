@@ -53,9 +53,6 @@
   (if (= (:nimi_fi toimikunta) (:nimi_sv toimikunta))
     (dissoc toimikunta :nimi_sv)
     toimikunta))
-
-(defn asettamispaatos->pdf [kieli header data]
-  (luo-paatos kieli header :asettamispaatos data))
     
 (defn jasen-nimike-filter [jasenet kieli]
   (filter (comp seq :jasen)
@@ -107,15 +104,13 @@
                        :jakelu jakelu
                        :tiedoksi tiedoksi
                        :paatosteksti (str (apply str (repeat (:tyhjiariveja data) "\n")) (:paatosteksti data)))}))
+
+(defn asettamispaatos->pdf [kieli header data]
+  (luo-paatos kieli header :asettamispaatos data))
   
 (defn luo-asettamispaatos [kieli diaarinumero data]
   (let [pdf-data (luo-asettamispaatos-data kieli diaarinumero data)]
     (asettamispaatos->pdf (:kieli pdf-data) (:header pdf-data) (:data pdf-data))))
-
-
-(defn asettamispaatos->pdf [kieli header data]
-  (luo-paatos kieli header :asettamispaatos data))
-
 
 (defn luo-taydennyspaatos [kieli diaarinumero data]
   (let [toimikunta (-> (select-and-rename-keys (ttk-arkisto/hae diaarinumero)
