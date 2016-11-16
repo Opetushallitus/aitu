@@ -135,12 +135,21 @@
     (sql/where {:osatunnus osatunnus})))
 
 (defn hae-osaamisalat
-  "Hakee jokaisen osaamisalan uusimman version"
-  []
-  (sql/select osaamisala
-    (sql/where (= :osaamisala_id (sql/subselect [osaamisala :oa2]
-                                   (sql/aggregate (max :osaamisala_id) :max_id)
-                                   (sql/where {:oa2.osaamisalatunnus :osaamisala.osaamisalatunnus}))))))
+  "Hakee jokaisen osaamisalan uusimman version. Jos tutkintotunnus on annettu, hakee vain sen tutkinnon osaamisalat."
+  ([]
+   (sql/select osaamisala
+     (sql/where (= :osaamisala_id (sql/subselect [osaamisala :oa2]
+                                    (sql/aggregate (max :osaamisala_id) :max_id)
+                                    (sql/where {:oa2.osaamisalatunnus :osaamisala.osaamisalatunnus}))))))
+  ([tutkintotunnus]
+   (first
+     (sql/select nayttotutkinto
+       (sql/fields :tutkintotunnus :opintoala)
+       (sql/with uusin-versio
+         (sql/fields :tutkintoversio_id :peruste)
+         (sql/with osaamisala
+           (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :osaamisala_id)))
+       (sql/where {:nayttotutkinto.tutkintotunnus tutkintotunnus})))))
 
 (defn ^:integration-api lisaa-osaamisala!
   "Lisää osaamisalan"
@@ -219,16 +228,6 @@
     (sql/with opintoala
       (sql/fields [:selite_fi :opintoala_nimi_fi] [:selite_sv :opintoala_nimi_sv]))
     (sql/with tutkintotoimikunta)))
-
-(defn hae-osaamisalat [tutkintotunnus]
-  (first
-    (sql/select nayttotutkinto
-       (sql/fields :tutkintotunnus :opintoala)
-        (sql/with uusin-versio
-          (sql/fields :tutkintoversio_id :peruste)
-          (sql/with osaamisala
-            (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :osaamisala_id)))
-       (sql/where {:nayttotutkinto.tutkintotunnus tutkintotunnus}))))
 
 (defn hae-tutkinnot-koodistopalvelulle
   "Hakee kaikkien tutkintojen uusimman version koodistopalveluintegraatiolle."

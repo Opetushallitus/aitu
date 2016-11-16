@@ -28,23 +28,23 @@
   (get {"Suomi" "fi"
         "Ruotsi" "sv"
         "Saame" "se"
-        "Englanti" "en"
-        } kieli))
+        "Englanti" "en"}
+       kieli))
 
-(defn ^:private get-cell-str [rowref col]
+(defn ^:private get-cell-str [^org.apache.poi.ss.usermodel.Row rowref col]
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell)) (.getStringCellValue cell))))
     
-(defn ^:private get-cell-num [rowref col]
+(defn ^:private get-cell-num [^org.apache.poi.ss.usermodel.Row rowref col]
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell)) (.getNumericCellValue cell))))  
         
-(defn excel->boolean [str]
+(defn excel->boolean [s]
   (let [m {"Kyllä" true
            "Ei" false}
-        v (get m str)]
+        v (get m s)]
     (when (nil? v)
-      (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " str))))
+      (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " s))))
     v))
 
 ; TODO: clojuren idiomi mallintaa bijektio? tämä on kömpelöä tarpeettomasti
@@ -76,7 +76,7 @@
   
 (defn ^:private date->LocalDate [date]
   (when (not (nil? date))
-    (new org.joda.time.LocalDate date)))
+    (org.joda.time.LocalDate. date)))
 
 (defn ^:private date->iso-date [date]
   (when (not (nil? date))
@@ -98,7 +98,7 @@
 
 (defn ^:private get-excel-arvosana 
   "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"
-  [rowref col]
+  [^org.apache.poi.ss.usermodel.Row rowref col]
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell))
       (if (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
@@ -107,7 +107,7 @@
                  
 (defn ^:private get-excel-tutperuste
   "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"
-  [rowref col]
+  [^org.apache.poi.ss.usermodel.Row rowref col]
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell))
       (if (or (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
@@ -136,10 +136,11 @@
          )))))
 
 (defn ^:private set-or-create-cell! 
-  ([sheet n val type]
+  ([^org.apache.poi.ss.usermodel.Sheet sheet ^String n val type]
     (let [cellref (org.apache.poi.ss.util.CellReference. n)
           r (.getRow cellref)
           col (int (.getCol cellref))
+          ^org.apache.poi.ss.usermodel.Row
           row (or (.getRow sheet r) (.createRow sheet r))
           cell (or (select-cell n sheet) (.createCell row col type))]
       (set-cell! cell val)))
@@ -153,54 +154,54 @@
                  "DA","DB","DC","DD","DE","DF","DG","DH","DI","DJ","DK","DL","DM","DN","DO","DP","DQ","DR","DS","DT","DU","DV","DW","DX","DY","DZ"])
 
 ; Tutkinnot tulevat aakkosjärjestykseen nimen mukaan tutkinnot-välilehdelle, jotta niiden valitseminen on käyttäjälle loogista
-(defn ^:private map-tutkinnot! 
+(defn ^:private map-tutkinnot!
   [tutkinnot-sheet tut-aakkosjarjestys kieli]
   (doall (map-indexed (fn [i tutkinto]
-           (let [tutkinto-map (first tutkinto)
-                 tutkintotunnus (:tutkintotunnus tutkinto-map)
-                 tutkinto-nimi (if (= "fi" kieli) (:nimi_fi tutkinto-map) (:nimi_sv tutkinto-map))
-                 tutkinto-yhd (str (:tutkintotunnus tutkinto-map) " (" (:peruste tutkinto-map) ")" " (" (:tutkintoversio_id tutkinto-map) ")")
-                 row (+ 2 i)]
-             (set-or-create-cell! tutkinnot-sheet (str "A" row) (str tutkinto-nimi " " tutkinto-yhd))
-             (set-or-create-cell! tutkinnot-sheet (str "B" row) tutkintotunnus)
-             (set-or-create-cell! tutkinnot-sheet (str "C" row) (:peruste tutkinto-map))
-             (set-or-create-cell! tutkinnot-sheet (str "D" row) (:tutkintoversio_id tutkinto-map))
-             (set-or-create-cell! tutkinnot-sheet (str "E" row) tutkinto-nimi)
-             )) tut-aakkosjarjestys)))
+                        (let [tutkinto-map (first tutkinto)
+                              tutkintotunnus (:tutkintotunnus tutkinto-map)
+                              tutkinto-nimi (if (= "fi" kieli) (:nimi_fi tutkinto-map) (:nimi_sv tutkinto-map))
+                              tutkinto-yhd (str (:tutkintotunnus tutkinto-map) " (" (:peruste tutkinto-map) ")" " (" (:tutkintoversio_id tutkinto-map) ")")
+                              row (+ 2 i)]
+                          (set-or-create-cell! tutkinnot-sheet (str "A" row) (str tutkinto-nimi " " tutkinto-yhd))
+                          (set-or-create-cell! tutkinnot-sheet (str "B" row) tutkintotunnus)
+                          (set-or-create-cell! tutkinnot-sheet (str "C" row) (:peruste tutkinto-map))
+                          (set-or-create-cell! tutkinnot-sheet (str "D" row) (:tutkintoversio_id tutkinto-map))
+                          (set-or-create-cell! tutkinnot-sheet (str "E" row) tutkinto-nimi)))
+                      tut-aakkosjarjestys)))
 
-(defn ^:private map-osaamisalat! 
+(defn ^:private map-osaamisalat!
   [oalat-sheet kieli]
   (let [tutkinnot (tutkinto-arkisto/hae-tutkintoversiot-ja-osaamisalat)]
     (doall (map-indexed (fn [i tutkinto]
-      (let [nimi-fn (fn [o] (if (= "fi" kieli) (:nimi_fi o) (or (:nimi_sv o) (:nimi_fi o))))
-            osaamisalat (sort-by nimi-fn (:osaamisala tutkinto))
-            tutkintoversio (:tutkintoversio_id tutkinto)
-            row (+ 2 i)]
-        (set-or-create-cell! oalat-sheet (str "A" row) tutkintoversio)
-        (doall (map-indexed (fn [ind osaamisala]
-           (let [colstr (nth osacolumns ind)]
-             (set-or-create-cell! oalat-sheet (str colstr row) (str (nimi-fn osaamisala) " (" (:osaamisala_id osaamisala) ")"))))
-               osaamisalat))
-        )) tutkinnot))))
+                          (let [nimi-fn (fn [o] (if (= "fi" kieli) (:nimi_fi o) (or (:nimi_sv o) (:nimi_fi o))))
+                                osaamisalat (sort-by nimi-fn (:osaamisala tutkinto))
+                                tutkintoversio (:tutkintoversio_id tutkinto)
+                                row (+ 2 i)]
+                            (set-or-create-cell! oalat-sheet (str "A" row) tutkintoversio)
+                            (doall (map-indexed (fn [ind osaamisala]
+                                                  (let [colstr (nth osacolumns ind)]
+                                                    (set-or-create-cell! oalat-sheet (str colstr row) (str (nimi-fn osaamisala) " (" (:osaamisala_id osaamisala) ")"))))
+                                                osaamisalat))))
+                        tutkinnot))))
                               
-(defn ^:private map-tutkintorakenne! 
+(defn ^:private map-tutkintorakenne!
   ([tutosat-sheet tutkinnot-sheet kieli]
-    (let [tutkintorakenne (hae-osarakenne kieli)
-          versio-jarj (sort-by #(:tutkintoversio_id (first %)) tutkintorakenne) ]
-      (map-tutkinnot! tutkinnot-sheet tutkintorakenne kieli)
-      (doall (map-indexed (fn [i tutkinto]
-               (let [tutkinto-map (first tutkinto)
-                     tutkinnonosat (second tutkinto)
-                     row (+ 2 i)]
-                 (set-or-create-cell! tutosat-sheet (str "A" row) (:tutkintoversio_id tutkinto-map))
-                 ; rivi jää kokonaan tyhjäksi jos tutkintoon ei kuulu tutkinnonosia 
-                 (doall (map-indexed (fn [ind tutkinnonosa]
-                                       (let [colstr (nth osacolumns ind)]
-                                         (set-or-create-cell! tutosat-sheet (str colstr row) tutkinnonosa)))
-                                     tutkinnonosat))))
-                          versio-jarj))))
+   (let [tutkintorakenne (hae-osarakenne kieli)
+         versio-jarj (sort-by #(:tutkintoversio_id (first %)) tutkintorakenne)]
+     (map-tutkinnot! tutkinnot-sheet tutkintorakenne kieli)
+     (doall (map-indexed (fn [i tutkinto]
+                           (let [tutkinto-map (first tutkinto)
+                                 tutkinnonosat (second tutkinto)
+                                 row (+ 2 i)]
+                             (set-or-create-cell! tutosat-sheet (str "A" row) (:tutkintoversio_id tutkinto-map))
+                             ; rivi jää kokonaan tyhjäksi jos tutkintoon ei kuulu tutkinnonosia
+                             (doall (map-indexed (fn [ind tutkinnonosa]
+                                                   (let [colstr (nth osacolumns ind)]
+                                                     (set-or-create-cell! tutosat-sheet (str colstr row) tutkinnonosa)))
+                                                 tutkinnonosat))))
+                         versio-jarj))))
   ([tutosat-sheet tutkinnot-sheet]
-    (map-tutkintorakenne! tutosat-sheet tutkinnot-sheet "fi")))
+   (map-tutkintorakenne! tutosat-sheet tutkinnot-sheet "fi")))
 
 
 (defn ^:private map-arvioijat! [sheet]
@@ -209,8 +210,8 @@
                           (let [row (+ 3 r)]
                             (set-or-create-cell! sheet (str "B" row) (:nimi arvioija))
                             (set-or-create-cell! sheet (str "C" row) (edustus->excel (:rooli arvioija)))
-                            (set-or-create-cell! sheet (str "D" row) (bool->excel (:nayttotutkintomestari arvioija)))
-                            )) arvioijat))))
+                            (set-or-create-cell! sheet (str "D" row) (bool->excel (:nayttotutkintomestari arvioija)))))
+                        arvioijat))))
 
 (defn ^:private hae-arvioija-id
   [nimi excel-arvioijat db-arvioijat]
@@ -218,81 +219,77 @@
         a-db (first (filter #(= a (select-keys % [:etunimi :sukunimi :nayttotutkintomestari :rooli])) db-arvioijat))]
     (:arvioija_id a-db))) 
     
-(defn ^:private arvioijatiedot 
+(defn ^:private arvioijatiedot
   "Tulkitsee arvioijalistan Excelistä ja palauttaa joukkona arvioijat"
   [sheet ui-log]
   (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
         rivit (row-seq sheet)
         arvioijat (nthrest rivit 1)
         excel-arvioijat (atom #{})]
-    (try 
+    (try
       (doseq [arvioija arvioijat]
         (let [sukunimi (get-cell-str arvioija 1)
               etunimi (get-cell-str arvioija 0)]
           (when (not (empty? sukunimi))
             (let [rooli (excel->edustus (get-cell-str arvioija 2))
                   ntm (excel->boolean (get-cell-str arvioija 3))
-                  uusi-arvioija {:etunimi etunimi
-                                 :sukunimi sukunimi
-                                 :rooli rooli
+                  uusi-arvioija {:etunimi               etunimi
+                                 :sukunimi              sukunimi
+                                 :rooli                 rooli
                                  :nayttotutkintomestari ntm}]
-              (swap! excel-arvioijat #(conj % uusi-arvioija))
-              )))
+              (swap! excel-arvioijat #(conj % uusi-arvioija)))))
         (swap! rivi inc))
       (catch Exception e
         (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
-        (throw e)
-        ))
+        (throw e)))
     @excel-arvioijat))
 
 ; TODO: refaktoroi
-(defn ^:private luo-arvioijat! 
+(defn ^:private luo-arvioijat!
   "Luo tietokantaan ne arvioijat excelistä, jotka ovat uusia."
   [sheet ui-log]
   (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
         rivit (row-seq sheet)
         arvioijat (nthrest rivit 1)
         db-arvioijat (set (map #(select-keys % [:etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
-    (try 
+    (try
       (doseq [arvioija arvioijat]
         (let [sukunimi (get-cell-str arvioija 1)
               etunimi (get-cell-str arvioija 0)]
           (when (not (empty? sukunimi))
             (let [rooli (excel->edustus (get-cell-str arvioija 2))
                   ntm (excel->boolean (get-cell-str arvioija 3))
-                  uusi-arvioija {:etunimi etunimi
-                                 :sukunimi sukunimi
-                                 :rooli rooli
+                  uusi-arvioija {:etunimi               etunimi
+                                 :sukunimi              sukunimi
+                                 :rooli                 rooli
                                  :nayttotutkintomestari ntm}]
               (if (contains? db-arvioijat uusi-arvioija)
                 (swap! ui-log conj (str "Arvioija on jo olemassa tietokannassa (" sukunimi "," etunimi ")"))
                 (do
-                  (log/info (str "Lisätään uusi arvioija ("   sukunimi "," etunimi ")"))
-                  (swap! ui-log conj (str "Lisätään uusi arvioija ("   sukunimi "," etunimi ")"))
-                  (arvioija-arkisto/lisaa! uusi-arvioija))
-                  ))))
-          (swap! rivi inc))
+                  (log/info (str "Lisätään uusi arvioija (" sukunimi "," etunimi ")"))
+                  (swap! ui-log conj (str "Lisätään uusi arvioija (" sukunimi "," etunimi ")"))
+                  (arvioija-arkisto/lisaa! uusi-arvioija))))))
+        (swap! rivi inc))
       (catch Exception e
         (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
-        (throw e)
-        ))))
+        (throw e)))))
     
   
 
 (defn ^:private map-opiskelijat! [sheet]
-  (let [suorittajat (->>  (suorittaja-arkisto/hae-kaikki)
-           (map #(assoc % :nimi (str (:etunimi %) " " (:sukunimi %) " (" (:oid %) ")"))  )
-           (sort-by :nimi))]
+  (let [suorittajat (->> (suorittaja-arkisto/hae-kaikki)
+                         (map #(assoc % :nimi (str (:etunimi %) " " (:sukunimi %) " (" (:oid %) ")")))
+                         (sort-by :nimi))]
     (doall (map-indexed (fn [r opiskelija]
-                          (let [row (+ 3 r)] 
+                          (let [row (+ 3 r)]
                             (set-or-create-cell! sheet (str "A" row) (str (:sukunimi opiskelija) " " (:etunimi opiskelija) " (" (:oid opiskelija) ")")) ; Excel-concatenate ei toimi jostain syystä..
                             (set-or-create-cell! sheet (str "B" row) (:sukunimi opiskelija))
                             (set-or-create-cell! sheet (str "C" row) (:etunimi opiskelija))
                             (set-or-create-cell! sheet (str "D" row) (str (:suorittaja_id opiskelija)))
                             (set-or-create-cell! sheet (str "E" row) (:oid opiskelija))
                             (set-or-create-cell! sheet (str "F" row) (:hetu opiskelija))
-                            (set-or-create-cell! sheet (str "G" row) (:rahoitusmuoto_nimi opiskelija))
-                          )) suorittajat))))
+                            (set-or-create-cell! sheet (str "G" row) (:rahoitusmuoto_nimi opiskelija))))
+                        suorittajat))))
                
 
 
@@ -315,11 +312,11 @@
  
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-opiskelijat! [sheet ui-log]
-  (let [rivi (atom 3) ; Käyttäjän näkökulmasta Excelin ensimmäinen tietorivi on rivi 3 
+  (let [rivi (atom 3) ; Käyttäjän näkökulmasta Excelin ensimmäinen tietorivi on rivi 3
         rivit (row-seq sheet)
         opiskelijat (nthrest rivit 1)
         db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
-    (try 
+    (try
       (doseq [opiskelija opiskelijat]
         (let [sukunimi (get-cell-str opiskelija 1)
               etunimi (get-cell-str opiskelija 2)
@@ -329,26 +326,24 @@
             (swap! ui-log conj (str "Käsitellään uusi opiskelija " etunimi " " sukunimi))
             (let [oid (get-cell-str opiskelija 4)
                   hetu (get-cell-str opiskelija 5)
-                  rahoitusmuoto  (get-cell-num opiskelija 7)]
+                  rahoitusmuoto (get-cell-num opiskelija 7)]
               (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
-              (let [uusi-opiskelija {:etunimi etunimi
-                                     :sukunimi sukunimi
-                                     :hetu hetu
+              (let [uusi-opiskelija {:etunimi          etunimi
+                                     :sukunimi         sukunimi
+                                     :hetu             hetu
                                      :rahoitusmuoto_id (int rahoitusmuoto)
-                                     :oid oid}]
+                                     :oid              oid}]
                 (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
                   (if (and (:hetu uusi-opiskelija) (not (sade-validators/valid-hetu? (:hetu uusi-opiskelija))))
                     (swap! ui-log conj (str "Henkilötunnus on viallinen : " (:hetu uusi-opiskelija)))
                     (do
                       (swap! ui-log conj (str "Lisättiin opiskelija " etunimi " " sukunimi))
-                      (suorittaja-arkisto/lisaa! uusi-opiskelija)))
-                  ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
-                                            )))))
+                      ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
+                      (suorittaja-arkisto/lisaa! uusi-opiskelija))))))))
         (swap! rivi inc))
       (catch Exception e
         (swap! ui-log conj (str "Poikkeus opiskelijoiden käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
-        (throw e)
-        ))))
+        (throw e)))))
 
 (defn parse-osatunnus [osa]
   (let [start (.lastIndexOf osa "(")
@@ -369,9 +364,9 @@
         (throw (IllegalArgumentException. (str "Virheellinen osaamisala: " osaamisala))))
       (let [idstr (.substring osaamisala (+ 1 start) end)]
         (if (= "" idstr) nil
-          (java.lang.Long/parseLong idstr))))))
+          (Long/parseLong idstr))))))
 
-(defn ^:private tarkista-suorittaja-id [cell]
+(defn ^:private tarkista-suorittaja-id [^org.apache.poi.ss.usermodel.Cell cell]
   (try 
     (int (.getNumericCellValue cell))
     (catch IllegalStateException e
@@ -419,8 +414,8 @@
           (update :suoritusaika_loppu date->LocalDate))] 
     (contains? suoritus-set m)))
   
-(defn ^:private tulkitse-suorittajaid [id-cell
-                                       suorittaja-cell
+(defn ^:private tulkitse-suorittajaid [^org.apache.poi.ss.usermodel.Cell id-cell
+                                       ^org.apache.poi.ss.usermodel.Cell suorittaja-cell
                                        suorittajamap
                                        suorittajat-excelmap]
   (let [id (tarkista-suorittaja-id id-cell)
@@ -434,7 +429,7 @@
       ; helppo case, suorittaja löytyi id:llä
       id)))
 
-(defn ^:private date-or-nil [rowref colnum]
+(defn ^:private date-or-nil [^org.apache.poi.ss.usermodel.Row rowref colnum]
   (let [c (.getCell rowref colnum)]
     (when (not (nil? c))
       (.getDateCellValue c))))
@@ -446,18 +441,18 @@
         ]
     (try
       (let [rivit (row-seq sheet)
-             rivi1 (first rivit)
-             jarjestaja (get-cell-str rivi1 3) ; tutkinnon järjestäjän y-tunnus, solu D1 
-             suoritukset (nthrest rivit 4)
-             opiskelijat (suorittaja-arkisto/hae-kaikki)
-             suorittajamap (group-by :suorittaja_id opiskelijat)
-             suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
-             osamap (group-by #(select-keys % [:osatunnus :tutkintoversio]) (tutosa-arkisto/hae-kaikki))
-             suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
-             db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
-             _ (reset! rivi 5) ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
-             ]
-        (doseq [suoritus suoritukset]
+            rivi1 (first rivit)
+            jarjestaja (get-cell-str rivi1 3)               ; tutkinnon järjestäjän y-tunnus, solu D1
+            suoritukset (nthrest rivit 4)
+            opiskelijat (suorittaja-arkisto/hae-kaikki)
+            suorittajamap (group-by :suorittaja_id opiskelijat)
+            suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
+            osamap (group-by #(select-keys % [:osatunnus :tutkintoversio]) (tutosa-arkisto/hae-kaikki))
+            suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
+            db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
+            _ (reset! rivi 5)                               ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
+            ]
+        (doseq [^org.apache.poi.ss.usermodel.Row suoritus suoritukset]
           (reset! solu "suorittajan nimi")
           (let [nimisolu (.getCell suoritus 1)
                 nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
@@ -547,16 +542,11 @@
                     (log/info "Lisätään suorituskerta .." suorituskerta-map)
                     (log/info "Lisätään suoritus .." suoritus-map)
                     (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
-                    (suoritus-arkisto/lisaa! suoritus-full)
-
-                    ))
-          )))
-          (swap! rivi inc))
-        )
+                    (suoritus-arkisto/lisaa! suoritus-full))))))
+          (swap! rivi inc)))
       (catch Exception e
         (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))
-        (throw e)
-        ))))
+        (throw e)))))
 
 ;(user/with-testikayttaja 
 ;     (let [wb (load-workbook "tutosat_taydennetty2.xlsx")]

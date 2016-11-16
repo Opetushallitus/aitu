@@ -29,8 +29,4 @@
     (db/transaction
       (testdata/tyhjenna-testidata! oid)
       (testdata/poista-testikayttaja! oid)
-      {:status 200}))
-  (c/POST "/:oid" [oid]
-    (db/transaction
-      (testdata/luo-testikayttaja! oid)
       {:status 200})))
