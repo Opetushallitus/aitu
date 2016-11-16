@@ -73,7 +73,7 @@
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
            rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta kieli todistus sukupuoli
-           tutkinnonosa osaamisala]}]
+           tutkinnonosa osaamisala luotupvm_alku luotupvm_loppu]}]
   (->
     (sql/select* suorituskerta)
     (sql/join suoritus)
@@ -106,6 +106,8 @@
       (seq suorituskertaid) (sql/where {:suorituskerta.suorituskerta_id (Integer/parseInt suorituskertaid)})
       (seq ehdotuspvm_alku) (sql/where {:ehdotusaika [>= (to-sql-date (parse-iso-date ehdotuspvm_alku))]})
       (seq ehdotuspvm_loppu) (sql/where {:ehdotusaika [<= (to-sql-date (parse-iso-date ehdotuspvm_loppu))]})
+      (seq luotupvm_alku) (sql/where {:suorituskerta.luotuaika [>= (to-sql-date (parse-iso-date luotupvm_alku))]})
+      (seq luotupvm_loppu) (sql/where {:suorituskerta.luotuaika [<= (to-sql-date (parse-iso-date luotupvm_loppu))]})
       (seq hyvaksymispvm_alku) (sql/where {:hyvaksymisaika [>= (to-sql-date (parse-iso-date hyvaksymispvm_alku))]})
       (seq hyvaksymispvm_loppu) (sql/where {:hyvaksymisaika [<= (to-sql-date (parse-iso-date hyvaksymispvm_loppu))]})
       (seq jarjestamismuoto) (sql/where {:jarjestamismuoto jarjestamismuoto})
