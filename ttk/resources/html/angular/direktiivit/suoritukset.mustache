@@ -1,5 +1,6 @@
 {{=[[ ]]=}}
 [[#i18n.yleiset]]
+[[#i18n.sivutus]]
 [[#i18n.arviointipaatokset]]
 <div>
   <h3 ng-click="haeSuorituksia = !haeSuorituksia">[[hae_suorituksia]]</h3>
@@ -133,9 +134,19 @@
       [[hyvaksytyt]]
     </label>
   </div>
-
+  <div>
+    <label>[[tuloksia]]</label>
+      <fieldset>
+        <select ng-model="hakuForm.tuloksiasivulla">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>   
+     </fieldset>
+  </div>
   <form name="suorituksetForm">
-  <hakutulokset tuloksia-sivulla="10"
+  <hakutulokset tuloksia-sivulla="+hakuForm.tuloksiasivulla"
   haku-tila="hakuForm.tila" tulosform="form"
    otsikot="['[[sukunimi]], [[etunimi]], [[syntymapvm]]', '[[tutkinto]]', '[[tutkinnon_osa]]', '[[osaamisala]]', '[[arvosana]]', '[[arviointikokouksen_pvm]]', '[[kirjauspaiva]]','[[tutkinto_jarjestaja]]', '[[tila]]']" hakutulokset="suoritukset">
       <div class="table-cell">{{ hakutulos.suorittaja_sukunimi }}, {{ hakutulos.suorittaja_etunimi }}, {{ hakutulos.suorittaja_syntymapvm | date:'dd.MM.yyyy' }}</div>
@@ -161,4 +172,5 @@
   </form>
 </div>
 [[/i18n.arviointipaatokset]]
+[[/i18n.sivutus]]
 [[/i18n.yleiset]]
