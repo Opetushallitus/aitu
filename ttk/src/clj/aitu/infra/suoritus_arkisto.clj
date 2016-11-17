@@ -50,13 +50,14 @@
         (sql/fields :suoritus.tutkinnonosa :suoritus.arvosanan_korotus :suoritus.osaamisen_tunnustaminen :suoritus.kieli :suoritus.todistus :suoritus.osaamisala :suoritus.arvosana :suoritus.kokotutkinto
                     :suorituskerta.suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :paikka :jarjestelyt :jarjestamismuoto :valmistava_koulutus
                     :suorituskerta.suoritusaika_alku :suorituskerta.suoritusaika_loppu :suorituskerta.arviointikokouksen_pvm :suorituskerta.toimikunta
+                    :suorituskerta.liitetty_pvm :suorituskerta.tutkintoversio_suoritettava
                   ))))
 
 (defn hae-kaikki-suoritukset [koulutustoimija]
  (sql/select suorituskerta
    (sql/join suoritus (= :suoritus.suorituskerta :suorituskerta_id))
    (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :jarjestelyt :paikka :valmistava_koulutus :suoritusaika_alku :suoritusaika_loppu
-               :arviointikokouksen_pvm :toimikunta
+               :arviointikokouksen_pvm :toimikunta :liitetty_pvm :tutkintoversio_suoritettava
                [:suoritus.suoritus_id :suoritus_id]
                [:suoritus.kokotutkinto :kokotutkinto]
                [:suoritus.arvosana :arvosana]
@@ -84,7 +85,7 @@
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
                 :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
-                :jarjestamismuoto :opiskelijavuosi
+                :jarjestamismuoto :opiskelijavuosi :liitetty_pvm :tutkintoversio_suoritettava
                 :valmistava_koulutus :paikka :jarjestelyt
                 [:suorittaja.etunimi :suorittaja_etunimi]
                 [:suorittaja.sukunimi :suorittaja_sukunimi]
@@ -209,6 +210,7 @@
                   :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta
                   :tutkintoversio_suoritettava :liitetty_pvm])
     (update :opiskelijavuosi ->int)
+    (update :tutkintoversio_suoritettava #(or % (:tutkintoversio_id kerta)))
     (update :suoritusaika_alku parse-iso-date)
     (update :liitetty_pvm parse-iso-date)
     (update :arviointikokouksen_pvm parse-iso-date)

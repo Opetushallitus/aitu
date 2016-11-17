@@ -22,6 +22,8 @@
   :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
   :osaamisala_nimi_sv nil
   :arvosana "hyvaksytty"
+  :liitetty_pvm nil
+  :tutkintoversio_suoritettava -20000
   :suoritusaika_loppu "2016-09-01"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
   :suorittaja_syntymapvm "1912-12-12"
@@ -48,6 +50,8 @@
    "suoritusaika_loppu"  "01.09.2016"
    :arviointikokouksen_pvm "02.09.2016"
    :toimikunta "Lynx lynx"
+   :liitetty_pvm nil
+   :tutkintoversio_suoritettava -20000
    :arvioijat [{:arvioija_id -1}]
    "koulutustoimija" "0208430-8"
    "valmistava_koulutus" true
@@ -69,6 +73,7 @@
    "rahoitusmuoto" 3
    "suoritusaika_alku" nil
    "suoritusaika_loppu" nil
+   :tutkintoversio_suoritettava -20000
    :arviointikokouksen_pvm nil
    :toimikunta "Lynx lynx"
    :arvioijat []
@@ -98,9 +103,11 @@
    :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
    :paikka nil,
    :arvosana "hyvaksytty"
+   :liitetty_pvm nil
+   :tutkintoversio_suoritettava -20000
    :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
    :tutkinnonosa_nimi_sv nil
-    :tutkinnonosa_tutkinnonosa_id -10002
+   :tutkinnonosa_tutkinnonosa_id -10002
    :osaamisala_tunnus "9875" 
    :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
    :osaamisala_nimi_sv nil
@@ -131,7 +138,9 @@
    :arvosana "hyvaksytty"
    :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
    :tutkinnonosa_nimi_sv nil
-    :tutkinnonosa_tutkinnonosa_id -10002
+   :tutkinnonosa_tutkinnonosa_id -10002
+   :liitetty_pvm nil
+   :tutkintoversio_suoritettava -20000
    :osaamisala_tunnus "9875"
    :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
    :osaamisala_nimi_sv nil  
