@@ -465,40 +465,43 @@
                                                          suorittajat-excelmap)
                     _ (reset! solu "tutkintotunnus")
                     tutkintotunnus (get-cell-str suoritus 4)
-                    tutkintoversio (get-excel-tutperuste suoritus 23)
+                    tutkintoversio (get-excel-tutperuste suoritus 25)
+                    tutkintoversio_suoritettava (get-excel-tutperuste suoritus 27)
                     _ (reset! solu "osaamisala") 
                     osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
                     _ (reset! solu "tutkinnon osa")
                     osatunnus (parse-osatunnus (get-cell-str suoritus 6))
+                    _ (reset! solu "liittämisen pvm")
+                    liittamisen-pvm (date-or-nil suoritus 8)
                     _ (reset! solu "tunnustamisen pvm")
-                    tunnustamisen-pvm (date-or-nil suoritus 7) ; voi olla tyhjä
+                    tunnustamisen-pvm (date-or-nil suoritus 9) ; voi olla tyhjä
                     _ (reset! solu "tutkintotilaisuus, alkupvm") ; voi olla tyhjä jos osaamisen tunnustaminen
-                    suoritus-alkupvm (date-or-nil suoritus 8)
+                    suoritus-alkupvm (date-or-nil suoritus 10)
                     _ (reset! solu "tutkintotilaisuus, loppupvm")
-                    suoritus-loppupvm (date-or-nil suoritus 9) ; voi olla tyhjä jos osaamisen tunnustaminen
+                    suoritus-loppupvm (date-or-nil suoritus 11) ; voi olla tyhjä jos osaamisen tunnustaminen
                     _ (reset! solu "paikka")
-                    paikka (get-cell-str suoritus 10)
+                    paikka (get-cell-str suoritus 12)
                     _ (reset! solu "järjestelyt/työtehtävät")
-                    jarjestelyt (get-cell-str suoritus 11)
+                    jarjestelyt (get-cell-str suoritus 13)
                     _ (reset! solu "arviointikokous pvm")
-                    arviointikokous-pvm (date-or-nil suoritus 12) ; voi olla tyhjä jos osaamisen tunnustaminen
+                    arviointikokous-pvm (date-or-nil suoritus 14) ; voi olla tyhjä jos osaamisen tunnustaminen
                     _ (reset! solu "arvosana")
-                    arvosana (get-excel-arvosana suoritus 13)
+                    arvosana (get-excel-arvosana suoritus 15)
                     _ (reset! solu "todistus")
-                    todistus-valinta (get-cell-str suoritus 14)
+                    todistus-valinta (get-cell-str suoritus 16)
                     koko-tutkinto (= "Koko tutkinto" todistus-valinta)
                     todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
                     _ (reset! solu "suorituskieli")
-                    suorituskieli (get-cell-str suoritus 15)
+                    suorituskieli (get-cell-str suoritus 17)
                     _ (reset! solu "arvosanan korotus")
-                    korotus (excel->boolean (get-cell-str suoritus 16))
+                    korotus (excel->boolean (get-cell-str suoritus 18))
                   
                     _ (reset! solu "arvioija1")
-                    arvioija1 (get-cell-str suoritus 18)
+                    arvioija1 (get-cell-str suoritus 20)
                     _ (reset! solu "arvioija2")
-                    arvioija2 (get-cell-str suoritus 19)
+                    arvioija2 (get-cell-str suoritus 21)
                     _ (reset! solu "arvioija3")
-                    arvioija3 (get-cell-str suoritus 20)
+                    arvioija3 (get-cell-str suoritus 22)
                     
                     a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
                     a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
