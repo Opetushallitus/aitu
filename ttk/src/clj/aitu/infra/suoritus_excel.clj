@@ -110,10 +110,13 @@
   [^org.apache.poi.ss.usermodel.Row rowref col]
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell))
-      (if (or (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
-              (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_FORMULA))
-        (int (.getNumericCellValue cell))
-        (Integer/parseInt (.getStringCellValue cell))))))
+      (let [id (if (or (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
+                       (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_FORMULA))
+                 (int (.getNumericCellValue cell))
+                 (Integer/parseInt (.getStringCellValue cell)))]
+        (if (= 0 id)
+          nil
+          id)))))
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
@@ -466,7 +469,8 @@
                     _ (reset! solu "tutkintotunnus")
                     tutkintotunnus (get-cell-str suoritus 4)
                     tutkintoversio (get-excel-tutperuste suoritus 25)
-                    tutkintoversio_suoritettava (get-excel-tutperuste suoritus 27)
+                    _ (reset! solu "kohdistuva/suoritettava tutkinto")
+                    tutkintoversio-suoritettava (or (get-excel-tutperuste suoritus 27) tutkintoversio)
                     _ (reset! solu "osaamisala") 
                     osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
                     _ (reset! solu "tutkinnon osa")
@@ -514,7 +518,9 @@
                                        :tutkintoversio_id tutkintoversio
                                        :paikka paikka
                                        :toimikunta vastuutoimikunta
+                                       :tutkintoversio_suoritettava tutkintoversio-suoritettava
                                        :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
+                                       :liitetty_pvm (date->iso-date liittamisen-pvm)
                                        :jarjestelyt jarjestelyt
                                        :opiskelijavuosi 1 ; TODO
                                        :koulutustoimija jarjestaja

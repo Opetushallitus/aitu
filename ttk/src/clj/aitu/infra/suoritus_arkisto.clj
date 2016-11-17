@@ -206,9 +206,11 @@
 (defn kerta->suorituskerta-db [kerta]
   (-> kerta
     (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi
-                  :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta])
+                  :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta
+                  :tutkintoversio_suoritettava :liitetty_pvm])
     (update :opiskelijavuosi ->int)
     (update :suoritusaika_alku parse-iso-date)
+    (update :liitetty_pvm parse-iso-date)
     (update :arviointikokouksen_pvm parse-iso-date)
     (update :suoritusaika_loppu parse-iso-date)))
 
@@ -242,7 +244,7 @@
     (doseq [osa (:osat suoritus)]
       (let [suor (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta)))]
         (when (true? (:kokotutkinto osa))
-          (lisaa-koko-tutkinnon-suoritus! (:suoritus_id suor) (:tutkintoversio_id suoritus) (:suorittaja suorituskerta)))))
+          (lisaa-koko-tutkinnon-suoritus! (:suoritus_id suor) (:tutkintoversio_suoritettava suoritus) (:suorittaja suorituskerta)))))
 
     (doseq [arvioija (:arvioijat suoritus)]
       (let [arvioija-id (or (:arvioija_id arvioija)
