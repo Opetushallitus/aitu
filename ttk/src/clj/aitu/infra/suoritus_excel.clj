@@ -398,24 +398,30 @@
                              :suoritusaika_alku :suoritusaika_loppu
                              :kieli 
                              :osaamisala
-                             :todistus                             
+                             :todistus
+                             :suorituskerta_id
                              ; :valmistava_koulutus 
                              ;:arvointikokouksen_pvm
                              ])
                              (suoritus-arkisto/hae-kaikki-suoritukset jarjestaja))))
 
+(defn ^:private hae-suoritus 
+  "Etsi suoritus annetusta joukosta annettujen avainten perusteella."
+  [suoritus-set suoritus keyseq]
+  (let [m 
+        (-> (select-keys suoritus keyseq)
+          (update :suoritusaika_alku date->LocalDate)
+          (update :suoritusaika_loppu date->LocalDate))]
+    (filter #(= (select-keys % keyseq) m) suoritus-set)))  
+  
 (defn ^:private olemassaoleva-suoritus?
   "Tarkistaa onko suoritus jo annetussa joukossa. Tarkoituksella osa kentistä on vertailun ulkopuolella."
   [suoritus-set suoritus]
-  (let [m 
-        (-> (select-keys suoritus [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
-                                   :osaamisen_tunnustaminen :arvosanan_korotus ;järjestelyt ; paikka
-                                   :arvosana :rahoitusmuoto
-                                   :suoritusaika_alku :suoritusaika_loppu
-                                   :kieli :osaamisala :todistus])
-          (update :suoritusaika_alku date->LocalDate)
-          (update :suoritusaika_loppu date->LocalDate))] 
-    (contains? suoritus-set m)))
+  (not (empty? (hae-suoritus suoritus-set suoritus [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
+                                                    :osaamisen_tunnustaminen :arvosanan_korotus ;järjestelyt ; paikka
+                                                    :arvosana :rahoitusmuoto
+                                                    :suoritusaika_alku :suoritusaika_loppu
+                                                    :kieli :osaamisala :todistus]))))
   
 (defn ^:private tulkitse-suorittajaid [^org.apache.poi.ss.usermodel.Cell id-cell
                                        ^org.apache.poi.ss.usermodel.Cell suorittaja-cell
@@ -542,7 +548,8 @@
                     suoritus-full (merge suorituskerta-map
                                          {:osat [suoritus-map]})]
                 (log/info "suoritus.. " suorituskerta-map)
-              
+                
+                ; Suorituksen lisääminen
                 (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map))
                   (do
                    (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
@@ -551,7 +558,30 @@
                     (log/info "Lisätään suorituskerta .." suorituskerta-map)
                     (log/info "Lisätään suoritus .." suoritus-map)
                     (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
-                    (suoritus-arkisto/lisaa! suoritus-full))))))
+                    (suoritus-arkisto/lisaa! suoritus-full)))
+                
+                ; TODO: äsken lisätty suoritus pitäisi saada osaksi suorituset-settiä
+                ; Suorituksen liittäminen toiseen tutkintoon
+                (if (not (nil? liittamisen-pvm))
+                  (if (= tutkintoversio-suoritettava tutkintoversio)
+                  (do
+                   (swap! ui-log conj (str "Suoritusta ei voi liittää samaan tutkintoon: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                   (log/info "ohitetaan liittäminen kun kohde on sama kuin alkuperäisellä tutkinnon osalla"))
+                  (do
+                    (let [aiempi-suoritus (first (hae-suoritus suoritukset-alussa (merge suorituskerta-map suoritus-map)
+                                                               [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
+                                                                :arvosana :suoritusaika_alku :suoritusaika_loppu]))]
+                      (if (nil? aiempi-suoritus)
+                        (do
+                          (swap! ui-log conj (str "Aiempaa suoritusta liittämistä varten ei löydy! " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                          (log/info "ohitetaan liittäminen kun aiempaa suoritusta ei löydy!"))
+                        (do
+                          (log/info "Liitetään suoritusta .." suorituskerta-map)
+                          (swap! ui-log conj (str "Liitetään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio-suoritettava})))))
+                          (suoritus-arkisto/liita-suoritus! {:suorituskerta_id (:suorituskerta_id aiempi-suoritus)
+                                                             :tutkintoversio_suoritettava tutkintoversio-suoritettava
+                                                             :liitetty_pvm (date->iso-date liittamisen-pvm)}))))
+                  ))))))
           (swap! rivi inc)))
       (catch Exception e
         (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))

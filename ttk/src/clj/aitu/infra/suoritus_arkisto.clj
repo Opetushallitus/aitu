@@ -256,6 +256,13 @@
                        :arvioija_id arvioija-id}))))
     suorituskerta))
 
+(defn liita-suoritus!
+  "Liitä tutkinnon osan suoritukseen suoritettava (toinen tutkinto, johon tämä osa ei kuulu) tutkinto"
+  [{:keys [suorituskerta_id tutkintoversio_suoritettava liitetty_pvm] :as suoritustiedot}]
+  (auditlog/suoritus-operaatio! :paivitys suoritustiedot)
+  (sql-util/update-unique suorituskerta
+    (sql/set-fields (update suoritustiedot :liitetty_pvm parse-iso-date))))
+                            
 (defn lisaa-tai-paivita!
   [{:keys [arvioijat jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id]
     :as suoritustiedot}]
