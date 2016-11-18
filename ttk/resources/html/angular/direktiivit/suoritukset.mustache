@@ -108,7 +108,6 @@
           <option value="6">[[rahoitusmuoto-arvo.opsmapa]]</option> <!-- opsmapa -->
         </select>
       </fieldset>
-<!-- <enum-arvo arvo="esitys.rooli" nimi="rooli"></enum-arvo></td> -->
       <fieldset>
         <label>[[jarjestamismuoto]]</label>
         <select ng-model="hakuForm.jarjestamismuoto">
@@ -132,10 +131,6 @@
     <label>
       <input type="radio" ng-model="hakuForm.tila" value="luonnos">
       [[luonnokset]]
-    </label>
-    <label>
-      <input type="radio" ng-model="hakuForm.tila" value="ehdotettu">
-      [[ehdotetut]]
     </label>
     <label>
       <input type="radio" ng-model="hakuForm.tila" value="hyvaksytty">
@@ -173,10 +168,8 @@
         <button class="icon delete-icon" ng-click="poistaSuoritus(hakutulos)" ng-if="hakuTila === 'luonnos'"></button>
       </div>
    </hakutulokset>
-    <button class="float-right" ng-click="lahetaHyvaksyttavaksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'luonnos'">[[laheta_hyvaksyttavaksi]]</button>
-    <button class="float-right" ng-click="palautaLuonnokseksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'ehdotettu'">[[palauta_luonnokseksi]]</button>
-    <button class="float-right" ng-click="hyvaksy()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'ehdotettu'">[[hyvaksy]]</button>
-    <button class="float-right" ng-click="palautaHyvaksyttavaksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'hyvaksytty'">[[palauta_hyvaksyttavaksi]]</button>
+    <button class="float-right" ng-click="palautaLuonnokseksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'hyvaksytty'">[[palauta_luonnokseksi]]</button>
+    <button class="float-right" ng-click="hyvaksy()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'luonnos'">[[hyvaksy]]</button>
   </form>
 </div>
 [[/i18n.arviointipaatokset]]

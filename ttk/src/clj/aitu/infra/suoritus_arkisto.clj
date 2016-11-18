@@ -242,7 +242,7 @@
 (defn lisaa!
   [suoritus]
   (auditlog/suoritus-operaatio! :lisays suoritus)
-  (let [suorituskerta (sql/insert suorituskerta (sql/values (kerta->suorituskerta-db suoritus)))]
+  (let [suorituskerta (sql/insert suorituskerta (sql/values (kerta->suorituskerta-db suoritus) ))]
     (doseq [osa (:osat suoritus)]
       (let [suor (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta)))]
         (when (true? (:kokotutkinto osa))
