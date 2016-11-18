@@ -568,19 +568,24 @@
                    (swap! ui-log conj (str "Suoritusta ei voi liittää samaan tutkintoon: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
                    (log/info "ohitetaan liittäminen kun kohde on sama kuin alkuperäisellä tutkinnon osalla"))
                   (do
-                    (let [aiempi-suoritus (first (hae-suoritus suoritukset-alussa (merge suorituskerta-map suoritus-map)
+                    (let [aiemmat (hae-suoritus suoritukset-alussa (merge suorituskerta-map suoritus-map)
                                                                [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
-                                                                :arvosana :suoritusaika_alku :suoritusaika_loppu]))]
+                                                                :arvosana :suoritusaika_alku :suoritusaika_loppu])
+                          aiempi-suoritus (first aiemmat)]
                       (if (nil? aiempi-suoritus)
                         (do
                           (swap! ui-log conj (str "Aiempaa suoritusta liittämistä varten ei löydy! " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
                           (log/info "ohitetaan liittäminen kun aiempaa suoritusta ei löydy!"))
-                        (do
-                          (log/info "Liitetään suoritusta .." suorituskerta-map)
-                          (swap! ui-log conj (str "Liitetään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio-suoritettava})))))
-                          (suoritus-arkisto/liita-suoritus! {:suorituskerta_id (:suorituskerta_id aiempi-suoritus)
-                                                             :tutkintoversio_suoritettava tutkintoversio-suoritettava
-                                                             :liitetty_pvm (date->iso-date liittamisen-pvm)}))))
+                        (if (> (count aiemmat) 1)
+                          (do
+                            (swap! ui-log conj (str "Aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                            (log/info "ohitetaan liittäminen kun aiempaa suoritusta ei voi yksilöidä!"))
+                          (do
+                            (log/info "Liitetään suoritusta .." suorituskerta-map)
+                            (swap! ui-log conj (str "Liitetään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio-suoritettava})))))
+                            (suoritus-arkisto/liita-suoritus! {:suorituskerta_id (:suorituskerta_id aiempi-suoritus)
+                                                               :tutkintoversio_suoritettava tutkintoversio-suoritettava
+                                                               :liitetty_pvm (date->iso-date liittamisen-pvm)})))))
                   ))))))
           (swap! rivi inc)))
       (catch Exception e
