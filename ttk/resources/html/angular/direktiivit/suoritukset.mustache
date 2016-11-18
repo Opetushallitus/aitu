@@ -1,5 +1,6 @@
 {{=[[ ]]=}}
 [[#i18n.yleiset]]
+[[#i18n.enum]]
 [[#i18n.sivutus]]
 [[#i18n.arviointipaatokset]]
 <div>
@@ -97,10 +98,17 @@
     <div>
       <fieldset>
         <label>[[rahoitusmuoto]]</label>
-        <select ng-model="hakuForm.rahoitusmuoto" ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot">
+        <select ng-model="hakuForm.rahoitusmuoto">
           <option value=""></option>
+          <option value="1">[[rahoitusmuoto-arvo.valtionosuus]]</option> <!-- valtionosuus -->
+          <option value="2">[[rahoitusmuoto-arvo.oppisopimus]]</option> <!-- oppisopimus -->
+          <option value="3">[[rahoitusmuoto-arvo.tyovoimapoliittinen]]</option> <!-- tyovoimapoliittinen -->
+          <option value="4">[[rahoitusmuoto-arvo.henkilostokoulutus]]</option> <!--  henkilostokoulutus -->
+          <option value="5">[[rahoitusmuoto-arvo.eirahoitusmuotoa]]</option> <!-- eirahoitusmuotoa -->
+          <option value="6">[[rahoitusmuoto-arvo.opsmapa]]</option> <!-- opsmapa -->
         </select>
       </fieldset>
+<!-- <enum-arvo arvo="esitys.rooli" nimi="rooli"></enum-arvo></td> -->
       <fieldset>
         <label>[[jarjestamismuoto]]</label>
         <select ng-model="hakuForm.jarjestamismuoto">
@@ -173,4 +181,5 @@
 </div>
 [[/i18n.arviointipaatokset]]
 [[/i18n.sivutus]]
+[[/i18n.enum]]
 [[/i18n.yleiset]]
