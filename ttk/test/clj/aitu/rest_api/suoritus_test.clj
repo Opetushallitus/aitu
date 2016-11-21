@@ -166,7 +166,6 @@
              skerta-id (some :suorituskerta_id suorituslista-resp)
              suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
              suoritus-resp (body-json (:response suoritustiedot))
-             _ (println suoritus-resp)
              ; update
              paivitys-map (assoc (merge suoritus-resp suoritus-diff) :suorituskerta_id  skerta-id )
              kirjaa-paivitys (mock-json-post s "/api/suoritus" (cheshire/generate-string paivitys-map))
@@ -240,4 +239,20 @@
            
            (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
         ))))
+
+(deftest ^:integraatio testaa-tilasiirtymat 
+  (let [crout (init-peridot!)]
+    (run-with-db (constantly true)
+      #(let [s (peridot/session crout)
+             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-base))
+             suorituksia (mock-request s "/api/suoritus" :get {})             
+             suorituslista-resp (body-json (:response suorituksia))
+             skerta-id (some :suorituskerta_id suorituslista-resp)
+             hyvaksy-req {:hyvaksymispvm "2016-11-16"
+                          :suoritukset [skerta-id]}
+             hyv-resp (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))]
+         (println (body-json (:response hyv-resp)))     
+         (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
+        ))))
+  
 
