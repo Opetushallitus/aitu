@@ -19,6 +19,7 @@
              [oph.korma.common :as sql-util]
              [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
              [oph.common.util.http-util :refer [parse-iso-date]]
+             [oph.korma.common :refer [to-hki-local-date]]
              [aitu.integraatio.sql.korma :refer :all]))
 
 
@@ -312,12 +313,12 @@
     (sql/where {:suorituskerta_id [in suoritukset]})))
 
 (defn hyvaksy!
-  [suoritukset]
+  [{:keys [hyvaksymispvm suoritukset] :as suoritusdata}]
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
                                            :tila "hyvaksytty"})
-  (sql/update :suorituskerta
+  (sql/update suorituskerta
     (sql/set-fields {:tila "hyvaksytty"
-                     :hyvaksymisaika (sql/sqlfn now)})
+                     :hyvaksymisaika (or (to-hki-local-date (parse-iso-date hyvaksymispvm)) (sql/sqlfn now))}) ; (sql/sqlfn now)
     (sql/where {:suorituskerta_id [in suoritukset]})))
 
 (defn poista!

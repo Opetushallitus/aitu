@@ -150,8 +150,12 @@
   </div>
   <form name="suorituksetForm">
   <hakutulokset tuloksia-sivulla="+hakuForm.tuloksiasivulla"
-  haku-tila="hakuForm.tila" tulosform="form"
-   otsikot="['[[sukunimi]], [[etunimi]], [[syntymapvm]]', '[[tutkinto]]', '[[tutkinnon_osa]]', '[[osaamisala]]', '[[arvosana]]', '[[arviointikokouksen_pvm]]', '[[kirjauspaiva]]','[[tutkinto_jarjestaja]]', '[[tila]]']" hakutulokset="suoritukset">
+    haku-tila="hakuForm.tila" tulosform="form"
+    otsikot="['[[sukunimi]], [[etunimi]], [[syntymapvm]]', '[[tutkinto]]', '[[tutkinnon_osa]]', '[[osaamisala]]', '[[arvosana]]', '[[arviointikokouksen_pvm]]', '[[kirjauspaiva]]','[[tutkinto_jarjestaja]]', '[[tila]]']" 
+    hakutulokset="suoritukset"
+    poistofn="poistaSuoritus"
+    muokkausfn="muokkaaSuoritusta"
+    >
       <div class="table-cell">{{ hakutulos.suorittaja_sukunimi }}, {{ hakutulos.suorittaja_etunimi }}, {{ hakutulos.suorittaja_syntymapvm | date:'dd.MM.yyyy' }}</div>
       <div class="table-cell">{{ hakutulos | lokalisoiKentta:'tutkinto_nimi' }}</div>
       <div class="table-cell">{{ hakutulos | lokalisoiKentta:'tutkinnonosa_nimi' }}</div>
@@ -163,13 +167,17 @@
       <div class="table-cell">{{ i18n.arviointipaatokset['tila-' + hakutulos.tila] }}</div>
       <div class="table-cell"><input type="checkbox" ng-model="tulosform[hakutulos.suorituskerta_id]" ng-if="hakuTila === 'luonnos' || hakuTila === 'ehdotettu' || hakuTila === 'hyvaksytty'"></div>
       <div class="table-cell">
-        <button class="icon edit-icon" ng-click="muokkaaSuoritusta(hakutulos)" ng-if="hakuTila === 'luonnos'"></button>
+        <button class="icon edit-icon" ng-click="muokkausfn(hakutulos)" ng-if="hakuTila === 'luonnos'"></button>
         &nbsp;&nbsp;&nbsp;
-        <button class="icon delete-icon" ng-click="poistaSuoritus(hakutulos)" ng-if="hakuTila === 'luonnos'"></button>
+        <button class="icon delete-icon" ng-click="poistofn(hakutulos)" ng-if="hakuTila === 'luonnos'"></button>
       </div>
    </hakutulokset>
     <button class="float-right" ng-click="palautaLuonnokseksi()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'hyvaksytty'">[[palauta_luonnokseksi]]</button>
-    <button class="float-right" ng-click="hyvaksy()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'luonnos'">[[hyvaksy]]</button>
+    <span class="float-right" ng-show="hakuForm.tila === 'luonnos'">
+      <label> [[hyvaksymispvm]]</label>
+      <pvm-valitsin pakollinen="false" valittu-pvm="form.hyvaksymispvm" tyhjennettava="true"></pvm-valitsin>
+      <button class="float-right" ng-click="hyvaksy()" ng-disabled="valitutSuoritukset().length == 0" ng-if="hakuForm.tila === 'luonnos'">[[hyvaksy]]</button>
+    </span>
   </form>
 </div>
 [[/i18n.arviointipaatokset]]

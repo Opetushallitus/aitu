@@ -34,6 +34,8 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         hakuTila : "=",
         tulosform: "=",
         tuloksiaSivulla: "=",
+        poistofn: "=",
+        muokkausfn: "=",
         otsikot: "@"
       },
       transclude: true,

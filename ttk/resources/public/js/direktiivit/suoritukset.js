@@ -142,7 +142,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         $scope.hyvaksy = function() {
           Varmistus.varmista(i18n.arviointipaatokset.hyvaksytaanko_suoritus, i18n.arviointipaatokset.hyvaksy_suoritus_teksti, i18n.arviointipaatokset.hyvaksy_suoritus).then(function() {
             var valitutSuoritukset = $scope.valitutSuoritukset();
-            Suoritus.hyvaksy(valitutSuoritukset).then(function() {
+            Suoritus.hyvaksy(valitutSuoritukset, $scope.form.hyvaksymispvm).then(function() {
               paivitaSuoritustenTila(valitutSuoritukset, 'hyvaksytty');
             });
           });

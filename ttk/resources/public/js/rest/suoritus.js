@@ -35,8 +35,8 @@ angular.module('rest.suoritus', [])
           return response.data;
         });
       },
-      hyvaksy: function(suoritukset) {
-        return $http.post(ophBaseUrl + '/api/suoritus/hyvaksy', {suoritukset: suoritukset}).then(function(response) {
+      hyvaksy: function(suoritukset, hyvaksymispvm) {
+        return $http.post(ophBaseUrl + '/api/suoritus/hyvaksy', {suoritukset: suoritukset, hyvaksymispvm: hyvaksymispvm}).then(function(response) {
           return response.data;
         });
       },

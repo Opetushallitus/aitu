@@ -54,7 +54,7 @@
   (POST "/laheta" [suoritukset]
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/laheta! suoritukset)))
-  (POST "/hyvaksy" [suoritukset]
+  (POST "/hyvaksy" [& suoritukset]
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/hyvaksy! suoritukset)))
   (POST "/palauta" [suoritukset]
