@@ -16,8 +16,8 @@
   (:require [clj-time.coerce :as c]
             [clj-time.core :as time]
             [clojure.tools.logging :as log]
-            [oph.common.util.util :refer :all])
-  (:import org.joda.time.DateTimeZone))
+            [oph.common.util.util :refer :all]
+            [oph.korma.common :refer [to-hki-local-date]]))
 
 (defn lataa-kaikki-sivut [url options]
   (loop [vanha-data []
@@ -73,11 +73,6 @@
    :nimi_fi (or (get-in osa [:nimi :fi]) (get-in osa [:nimi :sv]))
    :nimi_sv (get-in osa [:nimi :sv])})
 
-(defn ^:private to-local-date
-  [date]
-  (when-let [dt (c/to-date-time date)]
-    (c/to-local-date (time/to-time-zone dt (DateTimeZone/forID "Europe/Helsinki")))))
-
 (defn muotoile-peruste [peruste]
   (let [osa-id->osatunnus (into {} (for [osa (:tutkinnonOsat peruste)]
                                      [(str (:id osa)) (osatunnus osa)]))
@@ -89,9 +84,9 @@
         (log/warn (str "Tutkinnon " (:id peruste) " siirtymäaikaa ei ole asetettu, voimassaolon päättymispäivä on asetettu. ")))   
       (merge {:diaarinumero (:diaarinumero peruste)
               :eperustetunnus (:id peruste)
-              :voimassa_alkupvm (to-local-date (:voimassaoloAlkaa peruste))
-              :voimassa_loppupvm (or (to-local-date (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))
-              :siirtymaajan_loppupvm (or (to-local-date (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))              
+              :voimassa_alkupvm (to-hki-local-date (:voimassaoloAlkaa peruste))
+              :voimassa_loppupvm (or (to-hki-local-date (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))
+              :siirtymaajan_loppupvm (or (to-hki-local-date (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))              
               :tutkinnot (map :koulutuskoodiArvo (:koulutukset peruste))
               :tutkinnonosat tutkinnonosat}
              (muotoile-suoritustapa osa-id->osatunnus osaamisalat nayttotutkinto))
