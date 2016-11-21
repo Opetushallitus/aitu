@@ -390,19 +390,22 @@
               items#))))
     
 
+(defn ^:private suoritus-kentat [suoritus]
+ (select-keys suoritus [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija 
+                                   :osaamisen_tunnustaminen :arvosanan_korotus; :jarjestelyt 
+                                   ;:paikka 
+                                   :arvosana :rahoitusmuoto
+                                   :suoritusaika_alku :suoritusaika_loppu
+                                   :kieli 
+                                   :osaamisala
+                                   :todistus
+                                   :suorituskerta_id
+                                   ; :valmistava_koulutus 
+                                   ;:arvointikokouksen_pvm
+                                   ]))
+  
 (defn ^:private hae-suoritukset [jarjestaja]
-  (set (map #(select-keys % [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija 
-                             :osaamisen_tunnustaminen :arvosanan_korotus; :jarjestelyt 
-                             ;:paikka 
-                             :arvosana :rahoitusmuoto
-                             :suoritusaika_alku :suoritusaika_loppu
-                             :kieli 
-                             :osaamisala
-                             :todistus
-                             :suorituskerta_id
-                             ; :valmistava_koulutus 
-                             ;:arvointikokouksen_pvm
-                             ])
+  (set (map #(suoritus-kentat %)
                              (suoritus-arkisto/hae-kaikki-suoritukset jarjestaja))))
 
 (defn ^:private hae-suoritus 
@@ -457,7 +460,7 @@
             suorittajamap (group-by :suorittaja_id opiskelijat)
             suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
             osamap (group-by #(select-keys % [:osatunnus :tutkintoversio]) (tutosa-arkisto/hae-kaikki))
-            suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
+            suoritukset-set (atom (hae-suoritukset jarjestaja)) ; Duplikaattirivejä verrataan näihin
             db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
             _ (reset! rivi 5)                               ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
             ]
@@ -550,7 +553,7 @@
                 (log/info "suoritus.. " suorituskerta-map)
                 
                 ; Suorituksen lisääminen
-                (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map))
+                (if (olemassaoleva-suoritus? @suoritukset-set (merge suorituskerta-map suoritus-map))
                   (do
                    (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
                    (log/info "ohitetaan duplikaatti suoritus"))
@@ -558,9 +561,8 @@
                     (log/info "Lisätään suorituskerta .." suorituskerta-map)
                     (log/info "Lisätään suoritus .." suoritus-map)
                     (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
-                    (suoritus-arkisto/lisaa! suoritus-full)))
+                    (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))))
                 
-                ; TODO: äsken lisätty suoritus pitäisi saada osaksi suorituset-settiä
                 ; Suorituksen liittäminen toiseen tutkintoon
                 (if (not (nil? liittamisen-pvm))
                   (if (= tutkintoversio-suoritettava tutkintoversio)
@@ -568,7 +570,7 @@
                    (swap! ui-log conj (str "Suoritusta ei voi liittää samaan tutkintoon: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
                    (log/info "ohitetaan liittäminen kun kohde on sama kuin alkuperäisellä tutkinnon osalla"))
                   (do
-                    (let [aiemmat (hae-suoritus suoritukset-alussa (merge suorituskerta-map suoritus-map)
+                    (let [aiemmat (hae-suoritus @suoritukset-set (merge suorituskerta-map suoritus-map)
                                                                [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
                                                                 :arvosana :suoritusaika_alku :suoritusaika_loppu])
                           aiempi-suoritus (first aiemmat)]
