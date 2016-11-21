@@ -250,8 +250,10 @@
              skerta-id (some :suorituskerta_id suorituslista-resp)
              hyvaksy-req {:hyvaksymispvm "2016-11-16"
                           :suoritukset [skerta-id]}
-             hyv-resp (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))]
-         (println (body-json (:response hyv-resp)))     
+             hyv-resp (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))
+             hyv-json (body-json (:response hyv-resp))]
+         (is (= (:tila hyv-json) "hyvaksytty"))
+         (is (= (:hyvaksymisaika hyv-json) "2016-11-16"))
          (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
         ))))
   
