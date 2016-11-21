@@ -21,5 +21,5 @@
 (defn hae-kaikki
   "Hakee kaikki nimet enum taulusta."
   [enum]
-  {:pre [(subset? #{enum} #{"edustus" "alue" "rooli" "kieli" "sukupuoli" "tutkintotaso", "jasenyyden_status"})]}
+  {:pre [(subset? #{enum} #{"edustus" "alue" "rooli" "kieli" "sukupuoli" "tutkintotaso", "jasenyyden_status", "rahoitusmuoto"})]}
   (sql/exec-raw [(str "select nimi from " enum)] :results))
