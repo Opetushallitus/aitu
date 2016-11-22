@@ -20,6 +20,7 @@
              [aitu.infra.suorittaja-arkisto :as suorittaja-arkisto]
              [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
              [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
+             [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
              [aitu.auditlog :as auditlog]
              [dk.ative.docjure.spreadsheet :refer :all]
              [sade.validators :as sade-validators]))
@@ -464,6 +465,9 @@
             db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
             _ (reset! rivi 5)                               ; Käyttäjän näkökulmasta ensimmäinen tietorivi on rivi 5 Excelissä.
             ]
+        (when (nil? (koulutustoimija-arkisto/hae-tiedot jarjestaja))
+          (throw (new IllegalArgumentException (str "Koulutuksen järjestäjää ei löydy y-tunnuksella " jarjestaja))))
+          
         (doseq [^org.apache.poi.ss.usermodel.Row suoritus suoritukset]
           (reset! solu "suorittajan nimi")
           (let [nimisolu (.getCell suoritus 1)
@@ -521,6 +525,7 @@
                     a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
                     
                     kouljarjestaja (get-cell-str suoritus 22) ; koulutuksen järjestäjän y-tunnus, solu Wn
+                    koulj (koulutustoimija-arkisto/hae-tiedot kouljarjestaja)
                     kouljarj-nimi (get-cell-str suoritus 23)
 
                     vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
@@ -536,7 +541,7 @@
                                        :jarjestelyt jarjestelyt
                                        :opiskelijavuosi 1 ; TODO
                                        :koulutustoimija jarjestaja
-                                       :kouljarjestaja kouljarjestaja
+                                       :kouljarjestaja (:ytunnus koulj) ; nil -> nil
                                        :suoritusaika_alku (date->iso-date suoritus-alkupvm)
                                        :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
                                        :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
@@ -555,6 +560,10 @@
                     suoritus-full (merge suorituskerta-map
                                          {:osat [suoritus-map]})]
                 (log/info "suoritus.. " suorituskerta-map)
+                
+                (when (and (not (nil? kouljarjestaja))
+                           (nil? koulj))
+                  (swap! ui-log conj (str "Tutkinnon järjestäjää ei löydy: " kouljarjestaja " , nimi " kouljarj-nimi)))
                 
                 ; Suorituksen lisääminen
                 (if (olemassaoleva-suoritus? @suoritukset-set (merge suorituskerta-map suoritus-map))

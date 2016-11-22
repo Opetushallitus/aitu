@@ -18,6 +18,7 @@
              [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
              [aitu.infra.jarjestamissopimus-arkisto :as sopimus-arkisto]
              [clojure.string :refer [blank?]]
+             [oph.korma.common :as sql-util]
              [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ^:integration-api lisaa!
@@ -135,3 +136,8 @@
   (sql/select :koulutustoimija
     (sql/fields :ytunnus :nimi_fi :nimi_sv)
     (sql/order :nimi_fi)))
+
+(defn hae-tiedot
+  [ytunnus]
+  (sql-util/select-unique-or-nil :koulutustoimija
+   (sql/where {:ytunnus ytunnus})))              
