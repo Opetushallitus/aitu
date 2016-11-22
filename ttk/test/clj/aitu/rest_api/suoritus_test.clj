@@ -11,7 +11,7 @@
 (def suorituslista-result
   {:tila "luonnos", :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", :hyvaksymisaika nil, 
   :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto", :suorittaja -1, 
-  :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :koulutustoimija "0208430-8",
+  :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8"
   :arviointikokouksen_pvm "2016-09-02"
   :suoritusaika_alku "2016-09-01"
   :toimikunta "Lynx lynx"
@@ -59,6 +59,12 @@
    "jarjestelyt" "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. "   
    "tutkinto" "927128"})
 
+(def suoritus-erikoinen
+  (-> suoritus-base
+    (assoc :kouljarjestaja "0159216-7")
+    (assoc :liitetty_pvm "05.05.2014")))    
+           
+
 (def suoritus-tunnustaminen
   {"osat" [{"arvosana" "hyvaksytty"
             "arvosanan_korotus" false
@@ -94,7 +100,7 @@
    :arvioijat []
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
    :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :valmistava_koulutus true, 
-   :koulutustoimija "0208430-8", :arviointikokouksen_pvm nil
+   :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8", :arviointikokouksen_pvm nil
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
    :suorittaja_syntymapvm "1912-12-12"
@@ -128,7 +134,7 @@
    :arvioijat [{:arvioija_id -1 :etunimi "Väinö" :sukunimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false}]
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
    :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :valmistava_koulutus true, 
-   :koulutustoimija "0208430-8", :arviointikokouksen_pvm "2016-09-02"
+   :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8", :arviointikokouksen_pvm "2016-09-02"
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
    :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
@@ -256,5 +262,21 @@
          (is (= (:hyvaksymisaika hyv-json) "2016-11-16"))
          (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
         ))))
-  
+
+(deftest ^:integraatio suoritus-liitetty-sopimus
+  (let [crout (init-peridot!)]
+    (run-with-db (constantly true)
+      #(let [s (peridot/session crout)
+             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-erikoinen))
+             suorituksia (mock-request s "/api/suoritus" :get {})
+             suorituslista-resp (body-json (:response suorituksia))
+             skerta-id (some :suorituskerta_id suorituslista-resp)
+             suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
+             suoritus-resp (body-json (:response suoritustiedot))
+
+             poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
+             ]
+        (is (= "0159216-7" (:kouljarjestaja suoritus-resp)))
+        (is (= "2014-05-05" (:liitetty_pvm suoritus-resp)))
+        ))))
 
