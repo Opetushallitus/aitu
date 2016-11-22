@@ -477,9 +477,9 @@
                                                          suorittajat-excelmap)
                     _ (reset! solu "tutkintotunnus")
                     tutkintotunnus (get-cell-str suoritus 4)
-                    tutkintoversio (get-excel-tutperuste suoritus 25)
+                    tutkintoversio (get-excel-tutperuste suoritus 26)
                     _ (reset! solu "kohdistuva/suoritettava tutkinto")
-                    tutkintoversio-suoritettava (or (get-excel-tutperuste suoritus 27) tutkintoversio)
+                    tutkintoversio-suoritettava (or (get-excel-tutperuste suoritus 28) tutkintoversio)
                     _ (reset! solu "osaamisala") 
                     osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
                     _ (reset! solu "tutkinnon osa")
@@ -510,15 +510,18 @@
                     korotus (excel->boolean (get-cell-str suoritus 18))
                   
                     _ (reset! solu "arvioija1")
-                    arvioija1 (get-cell-str suoritus 20)
+                    arvioija1 (get-cell-str suoritus 19)
                     _ (reset! solu "arvioija2")
-                    arvioija2 (get-cell-str suoritus 21)
+                    arvioija2 (get-cell-str suoritus 20)
                     _ (reset! solu "arvioija3")
-                    arvioija3 (get-cell-str suoritus 22)
+                    arvioija3 (get-cell-str suoritus 21)
                     
                     a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
                     a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
                     a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
+                    
+                    kouljarjestaja (get-cell-str suoritus 22) ; koulutuksen järjestäjän y-tunnus, solu Wn
+                    kouljarj-nimi (get-cell-str suoritus 23)
 
                     vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
                     suorituskerta-map {:suorittaja suorittaja-id
@@ -533,6 +536,7 @@
                                        :jarjestelyt jarjestelyt
                                        :opiskelijavuosi 1 ; TODO
                                        :koulutustoimija jarjestaja
+                                       :kouljarjestaja kouljarjestaja
                                        :suoritusaika_alku (date->iso-date suoritus-alkupvm)
                                        :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
                                        :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
