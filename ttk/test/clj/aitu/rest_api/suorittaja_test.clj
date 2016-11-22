@@ -55,7 +55,7 @@
   (map #(dissoc % :muutettuaika :muutettu_nimi) s))
 
 (deftest ^:integraatio suorittaja-flow
-  (let [crout (init-peridot!)]
+  (with-peridot (fn [crout]
     (run-with-db (constantly true)
       #(let [s (peridot/session crout)
              suorittajat (mock-request s "/api/suorittaja" :get {})
@@ -66,15 +66,15 @@
              ]
          (is (= suorittajat-alussa (rip-muutettukentat (body-json (:response suorittajat)))))
          (is (= "121212-999R" (:hetu kirjaus-respo)))
-        ))))
+        )))))
 
 (deftest ^:integraatio suorittaja-viallinen-hetu
   (testing "suorittajan syöttämisessä hetu-tarkistus toimii ja palauttaa virheilmoituksen"
-    (let [crout (init-peridot!)]
-      (run-with-db (constantly true)
-        #(let [s (peridot/session crout)
-               kirjaa (mock-json-post s "/api/suorittaja" (cheshire/generate-string uusi-suorittaja-viallinen-hetu))
-               kirjaus-respo (:response kirjaa)
-               ]
-           (is (= 400 (:status kirjaus-respo))) 
-           (is (= "{\"errors\":[\"hetu\",\"Viallinen henkilötunnus\"]}" (:body kirjaus-respo))))))))
+   (with-peridot (fn [crout]
+     (run-with-db (constantly true)
+         #(let [s (peridot/session crout)
+                kirjaa (mock-json-post s "/api/suorittaja" (cheshire/generate-string uusi-suorittaja-viallinen-hetu))
+                kirjaus-respo (:response kirjaa)
+                ]
+            (is (= 400 (:status kirjaus-respo))) 
+            (is (= "{\"errors\":[\"hetu\",\"Viallinen henkilötunnus\"]}" (:body kirjaus-respo)))))))))

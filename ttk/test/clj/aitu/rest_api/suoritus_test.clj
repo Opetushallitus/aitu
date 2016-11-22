@@ -163,7 +163,7 @@
   (map #(dissoc % :suorituskerta_id) suorituslista))
   
 (deftest ^:integraatio suoritus-tunnustaminen-flow
-  (let [crout (init-peridot!)]
+  (with-peridot (fn [crout]
     (run-with-db (constantly true)
       #(let [s (peridot/session crout)
              kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-tunnustaminen))
@@ -179,7 +179,7 @@
              poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
              ]
         (is (= (rip-suoritusid suoritus-result-tunnustaminen) (rip-suoritusid suoritus-resp)))
-        ))))
+        )))))
 
 (deftest ^:integraatio suoritus-flow
   (with-peridot (fn [crout]
@@ -224,27 +224,27 @@
   
 (deftest ^:integraatio suoritus-haku-suorittajalla
   (let [haku-vals ["Orvok" "kelija" "Orvokki", "fan.far.12345"]
-        haku-notfound [ "Jörmungandr" "fan.far.1"]
-        crout (init-peridot!)]
-    (run-with-db (constantly true)
-      #(let [s (peridot/session crout)
-             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-base))
-             suorituksia (mock-request s "/api/suoritus" :get {})
-             suorituslista-resp (body-json (:response suorituksia))
-             skerta-id (some :suorituskerta_id suorituslista-resp)]
-         (testing "testaan opiskelijalla hakua erilaisilla kriteereillä.." 
-                  (doseq [crit haku-vals]
-                    (let [suorituslista-resp  (body-json (:response (mock-request s "/api/suoritus" :get {:suorittaja crit})))]
-                      (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))                      
-                    )))
-         (testing "testataan opiskelijalla hakua"
-                  (doseq [crit haku-notfound]
-                    (let [ei-suorituksia  (mock-request s "/api/suoritus" :get {:suorittaja crit})]
-                      (is (= '() (body-json (:response ei-suorituksia))))
-                    )))
+        haku-notfound [ "Jörmungandr" "fan.far.1"]]
+   (with-peridot (fn [crout]
+     (run-with-db (constantly true)
+       #(let [s (peridot/session crout)
+              kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-base))
+              suorituksia (mock-request s "/api/suoritus" :get {})
+              suorituslista-resp (body-json (:response suorituksia))
+              skerta-id (some :suorituskerta_id suorituslista-resp)]
+          (testing "testaan opiskelijalla hakua erilaisilla kriteereillä.." 
+                   (doseq [crit haku-vals]
+                     (let [suorituslista-resp  (body-json (:response (mock-request s "/api/suoritus" :get {:suorittaja crit})))]
+                       (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))                      
+                     )))
+          (testing "testataan opiskelijalla hakua"
+                   (doseq [crit haku-notfound]
+                     (let [ei-suorituksia  (mock-request s "/api/suoritus" :get {:suorittaja crit})]
+                       (is (= '() (body-json (:response ei-suorituksia))))
+                     )))
            
-           (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
-        ))))
+            (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
+         ))))))
 
 (deftest ^:integraatio testaa-tilasiirtymat 
   (with-peridot (fn [crout]

@@ -13,11 +13,11 @@
    :oppilaitokset []})
 
 (deftest ^:integraatio osoitepalvelu-api
-  (let [crout (init-peridot!)]
+  (with-peridot (fn [crout]
     (run-with-db (constantly true)
       #(let [s (peridot/session crout)
              osoitteet (mock-request s "/api/osoitepalvelu" :get {})
              ]
         (is (= toimikunta-reply (body-json (:response osoitteet))))
-        ))))
+        )))))
 
