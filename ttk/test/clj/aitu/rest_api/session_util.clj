@@ -72,6 +72,20 @@
         _ (alusta-korma! asetukset)]
     (palvelin/app asetukset)))
 
+(defn with-peridot
+  "Alustaa app stackin ja Korman, mutta ei avaa transaktiota tietokantaan. Parametrina annettu f on funktio, joka ottaa parametrina peridot-session testikoodia varten."
+  [f]
+  (let [asetukset
+        (-> oletusasetukset
+          (assoc-in [:cas-auth-server :enabled] true)
+          (assoc :development-mode true))
+        pool (alusta-korma! asetukset)
+        crout (palvelin/app asetukset)]
+    (try
+      (f crout)
+      (finally
+        (-> pool :pool :datasource .close)))))
+
 (defn body-json [response]
   (cheshire/parse-string (slurp (:body response)) true))
 
