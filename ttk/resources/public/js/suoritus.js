@@ -68,6 +68,7 @@ angular.module('suoritus', [])
         	$scope.form.rahoitusmuoto = suoritus.rahoitusmuoto;
         	$scope.form.suorittaja = suoritus.suorittaja;
         	$scope.form.koulutustoimija = suoritus.koulutustoimija;
+        	$scope.form.kouljarjestaja = suoritus.kouljarjestaja;
         	$scope.form.opiskelijavuosi = "" + suoritus.opiskelijavuosi;
         	$scope.form.jarjestamismuoto = suoritus.jarjestamismuoto;
         	$scope.form.jarjestelyt = suoritus.jarjestelyt;
@@ -77,6 +78,7 @@ angular.module('suoritus', [])
         	$scope.form.suoritusaika_loppu = suoritus.suoritusaika_loppu;
         	$scope.form.toimikunta = suoritus.toimikunta;
         	$scope.form.arviointikokouksen_pvm = suoritus.arviointikokouksen_pvm;
+        	$scope.form.liitetty_pvm = suoritus.liitetty_pvm;        	
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.form.arvioijat = suoritus.arvioijat;
