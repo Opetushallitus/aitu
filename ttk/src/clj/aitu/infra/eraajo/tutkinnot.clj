@@ -100,14 +100,10 @@
 
 (defn ^:integration-api paivita-tutkinto! [tutkinto]
   (let [tutkintotunnus (:tutkintotunnus tutkinto)
-        tutkintotiedot (remove-nil-vals (select-keys tutkinto [:nimi_fi :nimi_sv :tyyppi :tutkintotaso :opintoala]))
-        versiotiedot (remove-nil-vals (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio]))]
+        tutkintotiedot (remove-nil-vals (select-keys tutkinto [:nimi_fi :nimi_sv :tyyppi :tutkintotaso :opintoala]))]
     (when (not-every? nil? (vals tutkintotiedot))
       (tutkinto-arkisto/paivita! tutkintotunnus tutkintotiedot))
-    (let [tutkintoversio-id (:tutkintoversio_id (tutkinto-arkisto/hae-tutkinto (:tutkintotunnus tutkinto)))]
-      (when (not-every? nil? (vals versiotiedot))
-        (tutkinto-arkisto/paivita-tutkintoversio! (assoc versiotiedot :tutkintoversio_id tutkintoversio-id)))
-      tutkintoversio-id)))
+    (:tutkintoversio_id (tutkinto-arkisto/hae-tutkinto (:tutkintotunnus tutkinto)))))
 
 (defn ^:integration-api paivita-tutkinnot! [tutkintomuutokset]
   (let [opintoalat (set (map :opintoala_tkkoodi (opintoala-arkisto/hae-kaikki)))

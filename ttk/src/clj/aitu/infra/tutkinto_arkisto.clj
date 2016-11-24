@@ -77,14 +77,17 @@
         versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio 
                                             :siirtymaajan_loppupvm  :jarjestyskoodistoversio :peruste :eperustetunnus])
         tutkintotunnus (:tutkintotunnus tutkinto)
-        vanha-versio (hae-tutkintoversio-perusteella tutkintotunnus (:peruste tutkinto))
+        vanha-versio (or (hae-tutkintoversio-perusteella tutkintotunnus (:peruste tutkinto))
+                         (hae-tutkintoversio-perusteella tutkintotunnus nil))
         uusi-versio (->
                       (merge (hae-uusin-tutkintoversio tutkintotunnus) versiotiedot)
                       (update-in [:versio] inc)
                       (dissoc :tutkintoversio_id))]
     (when (seq tutkintotiedot)
       (paivita! tutkintotunnus tutkintotiedot))
-    (if vanha-versio
+    (if (and vanha-versio
+             (or (= (:peruste vanha-versio) (:peruste versiotiedot))
+                 (= (:voimassa_alkupvm vanha-versio) (:voimassa_alkupvm versiotiedot)))) ; vanha peruste on nil, mutta voimassaolo täsmää -> sama versio
       (do
         (paivita-tutkintoversio! (assoc versiotiedot :tutkintoversio_id (:tutkintoversio_id vanha-versio)))
         (:tutkintoversio_id vanha-versio))
