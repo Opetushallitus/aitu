@@ -19,7 +19,7 @@ angular.module('palvelut.viestidialogi', [])
     return {
       nayta: function(otsikko, teksti, nappi) {
         return $modal.open({
-          template: '<div class="modal-header"><h1 ng-bind="otsikko"></h1></div><div class="modal-scrollable"><div ng-repeat="teks in teksti">{{teks}}</div><div><button ng-click="ok()" ng-bind="nappi"></button></div></div>',
+          template: '<div class="modal-header"><h1 ng-bind="otsikko"></h1></div><div class="modal-scrollable"><div ng-repeat="teks in teksti track by $index">{{teks}}</div><div><button ng-click="ok()" ng-bind="nappi"></button></div></div>',
           controller: 'ViestidialogiModalController',
           resolve: {
             tekstit: function() {
