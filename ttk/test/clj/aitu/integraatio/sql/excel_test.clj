@@ -28,13 +28,12 @@
 ; :osaamisen_tunnustaminen false, :kieli "fi"}]})
 
 (def luku-result
-  ["Käsitellään arvioijat.." "Arvioija on jo olemassa tietokannassa (Ilmarinen,Seppo)"
-   "Lisätään uusi arvioija (Kullervoinen,Kullervo)" "Lisätään uusi arvioija (Väinämöinen,Väinö)" 
-   "Käsitellään opiskelijat.." "Opiskelijat ok. Käsitellään suoritukset.." 
-   "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" 
-   "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen" 
+  ["Käsitellään arvioijat.." "Arvioija on jo olemassa tietokannassa (Ilmarinen,Seppo)" 
+   "Lisätään uusi arvioija (Kullervoinen,Kullervo)" "Lisätään uusi arvioija (Väinämöinen,Väinö)" "Käsitellään opiskelijat.." 
+   "Opiskelijat ok. Käsitellään suoritukset.." "------------------------" "Suoritusrivejä 213 kpl. Suorituksia kirjattu 1 kpl." 
+   "------------------------" "------------------ tarkempi loki ----" 
+   "Käsitellään suoritus opiskelijalle " "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen"
    "Suoritukset ok."])
-
 
 (deftest ^:integraatio excel-import-test
   (let [wb (load-workbook "test-resources/tutosat_perus.xlsx")

@@ -572,10 +572,19 @@
         (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))
         (throw e)))))
 
+(defn ^:private kirjaa-loki! [ui-log lev & args]
+  {:pre [(contains? #{:info :error :fatal} lev)]}
+  (let [msg (apply str args)]
+    (log/info msg)
+    (swap! ui-log conj [lev msg])))
+
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log]
   (let [rivi (atom 1) ; Y-tunnus on rivillä 1.
         solu (atom "Tutkinnon järjestäjän y-tunnus") ; Solureferenssi virheilmoituksiin, jotta käyttäjä saa selvemmin tiedon siitä mikä on vialla.
+        import-log (atom [])
+        rivicount (atom 0) ; suoritusrivejä
+        suorituscount (atom 0) ; kirjattuja suoritusrivejä
         ]
     (try
       (let [rivit (row-seq sheet)
@@ -598,16 +607,16 @@
         (log/info "Excel versionumero " (versionumero rivit))
         (if (onko-0911-versio? rivit)
           (do
-            (swap! ui-log conj  "Vanha excel-versio tunnistettu")           
+            (kirjaa-loki! import-log :info "Vanha excel-versio tunnistettu")           
             (luo-suoritukset-vanha-excel! arvioijatiedot sheet ui-log))
           (do                  
             (doseq [^org.apache.poi.ss.usermodel.Row suoritus suoritukset]
+              (swap! rivicount inc)
               (reset! solu "suorittajan nimi")
               (let [nimisolu (.getCell suoritus 1)
                     nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
                 (when (not (empty? nimi))
-                  (log/info ".. " nimi)
-                  (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
+                  (kirjaa-loki! import-log :info "Käsitellään suoritus opiskelijalle ")
                   (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 2)
                                                              (.getCell suoritus 1)
                                                              suorittajamap
@@ -696,49 +705,52 @@
                 
                     (when (and (not (nil? kouljarjestaja))
                                (nil? koulj))
-                      (swap! ui-log conj (str "Tutkinnon järjestäjää ei löydy: " kouljarjestaja " , nimi " kouljarj-nimi)))
+                      (kirjaa-loki! import-log :error "Tutkinnon järjestäjää ei löydy: " kouljarjestaja " , nimi " kouljarj-nimi))
                 
                     ; Suorituksen lisääminen
                     (if (olemassaoleva-suoritus? @suoritukset-set (merge suorituskerta-map suoritus-map))
-                      (do
-                       (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-                       (log/info "ohitetaan duplikaatti suoritus"))
+                      (kirjaa-loki! import-log :info "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                       (do
                         (log/info "Lisätään suorituskerta .." suorituskerta-map)
                         (log/info "Lisätään suoritus .." suoritus-map)
-                        (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
-                        (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))))
+                        (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
+                        (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))
+                        (swap! suorituscount inc)))
                 
                     ; Suorituksen liittäminen toiseen tutkintoon
                     (if (not (nil? liittamisen-pvm))
                       (if (= tutkintoversio-suoritettava tutkintoversio)
-                      (do
-                       (swap! ui-log conj (str "Suoritusta ei voi liittää samaan tutkintoon: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-                       (log/info "ohitetaan liittäminen kun kohde on sama kuin alkuperäisellä tutkinnon osalla"))
+                      (kirjaa-loki! import-log :info "Suoritusta ei voi liittää samaan tutkintoon: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                       (do
                         (let [aiemmat (hae-suoritus @suoritukset-set (merge suorituskerta-map suoritus-map)
                                                                    [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
-                                                                    :arvosana :suoritusaika_alku :suoritusaika_loppu])
+                                                                    :arvosana])
                               aiempi-suoritus (first aiemmat)]
                           (if (nil? aiempi-suoritus)
-                            (do
-                              (swap! ui-log conj (str "Aiempaa suoritusta liittämistä varten ei löydy! " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-                              (log/info "ohitetaan liittäminen kun aiempaa suoritusta ei löydy!"))
+                            (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, aiempaa suoritusta liittämistä varten ei löydy! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                             (if (> (count aiemmat) 1)
+                              (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                               (do
-                                (swap! ui-log conj (str "Aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-                                (log/info "ohitetaan liittäminen kun aiempaa suoritusta ei voi yksilöidä!"))
-                              (do
-                                (log/info "Liitetään suoritusta .." suorituskerta-map)
-                                (swap! ui-log conj (str "Liitetään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio-suoritettava})))))
+                                (kirjaa-loki! import-log :info "Liitetään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio-suoritettava}))))
                                 (suoritus-arkisto/liita-suoritus! {:suorituskerta_id (:suorituskerta_id aiempi-suoritus)
                                                                    :tutkintoversio_suoritettava tutkintoversio-suoritettava
                                                                    :liitetty_pvm (date->iso-date liittamisen-pvm)})))))
                       ))))))
               (swap! rivi inc)))))
       (catch Exception e
-        (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))
-        (throw e)))))
+        (kirjaa-loki! import-log :fatal "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e)
+        (throw e))
+      (finally
+        ; käsitellään lokiviestit
+        (swap! ui-log conj "------------------------")
+        (swap! ui-log conj (str "Suoritusrivejä " @rivicount " kpl. Suorituksia kirjattu " @suorituscount " kpl."))
+        (swap! ui-log conj "------------------------")
+        (let [virheet (map second (filter #(= :error (first %)) @import-log))
+              lokiviestit (map second @import-log)]
+           (doall (map #(swap! ui-log conj %) virheet))
+           (swap! ui-log conj "------------------ tarkempi loki ----")
+           (doall (map #(swap! ui-log conj %) lokiviestit))))
+      )))
 
 ;(user/with-testikayttaja 
 ;     (let [wb (load-workbook "tutosat_taydennetty2.xlsx")]
