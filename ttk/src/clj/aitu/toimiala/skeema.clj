@@ -190,7 +190,7 @@
                          (s/optional-key :oid) s/Str
                          :etunimi s/Str
                          :sukunimi s/Str
-                         :rahoitusmuoto_id s/Int})
+                         (s/optional-key :rahoitusmuoto_id) s/Int})
 
 (s/defschema Lokalisoitu
   {:fi s/Str

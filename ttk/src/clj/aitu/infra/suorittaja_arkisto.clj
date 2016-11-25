@@ -30,7 +30,7 @@
   []
   (sql/select :suorittaja
     (sql/join :kayttaja (= :kayttaja.oid :muutettu_kayttaja))
-    (sql/join :rahoitusmuoto (= :rahoitusmuoto.rahoitusmuoto_id :rahoitusmuoto))
+    (sql/join :left :rahoitusmuoto (= :rahoitusmuoto.rahoitusmuoto_id :rahoitusmuoto))
     (sql/fields :suorittaja_id :etunimi :sukunimi :hetu :oid :muutettuaika
                 [:rahoitusmuoto.rahoitusmuoto :rahoitusmuoto_nimi]
                 [:rahoitusmuoto.rahoitusmuoto_id :rahoitusmuoto_id]

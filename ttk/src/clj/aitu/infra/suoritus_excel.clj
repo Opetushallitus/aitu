@@ -297,8 +297,7 @@
                
 
 
-(defn ^:private tarkista-opiskelija-tiedot [oid hetu rahoitusmuoto]
-  (when (nil? rahoitusmuoto) (throw (IllegalArgumentException. "Rahoitusmuoto ei voi olla tyhjä")))
+(defn ^:private tarkista-opiskelija-tiedot [oid hetu]
   (when (and (nil? oid) (nil? hetu)) (throw (IllegalArgumentException. "Hetu tai Oid pitää olla.")))
   (when (and (not (nil? hetu)) (not (= 11 (count hetu)))) (throw (IllegalArgumentException. "Hetun pitää olla 11 merkkiä pitkä."))))
 
@@ -329,13 +328,11 @@
             (log/info (str "käsitellään uusi opiskelija " etunimi " " sukunimi))
             (swap! ui-log conj (str "Käsitellään uusi opiskelija " etunimi " " sukunimi))
             (let [oid (get-cell-str opiskelija 4)
-                  hetu (get-cell-str opiskelija 5)
-                  rahoitusmuoto (get-cell-num opiskelija 7)]
-              (tarkista-opiskelija-tiedot oid hetu rahoitusmuoto)
+                  hetu (get-cell-str opiskelija 5)]
+              (tarkista-opiskelija-tiedot oid hetu)
               (let [uusi-opiskelija {:etunimi          etunimi
                                      :sukunimi         sukunimi
                                      :hetu             hetu
-                                     :rahoitusmuoto_id (int rahoitusmuoto)
                                      :oid              oid}]
                 (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
                   (if (and (:hetu uusi-opiskelija) (not (sade-validators/valid-hetu? (:hetu uusi-opiskelija))))
@@ -611,11 +608,11 @@
             (luo-suoritukset-vanha-excel! arvioijatiedot sheet ui-log))
           (do                  
             (doseq [^org.apache.poi.ss.usermodel.Row suoritus suoritukset]
-              (swap! rivicount inc)
               (reset! solu "suorittajan nimi")
               (let [nimisolu (.getCell suoritus 1)
                     nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
                 (when (not (empty? nimi))
+                  (swap! rivicount inc)
                   (kirjaa-loki! import-log :info "Käsitellään suoritus opiskelijalle ")
                   (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 2)
                                                              (.getCell suoritus 1)
