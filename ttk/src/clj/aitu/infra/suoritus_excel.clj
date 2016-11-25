@@ -452,10 +452,10 @@
   (let [otsikot (nth rivit 3)]
     (reduce #(+ (.hashCode %1) (.hashCode %2)) (map #(.getStringCellValue %) (take 30 otsikot)))))
 
-(defn ^:private onko-0911-versio? 
-  "Palauttaa true jos kyse on 9.11. 2016 käytössä olleesta excelin versiosta"
+(defn ^:private onko-vanha-versio? 
+  "Palauttaa true jos kyse on 9.11. tai 4.11. 2016 käytössä olleesta excelin versiosta"
   [rivit]
-  (= 612231933 (versionumero rivit)))
+  (contains? #{851295559 612231933} (versionumero rivit)))
 
 (defn ^:private luo-suoritukset-vanha-excel! 
   "Vanhan excel-version kanssa toimiva versio luo-suoritukset funktiosta. TODO: Tämä voidaan poistaa jossain kohtaa kokonaan kun vanha excel on poistunut käytöstä."
@@ -605,7 +605,7 @@
         ; versiotarkistus on vasta tässä tarkoituksella, jotta saadaan vanhallekin versiolle koulutuksen järjestäjän olemassaolotarkistus 
         ; Tämä voidaan poistaa kun vanha versio on poistunut kentältä käytöstä.
         (log/info "Excel versionumero " (versionumero rivit))
-        (if (onko-0911-versio? rivit)
+        (if (onko-vanha-versio? rivit)
           (do
             (kirjaa-loki! import-log :info "Vanha excel-versio tunnistettu")           
             (luo-suoritukset-vanha-excel! arvioijatiedot sheet ui-log))
