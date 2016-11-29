@@ -47,8 +47,8 @@
     (when (not (nil? cell))
       (if (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
         (.getDateCellValue cell)
-        (let [v (.getStringCellValue cell)]
-          (println "lkwlkrl//" v "//"))))))
+        nil))))
+
 
 (defn ^:private excel->arvosana [excel-arvosana]
   (let [m {"Hyväksytty" "hyvaksytty"
