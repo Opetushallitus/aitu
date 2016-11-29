@@ -32,7 +32,7 @@
    "Lisätään uusi arvioija (Kullervoinen,Kullervo)" "Lisätään uusi arvioija (Väinämöinen,Väinö)" "Käsitellään opiskelijat.." 
    "Opiskelijat ok. Käsitellään suoritukset.." "------------------------" "Suoritusrivejä 1 kpl. Suorituksia kirjattu 1 kpl." 
    "------------------------" "------------------ tarkempi loki ----" 
-   "Käsitellään suoritus opiskelijalle " "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen"
+   "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen"
    "Suoritukset ok."])
 
 (deftest ^:integraatio excel-import-test
