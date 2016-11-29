@@ -39,6 +39,51 @@
 (defn ^:private get-cell-num [^org.apache.poi.ss.usermodel.Row rowref col]
   (let [cell (.getCell rowref col)]
     (when (not (nil? cell)) (.getNumericCellValue cell))))  
+
+(defn ^:private date-or-nil
+  "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"  
+  [^org.apache.poi.ss.usermodel.Row rowref colnum]
+  (let [cell (.getCell rowref colnum)]
+    (when (not (nil? cell))
+      (if (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
+        (.getDateCellValue cell)
+        (let [v (.getStringCellValue cell)]
+          (println "lkwlkrl//" v "//"))))))
+
+(defn ^:private excel->arvosana [excel-arvosana]
+  (let [m {"Hyväksytty" "hyvaksytty"
+           "1"  "1"
+           "2" "2"
+           "3" "3"
+           "1.0" "1"
+           "2.0" "2"
+           "3.0" "3"}
+        v (get m excel-arvosana)]
+    (when (nil? v)
+      (throw (IllegalArgumentException. (str "Virheellinen arvosana: " excel-arvosana))))
+    v))
+
+(defn ^:private get-excel-arvosana 
+  "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"
+  [^org.apache.poi.ss.usermodel.Row rowref col]
+  (let [cell (.getCell rowref col)]
+    (when (not (nil? cell))
+      (if (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
+        (excel->arvosana (str (.getNumericCellValue cell)))
+        (excel->arvosana (.getStringCellValue cell))))))
+                 
+(defn ^:private get-excel-tutperuste
+  "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"
+  [^org.apache.poi.ss.usermodel.Row rowref col]
+  (let [cell (.getCell rowref col)]
+    (when (not (nil? cell))
+      (let [id (if (or (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
+                       (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_FORMULA))
+                 (int (.getNumericCellValue cell))
+                 (Integer/parseInt (.getStringCellValue cell)))]
+        (if (= 0 id)
+          nil
+          id)))))
         
 (defn excel->boolean [s]
   (let [m {"Kyllä" true
@@ -84,40 +129,6 @@
     (let [dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
       (.format dformat date))))
 
-(defn ^:private excel->arvosana [excel-arvosana]
-  (let [m {"Hyväksytty" "hyvaksytty"
-           "1"  "1"
-           "2" "2"
-           "3" "3"
-           "1.0" "1"
-           "2.0" "2"
-           "3.0" "3"}
-        v (get m excel-arvosana)]
-    (when (nil? v)
-      (throw (IllegalArgumentException. (str "Virheellinen arvosana: " excel-arvosana))))
-    v))
-
-(defn ^:private get-excel-arvosana 
-  "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"
-  [^org.apache.poi.ss.usermodel.Row rowref col]
-  (let [cell (.getCell rowref col)]
-    (when (not (nil? cell))
-      (if (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
-        (excel->arvosana (str (.getNumericCellValue cell)))
-        (excel->arvosana (.getStringCellValue cell))))))
-                 
-(defn ^:private get-excel-tutperuste
-  "Tulkitaan monimutkaisesti, koska Excelin tyyppijärjestelmä ei osaa päättää onko solu tekstiä vai ei. Joskus on, joskus ei ole, vaikka miten sanoisi Format Cell -> Text"
-  [^org.apache.poi.ss.usermodel.Row rowref col]
-  (let [cell (.getCell rowref col)]
-    (when (not (nil? cell))
-      (let [id (if (or (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
-                       (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_FORMULA))
-                 (int (.getNumericCellValue cell))
-                 (Integer/parseInt (.getStringCellValue cell)))]
-        (if (= 0 id)
-          nil
-          id)))))
 
 ; [t], jossa t [tutkintotunnus (osa1 osa2..)]
 ; eli vektori, jonka sisällä on vektoreina tutkintotunnus + lista sen osista
@@ -439,10 +450,6 @@
       ; helppo case, suorittaja löytyi id:llä
       id)))
 
-(defn ^:private date-or-nil [^org.apache.poi.ss.usermodel.Row rowref colnum]
-  (let [c (.getCell rowref colnum)]
-    (when (not (nil? c))
-      (.getDateCellValue c))))
 
 (defn ^:private versionumero
   [rivit]
@@ -467,7 +474,7 @@
             suoritukset (nthrest rivit 4)
             opiskelijat (suorittaja-arkisto/hae-kaikki)
             suorittajamap (group-by :suorittaja_id opiskelijat)
-            suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
+            suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) " (" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
             osamap (group-by #(select-keys % [:osatunnus :tutkintoversio]) (tutosa-arkisto/hae-kaikki))
             suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
             db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
@@ -590,7 +597,7 @@
             suoritukset (nthrest rivit 4)
             opiskelijat (suorittaja-arkisto/hae-kaikki)
             suorittajamap (group-by :suorittaja_id opiskelijat)
-            suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) "(" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
+            suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) " (" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
             osamap (group-by #(select-keys % [:osatunnus :tutkintoversio]) (tutosa-arkisto/hae-kaikki))
             suoritukset-set (atom (hae-suoritukset jarjestaja)) ; Duplikaattirivejä verrataan näihin
             db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
@@ -613,7 +620,7 @@
                     nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
                 (when (not (empty? nimi))
                   (swap! rivicount inc)
-                  (kirjaa-loki! import-log :info "Käsitellään suoritus opiskelijalle ")
+                  (kirjaa-loki! import-log :info "Käsitellään suoritus opiskelijalle " nimi)
                   (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 2)
                                                              (.getCell suoritus 1)
                                                              suorittajamap
