@@ -43,12 +43,12 @@
            [-2 2 "927128" "1060155-5"]))
     (is (= ui-log luku-result))))
 
-(deftest parse-opiskelija-test
+(deftest ^:integraatio parse-opiskelija-test
   (is (= {:nimi "a b", :oid nil, :hetu nil} (parse-opiskelija "a b ()")))
   (is (= {:nimi "a b", :oid "d", :hetu nil} (parse-opiskelija "a b (d)")))
   (is (= {:nimi "a b", :oid "d", :hetu "1234-x"} (parse-opiskelija "a b (d,1234-x)"))))
 
-(deftest nilstr-test
+(deftest ^:integraatio  nilstr-test
   (is (nil? (nilstr "")))
   (is (nil? (nilstr nil)))
   (is (= "a" (nilstr "a"))))
