@@ -288,8 +288,10 @@
       (catch Exception e
         (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
         (throw e)))))
-    
-  
+
+(defn ^:private nilstr [str]
+  (if (empty? str) nil str))
+ 
 
 (defn ^:private map-opiskelijat! [sheet]
   (let [suorittajat (->> (suorittaja-arkisto/hae-kaikki)
@@ -305,17 +307,41 @@
                             (set-or-create-cell! sheet (str "F" row) (:hetu opiskelija))
                             (set-or-create-cell! sheet (str "G" row) (:rahoitusmuoto_nimi opiskelija))))
                         suorittajat))))
-               
-
 
 (defn ^:private tarkista-opiskelija-tiedot [oid hetu]
-  (when (and (nil? oid) (nil? hetu)) (throw (IllegalArgumentException. "Hetu tai Oid pitää olla.")))
-  (when (and (not (nil? hetu)) (not (= 11 (count hetu)))) (throw (IllegalArgumentException. "Hetun pitää olla 11 merkkiä pitkä."))))
+  (when (and (empty? oid) (empty? hetu)) (throw (IllegalArgumentException. "Hetu tai Oid pitää olla.")))
+  (when (and (not (empty? hetu)) (not (= 11 (count hetu)))) (throw (IllegalArgumentException. "Hetun pitää olla 11 merkkiä pitkä."))))
 
+(defn hae-opiskelija 
+  "Hae opiskelija joko hetun tai oid-tunnuksen perusteella."
+  [tiedot opseq]
+  (filter #(or 
+             (and (not (empty? (:hetu %))) (= (:hetu %) (:hetu tiedot)))
+             (and (not (empty? (:oid %))) (= (:oid %) (:oid tiedot)))) opseq))
+
+(defn ^:private parse-opiskelija
+  [id-str]
+  (let [osat (clojure.string/split id-str #"\(")
+        loppu (last osat)
+        oid-hetu (clojure.string/split (.substring loppu 0 (- (.length loppu) 1)) #"\,")
+        oid (nilstr (first oid-hetu))
+        hetu (when (> (count oid-hetu) 1) (nilstr (last oid-hetu)))]
+    {:nimi (clojure.string/trim (first osat))
+     :oid oid
+     :hetu hetu}))
+
+(defn hae-opiskelija-excel 
+  "Hae opiskelija nimellä/oid/hetulla excelin sisällä."
+  [id-str excel-opiskelijat]
+  (let [op (parse-opiskelija id-str)
+        oidhetu-haku (hae-opiskelija op excel-opiskelijat)]
+    (if (not (empty? oidhetu-haku))
+      oidhetu-haku
+      ; ei löydetty hetulla/oid-tunnuksella. Kyse on vanhasta excelistä, jossa opiskelijan hetu ei ollut pakollinen tunnistetieto.
+      (filter #(= (clojure.string/trim (str (:sukunimi %) " " (:etunimi %))) (:nimi op)) excel-opiskelijat))))
+        
 (defn opiskelija-olemassa? [tiedot kaikki-seq]  
-  (let [vertailu-kentat [:hetu :oid]
-        vrt (select-keys tiedot vertailu-kentat)
-        op (filter #(= (select-keys % vertailu-kentat) vrt) kaikki-seq)]
+  (let [op (hae-opiskelija tiedot kaikki-seq)]
     (if (empty? op) 
       false ; Opiskelijaa ei löytynyt hetulla / oid:lla
       (let [uusi (select-keys tiedot [:etunimi :sukunimi])
@@ -323,38 +349,73 @@
       (if (= aiempi uusi)
         true ; Opiskelija löytyi, samat nimitiedot
         (throw (IllegalArgumentException. (str "Samalla hetu/oid tunnisteella on eri niminen henkilö. Uusi henkilö : " uusi " ja vanha: " aiempi))))))))
- 
-; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
-(defn ^:private luo-opiskelijat! [sheet ui-log]
+
+; O(n), mutta ei ongelma koska excelissä on max. vähän opiskelijoita 
+(defn ^:private tulkitse-suorittajaid [^org.apache.poi.ss.usermodel.Cell suorittaja-cell
+                                       suorittajat-hetu ; tietokannasta haetut tiedot, avaimena hetu
+                                       suorittajat-oid ; tietokannasta haetut tiedot, avaimena oid
+                                       suorittajat-excel]
+  (let [id-str (.getStringCellValue suorittaja-cell)
+        op-base (parse-opiskelija id-str)
+        op-ad (when (and (empty? (:oid op-base)) (empty? (:hetu op-base)))
+                (let [opp (hae-opiskelija-excel id-str suorittajat-excel)]
+                  (if (= 1 (count opp))
+                    (first opp)
+                    (throw (new IllegalArgumentException (str "Opiskelijaa ei voitu tulkita yksikäsitteisesti: " id-str))))))                
+        op (merge op-base op-ad)
+        oid-tulos (get suorittajat-oid (:oid op))
+        hetu-tulos (get suorittajat-hetu (:hetu op))]
+    (if (not (nil? oid-tulos))
+      (:suorittaja_id (first oid-tulos))
+      (if (not (nil? hetu-tulos))
+        (:suorittaja_id (first hetu-tulos))))))
+        
+(defn ^:private lue-opiskelijat [sheet ui-log]
   (let [rivi (atom 3) ; Käyttäjän näkökulmasta Excelin ensimmäinen tietorivi on rivi 3
         rivit (row-seq sheet)
-        opiskelijat (nthrest rivit 1)
-        db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
+        opiskelijat (nthrest rivit 1)]
     (try
-      (doseq [opiskelija opiskelijat]
-        (let [sukunimi (get-cell-str opiskelija 1)
-              etunimi (get-cell-str opiskelija 2)
-              id (get-cell-str opiskelija 3)]
-          (when (and (empty? id) (not (empty? sukunimi)))
-            (log/info (str "käsitellään uusi opiskelija " etunimi " " sukunimi))
-            (swap! ui-log conj (str "Käsitellään uusi opiskelija " etunimi " " sukunimi))
-            (let [oid (get-cell-str opiskelija 4)
-                  hetu (get-cell-str opiskelija 5)]
-              (tarkista-opiskelija-tiedot oid hetu)
-              (let [uusi-opiskelija {:etunimi          etunimi
-                                     :sukunimi         sukunimi
-                                     :hetu             hetu
-                                     :oid              oid}]
-                (when (not (opiskelija-olemassa? uusi-opiskelija db-opiskelijat))
-                  (if (and (:hetu uusi-opiskelija) (not (sade-validators/valid-hetu? (:hetu uusi-opiskelija))))
-                    (swap! ui-log conj (str "Henkilötunnus on viallinen : " (:hetu uusi-opiskelija)))
-                    (do
-                      (swap! ui-log conj (str "Lisättiin opiskelija " etunimi " " sukunimi))
-                      ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
-                      (suorittaja-arkisto/lisaa! uusi-opiskelija))))))))
-        (swap! rivi inc))
+      (into [] 
+            (filter #(not (nil? %)) (for [opiskelija opiskelijat]
+                                     (let [sukunimi (get-cell-str opiskelija 1)
+                                           etunimi (get-cell-str opiskelija 2)
+                                           id (get-cell-str opiskelija 3)]
+                                       (when (not (empty? sukunimi))
+                                         (let [oid (nilstr (get-cell-str opiskelija 4))
+                                               hetu (nilstr (get-cell-str opiskelija 5))
+                                               opiskelija {:etunimi          etunimi
+                                                           :sukunimi         sukunimi
+                                                           :hetu             hetu
+                                                           :oid              oid
+                                                           :excel-rivi @rivi}]
+                                           (tarkista-opiskelija-tiedot oid hetu)
+                                           (swap! rivi inc)
+                                           opiskelija))))))
       (catch Exception e
         (swap! ui-log conj (str "Poikkeus opiskelijoiden käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
+        (throw e)))))
+
+; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
+(defn ^:private luo-opiskelijat! [opiskelijat ui-log]
+  (let [db-opiskelijat (suorittaja-arkisto/hae-kaikki)]
+    (try
+      (doseq [opiskelija opiskelijat]
+        (let [sukunimi (:sukunimi opiskelija)
+              etunimi (:etunimi opiskelija)
+              oid (:oid opiskelija)
+              hetu (:hetu opiskelija)]
+          (when (not (empty? sukunimi))
+            (when (not (opiskelija-olemassa? opiskelija db-opiskelijat))
+              (log/info (str "käsitellään uusi opiskelija " etunimi " " sukunimi))
+              (swap! ui-log conj (str "Käsitellään uusi opiskelija " etunimi " " sukunimi))
+              (if (and (:hetu opiskelija) (not (sade-validators/valid-hetu? (:hetu opiskelija))))
+                (swap! ui-log conj (str "Henkilötunnus on viallinen : " (:hetu opiskelija)))
+                (do
+                  (swap! ui-log conj (str "Lisättiin opiskelija " etunimi " " sukunimi))
+                  ; TODO: jos sama opiskelija on kaksi kertaa excelissä, siitä tulee SQL exception
+                  (suorittaja-arkisto/lisaa! opiskelija)))))))
+      (catch Exception e
+        (swap! ui-log conj (str "Poikkeus opiskelijoiden käsittelyssä. Tarkista solujen sisältö: " e))
         (throw e)))))
 
 (defn parse-osatunnus [osa]
@@ -423,7 +484,8 @@
   (let [m 
         (-> (select-keys suoritus keyseq)
           (update :suoritusaika_alku date->LocalDate)
-          (update :suoritusaika_loppu date->LocalDate))]
+          (update :suoritusaika_loppu date->LocalDate)
+          (update :osaamisen_tunnustaminen date->LocalDate))]
     (filter #(= (select-keys % keyseq) m) suoritus-set)))  
   
 (defn ^:private olemassaoleva-suoritus?
@@ -434,22 +496,6 @@
                                                     :arvosana :rahoitusmuoto
                                                     :suoritusaika_alku :suoritusaika_loppu
                                                     :kieli :osaamisala :todistus]))))
-  
-(defn ^:private tulkitse-suorittajaid [^org.apache.poi.ss.usermodel.Cell id-cell
-                                       ^org.apache.poi.ss.usermodel.Cell suorittaja-cell
-                                       suorittajamap
-                                       suorittajat-excelmap]
-  (let [id (tarkista-suorittaja-id id-cell)
-        id-str (.getStringCellValue suorittaja-cell)]
-    (if (= id 0)
-      ; excelissä voi olla useampi duplikaattivaihtoehto -> ongelma
-      (let [l (get suorittajat-excelmap id-str)]
-        (if (= 1 (count l))
-          (:suorittaja_id (first l))
-          (throw (new IllegalArgumentException (str "Opiskelijaa ei voitu tulkita yksikäsitteisesti: " id-str)))))
-      ; helppo case, suorittaja löytyi id:llä
-      id)))
-
 
 (defn ^:private versionumero
   [rivit]
@@ -463,7 +509,7 @@
 
 (defn ^:private luo-suoritukset-vanha-excel! 
   "Vanhan excel-version kanssa toimiva versio luo-suoritukset funktiosta. TODO: Tämä voidaan poistaa jossain kohtaa kokonaan kun vanha excel on poistunut käytöstä."
-  [arvioijatiedot sheet ui-log]
+  [arvioijatiedot sheet ui-log suorittajat-excel]
   (let [rivi (atom 1) ; Y-tunnus on rivillä 1.
         solu (atom "Tutkinnon järjestäjän y-tunnus") ; Solureferenssi virheilmoituksiin, jotta käyttäjä saa selvemmin tiedon siitä mikä on vialla.
         ]
@@ -473,8 +519,10 @@
             jarjestaja (get-cell-str rivi1 3)               ; tutkinnon järjestäjän y-tunnus, solu D1
             suoritukset (nthrest rivit 4)
             opiskelijat (suorittaja-arkisto/hae-kaikki)
+            suorittajat-hetu (group-by :hetu opiskelijat)
+            suorittajat-oid (group-by :oid opiskelijat)
+            suorittajat-oid (group-by :oid opiskelijat)
             suorittajamap (group-by :suorittaja_id opiskelijat)
-            suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) " (" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
             osamap (group-by #(select-keys % [:osatunnus :tutkintoversio]) (tutosa-arkisto/hae-kaikki))
             suoritukset-alussa (hae-suoritukset jarjestaja) ; Duplikaattirivejä verrataan näihin
             db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
@@ -487,10 +535,10 @@
             (when (not (empty? nimi))
               (log/info ".. " nimi)
               (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
-              (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 2)
-                                                         (.getCell suoritus 1)
-                                                         suorittajamap
-                                                         suorittajat-excelmap)
+              (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 1)
+                                                         suorittajat-hetu
+                                                         suorittajat-oid
+                                                         suorittajat-excel)
                     _ (reset! solu "tutkintotunnus")
                     tutkintotunnus (get-cell-str suoritus 4)
                     tutkintoversio (get-excel-tutperuste suoritus 23)
@@ -560,7 +608,7 @@
                                   }
                     suoritus-full (merge suorituskerta-map
                                          {:osat [suoritus-map]})]
-                (log/info "suoritus.. " suorituskerta-map)
+                (log/info "suoritus..! " (merge suorituskerta-map suoritus-map))
               
                 (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map))
                   (do
@@ -583,7 +631,7 @@
     (swap! ui-log conj [lev msg])))
 
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
-(defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log]
+(defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log suorittajat-excel]
   (let [rivi (atom 1) ; Y-tunnus on rivillä 1.
         solu (atom "Tutkinnon järjestäjän y-tunnus") ; Solureferenssi virheilmoituksiin, jotta käyttäjä saa selvemmin tiedon siitä mikä on vialla.
         import-log (atom [])
@@ -596,8 +644,9 @@
             jarjestaja (get-cell-str rivi1 3)               ; tutkinnon järjestäjän y-tunnus, solu D1
             suoritukset (nthrest rivit 4)
             opiskelijat (suorittaja-arkisto/hae-kaikki)
-            suorittajamap (group-by :suorittaja_id opiskelijat)
-            suorittajat-excelmap (group-by #(str (:sukunimi %) " " (:etunimi %) " (" (:oid %) ")") opiskelijat) ; funktion pitää matchata excelin kanssa tässä
+            suorittajat-hetu (group-by :hetu opiskelijat)
+            suorittajat-oid (group-by :oid opiskelijat)
+            suorittajamap (group-by :suorittaja_id opiskelijat)            
             osamap (group-by #(select-keys % [:osatunnus :tutkintoversio]) (tutosa-arkisto/hae-kaikki))
             suoritukset-set (atom (hae-suoritukset jarjestaja)) ; Duplikaattirivejä verrataan näihin
             db-arvioijat (set (map #(select-keys % [:arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))
@@ -612,7 +661,7 @@
         (if (onko-vanha-versio? rivit)
           (do
             (kirjaa-loki! import-log :info "Vanha excel-versio tunnistettu")           
-            (luo-suoritukset-vanha-excel! arvioijatiedot sheet ui-log))
+            (luo-suoritukset-vanha-excel! arvioijatiedot sheet ui-log suorittajat-excel))
           (do                  
             (doseq [^org.apache.poi.ss.usermodel.Row suoritus suoritukset]
               (reset! solu "suorittajan nimi")
@@ -621,10 +670,10 @@
                 (when (not (empty? nimi))
                   (swap! rivicount inc)
                   (kirjaa-loki! import-log :info "Käsitellään suoritus opiskelijalle " nimi)
-                  (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 2)
-                                                             (.getCell suoritus 1)
-                                                             suorittajamap
-                                                             suorittajat-excelmap)
+                  (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 1)
+                                                             suorittajat-hetu
+                                                             suorittajat-oid
+                                                             suorittajat-excel)
                         _ (reset! solu "tutkintotunnus")
                         tutkintotunnus (get-cell-str suoritus 4)
                         tutkintoversio (get-excel-tutperuste suoritus 26)
@@ -704,11 +753,12 @@
                                       :kieli (parse-kieli suorituskieli)
                                       }
                         suoritus-full (merge suorituskerta-map
-                                             {:osat [suoritus-map]})]
-                    (log/info "suoritus.. " suorituskerta-map)
+                                             {:osat [suoritus-map]})]                    
+                    (log/info "suoritus..! " (merge suorituskerta-map suoritus-map))
+
                 
-                    (when (and (not (nil? kouljarjestaja))
-                               (nil? koulj))
+                    (when (and (not (empty? kouljarjestaja))
+                               (empty? koulj))
                       (kirjaa-loki! import-log :error "Tutkinnon järjestäjää ei löydy: " kouljarjestaja " , nimi " kouljarj-nimi))
                 
                     ; Suorituksen lisääminen
@@ -773,11 +823,12 @@
           ui-log-arvioijat (luo-arvioijat! (select-sheet "Arvioijat" excel-wb) ui-log)
           _ (log/info "Käsitellään opiskelijat")
           _ (swap! ui-log conj "Käsitellään opiskelijat..")
-          ui-log-opiskelijat (luo-opiskelijat! (select-sheet "Tutkinnon suorittajat" excel-wb) ui-log)
+          opiskelijat (lue-opiskelijat (select-sheet "Tutkinnon suorittajat" excel-wb) ui-log)
+          ui-log-opiskelijat (luo-opiskelijat! opiskelijat ui-log)
           _ (log/info "Opiskelijat luettu")
           _ (log/info "Käsitellään suoritukset")
           _ (swap! ui-log conj (str "Opiskelijat ok. Käsitellään suoritukset.."))
-          ui-log-suoritukset (luo-suoritukset! arvioijatiedot suoritukset-sheet ui-log)
+          ui-log-suoritukset (luo-suoritukset! arvioijatiedot suoritukset-sheet ui-log opiskelijat)
           _ (log/info "Suoritukset käsitelty")
           _ (swap! ui-log conj (str "Suoritukset ok."))]
         @ui-log)
