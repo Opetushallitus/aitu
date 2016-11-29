@@ -289,9 +289,8 @@
         (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
         (throw e)))))
 
-(defn ^:private nilstr [str]
-  (if (empty? str) nil str))
- 
+(defn  nilstr [str]
+  (if (empty? str) nil str)) 
 
 (defn ^:private map-opiskelijat! [sheet]
   (let [suorittajat (->> (suorittaja-arkisto/hae-kaikki)
@@ -319,7 +318,7 @@
              (and (not (empty? (:hetu %))) (= (:hetu %) (:hetu tiedot)))
              (and (not (empty? (:oid %))) (= (:oid %) (:oid tiedot)))) opseq))
 
-(defn ^:private parse-opiskelija
+(defn  parse-opiskelija
   [id-str]
   (let [osat (clojure.string/split id-str #"\(")
         loppu (last osat)
@@ -842,15 +841,22 @@
 ;     (let [wb (luo-excel "fi")]
 ;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
 
+(defn versionumero! [sheet]
+  (let [dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
+    (set-or-create-cell! sheet "I1" 
+                         (str "Latauspäivä: " (.format dformat (new java.util.Date))))))
+
 (defn luo-excel [kieli]
   (let [export (load-workbook-from-resource "tutosat_export_base.xlsx")
         tutosat (select-sheet "Tutkinnonosat" export)
         tutkinnot (select-sheet "Tutkinnot" export)
         opiskelijat (select-sheet "Tutkinnon suorittajat" export)
+        suoritukset (select-sheet "Suoritukset" export)
         arvioijat (select-sheet "Arvioijat" export)
         osaamisalat (select-sheet "Osaamisalat" export)]
      (map-tutkintorakenne! tutosat tutkinnot kieli)
      (map-osaamisalat! osaamisalat kieli)
+     (versionumero! suoritukset)
      ; HUOM: rivit on kommentoitu pois, koska ne ovat testatessa hyödyllinen juttu, tuotannossa tätä ei haluta!
      ;(map-opiskelijat! opiskelijat)
      ;(map-arvioijat! arvioijat)

@@ -16,7 +16,7 @@
   (:require [clojure.test :refer [deftest testing is are use-fixtures]]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [aitu.integraatio.sql.test-data-util :refer :all]
-            [aitu.infra.suoritus-excel :refer [lue-excel!]]
+            [aitu.infra.suoritus-excel :refer [parse-opiskelija nilstr lue-excel!]]
             [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
             [dk.ative.docjure.spreadsheet :refer [load-workbook]]
             ))
@@ -42,4 +42,13 @@
     (is (= (first (map (juxt :suorittaja :rahoitusmuoto :tutkinto :koulutustoimija) (suoritus-arkisto/hae-kaikki {})))
            [-2 2 "927128" "1060155-5"]))
     (is (= ui-log luku-result))))
-  
+
+(deftest parse-opiskelija-test
+  (is (= {:nimi "a b", :oid nil, :hetu nil} (parse-opiskelija "a b ()")))
+  (is (= {:nimi "a b", :oid "d", :hetu nil} (parse-opiskelija "a b (d)")))
+  (is (= {:nimi "a b", :oid "d", :hetu "1234-x"} (parse-opiskelija "a b (d,1234-x)"))))
+
+(deftest nilstr-test
+  (is (nil? (nilstr "")))
+  (is (nil? (nilstr nil)))
+  (is (= "a" (nilstr "a"))))
