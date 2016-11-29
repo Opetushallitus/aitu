@@ -841,7 +841,7 @@
 ;     (let [wb (luo-excel "fi")]
 ;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
 
-(defn versionumero [sheet]
+(defn kirjoita-versionumero [sheet]
   (let [dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
     (set-or-create-cell! sheet "I1" 
                          (str "Latauspäivä: " (.format dformat (new java.util.Date))))))
@@ -856,7 +856,7 @@
         osaamisalat (select-sheet "Osaamisalat" export)]
      (map-tutkintorakenne! tutosat tutkinnot kieli)
      (map-osaamisalat! osaamisalat kieli)
-     (versionumero suoritukset)
+     (kirjoita-versionumero suoritukset)
      ; HUOM: rivit on kommentoitu pois, koska ne ovat testatessa hyödyllinen juttu, tuotannossa tätä ei haluta!
      ;(map-opiskelijat! opiskelijat)
      ;(map-arvioijat! arvioijat)
