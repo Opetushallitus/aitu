@@ -763,14 +763,23 @@
                     ; Suorituksen lisääminen
                     (if (olemassaoleva-suoritus? @suoritukset-set (merge suorituskerta-map suoritus-map))
                       (kirjaa-loki! import-log :info "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
-                      (do
-                        (log/info "Lisätään suorituskerta .." suorituskerta-map)
-                        (log/info "Lisätään suoritus .." suoritus-map)
-                        (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
-                        (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))
-                        (swap! suorituscount inc)))
+                      (if (and (empty? (:osaamisen_tunnustaminen suoritus-map))
+                               (or (empty? (:suoritusaika_alku suorituskerta-map))
+                                   (empty? (:suoritusaika_loppu suorituskerta-map))
+                                   (empty? (:arvosana suoritus-map))
+                                   (empty? (:todistus suoritus-map))
+                                   (empty? (:tutkinnonosa suoritus-map))
+                                   (empty? (:kieli suoritus-map))))
+                        (when (not (nil? liittamisen-pvm)) (kirjaa-loki! import-log :info "Ei kirjata suoritusta, pakollisia tietoja puuttuu: "nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
+                        (do
+                          (log/info "Lisätään suorituskerta .." suorituskerta-map)
+                          (log/info "Lisätään suoritus .." suoritus-map)
+                          (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
+                          (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))
+                          (swap! suorituscount inc))))
                 
                     ; Suorituksen liittäminen toiseen tutkintoon
+                    ; Liittäminen voi kohdistua äsken kirjattuun suoritusriviin
                     (if (not (nil? liittamisen-pvm))
                       (if (= tutkintoversio-suoritettava tutkintoversio)
                       (kirjaa-loki! import-log :info "Suoritusta ei voi liittää samaan tutkintoon: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
