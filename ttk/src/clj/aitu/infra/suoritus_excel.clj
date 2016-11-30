@@ -362,8 +362,8 @@
                     (first opp)
                     (throw (new IllegalArgumentException (str "Opiskelijaa ei voitu tulkita yksikäsitteisesti: " id-str))))))                
         op (merge op-base op-ad)
-        oid-tulos (get suorittajat-oid (:oid op))
-        hetu-tulos (get suorittajat-hetu (:hetu op))]
+        oid-tulos (when (not (empty? (:oid op))) (get suorittajat-oid (:oid op)))
+        hetu-tulos (when (not (empty? (:hetu op))) (get suorittajat-hetu (:hetu op)))]
     (if (not (nil? oid-tulos))
       (:suorittaja_id (first oid-tulos))
       (if (not (nil? hetu-tulos))
