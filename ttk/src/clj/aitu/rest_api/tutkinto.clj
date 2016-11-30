@@ -51,6 +51,10 @@
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (map (comp rajaa-tutkinnon-kentat voimassaolo/taydenna-tutkinnon-voimassaolo)
                                      (arkisto/hae-tutkinnot-ja-osaamisalat))))
+  (GET "/tuoreet" [:as req]
+       :kayttooikeus :yleinen-rest-api
+       (cachable-response req (map (comp rajaa-tutkinnon-kentat voimassaolo/taydenna-tutkinnon-voimassaolo)
+                                        (arkisto/hae-tutkinnot-ja-osaamisalat-haku))))
   (GET "/:tutkintotunnus" [tutkintotunnus]
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (tutkinto/taydenna-tutkinto (arkisto/hae tutkintotunnus))))

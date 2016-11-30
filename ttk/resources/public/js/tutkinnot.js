@@ -47,7 +47,7 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
 
   .controller('TutkinnotController', ['$scope', 'TutkintoResource', 'KoulutusalaResource', '$filter',
     function($scope, TutkintoResource, KoulutusalaResource, $filter) {
-      $scope.kaikkiTutkinnot = TutkintoResource.query();
+      $scope.kaikkiTutkinnot = TutkintoResource.query({"tutkintotunnus": "tuoreet"});
       $scope.koulutusalat = KoulutusalaResource.query();
       $scope.tutkinnot = [];
       $scope.tutkintoHakuehto = {'nimi': '',
@@ -66,7 +66,7 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       $scope.haeTutkinnot = haeTutkinnot;
 
       function haeTutkinnot() {
-        $scope.kaikkiTutkinnot = TutkintoResource.query();
+        $scope.kaikkiTutkinnot = TutkintoResource.query({"tutkintotunnus": "tuoreet"});
       }
 
       function suodataTutkinnot() {
