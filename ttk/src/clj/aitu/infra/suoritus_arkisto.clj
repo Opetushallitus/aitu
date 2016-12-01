@@ -19,9 +19,9 @@
              [oph.korma.common :as sql-util]
              [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
              [oph.common.util.http-util :refer [parse-iso-date]]
+             [oph.common.util.util :refer [erottele-lista]]
              [oph.korma.common :refer [to-hki-local-date]]
              [aitu.integraatio.sql.korma :refer :all]))
-
 
 (defn ->int [str-or-int]
   (if (integer? str-or-int)
@@ -138,18 +138,32 @@
   (let [results
         (->
           (sql/select* suorituskerta)
-          (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
-          (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta_id))
+          (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorituskerta.suorittaja))
+          (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta.suorituskerta_id))
           (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :suoritus.tutkinnonosa))
-          (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkintoversio_id))
+          (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :suorituskerta.tutkintoversio_id))
           (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
           (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
           (sql/join :left :suorituskerta_arvioija (= :suorituskerta_arvioija.suorituskerta_id :suorituskerta_id))
           (sql/join :left :arvioija (= :arvioija.arvioija_id :suorituskerta_arvioija.arvioija_id))
-          (sql/with tutkintotoimikunta)
+          (sql/join :left :tutkintotoimikunta {:tutkintotoimikunta.tkunta :suorituskerta.toimikunta})
 
-          (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
-                      :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
+          (cond->
+            ehdotuspvm_alku (sql/where {:suorituskerta.ehdotusaika [>= ehdotuspvm_alku]})
+            ehdotuspvm_loppu (sql/where {:suorituskerta.ehdotusaika [<= ehdotuspvm_loppu]})
+            hyvaksymispvm_alku (sql/where {:suorituskerta.hyvaksymisaika [>= hyvaksymispvm_alku]})
+            hyvaksymispvm_loppu (sql/where {:suorituskerta.hyvaksymisaika [<= hyvaksymispvm_loppu]})
+            jarjestamismuoto (sql/where {:suorituskerta.jarjestamismuoto jarjestamismuoto})
+            koulutustoimija (sql/where {:suorituskerta.koulutustoimija koulutustoimija})
+            rahoitusmuoto (sql/where {:suorituskerta.rahoitusmuoto rahoitusmuoto})
+            tila (sql/where {:suorituskerta.tila tila})
+            tutkinto (sql/where {:suorituskerta.tutkinto tutkinto})
+            suorituskertaid (sql/where {:suorituskerta.suorituskerta_id suorituskertaid})
+            suorittaja (sql/where {:suorituskerta.suorittaja suorittaja})
+            toimikunta (sql/where {:suorituskerta.toimikunta toimikunta}))
+
+          (sql/fields :suorituskerta_id :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika
+                      :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
                       :jarjestamismuoto :opiskelijavuosi
                       :valmistava_koulutus :paikka :jarjestelyt
                       [:suoritus.todistus :todistus]
@@ -159,10 +173,11 @@
                       [:suorittaja.sukunimi :suorittaja_sukunimi]
                       [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
                       [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
-                      [:tutkintoversio.tutkintotunnus :tutkinto_tutkintotunnus]
+                      :nayttotutkinto.tutkintotunnus
                       [:tutkintoversio.peruste :tutkinto_peruste]
                       [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
                       [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                      :koulutustoimija.ytunnus
                       [:tutkinnonosa.osatunnus :osatunnus]
                       [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
                       [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
@@ -171,13 +186,16 @@
                       [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
                       [:arvioija.etunimi :arvioija_etunimi]
                       [:arvioija.sukunimi :arvioija_sukunimi]
-                      [:arvioija.rooli :arvioija_rooli]
-                      )
+                      [:arvioija.rooli :arvioija_rooli])
           (sql/order :suorituskerta_id :DESC)
-; (group-by #(dissoc % :arvioija_etunimi :arvioija_sukunimi :arvioija_rooli) sql-select..)
-; ja sitten map (..
           sql/exec)]
-    results))
+    (->> results
+         (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
+         (erottele-lista :suoritukset [:suorituskerta_id :suorittaja_etunimi :suorittaja_sukunimi :todistus :kokotutkinto :osaamisen_tunnustaminen :suoritusaika_alku :suoritusaika_loppu
+                                                                                  :arviointikokouksen_pvm :ehdotusaika :hyvaksymisaika :tila :rahoitusmuoto :opiskelijavuosi :valmistava_koulutus :paikka :jarjestelyt :jarjestamismuoto :arvioijat])
+         (erottele-lista :tutkinnonosat [:osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :suoritukset])
+         (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste :tutkinnonosat])
+         (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :tutkinnot]))))
 
 
 (defn hae-arvioijat [suorituskerta-id]
@@ -264,7 +282,7 @@
   (auditlog/suoritus-operaatio! :paivitys suoritustiedot)
   (sql-util/update-unique suorituskerta
     (sql/set-fields (update suoritustiedot :liitetty_pvm parse-iso-date))))
-                            
+
 (defn lisaa-tai-paivita!
   [{:keys [arvioijat jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id]
     :as suoritustiedot}]
