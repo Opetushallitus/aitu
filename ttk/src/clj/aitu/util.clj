@@ -55,6 +55,10 @@
 
 (def sarakkeiden-otsikot {:aidinkieli "Äidinkieli"
                           :alkupvm "Alkupäivämäärä"
+                          :arvioija_etunimi "Arvioijan etunimi"
+                          :arvioija_rooli "Arvioijan rooli"
+                          :arvioija_sukunimi "Arvioijan sukunimi"
+                          :arvosana "Arvosana"
                           :diaarinumero "Diaarinumero"
                           :edustus "Edustus"
                           :etunimi "Etunimi"
@@ -65,6 +69,7 @@
                           :jasenyys_status "Jäsenyyden tila"
                           :kieli "Kieli"
                           :kielisyys "Kielisyys"
+                          :kokotutkinto "Koko tutkinto?"
                           :koulutustoimija_fi "Koulutustoimija suomeksi"
                           :koulutustoimija_sv "Koulutustoimija ruotsiksi"
                           :loppupvm "Loppupäivämäärä"
@@ -77,6 +82,7 @@
                           :oppilaitoskoodi "Oppilaitoskoodi"
                           :organisaatio "Organisaatio"
                           :osaamisalat "Osaamisalat"
+                          :osatunnus "Osatunnus"
                           :osoite "Osoite"
                           :peruste "Tutkinnon peruste"
                           :postinumero "Postinumero"
@@ -88,9 +94,14 @@
                           :sopimusnumero "Sopimusnumero"
                           :sopimusten_maara "Sopimusten määrä"
                           :sukunimi "Sukunimi"
+                          :suorittaja_etunimi "Suorittajan etunimi"
+                          :suorittaja_sukunimi "Suorittajan sukunimi"
                           :tilikoodi "Tilikoodi"
+                          :todistus "Haluaa todistuksen?"
                           :toimikunta_fi "Toimikunta suomeksi"
                           :toimikunta_sv "Toimikunta ruotsiksi"
+                          :tutkinnonosa_fi "Tutkinnonosa suomeksi"
+                          :tutkinnonosa_sv "Tutkinnonosa ruotsiksi"
                           :tutkinto_fi "Tutkinto suomeksi"
                           :tutkinto_sv "Tutkinto ruotsiksi"
                           :tutkintotunnus "Tutkintotunnus"
@@ -107,6 +118,11 @@
                           :toimikausi_alku "Toimikausi alkupvm"
                           :toimikausi_loppu "Toimikausi loppupvm"
                           :toimikunta "Toimikunta"})
+
+(defn lisaa-puuttuvat-avaimet [m kenttien-jarjestys]
+  (let [tyhja-rivi (zipmap kenttien-jarjestys (repeat nil))]
+    (for [rivi m]
+      (merge tyhja-rivi rivi))))
 
 (def type-mapping
   "Arvojen konversio CSV-exporttia varten käyttäjäystävällisemmäksi"

@@ -127,6 +127,7 @@
       (context "/api/rahoitusmuoto" [] :middleware [wrap-tarkasta-csrf-token] aitu.rest-api.rahoitusmuoto/reitit)
       (context "/api/suorittaja" [] :middleware [wrap-tarkasta-csrf-token] aitu.rest-api.suorittaja/reitit)
       (context "/api/suoritus" [] aitu.rest-api.suoritus/reitit-lataus)
+      (context "/api/suoritus" [] aitu.rest-api.suoritus/raportti-reitit)
       (context "/api/suoritus" [] :middleware [wrap-tarkasta-csrf-token] aitu.rest-api.suoritus/reitit)
       (context "/api/tutkinnonosa" [] :middleware [wrap-tarkasta-csrf-token] aitu.rest-api.tutkinnonosa/reitit)
       (context "/api/jasenesitykset" [] aitu.rest-api.jasenesitykset/reitit-csv)
