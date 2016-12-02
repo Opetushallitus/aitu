@@ -166,6 +166,7 @@
                       :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
                       :jarjestamismuoto :opiskelijavuosi
                       :valmistava_koulutus :paikka :jarjestelyt
+                      :suoritus.arvosana
                       [:suoritus.todistus :todistus]
                       [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
                       [:suoritus.kokotutkinto :kokotutkinto]
@@ -191,8 +192,8 @@
           sql/exec)]
     (->> results
          (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
-         (erottele-lista :suoritukset [:suorituskerta_id :suorittaja_etunimi :suorittaja_sukunimi :todistus :kokotutkinto :osaamisen_tunnustaminen :suoritusaika_alku :suoritusaika_loppu
-                                                                                  :arviointikokouksen_pvm :ehdotusaika :hyvaksymisaika :tila :rahoitusmuoto :opiskelijavuosi :valmistava_koulutus :paikka :jarjestelyt :jarjestamismuoto :arvioijat])
+         (erottele-lista :suoritukset [:suorituskerta_id :suorittaja_etunimi :suorittaja_sukunimi :todistus :kokotutkinto :osaamisen_tunnustaminen :suoritusaika_alku :suoritusaika_loppu :arvosana
+                                       :arviointikokouksen_pvm :ehdotusaika :hyvaksymisaika :tila :rahoitusmuoto :opiskelijavuosi :valmistava_koulutus :paikka :jarjestelyt :jarjestamismuoto :arvioijat])
          (erottele-lista :tutkinnonosat [:osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :suoritukset])
          (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste :tutkinnonosat])
          (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :tutkinnot]))))
