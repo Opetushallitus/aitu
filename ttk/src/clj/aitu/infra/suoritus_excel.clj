@@ -795,7 +795,7 @@
                                                                     :arvosana])
                               aiempi-suoritus (first aiemmat)]
                           (if (nil? aiempi-suoritus)
-                            (kirjaa-loki! import-log :error "Liittäminen - aiempaa suoritusta liittämistä varten ei löydy! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                            (kirjaa-loki! import-log :error "Liittäminen - aiempaa suoritusta liittämistä varten ei löydy, mutta siirto tehty ok. " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                             (if (> (count aiemmat) 1)
                               (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                               (do
