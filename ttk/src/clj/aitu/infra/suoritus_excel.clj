@@ -364,6 +364,7 @@
         op (merge op-base op-ad)
         oid-tulos (when (not (empty? (:oid op))) (get suorittajat-oid (:oid op)))
         hetu-tulos (when (not (empty? (:hetu op))) (get suorittajat-hetu (:hetu op)))]
+    ; Opiskelija on haettu joko oid-tunnuksen tai hetun perusteella. 
     (if (not (nil? oid-tulos))
       (:suorittaja_id (first oid-tulos))
       (if (not (nil? hetu-tulos))
@@ -403,6 +404,7 @@
               etunimi (:etunimi opiskelija)
               oid (:oid opiskelija)
               hetu (:hetu opiskelija)]
+ 
           (when (not (empty? sukunimi))
             (when (not (opiskelija-olemassa? opiskelija db-opiskelijat))
               (log/info (str "käsitellään uusi opiskelija " etunimi " " sukunimi))
@@ -752,7 +754,9 @@
                                       :kieli (parse-kieli suorituskieli)
                                       }
                         suoritus-full (merge suorituskerta-map
-                                             {:osat [suoritus-map]})]                    
+                                             {:osat [suoritus-map]})]
+                    (when (nil? suorittaja-id)
+                      (throw (new RuntimeException (str "Suorittajaa ei voitu tulkita: " (get-cell-str 1)))))
                     (log/info "suoritus..! " (merge suorituskerta-map suoritus-map))
 
                 
@@ -763,14 +767,16 @@
                     ; Suorituksen lisääminen
                     (if (olemassaoleva-suoritus? @suoritukset-set (merge suorituskerta-map suoritus-map))
                       (kirjaa-loki! import-log :info "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                      
                       (if (and (empty? (:osaamisen_tunnustaminen suoritus-map))
+                               (nil? liittamisen-pvm)
                                (or (empty? (:suoritusaika_alku suorituskerta-map))
                                    (empty? (:suoritusaika_loppu suorituskerta-map))
                                    (nil? (:arvosana suoritus-map))
                                    (nil? (:todistus suoritus-map))
                                    (nil? (:tutkinnonosa suoritus-map))
                                    (nil? (:kieli suoritus-map))))
-                        (when (not (nil? liittamisen-pvm)) (kirjaa-loki! import-log :info "Ei kirjata suoritusta, pakollisia tietoja puuttuu: "nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
+                        (kirjaa-loki! import-log :info "Ei kirjata suoritusta, pakollisia tietoja puuttuu: "nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
                         (do
                           (log/info "Lisätään suorituskerta .." suorituskerta-map)
                           (log/info "Lisätään suoritus .." suoritus-map)
@@ -789,7 +795,7 @@
                                                                     :arvosana])
                               aiempi-suoritus (first aiemmat)]
                           (if (nil? aiempi-suoritus)
-                            (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, aiempaa suoritusta liittämistä varten ei löydy! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                            (kirjaa-loki! import-log :error "Liittäminen - aiempaa suoritusta liittämistä varten ei löydy! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                             (if (> (count aiemmat) 1)
                               (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                               (do
