@@ -78,7 +78,8 @@ angular.module('suoritus', [])
         	$scope.form.suoritusaika_loppu = suoritus.suoritusaika_loppu;
         	$scope.form.toimikunta = suoritus.toimikunta;
         	$scope.form.arviointikokouksen_pvm = suoritus.arviointikokouksen_pvm;
-        	$scope.form.liitetty_pvm = suoritus.liitetty_pvm;        	
+        	$scope.form.liitetty_pvm = suoritus.liitetty_pvm;
+        	$scope.form.tutkintoversio_id = suoritus.tutkintoversio_id;
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.form.arvioijat = suoritus.arvioijat;
@@ -94,6 +95,7 @@ angular.module('suoritus', [])
                 	tutkinto: {
                 		nimi: suoritus.tutkinto_nimi_fi,
                 		tutkintotunnus: suoritus.tutkinto,
+                    	tutkintoversio_id: suoritus.tutkintoversio_id,
                 		nimi_fi: suoritus.tutkinto_nimi_fi,
                 		nimi_sv: suoritus.tutkinto_nimi_sv
                 	}
@@ -129,9 +131,9 @@ angular.module('suoritus', [])
             	 muokattuOsa.arvosanan_korotus = false;
              }
              muokattuOsa.osaamisala_id = muokattuOsa.osaamisala;
-             muokattuOsa.tutkinnonosa.tutkinto = {tutkintotunnus: $scope.form.tutkinto};
+             muokattuOsa.tutkinnonosa.tutkintotunnus = {tutkintotunnus: $scope.form.tutkintotunnus};
  	         var osaInd = _.findIndex($scope.osat, function(osa) {
- 	            return osa.tutkinnonosa.tutkinnonosa_id === muokattuOsa.tutkinnonosa.tutkinnonosa_id;
+ 	            return osa.tutkinnonosa.tutkintotunnus === muokattuOsa.tutkinnonosa.tutkintotunnus;
  	          });
  	        if (osaInd === -1) {
  	        	// tutkinnon osa muokattu
@@ -149,7 +151,7 @@ angular.module('suoritus', [])
         resolve: {
           osa: function() {return null; },
           tutkinnot: function() { return $scope.tutkinnot; },
-          tutkinto: function() { return $scope.form.tutkinto; }
+          tutkintoversio_id: function() { return $scope.form.tutkintoversio_id; }
         }
       });
 
@@ -159,7 +161,7 @@ angular.module('suoritus', [])
           uusiOsa.arvosanan_korotus = false;
         }
         uusiOsa.osaamisala_id = uusiOsa.osaamisala; 
-        uusiOsa.tutkinnonosa.tutkinto = {tutkintotunnus: $scope.form.tutkinto};
+        uusiOsa.tutkinnonosa.tutkintoversio_id = {tutkintoversio_id: $scope.form.tutkintoversio_id};
         if (!_.find($scope.osat, function(osa) {
             return osa.tutkinnonosa.tutkinnonosa_id === uusiOsa.tutkinnonosa.tutkinnonosa_id;
           })) {
@@ -230,9 +232,10 @@ angular.module('suoritus', [])
     };
 	}])
    
-  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Osaamisala', 'Tutkinnonosa', 'tutkinnot', 'tutkinto', 'osa', 
-                                                      function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkinto, osa) {
+  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Osaamisala', 'Tutkinnonosa', 'tutkinnot', 'tutkintoversio_id', 'osa', 
+                                                      function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkintoversio_id, osa) {
 	  $scope.tutkinnot = tutkinnot;
+	  $scope.tutkintoversio_id  = tutkintoversio_id;
 	  if (osa == null) {
 		  $scope.form = {
 		    arvosana: 'hyvaksytty',
@@ -244,9 +247,7 @@ angular.module('suoritus', [])
 		    osaamisala_id: null,
 		    osaamisala: null
 		  };
-		  $scope.tutkinto = tutkinto;
 	  } else { // TODO: select-fields
-
 		  $scope.form = {
     	     arvosana: osa.arvosana,
 		     arvosanan_korotus: osa.arvosanan_korotus,
@@ -257,11 +258,10 @@ angular.module('suoritus', [])
 		     osaamisala_id: osa.osaamisala_id,
 		     osaamisala: null
 		  };
-		  $scope.tutkinto = osa.tutkinnonosa.tutkinto.tutkintotunnus;
 		  $scope.tutkinnonosa = osa.tutkinnonosa;
 	  }
 
-    $scope.$watch('tutkinto', function(tutkinto) {
+    $scope.$watch('tutkintoversio_id', function(tutkinto) {
       if (tutkinto != undefined) {
         Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
           $scope.tutkinnonosat = tutkinnonosat;

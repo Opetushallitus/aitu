@@ -44,7 +44,7 @@
 
 (defn rajaa-tutkinnon-kentat [tutkinto]
   (select-keys tutkinto [:tutkintotunnus :nimi_fi :nimi_sv :opintoala_nimi_fi :opintoala_nimi_sv
-                         :opintoala :tutkintotaso :peruste :voimassa :osaamisala]))
+                         :opintoala :tutkintotaso :peruste :voimassa :osaamisala :tutkintoversio_id]))
 
 (defroutes reitit
   (GET "/" [:as req]
@@ -64,6 +64,6 @@
   (GET "/haku/tutkinnot" [termi :as req]
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (arkisto/hae-opintoalat-tutkinnot termi)))
-  (GET "/osaamisalat/:tutkintotunnus" [tutkintotunnus]
+  (GET "/osaamisalat/:tutkintoversio" [tutkintoversio]
     :kayttooikeus :yleinen-rest-api
-    (response-or-404 (arkisto/hae-osaamisalat tutkintotunnus))))
+    (response-or-404 (arkisto/hae-osaamisalat (Integer/parseInt tutkintoversio)))))

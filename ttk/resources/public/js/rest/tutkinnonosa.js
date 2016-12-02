@@ -20,8 +20,8 @@ angular.module('rest.tutkinnonosa', [])
           return response.data;
         });
       },
-      hae: function(tutkintotunnus) {
-        return $http.get(ophBaseUrl + '/api/tutkinnonosa?tutkintotunnus=' + tutkintotunnus).then(function(response) {
+      hae: function(tutkintoversioid) {
+        return $http.get(ophBaseUrl + '/api/tutkinnonosa?tutkintoversioid=' + tutkintoversioid).then(function(response) {
           return response.data;
         });
       }

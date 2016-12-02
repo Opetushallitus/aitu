@@ -19,7 +19,10 @@
             [oph.common.util.http-util :refer [response-or-404]]))
 
 (defroutes reitit
-  (GET "/" [tutkintotunnus]
-    :summary "Tutkinnon osat tutkinnon tunnuksen perusteella. (ePerusteet on tietojen master-järjestelmä)"
+  (GET "/" [tutkintoversioid]
+    :summary "Tutkinnon osat tutkintoversion perusteella. (ePerusteet on tietojen master-järjestelmä)"
     :kayttooikeus :yleinen-rest-api
-    (response-or-404 (arkisto/hae tutkintotunnus))))
+    (let [osat (if (nil? tutkintoversioid) 
+                 (arkisto/hae nil)
+                 (arkisto/hae-versiolla (Integer/parseInt tutkintoversioid)))]
+    (response-or-404 osat))))

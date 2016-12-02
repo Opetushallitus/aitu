@@ -285,7 +285,7 @@
     (sql/set-fields (update suoritustiedot :liitetty_pvm parse-iso-date))))
 
 (defn lisaa-tai-paivita!
-  [{:keys [arvioijat jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id]
+  [{:keys [arvioijat jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id tutkintoversio_suoritettava]
     :as suoritustiedot}]
   (if (nil? suorituskerta_id)
     (lisaa! suoritustiedot)

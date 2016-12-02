@@ -144,15 +144,16 @@
      (sql/where (= :osaamisala_id (sql/subselect [osaamisala :oa2]
                                     (sql/aggregate (max :osaamisala_id) :max_id)
                                     (sql/where {:oa2.osaamisalatunnus :osaamisala.osaamisalatunnus}))))))
-  ([tutkintotunnus]
-   (first
-     (sql/select nayttotutkinto
-       (sql/fields :tutkintotunnus :opintoala)
-       (sql/with uusin-versio
-         (sql/fields :tutkintoversio_id :peruste)
-         (sql/with osaamisala
-           (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :osaamisala_id)))
-       (sql/where {:nayttotutkinto.tutkintotunnus tutkintotunnus})))))
+  ([tutkintoversio_id]
+    (first 
+      (sql/select tutkintoversio
+                  (sql/join nayttotutkinto)
+                  (sql/with osaamisala
+                    (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus))
+                  (sql/fields 
+                    :tutkintoversio.tutkintotunnus :nayttotutkinto.opintoala :tutkintoversio_id :peruste
+                    :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv  )
+                  (sql/where {:tutkintoversio_id tutkintoversio_id})))))
 
 (defn ^:integration-api lisaa-osaamisala!
   "Lisää osaamisalan"
