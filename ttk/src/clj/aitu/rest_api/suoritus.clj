@@ -20,7 +20,9 @@
             [compojure.api.core :refer [DELETE GET POST defroutes]]
             [aitu.rest-api.http-util :refer [excel-mimetypes jos-lapaisee-virustarkistuksen]]
             [aitu.infra.suoritus-excel :refer [lue-excel! luo-excel]]
-            [oph.common.util.http-util :refer [response-or-404 file-upload-response file-download-response sallittu-jos]]
+            [aitu.infra.suoritus-raportti :refer [yhteenveto-raportti-excel]]
+            [aitu.util :refer [muodosta-csv lisaa-puuttuvat-avaimet]]
+            [oph.common.util.http-util :refer [response-or-404 file-upload-response file-download-response sallittu-jos csv-download-response]]
             [dk.ative.docjure.spreadsheet :refer [load-workbook save-workbook-into-stream!]]))
 
 (defroutes reitit-lataus
@@ -32,6 +34,22 @@
           content-type "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           filename "excel-suoritustiedot-template.xlsx"]
       (file-download-response (.toByteArray bos) filename content-type))))
+
+(def kenttien-jarjestys [:diaarinumero :toimikunta_fi
+                         :ytunnus :koulutustoimija_fi
+                         :tutkintotunnus :tutkinto_fi :peruste
+                         :osatunnus :tutkinnonosa_fi
+                         :suorittaja_sukunimi :suorittaja_etunimi :arvosana :kokotutkinto :todistus
+                         :arvioija_sukunimi :arvioija_etunimi :arvioija_rooli])
+
+(defroutes raportti-reitit
+  (GET "/suoritusraportti" params
+       :kayttooikeus :raportti
+    (-> (arkisto/hae-yhteenveto-raportti params)
+        (yhteenveto-raportti-excel)
+        (lisaa-puuttuvat-avaimet kenttien-jarjestys)
+        (muodosta-csv kenttien-jarjestys)
+        (csv-download-response "suoritukset.csv"))))
 
 ; TODO: tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
 (defroutes reitit
@@ -64,7 +82,7 @@
   (POST "/excel-lataus" [file]
     :kayttooikeus :arviointipaatos
     (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
-    
+
     ;    (sallittu-jos (contains? excel-mimetypes (:content-type file))
 ;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
       (let [b (FileUtils/readFileToByteArray (:tempfile file))
