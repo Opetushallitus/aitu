@@ -18,6 +18,7 @@
              [clj-time.coerce :refer [to-sql-date]]
              [oph.korma.common :as sql-util]
              [aitu.infra.arvioija-arkisto :as arvioija-arkisto]
+             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
              [oph.common.util.http-util :refer [parse-iso-date]]
              [oph.common.util.util :refer [erottele-lista]]
              [oph.korma.common :refer [to-hki-local-date]]
@@ -84,7 +85,7 @@
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
-    (sql/fields :suorituskerta_id :tutkinto :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
+    (sql/fields :suorituskerta_id :tutkinto :tutkintoversio_id :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
                 :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
                 :jarjestamismuoto :opiskelijavuosi :liitetty_pvm :tutkintoversio_suoritettava :kouljarjestaja
                 :valmistava_koulutus :paikka :jarjestelyt
@@ -225,17 +226,19 @@
    :todistus (:todistus osa)})
 
 (defn kerta->suorituskerta-db [kerta]
-  (-> kerta
-    (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi
-                  :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta
-                  :tutkintoversio_suoritettava :liitetty_pvm :kouljarjestaja])
-    (update :opiskelijavuosi ->int)
-    (update :tutkintoversio_suoritettava #(or % (:tutkintoversio_id kerta)))
-    (update :kouljarjestaja #(or % (:koulutustoimija kerta))) ; tut. järjestäjä = koulutustoimija, jos arvoa ei ole asetettu
-    (update :suoritusaika_alku parse-iso-date)
-    (update :liitetty_pvm parse-iso-date)
-    (update :arviointikokouksen_pvm parse-iso-date)
-    (update :suoritusaika_loppu parse-iso-date)))
+  (let [tutkintotunnus (or (:tutkinto kerta) (:tutkintotunnus (tutkinto-arkisto/hae-versio (:tutkintoversio_id kerta))))]
+    (-> kerta
+      (select-keys [:jarjestamismuoto :valmistava_koulutus :paikka :jarjestelyt :koulutustoimija :suoritusaika_alku :suoritusaika_loppu :opiskelijavuosi
+                    :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta
+                    :tutkintoversio_suoritettava :liitetty_pvm :kouljarjestaja])
+      (assoc :tutkinto tutkintotunnus)
+      (update :opiskelijavuosi ->int)
+      (update :tutkintoversio_suoritettava #(or % (:tutkintoversio_id kerta)))
+      (update :kouljarjestaja #(or % (:koulutustoimija kerta))) ; tut. järjestäjä = koulutustoimija, jos arvoa ei ole asetettu
+      (update :suoritusaika_alku parse-iso-date)
+      (update :liitetty_pvm parse-iso-date)
+      (update :arviointikokouksen_pvm parse-iso-date)
+      (update :suoritusaika_loppu parse-iso-date))))
 
 (defn ^:private lisaa-suoritus! [osa]
   (sql/insert suoritus
@@ -285,7 +288,7 @@
     (sql/set-fields (update suoritustiedot :liitetty_pvm parse-iso-date))))
 
 (defn lisaa-tai-paivita!
-  [{:keys [arvioijat jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto osat suorituskerta_id tutkintoversio_suoritettava]
+  [{:keys [arvioijat jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto tutkintoversio_id osat suorituskerta_id tutkintoversio_suoritettava]
     :as suoritustiedot}]
   (if (nil? suorituskerta_id)
     (lisaa! suoritustiedot)

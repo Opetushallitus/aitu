@@ -10,7 +10,7 @@
   <div>
     <fieldset>
       <label>[[tutkinto]]</label>
-      <select ng-options="tutkinto.tutkintotunnus as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="tutkinto" required></select>
+      <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="tutkintoversio_id" ng-disabled="true" required></select>
      </fieldset>
     <fieldset>
       <label>[[muodostaa_kokotutkinto]]</label>

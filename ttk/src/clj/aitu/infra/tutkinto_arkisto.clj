@@ -24,6 +24,10 @@
             [aitu.toimiala.voimassaolo.saanto.tutkinto :as voimassaolo]
             [aitu.integraatio.sql.korma :refer :all]))
 
+(defn hae-versio [versioid]
+  (sql-util/select-unique tutkintoversio
+                          (sql/where {:tutkintoversio_id versioid})))
+    
 (defn ^:test-api tyhjenna!
   "Tyhjentää arkiston."
   []

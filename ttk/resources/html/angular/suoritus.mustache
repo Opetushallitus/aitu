@@ -13,7 +13,7 @@
 
     <fieldset>
       <label>[[opiskelijavuosi]]</label>
-      <select ng-model="form.opiskelijavuosi" required>
+      <select ng-model="form.opiskelijavuosi" ng-disabled="true">
         <option ng-repeat="vuosi in vuodet" value="{{ vuosi }}">{{ vuosi }}</option>
       </select>
     </fieldset>
@@ -22,7 +22,7 @@
   <div>
     <fieldset>
       <label>[[jarjestamismuoto]]</label>
-      <select ng-model="form.jarjestamismuoto" required>
+      <select ng-model="form.jarjestamismuoto" >
         <option value="oppilaitosmuotoinen">[[oppilaitosmuotoinen]]</option>
         <option value="oppisopimuskoulutus">[[oppisopimuskoulutus]]</option>
       </select>
@@ -30,7 +30,7 @@
   
     <fieldset>
       <label>[[rahoitusmuoto]]</label>
-      <select ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot" ng-model="form.rahoitusmuoto" required></select>
+      <select ng-options="rahoitusmuoto.rahoitusmuoto_id as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot" ng-model="form.rahoitusmuoto"></select>
     </fieldset>
   </div>
 
@@ -79,7 +79,7 @@
   <div>
       <fieldset>
         <label>[[suoritettava_tutkinto]]</label>
-        <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkintoversio_suoritettava" required></select>
+        <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkintoversio_suoritettava"></select>
     </fieldset>
   </div>
   <div>

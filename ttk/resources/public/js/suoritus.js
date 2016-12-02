@@ -80,6 +80,7 @@ angular.module('suoritus', [])
         	$scope.form.arviointikokouksen_pvm = suoritus.arviointikokouksen_pvm;
         	$scope.form.liitetty_pvm = suoritus.liitetty_pvm;
         	$scope.form.tutkintoversio_id = suoritus.tutkintoversio_id;
+        	$scope.form.tutkintoversio_suoritettava = suoritus.tutkintoversio_suoritettava;        	
         	$scope.form.tutkinto = suoritus.tutkinto;
         	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
             $scope.form.arvioijat = suoritus.arvioijat;
@@ -122,7 +123,7 @@ angular.module('suoritus', [])
              resolve: {
                osa: function() {return muokattavaOsa; },
                tutkinnot: function() { return $scope.tutkinnot; },
-               tutkinto: function() { return $scope.form.tutkinto; }
+               tutkintoversio_id: function() { return $scope.form.tutkintoversio_id; }
              }
     	 });
          modalInstance.result.then(function(muokattuOsa) {
