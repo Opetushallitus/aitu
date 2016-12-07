@@ -15,6 +15,7 @@
 (ns aitu.infra.suorittaja-arkisto
   (:require [clojure.string :as s]
             [korma.core :as sql]
+            [oph.korma.common :as sql-util]
             [aitu.auditlog :as auditlog]))
 
 (defn hetu-kaytossa?
@@ -25,6 +26,17 @@
                   (sql/where (and (= :hetu hetu)
                                   (not (= :suorittaja_id suorittajaid)))))))
     false))
+
+(defn hae
+  [suorittajaid]
+  (sql-util/select-unique :suorittaja
+    (sql/join :kayttaja (= :kayttaja.oid :muutettu_kayttaja))
+    (sql/join :left :rahoitusmuoto (= :rahoitusmuoto.rahoitusmuoto_id :rahoitusmuoto))
+    (sql/fields :suorittaja_id :etunimi :sukunimi :hetu :oid :muutettuaika
+                [:rahoitusmuoto.rahoitusmuoto :rahoitusmuoto_nimi]
+                [:rahoitusmuoto.rahoitusmuoto_id :rahoitusmuoto_id]
+                [(sql/sqlfn "concat" :kayttaja.etunimi " " :kayttaja.sukunimi) :muutettu_nimi])
+    (sql/where {:suorittaja_id suorittajaid})))
 
 (defn hae-kaikki
   []

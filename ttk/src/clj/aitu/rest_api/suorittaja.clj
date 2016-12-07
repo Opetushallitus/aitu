@@ -38,6 +38,9 @@
            {:errors [:hetu "Henkilötunnus on toisella opiskelijalla käytössä."]})})
 
 (defroutes reitit
+  (GET "/:suorittajaid" [suorittajaid]
+    :kayttooikeus :arviointipaatos
+    (response-or-404 (arkisto/hae (Integer/parseInt suorittajaid))))
   (GET "/" []
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/hae-kaikki)))

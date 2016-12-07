@@ -36,6 +36,7 @@ angular.module('ttk', [
   'jasenesitykset',
   'kayttooikeudet',
   'koulutustoimijat',
+  'suorittajatiedot',
   'ohjeet',
   'oppilaitokset',
   'organisaatiomuutokset',

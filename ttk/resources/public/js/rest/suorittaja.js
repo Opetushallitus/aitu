@@ -15,6 +15,11 @@
 angular.module('rest.suorittaja', [])
   .factory('Suorittaja', ['$http', function($http) {
     return {
+      hae: function(suorittajaid) {
+          return $http.get(ophBaseUrl + '/api/suorittaja/' + suorittajaid).then(function(response) {
+              return response.data;
+            });
+      },
       haeKaikki: function() {
         return $http.get(ophBaseUrl + '/api/suorittaja').then(function(response) {
           return response.data;
