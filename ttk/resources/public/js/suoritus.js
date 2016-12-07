@@ -56,7 +56,8 @@ angular.module('suoritus', [])
 
     $scope.form = {
       osat: [],
-      arvioijat: []
+      arvioijat: [],
+      opiskelijavuosi: "1"
     };
     $scope.osat = [];
     $scope.form.valmistava_koulutus = false;

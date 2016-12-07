@@ -53,7 +53,7 @@
   <div>
     <fieldset>
         <label>[[tutkinto]]</label>
-        <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkintoversio_id" required></select>
+        <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_id" required></select>
     </fieldset>
     <fieldset>
         <label>[[toimikunta]]</label>
@@ -79,7 +79,7 @@
   <div>
       <fieldset>
         <label>[[suoritettava_tutkinto]]</label>
-        <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot" ng-model="form.tutkintoversio_suoritettava"></select>
+        <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_suoritettava"></select>
     </fieldset>
   </div>
   <div>
@@ -96,7 +96,6 @@
   
   <button class="button-with-icon add-icon-white float-right" ng-click="lisaaArvioija()">[[lisaa_arvioija]]</button>
    <div class="table">
-
      <div class="table-header">        
        <div class="table-cell">[[arvioijat]]</div>
        <div class="table-cell"></div>

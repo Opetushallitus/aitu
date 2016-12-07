@@ -17,13 +17,14 @@
   :toimikunta "Lynx lynx"
   :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
   :tutkinnonosa_nimi_sv nil
-   :tutkinnonosa_tutkinnonosa_id -10002
+  :tutkinnonosa_tutkinnonosa_id -10002
   :osaamisala_tunnus "9875" 
   :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
   :osaamisala_nimi_sv nil
   :arvosana "hyvaksytty"
   :liitetty_pvm nil
   :tutkintoversio_suoritettava -20000
+  :tutkintoversio_id nil
   :suoritusaika_loppu "2016-09-01"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
   :suorittaja_syntymapvm "1912-12-12"
@@ -111,6 +112,7 @@
    :arvosana "hyvaksytty"
    :liitetty_pvm nil
    :tutkintoversio_suoritettava -20000
+   :tutkintoversio_id nil
    :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
    :tutkinnonosa_nimi_sv nil
    :tutkinnonosa_tutkinnonosa_id -10002
@@ -147,11 +149,21 @@
    :tutkinnonosa_tutkinnonosa_id -10002
    :liitetty_pvm nil
    :tutkintoversio_suoritettava -20000
+   :tutkintoversio_id nil
    :osaamisala_tunnus "9875"
    :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
    :osaamisala_nimi_sv nil  
    :suorittaja_syntymapvm "1912-12-12"
    :suorittaja_etunimi "Orvokki"})
+
+(defn diff-keys [m1 m2]
+  (let [keyz (set (clojure.set/union (keys m1) (keys m2)))]
+    (filter #(not (= (get m1 %) (get m2 %))) keyz)))
+
+(defn diff-maps [m1 m2]
+  (let [keyz (diff-keys m1 m2)]
+    (when (not (empty? keyz))
+      [(select-keys m1 keyz) (select-keys m2 keyz)])))
 
 (defn rip-suoritusid [suoritus]
   (let [osat (:osat suoritus)]
@@ -180,6 +192,7 @@
              ]
         (is (= (rip-suoritusid suoritus-result-tunnustaminen) (rip-suoritusid suoritus-resp)))
         )))))
+
 
 (deftest ^:integraatio suoritus-flow
   (with-peridot (fn [crout]

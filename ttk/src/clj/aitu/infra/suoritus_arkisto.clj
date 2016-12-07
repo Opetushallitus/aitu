@@ -25,9 +25,10 @@
              [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ->int [str-or-int]
-  (if (integer? str-or-int)
-    str-or-int
-    (Integer/parseInt str-or-int)))
+  (when (not (nil? str-or-int))
+    (if (integer? str-or-int)
+      str-or-int
+      (Integer/parseInt str-or-int))))
 
 (defn hae
   [suorituskerta-id]

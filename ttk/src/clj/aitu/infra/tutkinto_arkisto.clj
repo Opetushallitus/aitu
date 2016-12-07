@@ -153,10 +153,10 @@
       (sql/select tutkintoversio
                   (sql/join nayttotutkinto)
                   (sql/with osaamisala
-                    (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus))
+                    (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus :osaamisala_id))
                   (sql/fields 
                     :tutkintoversio.tutkintotunnus :nayttotutkinto.opintoala :tutkintoversio_id :peruste
-                    :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv  )
+                    )
                   (sql/where {:tutkintoversio_id tutkintoversio_id})))))
 
 (defn ^:integration-api lisaa-osaamisala!
