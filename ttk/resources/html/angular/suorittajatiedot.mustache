@@ -22,5 +22,32 @@
     </fieldset>
   </div>
 </div>
+
+<hr> 
+<table jarjestettava-taulukko="suoritukset" jarjestetty-data="suorituksetJarjestetty">
+ <thead>
+   <tr>
+    <th>[[tutkinto]]</th>
+    <th jarjestettava-sarake="tutkinnonosa_nimi" jarjestely-fn="orderByLokalisoitu">[[tutkinnon_osa]]</th>
+    <th>[[osaamisala]]</th>
+    <th jarjestettava-sarake="arvosana">[[arvosana]]</th>
+    <th>[[arvosanan_korotus]]</th>
+    <th>[[osaamisen_tunnustaminen]]</th>    
+    <th>[[suorituskieli]]</th>
+   </tr>
+  </thead>
+  <tr ng-repeat="suoritus in suorituksetJarjestetty track by $index">
+      <td>{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</td>
+      <td>{{ suoritus | lokalisoiKentta:'tutkinnonosa_nimi' }}</td>
+      <td>{{ suoritus | lokalisoiKentta:'osaamisala_nimi' }}</td>
+      <td>{{ suoritus.arvosana }}</td>
+      <td>{{ suoritus.arvosanan_korotus | muotoileBoolean }}</td>
+      <td>{{ suoritus.arvosanan_korotus | muotoileBoolean }}</td>
+      <td>{{suoritus.osaamisen_tunnustaminen | date:'dd.MM.yyyy'}}</td>
+      <td><enum-arvo nimi="kieli" arvo="suoritus.kieli"></enum-arvo></td>
+  </tr>
+</table>
+ 
+ 
 [[/i18n.yleiset]]
 [[/i18n.arviointipaatokset]]

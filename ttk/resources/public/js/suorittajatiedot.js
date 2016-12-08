@@ -25,5 +25,11 @@ angular.module('suorittajatiedot', [])
 	   Suorittaja.hae($routeParams.suorittajaid).then(function(suorittaja) {
 		   $scope.suorittaja = suorittaja;
 	   });
+	   var hakuForm = {suorittajaid: $routeParams.suorittajaid};
+	   Suoritus.haeKaikki(hakuForm).then(function(suoritukset) {
+		   $scope.suoritukset = suoritukset;
+		   $scope.suorituksetJarjestetty = suoritukset;
+       });
+
 	 }
   }]);
