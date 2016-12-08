@@ -26,6 +26,30 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       }
     };
   })
+  .directive('sivutetuthakutulokset', function($parse, i18n){
+    return {
+      restrict: 'E',
+      scope : {
+        hakutulokset : "=",
+        tuloksetjarjestetty: "=",
+        hakuTila : "=",
+        tulosform: "=",
+        tuloksiaSivulla: "=",
+        poistofn: "=",
+        muokkausfn: "="
+      },
+      transclude: true,
+      templateUrl: 'template/sivutetuthakutulokset',
+      link: function(scope, element, attrs) {
+        scope.parsitutOtsikot = eval(scope.otsikot);
+        scope.nykyinenSivu = 1;
+        scope.$watchCollection('hakutulokset', function(){
+          scope.nykyinenSivu = 1;
+        });
+        scope.i18n = i18n;
+      }
+    };
+  })  
   .directive('hakutulokset', function($parse, i18n){
     return {
       restrict: 'E',

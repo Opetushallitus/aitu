@@ -58,6 +58,8 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         $scope.$watch('hakuForm', function(hakuForm) {
           Suoritus.haeKaikki(hakuForm).then(function(suoritukset) {
             $scope.suoritukset = suoritukset;
+            $scope.suorituksetjarjestetty = suoritukset;
+            $scope.suoritussivu = 1;
           });
         }, true);
         
@@ -106,8 +108,13 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
               suoritus.tila = tila;
             }
           });
+          // tyhjentää valintalomakkeen checkboxit kun tila muuttuu
+          _.forEach(_.keys($scope.form), function(k) { $scope.form[k]=false;}); 
+
           Suoritus.haeKaikki($scope.hakuForm).then(function(suoritukset) {
               $scope.suoritukset = suoritukset;
+              $scope.suorituksetjarjestetty = suoritukset;
+              $scope.suoritussivu = 1;
           });
         };
 
