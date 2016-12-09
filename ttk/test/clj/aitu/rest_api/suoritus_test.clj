@@ -159,15 +159,6 @@
    :suorittaja_syntymapvm "1912-12-12"
    :suorittaja_etunimi "Orvokki"})
 
-(defn diff-keys [m1 m2]
-  (let [keyz (set (clojure.set/union (keys m1) (keys m2)))]
-    (filter #(not (= (get m1 %) (get m2 %))) keyz)))
-
-(defn diff-maps [m1 m2]
-  (let [keyz (diff-keys m1 m2)]
-    (when (not (empty? keyz))
-      [(select-keys m1 keyz) (select-keys m2 keyz)])))
-
 (defn rip-suoritusid [suoritus]
   (let [osat (:osat suoritus)]
     (-> suoritus
