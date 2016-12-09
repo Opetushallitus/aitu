@@ -176,26 +176,33 @@
 
 (defn rip-skertaid [suorituslista]
   (map #(dissoc % :suorituskerta_id) suorituslista))
-  
-(deftest ^:integraatio suoritus-tunnustaminen-flow
+
+(defn base-testi
+  "Wrapper happy-case testeille. Callback funktio testifn ottaa parametrina peridot-session handlen ja suorituskerta-id:n"
+  ([testifn suoritus-data]
   (with-peridot (fn [crout]
     (run-with-db (constantly true)
       #(let [s (peridot/session crout)
-             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-tunnustaminen))
+             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-data))
              suorituksia (mock-request s "/api/suoritus" :get {})
              suorituslista-resp (body-json (:response suorituksia))
-             skerta-id (some :suorituskerta_id suorituslista-resp)
-             suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
-             suoritus-resp (body-json (:response suoritustiedot))
-             ; update
-             paivitys-map (assoc (merge suoritus-resp suoritus-diff) :suorituskerta_id  skerta-id )
-             kirjaa-paivitys (mock-json-post s "/api/suoritus" (cheshire/generate-string paivitys-map))
-             suoritustiedot-paivitys (mock-request s (str "/api/suoritus/" skerta-id) :get {})
-             poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
-             ]
-        (is (= (rip-suoritusid suoritus-result-tunnustaminen) (rip-suoritusid suoritus-resp)))
+             skerta-id (some :suorituskerta_id suorituslista-resp)]
+         (testifn s skerta-id)
+         (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
         )))))
+  ([testifn]
+    (base-testi testifn suoritus-base)))
 
+(deftest ^:integraatio suoritus-tunnustaminen-flow
+  (base-testi (fn [s skerta-id]
+                (let [suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
+                      suoritus-resp (body-json (:response suoritustiedot))
+                      ; update
+                      paivitys-map (assoc (merge suoritus-resp suoritus-diff) :suorituskerta_id  skerta-id )
+                      kirjaa-paivitys (mock-json-post s "/api/suoritus" (cheshire/generate-string paivitys-map))
+                      suoritustiedot-paivitys (mock-request s (str "/api/suoritus/" skerta-id) :get {})]
+                  (is (= (rip-suoritusid suoritus-result-tunnustaminen) (rip-suoritusid suoritus-resp)))
+                  )) suoritus-tunnustaminen))
 
 (deftest ^:integraatio suoritus-flow
   (with-peridot (fn [crout]
@@ -222,77 +229,46 @@
         )))))
 
 (deftest ^:integraatio suoritus-haku
-  (with-peridot (fn [crout]
+  (base-testi (fn [s skerta-id]
     (let [haku-map {:koulutustoimija "0208430-8"
-                    :tutkinto "927128"}]
-      (run-with-db (constantly true)
-        #(let [s (peridot/session crout)
-               kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-base))
-               suorituksia (mock-request s "/api/suoritus" :get haku-map)
-               suorituslista-resp (body-json (:response suorituksia))
-               skerta-id (some :suorituskerta_id suorituslista-resp)
-               ei-suorituksia (mock-request s "/api/suoritus" :get (assoc haku-map :rahoitusmuoto 4))
-               poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
-               ]
-          (is (= '() (body-json (:response ei-suorituksia))))
-          (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))
-          ))))))
-  
+                    :tutkinto "927128"}
+          suorituksia (mock-request s "/api/suoritus" :get haku-map)
+          suorituslista-resp (body-json (:response suorituksia))
+          ei-suorituksia (mock-request s "/api/suoritus" :get (assoc haku-map :rahoitusmuoto 4))]
+      (is (= '() (body-json (:response ei-suorituksia))))
+      (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))
+      ))))
+
 (deftest ^:integraatio suoritus-haku-suorittajalla
-  (let [haku-vals ["Orvok" "kelija" "Orvokki", "fan.far.12345"]
-        haku-notfound [ "Jörmungandr" "fan.far.1"]]
-   (with-peridot (fn [crout]
-     (run-with-db (constantly true)
-       #(let [s (peridot/session crout)
-              kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-base))
-              suorituksia (mock-request s "/api/suoritus" :get {})
-              suorituslista-resp (body-json (:response suorituksia))
-              skerta-id (some :suorituskerta_id suorituslista-resp)]
-          (testing "testaan opiskelijalla hakua erilaisilla kriteereillä.." 
-                   (doseq [crit haku-vals]
-                     (let [suorituslista-resp  (body-json (:response (mock-request s "/api/suoritus" :get {:suorittaja crit})))]
-                       (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))                      
-                     )))
-          (testing "testataan opiskelijalla hakua"
-                   (doseq [crit haku-notfound]
-                     (let [ei-suorituksia  (mock-request s "/api/suoritus" :get {:suorittaja crit})]
-                       (is (= '() (body-json (:response ei-suorituksia))))
-                     )))
-           
-            (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
-         ))))))
+  (base-testi (fn [s skerta-id]
+                (let [haku-vals ["Orvok" "kelija" "Orvokki", "fan.far.12345"]
+                      haku-notfound [ "Jörmungandr" "fan.far.1"]]
+
+                  (testing "testaan opiskelijalla hakua erilaisilla kriteereillä.." 
+                           (doseq [crit haku-vals]
+                             (let [suorituslista-resp  (body-json (:response (mock-request s "/api/suoritus" :get {:suorittaja crit})))]
+                               (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))                      
+                             )))
+                  (testing "testataan opiskelijalla hakua"
+                           (doseq [crit haku-notfound]
+                             (let [ei-suorituksia  (mock-request s "/api/suoritus" :get {:suorittaja crit})]
+                               (is (= '() (body-json (:response ei-suorituksia))))
+                             )))))))
 
 (deftest ^:integraatio testaa-tilasiirtymat 
-  (with-peridot (fn [crout]
-    (run-with-db (constantly true)
-      #(let [s (peridot/session crout)
-             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-base))
-             suorituksia (mock-request s "/api/suoritus" :get {})             
-             suorituslista-resp (body-json (:response suorituksia))
-             skerta-id (some :suorituskerta_id suorituslista-resp)
-             hyvaksy-req {:hyvaksymispvm "2016-11-16"
-                          :suoritukset [skerta-id]}
-             hyv-resp (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))
-             hyv-json (body-json (:response hyv-resp))]
-         (is (= (:tila hyv-json) "hyvaksytty"))
-         (is (= (:hyvaksymisaika hyv-json) "2016-11-16"))
-         (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
-        )))))
+  (base-testi (fn [s skerta-id]
+                (let [hyvaksy-req {:hyvaksymispvm "2016-11-16"
+                                   :suoritukset [skerta-id]}
+                      hyv-resp (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))
+                      hyv-json (body-json (:response hyv-resp))]
+                  (is (= (:tila hyv-json) "hyvaksytty"))
+                  (is (= (:hyvaksymisaika hyv-json) "2016-11-16"))
+                  ))))
 
 (deftest ^:integraatio suoritus-liitetty-sopimus
-  (with-peridot (fn [crout]
-    (run-with-db (constantly true)
-      #(let [s (peridot/session crout)
-             kirjaa (mock-json-post s "/api/suoritus" (cheshire/generate-string suoritus-erikoinen))
-             suorituksia (mock-request s "/api/suoritus" :get {})
-             suorituslista-resp (body-json (:response suorituksia))
-             skerta-id (some :suorituskerta_id suorituslista-resp)
-             suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
-             suoritus-resp (body-json (:response suoritustiedot))
-
-             poisto (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
-             ]
-        (is (= "0159216-7" (:kouljarjestaja suoritus-resp)))
-        (is (= "2014-05-05" (:liitetty_pvm suoritus-resp)))
-        )))))
-
+  (base-testi (fn [s skerta-id]
+                (let [suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
+                      suoritus-resp (body-json (:response suoritustiedot))]
+                  (is (= "0159216-7" (:kouljarjestaja suoritus-resp)))
+                  (is (= "2014-05-05" (:liitetty_pvm suoritus-resp)))
+        )) suoritus-erikoinen))
