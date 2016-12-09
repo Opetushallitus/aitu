@@ -93,6 +93,7 @@
                 [:suorittaja.etunimi :suorittaja_etunimi]
                 [:suorittaja.sukunimi :suorittaja_sukunimi]
                 [:suorittaja.syntymapvm :suorittaja_syntymapvm]
+                [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
                 [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
                 [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
                 [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]

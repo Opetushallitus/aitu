@@ -28,6 +28,7 @@
   :suoritusaika_loppu "2016-09-01"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
   :suorittaja_syntymapvm "1912-12-12"
+  :suorittaja_suorittaja_id -1
   :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.",
   :valmistava_koulutus true
   :paikka "Yöttäjän harjoitusalue"
@@ -105,6 +106,7 @@
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
    :suorittaja_syntymapvm "1912-12-12"
+   :suorittaja_suorittaja_id -1
    :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
    :jarjestamismuoto "oppisopimuskoulutus", 
    :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
@@ -139,6 +141,7 @@
    :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8", :arviointikokouksen_pvm "2016-09-02"
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
+   :suorittaja_suorittaja_id -1,
    :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
    :jarjestamismuoto "oppisopimuskoulutus", 
    :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.", 
