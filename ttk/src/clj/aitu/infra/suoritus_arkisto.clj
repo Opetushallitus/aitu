@@ -137,8 +137,8 @@
     sql/exec))
 
 (defn hae-yhteenveto-raportti
-  [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
-           rahoitusmuoto tila tutkinto suorituskertaid suorittaja toimikunta]}]
+  [{{:keys [luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
+            tila tutkinto tutkinnonosa osaamisala suorittaja toimikunta] :as params} :params}]
   (let [results
         (->
           (sql/select* suorituskerta)
@@ -153,18 +153,21 @@
           (sql/join :left :tutkintotoimikunta {:tutkintotoimikunta.tkunta :suorituskerta.toimikunta})
 
           (cond->
-            ehdotuspvm_alku (sql/where {:suorituskerta.ehdotusaika [>= ehdotuspvm_alku]})
-            ehdotuspvm_loppu (sql/where {:suorituskerta.ehdotusaika [<= ehdotuspvm_loppu]})
-            hyvaksymispvm_alku (sql/where {:suorituskerta.hyvaksymisaika [>= hyvaksymispvm_alku]})
-            hyvaksymispvm_loppu (sql/where {:suorituskerta.hyvaksymisaika [<= hyvaksymispvm_loppu]})
-            jarjestamismuoto (sql/where {:suorituskerta.jarjestamismuoto jarjestamismuoto})
-            koulutustoimija (sql/where {:suorituskerta.koulutustoimija koulutustoimija})
-            rahoitusmuoto (sql/where {:suorituskerta.rahoitusmuoto rahoitusmuoto})
-            tila (sql/where {:suorituskerta.tila tila})
-            tutkinto (sql/where {:suorituskerta.tutkinto tutkinto})
-            suorituskertaid (sql/where {:suorituskerta.suorituskerta_id suorituskertaid})
-            suorittaja (sql/where {:suorituskerta.suorittaja suorittaja})
-            toimikunta (sql/where {:suorituskerta.toimikunta toimikunta}))
+            (seq luotupvm_alku) (sql/where {:suorituskerta.luotuaika [>= (to-sql-date (parse-iso-date luotupvm_alku))]})
+            (seq luotupvm_loppu) (sql/where {:suorituskerta.luotuaika [<= (to-sql-date (parse-iso-date luotupvm_loppu))]})
+            (seq hyvaksymispvm_alku) (sql/where {:suorituskerta.hyvaksymisaika [>= (to-sql-date (parse-iso-date hyvaksymispvm_alku))]})
+            (seq hyvaksymispvm_loppu) (sql/where {:suorituskerta.hyvaksymisaika [<= (to-sql-date (parse-iso-date hyvaksymispvm_loppu))]})
+            (seq jarjestamismuoto) (sql/where {:suorituskerta.jarjestamismuoto jarjestamismuoto})
+            (seq koulutustoimija) (sql/where {:suorituskerta.koulutustoimija koulutustoimija})
+            (seq tila) (sql/where {:suorituskerta.tila tila})
+            (seq tutkinto) (sql/where {:suorituskerta.tutkinto tutkinto})
+            (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
+            (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
+            (seq suorittaja) (sql/where (or {:suorittaja.hetu suorittaja}
+                                            {:suorittaja.oid suorittaja}
+                                            {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
+                                            {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
+            (not-empty toimikunta) (sql/where {:suorituskerta.toimikunta toimikunta}))
 
           (sql/fields :suorituskerta_id :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika
                       :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
