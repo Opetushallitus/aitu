@@ -4,7 +4,7 @@
 [[#i18n.sivutus]]
 [[#i18n.arviointipaatokset]]
 <div>
-  <h3 ng-click="haeSuorituksia = !haeSuorituksia">[[hae_suorituksia]]</h3>
+  <button class="button-with-icon search-icon" ng-click="haeSuorituksia = !haeSuorituksia">[[hae_suorituksia]]</button>
 
   <div ng-show="haeSuorituksia" style="border: 1px solid black; padding: 1em">
 
@@ -16,7 +16,7 @@
       <fieldset>
        <label>[[sukupuoli]]</label>
         <select ng-model="hakuForm.sukupuoli">
-          <option ng-value="null"></option>        
+          <option ng-value="null"></option>
           <option value="N">[[sukupuoli_nainen]]</option>
           <option value="M">[[sukupuoli_mies]]</option>
         </select>
@@ -34,7 +34,7 @@
         <select ng-model="hakuForm.koulutustoimija" ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat">
           <option value=""></option>
         </select>
-      </fieldset>      
+      </fieldset>
     </div>
     <div>
       <fieldset>
@@ -88,12 +88,12 @@
         <label>[[suorituskieli]]</label>
         [[#i18n.enum.kieli-arvo]]
         <select ng-model="hakuForm.kieli">
-          <option ng-value="null"></option>        
+          <option ng-value="null"></option>
           <option value="fi">[[fi]]</option>
           <option value="sv">[[sv]]</option>
         </select>
         [[/i18n.enum.kieli-arvo]]
-      </fieldset>      
+      </fieldset>
     </div>
     <div>
       <fieldset>
@@ -134,7 +134,7 @@
           <option value="25">25</option>
           <option value="50">50</option>
           <option value="100">100</option>
-        </select>   
+        </select>
      </fieldset>
   </div>
 
@@ -142,6 +142,7 @@
   <form name="suorituksetForm">
   <sivutetuthakutulokset tuloksia-sivulla="+hakuForm.tuloksiasivulla"
     haku-tila="hakuForm.tila" tulosform="form"
+    otsikot="['[[sukunimi]], [[etunimi]], [[syntymapvm]]', '[[tutkinto]]', '[[tutkinnon_osa]]', '[[osaamisala]]', '[[arvosana]]', '[[arviointikokouksen_pvm]]', '[[kirjauspaiva]]','[[tutkinto_jarjestaja]]', '[[tila]]']"
     hakutulokset="suoritukset"
     tuloksetjarjestetty="suorituksetjarjestetty"
     poistofn="poistaSuoritus"
@@ -173,13 +174,13 @@
         <td>{{ suoritus.hyvaksymisaika | date:'dd.MM.yyyy' }}</td>
         <td>{{ suoritus | lokalisoiKentta:'koulutustoimija_nimi' }}</td>
         <td>{{ i18n.arviointipaatokset['tila-' + suoritus.tila] }}</td>
-        <td><input type="checkbox" ng-model="tulosform[suoritus.suorituskerta_id]" ng-if="hakuTila === 'luonnos' || hakuTila === 'ehdotettu' || hakuTila === 'hyvaksytty'"></td>        
+        <td><input type="checkbox" ng-model="tulosform[suoritus.suorituskerta_id]" ng-if="hakuTila === 'luonnos' || hakuTila === 'ehdotettu' || hakuTila === 'hyvaksytty'"></td>
         <td>
           <button class="icon edit-icon" ng-click="muokkausfn(suoritus)" ng-if="hakuTila === 'luonnos'"></button>
           &nbsp;&nbsp;&nbsp;
           <button class="icon delete-icon" ng-click="poistofn(suoritus)" ng-if="hakuTila === 'luonnos'"></button>
         </td>
-    </tr>  
+    </tr>
   </table>
 </sivutetuthakutulokset>
 <div>
