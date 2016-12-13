@@ -57,7 +57,6 @@ angular.module('suoritus', [])
     $scope.form = {
       osat: [],
       arvioijat: [],
-      opiskelijavuosi: "1"
     };
     $scope.osat = [];
     $scope.form.valmistava_koulutus = false;
@@ -66,7 +65,7 @@ angular.module('suoritus', [])
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
         	$scope.form = _.merge($scope.form, _.pick(suoritus, ['rahoitusmuoto', 'suorittaja',
-        			'koulutustoimija','kouljarjestaja','jarjestamismuoto', 'jarjestelyt',
+        			'koulutustoimija','kouljarjestaja', 'jarjestelyt',
         			'paikka','valmistava_koulutus','suoritusaika_alku','suoritusaika_loppu', 'toimikunta',
         			'arviointikokouksen_pvm', 'liitetty_pvm','tutkintoversio_id','tutkintoversio_suoritettava',
         			'tutkinto','suorituskerta_id','arvioijat']));

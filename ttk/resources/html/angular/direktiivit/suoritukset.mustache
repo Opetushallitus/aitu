@@ -95,22 +95,10 @@
         [[/i18n.enum.kieli-arvo]]
       </fieldset>
     </div>
-    <div>
-      <fieldset>
-        <label>[[jarjestamismuoto]]</label>
-        <select ng-model="hakuForm.jarjestamismuoto">
-          <option ng-value="null"></option>
-          <option value="oppilaitosmuotoinen">[[oppilaitosmuotoinen]]</option>
-          <option value="oppisopimuskoulutus">[[oppisopimuskoulutus]]</option>
-          <option value="ei_valmistavaa_koulutusta">[[ei_valmistavaa_koulutusta]]</option>
-        </select>
-      </fieldset>
-    </div>
-
   </div>
 
   <div>
-    <a ng-href="[[base-url]]/api/suoritus/suoritusraportti?toimikunta={{hakuForm.toimikunta}}&koulutustoimija={{hakuForm.koulutustoimija}}&jarjestamismuoto={{hakuForm.jarjestamismuoto}}&tutkinto={{hakuForm.tutkinto}}&tutkinnonosa={{hakuForm.tutkinnonosa}}&osaamisala={{hakuForm.osaamisala}}&luotupvm_alku={{hakuForm.luotupvm_alku}}&luotupvm_loppu={{hakuForm.luotupvm_loppu}}&hyvaksymispvm_alku={{hakuForm.hyvaksymispvm_alku}}&hyvaksymispvm_loppu={{hakuForm.hyvaksymispvm_loppu}}&tila={{hakuForm.tila}}&suorittaja={{hakuForm.suorittaja}}">
+    <a ng-href="[[base-url]]/api/suoritus/suoritusraportti?toimikunta={{hakuForm.toimikunta}}&koulutustoimija={{hakuForm.koulutustoimija}}&tutkinto={{hakuForm.tutkinto}}&tutkinnonosa={{hakuForm.tutkinnonosa}}&osaamisala={{hakuForm.osaamisala}}&luotupvm_alku={{hakuForm.luotupvm_alku}}&luotupvm_loppu={{hakuForm.luotupvm_loppu}}&hyvaksymispvm_alku={{hakuForm.hyvaksymispvm_alku}}&hyvaksymispvm_loppu={{hakuForm.hyvaksymispvm_loppu}}&tila={{hakuForm.tila}}&suorittaja={{hakuForm.suorittaja}}">
       Lataa suoritukset Exceliin
     </a>
   </div>
