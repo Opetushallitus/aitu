@@ -121,7 +121,7 @@
         <div class="table-cell"> {{osa.osaamisen_tunnustaminen | date:'dd.MM.yyyy'}}</div>
         <div class="table-cell"><enum-arvo nimi="kieli" arvo="osa.kieli"></enum-arvo></div>
         <div class="table-cell"><button class="icon delete-icon" ng-hide="!editointitila" ng-click="poistaOsa(osa)"></button></div>
-        <div class="table-cell"><button class="icon edit-icon" ng-hide="!editointitila" ng-click="muokkaaOsa(osa)"></button></div>
+        <div class="table-cell"><button class="icon edit-icon" ng-click="muokkaaOsa(osa)"></button></div>
       </div>
     </div>
 

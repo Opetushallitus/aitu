@@ -103,6 +103,7 @@ angular.module('suoritus', [])
              templateUrl: 'template/modal/suoritus-tutkinnonosa',
              controller: 'SuoritusTutkinnonosaModalController',
              resolve: {
+               editointitila: function() {return $scope.editointitila; },
                osa: function() {return muokattavaOsa; },
                tutkinnot: function() { return $scope.tutkinnot; },
                tutkintoversio_id: function() { return $scope.form.tutkintoversio_id; }
@@ -133,6 +134,7 @@ angular.module('suoritus', [])
         controller: 'SuoritusTutkinnonosaModalController',
         resolve: {
           osa: function() {return null; },
+          editointitila: function() {return true;},
           tutkinnot: function() { return $scope.tutkinnot; },
           tutkintoversio_id: function() { return $scope.form.tutkintoversio_id; }
         }
