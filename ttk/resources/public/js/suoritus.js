@@ -68,7 +68,7 @@ angular.module('suoritus', [])
         	$scope.form = _.merge($scope.form, _.pick(suoritus, ['rahoitusmuoto', 'suorittaja',
         			'koulutustoimija','kouljarjestaja','jarjestamismuoto', 'jarjestelyt',
         			'paikka','valmistava_koulutus','suoritusaika_alku','suoritusaika_loppu', 'toimikunta',
-        			'arvointikokouksen_pvm', 'liitetty_pvm','tutkintoversio_id','tutkintoversio_suoritettava',
+        			'arviointikokouksen_pvm', 'liitetty_pvm','tutkintoversio_id','tutkintoversio_suoritettava',
         			'tutkinto','suorituskerta_id','arvioijat']));
         	$scope.form.opiskelijavuosi = "" + suoritus.opiskelijavuosi;
             $scope.osat = _.map(suoritus.osat, function(osa) {
