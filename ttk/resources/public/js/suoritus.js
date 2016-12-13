@@ -54,10 +54,14 @@ angular.module('suoritus', [])
     };
     $scope.osat = [];
     $scope.form.valmistava_koulutus = false;
+
+    $scope.editointitila = true;
     
     // ladataan editoitavaksi
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
+        	$scope.editointitila = (suoritus.tila === 'luonnos'); // vain luonnos-tilassa olevaa voidaan editoida
+        	$scope.suoritustiedot = suoritus;
         	$scope.form = _.merge($scope.form, _.pick(suoritus, ['suorittaja', 'koulutustoimija','kouljarjestaja', 'jarjestelyt',
         			'paikka','valmistava_koulutus','suoritusaika_alku','suoritusaika_loppu', 'toimikunta',
         			'arviointikokouksen_pvm', 'liitetty_pvm','tutkintoversio_id','tutkintoversio_suoritettava',

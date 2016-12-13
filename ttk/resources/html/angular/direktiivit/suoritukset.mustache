@@ -170,7 +170,7 @@
         <td>{{ i18n.arviointipaatokset['tila-' + suoritus.tila] }}</td>
         <td><input type="checkbox" ng-model="tulosform[suoritus.suorituskerta_id]" ng-if="hakuTila === 'luonnos' || hakuTila === 'ehdotettu' || hakuTila === 'hyvaksytty'"></td>
         <td>
-          <button class="icon edit-icon" ng-click="muokkausfn(suoritus)" ng-if="hakuTila === 'luonnos'"></button>
+          <button class="icon edit-icon" ng-click="muokkausfn(suoritus)" ></button>
           &nbsp;&nbsp;&nbsp;
           <button class="icon delete-icon" ng-click="poistofn(suoritus)" ng-if="hakuTila === 'luonnos'"></button>
         </td>

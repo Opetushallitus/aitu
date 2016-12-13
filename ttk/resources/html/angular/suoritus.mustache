@@ -2,78 +2,90 @@
 [[#i18n.yleiset]]
 [[#i18n.arviointipaatokset]]
 
+<span ng-hide="!editointitila">
 <h1>[[lisaa_suoritus]]</h1>
+</span>
 
 <form name="suoritusForm">
   <div>
     <fieldset>
       <label>[[suorittaja]]</label>
-      <select ng-options="suorittaja.suorittaja_id as suorittaja.etunimi + ' ' + suorittaja.sukunimi for suorittaja in suorittajat" ng-model="form.suorittaja" required></select>
+      <p ng-hide="editointitila">{{suoritustiedot.suorittaja_etunimi}} {{suoritustiedot.suorittaja_sukunimi}}</p>      
+      <select ng-hide="!editointitila" ng-options="suorittaja.suorittaja_id as suorittaja.etunimi + ' ' + suorittaja.sukunimi for suorittaja in suorittajat" ng-model="form.suorittaja" required></select>
     </fieldset>
-
   </div>
 
   <div>
     <fieldset>
       <label>[[tutkinto_jarjestaja]]</label>
-      <select ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat" ng-model="form.koulutustoimija" required></select>
+      <p ng-hide="editointitila">{{suoritustiedot | lokalisoiKentta:'koulutustoimija_nimi'}}</p>
+      <select ng-hide="!editointitila" ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat" ng-model="form.koulutustoimija" required></select>
     </fieldset>
   </div>
   <div>
     <fieldset>
       <label>[[koulutus_jarjestaja]]</label>
-      <select ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat" ng-model="form.kouljarjestaja" required></select>
+      <p ng-hide="editointitila">{{suoritustiedot.kouljarjestaja}}</p>       <!-- TODO: nimi -->
+      <select ng-hide="!editointitila" ng-options="koulutustoimija.ytunnus as (koulutustoimija | lokalisoiKentta:'nimi') for koulutustoimija in koulutustoimijat" ng-model="form.kouljarjestaja" required></select>
     </fieldset>    
     <fieldset>
       <label>[[valmistava_koulutus]]</label>
-      <input type="checkbox" ng-model="form.valmistava_koulutus" >
+      <p ng-hide="editointitila">{{suoritustiedot.valmistava_koulutus | muotoileBoolean}}</p>    
+      <input type="checkbox" ng-hide="!editointitila" ng-model="form.valmistava_koulutus" >
     </fieldset>
   </div>
   <div>
     <fieldset>
         <label>[[tutkinto]]</label>
-        <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_id" required></select>
+        <p ng-hide="editointitila">{{suoritustiedot | lokalisoiKentta:'tutkinto_nimi'}}</p>
+        <select ng-hide="!editointitila" ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_id" required></select>
     </fieldset>
     <fieldset>
         <label>[[toimikunta]]</label>
-        <select ng-options="toimikunta.tkunta as toimikunta.diaarinumero + ' ' + (toimikunta | lokalisoiKentta:'nimi') for toimikunta in tutkintotoimikunnat" ng-model="form.toimikunta" required></select>
+        <p ng-hide="editointitila">{{suoritustiedot.toimikunta}}</p> <!-- TODO: nimi -->
+        <select  ng-hide="!editointitila" ng-options="toimikunta.tkunta as toimikunta.diaarinumero + ' ' + (toimikunta | lokalisoiKentta:'nimi') for toimikunta in tutkintotoimikunnat" ng-model="form.toimikunta" required></select>
     </fieldset>    
   </div>
   <div>
     <fieldset>
-       <pvm-valitsin  pakollinen="true" valittu-pvm="form.suoritusaika_alku" otsikko="[[suoritusaika_alku]]"></pvm-valitsin>
+       <p ng-hide="editointitila">[[suoritusaika_alku]] - [[suoritusaika_loppu]]</p>
+       <pvm-valitsin ng-hide="!editointitila" pakollinen="true" valittu-pvm="form.suoritusaika_alku" otsikko="[[suoritusaika_alku]]"></pvm-valitsin>
     </fieldset>
     <fieldset>
-       <pvm-valitsin  pakollinen="true" valittu-pvm="form.suoritusaika_loppu" otsikko="[[suoritusaika_loppu]]"></pvm-valitsin>
+    <p ng-hide="editointitila">{{suoritustiedot.suoritusaika_alku| date:'dd.MM.yyyy'}} - {{suoritustiedot.suoritusaika_loppu| date:'dd.MM.yyyy'}}</p>    
+       <pvm-valitsin ng-hide="!editointitila" pakollinen="true" valittu-pvm="form.suoritusaika_loppu" otsikko="[[suoritusaika_loppu]]"></pvm-valitsin>
     </fieldset>
   </div>
   <div>
     <fieldset>
-       <pvm-valitsin  pakollinen="false" valittu-pvm="form.liitetty_pvm" otsikko="[[liittamispvm]]"></pvm-valitsin>
-    </fieldset>    
+       <p ng-hide="editointitila">[[liittamispvm]] : {{suoritustiedot.liitetty_pvm| date:'dd.MM.yyyy'}}</p>      
+       <pvm-valitsin  ng-hide="!editointitila" pakollinen="false" valittu-pvm="form.liitetty_pvm" otsikko="[[liittamispvm]]"></pvm-valitsin>
+    </fieldset>
     <fieldset>
-       <pvm-valitsin  pakollinen="true" valittu-pvm="form.arviointikokouksen_pvm" otsikko="[[arviointikokouksen_pvm]]"></pvm-valitsin>
+       <p ng-hide="editointitila">[[arviointikokouksen_pvm]] : {{suoritustiedot.arviointikokouksen_pvm| date:'dd.MM.yyyy'}}</p>      
+       <pvm-valitsin ng-hide="!editointitila" pakollinen="true" valittu-pvm="form.arviointikokouksen_pvm" otsikko="[[arviointikokouksen_pvm]]"></pvm-valitsin>
     </fieldset>    
   </div>
   <div>
       <fieldset>
         <label>[[suoritettava_tutkinto]]</label>
-        <select ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_suoritettava"></select>
+        <p ng-hide="editointitila"> {{suoritustiedot.tutkintoversio_suoritettava}}</p>  <!-- TODO: nimi -->
+        <select ng-hide="!editointitila" ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_suoritettava"></select>
     </fieldset>
   </div>
   <div>
     <fieldset>
       <label>[[jarjestelyt]]</label>
-      <textarea ng-model="form.jarjestelyt"></textarea>
+      <textarea ng-disabled="!editointitila" ng-model="form.jarjestelyt"></textarea>
     </fieldset>
 
     <fieldset>
       <label>[[paikka]]</label>
-      <textarea ng-model="form.paikka"></textarea>
+      <textarea ng-disabled="!editointitila" ng-model="form.paikka"></textarea>
     </fieldset>
   </div>
   
-  <button class="button-with-icon add-icon-white float-right" ng-click="lisaaArvioija()">[[lisaa_arvioija]]</button>
+  <button class="button-with-icon add-icon-white float-right" ng-hide="!editointitila" ng-click="lisaaArvioija()">[[lisaa_arvioija]]</button>
    <div class="table">
      <div class="table-header">        
        <div class="table-cell">[[arvioijat]]</div>
@@ -81,13 +93,13 @@
      </div>
      <div class="table-row" ng-repeat="arvioija in form.arvioijat track by $index">
        <div class="table-cell">{{ arvioija.etunimi }} {{arvioija.sukunimi}} ( {{ arvioija.rooli }} )</div>
-       <div class="table-cell"><button class="icon delete-icon" ng-click="poistaArvioija(arvioija)"></button></div>
+       <div class="table-cell"><button class="icon delete-icon" ng-hide="!editointitila" ng-click="poistaArvioija(arvioija)"></button></div>
      </div>
   </div>
 
     <h2>[[tutkinnon_osat]]</h2>
 
-    <button class="button-with-icon add-icon-white float-right" ng-click="lisaaTutkinnonosa()">[[lisaa_tutkinnon_osa]]</button>
+    <button class="button-with-icon add-icon-white float-right" ng-hide="!editointitila" ng-click="lisaaTutkinnonosa()">[[lisaa_tutkinnon_osa]]</button>
 
     <div class="table">
       <div class="table-header">
@@ -108,13 +120,14 @@
         <div class="table-cell">{{ osa.arvosanan_korotus | muotoileBoolean }}</div>
         <div class="table-cell"> {{osa.osaamisen_tunnustaminen | date:'dd.MM.yyyy'}}</div>
         <div class="table-cell"><enum-arvo nimi="kieli" arvo="osa.kieli"></enum-arvo></div>
-        <div class="table-cell"><button class="icon delete-icon" ng-click="poistaOsa(osa)"></button></div>
-        <div class="table-cell"><button class="icon edit-icon" ng-click="muokkaaOsa(osa)"></button></div>
+        <div class="table-cell"><button class="icon delete-icon" ng-hide="!editointitila" ng-click="poistaOsa(osa)"></button></div>
+        <div class="table-cell"><button class="icon edit-icon" ng-hide="!editointitila" ng-click="muokkaaOsa(osa)"></button></div>
       </div>
     </div>
 
-    <button class="button-with-icon add-icon-white" ng-disabled="suoritusForm.$invalid || osat.length === 0" ng-click="lisaaSuoritus()">[[lisaa_suoritus]]</button>
-    <button ng-click="peruuta()">[[peruuta]]</button>
+    <button class="button-with-icon add-icon-white" ng-hide="!editointitila" ng-disabled="suoritusForm.$invalid || osat.length === 0" ng-click="lisaaSuoritus()">[[lisaa_suoritus]]</button>
+    <button ng-hide="!editointitila" ng-click="peruuta()">[[peruuta]]</button>
+    <button ng-hide="editointitila" ng-click="peruuta()">[[palaa]]</button>
 </form>
 
 [[/i18n.arviointipaatokset]]
