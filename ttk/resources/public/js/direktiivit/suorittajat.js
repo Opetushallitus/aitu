@@ -62,13 +62,8 @@ angular.module('direktiivit.suorittajat', ['rest.suorittaja'])
     }
   }])
 
-  .controller('LisaaSuorittajaModalController', ['$modalInstance', '$scope', 'suorittaja', 'Rahoitusmuoto',
-                                                 function($modalInstance, $scope, suorittaja, Rahoitusmuoto) {
-
-	Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
-	  $scope.rahoitusmuodot = rahoitusmuodot;
-	});
-	    
+  .controller('LisaaSuorittajaModalController', ['$modalInstance', '$scope', 'suorittaja',
+                                                 function($modalInstance, $scope, suorittaja) {
     $scope.suorittajaForm = {};
     if (suorittaja) {
       $scope.suorittajaForm = _.cloneDeep(suorittaja);
