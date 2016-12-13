@@ -19,15 +19,9 @@ angular.module('suoritus', [])
     $routeProvider.when('/muokkaa-suoritus/:suoritusid', {controller:'SuoritusController', templateUrl:'template/suoritus'});
   }])
 
-  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Toimikunta', 'Rahoitusmuoto', 
+  .controller('SuoritusController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Toimikunta',  
                                      'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
-   function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Toimikunta, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
-	  
-    $scope.vuodet = _.range(1, 21);
-
-    Rahoitusmuoto.haeKaikki().then(function(rahoitusmuodot) {
-      $scope.rahoitusmuodot = rahoitusmuodot;
-    });
+   function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Toimikunta,  Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
 
     Suorittaja.haeKaikki().then(function(suorittajat) {
       $scope.suorittajat = suorittajat;
@@ -64,8 +58,7 @@ angular.module('suoritus', [])
     // ladataan editoitavaksi
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
-        	$scope.form = _.merge($scope.form, _.pick(suoritus, ['rahoitusmuoto', 'suorittaja',
-        			'koulutustoimija','kouljarjestaja', 'jarjestelyt',
+        	$scope.form = _.merge($scope.form, _.pick(suoritus, ['suorittaja', 'koulutustoimija','kouljarjestaja', 'jarjestelyt',
         			'paikka','valmistava_koulutus','suoritusaika_alku','suoritusaika_loppu', 'toimikunta',
         			'arviointikokouksen_pvm', 'liitetty_pvm','tutkintoversio_id','tutkintoversio_suoritettava',
         			'tutkinto','suorituskerta_id','arvioijat']));
