@@ -120,7 +120,7 @@ angular.module('suoritus', [])
              muokattuOsa.osaamisala_id = muokattuOsa.osaamisala;
              muokattuOsa.tutkinnonosa.tutkintotunnus = {tutkintotunnus: $scope.form.tutkintotunnus};
  	         var osaInd = _.findIndex($scope.osat, function(osa) {
- 	            return osa.tutkinnonosa.tutkintotunnus === muokattuOsa.tutkinnonosa.tutkintotunnus;
+ 	            return osa.tutkinnonosa.tutkinnonosa_id === muokattuOsa.tutkinnonosa.tutkinnonosa_id;
  	          });
  	        if (osaInd === -1) {
  	        	// tutkinnon osa muokattu
@@ -234,17 +234,10 @@ angular.module('suoritus', [])
 		    osaamisala_id: null,
 		    osaamisala: null
 		  };
-	  } else { // TODO: select-fields
-		  $scope.form = {
-    	     arvosana: osa.arvosana,
-		     arvosanan_korotus: osa.arvosanan_korotus,
-		     kokotutkinto: osa.kokotutkinto,
-		     kieli: osa.kieli,
-		     todistus: osa.todistus,
-		     osaamisen_tunnustaminen: osa.osaamisen_tunnustaminen,
-		     osaamisala_id: osa.osaamisala_id,
-		     osaamisala: null
-		  };
+	  } else { 
+		  $scope.form = _.pick(osa, ['arvosana','arvosanan_korotus','kokotutkinto','kieli','todistus',
+		                             'osaamisen_tunnustaminen','osaamisala_id']);
+		  $scope.form.osaamisala = null;
 		  $scope.tutkinnonosa = osa.tutkinnonosa;
 	  }
 
