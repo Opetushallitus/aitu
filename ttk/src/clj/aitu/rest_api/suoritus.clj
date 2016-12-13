@@ -61,7 +61,7 @@
         (lisaa-luontiaika)
         (csv-download-response "suoritukset.csv"))))
 
-; TODO: tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
+; TODO: OPH-1916 tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
 (defroutes reitit
   (GET "/" [& ehdot]
     :kayttooikeus :arviointipaatos

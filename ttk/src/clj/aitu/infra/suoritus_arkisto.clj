@@ -238,7 +238,8 @@
                     :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta
                     :tutkintoversio_suoritettava :liitetty_pvm :kouljarjestaja])
       (assoc :tutkinto tutkintotunnus)
-      (update :opiskelijavuosi ->int)
+      (update :opiskelijavuosi #(or (->int %) 1)) ; TODO: poistuu 
+      (update :jarjestamismuoto #(or % "oppilaitosmuotoinen")) ; TODO: poistuu
       (update :tutkintoversio_suoritettava #(or % (:tutkintoversio_id kerta)))
       (update :kouljarjestaja #(or % (:koulutustoimija kerta))) ; tut. järjestäjä = koulutustoimija, jos arvoa ei ole asetettu
       (update :suoritusaika_alku parse-iso-date)

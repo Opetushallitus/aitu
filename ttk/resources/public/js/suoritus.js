@@ -217,10 +217,11 @@ angular.module('suoritus', [])
     };
 	}])
    
-  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Osaamisala', 'Tutkinnonosa', 'tutkinnot', 'tutkintoversio_id', 'osa', 
-                                                      function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkintoversio_id, osa) {
+  .controller('SuoritusTutkinnonosaModalController', ['$modalInstance', '$scope', 'Osaamisala', 'Tutkinnonosa', 'tutkinnot', 'tutkintoversio_id', 'osa', 'editointitila', 
+                                                      function($modalInstance, $scope, Osaamisala, Tutkinnonosa, tutkinnot, tutkintoversio_id, osa, editointitila) {
 	  $scope.tutkinnot = tutkinnot;
 	  $scope.tutkintoversio_id  = tutkintoversio_id;
+	  $scope.editointitila = editointitila;
 	  if (osa == null) {
 		  $scope.form = {
 		    arvosana: 'hyvaksytty',
@@ -231,7 +232,7 @@ angular.module('suoritus', [])
 		    osaamisen_tunnustaminen: null, 
 		    osaamisala_id: null,
 		    osaamisala: null
-		  };
+		  };		  
 	  } else { 
 		  $scope.form = _.pick(osa, ['arvosana','arvosanan_korotus','kokotutkinto','kieli','todistus',
 		                             'osaamisen_tunnustaminen','osaamisala_id']);
