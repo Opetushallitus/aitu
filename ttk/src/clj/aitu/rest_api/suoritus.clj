@@ -13,11 +13,14 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.rest-api.suoritus
-  (:import org.apache.commons.io.FileUtils)
-  (:require [aitu.infra.suoritus-arkisto :as arkisto]
-            aitu.compojure-util
-            [clojure.tools.logging :as log]
+  (:import org.apache.commons.io.FileUtils
+           (org.joda.time DateTimeZone))
+  (:require [clojure.tools.logging :as log]
+            [clj-time.format :refer [unparse formatter]]
+            [clj-time.core :refer [now]]
             [compojure.api.core :refer [DELETE GET POST defroutes]]
+            [aitu.infra.suoritus-arkisto :as arkisto]
+            aitu.compojure-util
             [aitu.rest-api.http-util :refer [excel-mimetypes jos-lapaisee-virustarkistuksen]]
             [aitu.infra.suoritus-excel :refer [lue-excel! luo-excel]]
             [aitu.infra.suoritus-raportti :refer [yhteenveto-raportti-excel]]
@@ -42,6 +45,12 @@
                          :suorittaja_sukunimi :suorittaja_etunimi :arvosana :kokotutkinto :todistus
                          :arvioija_sukunimi :arvioija_etunimi :arvioija_rooli])
 
+(defn lisaa-luontiaika [csv]
+  (str "Raportti luotu "
+       (unparse (formatter "dd.MM.yyyy 'klo' HH:mm" (DateTimeZone/forID "Europe/Helsinki")) (now))
+       \newline
+       csv))
+
 (defroutes raportti-reitit
   (GET "/suoritusraportti" params
        :kayttooikeus :raportti
@@ -49,6 +58,7 @@
         (yhteenveto-raportti-excel)
         (lisaa-puuttuvat-avaimet kenttien-jarjestys)
         (muodosta-csv kenttien-jarjestys)
+        (lisaa-luontiaika)
         (csv-download-response "suoritukset.csv"))))
 
 ; TODO: tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
