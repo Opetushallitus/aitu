@@ -35,7 +35,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         $scope.$watch('haeSuorituksia', function(haeSuorituksia) {
           // Tyhjennä hakuehdot kun haku suljetaan
           if (haeSuorituksia === false) {
-            $scope.hakuForm = _.pick($scope.hakuForm, 'tila');
+            $scope.hakuForm = _.pick($scope.hakuForm, 'tila', 'tuloksiasivulla');
           }
         });
 
