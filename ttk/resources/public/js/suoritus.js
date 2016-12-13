@@ -61,31 +61,16 @@ angular.module('suoritus', [])
     };
     $scope.osat = [];
     $scope.form.valmistava_koulutus = false;
-//    $scope.form.suoritusaika = now;
     
     // ladataan editoitavaksi
     if ($routeParams.suoritusid) {
         Suoritus.haeId($routeParams.suoritusid).then(function(suoritus) {
-        	$scope.form.rahoitusmuoto = suoritus.rahoitusmuoto;
-        	$scope.form.suorittaja = suoritus.suorittaja;
-        	$scope.form.koulutustoimija = suoritus.koulutustoimija;
-        	$scope.form.kouljarjestaja = suoritus.kouljarjestaja;
+        	$scope.form = _.merge($scope.form, _.pick(suoritus, ['rahoitusmuoto', 'suorittaja',
+        			'koulutustoimija','kouljarjestaja','jarjestamismuoto', 'jarjestelyt',
+        			'paikka','valmistava_koulutus','suoritusaika_alku','suoritusaika_loppu', 'toimikunta',
+        			'arvointikokouksen_pvm', 'liitetty_pvm','tutkintoversio_id','tutkintoversio_suoritettava',
+        			'tutkinto','suorituskerta_id','arvioijat']));
         	$scope.form.opiskelijavuosi = "" + suoritus.opiskelijavuosi;
-        	$scope.form.jarjestamismuoto = suoritus.jarjestamismuoto;
-        	$scope.form.jarjestelyt = suoritus.jarjestelyt;
-        	$scope.form.paikka = suoritus.paikka;
-        	$scope.form.valmistava_koulutus = suoritus.valmistava_koulutus;
-        	$scope.form.suoritusaika_alku = suoritus.suoritusaika_alku;
-        	$scope.form.suoritusaika_loppu = suoritus.suoritusaika_loppu;
-        	$scope.form.toimikunta = suoritus.toimikunta;
-        	$scope.form.arviointikokouksen_pvm = suoritus.arviointikokouksen_pvm;
-        	$scope.form.liitetty_pvm = suoritus.liitetty_pvm;
-        	$scope.form.tutkintoversio_id = suoritus.tutkintoversio_id;
-        	$scope.form.tutkintoversio_suoritettava = suoritus.tutkintoversio_suoritettava;        	
-        	$scope.form.tutkinto = suoritus.tutkinto;
-        	$scope.form.suorituskerta_id = suoritus.suorituskerta_id;
-            $scope.form.arvioijat = suoritus.arvioijat;
-           // $scope.arvioijat = suoritus.arvioijat;
             $scope.osat = _.map(suoritus.osat, function(osa) {
                 var result = _.pick(osa, ['arvosana', 'kieli', 'todistus', 'suoritus_id','arvosanan_korotus','osaamisen_tunnustaminen', 'kokotutkinto']);
                 result.tutkinnonosa = {
