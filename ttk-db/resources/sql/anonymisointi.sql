@@ -22,4 +22,5 @@ with
 update suorittaja set etunimi = e || ' ' || k,
   sukunimi = s
 from nimet 
-  where nimet.id = suorittaja.suorittaja_id % 2850; -- 2850 on with-lauseen generoima rivimäärä
+  where nimet.id = suorittaja.suorittaja_id % 2850   -- 2850 on with-lauseen generoima rivimäärä
+  and suorittaja.suorittaja_id > 0;

@@ -63,6 +63,10 @@
   (aja-testidata-sql! kayttaja-param "testitoimikunnat.sql")
   (aja-testidata-sql! kayttaja-param "testidata.sql"))
 
+(defn anonymisoi-henkilodata!
+  [kayttaja-param]
+  (aja-testidata-sql! kayttaja-param "anonymisointi.sql"))
+
 (defn aseta-oikeudet-sovelluskayttajille
   [options]
   {:pre [(contains? options :username)
@@ -177,6 +181,7 @@
       (try 
         (jdbc/with-connection {:datasource datasource}
           (aseta-oikeudet-sovelluskayttajille options)
+          (anonymisoi-henkilodata! (:uservariable options))
           (when (:testidata options)
             (luo-testidata! (:uservariable options))))
         (finally
