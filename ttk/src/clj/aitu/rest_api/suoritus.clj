@@ -61,7 +61,17 @@
         (lisaa-luontiaika)
         (csv-download-response "suoritukset.csv"))))
 
-; TODO: OPH-1916 tilan huomiointi operaatioissa - voiko hyväksyttyä päivittää? ei voi.
+(defn muokkaus-sallittu? [suorituskertaid]
+  (let [suorituskerta-id (arkisto/->int suorituskertaid)]
+    (if (not (nil? suorituskerta-id))
+      (let [suorituskerta (arkisto/hae suorituskerta-id)]
+        (= "luonnos" (:tila suorituskerta)))
+      true)))
+
+(defn muokkaus-sallittu-kaikille? [suoritukset]
+  (let [suoritustiedot (arkisto/hae-tiedot-monta suoritukset)]
+    (not (some #(not (= "luonnos" (:tila %))) suoritustiedot))))
+
 (defroutes reitit
   (GET "/" [& ehdot]
     :kayttooikeus :arviointipaatos
@@ -71,20 +81,22 @@
        (response-or-404 (arkisto/hae-tiedot suorituskerta-id)))
   (DELETE "/:suorituskerta-id" [suorituskerta-id]
     :kayttooikeus :arviointipaatos
-    (let [suorituskerta-id (Integer/parseInt suorituskerta-id)
-          suorituskerta (arkisto/hae suorituskerta-id)]
-      (if (= "luonnos" (:tila suorituskerta))
-        (response-or-404 (arkisto/poista! suorituskerta-id))
-        {:status 403})))
+    (if (muokkaus-sallittu? suorituskerta-id)
+      (response-or-404 (arkisto/poista! (arkisto/->int suorituskerta-id)))
+      {:status 403}))
   (POST "/" [& suoritus]
     :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/lisaa-tai-paivita! suoritus)))
+    (if (muokkaus-sallittu? (:suorituskerta_id suoritus))
+      (response-or-404 (arkisto/lisaa-tai-paivita! suoritus))
+      {:status 403}))
   (POST "/laheta" [suoritukset]
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/laheta! suoritukset)))
   (POST "/hyvaksy" [& suoritukset]
     :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/hyvaksy! suoritukset)))
+    (if (muokkaus-sallittu-kaikille? (:suoritukset suoritukset))
+      (response-or-404 (arkisto/hyvaksy! suoritukset))
+      {:status 403}))
   (POST "/palauta" [suoritukset]
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/palauta! suoritukset)))

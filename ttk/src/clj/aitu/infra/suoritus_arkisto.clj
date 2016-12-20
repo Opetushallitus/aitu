@@ -342,6 +342,10 @@
                      :hyvaksymisaika nil})
     (sql/where {:suorituskerta_id [in suoritukset]})))
 
+(defn hae-tiedot-monta [suoritukset]
+  (sql/select suorituskerta
+    (sql/where {:suorituskerta_id [in suoritukset]})))
+
 (defn hyvaksy!
   [{:keys [hyvaksymispvm suoritukset] :as suoritusdata}]
   (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset

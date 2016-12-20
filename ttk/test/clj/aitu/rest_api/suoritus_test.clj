@@ -179,7 +179,7 @@
              suorituslista-resp (body-json (:response suorituksia))
              skerta-id (some :suorituskerta_id suorituslista-resp)]
          (testifn s skerta-id)
-         (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
+;         (mock-request s (str "/api/suoritus/" skerta-id) :delete nil)
         )))))
   ([testifn]
     (base-testi testifn suoritus-base)))
@@ -251,9 +251,28 @@
                 (let [hyvaksy-req {:hyvaksymispvm "2016-11-16"
                                    :suoritukset [skerta-id]}
                       hyv-resp (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))
+                      _ (println ".." hyv-resp)
+                      
                       hyv-json (body-json (:response hyv-resp))]
                   (is (= (:tila hyv-json) "hyvaksytty"))
                   (is (= (:hyvaksymisaika hyv-json) "2016-11-16"))
+                  ))))
+
+(deftest ^:integraatio testaa-tilat 
+  (base-testi (fn [s skerta-id]
+                (let [hyvaksy-req {:hyvaksymispvm "2016-11-16"
+                                   :suoritukset [skerta-id]}
+                      suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
+                      suoritus-resp (body-json (:response suoritustiedot))
+                      paivitys-map (assoc (merge suoritus-resp suoritus-diff) :suorituskerta_id  skerta-id )
+                      hyv-resp (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))
+                      
+                      ; hyväksytty-tilassa olevaa ei pitäisi voida muokata 
+                      kirjaa-paivitys (mock-json-post s "/api/suoritus" (cheshire/generate-string paivitys-map))                      
+                      hyv-resp2 (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))
+                      hyv-json  (:response hyv-resp2)]
+                  (is (= 403 (:status hyv-json)))
+                  (is (= 403 (:status (:response hyv-resp2))))
                   ))))
 
 (deftest ^:integraatio suoritus-liitetty-sopimus
