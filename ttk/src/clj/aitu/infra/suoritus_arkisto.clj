@@ -136,6 +136,13 @@
       (seq tutkinto) (sql/where {:tutkinto tutkinto}))
     sql/exec))
 
+(defn laske-tilastot [tutkinto]
+  (let [suoritukset (mapcat :suoritukset (:tutkinnonosat tutkinto))]
+    (assoc tutkinto :suoritetut_kokotutkinnot (count (filter #(= "kyllä" (:kokotutkinto %)) suoritukset))
+                    :suoritetut_osat (count suoritukset)
+                    :haluaa_todistuksen (count (filter :todistus suoritukset))
+                    :ei_halua_todistusta (count (remove :todistus suoritukset)))))
+
 (defn hae-yhteenveto-raportti
   [{{:keys [luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
             tila tutkinto tutkinnonosa osaamisala suorittaja toimikunta] :as params} :params}]
@@ -173,10 +180,10 @@
                       :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
                       :jarjestamismuoto :opiskelijavuosi
                       :valmistava_koulutus :paikka :jarjestelyt
-                      :suoritus.arvosana
+                      [(sql/raw "case suoritus.arvosana when 'hyvaksytty' then 'Hyväksytty' else suoritus.arvosana end") :arvosana]
                       [:suoritus.todistus :todistus]
                       [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
-                      [:suoritus.kokotutkinto :kokotutkinto]
+                      [(sql/raw "case when suoritus.kokotutkinto then 'kyllä' else 'ei' end") :kokotutkinto]
                       [:suorittaja.etunimi :suorittaja_etunimi]
                       [:suorittaja.sukunimi :suorittaja_sukunimi]
                       [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
@@ -194,7 +201,8 @@
                       [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
                       [:arvioija.etunimi :arvioija_etunimi]
                       [:arvioija.sukunimi :arvioija_sukunimi]
-                      [:arvioija.rooli :arvioija_rooli])
+                      [(sql/raw "case arvioija.rooli when 'itsenainen' then 'itsenäinen' when 'tyonantaja' then 'työnantaja' when 'tyontekija' then 'työntekijä' else arvioija.rooli end")
+                       :arvioija_rooli])
           (sql/order :suorituskerta_id :DESC)
           sql/exec)]
     (->> results
@@ -202,9 +210,10 @@
          (erottele-lista :suoritukset [:suorituskerta_id :suorittaja_etunimi :suorittaja_sukunimi :todistus :kokotutkinto :osaamisen_tunnustaminen :suoritusaika_alku :suoritusaika_loppu :arvosana
                                        :arviointikokouksen_pvm :ehdotusaika :hyvaksymisaika :tila :rahoitusmuoto :opiskelijavuosi :valmistava_koulutus :paikka :jarjestelyt :jarjestamismuoto :arvioijat])
          (erottele-lista :tutkinnonosat [:osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :suoritukset])
-         (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste :tutkinnonosat])
+         (map laske-tilastot)
+         (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste :tutkinnonosat
+                                     :suoritetut_kokotutkinnot :suoritetut_osat :haluaa_todistuksen :ei_halua_todistusta])
          (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :tutkinnot]))))
-
 
 (defn hae-arvioijat [suorituskerta-id]
   (sql/select :arvioija

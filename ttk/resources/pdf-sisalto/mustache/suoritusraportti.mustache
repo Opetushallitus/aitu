@@ -1,0 +1,34 @@
+{{raportti_luotu}}
+
+{{#toimikunnat}}
+*{{tutkintotoimikunta_nimi_fi}}*
+{{#koulutustoimijat}}
+
+*{{koulutustoimija_nimi_fi}}*
+{{#tutkinnot}}
+
+*{{tutkintotunnus}} {{tutkinto_nimi_fi}}*
+*Tutkinnon peruste {{tutkinto_peruste}}*
+
+	Suoritetut tutkinnon osat
+{{#tutkinnonosat}}
+
+	*{{tutkinnonosa_nimi_fi}}*
+
+	Tutkinnon suorittaja		arvosana			koko tutkinto
+			arvioijat
+{{#suoritukset}}
+
+	{{suorittaja_sukunimi}} {{suorittaja_etunimi}}		{{arvosana}}			{{kokotutkinto}}
+{{#arvioijat}}			{{arvioija_sukunimi}} {{arvioija_etunimi}}, {{arvioija_rooli}}
+{{/arvioijat}}
+{{/suoritukset}}
+{{/tutkinnonosat}}
+
+*Yhteensä*
+	Suoritetut koko tutkinnot		{{suoritetut_kokotutkinnot}}
+	Suoritetut tutkinnon osat		{{suoritetut_osat}}, näistä	todistuksen haluaa {{haluaa_todistuksen}}
+				ei todistusta {{ei_halua_todistusta}}
+{{/tutkinnot}}
+{{/koulutustoimijat}}
+{{/toimikunnat}}

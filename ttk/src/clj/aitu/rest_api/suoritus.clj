@@ -16,17 +16,19 @@
   (:import org.apache.commons.io.FileUtils
            (org.joda.time DateTimeZone))
   (:require [clojure.tools.logging :as log]
+            [clojure.java.io :as io]
             [clj-time.format :refer [unparse formatter]]
             [clj-time.core :refer [now]]
             [compojure.api.core :refer [DELETE GET POST defroutes]]
             [aitu.infra.suoritus-arkisto :as arkisto]
             aitu.compojure-util
-            [aitu.rest-api.http-util :refer [excel-mimetypes jos-lapaisee-virustarkistuksen]]
+            [aitu.rest-api.http-util :refer [excel-mimetypes jos-lapaisee-virustarkistuksen pdf-response]]
             [aitu.infra.suoritus-excel :refer [lue-excel! luo-excel]]
-            [aitu.infra.suoritus-raportti :refer [yhteenveto-raportti-excel]]
+            [aitu.infra.pdf-arkisto :as pdf-arkisto]
             [aitu.util :refer [muodosta-csv lisaa-puuttuvat-avaimet]]
             [oph.common.util.http-util :refer [response-or-404 file-upload-response file-download-response sallittu-jos csv-download-response]]
-            [dk.ative.docjure.spreadsheet :refer [load-workbook save-workbook-into-stream!]]))
+            [dk.ative.docjure.spreadsheet :refer [load-workbook save-workbook-into-stream!]]
+            [stencil.core :as stencil]))
 
 (defroutes reitit-lataus
   (GET "/excel-luonti" [kieli]
@@ -38,28 +40,19 @@
           filename "excel-suoritustiedot-template.xlsx"]
       (file-download-response (.toByteArray bos) filename content-type))))
 
-(def kenttien-jarjestys [:diaarinumero :toimikunta_fi
-                         :ytunnus :koulutustoimija_fi
-                         :tutkintotunnus :tutkinto_fi :peruste
-                         :osatunnus :tutkinnonosa_fi
-                         :suorittaja_sukunimi :suorittaja_etunimi :arvosana :kokotutkinto :todistus
-                         :arvioija_sukunimi :arvioija_etunimi :arvioija_rooli])
-
-(defn lisaa-luontiaika [csv]
-  (str "Raportti luotu "
-       (unparse (formatter "dd.MM.yyyy 'klo' HH:mm" (DateTimeZone/forID "Europe/Helsinki")) (now))
-       \newline
-       csv))
+(defn luontiaika []
+  (str "Raportti luotu " (unparse (formatter "dd.MM.yyyy 'klo' HH:mm" (DateTimeZone/forID "Europe/Helsinki")) (now))))
 
 (defroutes raportti-reitit
   (GET "/suoritusraportti" params
-       :kayttooikeus :raportti
-    (-> (arkisto/hae-yhteenveto-raportti params)
-        (yhteenveto-raportti-excel)
-        (lisaa-puuttuvat-avaimet kenttien-jarjestys)
-        (muodosta-csv kenttien-jarjestys)
-        (lisaa-luontiaika)
-        (csv-download-response "suoritukset.csv"))))
+    :kayttooikeus :raportti
+    (let [data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache"))
+                                               {:toimikunnat    (arkisto/hae-yhteenveto-raportti params)
+                                                :raportti_luotu (luontiaika)})
+                :footer ""}
+          pdf (binding [pdf-arkisto/*sisennys* 64.0]
+                (pdf-arkisto/muodosta-pdf data))]
+      (pdf-response pdf "suoritukset.pdf"))))
 
 (defn muokkaus-sallittu? [suorituskertaid]
   (let [suorituskerta-id (arkisto/->int suorituskertaid)]
@@ -77,8 +70,8 @@
     :kayttooikeus :arviointipaatos
     (response-or-404 (arkisto/hae-kaikki ehdot)))
   (GET "/:suorituskerta-id" [suorituskerta-id]
-       :kayttooikeus :arviointipaatos
-       (response-or-404 (arkisto/hae-tiedot suorituskerta-id)))
+    :kayttooikeus :arviointipaatos
+    (response-or-404 (arkisto/hae-tiedot suorituskerta-id)))
   (DELETE "/:suorituskerta-id" [suorituskerta-id]
     :kayttooikeus :arviointipaatos
     (if (muokkaus-sallittu? suorituskerta-id)
@@ -106,8 +99,8 @@
     (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
 
     ;    (sallittu-jos (contains? excel-mimetypes (:content-type file))
-;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
-      (let [b (FileUtils/readFileToByteArray (:tempfile file))
-            wb (load-workbook (new java.io.ByteArrayInputStream b))
-            respo (lue-excel! wb)]
-     (file-upload-response respo))))
+    ;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
+    (let [b (FileUtils/readFileToByteArray (:tempfile file))
+          wb (load-workbook (new java.io.ByteArrayInputStream b))
+          respo (lue-excel! wb)]
+      (file-upload-response respo))))

@@ -16,7 +16,7 @@
 (def ensimmainen-rivi (- ylamarginaali 12))
 (def vasen-marginaali 57.0)
 (def oikea-marginaali 50.0)
-(def sisennys 128.0)
+(def ^:dynamic *sisennys* 128.0)
 (def footer-tila 70.0)
 
 (defn muodosta-header
@@ -99,7 +99,7 @@
                (for [[tab osa] (map-indexed vector osat)
                      :let [vapaa-tila (- (.getWidth sivukoko)
                                          vasen-marginaali
-                                         (* tab sisennys)
+                                         (* tab *sisennys*)
                                          oikea-marginaali)
                            fontti (if (:bold osa)
                                     bold-fontti
@@ -109,9 +109,9 @@
                                   {:x 0
                                    :y (- fonttikoko)
                                    :teksti rivi})))
-                   (update-in [0 :x] + (* tab sisennys))
+                   (update-in [0 :x] + (* tab *sisennys*))
                    (update-in [0 :y] + fonttikoko)
-                   (conj {:x (- (* tab sisennys))
+                   (conj {:x (- (* tab *sisennys*))
                           :y 0}))))
       (update-in-if-exists [0 :y] - fonttikoko))))
 
