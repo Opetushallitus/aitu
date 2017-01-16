@@ -49,13 +49,10 @@
     (arvo-tai-rakenne kentta)
     arvo-tai-rakenne))
 
+; OPH-1921 sopimuksen päivitys on sallittu riippumatta sen voimassaolosta. 
 (defn salli-sopimuksen-paivitys?
   [jarjestamissopimusid]
-  (some->
-    (jarjestamissopimus/taydenna-sopimus (arkisto/hae jarjestamissopimusid))
-    voimassaolo/taydenna-sopimuksen-voimassaolo
-    :vanhentunut
-    not))
+  (not (nil? (arkisto/hae jarjestamissopimusid))))
 
 (def rajattujen-sopimuskenttien-jarjestys
   [:sopimusnumero :toimikunta_fi :toimikunta_sv :tutkinto_fi :tutkinto_sv :peruste :koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_sahkoposti :alkupvm :loppupvm
