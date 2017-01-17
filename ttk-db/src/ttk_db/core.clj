@@ -69,8 +69,10 @@
   (println "HUOM: EI SAA AJAA TUOTANNOSSA")
   (let [ok (read-line)]
     (if (= ok "K")
-      (aja-testidata-sql! kayttaja-param "anonymisointi.sql")
-      (println "Ei anonymisoida."))))
+      (do
+        (println "Anonymisoidaan")
+        (aja-testidata-sql! kayttaja-param "anonymisointi.sql"))
+      (println ok " -> Ei anonymisoida."))))
 
 
 (defn aseta-oikeudet-sovelluskayttajille
