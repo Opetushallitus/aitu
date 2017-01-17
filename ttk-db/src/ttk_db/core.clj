@@ -65,7 +65,13 @@
 
 (defn anonymisoi-henkilodata!
   [kayttaja-param]
-  (aja-testidata-sql! kayttaja-param "anonymisointi.sql"))
+  (println "Anonymisoidaanko henkilödata? K/E")
+  (println "HUOM: EI SAA AJAA TUOTANNOSSA")
+  (let [ok (read-line)]
+    (if (= ok "K")
+      (aja-testidata-sql! kayttaja-param "anonymisointi.sql")
+      (println "Ei anonymisoida."))))
+
 
 (defn aseta-oikeudet-sovelluskayttajille
   [options]
@@ -119,6 +125,8 @@
    [nil "--target-version VERSION" "Tehdään migrate annettuun versioon saakka"]
    ["-t" nil "Testidatan luonti"
     :id :testidata]
+   [nil "--anonymisointi" "Henkilödatan anonymisointi"
+    :id :anonymisointi]
    ["-u" "--username USER" "Tietokantakäyttäjä"
     :default "ttk_user"]
    [nil "--aituhaku-username USER" "Aituhaun tietokantakäyttäjä"]
@@ -181,7 +189,8 @@
       (try 
         (jdbc/with-connection {:datasource datasource}
           (aseta-oikeudet-sovelluskayttajille options)
-          (anonymisoi-henkilodata! (:uservariable options))
+          (when (:anonymisointi options)
+            (anonymisoi-henkilodata! (:uservariable options)))
           (when (:testidata options)
             (luo-testidata! (:uservariable options))))
         (finally
