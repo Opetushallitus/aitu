@@ -270,214 +270,215 @@
             ;   ))   ;    (sql/with tutkintotoimikunta)                                       
    ;    ))
 
-   (defn hae-tutkinnot-koodistopalvelulle
-     "Hakee kaikkien tutkintojen uusimman version koodistopalveluintegraatiolle."
-     []
-     (sql/select nayttotutkinto
-       (sql/with uusin-versio
-         (sql/with tutkintonimike))
-       (sql/with opintoala
-         (sql/fields :koulutusala_tkkoodi))))
+(defn hae-tutkinnot-koodistopalvelulle
+  "Hakee kaikkien tutkintojen uusimman version koodistopalveluintegraatiolle."
+  []
+  (sql/select nayttotutkinto
+    (sql/with uusin-versio
+      (sql/with tutkintonimike))
+    (sql/with opintoala
+      (sql/fields :koulutusala_tkkoodi))))
 
-   (defn liita-sopimus-ja-tutkinto-riviin
-     [sopimus-ja-tutkinto]
-     (let [{:keys [jarjestamissopimusid]} sopimus-ja-tutkinto]
-       (-> sopimus-ja-tutkinto
-         (assoc :jarjestamissopimus (sopimus-arkisto/hae-rajatut-tiedot jarjestamissopimusid)))))
+(defn liita-sopimus-ja-tutkinto-riviin
+  [sopimus-ja-tutkinto]
+  (let [{:keys [jarjestamissopimusid]} sopimus-ja-tutkinto]
+    (-> sopimus-ja-tutkinto
+      (assoc :jarjestamissopimus (sopimus-arkisto/hae-rajatut-tiedot jarjestamissopimusid)))))
 
-   (defn liita-sopimus-ja-tutkinto-riveihin
-     [rivit]
-     (mapv liita-sopimus-ja-tutkinto-riviin rivit))
+(defn liita-sopimus-ja-tutkinto-riveihin
+  [rivit]
+  (mapv liita-sopimus-ja-tutkinto-riviin rivit))
 
-   (defn hae-tutkintotunnukseen-liittyvat-sopimus-ja-tutkinto-rivit
-     [tutkintotunnus]
-     (liita-sopimus-ja-tutkinto-riveihin (sopimus-ja-tutkinto-arkisto/hae-tutkintotunnukseen-liittyvat tutkintotunnus)))
+(defn hae-tutkintotunnukseen-liittyvat-sopimus-ja-tutkinto-rivit
+  [tutkintotunnus]
+  (liita-sopimus-ja-tutkinto-riveihin (sopimus-ja-tutkinto-arkisto/hae-tutkintotunnukseen-liittyvat tutkintotunnus)))
 
-   (defn hae-tutkinto
-     [tutkintotunnus]
-     (first
-       (sql/select
-         nayttotutkinto
-         (sql/with uusin-versio)
-         (sql/with tutkintotyyppi
-           (sql/fields [:selite_fi :tyyppi_selite_fi]
-                       [:selite_sv :tyyppi_selite_sv]))
-         (sql/with tutkintotoimikunta
-           (sql/with toimikausi))
-         (sql/where {:tutkintotunnus tutkintotunnus}))))
+(defn hae-tutkinto
+  "Hakee tutkinnon uusimman version"
+  [tutkintotunnus]
+  (first
+    (sql/select
+      nayttotutkinto
+      (sql/with uusin-versio)
+      (sql/with tutkintotyyppi
+        (sql/fields [:selite_fi :tyyppi_selite_fi]
+                    [:selite_sv :tyyppi_selite_sv]))
+      (sql/with tutkintotoimikunta
+        (sql/with toimikausi))
+      (sql/where {:tutkintotunnus tutkintotunnus}))))
 
-   (defn hae-tutkintoversiot
-     "Hakee kaikki tietyn tutkinnon tutkintoversiot"
-     [tutkintotunnus]
-     (sql/select tutkintoversio
-       (sql/where {:tutkintotunnus tutkintotunnus})))
+(defn hae-tutkintoversiot
+  "Hakee kaikki tietyn tutkinnon tutkintoversiot"
+  [tutkintotunnus]
+  (sql/select tutkintoversio
+    (sql/where {:tutkintotunnus tutkintotunnus})))
 
-   (defn hae
-     "Hakee tutkinnon tunnuksen perusteella"
-     [tutkintotunnus]
-     (let [tutkinto (hae-tutkinto tutkintotunnus)
-           opintoala (opintoala-arkisto/hae (:opintoala tutkinto))
-           sopimus-ja-tutkinto-rivit (hae-tutkintotunnukseen-liittyvat-sopimus-ja-tutkinto-rivit tutkintotunnus)]
-       (some-> tutkinto
-               (assoc :opintoala opintoala)
-               (assoc :sopimus_ja_tutkinto sopimus-ja-tutkinto-rivit))))
+(defn hae
+  "Hakee tutkinnon tunnuksen perusteella"
+  [tutkintotunnus]
+  (let [tutkinto (hae-tutkinto tutkintotunnus)
+        opintoala (opintoala-arkisto/hae (:opintoala tutkinto))
+        sopimus-ja-tutkinto-rivit (hae-tutkintotunnukseen-liittyvat-sopimus-ja-tutkinto-rivit tutkintotunnus)]
+    (some-> tutkinto
+            (assoc :opintoala opintoala)
+            (assoc :sopimus_ja_tutkinto sopimus-ja-tutkinto-rivit))))
 
-   (defn hae-opintoalat-tutkinnot
-     "Hakee listan kaikista opintoaloista ja tutkinnoista annetun termin perusteella"
-     [termi]
-     (let [opintoalat (sql/select opintoala
-                        (sql/fields [:opintoala_tkkoodi :tunnus] [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
-           tutkinnot (sql/select nayttotutkinto
-                       (sql/fields [:tutkintotunnus :tunnus] :nimi_fi :nimi_sv))
-           kaikki (concat opintoalat tutkinnot)]
+(defn hae-opintoalat-tutkinnot
+  "Hakee listan kaikista opintoaloista ja tutkinnoista annetun termin perusteella"
+  [termi]
+  (let [opintoalat (sql/select opintoala
+                     (sql/fields [:opintoala_tkkoodi :tunnus] [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
+        tutkinnot (sql/select nayttotutkinto
+                    (sql/fields [:tutkintotunnus :tunnus] :nimi_fi :nimi_sv))
+        kaikki (concat opintoalat tutkinnot)]
 
-       (->> kaikki
-         (filter #(sisaltaako-kentat? % [:nimi_fi :nimi_sv] termi))
-         (sort-by :nimi_fi))))
+    (->> kaikki
+      (filter #(sisaltaako-kentat? % [:nimi_fi :nimi_sv] termi))
+      (sort-by :nimi_fi))))
 
-   (defn hae-opintoalat-tutkinnot-osaamisalat-tutkinnonosat
-     "Hakee listan kaikista opintoaloista, tutkinnoista, osaamisaloista ja tutkinnon osista annetun termin perusteella."
-     [termi]
-     (let [opintoalat (sql/select opintoala
-                        (sql/fields [:opintoala_tkkoodi :tunnus] [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
-           osaamisalat (sql/select osaamisala
-                         (sql/fields [:osaamisalatunnus :tunnus] :nimi_fi :nimi_sv))
-           tutkinnonosat (sql/select tutkinnonosa
-                           (sql/fields [:osatunnus :tunnus] :nimi_fi :nimi_sv))
-           tutkinnot (sql/select nayttotutkinto
-                       (sql/fields [:tutkintotunnus :tunnus] :nimi_fi :nimi_sv))
-           kaikki (for [ala (concat opintoalat osaamisalat tutkinnonosat tutkinnot)]
-                    (assoc ala :termi (:nimi_fi ala)))]
-       (->> kaikki
-         (filter #(sisaltaako-kentat? % [:nimi_fi :nimi_sv] termi))
-         (sort-by :termi))))
+(defn hae-opintoalat-tutkinnot-osaamisalat-tutkinnonosat
+  "Hakee listan kaikista opintoaloista, tutkinnoista, osaamisaloista ja tutkinnon osista annetun termin perusteella."
+  [termi]
+  (let [opintoalat (sql/select opintoala
+                     (sql/fields [:opintoala_tkkoodi :tunnus] [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
+        osaamisalat (sql/select osaamisala
+                      (sql/fields [:osaamisalatunnus :tunnus] :nimi_fi :nimi_sv))
+        tutkinnonosat (sql/select tutkinnonosa
+                        (sql/fields [:osatunnus :tunnus] :nimi_fi :nimi_sv))
+        tutkinnot (sql/select nayttotutkinto
+                    (sql/fields [:tutkintotunnus :tunnus] :nimi_fi :nimi_sv))
+        kaikki (for [ala (concat opintoalat osaamisalat tutkinnonosat tutkinnot)]
+                 (assoc ala :termi (:nimi_fi ala)))]
+    (->> kaikki
+      (filter #(sisaltaako-kentat? % [:nimi_fi :nimi_sv] termi))
+      (sort-by :termi))))
 
-   (defn hae-toimikunnan-toimiala [tkunta]
-     (sql/select toimikunta-ja-tutkinto
-       (sql/with nayttotutkinto
-         (sql/with opintoala))
-       (sql/fields [:opintoala.selite_fi :opintoala_fi]
-                   [:opintoala.selite_sv :opintoala_sv]
-                   [:nayttotutkinto.nimi_fi :tutkinto_fi]
-                   [:nayttotutkinto.nimi_sv :tutkinto_sv])
-       (sql/where {:toimikunta tkunta})
-       (sql/order :opintoala.selite_fi)
-       (sql/order :nayttotutkinto.nimi_fi)))
+(defn hae-toimikunnan-toimiala [tkunta]
+  (sql/select toimikunta-ja-tutkinto
+    (sql/with nayttotutkinto
+      (sql/with opintoala))
+    (sql/fields [:opintoala.selite_fi :opintoala_fi]
+                [:opintoala.selite_sv :opintoala_sv]
+                [:nayttotutkinto.nimi_fi :tutkinto_fi]
+                [:nayttotutkinto.nimi_sv :tutkinto_sv])
+    (sql/where {:toimikunta tkunta})
+    (sql/order :opintoala.selite_fi)
+    (sql/order :nayttotutkinto.nimi_fi)))
 
-   (defn hae-ehdoilla [ehdot]
-     (let [nimi (str "%" (:nimi ehdot) "%")
-           tutkinnot (map voimassaolo/taydenna-tutkinnon-voimassaolo
-                          (sql/select nayttotutkinto
-                            (sql/with uusin-versio)
-                            (sql/with opintoala
-                              (sql/fields [:selite_fi :opintoala_fi] [:selite_sv :opintoala_sv]))
-                            (sql/where (or (blank? (:nimi ehdot))
-                                           {:nimi_fi [ilike nimi]}
-                                           {:nimi_sv [ilike nimi]}))))
-           palautettavat-tutkinnot (if (not= "kaikki" (:voimassa ehdot))
-                                     (filter :voimassa tutkinnot)
-                                     tutkinnot)]
-       (if (:avaimet ehdot)
-         (map #(select-keys % (:avaimet ehdot)) palautettavat-tutkinnot)
-         palautettavat-tutkinnot)))
+(defn hae-ehdoilla [ehdot]
+  (let [nimi (str "%" (:nimi ehdot) "%")
+        tutkinnot (map voimassaolo/taydenna-tutkinnon-voimassaolo
+                       (sql/select nayttotutkinto
+                         (sql/with uusin-versio)
+                         (sql/with opintoala
+                           (sql/fields [:selite_fi :opintoala_fi] [:selite_sv :opintoala_sv]))
+                         (sql/where (or (blank? (:nimi ehdot))
+                                        {:nimi_fi [ilike nimi]}
+                                        {:nimi_sv [ilike nimi]}))))
+        palautettavat-tutkinnot (if (not= "kaikki" (:voimassa ehdot))
+                                  (filter :voimassa tutkinnot)
+                                  tutkinnot)]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) palautettavat-tutkinnot)
+      palautettavat-tutkinnot)))
 
-   (defn hae-raportti [ehdot]
-     (let [tutkinnot (sql/select :tutkintoversio
-                       (sql/join :inner :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
-                       (sql/join :inner :opintoala (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
-                       (sql/join :inner :toimikunta_ja_tutkinto (= :toimikunta_ja_tutkinto.tutkintotunnus :nayttotutkinto.tutkintotunnus))
-                       (sql/join :inner :tutkintotoimikunta (= :tutkintotoimikunta.tkunta :toimikunta_ja_tutkinto.toimikunta))
-                       (sql/join :inner :toimikausi (= :toimikausi.toimikausi_id :tutkintotoimikunta.toimikausi_id))
-                       (sql/join :left [(sql/subselect :jarjestamissopimus
-                                          (sql/join :inner :sopimus_ja_tutkinto (and (= :sopimus_ja_tutkinto.jarjestamissopimusid :jarjestamissopimus.jarjestamissopimusid)
-                                                                                     (= :sopimus_ja_tutkinto.poistettu false)))
-                                          (sql/join :inner :koulutustoimija (= :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus))
-                                          (sql/fields :sopimus_ja_tutkinto.tutkintoversio :jarjestamissopimus.toimikunta
-                                                      :sopimus_ja_tutkinto.kieli :koulutustoimija.ytunnus
-                                                      [:koulutustoimija.nimi_fi :koulutustoimija_fi] :jarjestamissopimus.voimassa)) :sopimus]
-                                 (and (= :sopimus.tutkintoversio :tutkintoversio.tutkintoversio_id)
-                                      (= :sopimus.toimikunta :tutkintotoimikunta.tkunta)
-                                      (= :sopimus.voimassa true)))
-                       (sql/fields [:nayttotutkinto.opintoala :opintoalatunnus] [:opintoala.selite_fi :opintoala_fi]
-                                   :nayttotutkinto.tutkintotunnus :nayttotutkinto.tutkintotaso
-                                   [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
-                                   :tutkintoversio.peruste :sopimus.kieli :sopimus.ytunnus :sopimus.koulutustoimija_fi
-                                   [:tutkintotoimikunta.diaarinumero :toimikunta] [:tutkintotoimikunta.nimi_fi :toimikunta_fi]
-                                   :tutkintotoimikunta.toimikausi_alku :tutkintotoimikunta.toimikausi_loppu :tutkintotoimikunta.tilikoodi)
-                       (sql/aggregate (count :sopimus.ytunnus) :lukumaara)
-                       (sql/group :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :tutkintoversio.peruste
-                                  :sopimus.kieli :sopimus.koulutustoimija_fi :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.tkunta :opintoala.selite_fi :sopimus.ytunnus)
-                       (sql/order :tutkintotoimikunta.toimikausi_loppu :desc)
-                       (sql/order :nayttotutkinto.opintoala)
-                       (sql/order :nayttotutkinto.nimi_fi)
-                       (sql/order :sopimus.koulutustoimija_fi))]
-       (if (:avaimet ehdot)
-         (map #(select-keys % (:avaimet ehdot)) tutkinnot)
-         tutkinnot)))
+(defn hae-raportti [ehdot]
+  (let [tutkinnot (sql/select :tutkintoversio
+                    (sql/join :inner :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+                    (sql/join :inner :opintoala (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
+                    (sql/join :inner :toimikunta_ja_tutkinto (= :toimikunta_ja_tutkinto.tutkintotunnus :nayttotutkinto.tutkintotunnus))
+                    (sql/join :inner :tutkintotoimikunta (= :tutkintotoimikunta.tkunta :toimikunta_ja_tutkinto.toimikunta))
+                    (sql/join :inner :toimikausi (= :toimikausi.toimikausi_id :tutkintotoimikunta.toimikausi_id))
+                    (sql/join :left [(sql/subselect :jarjestamissopimus
+                                       (sql/join :inner :sopimus_ja_tutkinto (and (= :sopimus_ja_tutkinto.jarjestamissopimusid :jarjestamissopimus.jarjestamissopimusid)
+                                                                                  (= :sopimus_ja_tutkinto.poistettu false)))
+                                       (sql/join :inner :koulutustoimija (= :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus))
+                                       (sql/fields :sopimus_ja_tutkinto.tutkintoversio :jarjestamissopimus.toimikunta
+                                                   :sopimus_ja_tutkinto.kieli :koulutustoimija.ytunnus
+                                                   [:koulutustoimija.nimi_fi :koulutustoimija_fi] :jarjestamissopimus.voimassa)) :sopimus]
+                              (and (= :sopimus.tutkintoversio :tutkintoversio.tutkintoversio_id)
+                                   (= :sopimus.toimikunta :tutkintotoimikunta.tkunta)
+                                   (= :sopimus.voimassa true)))
+                    (sql/fields [:nayttotutkinto.opintoala :opintoalatunnus] [:opintoala.selite_fi :opintoala_fi]
+                                :nayttotutkinto.tutkintotunnus :nayttotutkinto.tutkintotaso
+                                [:nayttotutkinto.nimi_fi :tutkinto_fi] [:nayttotutkinto.nimi_sv :tutkinto_sv]
+                                :tutkintoversio.peruste :sopimus.kieli :sopimus.ytunnus :sopimus.koulutustoimija_fi
+                                [:tutkintotoimikunta.diaarinumero :toimikunta] [:tutkintotoimikunta.nimi_fi :toimikunta_fi]
+                                :tutkintotoimikunta.toimikausi_alku :tutkintotoimikunta.toimikausi_loppu :tutkintotoimikunta.tilikoodi)
+                    (sql/aggregate (count :sopimus.ytunnus) :lukumaara)
+                    (sql/group :nayttotutkinto.opintoala :nayttotutkinto.tutkintotunnus :tutkintoversio.peruste
+                               :sopimus.kieli :sopimus.koulutustoimija_fi :tutkintotoimikunta.nimi_fi :tutkintotoimikunta.tkunta :opintoala.selite_fi :sopimus.ytunnus)
+                    (sql/order :tutkintotoimikunta.toimikausi_loppu :desc)
+                    (sql/order :nayttotutkinto.opintoala)
+                    (sql/order :nayttotutkinto.nimi_fi)
+                    (sql/order :sopimus.koulutustoimija_fi))]
+    (if (:avaimet ehdot)
+      (map #(select-keys % (:avaimet ehdot)) tutkinnot)
+      tutkinnot)))
 
-   (defn ^:test-api poista-tutkintoversio!
-     "Poistaa tutkintoversion arkistosta"
-     [tutkintoversio_id]
-     (sql/delete tutkintoversio
-       (sql/where {:tutkintoversio_id tutkintoversio_id})))
+(defn ^:test-api poista-tutkintoversio!
+  "Poistaa tutkintoversion arkistosta"
+  [tutkintoversio_id]
+  (sql/delete tutkintoversio
+    (sql/where {:tutkintoversio_id tutkintoversio_id})))
 
-   (defn ^:test-api poista!
-     "Poistaa tutkinnon arkistosta."
-     [tutkintotunnus]
-     (sql/delete tutkintoversio
-       (sql/where {:tutkintotunnus tutkintotunnus}))
-     (sql/delete nayttotutkinto
-       (sql/where {:tutkintotunnus tutkintotunnus})))
+(defn ^:test-api poista!
+  "Poistaa tutkinnon arkistosta."
+  [tutkintotunnus]
+  (sql/delete tutkintoversio
+    (sql/where {:tutkintotunnus tutkintotunnus}))
+  (sql/delete nayttotutkinto
+    (sql/where {:tutkintotunnus tutkintotunnus})))
 
-   (defn hae-perusteen-tutkinnonosat [tutkintoversio-id]
-     (sql/select tutkinnonosa
-       (sql/where {:tutkintoversio tutkintoversio-id})))
+(defn hae-perusteen-tutkinnonosat [tutkintoversio-id]
+  (sql/select tutkinnonosa
+    (sql/where {:tutkintoversio tutkintoversio-id})))
 
-   (defn ^:integration-api paivita-osaamisalat!
-     "Päivittää tutkinnon perusteen osaamisalat"
-     [peruste]
-     (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste)))
-           osatunnus->id (into {} (for [osa (hae-perusteen-tutkinnonosat tutkintoversio-id)]
-                                    [(:osatunnus osa) (:tutkinnonosa_id osa)]))]
-       (sql/delete osaamisala-ja-tutkinnonosa
-         (sql/where {:osaamisala [in (sql/subselect osaamisala
-                                       (sql/fields :osaamisala_id)
-                                       (sql/where {:tutkintoversio tutkintoversio-id
-                                                   :osaamisalatunnus [not-in (map :osaamisalatunnus (:osaamisalat peruste))]}))]}))
-       (sql/delete osaamisala
-         (sql/where {:tutkintoversio tutkintoversio-id
-                     :osaamisalatunnus [not-in (map :osaamisalatunnus (:osaamisalat peruste))]}))
-       (doseq [oala (:osaamisalat peruste)]
-         (paivita-osaamisala! osatunnus->id (assoc (select-keys oala [:nimi_fi :nimi_sv :osaamisalatunnus])
-                                                   :tutkintoversio tutkintoversio-id)))))
+(defn ^:integration-api paivita-osaamisalat!
+  "Päivittää tutkinnon perusteen osaamisalat"
+  [peruste]
+  (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste)))
+        osatunnus->id (into {} (for [osa (hae-perusteen-tutkinnonosat tutkintoversio-id)]
+                                 [(:osatunnus osa) (:tutkinnonosa_id osa)]))]
+    (sql/delete osaamisala-ja-tutkinnonosa
+      (sql/where {:osaamisala [in (sql/subselect osaamisala
+                                    (sql/fields :osaamisala_id)
+                                    (sql/where {:tutkintoversio tutkintoversio-id
+                                                :osaamisalatunnus [not-in (map :osaamisalatunnus (:osaamisalat peruste))]}))]}))
+    (sql/delete osaamisala
+      (sql/where {:tutkintoversio tutkintoversio-id
+                  :osaamisalatunnus [not-in (map :osaamisalatunnus (:osaamisalat peruste))]}))
+    (doseq [oala (:osaamisalat peruste)]
+      (paivita-osaamisala! osatunnus->id (assoc (select-keys oala [:nimi_fi :nimi_sv :osaamisalatunnus])
+                                                :tutkintoversio tutkintoversio-id)))))
 
-   (defn ^:integration-api paivita-tutkinnonosat!
-     "Päivittää tutkinnon perusteen tutkinnonosat"
-     [peruste]
-     (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste)))]
-       (sql/delete osaamisala-ja-tutkinnonosa
-         (sql/where {:tutkinnonosa [in (sql/subselect tutkinnonosa
-                                         (sql/fields :tutkinnonosa_id)
-                                         (sql/where {:tutkintoversio tutkintoversio-id
-                                                     :osatunnus [not-in (map :osatunnus (:tutkinnonosat peruste))]}))]}))
-       (sql/delete sopimus-ja-tutkinto-ja-tutkinnonosa
-         (sql/where {:tutkinnonosa [in (sql/subselect tutkinnonosa
-                                         (sql/fields :tutkinnonosa_id)
-                                         (sql/where {:tutkintoversio tutkintoversio-id
-                                                     :osatunnus [not-in (map :osatunnus (:tutkinnonosat peruste))]}))]}))
-       (sql/delete tutkinnonosa
-         (sql/where {:tutkintoversio tutkintoversio-id
-                     :osatunnus [not-in (map :osatunnus (:tutkinnonosat peruste))]}))
-       (doseq [osa (:tutkinnonosat peruste)]
-         (sql-util/insert-or-update tutkinnonosa [:osatunnus :tutkintoversio] (assoc (select-keys osa [:osatunnus :nimi_fi :nimi_sv :jarjestysnumero])
-                                                                                     :tutkintoversio tutkintoversio-id)))))
+(defn ^:integration-api paivita-tutkinnonosat!
+  "Päivittää tutkinnon perusteen tutkinnonosat"
+  [peruste]
+  (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste)))]
+    (sql/delete osaamisala-ja-tutkinnonosa
+      (sql/where {:tutkinnonosa [in (sql/subselect tutkinnonosa
+                                      (sql/fields :tutkinnonosa_id)
+                                      (sql/where {:tutkintoversio tutkintoversio-id
+                                                  :osatunnus [not-in (map :osatunnus (:tutkinnonosat peruste))]}))]}))
+    (sql/delete sopimus-ja-tutkinto-ja-tutkinnonosa
+      (sql/where {:tutkinnonosa [in (sql/subselect tutkinnonosa
+                                      (sql/fields :tutkinnonosa_id)
+                                      (sql/where {:tutkintoversio tutkintoversio-id
+                                                  :osatunnus [not-in (map :osatunnus (:tutkinnonosat peruste))]}))]}))
+    (sql/delete tutkinnonosa
+      (sql/where {:tutkintoversio tutkintoversio-id
+                  :osatunnus [not-in (map :osatunnus (:tutkinnonosat peruste))]}))
+    (doseq [osa (:tutkinnonosat peruste)]
+      (sql-util/insert-or-update tutkinnonosa [:osatunnus :tutkintoversio] (assoc (select-keys osa [:osatunnus :nimi_fi :nimi_sv :jarjestysnumero])
+                                                                                  :tutkintoversio tutkintoversio-id)))))
 
-   (defn hae-viimeisin-eperusteet-paivitys []
-     (:paivitetty (sql-util/select-unique-or-nil eperusteet-log
-                    (sql/order :id :desc)
-                    (sql/limit 1)
-                    (sql/fields :paivitetty))))
+(defn hae-viimeisin-eperusteet-paivitys []
+  (:paivitetty (sql-util/select-unique-or-nil eperusteet-log
+                 (sql/order :id :desc)
+                 (sql/limit 1)
+                 (sql/fields :paivitetty))))
 
-   (defn ^:integration-api tallenna-viimeisin-eperusteet-paivitys! [ajankohta]
-     (sql/insert eperusteet-log
-       (sql/values {:paivitetty ajankohta})))
+(defn ^:integration-api tallenna-viimeisin-eperusteet-paivitys! [ajankohta]
+  (sql/insert eperusteet-log
+    (sql/values {:paivitetty ajankohta})))
