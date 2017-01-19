@@ -212,7 +212,10 @@
   []
   (sql/select nayttotutkinto
     (sql/join tutkintoversio)
-    (sql/where (> :tutkintoversio.siirtymaajan_loppupvm (sql/raw "current_date")))
+    (sql/where 
+      (and
+        (> :tutkintoversio.siirtymaajan_loppupvm (sql/raw "current_date"))
+        (not (= :tutkintoversio.peruste nil))))
     (sql/fields :tutkintoversio.tutkintoversio_id :tutkintotunnus :nimi_fi :nimi_sv :tutkintoversio.siirtymaajan_loppupvm :tutkintoversio.voimassa_loppupvm :tutkintoversio.peruste)
     ))
 
