@@ -234,60 +234,64 @@
         a-db (first (filter #(= a (select-keys % [:etunimi :sukunimi :nayttotutkintomestari :rooli])) db-arvioijat))]
     (:arvioija_id a-db))) 
     
+; TODO: refaktoroi luo-arvioijat! funktion kanssa
+; --> tästä ulos lista, ulkopuolella set suoritusten käsittelyyn. Lista parametrina luo-arvioijat! funktiolle.
 (defn ^:private arvioijatiedot
   "Tulkitsee arvioijalistan Excelistä ja palauttaa joukkona arvioijat"
-  [sheet ui-log]
-  (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
-        rivit (row-seq sheet)
-        arvioijat (nthrest rivit 1)
-        excel-arvioijat (atom #{})]
-    (try
-      (doseq [arvioija arvioijat]
-        (let [sukunimi (get-cell-str arvioija 0)
-              etunimi (get-cell-str arvioija 1)]
-          (when (not (empty? sukunimi))
-            (let [rooli (excel->edustus (get-cell-str arvioija 2))
-                  ntm (excel->boolean (get-cell-str arvioija 3))
-                  uusi-arvioija {:etunimi               etunimi
-                                 :sukunimi              sukunimi
-                                 :rooli                 rooli
-                                 :nayttotutkintomestari ntm}]
-              (swap! excel-arvioijat #(conj % uusi-arvioija)))))
-        (swap! rivi inc))
-      (catch Exception e
-        (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
-        (throw e)))
-    @excel-arvioijat))
+  ([sheet ui-log sukunimi-ind etunimi-ind]
+    (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
+          rivit (row-seq sheet)
+          arvioijat (nthrest rivit 1)
+          excel-arvioijat (atom #{})]
+      (try
+        (doseq [arvioija arvioijat]
+          (let [sukunimi (get-cell-str arvioija sukunimi-ind)
+                etunimi (get-cell-str arvioija etunimi-ind)]
+            (when (not (empty? sukunimi))
+              (let [rooli (excel->edustus (get-cell-str arvioija 2))
+                    ntm (excel->boolean (get-cell-str arvioija 3))
+                    uusi-arvioija {:etunimi               etunimi
+                                   :sukunimi              sukunimi
+                                   :rooli                 rooli
+                                   :nayttotutkintomestari ntm}]
+                (swap! excel-arvioijat #(conj % uusi-arvioija)))))
+          (swap! rivi inc))
+        (catch Exception e
+          (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
+          (throw e)))
+      @excel-arvioijat))
+  ([sheet ui-log] (arvioijatiedot sheet ui-log 0 1)))
 
-; TODO: refaktoroi
+; TODO: refaktoroi arvioijatiedot funktion kanssa
 (defn ^:private luo-arvioijat!
   "Luo tietokantaan ne arvioijat excelistä, jotka ovat uusia."
-  [sheet ui-log]
-  (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
-        rivit (row-seq sheet)
-        arvioijat (nthrest rivit 1)
-        db-arvioijat (set (map #(select-keys % [:etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
-    (try
-      (doseq [arvioija arvioijat]
-        (let [sukunimi (get-cell-str arvioija 0)
-              etunimi (get-cell-str arvioija 1)]
-          (when (not (empty? sukunimi))
-            (let [rooli (excel->edustus (get-cell-str arvioija 2))
-                  ntm (excel->boolean (get-cell-str arvioija 3))
-                  uusi-arvioija {:etunimi               etunimi
-                                 :sukunimi              sukunimi
-                                 :rooli                 rooli
-                                 :nayttotutkintomestari ntm}]
-              (if (contains? db-arvioijat uusi-arvioija)
-                (swap! ui-log conj (str "Arvioija on jo olemassa tietokannassa (" sukunimi "," etunimi ")"))
-                (do
-                  (log/info (str "Lisätään uusi arvioija (" sukunimi "," etunimi ")"))
-                  (swap! ui-log conj (str "Lisätään uusi arvioija (" sukunimi "," etunimi ")"))
-                  (arvioija-arkisto/lisaa! uusi-arvioija))))))
-        (swap! rivi inc))
-      (catch Exception e
-        (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
-        (throw e)))))
+  ([sheet ui-log sukunimi-ind etunimi-ind]
+    (let [rivi (atom 3) ; Excelissä rivi 3 on ensimmäinen rivi.
+          rivit (row-seq sheet)
+          arvioijat (nthrest rivit 1)
+          db-arvioijat (set (map #(select-keys % [:etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
+      (try
+        (doseq [arvioija arvioijat]
+          (let [sukunimi (get-cell-str arvioija sukunimi-ind)
+                etunimi (get-cell-str arvioija etunimi-ind)]
+            (when (not (empty? sukunimi))
+              (let [rooli (excel->edustus (get-cell-str arvioija 2))
+                    ntm (excel->boolean (get-cell-str arvioija 3))
+                    uusi-arvioija {:etunimi               etunimi
+                                   :sukunimi              sukunimi
+                                   :rooli                 rooli
+                                   :nayttotutkintomestari ntm}]
+                (if (contains? db-arvioijat uusi-arvioija)
+                  (swap! ui-log conj (str "Arvioija on jo olemassa tietokannassa (" sukunimi "," etunimi ")"))
+                  (do
+                    (log/info (str "Lisätään uusi arvioija (" sukunimi "," etunimi ")"))
+                    (swap! ui-log conj (str "Lisätään uusi arvioija (" sukunimi "," etunimi ")"))
+                    (arvioija-arkisto/lisaa! uusi-arvioija))))))
+          (swap! rivi inc))
+        (catch Exception e
+          (swap! ui-log conj (str "Poikkeus arvioijien käsittelyssä. Rivi: " @rivi ". Tarkista solujen sisältö: " e))
+          (throw e)))))
+  ([sheet ui-log] (luo-arvioijat! sheet ui-log 0 1)))
 
 (defn  nilstr [str]
   (if (empty? str) nil str)) 
@@ -498,15 +502,15 @@
                                                     :suoritusaika_alku :suoritusaika_loppu
                                                     :kieli :osaamisala :todistus]))))
 
-(defn ^:private versionumero
+(defn ^:private suoritukset-versionumero
   [rivit]
   (let [otsikot (nth rivit 3)]
     (reduce #(+ (.hashCode %1) (.hashCode %2)) (map #(.getStringCellValue %) (take 30 otsikot)))))
 
-(defn ^:private onko-vanha-versio? 
+(defn ^:private onko-vanha-suoritukset-versio? 
   "Palauttaa true jos kyse on 9.11. tai 4.11. 2016 käytössä olleesta excelin versiosta"
   [rivit]
-  (contains? #{851295559 612231933} (versionumero rivit)))
+  (contains? #{851295559 612231933} (suoritukset-versionumero rivit)))
 
 (defn ^:private luo-suoritukset-vanha-excel! 
   "Vanhan excel-version kanssa toimiva versio luo-suoritukset funktiosta. TODO: Tämä voidaan poistaa jossain kohtaa kokonaan kun vanha excel on poistunut käytöstä."
@@ -658,8 +662,8 @@
 
         ; versiotarkistus on vasta tässä tarkoituksella, jotta saadaan vanhallekin versiolle koulutuksen järjestäjän olemassaolotarkistus 
         ; Tämä voidaan poistaa kun vanha versio on poistunut kentältä käytöstä.
-        (log/info "Excel versionumero " (versionumero rivit))
-        (if (onko-vanha-versio? rivit)
+        (log/info "Excel versionumero " (suoritukset-versionumero rivit))
+        (if (onko-vanha-suoritukset-versio? rivit)
           (do
             (kirjaa-loki! import-log :info "Vanha excel-versio tunnistettu")           
             (luo-suoritukset-vanha-excel! arvioijatiedot sheet ui-log suorittajat-excel))
@@ -824,6 +828,26 @@
 ;     (let [wb (load-workbook "tutosat_taydennetty2.xlsx")]
 ;       (lue-excel! wb)))
 
+(defn ^:private arvioijat-versionumero
+  [rivit]
+  (let [otsikot (nth rivit 0)]     
+    (.hashCode (reduce #(str %1 %2) (map #(.getStringCellValue %) (take 4 otsikot))))))
+
+
+;=> (let [strz ["Etunimi" "Sukunimi"  "Edustaa" "NTM"]]
+;     (.hashCode (reduce #(str %1  %2) strz)))
+;-1537329872 -> kyse on ennen 19.1. 2017 käytössä olleesta Excelin versiosta. (kts. OPH-1920)
+
+;=> (let [strz ["Sukunimi" "Etunimi"  "Edustaa" "NTM"]]
+;     (.hashCode (reduce #(str %1  %2) strz)))
+; 749448266
+(defn ^:private nimi-indeksit 
+  "Palauttaa indeksit nimisarakkeisiin version perusteella"
+  [rivit]
+  (if (= -1537329872 (arvioijat-versionumero rivit))
+    {:sukunimi 1 :etunimi 0}
+    {:sukunimi 0 :etunimi 1}))
+
 ; Palauttaa vektorin, joka sisältää käyttäjälle lokin siitä miten import onnistui
 ; sisältää myös virheviestin jos tulee poikkeus siksi että tietoa ei voida tulkita sisäänlukemisen yhteydessä.
 (defn lue-excel! [excel-wb]
@@ -833,8 +857,11 @@
       (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)
           _ (log/info "Käsitellään arvioijat")
           _ (swap! ui-log conj "Käsitellään arvioijat..")
-          arvioijatiedot (arvioijatiedot (select-sheet "Arvioijat" excel-wb) ui-log)          
-          ui-log-arvioijat (luo-arvioijat! (select-sheet "Arvioijat" excel-wb) ui-log)
+          arvioija-rivit (row-seq (select-sheet "Arvioijat" excel-wb))
+          nimi-sarakkeet (nimi-indeksit arvioija-rivit)
+          _ (swap! ui-log conj "Arvioijatietojen versionumero " (arvioijat-versionumero arvioija-rivit))
+          arvioijatiedot (arvioijatiedot (select-sheet "Arvioijat" excel-wb) ui-log (:sukunimi nimi-sarakkeet) (:etunimi nimi-sarakkeet))          
+          ui-log-arvioijat (luo-arvioijat! (select-sheet "Arvioijat" excel-wb) ui-log (:sukunimi nimi-sarakkeet) (:etunimi nimi-sarakkeet))
           _ (log/info "Käsitellään opiskelijat")
           _ (swap! ui-log conj "Käsitellään opiskelijat..")
           opiskelijat (lue-opiskelijat (select-sheet "Tutkinnon suorittajat" excel-wb) ui-log)
