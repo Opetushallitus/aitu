@@ -243,8 +243,8 @@
         excel-arvioijat (atom #{})]
     (try
       (doseq [arvioija arvioijat]
-        (let [sukunimi (get-cell-str arvioija 1)
-              etunimi (get-cell-str arvioija 0)]
+        (let [sukunimi (get-cell-str arvioija 0)
+              etunimi (get-cell-str arvioija 1)]
           (when (not (empty? sukunimi))
             (let [rooli (excel->edustus (get-cell-str arvioija 2))
                   ntm (excel->boolean (get-cell-str arvioija 3))
@@ -269,8 +269,8 @@
         db-arvioijat (set (map #(select-keys % [:etunimi :sukunimi :rooli :nayttotutkintomestari]) (arvioija-arkisto/hae-kaikki)))]
     (try
       (doseq [arvioija arvioijat]
-        (let [sukunimi (get-cell-str arvioija 1)
-              etunimi (get-cell-str arvioija 0)]
+        (let [sukunimi (get-cell-str arvioija 0)
+              etunimi (get-cell-str arvioija 1)]
           (when (not (empty? sukunimi))
             (let [rooli (excel->edustus (get-cell-str arvioija 2))
                   ntm (excel->boolean (get-cell-str arvioija 3))
