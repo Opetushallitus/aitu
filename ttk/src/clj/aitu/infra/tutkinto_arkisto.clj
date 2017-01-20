@@ -296,15 +296,16 @@
 (defn hae-tutkinto
   "Hakee tutkinnon uusimman version"
   [tutkintotunnus]
-  (sql-util/select-unique-or-nil ; TODO: select-unique? 
-    nayttotutkinto
-    (sql/with uusin-versio)
-    (sql/with tutkintotyyppi
-      (sql/fields [:selite_fi :tyyppi_selite_fi]
-                  [:selite_sv :tyyppi_selite_sv]))
-    (sql/with tutkintotoimikunta
-      (sql/with toimikausi))
-    (sql/where {:tutkintotunnus tutkintotunnus})))
+  (first
+    (sql/select
+      nayttotutkinto
+      (sql/with uusin-versio)
+      (sql/with tutkintotyyppi
+        (sql/fields [:selite_fi :tyyppi_selite_fi]
+                    [:selite_sv :tyyppi_selite_sv]))
+      (sql/with tutkintotoimikunta
+        (sql/with toimikausi))
+      (sql/where {:tutkintotunnus tutkintotunnus}))))
 
 (defn hae-tutkintoversiot
   "Hakee kaikki tietyn tutkinnon tutkintoversiot"

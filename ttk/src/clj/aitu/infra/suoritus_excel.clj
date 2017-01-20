@@ -859,7 +859,7 @@
           _ (swap! ui-log conj "Käsitellään arvioijat..")
           arvioija-rivit (row-seq (select-sheet "Arvioijat" excel-wb))
           nimi-sarakkeet (nimi-indeksit arvioija-rivit)
-          _ (swap! ui-log conj "Arvioijatietojen versionumero " (arvioijat-versionumero arvioija-rivit))
+          _ (swap! ui-log conj (str "Arvioijatietojen versionumero " (arvioijat-versionumero arvioija-rivit)))
           arvioijatiedot (arvioijatiedot (select-sheet "Arvioijat" excel-wb) ui-log (:sukunimi nimi-sarakkeet) (:etunimi nimi-sarakkeet))          
           ui-log-arvioijat (luo-arvioijat! (select-sheet "Arvioijat" excel-wb) ui-log (:sukunimi nimi-sarakkeet) (:etunimi nimi-sarakkeet))
           _ (log/info "Käsitellään opiskelijat")

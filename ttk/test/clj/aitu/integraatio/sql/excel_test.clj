@@ -28,7 +28,7 @@
 ; :osaamisen_tunnustaminen false, :kieli "fi"}]})
 
 (def luku-result
-  ["Käsitellään arvioijat.." "Arvioija on jo olemassa tietokannassa (Ilmarinen,Seppo)" 
+  ["Käsitellään arvioijat.." "Arvioijatietojen versionumero 749448266" "Arvioija on jo olemassa tietokannassa (Ilmarinen,Seppo)" 
    "Lisätään uusi arvioija (Kullervoinen,Kullervo)" "Lisätään uusi arvioija (Väinämöinen,Väinö)" "Käsitellään opiskelijat.." 
    "Opiskelijat ok. Käsitellään suoritukset.." "------------------------" "Suoritusrivejä 1 kpl. Suorituksia kirjattu 1 kpl." 
    "------------------------" "------------------ tarkempi loki ----" 
