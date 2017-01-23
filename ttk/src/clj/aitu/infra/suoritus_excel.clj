@@ -512,6 +512,13 @@
   [rivit]
   (contains? #{851295559 612231933} (suoritukset-versionumero rivit)))
 
+
+(defn ^:private kirjaa-loki! [ui-log lev & args]
+  {:pre [(contains? #{:info :error :fatal} lev)]}
+  (let [msg (apply str args)]
+    (log/info msg)
+    (swap! ui-log conj [lev msg])))
+
 (defn ^:private luo-suoritukset-vanha-excel! 
   "Vanhan excel-version kanssa toimiva versio luo-suoritukset funktiosta. TODO: Tämä voidaan poistaa jossain kohtaa kokonaan kun vanha excel on poistunut käytöstä."
   [arvioijatiedot sheet ui-log suorittajat-excel]
@@ -537,103 +544,101 @@
           (reset! solu "suorittajan nimi")
           (let [nimisolu (.getCell suoritus 1)
                 nimi (when (not (nil? nimisolu)) (.getStringCellValue nimisolu))]
-            (when (not (empty? nimi))
-              (log/info ".. " nimi)
-              (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
-              (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 1)
-                                                         suorittajat-hetu
-                                                         suorittajat-oid
-                                                         suorittajat-excel)
-                    _ (reset! solu "tutkintotunnus")
-                    tutkintotunnus (get-cell-str suoritus 4)
-                    tutkintoversio (get-excel-tutperuste suoritus 23)
-                    _ (reset! solu "osaamisala") 
-                    osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
-                    _ (reset! solu "tutkinnon osa")
-                    osatunnus (parse-osatunnus (get-cell-str suoritus 6))
-                    _ (reset! solu "tunnustamisen pvm")
-                    tunnustamisen-pvm (date-or-nil suoritus 7) ; voi olla tyhjä
-                    _ (reset! solu "tutkintotilaisuus, alkupvm") ; voi olla tyhjä jos osaamisen tunnustaminen
-                    suoritus-alkupvm (date-or-nil suoritus 8)
-                    _ (reset! solu "tutkintotilaisuus, loppupvm")
-                    suoritus-loppupvm (date-or-nil suoritus 9) ; voi olla tyhjä jos osaamisen tunnustaminen
-                    _ (reset! solu "paikka")
-                    paikka (get-cell-str suoritus 10)
-                    _ (reset! solu "järjestelyt/työtehtävät")
-                    jarjestelyt (get-cell-str suoritus 11)
-                    _ (reset! solu "arviointikokous pvm")
-                    arviointikokous-pvm (date-or-nil suoritus 12) ; voi olla tyhjä jos osaamisen tunnustaminen
-                    _ (reset! solu "arvosana")
-                    arvosana (get-excel-arvosana suoritus 13)
-                    _ (reset! solu "todistus")
-                    todistus-valinta (get-cell-str suoritus 14)
-                    koko-tutkinto (= "Koko tutkinto" todistus-valinta)
-                    todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
-                    _ (reset! solu "suorituskieli")
-                    suorituskieli (get-cell-str suoritus 15)
-                    _ (reset! solu "arvosanan korotus")
-                    korotus (excel->boolean (get-cell-str suoritus 16))
+            (try 
+              (when (not (empty? nimi))
+                (log/info ".. " nimi)
+                (swap! ui-log conj (str "Käsitellään suoritus opiskelijalle " nimi))
+                (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 1)
+                                                           suorittajat-hetu
+                                                           suorittajat-oid
+                                                           suorittajat-excel)
+                      _ (reset! solu "tutkintotunnus")
+                      tutkintotunnus (get-cell-str suoritus 4)
+                      tutkintoversio (get-excel-tutperuste suoritus 23)
+                      _ (reset! solu "osaamisala") 
+                      osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
+                      _ (reset! solu "tutkinnon osa")
+                      osatunnus (parse-osatunnus (get-cell-str suoritus 6))
+                      _ (reset! solu "tunnustamisen pvm")
+                      tunnustamisen-pvm (date-or-nil suoritus 7) ; voi olla tyhjä
+                      _ (reset! solu "tutkintotilaisuus, alkupvm") ; voi olla tyhjä jos osaamisen tunnustaminen
+                      suoritus-alkupvm (date-or-nil suoritus 8)
+                      _ (reset! solu "tutkintotilaisuus, loppupvm")
+                      suoritus-loppupvm (date-or-nil suoritus 9) ; voi olla tyhjä jos osaamisen tunnustaminen
+                      _ (reset! solu "paikka")
+                      paikka (get-cell-str suoritus 10)
+                      _ (reset! solu "järjestelyt/työtehtävät")
+                      jarjestelyt (get-cell-str suoritus 11)
+                      _ (reset! solu "arviointikokous pvm")
+                      arviointikokous-pvm (date-or-nil suoritus 12) ; voi olla tyhjä jos osaamisen tunnustaminen
+                      _ (reset! solu "arvosana")
+                      arvosana (get-excel-arvosana suoritus 13)
+                      _ (reset! solu "todistus")
+                      todistus-valinta (get-cell-str suoritus 14)
+                      koko-tutkinto (= "Koko tutkinto" todistus-valinta)
+                      todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
+                      _ (reset! solu "suorituskieli")
+                      suorituskieli (get-cell-str suoritus 15)
+                      _ (reset! solu "arvosanan korotus")
+                      korotus (excel->boolean (get-cell-str suoritus 16))
                   
-                    _ (reset! solu "arvioija1")
-                    arvioija1 (get-cell-str suoritus 18)
-                    _ (reset! solu "arvioija2")
-                    arvioija2 (get-cell-str suoritus 19)
-                    _ (reset! solu "arvioija3")
-                    arvioija3 (get-cell-str suoritus 20)
+                      _ (reset! solu "arvioija1")
+                      arvioija1 (get-cell-str suoritus 18)
+                      _ (reset! solu "arvioija2")
+                      arvioija2 (get-cell-str suoritus 19)
+                      _ (reset! solu "arvioija3")
+                      arvioija3 (get-cell-str suoritus 20)
                     
-                    a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
-                    a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
-                    a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
+                      a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
+                      a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
+                      a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
 
-                    vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
-                    suorituskerta-map {:suorittaja suorittaja-id
-                                       :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
-                                       :tutkinto tutkintotunnus
-                                       :tutkintoversio_id tutkintoversio
-                                       :paikka paikka
-                                       :toimikunta vastuutoimikunta
-                                       :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
-                                       :jarjestelyt jarjestelyt
-                                       :opiskelijavuosi 1 ; TODO
-                                       :koulutustoimija jarjestaja
-                                       :suoritusaika_alku (date->iso-date suoritus-alkupvm)
-                                       :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
-                                       :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
-                                       :arvioijat (filter #(not (nil? (:arvioija_id %))) (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3}))
-                                       }
-                    suoritus-map {:suorittaja_id suorittaja-id
-                                  :arvosana arvosana
-                                  :todistus todistus
-                                  :osaamisala osaamisala-id
-                                  :kokotutkinto koko-tutkinto
-                                  :tutkinnonosa (:tutkinnonosa_id (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))) 
-                                  :arvosanan_korotus korotus
-                                  :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 
-                                  :kieli (parse-kieli suorituskieli)
-                                  }
-                    suoritus-full (merge suorituskerta-map
-                                         {:osat [suoritus-map]})]
-                (log/info "suoritus..! " (merge suorituskerta-map suoritus-map))
+                      vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
+                      suorituskerta-map {:suorittaja suorittaja-id
+                                         :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
+                                         :tutkinto tutkintotunnus
+                                         :tutkintoversio_id tutkintoversio
+                                         :paikka paikka
+                                         :toimikunta vastuutoimikunta
+                                         :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
+                                         :jarjestelyt jarjestelyt
+                                         :opiskelijavuosi 1 ; TODO
+                                         :koulutustoimija jarjestaja
+                                         :suoritusaika_alku (date->iso-date suoritus-alkupvm)
+                                         :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
+                                         :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
+                                         :arvioijat (filter #(not (nil? (:arvioija_id %))) (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3}))
+                                         }
+                      suoritus-map {:suorittaja_id suorittaja-id
+                                    :arvosana arvosana
+                                    :todistus todistus
+                                    :osaamisala osaamisala-id
+                                    :kokotutkinto koko-tutkinto
+                                    :tutkinnonosa (:tutkinnonosa_id (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))) 
+                                    :arvosanan_korotus korotus
+                                    :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 
+                                    :kieli (parse-kieli suorituskieli)
+                                    }
+                      suoritus-full (merge suorituskerta-map
+                                           {:osat [suoritus-map]})]
+                  (log/info "suoritus..! " (merge suorituskerta-map suoritus-map))
               
-                (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map))
-                  (do
-                   (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
-                   (log/info "ohitetaan duplikaatti suoritus"))
-                  (do
-                    (log/info "Lisätään suorituskerta .." suorituskerta-map)
-                    (log/info "Lisätään suoritus .." suoritus-map)
-                    (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
-                    (suoritus-arkisto/lisaa! suoritus-full))))))
+                  (if (olemassaoleva-suoritus? suoritukset-alussa (merge suorituskerta-map suoritus-map))
+                    (do
+                     (swap! ui-log conj (str "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus)))))
+                     (log/info "ohitetaan duplikaatti suoritus"))
+                    (do
+                      (log/info "Lisätään suorituskerta .." suorituskerta-map)
+                      (log/info "Lisätään suoritus .." suoritus-map)
+                      (swap! ui-log conj (str "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio})))))
+                      (suoritus-arkisto/lisaa! suoritus-full)))))
+              (catch Exception e
+                (swap! ui-log conj (str "Virhe suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))                        
+                )))
           (swap! rivi inc)))
       (catch Exception e
-        (swap! ui-log conj (str "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))
+        (swap! ui-log conj (str "Suoritusten käsittelyssä tapahtui virhe, josta ei voitu toipua, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))
         (throw e)))))
-
-(defn ^:private kirjaa-loki! [ui-log lev & args]
-  {:pre [(contains? #{:info :error :fatal} lev)]}
-  (let [msg (apply str args)]
-    (log/info msg)
-    (swap! ui-log conj [lev msg])))
 
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log suorittajat-excel]
@@ -675,142 +680,146 @@
                 (when (not (empty? nimi))
                   (swap! rivicount inc)
                   (kirjaa-loki! import-log :info "Käsitellään suoritus opiskelijalle " nimi)
-                  (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 1)
-                                                             suorittajat-hetu
-                                                             suorittajat-oid
-                                                             suorittajat-excel)
-                        _ (reset! solu "tutkintotunnus")
-                        tutkintotunnus (get-cell-str suoritus 4)
-                        tutkintoversio (get-excel-tutperuste suoritus 26)
-                        _ (reset! solu "kohdistuva/suoritettava tutkinto")
-                        tutkintoversio-suoritettava (or (get-excel-tutperuste suoritus 28) tutkintoversio)
-                        _ (reset! solu "osaamisala") 
-                        osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
-                        _ (reset! solu "tutkinnon osa")
-                        osatunnus (parse-osatunnus (get-cell-str suoritus 6))
-                        _ (reset! solu "liittämisen pvm")
-                        liittamisen-pvm (date-or-nil suoritus 8)
-                        _ (reset! solu "tunnustamisen pvm")
-                        tunnustamisen-pvm (date-or-nil suoritus 9) ; voi olla tyhjä
-                        _ (reset! solu "tutkintotilaisuus, alkupvm") ; voi olla tyhjä jos osaamisen tunnustaminen
-                        suoritus-alkupvm (date-or-nil suoritus 10)
-                        _ (reset! solu "tutkintotilaisuus, loppupvm")
-                        suoritus-loppupvm (date-or-nil suoritus 11) ; voi olla tyhjä jos osaamisen tunnustaminen
-                        _ (reset! solu "paikka")
-                        paikka (get-cell-str suoritus 12)
-                        _ (reset! solu "järjestelyt/työtehtävät")
-                        jarjestelyt (get-cell-str suoritus 13)
-                        _ (reset! solu "arviointikokous pvm")
-                        arviointikokous-pvm (date-or-nil suoritus 14) ; voi olla tyhjä jos osaamisen tunnustaminen
-                        _ (reset! solu "arvosana")
-                        arvosana (get-excel-arvosana suoritus 15)
-                        _ (reset! solu "todistus")
-                        todistus-valinta (get-cell-str suoritus 16)
-                        koko-tutkinto (= "Koko tutkinto" todistus-valinta)
-                        todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
-                        _ (reset! solu "suorituskieli")
-                        suorituskieli (get-cell-str suoritus 17)
-                        _ (reset! solu "arvosanan korotus")
-                        korotus (excel->boolean (get-cell-str suoritus 18))
+                  (try 
+                    (let [suorittaja-id (tulkitse-suorittajaid (.getCell suoritus 1)
+                                                               suorittajat-hetu
+                                                               suorittajat-oid
+                                                               suorittajat-excel)
+                          _ (reset! solu "tutkintotunnus")
+                          tutkintotunnus (get-cell-str suoritus 4)
+                          tutkintoversio (get-excel-tutperuste suoritus 26)
+                          _ (reset! solu "kohdistuva/suoritettava tutkinto")
+                          tutkintoversio-suoritettava (or (get-excel-tutperuste suoritus 28) tutkintoversio)
+                          _ (reset! solu "osaamisala") 
+                          osaamisala-id (parse-osaamisala (get-cell-str suoritus 5))
+                          _ (reset! solu "tutkinnon osa")
+                          osatunnus (parse-osatunnus (get-cell-str suoritus 6))
+                          _ (reset! solu "liittämisen pvm")
+                          liittamisen-pvm (date-or-nil suoritus 8)
+                          _ (reset! solu "tunnustamisen pvm")
+                          tunnustamisen-pvm (date-or-nil suoritus 9) ; voi olla tyhjä
+                          _ (reset! solu "tutkintotilaisuus, alkupvm") ; voi olla tyhjä jos osaamisen tunnustaminen
+                          suoritus-alkupvm (date-or-nil suoritus 10)
+                          _ (reset! solu "tutkintotilaisuus, loppupvm")
+                          suoritus-loppupvm (date-or-nil suoritus 11) ; voi olla tyhjä jos osaamisen tunnustaminen
+                          _ (reset! solu "paikka")
+                          paikka (get-cell-str suoritus 12)
+                          _ (reset! solu "järjestelyt/työtehtävät")
+                          jarjestelyt (get-cell-str suoritus 13)
+                          _ (reset! solu "arviointikokous pvm")
+                          arviointikokous-pvm (date-or-nil suoritus 14) ; voi olla tyhjä jos osaamisen tunnustaminen
+                          _ (reset! solu "arvosana")
+                          arvosana (get-excel-arvosana suoritus 15)
+                          _ (reset! solu "todistus")
+                          todistus-valinta (get-cell-str suoritus 16)
+                          koko-tutkinto (= "Koko tutkinto" todistus-valinta)
+                          todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
+                          _ (reset! solu "suorituskieli")
+                          suorituskieli (get-cell-str suoritus 17)
+                          _ (reset! solu "arvosanan korotus")
+                          korotus (excel->boolean (get-cell-str suoritus 18))
                   
-                        _ (reset! solu "arvioija1")
-                        arvioija1 (get-cell-str suoritus 19)
-                        _ (reset! solu "arvioija2")
-                        arvioija2 (get-cell-str suoritus 20)
-                        _ (reset! solu "arvioija3")
-                        arvioija3 (get-cell-str suoritus 21)
+                          _ (reset! solu "arvioija1")
+                          arvioija1 (get-cell-str suoritus 19)
+                          _ (reset! solu "arvioija2")
+                          arvioija2 (get-cell-str suoritus 20)
+                          _ (reset! solu "arvioija3")
+                          arvioija3 (get-cell-str suoritus 21)
                     
-                        a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
-                        a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
-                        a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
+                          a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
+                          a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
+                          a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
                     
-                        kouljarjestaja (get-cell-str suoritus 22) ; koulutuksen järjestäjän y-tunnus, solu Wn
-                        koulj (koulutustoimija-arkisto/hae-tiedot kouljarjestaja)
-                        kouljarj-nimi (get-cell-str suoritus 23)
+                          kouljarjestaja (get-cell-str suoritus 22) ; koulutuksen järjestäjän y-tunnus, solu Wn
+                          koulj (koulutustoimija-arkisto/hae-tiedot kouljarjestaja)
+                          kouljarj-nimi (get-cell-str suoritus 23)
 
-                        vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
-                        suorituskerta-map {:suorittaja suorittaja-id
-                                           :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
-                                           :tutkinto tutkintotunnus
-                                           :tutkintoversio_id tutkintoversio
-                                           :paikka paikka
-                                           :toimikunta vastuutoimikunta
-                                           :tutkintoversio_suoritettava tutkintoversio-suoritettava
-                                           :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
-                                           :liitetty_pvm (date->iso-date liittamisen-pvm)
-                                           :jarjestelyt jarjestelyt
-                                           :opiskelijavuosi 1 ; TODO
-                                           :koulutustoimija jarjestaja
-                                           :kouljarjestaja (:ytunnus koulj) ; nil -> nil
-                                           :suoritusaika_alku (date->iso-date suoritus-alkupvm)
-                                           :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
-                                           :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
-                                           :arvioijat (filter #(not (nil? (:arvioija_id %))) (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3}))
-                                           }
-                        suoritus-map {:suorittaja_id suorittaja-id
-                                      :arvosana arvosana
-                                      :todistus todistus
-                                      :osaamisala osaamisala-id
-                                      :kokotutkinto koko-tutkinto
-                                      :tutkinnonosa (:tutkinnonosa_id (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))) 
-                                      :arvosanan_korotus korotus
-                                      :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 
-                                      :kieli (parse-kieli suorituskieli)
-                                      }
-                        suoritus-full (merge suorituskerta-map
-                                             {:osat [suoritus-map]})]
-                    (when (nil? suorittaja-id)
-                      (throw (new RuntimeException (str "Suorittajaa ei voitu tulkita: " (get-cell-str 1)))))
-                    (log/info "suoritus..! " (merge suorituskerta-map suoritus-map))
+                          vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
+                          suorituskerta-map {:suorittaja suorittaja-id
+                                             :rahoitusmuoto (:rahoitusmuoto_id (first (get suorittajamap suorittaja-id)))
+                                             :tutkinto tutkintotunnus
+                                             :tutkintoversio_id tutkintoversio
+                                             :paikka paikka
+                                             :toimikunta vastuutoimikunta
+                                             :tutkintoversio_suoritettava tutkintoversio-suoritettava
+                                             :arviointikokouksen_pvm (date->iso-date arviointikokous-pvm)
+                                             :liitetty_pvm (date->iso-date liittamisen-pvm)
+                                             :jarjestelyt jarjestelyt
+                                             :opiskelijavuosi 1 ; TODO
+                                             :koulutustoimija jarjestaja
+                                             :kouljarjestaja (:ytunnus koulj) ; nil -> nil
+                                             :suoritusaika_alku (date->iso-date suoritus-alkupvm)
+                                             :suoritusaika_loppu (date->iso-date suoritus-loppupvm)
+                                             :jarjestamismuoto "oppilaitosmuotoinen" ; TODO oppilaitosmuotoinen'::character varying, 'oppisopimuskoulutus
+                                             :arvioijat (filter #(not (nil? (:arvioija_id %))) (list {:arvioija_id a1} {:arvioija_id a2} {:arvioija_id a3}))
+                                             }
+                          suoritus-map {:suorittaja_id suorittaja-id
+                                        :arvosana arvosana
+                                        :todistus todistus
+                                        :osaamisala osaamisala-id
+                                        :kokotutkinto koko-tutkinto
+                                        :tutkinnonosa (:tutkinnonosa_id (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))) 
+                                        :arvosanan_korotus korotus
+                                        :osaamisen_tunnustaminen (date->iso-date tunnustamisen-pvm) 
+                                        :kieli (parse-kieli suorituskieli)
+                                        }
+                          suoritus-full (merge suorituskerta-map
+                                               {:osat [suoritus-map]})]
+                      (when (nil? suorittaja-id)
+                        (throw (new RuntimeException (str "Suorittajaa ei voitu tulkita: " (get-cell-str 1)))))
+                      (log/info "suoritus..! " (merge suorituskerta-map suoritus-map))
 
                 
-                    (when (and (not (empty? kouljarjestaja))
-                               (empty? koulj))
-                      (kirjaa-loki! import-log :error "Tutkinnon järjestäjää ei löydy: " kouljarjestaja " , nimi " kouljarj-nimi))
+                      (when (and (not (empty? kouljarjestaja))
+                                 (empty? koulj))
+                        (kirjaa-loki! import-log :error "Tutkinnon järjestäjää ei löydy: " kouljarjestaja " , nimi " kouljarj-nimi))
                 
-                    ; Suorituksen lisääminen
-                    (if (olemassaoleva-suoritus? @suoritukset-set (merge suorituskerta-map suoritus-map))
-                      (kirjaa-loki! import-log :info "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                      ; Suorituksen lisääminen
+                      (if (olemassaoleva-suoritus? @suoritukset-set (merge suorituskerta-map suoritus-map))
+                        (kirjaa-loki! import-log :info "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                       
-                      (if (and (empty? (:osaamisen_tunnustaminen suoritus-map))
-                               (nil? liittamisen-pvm)
-                               (or (empty? (:suoritusaika_alku suorituskerta-map))
-                                   (empty? (:suoritusaika_loppu suorituskerta-map))
-                                   (nil? (:arvosana suoritus-map))
-                                   (nil? (:todistus suoritus-map))
-                                   (nil? (:tutkinnonosa suoritus-map))
-                                   (nil? (:kieli suoritus-map))))
-                        (kirjaa-loki! import-log :info "Ei kirjata suoritusta, pakollisia tietoja puuttuu: "nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
-                        (do
-                          (log/info "Lisätään suorituskerta .." suorituskerta-map)
-                          (log/info "Lisätään suoritus .." suoritus-map)
-                          (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
-                          (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))
-                          (swap! suorituscount inc))))
+                        (if (and (empty? (:osaamisen_tunnustaminen suoritus-map))
+                                 (nil? liittamisen-pvm)
+                                 (or (empty? (:suoritusaika_alku suorituskerta-map))
+                                     (empty? (:suoritusaika_loppu suorituskerta-map))
+                                     (nil? (:arvosana suoritus-map))
+                                     (nil? (:todistus suoritus-map))
+                                     (nil? (:tutkinnonosa suoritus-map))
+                                     (nil? (:kieli suoritus-map))))
+                          (kirjaa-loki! import-log :info "Ei kirjata suoritusta, pakollisia tietoja puuttuu: "nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
+                          (do
+                            (log/info "Lisätään suorituskerta .." suorituskerta-map)
+                            (log/info "Lisätään suoritus .." suoritus-map)
+                            (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
+                            (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))
+                            (swap! suorituscount inc))))
                 
-                    ; Suorituksen liittäminen toiseen tutkintoon
-                    ; Liittäminen voi kohdistua äsken kirjattuun suoritusriviin
-                    (if (not (nil? liittamisen-pvm))
-                      (if (= tutkintoversio-suoritettava tutkintoversio)
-                      (kirjaa-loki! import-log :info "Suoritusta ei voi liittää samaan tutkintoon: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
-                      (do
-                        (let [aiemmat (hae-suoritus @suoritukset-set (merge suorituskerta-map suoritus-map)
-                                                                   [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
-                                                                    :arvosana])
-                              aiempi-suoritus (first aiemmat)]
-                          (if (nil? aiempi-suoritus)
-                            (kirjaa-loki! import-log :error "Liittäminen - aiempaa suoritusta liittämistä varten ei löydy, mutta siirto tehty ok. " nimi " " (:nimi_fi (first (get osamap osatunnus))))
-                            (if (> (count aiemmat) 1)
-                              (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
-                              (do
-                                (kirjaa-loki! import-log :info "Liitetään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio-suoritettava}))))
-                                (suoritus-arkisto/liita-suoritus! {:suorituskerta_id (:suorituskerta_id aiempi-suoritus)
-                                                                   :tutkintoversio_suoritettava tutkintoversio-suoritettava
-                                                                   :liitetty_pvm (date->iso-date liittamisen-pvm)})))))
-                      ))))))
-              (swap! rivi inc)))))
+                      ; Suorituksen liittäminen toiseen tutkintoon
+                      ; Liittäminen voi kohdistua äsken kirjattuun suoritusriviin
+                      (if (not (nil? liittamisen-pvm))
+                        (if (= tutkintoversio-suoritettava tutkintoversio)
+                        (kirjaa-loki! import-log :info "Suoritusta ei voi liittää samaan tutkintoon: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                        (do
+                          (let [aiemmat (hae-suoritus @suoritukset-set (merge suorituskerta-map suoritus-map)
+                                                                     [:suorittaja :tutkinto :tutkinnonosa :koulutustoimija
+                                                                      :arvosana])
+                                aiempi-suoritus (first aiemmat)]
+                            (if (nil? aiempi-suoritus)
+                              (kirjaa-loki! import-log :error "Liittäminen - aiempaa suoritusta liittämistä varten ei löydy, mutta siirto tehty ok. " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                              (if (> (count aiemmat) 1)
+                                (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                                (do
+                                  (kirjaa-loki! import-log :info "Liitetään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio-suoritettava}))))
+                                  (suoritus-arkisto/liita-suoritus! {:suorituskerta_id (:suorituskerta_id aiempi-suoritus)
+                                                                     :tutkintoversio_suoritettava tutkintoversio-suoritettava
+                                                                     :liitetty_pvm (date->iso-date liittamisen-pvm)})))))
+                        ))))
+                        (catch Exception e
+                          (kirjaa-loki! import-log :error "Virhe suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e)                          
+                    )))
+                (swap! rivi inc))))))
       (catch Exception e
-        (kirjaa-loki! import-log :fatal "Poikkeus suoritusten käsittelyssä, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e)
+        (kirjaa-loki! import-log :fatal "Suoritusten käsittelyssä tapahtui virhe, josta ei voitu toipua, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e)
         (throw e))
       (finally
         ; käsitellään lokiviestit

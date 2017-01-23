@@ -35,6 +35,32 @@
    "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen"
    "Suoritukset ok."])
 
+(def luku-result-virheita
+  ["Käsitellään arvioijat.."
+ "Arvioijatietojen versionumero 749448266"
+ "Arvioija on jo olemassa tietokannassa (Ilmarinen,Seppo)"
+ "Lisätään uusi arvioija (Kullervoinen,Kullervo)"
+ "Lisätään uusi arvioija (Väinämöinen,Väinö)"
+ "Käsitellään opiskelijat.."
+ "Opiskelijat ok. Käsitellään suoritukset.."
+ "------------------------"
+ "Suoritusrivejä 4 kpl. Suorituksia kirjattu 1 kpl."
+ "------------------------"
+ "Virhe suoritusten käsittelyssä, rivi: 6 . Tieto: tutkintotunnus . Tarkista solujen sisältö: java.lang.IllegalStateException: Cannot get a numeric value from a text cell"
+ "Virhe suoritusten käsittelyssä, rivi: 7 . Tieto: tutkinnon osa . Tarkista solujen sisältö: java.lang.NullPointerException"
+ "Virhe suoritusten käsittelyssä, rivi: 8 . Tieto: tutkintotunnus . Tarkista solujen sisältö: java.lang.IllegalStateException: Cannot get a numeric value from a text cell"
+ "------------------ tarkempi loki ----"
+ "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)"
+ "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen"
+ "Käsitellään suoritus opiskelijalle Opiskelija Orvokki (fan.far.12345)"
+ "Virhe suoritusten käsittelyssä, rivi: 6 . Tieto: tutkintotunnus . Tarkista solujen sisältö: java.lang.IllegalStateException: Cannot get a numeric value from a text cell"
+ "Käsitellään suoritus opiskelijalle Opiskelija Orvokki (fan.far.12345)"
+ "Virhe suoritusten käsittelyssä, rivi: 7 . Tieto: tutkinnon osa . Tarkista solujen sisältö: java.lang.NullPointerException"
+ "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)"
+ "Virhe suoritusten käsittelyssä, rivi: 8 . Tieto: tutkintotunnus . Tarkista solujen sisältö: java.lang.IllegalStateException: Cannot get a numeric value from a text cell"
+ "Suoritukset ok."]
+)
+
 (deftest ^:integraatio excel-import-test
   (let [wb (load-workbook "test-resources/tutosat_perus.xlsx")
         ui-log (lue-excel! wb)]
@@ -52,3 +78,9 @@
   (is (nil? (nilstr "")))
   (is (nil? (nilstr nil)))
   (is (= "a" (nilstr "a"))))
+
+(deftest ^:integraatio excel-import-test-virhekasittely
+  (let [wb (load-workbook "test-resources/tutosat_pahastivialla.xlsx")
+        ui-log (lue-excel! wb)]
+    (is (= ui-log luku-result-virheita))))
+    
