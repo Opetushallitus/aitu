@@ -36,11 +36,6 @@
   (is (thrown? IllegalArgumentException (parse-osaamisala "Kreegah bundolo")))
   (is (thrown? IllegalArgumentException (parse-osaamisala "Fo (12"))))
 
-(deftest ^:integraatio opiskelija-duplikaattien-tarkistus
-  (let [kaikki (suorittaja-arkisto/hae-kaikki)]
-    (is (true? (opiskelija-olemassa? {:etunimi "Orvokki" :sukunimi "Opiskelija" :hetu "121212-912X" :oid "fan.far.12345"} kaikki)))
-    (is (false? (opiskelija-olemassa? {:etunimi "Orvokki" :sukunimi "Opiskelija" :hetu nil :oid "dadaa"} kaikki)))))
-
 (def suoritus
   (let [suorituskerta-map {:suorittaja -1
                            :rahoitusmuoto 1 
