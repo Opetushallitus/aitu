@@ -25,6 +25,7 @@
              "arvioija"
              "suoritus"
              "suorituskerta"
+             "suorittaja"
              "jarjestamissuunnitelma"
              "sopimus_ja_tutkinto_ja_osaamisala"
              "sopimuksen_liite"

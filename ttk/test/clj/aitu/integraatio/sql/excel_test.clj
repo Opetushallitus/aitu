@@ -16,8 +16,9 @@
   (:require [clojure.test :refer [deftest testing is are use-fixtures]]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [aitu.integraatio.sql.test-data-util :refer :all]
-            [aitu.infra.suoritus-excel :refer [parse-opiskelija nilstr lue-excel!]]
+            [aitu.infra.suoritus-excel :refer [parse-opiskelija nilstr lue-excel! paivita-opiskelija-tiedot!]]
             [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
+            [aitu.infra.suorittaja-arkisto :as suorittaja-arkisto]            
             [dk.ative.docjure.spreadsheet :refer [load-workbook]]
             ))
 
@@ -73,6 +74,25 @@
   (is (= {:nimi "a b", :oid nil, :hetu nil} (parse-opiskelija "a b ()")))
   (is (= {:nimi "a b", :oid "d", :hetu nil} (parse-opiskelija "a b (d)")))
   (is (= {:nimi "a b", :oid "d", :hetu "1234-x"} (parse-opiskelija "a b (d,1234-x)"))))
+
+(deftest ^:integraatio paivita-opiskelija-test
+  (let [ui-log (atom [])
+        orvokki {:hetu "120303-112X"
+                 :etunimi "Orvokki"
+                 :sukunimi "Outolempi"}
+        uusi (suorittaja-arkisto/lisaa! orvokki)
+        ops (suorittaja-arkisto/hae-kaikki)
+        orv-uusi {:hetu "120303-112X"
+                  :etunimi "Otso"
+                  :sukunimi "Outolempi"}]
+    (println ops)
+    (is (= false (paivita-opiskelija-tiedot! {:hetu "fu"} ops ui-log)))
+    (is (= true (paivita-opiskelija-tiedot! orvokki ops ui-log)))
+    (testing "Nimenmuutos päivittää tiedot"
+       (is (= true (paivita-opiskelija-tiedot! orv-uusi ops ui-log)))
+       (is (= ["Henkilön nimi on muuttunut, päivitetään nimi: {:etunimi \"Orvokki\", :sukunimi \"Outolempi\"} -> {:etunimi \"Otso\", :sukunimi \"Outolempi\"}"]
+              @ui-log))       
+       (is (= "Otso" (:etunimi (suorittaja-arkisto/hae (:suorittaja_id uusi))))))))
 
 (deftest ^:integraatio  nilstr-test
   (is (nil? (nilstr "")))

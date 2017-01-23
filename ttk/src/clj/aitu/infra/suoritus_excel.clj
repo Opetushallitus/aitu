@@ -343,7 +343,9 @@
       ; ei löydetty hetulla/oid-tunnuksella. Kyse on vanhasta excelistä, jossa opiskelijan hetu ei ollut pakollinen tunnistetieto.
       (filter #(= (clojure.string/trim (str (:sukunimi %) " " (:etunimi %))) (:nimi op)) excel-opiskelijat))))
         
-(defn opiskelija-olemassa? [tiedot kaikki-seq]  
+(defn paivita-opiskelija-tiedot!
+  "Palauttaa true jos opiskelija löytyi jo tietokannasta. Tarvittaessa päivittää nimen."
+  [tiedot kaikki-seq ui-log]  
   (let [op (hae-opiskelija tiedot kaikki-seq)]
     (if (empty? op) 
       false ; Opiskelijaa ei löytynyt hetulla / oid:lla
@@ -351,7 +353,11 @@
             aiempi  (select-keys (first op) [:etunimi :sukunimi]) ]
       (if (= aiempi uusi)
         true ; Opiskelija löytyi, samat nimitiedot
-        (throw (IllegalArgumentException. (str "Samalla hetu/oid tunnisteella on eri niminen henkilö. Uusi henkilö : " uusi " ja vanha: " aiempi))))))))
+        ; Opiskelija löytyi, eri nimi tiedot, päivitetään nimi
+        (do
+          (suorittaja-arkisto/tallenna! (:suorittaja_id (first op)) uusi)
+          (swap! ui-log conj (str "Henkilön nimi on muuttunut, päivitetään nimi: " aiempi " -> " uusi))
+          true))))))
 
 ; O(n), mutta ei ongelma koska excelissä on max. vähän opiskelijoita 
 (defn ^:private tulkitse-suorittajaid [^org.apache.poi.ss.usermodel.Cell suorittaja-cell
@@ -410,7 +416,7 @@
               hetu (:hetu opiskelija)]
  
           (when (not (empty? sukunimi))
-            (when (not (opiskelija-olemassa? opiskelija db-opiskelijat))
+            (when (not (paivita-opiskelija-tiedot! opiskelija db-opiskelijat ui-log))
               (log/info (str "käsitellään uusi opiskelija " etunimi " " sukunimi))
               (swap! ui-log conj (str "Käsitellään uusi opiskelija " etunimi " " sukunimi))
               (if (and (:hetu opiskelija) (not (sade-validators/valid-hetu? (:hetu opiskelija))))
