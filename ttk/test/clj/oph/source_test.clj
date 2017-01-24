@@ -19,7 +19,9 @@
             [oph.source-util :refer :all]))
 
 (deftest audit-log-kutsut-ovat-olemassa
-  (is (empty? (vastaavat-muodot "src/clj" audit-log-kutsu-puuttuu? :ohita ["src/clj/aitu/auditlog.clj"]))))
+  (is (empty? (vastaavat-muodot "src/clj" audit-log-kutsu-puuttuu? 
+                                :ohita ["src/clj/aitu/auditlog.clj"
+                                        "src/clj/aitu/infra/suoritus_excel.clj"]))))
 
 (deftest js-debug-test
   (is (empty? (js-console-log-calls))))
