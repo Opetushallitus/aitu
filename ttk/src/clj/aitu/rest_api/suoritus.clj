@@ -43,64 +43,70 @@
 (defn luontiaika []
   (str "Raportti luotu " (unparse (formatter "dd.MM.yyyy 'klo' HH:mm" (DateTimeZone/forID "Europe/Helsinki")) (now))))
 
-(defroutes raportti-reitit
-  (GET "/suoritusraportti" params
-    :kayttooikeus :raportti
-    (let [data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache"))
-                                               {:toimikunnat    (arkisto/hae-yhteenveto-raportti params)
-                                                :raportti_luotu (luontiaika)})
-                :footer ""}
-          pdf (binding [pdf-arkisto/*sisennys* 64.0]
-                (pdf-arkisto/muodosta-pdf data))]
-      (pdf-response pdf "suoritukset.pdf"))))
+(defn localdate->str [locald]
+  (clj-time.format/unparse (clj-time.format/formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
 
-(defn muokkaus-sallittu? [suorituskertaid]
-  (let [suorituskerta-id (arkisto/->int suorituskertaid)]
-    (if (not (nil? suorituskerta-id))
-      (let [suorituskerta (arkisto/hae suorituskerta-id)]
-        (= "luonnos" (:tila suorituskerta)))
-      true)))
+(defn paivita-syntympvm->str [yhteenveto-raportti]
+  (clojure.walk/postwalk #(if (not (nil? (:suorittaja_syntymapvm %))) (update % :suorittaja_syntymapvm localdate->str) %) yhteenveto-raportti))
 
-(defn muokkaus-sallittu-kaikille? [suoritukset]
-  (let [suoritustiedot (arkisto/hae-tiedot-monta suoritukset)]
-    (not (some #(not (= "luonnos" (:tila %))) suoritustiedot))))
+  (defroutes raportti-reitit
+    (GET "/suoritusraportti" params
+      :kayttooikeus :raportti
+      (let [data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache"))
+                                                 {:toimikunnat    (paivita-syntympvm->str (arkisto/hae-yhteenveto-raportti params))
+                                                  :raportti_luotu (luontiaika)})
+                  :footer ""}
+            pdf (binding [pdf-arkisto/*sisennys* 64.0]
+                  (pdf-arkisto/muodosta-pdf data))]
+        (pdf-response pdf "suoritukset.pdf"))))
 
-(defroutes reitit
-  (GET "/" [& ehdot]
-    :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/hae-kaikki ehdot)))
-  (GET "/:suorituskerta-id" [suorituskerta-id]
-    :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/hae-tiedot suorituskerta-id)))
-  (DELETE "/:suorituskerta-id" [suorituskerta-id]
-    :kayttooikeus :arviointipaatos
-    (if (muokkaus-sallittu? suorituskerta-id)
-      (response-or-404 (arkisto/poista! (arkisto/->int suorituskerta-id)))
-      {:status 403}))
-  (POST "/" [& suoritus]
-    :kayttooikeus :arviointipaatos
-    (if (muokkaus-sallittu? (:suorituskerta_id suoritus))
-      (response-or-404 (arkisto/lisaa-tai-paivita! suoritus))
-      {:status 403}))
-  (POST "/laheta" [suoritukset]
-    :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/laheta! suoritukset)))
-  (POST "/hyvaksy" [& suoritukset]
-    :kayttooikeus :arviointipaatos
-    (if (muokkaus-sallittu-kaikille? (:suoritukset suoritukset))
-      (response-or-404 (arkisto/hyvaksy! suoritukset))
-      {:status 403}))
-  (POST "/palauta" [suoritukset]
-    :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/palauta! suoritukset)))
+  (defn muokkaus-sallittu? [suorituskertaid]
+    (let [suorituskerta-id (arkisto/->int suorituskertaid)]
+      (if (not (nil? suorituskerta-id))
+        (let [suorituskerta (arkisto/hae suorituskerta-id)]
+          (= "luonnos" (:tila suorituskerta)))
+        true)))
 
-  (POST "/excel-lataus" [file]
-    :kayttooikeus :arviointipaatos
-    (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
+  (defn muokkaus-sallittu-kaikille? [suoritukset]
+    (let [suoritustiedot (arkisto/hae-tiedot-monta suoritukset)]
+      (not (some #(not (= "luonnos" (:tila %))) suoritustiedot))))
 
-    ;    (sallittu-jos (contains? excel-mimetypes (:content-type file))
-    ;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
-    (let [b (FileUtils/readFileToByteArray (:tempfile file))
-          wb (load-workbook (new java.io.ByteArrayInputStream b))
-          respo (lue-excel! wb)]
-      (file-upload-response respo))))
+  (defroutes reitit
+    (GET "/" [& ehdot]
+      :kayttooikeus :arviointipaatos
+      (response-or-404 (arkisto/hae-kaikki ehdot)))
+    (GET "/:suorituskerta-id" [suorituskerta-id]
+      :kayttooikeus :arviointipaatos
+      (response-or-404 (arkisto/hae-tiedot suorituskerta-id)))
+    (DELETE "/:suorituskerta-id" [suorituskerta-id]
+      :kayttooikeus :arviointipaatos
+      (if (muokkaus-sallittu? suorituskerta-id)
+        (response-or-404 (arkisto/poista! (arkisto/->int suorituskerta-id)))
+        {:status 403}))
+    (POST "/" [& suoritus]
+      :kayttooikeus :arviointipaatos
+      (if (muokkaus-sallittu? (:suorituskerta_id suoritus))
+        (response-or-404 (arkisto/lisaa-tai-paivita! suoritus))
+        {:status 403}))
+    (POST "/laheta" [suoritukset]
+      :kayttooikeus :arviointipaatos
+      (response-or-404 (arkisto/laheta! suoritukset)))
+    (POST "/hyvaksy" [& suoritukset]
+      :kayttooikeus :arviointipaatos
+      (if (muokkaus-sallittu-kaikille? (:suoritukset suoritukset))
+        (response-or-404 (arkisto/hyvaksy! suoritukset))
+        {:status 403}))
+    (POST "/palauta" [suoritukset]
+      :kayttooikeus :arviointipaatos
+      (response-or-404 (arkisto/palauta! suoritukset)))
+
+    (POST "/excel-lataus" [file]
+      :kayttooikeus :arviointipaatos
+      (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
+
+      ;    (sallittu-jos (contains? excel-mimetypes (:content-type file))
+      ;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
+      (let [b (FileUtils/readFileToByteArray (:tempfile file))
+            wb (load-workbook (new java.io.ByteArrayInputStream b))
+            respo (lue-excel! wb)]
+        (file-upload-response respo))))

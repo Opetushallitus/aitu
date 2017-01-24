@@ -1,4 +1,5 @@
-{{raportti_luotu}}
+Tietolähde Näyttötutkintojen suoritusrekisteri
+						{{raportti_luotu}}
 
 {{#toimikunnat}}
 *{{tutkintotoimikunta_nimi_fi}}*
@@ -17,7 +18,8 @@ Suoritetut tutkinnon osat
 Tutkinnonosa			arvosana		Koko tutkinto?
 {{#tutkinnonosat}}
 *{{tutkinnonosa_nimi_fi}}*			{{arvosana}}		{{kokotutkinto}}
-	
+				{{tunnustaminen}}
+				
 {{#arvioijat}}			{{arvioija_sukunimi}} {{arvioija_etunimi}}, {{arvioija_rooli}}
 {{/arvioijat}}
 {{/tutkinnonosat}}
@@ -27,6 +29,7 @@ Tutkinnonosa			arvosana		Koko tutkinto?
 	Suoritetut koko tutkinnot		{{suoritetut_kokotutkinnot}}
 	Suoritetut tutkinnon osat		{{suoritetut_osat}}, näistä	todistuksen haluaa {{haluaa_todistuksen}}
 				ei todistusta {{ei_halua_todistusta}}
+				tunnustettuja {{tunnustetut_osat}}
 {{/tutkinnot}}
 {{/koulutustoimijat}}
 {{/toimikunnat}}

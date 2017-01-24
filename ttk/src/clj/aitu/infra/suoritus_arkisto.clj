@@ -138,8 +138,9 @@
 
 (defn laske-tilastot [tutkinto]
   (let [suoritukset (mapcat :tutkinnonosat (:suorittajat tutkinto))]
-    (assoc tutkinto :suoritetut_kokotutkinnot (count (filter #(= "kyllä" (:kokotutkinto %)) suoritukset))
+    (assoc tutkinto :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
                     :suoritetut_osat (count suoritukset)
+                    :tunnustetut_osat (count (filter #(= "Tunnustaminen" (:tunnustaminen %)) suoritukset))
                     :haluaa_todistuksen (count (filter :todistus suoritukset))
                     :ei_halua_todistusta (count (remove :todistus suoritukset)))))
 
@@ -181,9 +182,10 @@
                       :jarjestamismuoto :opiskelijavuosi
                       :valmistava_koulutus :paikka :jarjestelyt
                       [(sql/raw "case suoritus.arvosana when 'hyvaksytty' then 'Hyväksytty' else suoritus.arvosana end") :arvosana]
+                      [(sql/raw "case when suoritus.osaamisen_tunnustaminen is not null then 'Tunnustaminen' else ' ' end") :tunnustaminen]
                       [:suoritus.todistus :todistus]
                       [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
-                      [(sql/raw "case when suoritus.kokotutkinto then 'kyllä' else 'ei' end") :kokotutkinto]
+                      [(sql/raw "case when suoritus.kokotutkinto then 'Koko tutkinto' else ' ' end") :kokotutkinto]
                       [:suorittaja.etunimi :suorittaja_etunimi]
                       [:suorittaja.sukunimi :suorittaja_sukunimi]
                       [:suorittaja.syntymapvm :suorittaja_syntymapvm]
@@ -208,13 +210,18 @@
           sql/exec)]
     (->> results
          (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
-         (erottele-lista :tutkinnonosat [:osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :arvioijat])
-         (erottele-lista :suorittajat [:suorituskerta_id :suorittaja_etunimi :suorittaja_sukunimi :todistus :kokotutkinto :osaamisen_tunnustaminen :suoritusaika_alku :suoritusaika_loppu :arvosana
-                                       :arviointikokouksen_pvm :ehdotusaika :hyvaksymisaika :tila :rahoitusmuoto :opiskelijavuosi :valmistava_koulutus :paikka :jarjestelyt :jarjestamismuoto :tutkinnonosat])         
+         (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm 
+                                       :jarjestamismuoto :opiskelijavuosi  :valmistava_koulutus :paikka :jarjestelyt
+                                        :osaamisen_tunnustaminen :arvosana :tunnustaminen :todistus :kokotutkinto
+                                        :ehdotusaika :osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :arvioijat])
+         (erottele-lista :suorittajat [:suorittaja_etunimi :suorittaja_sukunimi :suorittaja_syntymapvm
+                                        :tutkinnonosat])
          (map laske-tilastot)
          (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste 
-                                     :suoritetut_kokotutkinnot :suoritetut_osat :haluaa_todistuksen :ei_halua_todistusta :suorittajat])
-         (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :tutkinnot]))))
+                                    :suoritetut_kokotutkinnot :suoritetut_osat :haluaa_todistuksen :ei_halua_todistusta :suorittajat])
+         (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :tutkinnot])
+         )))
+ 
 
 (defn hae-arvioijat [suorituskerta-id]
   (sql/select :arvioija
