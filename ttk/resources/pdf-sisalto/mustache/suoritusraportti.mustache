@@ -12,12 +12,13 @@
 
 Suoritetut tutkinnon osat
 {{#suorittajat}}
-  {{suorittaja_sukunimi}} {{suorittaja_etunimi}} {{suorittaja_syntymapvm}}
+{{suorittaja_sukunimi}} {{suorittaja_etunimi}} {{suorittaja_syntymapvm}}
 
+Tutkinnonosa			arvosana		Koko tutkinto?
 {{#tutkinnonosat}}
-	*{{tutkinnonosa_nimi_fi}}*   {{arvosana}}      {{kokotutkinto}}
+*{{tutkinnonosa_nimi_fi}}*			{{arvosana}}		{{kokotutkinto}}
 	
-{{#arvioijat}}			           {{arvioija_sukunimi}} {{arvioija_etunimi}}, {{arvioija_rooli}}
+{{#arvioijat}}			{{arvioija_sukunimi}} {{arvioija_etunimi}}, {{arvioija_rooli}}
 {{/arvioijat}}
 {{/tutkinnonosat}}
 {{/suorittajat}}
