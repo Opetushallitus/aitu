@@ -186,6 +186,7 @@
                       [(sql/raw "case when suoritus.kokotutkinto then 'kyllä' else 'ei' end") :kokotutkinto]
                       [:suorittaja.etunimi :suorittaja_etunimi]
                       [:suorittaja.sukunimi :suorittaja_sukunimi]
+                      [:suorittaja.syntymapvm :suorittaja_syntymapvm]
                       [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
                       [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
                       :nayttotutkinto.tutkintotunnus
