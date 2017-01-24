@@ -10,20 +10,17 @@
 *{{tutkintotunnus}} {{tutkinto_nimi_fi}}*
 *Tutkinnon peruste {{tutkinto_peruste}}*
 
-	Suoritetut tutkinnon osat
+Suoritetut tutkinnon osat
+{{#suorittajat}}
+  {{suorittaja_sukunimi}} {{suorittaja_etunimi}} {{suorittaja_syntymapvm}}
+
 {{#tutkinnonosat}}
-
-	*{{tutkinnonosa_nimi_fi}}*
-
-	Tutkinnon suorittaja		arvosana			koko tutkinto
-			arvioijat
-{{#suoritukset}}
-
-	{{suorittaja_sukunimi}} {{suorittaja_etunimi}} {{suorittaja_syntymapvm}}		{{arvosana}}			{{kokotutkinto}}
-{{#arvioijat}}			{{arvioija_sukunimi}} {{arvioija_etunimi}}, {{arvioija_rooli}}
+	*{{tutkinnonosa_nimi_fi}}*   {{arvosana}}      {{kokotutkinto}}
+	
+{{#arvioijat}}			           {{arvioija_sukunimi}} {{arvioija_etunimi}}, {{arvioija_rooli}}
 {{/arvioijat}}
-{{/suoritukset}}
 {{/tutkinnonosat}}
+{{/suorittajat}}
 
 *Yhteensä*
 	Suoritetut koko tutkinnot		{{suoritetut_kokotutkinnot}}

@@ -137,7 +137,7 @@
     sql/exec))
 
 (defn laske-tilastot [tutkinto]
-  (let [suoritukset (mapcat :suoritukset (:tutkinnonosat tutkinto))]
+  (let [suoritukset (mapcat :tutkinnonosat (:suorittajat tutkinto))]
     (assoc tutkinto :suoritetut_kokotutkinnot (count (filter #(= "kyllä" (:kokotutkinto %)) suoritukset))
                     :suoritetut_osat (count suoritukset)
                     :haluaa_todistuksen (count (filter :todistus suoritukset))
@@ -208,12 +208,12 @@
           sql/exec)]
     (->> results
          (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
-         (erottele-lista :suoritukset [:suorituskerta_id :suorittaja_etunimi :suorittaja_sukunimi :todistus :kokotutkinto :osaamisen_tunnustaminen :suoritusaika_alku :suoritusaika_loppu :arvosana
-                                       :arviointikokouksen_pvm :ehdotusaika :hyvaksymisaika :tila :rahoitusmuoto :opiskelijavuosi :valmistava_koulutus :paikka :jarjestelyt :jarjestamismuoto :arvioijat])
-         (erottele-lista :tutkinnonosat [:osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :suoritukset])
+         (erottele-lista :tutkinnonosat [:osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :arvioijat])
+         (erottele-lista :suorittajat [:suorituskerta_id :suorittaja_etunimi :suorittaja_sukunimi :todistus :kokotutkinto :osaamisen_tunnustaminen :suoritusaika_alku :suoritusaika_loppu :arvosana
+                                       :arviointikokouksen_pvm :ehdotusaika :hyvaksymisaika :tila :rahoitusmuoto :opiskelijavuosi :valmistava_koulutus :paikka :jarjestelyt :jarjestamismuoto :tutkinnonosat])         
          (map laske-tilastot)
-         (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste :tutkinnonosat
-                                     :suoritetut_kokotutkinnot :suoritetut_osat :haluaa_todistuksen :ei_halua_todistusta])
+         (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste 
+                                     :suoritetut_kokotutkinnot :suoritetut_osat :haluaa_todistuksen :ei_halua_todistusta :suorittajat])
          (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :tutkinnot]))))
 
 (defn hae-arvioijat [suorituskerta-id]
