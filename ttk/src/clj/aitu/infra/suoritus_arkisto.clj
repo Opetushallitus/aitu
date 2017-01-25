@@ -206,8 +206,13 @@
                       [:arvioija.sukunimi :arvioija_sukunimi]
                       [(sql/raw "case arvioija.rooli when 'itsenainen' then 'itsenäinen' when 'tyonantaja' then 'työnantaja' when 'tyontekija' then 'työntekijä' else arvioija.rooli end")
                        :arvioija_rooli])
-          (sql/order :suorituskerta_id :DESC)
-
+          (sql/order :tutkintotoimikunta_nimi_fi :ASC)
+          (sql/order :suorittaja_sukunimi :ASC)
+          (sql/order :suorittaja_etunimi :ASC)
+          (sql/order :tutkinto_nimi_fi :ASC)
+          (sql/order :tutkinnonosa_nimi_sv :ASC)
+          (sql/order :arvioija_sukunimi :ASC)
+          (sql/order :arvioija_etunimi :ASC)
           sql/exec)]
     (->> results
          (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
