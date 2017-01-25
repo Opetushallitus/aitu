@@ -23,6 +23,7 @@
 
 (def taulut ["suorituskerta_arvioija"
              "arvioija"
+             "tutkintosuoritus"
              "suoritus"
              "suorituskerta"
              "suorittaja"
