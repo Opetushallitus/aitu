@@ -137,12 +137,16 @@
     sql/exec))
 
 (defn laske-tilastot [rakenne]
-  (let [suoritukset (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat rakenne)))]
-    (assoc rakenne :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
-                    :suoritetut_osat (count suoritukset)
-                    :tunnustetut_osat (count (filter #(= "Tunnustaminen" (:tunnustaminen %)) suoritukset))
-                    :haluaa_todistuksen (count (filter :todistus suoritukset))
-                    :ei_halua_todistusta (count (remove :todistus suoritukset)))))
+  (let [suoritukset (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat rakenne)))
+        todistuksia-osista (count (filter #(and (not (= "Koko tutkinto" (:kokotutkinto %)))
+                                                (= "Todistus" (:todistus %))) suoritukset)) ; TODO: Ei lasketa koko tutkinto -rivejä mukaan lukumäärään
+        ]
+    (assoc rakenne 
+           :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
+           :suoritetut_osat (count suoritukset)
+           :tunnustetut_osat (count (filter #(= "tunnustamalla" (:tunnustaminen %)) suoritukset))
+           :haluaa_todistuksen todistuksia-osista
+           :ei_halua_todistusta (- (count suoritukset) todistuksia-osista))))
 
 (defn hae-yhteenveto-raportti
   [{{:keys [luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
@@ -182,8 +186,8 @@
                       :jarjestamismuoto :opiskelijavuosi
                       :valmistava_koulutus :paikka :jarjestelyt
                       [(sql/raw "case suoritus.arvosana when 'hyvaksytty' then 'Hyväksytty' else suoritus.arvosana end") :arvosana]
-                      [(sql/raw "case when suoritus.osaamisen_tunnustaminen is not null then 'Tunnustaminen' else ' ' end") :tunnustaminen]
-                      [:suoritus.todistus :todistus]
+                      [(sql/raw "case when suoritus.osaamisen_tunnustaminen is not null then 'tunnustamalla' else ' ' end") :tunnustaminen]
+                      [(sql/raw "case when suoritus.todistus then 'Todistus' else ' ' end") :todistus]
                       [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
                       [(sql/raw "case when suoritus.kokotutkinto then 'Koko tutkinto' else ' ' end") :kokotutkinto]
                       [:suorittaja.etunimi :suorittaja_etunimi]
@@ -210,7 +214,7 @@
           (sql/order :suorittaja_sukunimi :ASC)
           (sql/order :suorittaja_etunimi :ASC)
           (sql/order :tutkinto_nimi_fi :ASC)
-          (sql/order :tutkinnonosa_nimi_sv :ASC)
+          (sql/order :tutkinnonosa_nimi_fi :ASC)
           (sql/order :arvioija_sukunimi :ASC)
           (sql/order :arvioija_etunimi :ASC)
           sql/exec)]
@@ -227,6 +231,7 @@
                                        :tutkinnot])
          (map laske-tilastot)      
          (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :suorittajat])
+          
          )))
  
 

@@ -41,7 +41,7 @@
       (file-download-response (.toByteArray bos) filename content-type))))
 
 (defn luontiaika []
-  (str "Raportti luotu " (unparse (formatter "dd.MM.yyyy 'klo' HH:mm" (DateTimeZone/forID "Europe/Helsinki")) (now))))
+  (str   (unparse (formatter "dd.MM.yyyy 'klo' HH:mm" (DateTimeZone/forID "Europe/Helsinki")) (now))))
 
 (defn localdate->str [locald]
   (clj-time.format/unparse (clj-time.format/formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
