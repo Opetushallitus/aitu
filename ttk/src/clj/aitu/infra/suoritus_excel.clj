@@ -32,9 +32,14 @@
         "Englanti" "en"}
        kieli))
 
-(defn ^:private get-cell-str [^org.apache.poi.ss.usermodel.Row rowref col]
-  (let [cell (.getCell rowref col)]
-    (when (not (nil? cell)) (.getStringCellValue cell))))
+(defn ^:private get-cell-str 
+  ([^org.apache.poi.ss.usermodel.Row rowref col default-value]
+    (let [cell (.getCell rowref col)
+          v (when (not (nil? cell)) (.getStringCellValue cell))]
+      (or v default-value)))
+  ([^org.apache.poi.ss.usermodel.Row rowref col]
+    (get-cell-str rowref col nil)))
+    
     
 (defn ^:private get-cell-num [^org.apache.poi.ss.usermodel.Row rowref col]
   (let [cell (.getCell rowref col)]
@@ -580,13 +585,13 @@
                       _ (reset! solu "arvosana")
                       arvosana (get-excel-arvosana suoritus 13)
                       _ (reset! solu "todistus")
-                      todistus-valinta (get-cell-str suoritus 14)
+                      todistus-valinta (get-cell-str suoritus 14 "Ei")
                       koko-tutkinto (= "Koko tutkinto" todistus-valinta)
                       todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
                       _ (reset! solu "suorituskieli")
                       suorituskieli (get-cell-str suoritus 15)
                       _ (reset! solu "arvosanan korotus")
-                      korotus (excel->boolean (get-cell-str suoritus 16))
+                      korotus (excel->boolean (get-cell-str suoritus 16 "Ei"))
                   
                       _ (reset! solu "arvioija1")
                       arvioija1 (get-cell-str suoritus 18)
@@ -717,13 +722,13 @@
                           _ (reset! solu "arvosana")
                           arvosana (get-excel-arvosana suoritus 15)
                           _ (reset! solu "todistus")
-                          todistus-valinta (get-cell-str suoritus 16)
+                          todistus-valinta (get-cell-str suoritus 16 "Ei")
                           koko-tutkinto (= "Koko tutkinto" todistus-valinta)
                           todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
                           _ (reset! solu "suorituskieli")
                           suorituskieli (get-cell-str suoritus 17)
                           _ (reset! solu "arvosanan korotus")
-                          korotus (excel->boolean (get-cell-str suoritus 18))
+                          korotus (excel->boolean (get-cell-str suoritus 18 "Ei"))
                   
                           _ (reset! solu "arvioija1")
                           arvioija1 (get-cell-str suoritus 19)
