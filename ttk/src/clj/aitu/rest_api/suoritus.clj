@@ -52,10 +52,11 @@
   (defroutes raportti-reitit
     (GET "/suoritusraportti" params
       :kayttooikeus :raportti
-      (let [data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache"))
+      (let [footer-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti-footer.mustache"))
+            data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache"))
                                                  {:toimikunnat    (paivita-syntympvm->str (arkisto/hae-yhteenveto-raportti params))
                                                   :raportti_luotu (luontiaika)})
-                  :footer ""}
+                  :footer (stencil/render-string footer-string {:raportti_luotu (luontiaika)})}
             pdf (binding [pdf-arkisto/*sisennys* 64.0]
                   (pdf-arkisto/muodosta-pdf data))]
         (pdf-response pdf "suoritukset.pdf"))))
