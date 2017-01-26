@@ -46,20 +46,34 @@
 (defn localdate->str [locald]
   (clj-time.format/unparse (clj-time.format/formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
 
-(defn paivita-syntympvm->str [yhteenveto-raportti]
-  (clojure.walk/postwalk #(if (not (nil? (:suorittaja_syntymapvm %))) (update % :suorittaja_syntymapvm localdate->str) %) yhteenveto-raportti))
+(defn map-update
+  "Update key if the form is a map and key is mapped to non-nill value."
+  [form key update-fn]
+  (if (map? form)
+    (if (not (nil? (get form key))) (update form key update-fn) form)
+    form))
 
-  (defroutes raportti-reitit
-    (GET "/suoritusraportti" params
-      :kayttooikeus :raportti
-      (let [footer-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti-footer.mustache"))
-            data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache"))
-                                                 {:toimikunnat    (paivita-syntympvm->str (arkisto/hae-yhteenveto-raportti params))
-                                                  :raportti_luotu (luontiaika)})
-                  :footer (stencil/render-string footer-string {:raportti_luotu (luontiaika)})}
-            pdf (binding [pdf-arkisto/*sisennys* 64.0]
-                  (pdf-arkisto/muodosta-pdf data))]
-        (pdf-response pdf "suoritukset.pdf"))))
+(defn koulutustoimija->toupper [form]
+  (map-update form :koulutustoimija_nimi_fi clojure.string/upper-case))
+
+(defn paivita-syntymapvm->str [form]
+  (map-update form :suorittaja_syntymapvm localdate->str))
+                  
+(defn paivita-raportti [yhteenveto-raportti]
+  (let [walk-fn (comp paivita-syntymapvm->str koulutustoimija->toupper)]
+    (clojure.walk/postwalk walk-fn yhteenveto-raportti)))
+
+(defroutes raportti-reitit
+  (GET "/suoritusraportti" params
+    :kayttooikeus :raportti
+    (let [footer-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti-footer.mustache"))
+          data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache"))
+                                               {:toimikunnat    (paivita-raportti (arkisto/hae-yhteenveto-raportti params))
+                                                :raportti_luotu (luontiaika)})
+                :footer (stencil/render-string footer-string {:raportti_luotu (luontiaika)})}
+          pdf (binding [pdf-arkisto/*sisennys* 64.0]
+                (pdf-arkisto/muodosta-pdf data))]
+      (pdf-response pdf "suoritukset.pdf"))))
 
   (defn muokkaus-sallittu? [suorituskertaid]
     (let [suorituskerta-id (arkisto/->int suorituskertaid)]
