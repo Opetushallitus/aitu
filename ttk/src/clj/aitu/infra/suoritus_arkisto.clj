@@ -22,6 +22,7 @@
              [oph.common.util.http-util :refer [parse-iso-date]]
              [oph.common.util.util :refer [erottele-lista]]
              [oph.korma.common :refer [to-hki-local-date]]
+             [oph.korma.korma-auth :as ka]
              [aitu.integraatio.sql.korma :refer :all]))
 
 (defn ->int [str-or-int]
@@ -150,7 +151,7 @@
 
 (defn hae-yhteenveto-raportti
   [{{:keys [luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
-            tila tutkinto tutkinnonosa osaamisala suorittaja toimikunta] :as params} :params}]
+            tila tutkinto tutkinnonosa osaamisala suorittaja toimikunta edelliset-kayttaja] :as params} :params}]
   (let [results
         (->
           (sql/select* suorituskerta)
@@ -179,7 +180,12 @@
                                             {:suorittaja.oid suorittaja}
                                             {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
                                             {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
-            (not-empty toimikunta) (sql/where {:suorituskerta.toimikunta toimikunta}))
+            (not-empty toimikunta) (sql/where {:suorituskerta.toimikunta toimikunta})
+            ; hivenen ruma hack. Haetaan käyttäjän edellisen viiden minuutin aikana kirjaamat rivit, jotta saadaan se mitä äsken ladattiin haettua. 
+            ; mutta korrektimpaa olisi pitää kirjanpitoa latauksista ja käyttää sitä viitteenä. Tehdään jos tämä ei riitä.
+            (not-empty edelliset-kayttaja) (sql/where {:suoritus.luotu_kayttaja ka/*current-user-oid*
+                                                       :suoritus.luotuaika [>= (sql/raw "(now() - interval '5 minutes')")]})
+            )
 
           (sql/fields :suorituskerta_id :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika
                       :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
