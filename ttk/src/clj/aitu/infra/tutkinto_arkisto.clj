@@ -238,7 +238,10 @@
         (sql/fields :nimi_fi :nimi_sv :osaamisalatunnus)))
     (sql/with opintoala
       (sql/fields [:selite_fi :opintoala_nimi_fi] [:selite_sv :opintoala_nimi_sv]))
-    (sql/with tutkintotoimikunta)))
+    (sql/with tutkintotoimikunta)
+    (sql/order :nimi_fi :ASC)
+    (sql/order :uusin_versio_id :ASC)
+    ))
 
 (defn hae-tutkinnot-ja-osaamisalat-haku
   "Hakee tutkintojen tiedot voimassaolevalle ja mahdolliselle voimaantulevalle tutkintoversiolle. hae-tutkinnot-ja-osaamisalat hakee vain uusimmat versiot."

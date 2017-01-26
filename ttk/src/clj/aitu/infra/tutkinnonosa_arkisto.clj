@@ -38,6 +38,8 @@
                 [:nayttotutkinto.nimi_fi :nayttotutkinto_nimi_fi]
                 [:nayttotutkinto.nimi_sv :nayttotutkinto_nimi_sv])
     (cond-> tutkintotunnus (sql/where {:tutkintoversio.tutkintotunnus tutkintotunnus}))
+    (sql/order :nayttotutkinto_nimi_fi :ASC)
+    (sql/order :nimi_fi :ASC)
     sql/exec))
 
 (defn hae-versiolla
@@ -50,5 +52,6 @@
                 [:nayttotutkinto.nimi_fi :nayttotutkinto_nimi_fi]
                 [:nayttotutkinto.nimi_sv :nayttotutkinto_nimi_sv])
     (sql/where {:tutkintoversio.tutkintoversio_id tutkintoversio-id})
+    (sql/order :nimi_fi :ASC)
     sql/exec))
   

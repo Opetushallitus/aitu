@@ -63,7 +63,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
             if (tutkinto != undefined) {
               Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
                 $scope.tutkinnonosat = tutkinnonosat;
-                $scope.hakuForm.tutkinnonosa = _.find($scope.tutkinnonosat, {'tutkinnonosa_id' : $scope.tutkinnonosa.tutkinnonosa_id});
+//                $scope.hakuForm.tutkinnonosa = _.find($scope.tutkinnonosat, {'tutkinnonosa_id' : $scope.tutkinnonosa.tutkinnonosa_id});
               });
               Osaamisala.hae(tutkinto).then(function(osaamisalat) {
                 $scope.osaamisalat = osaamisalat.osaamisala;
