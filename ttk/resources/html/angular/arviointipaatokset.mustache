@@ -3,6 +3,17 @@
 
 <h1>[[arviointipaatokset]]</h1>
 
+<!-- Excel-latauksen palautelogin näkyminen -->
+<div ng-show="naytalatauspalaute">
+  <div>Excelin sisäänluku suoritettu, tulos</div>
+  <div ng-repeat="teks in latauslogiteksti track by $index">{{teks}}</div>
+  <hr/>
+  <div><button ng-click="piilotapalaute()">Piilota latausloki</button></div>
+  <hr/>
+</div>
+
+
+<div ng-show="!naytalatauspalaute">
 <div>
   [[excel_lataus]]
   <fieldset>
@@ -30,6 +41,6 @@
 </section>
 
 <br/>
-
+</div>
       
 [[/i18n.arviointipaatokset]]

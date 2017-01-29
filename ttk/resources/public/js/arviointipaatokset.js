@@ -17,18 +17,23 @@ angular.module('arviointipaatokset', [])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/arviointipaatokset', {controller: 'ArviointipaatoksetController', templateUrl: 'template/arviointipaatokset'});
   }])
-
-  .controller('ArviointipaatoksetController', ['$location', '$scope', '$route', 'Viestidialogi', function($location, $scope, $route, Viestidialogi) {
+  
+  .controller('ArviointipaatoksetController', ['$location', '$scope', '$route', 'Viestidialogi',
+                                               function($location, $scope, $route, Viestidialogi) {
+	  $scope.naytalatauspalaute = false;
 	  
       $scope.uploadValmis = function(r, liitetyyppi) {
-    	  Viestidialogi.nayta('Excelin sisäänluku suoritettu, tulos', r, 'Sulje');
-    	  $location.path("/arviointipaatokset");
+    	  $scope.naytalatauspalaute = true;
+    	  $scope.latauslogiteksti = r;
+      };
+      $scope.piilotapalaute = function() {
+    	  $scope.naytalatauspalaute = false;
+    	  //$location.path("/arviointipaatokset");
     	  $route.reload();
-    };
- 	  
+      }
          
-    $scope.lisaaSuoritus = function() {
-      $location.url('/lisaa-suoritus');
-    };
+      $scope.lisaaSuoritus = function() {
+    	  $location.url('/lisaa-suoritus');
+      };	
   }])
 ;
