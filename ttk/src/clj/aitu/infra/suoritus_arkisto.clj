@@ -137,17 +137,19 @@
       (seq tutkinto) (sql/where {:tutkinto tutkinto}))
     sql/exec))
 
-(defn laske-tilastot [rakenne]
-  (let [suoritukset (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat rakenne)))
-        todistuksia-osista (count (filter #(and (not (= "Koko tutkinto" (:kokotutkinto %)))
-                                                (= "Todistus" (:todistus %))) suoritukset)) ; TODO: Ei lasketa koko tutkinto -rivejä mukaan lukumäärään
-        ]
-    (assoc rakenne 
-           :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
-           :suoritetut_osat (count suoritukset)
-           :tunnustetut_osat (count (filter #(= "tunnustamalla" (:tunnustaminen %)) suoritukset))
-           :haluaa_todistuksen todistuksia-osista
-           :ei_halua_todistusta (- (count suoritukset) todistuksia-osista))))
+(defn laske-tilastot 
+  ([rakenne suoritukset]
+    (let [todistuksia-osista (count (filter #(and (not (= "Koko tutkinto" (:kokotutkinto %)))
+                                                  (= "Todistus" (:todistus %))) suoritukset)) ; TODO: Ei lasketa koko tutkinto -rivejä mukaan lukumäärään
+          ]
+      (assoc rakenne 
+             :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
+             :suoritetut_osat (count suoritukset)
+             :tunnustetut_osat (count (filter #(= "tunnustamalla" (:tunnustaminen %)) suoritukset))
+             :haluaa_todistuksen todistuksia-osista
+             :ei_halua_todistusta (- (count suoritukset) todistuksia-osista))))
+  ([rakenne]
+    (laske-tilastot rakenne (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat rakenne))))))
 
 (defn hae-yhteenveto-raportti
   [{{:keys [luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
@@ -223,22 +225,30 @@
           (sql/order :tutkinnonosa_nimi_fi :ASC)
           (sql/order :arvioija_sukunimi :ASC)
           (sql/order :arvioija_etunimi :ASC)
-          sql/exec)]
-    (->> results
-         (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
-         (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm 
-                                       :jarjestamismuoto :opiskelijavuosi  :valmistava_koulutus :paikka :jarjestelyt
-                                        :osaamisen_tunnustaminen :arvosana :tunnustaminen :todistus :kokotutkinto
-                                        :ehdotusaika :osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :arvioijat])
-         (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste
-                                     :tutkinnonosat])
-         (erottele-lista :suorittajat [:suorittaja_etunimi :suorittaja_sukunimi :suorittaja_syntymapvm
-                                       :suoritetut_kokotutkinnot :suoritetut_osat :tunnustetut_osat :haluaa_todistuksen :ei_halua_todistusta
-                                       :tutkinnot])
-         (map laske-tilastot)      
-         (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :suorittajat])
-          
-         )))
+          sql/exec)
+        
+    rapsa (->> results
+               (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
+               (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm 
+                                               :jarjestamismuoto :opiskelijavuosi  :valmistava_koulutus :paikka :jarjestelyt
+                                               :arvosana :tunnustaminen :todistus  :osaamisen_tunnustaminen  :kokotutkinto
+                                               :ehdotusaika :osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :arvioijat])
+               (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste
+                                           :tutkinnonosat])
+               (erottele-lista :suorittajat [:suorittaja_etunimi :suorittaja_sukunimi :suorittaja_syntymapvm
+                                             :tutkinnot])
+               (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv
+                                                  :suorittajat])
+               )
+    koulutustoimija-tilasto (fn [koulutustoimija]
+                              (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat koulutustoimija)))))
+    k-t (fn [koulutustoimijat]
+          (map #(merge % (koulutustoimija-tilasto %)) koulutustoimijat))
+    tilastoitu (map #(update % :koulutustoimijat k-t) rapsa)    
+    ]
+    ; kaikki yhteensä per toimikunta
+    (map #(merge % (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (mapcat :suorittajat (mapcat :koulutustoimijat tilastoitu)))))) tilastoitu)
+    ))
  
 
 (defn hae-arvioijat [suorituskerta-id]
