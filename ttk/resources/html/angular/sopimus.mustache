@@ -105,7 +105,7 @@
 
 <h2>[[nayttotutkinnot]]
     <div class="list-controls">
-        <auth-toiminto auth-nappi ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon add-icon muokkaa-tutkintoja" ng-click="muokkaaTutkintoja()"></auth-toiminto>
+        <auth-toiminto auth-nappi sallitut-roolit="['PAIVITTAJA']" ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon add-icon muokkaa-tutkintoja" ng-click="muokkaaTutkintoja()"></auth-toiminto>
     </div>
 </h2>
 
