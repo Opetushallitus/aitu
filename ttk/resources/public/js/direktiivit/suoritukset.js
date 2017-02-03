@@ -51,14 +51,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
             $scope.tutkintotoimikunnat = tutkintotoimikunnat;
         });
         
-        $scope.$watch('hakuForm', function(hakuForm) {
-          Suoritus.haeKaikki(hakuForm).then(function(suoritukset) {
-            $scope.suoritukset = suoritukset;
-            $scope.suorituksetjarjestetty = suoritukset;
-            $scope.suoritussivu = 1;
-          });
-        }, true);
-        
+
         $scope.$watch('hakuForm.tutkinto', function(tutkinto) {
             if (tutkinto != undefined) {
               Tutkinnonosa.hae(tutkinto).then(function(tutkinnonosat) {
@@ -151,9 +144,20 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
           });
         };
 
-        Suoritus.haeKaikki().then(function(suoritukset) {
-          $scope.suoritukset = suoritukset;
-        })
+        $scope.haeSuoritukset = function() {
+        	Suoritus.haeKaikki($scope.hakuForm).then(function(suoritukset) {
+    			$scope.suoritukset = suoritukset;
+    			$scope.suorituksetjarjestetty = suoritukset;
+    			$scope.suoritussivu = 1;
+        	})
+          };
+
+        $scope.$watch('hakuForm', function(hakuForm, oldhakuform) {
+        	if (! (angular.equals(hakuForm,oldhakuform))) { // ei haeta ensimmäisellä sivulatauksella dataa 
+        		$scope.haeSuoritukset();
+        	}
+          }, true);
+
       }]
     }
   }])
