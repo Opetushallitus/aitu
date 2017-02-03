@@ -36,10 +36,9 @@
   ([^org.apache.poi.ss.usermodel.Row rowref col default-value]
     (let [cell (.getCell rowref col)
           v (when (not (nil? cell)) (.getStringCellValue cell))]
-      (or v default-value)))
+      (if (clojure.string/blank? v) default-value v)))
   ([^org.apache.poi.ss.usermodel.Row rowref col]
     (get-cell-str rowref col nil)))
-    
     
 (defn ^:private get-cell-num [^org.apache.poi.ss.usermodel.Row rowref col]
   (let [cell (.getCell rowref col)]
@@ -53,7 +52,6 @@
       (if (= (.getCellType cell) org.apache.poi.ss.usermodel.Cell/CELL_TYPE_NUMERIC)
         (.getDateCellValue cell)
         nil))))
-
 
 (defn ^:private excel->arvosana [excel-arvosana]
   (let [m {"Hyväksytty" "hyvaksytty"
