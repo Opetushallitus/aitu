@@ -272,12 +272,12 @@
         (is (= (jarjestysnumerot) #{"1" "2"}))))))
 
 (deftest ei-voimassaoleva-sopimus-test
-  (testing "Vanhan järjestämissopimuksen muokkaus ei onnistu"
+  (testing "Vanhan järjestämissopimuksen muokkaus on sallittua"
     (with-webdriver
       (du/with-data (assoc-in jarjestamissopimus-data [:sopimus_ja_tutkinto 0 :sopimus_ja_tutkinto 0 :loppupvm] du/menneisyydessa)
         (siirry-sopimuksen-muokkaussivulle 1230)
         (tallenna)
-        (is (= (viestin-teksti) "Järjestämissopimuksen tietojen muokkaus ei onnistunut"))))))
+        (is (= (viestin-teksti) "Järjestämissopimuksen tietoja muokattu"))))))
 
 (defn aseta-liite [tyyppi polku]
   (w/send-keys {:css (str "div[liitetyyppi=\"" tyyppi "\"] input[type=\"file\"]")} polku)
