@@ -134,7 +134,7 @@
 
       (seq tila) (sql/where {:tila tila})
       (seq toimikunta) (sql/where {:toimikunta toimikunta})
-      (seq tutkinto) (sql/where {:tutkinto tutkinto}))
+      (seq tutkinto) (sql/where {:tutkintoversio_id (Integer/parseInt tutkinto)}))
     sql/exec))
 
 (defn laske-tilastot 

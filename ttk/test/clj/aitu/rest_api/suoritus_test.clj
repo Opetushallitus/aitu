@@ -24,7 +24,7 @@
   :arvosana "hyvaksytty"
   :liitetty_pvm nil
   :tutkintoversio_suoritettava -20000
-  :tutkintoversio_id nil
+  :tutkintoversio_id -20000
   :suoritusaika_loppu "2016-09-01"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
   :suorittaja_syntymapvm "1912-12-12"
@@ -54,6 +54,7 @@
    :toimikunta "Lynx lynx"
    :liitetty_pvm nil
    :tutkintoversio_suoritettava -20000
+   :tutkintoversio_id -20000
    :arvioijat [{:arvioija_id -1}]
    "koulutustoimija" "0208430-8"
    "valmistava_koulutus" true
@@ -152,7 +153,7 @@
    :tutkinnonosa_tutkinnonosa_id -10002
    :liitetty_pvm nil
    :tutkintoversio_suoritettava -20000
-   :tutkintoversio_id nil
+   :tutkintoversio_id -20000
    :osaamisala_tunnus "9875"
    :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
    :osaamisala_nimi_sv nil  
@@ -222,7 +223,7 @@
 (deftest ^:integraatio suoritus-haku
   (base-testi (fn [s skerta-id]
     (let [haku-map {:koulutustoimija "0208430-8"
-                    :tutkinto "927128"}
+                    :tutkinto "-20000"}
           suorituksia (mock-request s "/api/suoritus" :get haku-map)
           suorituslista-resp (body-json (:response suorituksia))
           ei-suorituksia (mock-request s "/api/suoritus" :get (assoc haku-map :rahoitusmuoto 4))]
