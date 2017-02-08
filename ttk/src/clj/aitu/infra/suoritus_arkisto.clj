@@ -77,7 +77,7 @@
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
-           rahoitusmuoto tila tutkinto suorituskertaid suorittaja suorittajaid toimikunta kieli todistus sukupuoli
+           rahoitusmuoto tila tutkinto suoritettavatutkinto suorituskertaid suorittaja suorittajaid toimikunta kieli todistus sukupuoli
            tutkinnonosa osaamisala luotupvm_alku luotupvm_loppu]}]
   (->
     (sql/select* suorituskerta)
@@ -134,7 +134,8 @@
 
       (seq tila) (sql/where {:tila tila})
       (seq toimikunta) (sql/where {:toimikunta toimikunta})
-      (seq tutkinto) (sql/where {:tutkintoversio_id (Integer/parseInt tutkinto)}))
+      (seq tutkinto) (sql/where {:tutkintoversio_id (Integer/parseInt tutkinto)})
+      (seq suoritettavatutkinto) (sql/where {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)}))
     sql/exec))
 
 (defn laske-tilastot 
@@ -153,7 +154,7 @@
 
 (defn hae-yhteenveto-raportti
   [{{:keys [luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
-            tila tutkinto tutkinnonosa osaamisala suorittaja toimikunta edelliset-kayttaja] :as params} :params}]
+            tila tutkinto suoritettavatutkinto tutkinnonosa osaamisala suorittaja toimikunta edelliset-kayttaja] :as params} :params}]
   (let [results
         (->
           (sql/select* suorituskerta)
@@ -175,7 +176,8 @@
             (seq jarjestamismuoto) (sql/where {:suorituskerta.jarjestamismuoto jarjestamismuoto})
             (seq koulutustoimija) (sql/where {:suorituskerta.koulutustoimija koulutustoimija})
             (seq tila) (sql/where {:suorituskerta.tila tila})
-            (seq tutkinto) (sql/where {:suorituskerta.tutkinto tutkinto})
+            (seq tutkinto) (sql/where {:suorituskerta.tutkintoversio_id tutkinto})
+            (seq suoritettavatutkinto) (sql/where {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)})
             (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
             (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
             (seq suorittaja) (sql/where (or {:suorittaja.hetu suorittaja}

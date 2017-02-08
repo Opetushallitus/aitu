@@ -77,6 +77,15 @@
     </div>
     <div>
       <fieldset>
+        <label>[[suoritettava_tutkinto ]]</label>
+        <select ng-model="hakuForm.suoritettavatutkinto" 
+        ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_id">
+          <option value=""></option>
+        </select>
+      </fieldset>
+    </div>
+    <div>
+      <fieldset>
         <label>[[tutkinnon_osan_todistus]]</label>
         <select ng-model="hakuForm.todistus">
           <option ng-value="null"></option>

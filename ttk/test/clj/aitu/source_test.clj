@@ -27,4 +27,5 @@
                                :ohita ["src/clj/aitu/palvelin.clj"]))))
 
 (deftest clj-testapi-auditlog-test
-  (is (empty? (vastaavat-muodot "src/clj/aitu/infra" audit-log-kutsu-puuttuu? :polku-re #".*arkisto\.clj"))))
+  (is (empty? (vastaavat-muodot "src/clj/aitu/infra" audit-log-kutsu-puuttuu?
+                                :polku-re #".*arkisto\.clj"))))

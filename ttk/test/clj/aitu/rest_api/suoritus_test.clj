@@ -231,6 +231,18 @@
       (is (= (list suorituslista-result) (rip-skertaid suorituslista-resp)))
       ))))
 
+(deftest ^:integraatio suoritus-haku-suoritettava-tutkinto
+  (let [suoritus-data (assoc suoritus-base :tutkintoversio_suoritettava -10000)]
+    (base-testi (fn [s skerta-id]
+      (let [haku-map {:koulutustoimija "0208430-8"
+                      :suoritettavatutkinto "-10000"}
+            suorituksia (mock-request s "/api/suoritus" :get haku-map)
+            suorituslista-resp (body-json (:response suorituksia))
+            ei-suorituksia (mock-request s "/api/suoritus" :get (assoc haku-map :tutkinto "-10000"))]
+        (is (= '() (body-json (:response ei-suorituksia))))
+        (is (= (count (list suorituslista-result)) 1))
+        )) suoritus-data)))
+
 (deftest ^:integraatio suoritus-haku-suorittajalla
   (base-testi (fn [s skerta-id]
                 (let [haku-vals ["Orvok" "kelija" "Orvokki", "fan.far.12345"]

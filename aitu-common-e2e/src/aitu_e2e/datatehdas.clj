@@ -76,9 +76,8 @@
     (setup-opintoala "OPI" opintoala-nimi)))
 
 (defn setup-voimassaoleva-jarjestamissopimus
-  ([sopimusnumero koulutustoimija oppilaitos toimikunta tutkintoversio]
-    (let [jarjestamissopimusid (Integer/parseInt sopimusnumero)
-          oppilaitostunnus (get oppilaitos :oppilaitoskoodi oppilaitos)
+  ([jarjestamissopimusid sopimusnumero koulutustoimija oppilaitos toimikunta tutkintoversio]
+    (let [oppilaitostunnus (get oppilaitos :oppilaitoskoodi oppilaitos)
           toimikuntatunnus (get toimikunta :tkunta toimikunta)
           y-tunnus (get koulutustoimija :ytunnus koulutustoimija)
           tutkintoversio-id (get tutkintoversio :tutkintoversio_id tutkintoversio)]
@@ -95,6 +94,8 @@
         :sopimus_ja_tutkinto [{:tutkintoversio_id tutkintoversio-id
                                :alkupvm eilen
                                :loppupvm tulevaisuudessa}]}}))
+  ([sopimusnumero koulutustoimija oppilaitos toimikunta tutkintoversio]
+    (setup-voimassaoleva-jarjestamissopimus (Integer/parseInt sopimusnumero) sopimusnumero koulutustoimija oppilaitos toimikunta tutkintoversio))
   ([y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio]
     (setup-voimassaoleva-jarjestamissopimus (uusi-sopimusnumero!) y-tunnus oppilaitostunnus toimikuntatunnus tutkintoversio)))
 
