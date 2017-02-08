@@ -40,7 +40,7 @@
       <td>{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</td>
       <td>{{ suoritus | lokalisoiKentta:'tutkinnonosa_nimi' }}</td>
       <td>{{ suoritus | lokalisoiKentta:'osaamisala_nimi' }}</td>
-      <td>{{ suoritus.arvosana }}</td>
+      <td>{{ suoritus.arvosana | muotoileArvosana}}</td>
       <td>{{ suoritus.arvosanan_korotus | muotoileBoolean }}</td>
       <td>{{suoritus.osaamisen_tunnustaminen | date:'dd.MM.yyyy'}}</td>
       <td><enum-arvo nimi="kieli" arvo="suoritus.kieli"></enum-arvo></td>

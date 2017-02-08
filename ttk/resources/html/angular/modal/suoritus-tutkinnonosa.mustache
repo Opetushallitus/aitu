@@ -37,7 +37,7 @@
   <div>
     <fieldset>
       <label>[[arvosana]]</label>
-     <p ng-hide="editointitila">{{form.arvosana}}</p>
+     <p ng-hide="editointitila">{{form.arvosana | muotoileArvosana}}</p>
      <select ng-hide="!editointitila" ng-model="form.arvosana" ng-disabled="form.tunnustaminen">
         <option value="hyvaksytty">[[hyvaksytty]]</option>
         <option value="1">1</option>

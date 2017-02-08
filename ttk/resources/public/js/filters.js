@@ -220,7 +220,16 @@ angular.module('filters', [] )
       return naytettavaArvo;
     };
   }])
-
+  
+  .filter('muotoileArvosana', ['i18n', function(i18n) {
+    return function(arvo){
+    	if (arvo === "hyvaksytty") {
+    		return i18n.arviointipaatokset['arvosana_hyvaksytty'];
+    	}
+    	return arvo;
+    };
+  }])
+  
   .filter('kielisyys', [function() {
     return function(entityt, kentta, terms) {
       if(_.isEmpty(terms)) {
