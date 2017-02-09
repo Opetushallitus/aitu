@@ -12,12 +12,15 @@
   {:tila "luonnos", :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", :hyvaksymisaika nil, 
   :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto", :suorittaja -1, 
   :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8"
+  :suoritettavatutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto"
+  :suoritettavatutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)"
+  :suoritettavatutkinto_tutkintotunnus "927128"
   :arviointikokouksen_pvm "2016-09-02"
   :suoritusaika_alku "2016-09-01"
   :toimikunta "Lynx lynx"
   :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
   :tutkinnonosa_nimi_sv nil
-  :tutkinnonosa_tutkinnonosa_id -10002
+  :tutkinnonosa_tutkinnonosa_id -10002  
   :osaamisala_tunnus "9875" 
   :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
   :osaamisala_nimi_sv nil
@@ -102,6 +105,10 @@
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat []
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
+   :suoritettavatutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto"
+   :suoritettavatutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)"
+   :suoritettavatutkinto_tutkintotunnus "927128"
+   
    :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :valmistava_koulutus true, 
    :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8", :arviointikokouksen_pvm nil
    :toimikunta "Lynx lynx"
@@ -154,6 +161,10 @@
    :liitetty_pvm nil
    :tutkintoversio_suoritettava -20000
    :tutkintoversio_id -20000
+   :suoritettavatutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto"
+   :suoritettavatutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)"
+   :suoritettavatutkinto_tutkintotunnus "927128"
+
    :osaamisala_tunnus "9875"
    :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
    :osaamisala_nimi_sv nil  

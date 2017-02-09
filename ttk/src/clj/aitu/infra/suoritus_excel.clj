@@ -814,9 +814,12 @@
                                                                       :arvosana])
                                 aiempi-suoritus (first aiemmat)]
                             (if (nil? aiempi-suoritus)
-                              (kirjaa-loki! import-log :error "Liittäminen - aiempaa suoritusta liittämistä varten ei löydy, mutta siirto tehty ok. " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                              (do
+                                (kirjaa-loki! import-log :error "Liittäminen - aiempaa suoritusta liittämistä varten ei löydy, mutta kirjataan suoritus vajailla tiedoilla. " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                                (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
+                                (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map))))                            
                               (if (> (count aiemmat) 1)
-                                (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
+                                (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, mahdollisia aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                                 (do
                                   (kirjaa-loki! import-log :info "Liitetään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio-suoritettava}))))
                                   (suoritus-arkisto/liita-suoritus! {:suorituskerta_id (:suorituskerta_id aiempi-suoritus)

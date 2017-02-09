@@ -86,6 +86,8 @@
     (sql/join :left :osaamisala (= :suoritus.osaamisala :osaamisala.osaamisala_id))
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
+    (sql/join :left :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkintoversio_suoritettava))
+    (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :tutkintoversio_id :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
                 :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
@@ -97,6 +99,9 @@
                 [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
                 [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
                 [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
+                [:suoritettava-tutkinto.nimi_fi :suoritettavatutkinto_nimi_fi]
+                [:suoritettava-tutkinto.nimi_sv :suoritettavatutkinto_nimi_sv]
+                [:suoritettava-tutkinto.tutkintotunnus :suoritettavatutkinto_tutkintotunnus]                
                 [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
                 [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
                 [:tutkinnonosa.tutkinnonosa_id :tutkinnonosa_tutkinnonosa_id]

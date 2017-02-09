@@ -170,7 +170,10 @@
     </thead>
     <tr ng-repeat="suoritus in tuloksetjarjestetty | sivutusSuodatin:+nykyinenSivu:tuloksiaSivulla">
         <td><a ng-href="[[base-url]]/#/suorittaja/{{suoritus.suorittaja_suorittaja_id}}">{{ suoritus.suorittaja_sukunimi }}, {{ suoritus.suorittaja_etunimi }}</a>, {{ suoritus.suorittaja_syntymapvm | date:'dd.MM.yyyy' }}</td>
-        <td>{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}</td>
+        <td>{{ suoritus | lokalisoiKentta:'tutkinto_nimi' }}
+            <span ng-show="suoritus.tutkintoversio_suoritettava !== suoritus.tutkintoversio_id">
+            <b>-> {{ suoritus | lokalisoiKentta:'suoritettavatutkinto_nimi' }}</b></span>
+        </td>
         <td>{{ suoritus | lokalisoiKentta:'tutkinnonosa_nimi' }}</td>
         <td>{{ suoritus | lokalisoiKentta:'osaamisala_nimi' }}</td>
         <td>{{ suoritus.arvosana | muotoileArvosana}}</td>
