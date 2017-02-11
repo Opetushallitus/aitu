@@ -143,14 +143,18 @@
       (seq suoritettavatutkinto) (sql/where {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)}))
     sql/exec))
 
+; TODO: ei vielä toimi täysin oikein... .. . 
+; TODO: Grouppaus pitää oikeasti tapahtua *suoritettavan tutkinnon* kautta. Liittäminen päätellään siitä onko *tutkinto* eri kuin *suoritettava tutkinto*, eikä siitä onko liittämispvm null
 (defn laske-tilastot 
   ([rakenne suoritukset]
-    (let [todistuksia-osista (count (filter #(and (not (= "Koko tutkinto" (:kokotutkinto %)))
+    (let [varsinaiset-suoritukset (filter #(nil? (:liitetty_pvm %)) suoritukset)
+          todistuksia-osista (count (filter #(and (not (= "Koko tutkinto" (:kokotutkinto %)))
                                                   (= "Todistus" (:todistus %))) suoritukset)) ; TODO: Ei lasketa koko tutkinto -rivejä mukaan lukumäärään
           ]
       (assoc rakenne 
              :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
-             :suoritetut_osat (count suoritukset)
+             :liitetyt_osat (count (filter #(not (nil? (:liitetty_pvm %))) suoritukset))  
+             :suoritetut_osat (count (filter #(nil? (:liitetty_pvm %)) suoritukset))  ; Liitetyt eivät ole osa suoritettuja
              :tunnustetut_osat (count (filter #(= "tunnustamalla" (:tunnustaminen %)) suoritukset))
              :haluaa_todistuksen todistuksia-osista
              :ei_halua_todistusta (- (count suoritukset) todistuksia-osista))))
@@ -167,6 +171,8 @@
           (sql/join :suoritus (= :suoritus.suorituskerta :suorituskerta.suorituskerta_id))
           (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :suoritus.tutkinnonosa))
           (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :suorituskerta.tutkintoversio_id))
+          (sql/join :left suoritettava-versio (= :suoritettava-versio.tutkintoversio_id :tutkintoversio_suoritettava))
+          (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
           (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
           (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
           (sql/join :left :suorituskerta_arvioija (= :suorituskerta_arvioija.suorituskerta_id :suorituskerta_id))
@@ -192,11 +198,11 @@
             (not-empty toimikunta) (sql/where {:suorituskerta.toimikunta toimikunta})
             ; hivenen ruma hack. Haetaan käyttäjän edellisen viiden minuutin aikana kirjaamat rivit, jotta saadaan se mitä äsken ladattiin haettua. 
             ; mutta korrektimpaa olisi pitää kirjanpitoa latauksista ja käyttää sitä viitteenä. Tehdään jos tämä ei riitä.
-            (not-empty edelliset-kayttaja) (sql/where {:suoritus.luotu_kayttaja ka/*current-user-oid*
+            (not-empty edelliset-kayttaja) (sql/where {:suoritus.luotu_kayttaja @ka/*current-user-oid*
                                                        :suoritus.luotuaika [>= (sql/raw "(now() - interval '5 minutes')")]})
             )
 
-          (sql/fields :suorituskerta_id :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika
+          (sql/fields :suorituskerta_id :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika :liitetty_pvm
                       :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
                       :jarjestamismuoto :opiskelijavuosi
                       :valmistava_koulutus :paikka :jarjestelyt
@@ -211,6 +217,9 @@
                       [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
                       [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
                       :nayttotutkinto.tutkintotunnus
+                      [:suoritettava-tutkinto.nimi_fi :suoritettavatutkinto_nimi_fi]
+                      [:suoritettava-tutkinto.nimi_sv :suoritettavatutkinto_nimi_sv]
+                      [:suoritettava-tutkinto.tutkintotunnus :suoritettavatutkinto_tutkintotunnus]                      
                       [:tutkintoversio.peruste :tutkinto_peruste]
                       [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
                       [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
@@ -236,11 +245,11 @@
         
     rapsa (->> results
                (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
-               (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm 
+               (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :liitetty_pvm :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm 
                                                :jarjestamismuoto :opiskelijavuosi  :valmistava_koulutus :paikka :jarjestelyt
                                                :arvosana :tunnustaminen :todistus  :osaamisen_tunnustaminen  :kokotutkinto
                                                :ehdotusaika :osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :arvioijat])
-               (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste
+               (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste :suoritettavatutkinto_nimi_fi :suoritettavatutkinto_nimi_sv :suoritettavatutkinto_tutkintotunnus
                                            :tutkinnonosat])
                (erottele-lista :suorittajat [:suorittaja_etunimi :suorittaja_sukunimi :suorittaja_syntymapvm
                                              :tutkinnot])
