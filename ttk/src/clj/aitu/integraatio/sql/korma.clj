@@ -28,7 +28,7 @@
          sopimus-ja-tutkinto-ja-osaamisala oppilaitos kieli
          toimikunta-ja-tutkinto tutkintotyyppi peruste jarjesto
          keskusjarjesto tutkinnonosa osaamisala jarjestamissuunnitelma
-         toimipaikka tutkintoversio suoritettava-tutkinto uusin-versio tutkinto-ja-tutkinnonosa
+         toimipaikka tutkintoversio suoritettava-tutkinto suoritettava-versio uusin-versio tutkinto-ja-tutkinnonosa
          sopimuksen-liite koulutustoimija organisaatiomuutos
          suorituskerta suoritus)
 
@@ -95,7 +95,9 @@
 (defentity suorituskerta
   (sql/pk :suorituskerta_id)
   (sql/has-many suoritus 
-    {:fk :suorituskerta})                 
+    {:fk :suorituskerta})
+  (sql/has-one suoritettava-versio 
+    {:fk :suoritettava_versio}) 
   (sql/belongs-to tutkintotoimikunta
     {:fk :toimikunta}))
 
@@ -171,9 +173,9 @@
 (defentity tutkintoversio
   (sql/pk :tutkintoversio_id)
   (sql/belongs-to nayttotutkinto
-    {:fk :tutkintotunnus})
-  (sql/belongs-to suoritettava-tutkinto
     {:fk :tutkintotunnus})  
+  (sql/belongs-to suoritettava-tutkinto
+    {:fk :tutkintotunnus})
   (sql/has-many sopimus-ja-tutkinto
     {:fk :tutkintoversio})
   (sql/has-many tutkinnonosa
@@ -184,6 +186,7 @@
     {:fk :tutkintoversio}))
 
 (defalias uusin-versio tutkintoversio)
+(defalias suoritettava-versio tutkintoversio)
 (defalias suoritettava-tutkinto nayttotutkinto)
 
 (defentity jarjestamissopimus
