@@ -46,9 +46,17 @@
         oikea-tulos (read-string (slurp "test-resources/suoritusrapsa.edn"))]
     (is (= rapsa-localized oikea-tulos))
     (testing "yhteenvetoraportti, edelliset 5 minuuttia"
-      (let [rapsa-latest (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:edelliset-kayttaja true})))]
-        (is (=  rapsa-latest oikea-tulos)))
-        
-    )))
+      (let [rapsa-latest (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:edelliset-kayttaja "true"}})))]
+        (is (=  rapsa-latest oikea-tulos))))
+    (testing "yhteenvetoraportti, OR-ehto toimikunta ja suoritettava tutkinto"
+      (let [tuntematon-toimikunta (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau"}})))
+            molemmat-vaarin (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau" :suoritettavatutkinto "-200"}})))
+            tuloksia-or (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau" :suoritettavatutkinto "-20000"}})))
+            ]
+        (is (empty? tuntematon-toimikunta))
+        (is (empty? molemmat-vaarin))
+        (is (=  tuloksia-or oikea-tulos))))
+    ))
+
 
 
