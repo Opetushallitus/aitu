@@ -306,3 +306,4 @@
                   (is (= "0159216-7" (:kouljarjestaja suoritus-resp)))
                   (is (= "2014-05-05" (:liitetty_pvm suoritus-resp)))
         )) suoritus-erikoinen))
+ 

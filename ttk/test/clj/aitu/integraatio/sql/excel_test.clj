@@ -36,6 +36,15 @@
    "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345) Käsityöyrityksen johtaminen"
    "Suoritukset ok."])
 
+
+(def luku-result-sv
+  ["Käsitellään arvioijat.." "Arvioijatietojen versionumero 825085205" "Arvioija on jo olemassa tietokannassa (Ilmarinen,Seppo)" 
+   "Lisätään uusi arvioija (Kullervoinen,Kullervo)" "Lisätään uusi arvioija (Väinämöinen,Väinö)" "Käsitellään opiskelijat.." 
+   "Opiskelijat ok. Käsitellään suoritukset.." "------------------------" "Suoritusrivejä 1 kpl. Suorituksia kirjattu 1 kpl." 
+   "------------------------" "------------------ tarkempi loki ----" 
+   "Käsitellään suoritus opiskelijalle Lemminkäinen Lieto (pfft.12345,101066-9451)" "Lisätään suoritus: Lemminkäinen Lieto (pfft.12345,101066-9451) Käsityöyrityksen johtaminen"
+   "Suoritukset ok."])
+ 
 (def luku-result-virheita
   ["Käsitellään arvioijat.."
  "Arvioijatietojen versionumero 749448266"
@@ -103,4 +112,10 @@
   (let [wb (load-workbook "test-resources/tutosat_pahastivialla.xlsx")
         ui-log (lue-excel! wb)]
     (is (= ui-log luku-result-virheita))))
-    
+
+
+(deftest ^:integraatio excel-import-ruotsinkielinen
+  (let [wb (load-workbook "test-resources/tutosat_sv_perus.xlsx")
+        ui-log (lue-excel! wb)]
+    (is (= ui-log luku-result-sv))))
+

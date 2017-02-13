@@ -675,7 +675,7 @@
           (throw (new IllegalArgumentException (str "Koulutuksen järjestäjää ei löydy y-tunnuksella " jarjestaja))))
 
         ; versiotarkistus on vasta tässä tarkoituksella, jotta saadaan vanhallekin versiolle koulutuksen järjestäjän olemassaolotarkistus 
-        ; Tämä voidaan poistaa kun vanha versio on poistunut kentältä käytöstä.
+        ; Tämä voidaan poistaa kun vanha versio on poistunut kentältä käytöstä. Oletusarvo on uusi versio.
         (log/info "Excel versionumero " (suoritukset-versionumero rivit))
         (if (onko-vanha-suoritukset-versio? rivit)
           (do
@@ -869,23 +869,37 @@
     {:sukunimi 1 :etunimi 0}
     {:sukunimi 0 :etunimi 1}))
 
+(def excel-struct
+  {"fi" {:suorittajat "Tutkinnon suorittajat"
+         :arvioijat "Arvioijat"
+         :suoritukset "Suoritukset"
+         :base-file "tutosat_export_base.xlsx"
+         }
+   "sv" {:suorittajat "Examinander"
+         :arvioijat "Bedömare"
+         :suoritukset "Prestationer"
+         :base-file "tutosat_export_base_sv.xlsx"
+         }})
+
 ; Palauttaa vektorin, joka sisältää käyttäjälle lokin siitä miten import onnistui
 ; sisältää myös virheviestin jos tulee poikkeus siksi että tietoa ei voida tulkita sisäänlukemisen yhteydessä.
 (defn lue-excel! [excel-wb]
   (auditlog/lue-suoritukset-excel!)
   (let [ui-log (atom [])]
     (try
-      (let [suoritukset-sheet (select-sheet "Suoritukset" excel-wb)
+      (let [struct (if (nil? (select-sheet "Suoritukset" excel-wb)) (get excel-struct "sv") (get excel-struct "fi")) ; hivenen tyly kielen päättely
+            _ (log/info "Excel-str " (:suoritukset  struct))
+            suoritukset-sheet (select-sheet (:suoritukset  struct) excel-wb)
           _ (log/info "Käsitellään arvioijat")
           _ (swap! ui-log conj "Käsitellään arvioijat..")
-          arvioija-rivit (row-seq (select-sheet "Arvioijat" excel-wb))
+          arvioija-rivit (row-seq (select-sheet (:arvioijat  struct) excel-wb))
           nimi-sarakkeet (nimi-indeksit arvioija-rivit)
           _ (swap! ui-log conj (str "Arvioijatietojen versionumero " (arvioijat-versionumero arvioija-rivit)))
-          arvioijatiedot (arvioijatiedot (select-sheet "Arvioijat" excel-wb) ui-log (:sukunimi nimi-sarakkeet) (:etunimi nimi-sarakkeet))          
-          ui-log-arvioijat (luo-arvioijat! (select-sheet "Arvioijat" excel-wb) ui-log (:sukunimi nimi-sarakkeet) (:etunimi nimi-sarakkeet))
+          arvioijatiedot (arvioijatiedot (select-sheet (:arvioijat  struct) excel-wb) ui-log (:sukunimi nimi-sarakkeet) (:etunimi nimi-sarakkeet))          
+          ui-log-arvioijat (luo-arvioijat! (select-sheet (:arvioijat  struct) excel-wb) ui-log (:sukunimi nimi-sarakkeet) (:etunimi nimi-sarakkeet))
           _ (log/info "Käsitellään opiskelijat")
           _ (swap! ui-log conj "Käsitellään opiskelijat..")
-          opiskelijat (lue-opiskelijat (select-sheet "Tutkinnon suorittajat" excel-wb) ui-log)
+          opiskelijat (lue-opiskelijat (select-sheet (:suorittajat  struct) excel-wb) ui-log)
           ui-log-opiskelijat (luo-opiskelijat! opiskelijat ui-log)
           _ (log/info "Opiskelijat luettu")
           _ (log/info "Käsitellään suoritukset")
@@ -910,12 +924,13 @@
                          (str "Latauspäivä: " (.format dformat (new java.util.Date))))))
 
 (defn luo-excel [kieli]
-  (let [export (load-workbook-from-resource "tutosat_export_base.xlsx")
+  (let [struct (if (= "sv" kieli) (get excel-struct "sv") (get excel-struct "fi"))
+        export (load-workbook-from-resource (:base-file struct))
         tutosat (select-sheet "Tutkinnonosat" export)
         tutkinnot (select-sheet "Tutkinnot" export)
-        opiskelijat (select-sheet "Tutkinnon suorittajat" export)
-        suoritukset (select-sheet "Suoritukset" export)
-        arvioijat (select-sheet "Arvioijat" export)
+        opiskelijat (select-sheet (:suorittajat struct) export)
+        suoritukset (select-sheet (:suoritukset struct) export)
+        arvioijat (select-sheet (:arvioijat struct) export)
         osaamisalat (select-sheet "Osaamisalat" export)]
      (map-tutkintorakenne! tutosat tutkinnot kieli)
      (map-osaamisalat! osaamisalat kieli)
