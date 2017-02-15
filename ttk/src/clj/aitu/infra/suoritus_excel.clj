@@ -29,7 +29,11 @@
   (get {"Suomi" "fi"
         "Ruotsi" "sv"
         "Saame" "se"
-        "Englanti" "en"}
+        "Englanti" "en"
+        "Finska" "fi"
+        "Svenska" "sv"
+        "Sami" "se"
+        "Engelska" "en"}
        kieli))
 
 (defn ^:private get-cell-str 
@@ -53,8 +57,11 @@
         (.getDateCellValue cell)
         nil))))
 
-(defn ^:private excel->arvosana [excel-arvosana]
+(defn ^:private excel->arvosana 
+  "Excel -> mallin esitystapa. Excel-versiosta riippuen tiedostosta voi tulla liukuluku."
+  [excel-arvosana]
   (let [m {"Hyväksytty" "hyvaksytty"
+           "Godkänd" "hyvaksytty"
            "1"  "1"
            "2" "2"
            "3" "3"
@@ -90,7 +97,9 @@
         
 (defn excel->boolean [s]
   (let [m {"Kyllä" true
-           "Ei" false}
+           "Ei" false
+           "Ja" true
+           "Nej" false}
         v (get m s)]
     (when (nil? v)
       (throw (IllegalArgumentException. (str "Virheellinen totuusarvo: " s))))
@@ -113,11 +122,18 @@
       (throw (IllegalArgumentException. (str "Virheellinen edustettava taho: " rooli))))
     v))
 
-(defn ^:private excel->edustus [edustus]
+(defn ^:private excel->edustus
+  "Excel-esitystapa muunnetaan (tietokanta)mallin esitystavaksi."
+  [edustus]
   (let [m {"työntekijät" "tyontekija"
            "työnantajat"  "tyonantaja"
            "opetusala" "opettaja"
-           "itsenäiset ammatinharjoittajat" "itsenainen"}
+           "itsenäiset ammatinharjoittajat" "itsenainen"
+           "Arbetstagare" "tyontekija"
+           "Arbetsgivare" "tyonantaja"
+           "Undervisningsområdet" "opettaja"
+           "De självständiga yrkesutövarna" "itsenainen"
+           }
         v (get m edustus)]
     (when (nil? v)
       (throw (IllegalArgumentException. (str "Virheellinen edustettava taho: " edustus))))
