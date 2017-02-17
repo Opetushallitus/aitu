@@ -181,7 +181,7 @@
             (sql/join :tutkinnonosa (= :tutkinnonosa.tutkinnonosa_id :suoritus.tutkinnonosa))
             (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :suorituskerta.tutkintoversio_id))
             (sql/join :left suoritettava-versio (= :suoritettava-versio.tutkintoversio_id :tutkintoversio_suoritettava))
-            (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+            (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :suoritettava-versio.tutkintotunnus))
             (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
             (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
             (sql/join :left :suorituskerta_arvioija (= :suorituskerta_arvioija.suorituskerta_id :suorituskerta_id))
@@ -253,15 +253,17 @@
             (sql/order :arvioija_sukunimi :ASC)
             (sql/order :arvioija_etunimi :ASC)
             sql/exec)
-          results (map #(assoc % :liittaminen (if (not (nil? (:liitetty_pvm %))) "liittämällä" " ")) results-sql)
+          results (->> results-sql
+                    (map #(assoc % :liittaminen (if (not (nil? (:liitetty_pvm %))) "liittämällä" " "))  )
+                    (map #(assoc % :tavoitetutkinto (if (not (= (:suoritettavatutkinto_nimi_fi %) (:tutkinto_nimi_fi %))) (str "-- " (:suoritettavatutkinto_nimi_fi %)) " ")) ))
         
       rapsa (->> results
                  (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
-                 (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :liitetty_pvm :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm 
+                 (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :liitetty_pvm :liittaminen :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm 
                                                  :jarjestamismuoto :opiskelijavuosi  :valmistava_koulutus :paikka :jarjestelyt
                                                  :arvosana :tunnustaminen :todistus  :osaamisen_tunnustaminen  :kokotutkinto
                                                  :ehdotusaika :osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :arvioijat])
-                 (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste :suoritettavatutkinto_nimi_fi :suoritettavatutkinto_nimi_sv :suoritettavatutkinto_tutkintotunnus
+                 (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste  :tavoitetutkinto :suoritettavatutkinto_nimi_fi :suoritettavatutkinto_nimi_sv :suoritettavatutkinto_tutkintotunnus
                                              :tutkinnonosat])
                  (erottele-lista :suorittajat [:suorittaja_etunimi :suorittaja_sukunimi :suorittaja_syntymapvm
                                                :tutkinnot])

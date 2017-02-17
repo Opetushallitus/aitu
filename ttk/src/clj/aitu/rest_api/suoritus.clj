@@ -47,7 +47,7 @@
   (clj-time.format/unparse (clj-time.format/formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
 
 (defn map-update
-  "Update key if the form is a map and key is mapped to non-nill value."
+  "Update key if the form is a map and key is mapped to non-nil value."
   [form key update-fn]
   (if (map? form)
     (if (not (nil? (get form key))) (update form key update-fn) form)
@@ -58,7 +58,7 @@
 
 (defn paivita-syntymapvm->str [form]
   (map-update form :suorittaja_syntymapvm localdate->str))
-                  
+
 (defn paivita-raportti [yhteenveto-raportti]
   (let [walk-fn (comp paivita-syntymapvm->str koulutustoimija->toupper)]
     (clojure.walk/postwalk walk-fn yhteenveto-raportti)))

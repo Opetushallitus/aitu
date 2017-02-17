@@ -275,7 +275,6 @@
                 (let [hyvaksy-req {:hyvaksymispvm "2016-11-16"
                                    :suoritukset [skerta-id]}
                       hyv-resp (mock-json-post s "/api/suoritus/hyvaksy" (cheshire/generate-string hyvaksy-req))
-                      _ (println ".." hyv-resp)
                       
                       hyv-json (body-json (:response hyv-resp))]
                   (is (= (:tila hyv-json) "hyvaksytty"))
