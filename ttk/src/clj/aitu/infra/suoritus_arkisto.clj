@@ -154,7 +154,7 @@
           ]
       (assoc rakenne 
              :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
-             :liitetyt_osat (count (filter #(not (nil? (:liitetty_pvm %))) suoritukset))  
+             :liitetyt_osat (count (filter #(not (nil? (:liitetty_pvm %))) suoritukset)) ; :liittaminen
              :suoritetut_osat osasuoritukset
              :tunnustetut_osat (count (filter #(= "tunnustamalla" (:tunnustaminen %)) suoritukset))
              :haluaa_todistuksen todistuksia-osista
@@ -173,7 +173,7 @@
         toimikunta-ehto (if (and (not (true? or-ehto)) (not (clojure.string/blank? toimikunta))) {:suorituskerta.toimikunta toimikunta} {})
         tutkinto-ehto (if (and (not (true? or-ehto)) (seq suoritettavatutkinto)) {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)} {})
         ]
-    (let [results
+    (let [results-sql
           (->
             (sql/select* suorituskerta)
             (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorituskerta.suorittaja))
@@ -212,8 +212,6 @@
               (not-empty edelliset-kayttaja) (sql/where {:suoritus.luotu_kayttaja @ka/*current-user-oid*
                                                          :suoritus.luotuaika [>= (sql/raw "(now() - interval '5 minutes')")]})
               )
-              
-                        
 
             (sql/fields :suorituskerta_id :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika :liitetty_pvm
                         :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
@@ -255,6 +253,7 @@
             (sql/order :arvioija_sukunimi :ASC)
             (sql/order :arvioija_etunimi :ASC)
             sql/exec)
+          results (map #(assoc % :liittaminen (if (not (nil? (:liitetty_pvm %))) "liittämällä" " ")) results-sql)
         
       rapsa (->> results
                  (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
