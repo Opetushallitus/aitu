@@ -508,14 +508,14 @@
   (set (map #(suoritus-kentat %)
                              (suoritus-arkisto/hae-kaikki-suoritukset jarjestaja))))
 
-(defn ^:private hae-suoritus 
+(defn  hae-suoritus 
   "Etsi suoritus annetusta joukosta annettujen avainten perusteella."
   [suoritus-set suoritus keyseq]
   (let [m 
-        (-> (select-keys suoritus keyseq)
-          (update :suoritusaika_alku date->LocalDate)
-          (update :suoritusaika_loppu date->LocalDate)
-          (update :osaamisen_tunnustaminen date->LocalDate))]
+        (select-keys (-> (select-keys suoritus keyseq)
+                       (update :suoritusaika_alku date->LocalDate)
+                       (update :suoritusaika_loppu date->LocalDate)
+                       (update :osaamisen_tunnustaminen date->LocalDate)) keyseq)]
     (filter #(= (select-keys % keyseq) m) suoritus-set)))  
   
 (defn ^:private olemassaoleva-suoritus?
@@ -804,7 +804,6 @@
                         (kirjaa-loki! import-log :info "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                       
                         (if (and (empty? (:osaamisen_tunnustaminen suoritus-map))
-                                 (nil? liittamisen-pvm)
                                  (or (empty? (:suoritusaika_alku suorituskerta-map))
                                      (empty? (:suoritusaika_loppu suorituskerta-map))
                                      (clojure.string/blank? (:arvosana suoritus-map)) 
@@ -812,13 +811,14 @@
                                      (nil? (:tutkinnonosa suoritus-map)) 
                                      (clojure.string/blank? (:kieli suoritus-map))))  
                           (kirjaa-loki! import-log :info "Ei kirjata suoritusta, pakollisia tietoja puuttuu: "nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
+
                           (do
                             (log/info "Lisätään suorituskerta .." suorituskerta-map)
-                            (log/info "Lisätään suoritus .." suoritus-map)
+                            (log/info "Lisätään normaali suoritus .." suoritus-map)
                             (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
                             (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))
                             (swap! suorituscount inc))))
-                
+
                       ; Suorituksen liittäminen toiseen tutkintoon
                       ; Liittäminen voi kohdistua äsken kirjattuun suoritusriviin
                       (if (not (nil? liittamisen-pvm))
@@ -834,6 +834,7 @@
                                 (kirjaa-loki! import-log :error "Liittäminen - aiempaa suoritusta liittämistä varten ei löydy, mutta kirjataan suoritus vajailla tiedoilla. " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                                 (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
                                 (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map))))                            
+; TODO: tässä kohtaa tulee ongelma kun aiempi-suoritus on nil tämän lisäyksen jälkeen -> tulee tuplakirjaus jos tiedot ovat puutteelliset.. OPH-1932
                               (if (> (count aiemmat) 1)
                                 (kirjaa-loki! import-log :error "Ei liitetä tutkintoa, mahdollisia aiempia suorituksia löytyi useita! " nimi " " (:nimi_fi (first (get osamap osatunnus))))
                                 (do

@@ -150,14 +150,15 @@
     (let [varsinaiset-suoritukset (filter #(nil? (:liitetty_pvm %)) suoritukset)
           todistuksia-osista (count (filter #(and (not (= "Koko tutkinto" (:kokotutkinto %)))
                                                   (= "Todistus" (:todistus %))) suoritukset)) ; TODO: Ei lasketa koko tutkinto -rivejä mukaan lukumäärään
+          osasuoritukset (count (filter #(nil? (:liitetty_pvm %)) suoritukset))  ; Liitetyt eivät ole osa suoritettuja
           ]
       (assoc rakenne 
              :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
              :liitetyt_osat (count (filter #(not (nil? (:liitetty_pvm %))) suoritukset))  
-             :suoritetut_osat (count (filter #(nil? (:liitetty_pvm %)) suoritukset))  ; Liitetyt eivät ole osa suoritettuja
+             :suoritetut_osat osasuoritukset
              :tunnustetut_osat (count (filter #(= "tunnustamalla" (:tunnustaminen %)) suoritukset))
              :haluaa_todistuksen todistuksia-osista
-             :ei_halua_todistusta (- (count suoritukset) todistuksia-osista))))
+             :ei_halua_todistusta (- osasuoritukset todistuksia-osista))))
   ([rakenne]
     (laske-tilastot rakenne (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat rakenne))))))
 
@@ -268,6 +269,7 @@
                  (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv
                                                     :suorittajat])
                  )
+      ; kaikki yhteensä per koulutustoimija
       koulutustoimija-tilasto (fn [koulutustoimija]
                                 (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat koulutustoimija)))))
       k-t (fn [koulutustoimijat]

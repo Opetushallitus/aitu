@@ -16,7 +16,7 @@
   (:require [clojure.test :refer [deftest testing is are use-fixtures]]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [aitu.integraatio.sql.test-data-util :refer :all]
-            [aitu.infra.suoritus-excel :refer [parse-opiskelija nilstr lue-excel! paivita-opiskelija-tiedot!]]
+            [aitu.infra.suoritus-excel :refer [hae-suoritus parse-opiskelija nilstr lue-excel! paivita-opiskelija-tiedot!]]
             [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
             [aitu.infra.suorittaja-arkisto :as suorittaja-arkisto]            
             [dk.ative.docjure.spreadsheet :refer [load-workbook]]
@@ -118,4 +118,48 @@
   (let [wb (load-workbook "test-resources/tutosat_sv_perus.xlsx")
         ui-log (lue-excel! wb)]
     (is (= ui-log luku-result-sv))))
+
+(deftest ^:integraatio hae-suoritus-test
+  (let [suoritukset-set #{{:osaamisen_tunnustaminen nil,
+                           :arvosanan_korotus false,
+                           :todistus false,
+                           :osaamisala nil,
+                           :suorituskerta_id 1,
+                           :suorittaja -2,
+                           :kieli "sv",
+                           :rahoitusmuoto 2,
+                           :tutkinto "927128",
+                           :tutkinnonosa -10003,
+                           :koulutustoimija "1060155-5",
+                           :arvosana "3"}}
+        suoritus
+        {:osaamisen_tunnustaminen nil,
+         :arvosanan_korotus false,
+         :jarjestelyt nil,
+         :todistus false,
+         :tutkintoversio_suoritettava -10000,
+         :tutkintoversio_id -20000,
+         :arvioijat ({:arvioija_id -2} {:arvioija_id 1} {:arvioija_id 2}),
+         :opiskelijavuosi 1,
+         :kokotutkinto false,
+         :osaamisala nil,
+         :suoritusaika_loppu "2017-02-02",
+         :suorittaja -2,
+         :kieli "sv",
+         :suoritusaika_alku "2017-02-02",
+         :rahoitusmuoto 2,
+         :toimikunta nil,
+         :tutkinto "927128",
+         :liitetty_pvm "2016-03-03",
+         :tutkinnonosa -10003,
+         :koulutustoimija "1060155-5",
+         :arviointikokouksen_pvm "2017-02-02",
+         :kouljarjestaja nil,
+         :suorittaja_id -2,
+         :jarjestamismuoto "oppilaitosmuotoinen",
+         :arvosana "3",
+         :paikka "Tampere"}]
+    (is (= 1 (count (hae-suoritus suoritukset-set suoritus [:arvosana :koulutustoimija :suorittaja ]))))))
+
+  
 
