@@ -1,12 +1,12 @@
 {{#toimikunnat}}
 *{{tutkintotoimikunta_nimi_fi}}*
+Suoritetut tutkinnon osat		Arvosana/Arvioijat
 {{#koulutustoimijat}}
 
 *{{koulutustoimija_nimi_fi}}*
 
 {{#suorittajat}}
 *{{suorittaja_sukunimi}} {{suorittaja_etunimi}} {{suorittaja_syntymapvm}}*
-Suoritetut tutkinnon osat		Arvosana/Arvioijat		
 
 {{#tutkinnot}}
 {{tutkintotunnus}} {{tutkinto_nimi_fi}}
@@ -14,10 +14,9 @@ Tutkinnon peruste {{tutkinto_peruste}}
 
 {{#tutkinnonosat}}
 {{tutkinnonosa_nimi_fi}}
-		{{arvosana}}			{{kokotutkinto}}
-		{{tunnustaminen}}{{liittaminen}}		{{todistus}}
-		{{tavoitetutkinto}}
-				
+		{{arvosana}}{{tunnustaminen}}{{liittaminen}}		{{kokotutkinto}}
+						{{todistus}}
+		{{tavoitetutkinto}}				
 {{#arvioijat}}		{{arvioija_sukunimi}} {{arvioija_etunimi}}, {{arvioija_rooli}}
 {{/arvioijat}}
 

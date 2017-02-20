@@ -27,6 +27,7 @@
        <label>[[toimikunta]]</label>
        <select ng-options="toimikunta.tkunta as toimikunta.diaarinumero + ' ' + (toimikunta | lokalisoiKentta:'nimi') for toimikunta in tutkintotoimikunnat" ng-model="hakuForm.toimikunta" required>
          <option value=""></option>
+         <option value="Ei kohdistettu"</option>
        </select>
       </fieldset>
       <fieldset>
