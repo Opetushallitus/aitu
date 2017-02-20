@@ -36,6 +36,9 @@
         "Engelska" "en"}
        kieli))
 
+(defn ^:private parse-kokotutkinto [valinta]
+  (contains? #{"Koko tutkinto" "Hela examen"} valinta))
+
 (defn ^:private get-cell-str 
   ([^org.apache.poi.ss.usermodel.Row rowref col default-value]
     (let [cell (.getCell rowref col)
@@ -600,7 +603,7 @@
                       arvosana (get-excel-arvosana suoritus 13)
                       _ (reset! solu "todistus")
                       todistus-valinta (get-cell-str suoritus 14 "Ei")
-                      koko-tutkinto (= "Koko tutkinto" todistus-valinta)
+                      koko-tutkinto (parse-kokotutkinto todistus-valinta)
                       todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
                       _ (reset! solu "suorituskieli")
                       suorituskieli (get-cell-str suoritus 15)
@@ -737,7 +740,7 @@
                           arvosana (get-excel-arvosana suoritus 15)
                           _ (reset! solu "todistus")
                           todistus-valinta (get-cell-str suoritus 16 "Ei")
-                          koko-tutkinto (= "Koko tutkinto" todistus-valinta)
+                          koko-tutkinto (parse-kokotutkinto todistus-valinta)
                           todistus (or koko-tutkinto (excel->boolean todistus-valinta)) ; koko tutkinnon suoritus = aina todistus
                           _ (reset! solu "suorituskieli")
                           suorituskieli (get-cell-str suoritus 17)
