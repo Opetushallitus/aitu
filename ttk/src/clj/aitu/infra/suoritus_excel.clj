@@ -668,6 +668,19 @@
         (swap! ui-log conj (str "Suoritusten käsittelyssä tapahtui virhe, josta ei voitu toipua, rivi: " @rivi " . Tieto: " @solu " . Tarkista solujen sisältö: " e))
         (throw e)))))
 
+(defn tarkista-kentta [m k f]
+  (when (f (get m k)) k))
+  
+; TODO: filter #(not -> remove 
+(defn puuttuvat-suorituksen-pakolliset [suorituskerta-map suoritus-map]
+  (remove nil?
+          [(tarkista-kentta suorituskerta-map :suoritusaika_alku empty?)
+           (tarkista-kentta suorituskerta-map :suoritusaika_loppu empty?)
+           (tarkista-kentta suoritus-map :arvosana clojure.string/blank?)
+           (tarkista-kentta suoritus-map :todistus nil?)
+           (tarkista-kentta suoritus-map :tutkinnonosa nil?)
+           (tarkista-kentta suoritus-map :kieli clojure.string/blank?)]))
+
 ; palauttaa vektorin, jossa on käyttäjälle logia siitä mitä tehtiin
 (defn ^:private luo-suoritukset! [arvioijatiedot sheet ui-log suorittajat-excel]
   (let [rivi (atom 1) ; Y-tunnus on rivillä 1.
@@ -805,22 +818,17 @@
                       ; Suorituksen lisääminen
                       (if (olemassaoleva-suoritus? @suoritukset-set (merge suorituskerta-map suoritus-map))
                         (kirjaa-loki! import-log :info "Ohitetaan suoritus, on jo tietokannassa: " nimi " " (:nimi_fi (first (get osamap osatunnus))))
-                      
-                        (if (and (empty? (:osaamisen_tunnustaminen suoritus-map))
-                                 (or (empty? (:suoritusaika_alku suorituskerta-map))
-                                     (empty? (:suoritusaika_loppu suorituskerta-map))
-                                     (clojure.string/blank? (:arvosana suoritus-map)) 
-                                     (nil? (:todistus suoritus-map)) 
-                                     (nil? (:tutkinnonosa suoritus-map)) 
-                                     (clojure.string/blank? (:kieli suoritus-map))))  
-                          (kirjaa-loki! import-log :info "Ei kirjata suoritusta, pakollisia tietoja puuttuu: "nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
+                        (let [pakolliset-puuttuvat (puuttuvat-suorituksen-pakolliset suorituskerta-map suoritus-map)]
+                          (if (and (empty? (:osaamisen_tunnustaminen suoritus-map))
+                                   (not (empty? pakolliset-puuttuvat))) 
+                            (kirjaa-loki! import-log :info "Ei kirjata suoritusta, pakollisia tietoja puuttuu: " (pr-str pakolliset-puuttuvat)  ". Suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
 
-                          (do
-                            (log/info "Lisätään suorituskerta .." suorituskerta-map)
-                            (log/info "Lisätään normaali suoritus .." suoritus-map)
-                            (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
-                            (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))
-                            (swap! suorituscount inc))))
+                            (do
+                              (log/info "Lisätään suorituskerta .." suorituskerta-map)
+                              (log/info "Lisätään normaali suoritus .." suoritus-map)
+                              (kirjaa-loki! import-log :info "Lisätään suoritus: " nimi " " (:nimi_fi (first (get osamap {:osatunnus osatunnus :tutkintoversio tutkintoversio}))))
+                              (swap! suoritukset-set conj (suoritus-kentat (merge (suoritus-arkisto/lisaa! suoritus-full) suoritus-map)))
+                              (swap! suorituscount inc)))))
 
                       ; Suorituksen liittäminen toiseen tutkintoon
                       ; Liittäminen voi kohdistua äsken kirjattuun suoritusriviin
