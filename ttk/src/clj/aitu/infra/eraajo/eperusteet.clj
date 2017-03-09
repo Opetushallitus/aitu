@@ -25,11 +25,13 @@
 (defn valitse-perusteen-kentat [peruste]
   (select-keys peruste [:peruste :eperustetunnus :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm]))
 
+; tästä tulee ulos aina vain yksi perustedata per diaarinumero??
+; TODO: tutkintoa ei löydy -> ei ole muuttunut peruste -> mistä saadaan tutkinto ?
 (defn muuttuneet-perusteet [perusteet]
   (for [[tutkintotunnus peruste] perusteet
         :let [diaarinumero (:diaarinumero peruste)
               tutkinto (tutkinto-arkisto/hae-tutkinto tutkintotunnus)
-              vanha-peruste (tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus diaarinumero)
+              vanha-peruste (tutkinto-arkisto/hae-tutkintoversio-perusteella tutkintotunnus diaarinumero (:eperustetunnus peruste))
               peruste (valitse-perusteen-kentat (assoc peruste :peruste diaarinumero))]
         :when (and tutkinto
                    (not= peruste (valitse-perusteen-kentat vanha-peruste)))]
@@ -48,14 +50,16 @@
             viimeisin-haku (tutkinto-arkisto/hae-viimeisin-eperusteet-paivitys)
             perusteet (eperusteet/hae-perusteet viimeisin-haku asetukset)
             muuttuneet (muuttuneet-perusteet perusteet)]
+        
         (doseq [tutkinto muuttuneet]
           (log/info "Päivitetään tutkinto" (:tutkintotunnus tutkinto) (:peruste tutkinto))
           (tutkinto-arkisto/paivita-tutkinto! tutkinto))
+        (log/info (str "Tutkinnot päivitetty, " (count muuttuneet) " kpl ,  päivitetään osat ja osaamisalat"))
         (doseq [[_ peruste] perusteet]
           (tutkinto-arkisto/paivita-tutkinnonosat! peruste)
           (tutkinto-arkisto/paivita-osaamisalat! peruste))
-        (tutkinto-arkisto/tallenna-viimeisin-eperusteet-paivitys! nyt))
-      (log/info "Tutkintojen perusteiden päivitys valmis"))))
+        (tutkinto-arkisto/tallenna-viimeisin-eperusteet-paivitys! nyt)
+        (log/info "Tutkintojen perusteiden päivitys valmis")))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.

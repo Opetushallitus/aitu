@@ -68,20 +68,30 @@
                                        (sql/where {:tutkintotunnus tutkintotunnus}))))))
 
 (defn hae-tutkintoversio-perusteella
-  [tutkintotunnus peruste]
+ ([tutkintotunnus peruste]
   (sql-util/select-unique-or-nil tutkintoversio
     (sql/where {:peruste peruste
                 :tutkintotunnus tutkintotunnus})))
+ ([tutkintotunnus peruste eperustetunnus]
+   (if (nil? eperustetunnus)
+     (hae-tutkintoversio-perusteella tutkintotunnus peruste)
+     (do
+       (println (str "haetaan kaikilla ... " eperustetunnus " / " tutkintotunnus " / " peruste))
+       (sql-util/select-unique-or-nil tutkintoversio
+                                      (sql/where {:eperustetunnus eperustetunnus
+                                                  :tutkintotunnus tutkintotunnus
+                                                  :peruste peruste}))))))
 
 (defn ^:integration-api paivita-tutkinto!
   "Jos peruste on muuttunut, tekee uuden version tutkinnosta. Jos peruste on sama, päivittää olemassaolevaa.
    Palauttaa tutkintoversion id:n."
   [tutkinto]
+;  (clojure.pprint/pprint tutkinto)
   (let [tutkintotiedot (select-keys tutkinto [:nimi_fi :nimi_sv :opintoala :tyyppi :tutkintotaso])
         versiotiedot (select-keys tutkinto [:voimassa_alkupvm :voimassa_loppupvm :koodistoversio 
                                             :siirtymaajan_loppupvm  :jarjestyskoodistoversio :peruste :eperustetunnus])
         tutkintotunnus (:tutkintotunnus tutkinto)
-        vanha-versio (or (hae-tutkintoversio-perusteella tutkintotunnus (:peruste tutkinto))
+        vanha-versio (or (hae-tutkintoversio-perusteella tutkintotunnus (:peruste tutkinto) (:eperustetunnus tutkinto))
                          (hae-tutkintoversio-perusteella tutkintotunnus nil))
         uusi-versio (->
                       (merge (hae-uusin-tutkintoversio tutkintotunnus) versiotiedot)
@@ -90,7 +100,8 @@
     (when (seq tutkintotiedot)
       (paivita! tutkintotunnus tutkintotiedot))
     (if (and vanha-versio
-             (or (= (:peruste vanha-versio) (:peruste versiotiedot))
+             (or  (and (= (:peruste vanha-versio) (:peruste versiotiedot))
+                       (= (:eperustetunnus vanha-versio) (:eperustetunnus versiotiedot)))
                  (= (:voimassa_alkupvm vanha-versio) (:voimassa_alkupvm versiotiedot)))) ; vanha peruste on nil, mutta voimassaolo täsmää -> sama versio
       (do
         (paivita-tutkintoversio! (assoc versiotiedot :tutkintoversio_id (:tutkintoversio_id vanha-versio)))
@@ -440,7 +451,7 @@
 (defn ^:integration-api paivita-osaamisalat!
   "Päivittää tutkinnon perusteen osaamisalat"
   [peruste]
-  (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste)))
+  (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste) (:eperustetunnus peruste)))
         osatunnus->id (into {} (for [osa (hae-perusteen-tutkinnonosat tutkintoversio-id)]
                                  [(:osatunnus osa) (:tutkinnonosa_id osa)]))]
     (sql/delete osaamisala-ja-tutkinnonosa
@@ -458,7 +469,7 @@
 (defn ^:integration-api paivita-tutkinnonosat!
   "Päivittää tutkinnon perusteen tutkinnonosat"
   [peruste]
-  (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste)))]
+  (let [tutkintoversio-id (:tutkintoversio_id (hae-tutkintoversio-perusteella (:tutkinto peruste) (:diaarinumero peruste) (:eperustetunnus peruste)))]
     (sql/delete osaamisala-ja-tutkinnonosa
       (sql/where {:tutkinnonosa [in (sql/subselect tutkinnonosa
                                       (sql/fields :tutkinnonosa_id)
