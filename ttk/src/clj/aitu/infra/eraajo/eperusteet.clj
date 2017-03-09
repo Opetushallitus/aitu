@@ -25,8 +25,6 @@
 (defn valitse-perusteen-kentat [peruste]
   (select-keys peruste [:peruste :eperustetunnus :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm]))
 
-; tästä tulee ulos aina vain yksi perustedata per diaarinumero??
-; TODO: tutkintoa ei löydy -> ei ole muuttunut peruste -> mistä saadaan tutkinto ?
 (defn muuttuneet-perusteet [perusteet]
   (for [[tutkintotunnus peruste] perusteet
         :let [diaarinumero (:diaarinumero peruste)
