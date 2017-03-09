@@ -76,7 +76,6 @@
    (if (nil? eperustetunnus)
      (hae-tutkintoversio-perusteella tutkintotunnus peruste)
      (do
-       (println (str "haetaan kaikilla ... " eperustetunnus " / " tutkintotunnus " / " peruste))
        (sql-util/select-unique-or-nil tutkintoversio
                                       (sql/where {:eperustetunnus eperustetunnus
                                                   :tutkintotunnus tutkintotunnus
