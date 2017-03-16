@@ -167,7 +167,7 @@
 
 (defn hae-yhteenveto-raportti
   [{{:keys [luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
-            tila tutkinto suoritettavatutkinto tutkinnonosa osaamisala suorittaja toimikunta edelliset-kayttaja] :as params} :params}]
+            tila tutkinto suoritettavatutkinto tutkinnonosa osaamisala suorittaja suorittajaid toimikunta edelliset-kayttaja] :as params} :params}]
  
   ; SQLKorma makroilee or ja and -funktiot, joten niitä ei voi käyttää ehtorakenteisiin enää sql-select makron sisällä normaalisti
   ; Ärsyttävää? Kyllä, erittäin. Siksi kikkailua.
@@ -203,6 +203,7 @@
               (seq tutkinto) (sql/where {:suorituskerta.tutkintoversio_id tutkinto})
               (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
               (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
+              (seq suorittajaid) (sql/where {:suorittaja.suorittaja_id (Integer/parseInt suorittajaid)})              
               (seq suorittaja) (sql/where (or {:suorittaja.hetu suorittaja}
                                               {:suorittaja.oid suorittaja}
                                               {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}

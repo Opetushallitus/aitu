@@ -23,7 +23,13 @@
   </div>
 </div>
 
-<hr> 
+<hr>
+  <div>
+    <a ng-href="[[base-url]]/api/suoritus/suoritusraportti?suorittajaid={{suorittaja.suorittaja_id}}">
+      Lataa suoritukset PDF:nä
+    </a>
+  </div>
+<hr>
 <table jarjestettava-taulukko="suoritukset" jarjestetty-data="suorituksetJarjestetty">
  <thead>
    <tr>
