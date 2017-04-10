@@ -46,8 +46,11 @@
       (log/info "Päivitetään tutkintojen perusteet ePerusteet-järjestelmästä")
       (let [nyt (time/now)
             viimeisin-haku (tutkinto-arkisto/hae-viimeisin-eperusteet-paivitys)
-            perusteet (eperusteet/hae-perusteet viimeisin-haku asetukset)
-            muuttuneet (muuttuneet-perusteet perusteet)]
+            perusteet_norm (eperusteet/hae-perusteet viimeisin-haku asetukset)
+            ; JIRA-XXX: tutkinto 357207 on ongelmallinen ePerusteissa, ohitetaan se
+            perusteet (filter #(not (= "357207" (first %))) perusteet_norm) ; TODO: ohitetaan epämääräinen tutkinto
+            muuttuneet (muuttuneet-perusteet perusteet)
+            ]
         
         (doseq [tutkinto muuttuneet]
           (log/info "Päivitetään tutkinto" (:tutkintotunnus tutkinto) (:peruste tutkinto))
