@@ -9,7 +9,7 @@ cd $REPO_PATH/vagrant
 vagrant ssh db -c 'cd /env && ./pgload-ttk.sh /dumps/amtu-dump.db dev-db.pgpass ttk ttk_adm 127.0.0.1'
 
 cd $REPO_PATH/ttk-db
-lein run 'postgresql://ttk_adm:ttk-adm@127.0.0.1:2345/ttk' -u ttk_user --aituhaku-username aituhaku_user
+lein run 'postgresql://ttk_adm:ttk-adm@127.0.0.1:2345/ttk' -u ttk_user --aituhaku-username aituhaku_user --anonymisointi
 
 cd $REPO_PATH/vagrant
 vagrant ssh db -c 'cd /env && ./pgdump-ttk.sh /dumps/amtu-dump.db dev-db.pgpass ttk ttk_adm 127.0.0.1'
