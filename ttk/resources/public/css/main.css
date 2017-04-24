@@ -7,11 +7,13 @@ body {
   font-family: "Open Sans", "Arial", sans-serif;
   font-size: 14px;
   line-height: 24px;
-  color: #4d4d4d; }
+  color: #4d4d4d;
+}
 
 p {
   margin-bottom: 12px;
-  line-height: 24px; }
+  line-height: 24px;
+}
 
 h1 {
   font-family: "Open Sans Condensed", "Arial", sans-serif;
@@ -19,7 +21,8 @@ h1 {
   font-size: 2.14em;
   line-height: 48px;
   margin-bottom: 24px;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+}
 
 h2 {
   font-family: "Open Sans Condensed", "Arial", sans-serif;
@@ -27,57 +30,83 @@ h2 {
   font-weight: 300;
   font-size: 1.7em;
   text-transform: uppercase;
-  color: gray; }
+  color: gray;
+}
 
 h3 {
   font-family: "Open Sans Condensed", "Arial", sans-serif;
   margin-bottom: 6px;
   font-size: 1.3em;
-  font-weight: 700; }
+  font-weight: 700;
+}
 
 label {
   font-size: 1em;
   font-family: "Open Sans", "Arial", sans-serif;
-  font-weight: 700; }
-  label input {
-    font-weight: normal; }
+  font-weight: 700;
+}
+
+label input {
+  font-weight: normal;
+}
 
 a {
   color: #107ea2;
-  text-decoration: none; }
-  a:not(.ajax-link)[href=""] {
-    color: #4d4d4d;
-    cursor: default; }
-  a.show-more:before {
-    content: "["; }
-  a.show-more:after {
-    content: "]"; }
-  a:hover {
-    color: #083f51;
-    text-decoration: underline; }
-    .pagination a:hover, .tutkintovalitsin a:hover {
-      text-decoration: none; }
+  text-decoration: none;
+}
+
+a:not(.ajax-link)[href=""] {
+  color: #4d4d4d;
+  cursor: default;
+}
+
+a.show-more:before {
+  content: "[";
+}
+
+a.show-more:after {
+  content: "]";
+}
+
+a:hover {
+  color: #083f51;
+  text-decoration: underline;
+}
+
+.pagination a:hover, .tutkintovalitsin a:hover {
+  text-decoration: none;
+}
 
 @font-face {
   font-family: 'Open Sans';
   font-weight: 400;
-  src: url("../font/opensans.woff") format("woff"); }
+  src: url("../font/opensans.woff") format("woff");
+}
+
 @font-face {
   font-family: 'Open Sans';
   font-weight: 600;
-  src: url("../font/opensans-semibold.woff") format("woff"); }
+  src: url("../font/opensans-semibold.woff") format("woff");
+}
+
 @font-face {
   font-family: 'Open Sans';
   font-weight: 700;
-  src: url("../font/opensans-bold.woff") format("woff"); }
+  src: url("../font/opensans-bold.woff") format("woff");
+}
+
 @font-face {
   font-family: 'Open Sans Condensed';
   font-weight: 300;
-  src: url("../font/opensans-condensed-light.woff") format("woff"); }
+  src: url("../font/opensans-condensed-light.woff") format("woff");
+}
+
 @font-face {
   font-family: 'Open Sans Condensed';
   font-weight: 700;
-  src: url("../font/opensans-condensed-bold.woff") format("woff"); }
+  src: url("../font/opensans-condensed-bold.woff") format("woff");
+}
+
 /* Voidaan käyttää elementissä, jonka perään hakutaan ikoni. Ei tarvitse erillistä dom elementtiä ikonille.
 Esim: @include icon-after(11px, 11px){@include user-icon;}; */
 /* Ikonimääritykset */
@@ -87,130 +116,190 @@ Esim: <div class="icon user-icon"></div> */
   background-image: url("../img/oph-icon-sprite.svg");
   width: 17px;
   height: 16px;
-  background-position: 0 -200px; }
-  .no-svg .icon.user-icon {
-    background-image: url("../img/oph-icon-sprite.png"); }
+  background-position: 0 -200px;
+}
+
+.no-svg .icon.user-icon {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
 .icon.edit-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 22px;
   height: 22px;
-  background-position: 0 -750px; }
-  .no-svg .icon.edit-icon {
-    background-image: url("../img/oph-icon-sprite.png"); }
-  .icon.edit-icon:hover {
-    background-position: 0 -800px; }
+  background-position: 0 -750px;
+}
+
+.no-svg .icon.edit-icon {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.icon.edit-icon:hover {
+  background-position: 0 -800px;
+}
+
 .icon.add-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 18px;
   height: 18px;
-  background-position: 0 -1150px; }
-  .no-svg .icon.add-icon {
-    background-image: url("../img/oph-icon-sprite.png"); }
-  .icon.add-icon:hover {
-    background-position: 0 -1200px; }
+  background-position: 0 -1150px;
+}
+
+.no-svg .icon.add-icon {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.icon.add-icon:hover {
+  background-position: 0 -1200px;
+}
+
 .icon.delete-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 16px;
   height: 16px;
-  background-position: 0 -1250px; }
-  .no-svg .icon.delete-icon {
-    background-image: url("../img/oph-icon-sprite.png"); }
-  .icon.delete-icon:hover {
-    background-position: 0 -1300px; }
+  background-position: 0 -1250px;
+}
+
+.no-svg .icon.delete-icon {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.icon.delete-icon:hover {
+  background-position: 0 -1300px;
+}
+
 .icon.calendar-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 18px;
   height: 18px;
-  background-position: 0 -1050px; }
-  .no-svg .icon.calendar-icon {
-    background-image: url("../img/oph-icon-sprite.png"); }
-  .icon.calendar-icon:hover {
-    background-position: 0 -1100px; }
+  background-position: 0 -1050px;
+}
+
+.no-svg .icon.calendar-icon {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.icon.calendar-icon:hover {
+  background-position: 0 -1100px;
+}
+
 .icon.remove-icon-small {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 12px;
   height: 12px;
-  background-position: 0 -1500px; }
-  .no-svg .icon.remove-icon-small {
-    background-image: url("../img/oph-icon-sprite.png"); }
+  background-position: 0 -1500px;
+}
+
+.no-svg .icon.remove-icon-small {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
 .icon.expand-icon-small {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
   height: 5px;
-  background-position: 0 -650px; }
-  .no-svg .icon.expand-icon-small {
-    background-image: url("../img/oph-icon-sprite.png"); }
+  background-position: 0 -650px;
+}
+
+.no-svg .icon.expand-icon-small {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
 .icon.expand-icon-small-white {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
   height: 5px;
-  background-position: 0 -650px; }
-  .no-svg .icon.expand-icon-small-white {
-    background-image: url("../img/oph-icon-sprite.png"); }
+  background-position: 0 -650px;
+}
+
+.no-svg .icon.expand-icon-small-white {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
 .icon.collapse-icon-small {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 8px;
   height: 5px;
-  background-position: 0 -600px; }
-  .no-svg .icon.collapse-icon-small {
-    background-image: url("../img/oph-icon-sprite.png"); }
+  background-position: 0 -600px;
+}
+
+.no-svg .icon.collapse-icon-small {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
 .icon.logout-icon {
   background-image: url("../img/oph-icon-sprite.svg");
   width: 17px;
   height: 16px;
-  background-position: 0 -1650px; }
-  .no-svg .icon.logout-icon {
-    background-image: url("../img/oph-icon-sprite.png"); }
+  background-position: 0 -1650px;
+}
+
+.no-svg .icon.logout-icon {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 /* Nappi jossa ikoni oikeassa reunassa */
 button.button-with-icon,
 a.button.button-with-icon {
-  padding-right: 50px; }
-  button.button-with-icon.add-icon-white:after,
-  a.button.button-with-icon.add-icon-white:after {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 16px;
-    height: 16px;
-    background-position: 0 -450px;
-    content: "";
-    position: absolute;
-    margin-top: 2px;
-    margin-left: 10px;
-    z-index: 1;
-    background-repeat: no-repeat; }
-    .no-svg button.button-with-icon.add-icon-white:after, .no-svg
-    a.button.button-with-icon.add-icon-white:after {
-      background-image: url("../img/oph-icon-sprite.png"); }
-  button.button-with-icon.add-user-icon:after,
-  a.button.button-with-icon.add-user-icon:after {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 26px;
-    height: 16px;
-    background-position: 0 -250px;
-    content: "";
-    position: absolute;
-    margin-top: 2px;
-    margin-left: 10px;
-    z-index: 1;
-    background-repeat: no-repeat; }
-    .no-svg button.button-with-icon.add-user-icon:after, .no-svg
-    a.button.button-with-icon.add-user-icon:after {
-      background-image: url("../img/oph-icon-sprite.png"); }
-  button.button-with-icon.search-icon:after,
-  a.button.button-with-icon.search-icon:after {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 18px;
-    height: 18px;
-    background-position: 0 -1600px;
-    content: "";
-    position: absolute;
-    margin-top: 2p;
-    margin-left: 10px;
-    z-index: 1;
-    background-repeat: no-repeat; }
-    .no-svg button.button-with-icon.search-icon:after, .no-svg
-    a.button.button-with-icon.search-icon:after {
-      background-image: url("../img/oph-icon-sprite.png"); }
+  padding-right: 50px;
+}
+
+button.button-with-icon.add-icon-white:after,
+a.button.button-with-icon.add-icon-white:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 16px;
+  height: 16px;
+  background-position: 0 -450px;
+  content: "";
+  position: absolute;
+  margin-top: 2px;
+  margin-left: 10px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg button.button-with-icon.add-icon-white:after, .no-svg
+a.button.button-with-icon.add-icon-white:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+button.button-with-icon.add-user-icon:after,
+a.button.button-with-icon.add-user-icon:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 26px;
+  height: 16px;
+  background-position: 0 -250px;
+  content: "";
+  position: absolute;
+  margin-top: 2px;
+  margin-left: 10px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg button.button-with-icon.add-user-icon:after, .no-svg
+a.button.button-with-icon.add-user-icon:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+button.button-with-icon.search-icon:after,
+a.button.button-with-icon.search-icon:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 18px;
+  height: 18px;
+  background-position: 0 -1600px;
+  content: "";
+  position: absolute;
+  margin-top: 2p;
+  margin-left: 10px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg button.button-with-icon.search-icon:after, .no-svg
+a.button.button-with-icon.search-icon:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 button {
   background-color: #107ea2;
@@ -223,13 +312,17 @@ button {
   cursor: pointer;
   padding-left: 15px;
   padding-right: 15px;
-  font-family: "Open Sans", "Arial", sans-serif; }
-  button:hover {
-    background-color: #083f51; }
+  font-family: "Open Sans", "Arial", sans-serif;
+}
+
+button:hover {
+  background-color: #083f51;
+}
 
 button:disabled {
   opacity: 0.5;
-  background-color: #107ea2; }
+  background-color: #107ea2;
+}
 
 button.icon {
   outline: none;
@@ -237,51 +330,70 @@ button.icon {
   margin-right: 0;
   padding: 0;
   background-color: transparent;
-  vertical-align: middle; }
+  vertical-align: middle;
+}
 
 h1 button.icon {
-  margin-left: 10px; }
+  margin-left: 10px;
+}
 
 select {
-  height: 28px; }
+  height: 28px;
+}
 
 form {
-  margin-bottom: 24px; }
-  form .pakollisia-kenttia-teksti {
-    margin: 12px 0; }
+  margin-bottom: 24px;
+}
+
+form .pakollisia-kenttia-teksti {
+  margin: 12px 0;
+}
 
 label {
   margin-bottom: 6px;
   display: inline-block;
-  vertical-align: middle; }
-  label ~ p, label ~ input, label ~ a {
-    display: block; }
-  label.pakollinen:after {
-    content: " (*)"; }
+  vertical-align: middle;
+}
+
+label ~ p, label ~ input, label ~ a {
+  display: block;
+}
+
+label.pakollinen:after {
+  content: " (*)";
+}
 
 input[type="text"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 2px 5px;
-  vertical-align: top; }
-  input[type="text"]:focus {
-    border-color: #042029; }
-  input[type="text"].ng-invalid-date {
-    border: 1px solid red; }
+  vertical-align: top;
+}
+
+input[type="text"]:focus {
+  border-color: #042029;
+}
+
+input[type="text"].ng-invalid-date {
+  border: 1px solid red;
+}
 
 .placeholder {
-  color: #aaa; }
+  color: #aaa;
+}
 
 .modal-dialog-button-right {
   position: absolute;
   right: 0;
-  bottom: 15px; }
+  bottom: 15px;
+}
 
 .modal-dialog-button-left {
   position: absolute;
   left: 15px;
-  bottom: 15px; }
+  bottom: 15px;
+}
 
 fieldset {
   border: 0;
@@ -290,67 +402,99 @@ fieldset {
   display: inline-block;
   width: 30%;
   margin: 0 6px 12px 0;
-  vertical-align: top; }
-  fieldset.select2-fieldset {
-    vertical-align: bottom; }
-  fieldset input, fieldset p, fieldset select {
-    width: 100%;
-    height: 28px;
-    margin: 0;
-    display: inline-block;
-    padding: 2px 0; }
-    fieldset input.icon, fieldset p.icon, fieldset select.icon {
-      padding: 0;
-      background-color: transparent;
-      vertical-align: middle; }
-    fieldset input[type=checkbox], fieldset input[type=radio], fieldset p[type=checkbox], fieldset p[type=radio], fieldset select[type=checkbox], fieldset select[type=radio] {
-      width: 18px;
-      background: white;
-      margin: 0 6px 0 0;
-      border: 0;
-      vertical-align: middle; }
-  fieldset textarea {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100px;
-    padding: 5px;
-    border: 1px solid #107ea2; }
-  fieldset input {
-    padding-left: 2px; }
-  fieldset input, fieldset select {
-    border: 1px solid #107ea2; }
-  fieldset select {
-    height: 28px; }
-  fieldset.lisatiedot p {
-    padding: 0; }
-  .wide-fieldset fieldset {
-    width: 100%; }
+  vertical-align: top;
+}
+
+fieldset.select2-fieldset {
+  vertical-align: bottom;
+}
+
+fieldset input, fieldset p, fieldset select {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  display: inline-block;
+  padding: 2px 0;
+}
+
+fieldset input.icon, fieldset p.icon, fieldset select.icon {
+  padding: 0;
+  background-color: transparent;
+  vertical-align: middle;
+}
+
+fieldset input[type=checkbox], fieldset input[type=radio], fieldset p[type=checkbox], fieldset p[type=radio], fieldset select[type=checkbox], fieldset select[type=radio] {
+  width: 18px;
+  background: white;
+  margin: 0 6px 0 0;
+  border: 0;
+  vertical-align: middle;
+}
+
+fieldset textarea {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100px;
+  padding: 5px;
+  border: 1px solid #107ea2;
+}
+
+fieldset input {
+  padding-left: 2px;
+}
+
+fieldset input, fieldset select {
+  border: 1px solid #107ea2;
+}
+
+fieldset select {
+  height: 28px;
+}
+
+fieldset.lisatiedot p {
+  padding: 0;
+}
+
+.wide-fieldset fieldset {
+  width: 100%;
+}
 
 .select2-container .select2-container-multi .select2-results {
   width: 50%;
-  display: block; }
-  .select2-container .select2-container-multi .select2-results a, .select2-container .select2-container-multi .select2-results ul {
-    border: 1px solid #107ea2;
-    background-color: white;
-    border-radius: 0; }
+  display: block;
+}
+
+.select2-container .select2-container-multi .select2-results a, .select2-container .select2-container-multi .select2-results ul {
+  border: 1px solid #107ea2;
+  background-color: white;
+  border-radius: 0;
+}
 
 .checkbox-pair {
-  display: block; }
-  .checkbox-pair label {
-    display: inline;
-    width: 30%; }
-  .checkbox-pair input[type=checkbox] {
-    display: inline;
-    margin: 12px 6px 0 0;
-    width: 18px; }
+  display: block;
+}
+
+.checkbox-pair label {
+  display: inline;
+  width: 30%;
+}
+
+.checkbox-pair input[type=checkbox] {
+  display: inline;
+  margin: 12px 6px 0 0;
+  width: 18px;
+}
 
 .search-field {
   width: 30%;
-  display: block; }
-  .search-field input {
-    width: 100%; }
+  display: block;
+}
+
+.search-field input {
+  width: 100%;
+}
 
 .datepicker-field .dropdown-menu {
   list-style: none;
@@ -361,71 +505,104 @@ fieldset {
   background-color: #ffffff;
   width: 250px !important;
   padding: 6px;
-  margin-top: -1px; }
-  .datepicker-field .dropdown-menu:before {
-    content: '';
-    display: inline-block;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 7px solid #107ea2;
-    position: absolute;
-    top: -7px;
-    left: 6px; }
-  .datepicker-field .dropdown-menu:after {
-    content: '';
-    display: inline-block;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 6px solid #ffffff;
-    position: absolute;
-    top: -6px;
-    left: 7px; }
-  .datepicker-field .dropdown-menu button {
-    background-color: transparent;
-    color: #4d4d4d;
-    width: auto;
-    height: auto;
-    margin: 0;
-    padding: 0; }
-    .datepicker-field .dropdown-menu button:hover {
-      background-color: #e6e6e6; }
-  .datepicker-field .dropdown-menu tr {
-    background-color: #ffffff !important;
-    border: 0 !important; }
-  .datepicker-field .dropdown-menu thead button {
-    background: none;
-    padding: 0;
-    color: #4d4d4d; }
-  .datepicker-field .dropdown-menu thead button.pull-left {
-    background: none; }
-    .datepicker-field .dropdown-menu thead button.pull-left:before {
-      content: "<";
-      color: #4d4d4d; }
-  .datepicker-field .dropdown-menu thead button.pull-right {
-    background: none; }
-    .datepicker-field .dropdown-menu thead button.pull-right:before {
-      content: ">";
-      color: #4d4d4d; }
-  .datepicker-field .dropdown-menu thead tr:first-child th:first-child + th button {
-    width: 100%;
-    padding: 6px 0; }
-  .datepicker-field .dropdown-menu th {
-    text-align: center;
-    padding: 0;
-    vertical-align: middle; }
-  .datepicker-field .dropdown-menu tbody td {
-    padding: 0; }
-    .datepicker-field .dropdown-menu tbody td button {
-      text-align: center;
-      width: 100%;
-      padding: 7px 0; }
-  .datepicker-field .dropdown-menu .btn-info, .datepicker-field .dropdown-menu .btn-info:hover {
-    color: #ffffff;
-    background-color: #107ea2; }
+  margin-top: -1px;
+}
+
+.datepicker-field .dropdown-menu:before {
+  content: '';
+  display: inline-block;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #107ea2;
+  position: absolute;
+  top: -7px;
+  left: 6px;
+}
+
+.datepicker-field .dropdown-menu:after {
+  content: '';
+  display: inline-block;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  position: absolute;
+  top: -6px;
+  left: 7px;
+}
+
+.datepicker-field .dropdown-menu button {
+  background-color: transparent;
+  color: #4d4d4d;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.datepicker-field .dropdown-menu button:hover {
+  background-color: #e6e6e6;
+}
+
+.datepicker-field .dropdown-menu tr {
+  background-color: #ffffff !important;
+  border: 0 !important;
+}
+
+.datepicker-field .dropdown-menu thead button {
+  background: none;
+  padding: 0;
+  color: #4d4d4d;
+}
+
+.datepicker-field .dropdown-menu thead button.pull-left {
+  background: none;
+}
+
+.datepicker-field .dropdown-menu thead button.pull-left:before {
+  content: "<";
+  color: #4d4d4d;
+}
+
+.datepicker-field .dropdown-menu thead button.pull-right {
+  background: none;
+}
+
+.datepicker-field .dropdown-menu thead button.pull-right:before {
+  content: ">";
+  color: #4d4d4d;
+}
+
+.datepicker-field .dropdown-menu thead tr:first-child th:first-child + th button {
+  width: 100%;
+  padding: 6px 0;
+}
+
+.datepicker-field .dropdown-menu th {
+  text-align: center;
+  padding: 0;
+  vertical-align: middle;
+}
+
+.datepicker-field .dropdown-menu tbody td {
+  padding: 0;
+}
+
+.datepicker-field .dropdown-menu tbody td button {
+  text-align: center;
+  width: 100%;
+  padding: 7px 0;
+}
+
+.datepicker-field .dropdown-menu .btn-info, .datepicker-field .dropdown-menu .btn-info:hover {
+  color: #ffffff;
+  background-color: #107ea2;
+}
 
 fieldset.datepicker-field input {
   width: 92%;
-  display: inline; }
+  display: inline;
+}
+
 fieldset.datepicker-field .open-datepicker {
   margin-top: -28px;
   margin-left: 92%;
@@ -435,171 +612,245 @@ fieldset.datepicker-field .open-datepicker {
   background-color: #107ea2;
   width: 29px;
   height: 28px;
-  background-position: 5px -1046px; }
-  fieldset.datepicker-field .open-datepicker:hover {
-    background-color: #083f51;
-    background-position: 5px -1046px; }
+  background-position: 5px -1046px;
+}
+
+fieldset.datepicker-field .open-datepicker:hover {
+  background-color: #083f51;
+  background-position: 5px -1046px;
+}
 
 .fieldset-table {
   display: table;
-  width: 100%; }
-  .fieldset-table fieldset {
-    width: 90%; }
+  width: 100%;
+}
+
+.fieldset-table fieldset {
+  width: 90%;
+}
 
 .select2-container {
-  width: 100%; }
+  width: 100%;
+}
 
 .select2-fieldset .select2-container .select2-choice .select2-arrow {
   filter: none;
   background-image: none;
   background-color: #107ea2;
   width: 25px;
-  border: 0; }
-  .select2-fieldset .select2-container .select2-choice .select2-arrow b {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 8px;
-    height: 5px;
-    background-position: 0 -1550px;
-    margin-top: 10px;
-    margin-left: 9px; }
-    .no-svg .select2-fieldset .select2-container .select2-choice .select2-arrow b {
-      background-image: url("../img/oph-icon-sprite.png"); }
+  border: 0;
+}
+
+.select2-fieldset .select2-container .select2-choice .select2-arrow b {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 8px;
+  height: 5px;
+  background-position: 0 -1550px;
+  margin-top: 10px;
+  margin-left: 9px;
+}
+
+.no-svg .select2-fieldset .select2-container .select2-choice .select2-arrow b {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 .select2-fieldset .select2-container.select2-dropdown-open .select2-choice .select2-arrow {
-  background-color: transparent; }
-  .select2-fieldset .select2-container.select2-dropdown-open .select2-choice .select2-arrow b {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 8px;
-    height: 5px;
-    background-position: 0 -600px; }
-    .no-svg .select2-fieldset .select2-container.select2-dropdown-open .select2-choice .select2-arrow b {
-      background-image: url("../img/oph-icon-sprite.png"); }
+  background-color: transparent;
+}
+
+.select2-fieldset .select2-container.select2-dropdown-open .select2-choice .select2-arrow b {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 8px;
+  height: 5px;
+  background-position: 0 -600px;
+}
+
+.no-svg .select2-fieldset .select2-container.select2-dropdown-open .select2-choice .select2-arrow b {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 .select2-container a.select2-choice, .select2-container-active a.select2-choice, .select2-container-multi ul.select2-choices {
   background-image: none;
   filter: none;
   background-color: transparent;
   border: 1px solid #107ea2;
-  color: #000000; }
+  color: #000000;
+}
 
 .select2-container a.select2-choice, .select2-container-active a.select2-choice, .select2-drop, .select2-arrow {
   -webkit-border-radius: 0 0 0 0 !important;
   -moz-border-radius: 0 0 0 0 !important;
-  border-radius: 0 0 0 0 !important; }
+  border-radius: 0 0 0 0 !important;
+}
 
 .select2-drop.select2-drop-multi {
-  border-top: 1px solid; }
+  border-top: 1px solid;
+}
 
 .select2-container-active a.select2-choice, .select2-drop {
-  border-color: #083f51 !important; }
-  .select2-container-active a.select2-choice li.select2-no-results, .select2-container-active a.select2-choice li.select2-searching, .select2-drop li.select2-no-results, .select2-drop li.select2-searching {
-    background-color: transparent !important; }
+  border-color: #083f51 !important;
+}
+
+.select2-container-active a.select2-choice li.select2-no-results, .select2-container-active a.select2-choice li.select2-searching, .select2-drop li.select2-no-results, .select2-drop li.select2-searching {
+  background-color: transparent !important;
+}
 
 .select2-result:nth-child(2n) {
-  background-color: #f2f2f2; }
+  background-color: #f2f2f2;
+}
+
 .select2-result.select2-highlighted {
-  background-color: #107ea2 !important; }
+  background-color: #107ea2 !important;
+}
 
 .tyhja-:empty:after {
   /*
-    Oikeasti haluttiin sisällöksi vain {content: "-";}, mutta tietyissä tilanteissa IE9 kaatui em. ratkaisuun,
-    joten kierettiin ongelma ao. tyylillä.
-  */
+      Oikeasti haluttiin sisällöksi vain {content: "-";}, mutta tietyissä tilanteissa IE9 kaatui em. ratkaisuun,
+      joten kierettiin ongelma ao. tyylillä.
+    */
   width: 4px;
   height: 1px;
   background-color: #4d4d4d;
   display: inline-block;
   vertical-align: middle;
-  content: ""; }
+  content: "";
+}
 
 table:not(.table-condensed), .table {
   border-collapse: collapse;
   width: 100%;
   box-sizing: border-box;
-  text-align: left; }
-  table:not(.table-condensed).full-width, .table.full-width {
-    width: 100%; }
-  table:not(.table-condensed) thead tr, table:not(.table-condensed) tfoot tr, table:not(.table-condensed) .table-header, .table thead tr, .table tfoot tr, .table .table-header {
-    border-bottom: 1px solid #999999;
-    border-top: 1px solid #999999;
-    background: #b3b3b3; }
-    table:not(.table-condensed) thead tr th, table:not(.table-condensed) thead tr .table-cell, table:not(.table-condensed) tfoot tr th, table:not(.table-condensed) tfoot tr .table-cell, table:not(.table-condensed) .table-header th, table:not(.table-condensed) .table-header .table-cell, .table thead tr th, .table thead tr .table-cell, .table tfoot tr th, .table tfoot tr .table-cell, .table .table-header th, .table .table-header .table-cell {
-      padding: 6px 12px;
-      font-weight: bold;
-      max-width: 20%;
-      text-align: left;
-      vertical-align: bottom; }
-      table:not(.table-condensed) thead tr th:last-child, table:not(.table-condensed) thead tr .table-cell:last-child, table:not(.table-condensed) tfoot tr th:last-child, table:not(.table-condensed) tfoot tr .table-cell:last-child, table:not(.table-condensed) .table-header th:last-child, table:not(.table-condensed) .table-header .table-cell:last-child, .table thead tr th:last-child, .table thead tr .table-cell:last-child, .table tfoot tr th:last-child, .table tfoot tr .table-cell:last-child, .table .table-header th:last-child, .table .table-header .table-cell:last-child {
-        max-width: 80%; }
-      table:not(.table-condensed) thead tr th.sortable, table:not(.table-condensed) thead tr .table-cell.sortable, table:not(.table-condensed) tfoot tr th.sortable, table:not(.table-condensed) tfoot tr .table-cell.sortable, table:not(.table-condensed) .table-header th.sortable, table:not(.table-condensed) .table-header .table-cell.sortable, .table thead tr th.sortable, .table thead tr .table-cell.sortable, .table tfoot tr th.sortable, .table tfoot tr .table-cell.sortable, .table .table-header th.sortable, .table .table-header .table-cell.sortable {
-        cursor: pointer;
-        padding-right: 25px; }
-        table:not(.table-condensed) thead tr th.sortable .sort-icon, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon, table:not(.table-condensed) tfoot tr th.sortable .sort-icon, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon, table:not(.table-condensed) .table-header th.sortable .sort-icon, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon, .table thead tr th.sortable .sort-icon, .table thead tr .table-cell.sortable .sort-icon, .table tfoot tr th.sortable .sort-icon, .table tfoot tr .table-cell.sortable .sort-icon, .table .table-header th.sortable .sort-icon, .table .table-header .table-cell.sortable .sort-icon {
-          display: inline-block;
-          position: absolute;
-          margin-left: 10px;
-          margin-top: 6px;
-          background-image: url("../img/oph-icon-sprite.svg");
-          width: 8px;
-          height: 12px;
-          background-position: 0 -700px; }
-          .no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon, .no-svg .table thead tr th.sortable .sort-icon, .no-svg .table thead tr .table-cell.sortable .sort-icon, .no-svg .table tfoot tr th.sortable .sort-icon, .no-svg .table tfoot tr .table-cell.sortable .sort-icon, .no-svg .table .table-header th.sortable .sort-icon, .no-svg .table .table-header .table-cell.sortable .sort-icon {
-            background-image: url("../img/oph-icon-sprite.png"); }
-          table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby, table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby, table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby, .table thead tr th.sortable .sort-icon.sortby, .table thead tr .table-cell.sortable .sort-icon.sortby, .table tfoot tr th.sortable .sort-icon.sortby, .table tfoot tr .table-cell.sortable .sort-icon.sortby, .table .table-header th.sortable .sort-icon.sortby, .table .table-header .table-cell.sortable .sort-icon.sortby {
-            background-image: url("../img/oph-icon-sprite.svg");
-            width: 8px;
-            height: 5px;
-            background-position: 0 -650px;
-            margin-top: 10px; }
-            .no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby, .no-svg .table thead tr th.sortable .sort-icon.sortby, .no-svg .table thead tr .table-cell.sortable .sort-icon.sortby, .no-svg .table tfoot tr th.sortable .sort-icon.sortby, .no-svg .table tfoot tr .table-cell.sortable .sort-icon.sortby, .no-svg .table .table-header th.sortable .sort-icon.sortby, .no-svg .table .table-header .table-cell.sortable .sort-icon.sortby {
-              background-image: url("../img/oph-icon-sprite.png"); }
-          table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby-reverse, .table thead tr th.sortable .sort-icon.sortby-reverse, .table thead tr .table-cell.sortable .sort-icon.sortby-reverse, .table tfoot tr th.sortable .sort-icon.sortby-reverse, .table tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .table .table-header th.sortable .sort-icon.sortby-reverse, .table .table-header .table-cell.sortable .sort-icon.sortby-reverse {
-            background-image: url("../img/oph-icon-sprite.svg");
-            width: 8px;
-            height: 5px;
-            background-position: 0 -600px;
-            margin-top: 10px; }
-            .no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table thead tr th.sortable .sort-icon.sortby-reverse, .no-svg .table thead tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table tfoot tr th.sortable .sort-icon.sortby-reverse, .no-svg .table tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table .table-header th.sortable .sort-icon.sortby-reverse, .no-svg .table .table-header .table-cell.sortable .sort-icon.sortby-reverse {
-              background-image: url("../img/oph-icon-sprite.png"); }
-  table:not(.table-condensed) tbody tr td, table:not(.table-condensed) tbody tr .table-cell, table:not(.table-condensed) .table-row td, table:not(.table-condensed) .table-row .table-cell, .table tbody tr td, .table tbody tr .table-cell, .table .table-row td, .table .table-row .table-cell {
-    padding: 6px 12px;
-    max-width: 20% !important; }
-  table:not(.table-condensed) tbody:not(.tuplarivit) tr, table:not(.table-condensed) .table-row, .table tbody:not(.tuplarivit) tr, .table .table-row {
-    border-bottom: 1px solid #999999;
-    background: #e6e6e6; }
-    table:not(.table-condensed) tbody:not(.tuplarivit) tr:nth-child(odd), table:not(.table-condensed) .table-row:nth-child(odd), .table tbody:not(.tuplarivit) tr:nth-child(odd), .table .table-row:nth-child(odd) {
-      background: white; }
-  table:not(.table-condensed) tbody.tuplarivit tr, .table tbody.tuplarivit tr {
-    background: #e6e6e6; }
-    table:not(.table-condensed) tbody.tuplarivit tr:nth-child(4n+1), table:not(.table-condensed) tbody.tuplarivit tr:nth-child(4n+2), .table tbody.tuplarivit tr:nth-child(4n+1), .table tbody.tuplarivit tr:nth-child(4n+2) {
-      background: white; }
-    table:not(.table-condensed) tbody.tuplarivit tr:nth-child(2n+1), .table tbody.tuplarivit tr:nth-child(2n+1) {
-      border-top: 1px solid #999999; }
+  text-align: left;
+}
+
+table:not(.table-condensed).full-width, .table.full-width {
+  width: 100%;
+}
+
+table:not(.table-condensed) thead tr, table:not(.table-condensed) tfoot tr, table:not(.table-condensed) .table-header, .table thead tr, .table tfoot tr, .table .table-header {
+  border-bottom: 1px solid #999999;
+  border-top: 1px solid #999999;
+  background: #b3b3b3;
+}
+
+table:not(.table-condensed) thead tr th, table:not(.table-condensed) thead tr .table-cell, table:not(.table-condensed) tfoot tr th, table:not(.table-condensed) tfoot tr .table-cell, table:not(.table-condensed) .table-header th, table:not(.table-condensed) .table-header .table-cell, .table thead tr th, .table thead tr .table-cell, .table tfoot tr th, .table tfoot tr .table-cell, .table .table-header th, .table .table-header .table-cell {
+  padding: 6px 12px;
+  font-weight: bold;
+  max-width: 20%;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+table:not(.table-condensed) thead tr th:last-child, table:not(.table-condensed) thead tr .table-cell:last-child, table:not(.table-condensed) tfoot tr th:last-child, table:not(.table-condensed) tfoot tr .table-cell:last-child, table:not(.table-condensed) .table-header th:last-child, table:not(.table-condensed) .table-header .table-cell:last-child, .table thead tr th:last-child, .table thead tr .table-cell:last-child, .table tfoot tr th:last-child, .table tfoot tr .table-cell:last-child, .table .table-header th:last-child, .table .table-header .table-cell:last-child {
+  max-width: 80%;
+}
+
+table:not(.table-condensed) thead tr th.sortable, table:not(.table-condensed) thead tr .table-cell.sortable, table:not(.table-condensed) tfoot tr th.sortable, table:not(.table-condensed) tfoot tr .table-cell.sortable, table:not(.table-condensed) .table-header th.sortable, table:not(.table-condensed) .table-header .table-cell.sortable, .table thead tr th.sortable, .table thead tr .table-cell.sortable, .table tfoot tr th.sortable, .table tfoot tr .table-cell.sortable, .table .table-header th.sortable, .table .table-header .table-cell.sortable {
+  cursor: pointer;
+  padding-right: 25px;
+}
+
+table:not(.table-condensed) thead tr th.sortable .sort-icon, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon, table:not(.table-condensed) tfoot tr th.sortable .sort-icon, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon, table:not(.table-condensed) .table-header th.sortable .sort-icon, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon, .table thead tr th.sortable .sort-icon, .table thead tr .table-cell.sortable .sort-icon, .table tfoot tr th.sortable .sort-icon, .table tfoot tr .table-cell.sortable .sort-icon, .table .table-header th.sortable .sort-icon, .table .table-header .table-cell.sortable .sort-icon {
+  display: inline-block;
+  position: absolute;
+  margin-left: 10px;
+  margin-top: 6px;
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 8px;
+  height: 12px;
+  background-position: 0 -700px;
+}
+
+.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon, .no-svg .table thead tr th.sortable .sort-icon, .no-svg .table thead tr .table-cell.sortable .sort-icon, .no-svg .table tfoot tr th.sortable .sort-icon, .no-svg .table tfoot tr .table-cell.sortable .sort-icon, .no-svg .table .table-header th.sortable .sort-icon, .no-svg .table .table-header .table-cell.sortable .sort-icon {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby, table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby, table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby, .table thead tr th.sortable .sort-icon.sortby, .table thead tr .table-cell.sortable .sort-icon.sortby, .table tfoot tr th.sortable .sort-icon.sortby, .table tfoot tr .table-cell.sortable .sort-icon.sortby, .table .table-header th.sortable .sort-icon.sortby, .table .table-header .table-cell.sortable .sort-icon.sortby {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 8px;
+  height: 5px;
+  background-position: 0 -650px;
+  margin-top: 10px;
+}
+
+.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby, .no-svg .table thead tr th.sortable .sort-icon.sortby, .no-svg .table thead tr .table-cell.sortable .sort-icon.sortby, .no-svg .table tfoot tr th.sortable .sort-icon.sortby, .no-svg .table tfoot tr .table-cell.sortable .sort-icon.sortby, .no-svg .table .table-header th.sortable .sort-icon.sortby, .no-svg .table .table-header .table-cell.sortable .sort-icon.sortby {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby-reverse, table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby-reverse, .table thead tr th.sortable .sort-icon.sortby-reverse, .table thead tr .table-cell.sortable .sort-icon.sortby-reverse, .table tfoot tr th.sortable .sort-icon.sortby-reverse, .table tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .table .table-header th.sortable .sort-icon.sortby-reverse, .table .table-header .table-cell.sortable .sort-icon.sortby-reverse {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 8px;
+  height: 5px;
+  background-position: 0 -600px;
+  margin-top: 10px;
+}
+
+.no-svg table:not(.table-condensed) thead tr th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) thead tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) tfoot tr th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) .table-header th.sortable .sort-icon.sortby-reverse, .no-svg table:not(.table-condensed) .table-header .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table thead tr th.sortable .sort-icon.sortby-reverse, .no-svg .table thead tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table tfoot tr th.sortable .sort-icon.sortby-reverse, .no-svg .table tfoot tr .table-cell.sortable .sort-icon.sortby-reverse, .no-svg .table .table-header th.sortable .sort-icon.sortby-reverse, .no-svg .table .table-header .table-cell.sortable .sort-icon.sortby-reverse {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+table:not(.table-condensed) tbody tr td, table:not(.table-condensed) tbody tr .table-cell, table:not(.table-condensed) .table-row td, table:not(.table-condensed) .table-row .table-cell, .table tbody tr td, .table tbody tr .table-cell, .table .table-row td, .table .table-row .table-cell {
+  padding: 6px 12px;
+  max-width: 20% !important;
+}
+
+table:not(.table-condensed) tbody:not(.tuplarivit) tr, table:not(.table-condensed) .table-row, .table tbody:not(.tuplarivit) tr, .table .table-row {
+  border-bottom: 1px solid #999999;
+  background: #e6e6e6;
+}
+
+table:not(.table-condensed) tbody:not(.tuplarivit) tr:nth-child(odd), table:not(.table-condensed) .table-row:nth-child(odd), .table tbody:not(.tuplarivit) tr:nth-child(odd), .table .table-row:nth-child(odd) {
+  background: white;
+}
+
+table:not(.table-condensed) tbody.tuplarivit tr, .table tbody.tuplarivit tr {
+  background: #e6e6e6;
+}
+
+table:not(.table-condensed) tbody.tuplarivit tr:nth-child(4n+1), table:not(.table-condensed) tbody.tuplarivit tr:nth-child(4n+2), .table tbody.tuplarivit tr:nth-child(4n+1), .table tbody.tuplarivit tr:nth-child(4n+2) {
+  background: white;
+}
+
+table:not(.table-condensed) tbody.tuplarivit tr:nth-child(2n+1), .table tbody.tuplarivit tr:nth-child(2n+1) {
+  border-top: 1px solid #999999;
+}
 
 .table {
-  display: table; }
+  display: table;
+}
 
 .table-row, .table-header {
-  display: table-row; }
+  display: table-row;
+}
 
 .table-cell {
-  display: table-cell; }
-  .table-cell.align-center {
-    text-align: center; }
-  .table-cell.align-right {
-    text-align: right; }
+  display: table-cell;
+}
+
+.table-cell.align-center {
+  text-align: center;
+}
+
+.table-cell.align-right {
+  text-align: right;
+}
 
 table.few-columns th {
-  width: 22%; }
-  table.few-columns th:last-child {
-    width: 80%; }
+  width: 22%;
+}
+
+table.few-columns th:last-child {
+  width: 80%;
+}
 
 .table-add {
-  margin-top: 12px; }
+  margin-top: 12px;
+}
 
 .accordion {
   border: 1px solid gray;
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+}
 
 .accordion-header {
   background-color: #72c4e0;
@@ -607,42 +858,55 @@ table.few-columns th {
   color: #000000;
   font-size: 1.1em;
   padding-left: 40px;
-  cursor: pointer; }
-  .accordion-header:before {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 20px;
-    height: 14px;
-    background-position: 0 -550px;
-    content: "";
-    position: absolute;
-    margin-top: 5px;
-    margin-left: -31px;
-    z-index: 1;
-    background-repeat: no-repeat; }
-    .no-svg .accordion-header:before {
-      background-image: url("../img/oph-icon-sprite.png"); }
-  .accordion-header.collapse:before {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 20px;
-    height: 13px;
-    background-position: 0 -500px;
-    content: "";
-    position: absolute;
-    margin-top: 5px;
-    margin-left: -31px;
-    z-index: 1;
-    background-repeat: no-repeat; }
-    .no-svg .accordion-header.collapse:before {
-      background-image: url("../img/oph-icon-sprite.png"); }
+  cursor: pointer;
+}
+
+.accordion-header:before {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 20px;
+  height: 14px;
+  background-position: 0 -550px;
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -31px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg .accordion-header:before {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.accordion-header.collapse:before {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 20px;
+  height: 13px;
+  background-position: 0 -500px;
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -31px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg .accordion-header.collapse:before {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 .accordion-body {
   display: none;
-  padding: 10px; }
-  .accordion-body.collapse {
-    display: block; }
+  padding: 10px;
+}
+
+.accordion-body.collapse {
+  display: block;
+}
 
 .accordion-container {
-  margin-bottom: 12px; }
+  margin-bottom: 12px;
+}
 
 .autocomplete {
   position: absolute;
@@ -651,123 +915,178 @@ table.few-columns th {
   border: 1px solid rgba(0, 0, 0, 0.2);
   margin-left: 22%;
   z-index: 10;
-  box-shadow: 2px 2px 0px gray; }
-  .autocomplete .ac-item {
-    padding: 6px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    display: block; }
-    .autocomplete .ac-item:hover {
-      background: #72c4e0; }
-    .autocomplete .ac-item:last-child {
-      border-bottom: none; }
+  box-shadow: 2px 2px 0px gray;
+}
+
+.autocomplete .ac-item {
+  padding: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  display: block;
+}
+
+.autocomplete .ac-item:hover {
+  background: #72c4e0;
+}
+
+.autocomplete .ac-item:last-child {
+  border-bottom: none;
+}
 
 .actions-container {
   width: 10%;
   float: right;
-  margin-right: 24px; }
+  margin-right: 24px;
+}
 
 ul.pagination {
   list-style: none;
   padding: 0;
   margin: 10px 0 10px 0;
-  *zoom: 1; }
-  ul.pagination:before, ul.pagination:after {
-    content: "";
-    display: table; }
-  ul.pagination:after {
-    clear: both; }
-  ul.pagination li {
-    float: left; }
-    ul.pagination li:not(.disabled) a:hover {
-      background-color: #083f51; }
-    ul.pagination li a[href=""] {
-      color: white;
-      cursor: pointer;
-      background-color: #107ea2;
-      margin-right: 24px;
-      display: block;
-      padding: 3px 10px 3px 10px; }
-    ul.pagination li.disabled {
-      cursor: auto; }
-      ul.pagination li.disabled a {
-        background-color: #a1d8ea; }
-  ul.pagination li:first-child a {
-    padding-left: 50px; }
-    ul.pagination li:first-child a:before {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 14px;
-      height: 15px;
-      background-position: 0 -150px;
-      content: "";
-      position: absolute;
-      margin-top: 5px;
-      margin-left: -35px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg ul.pagination li:first-child a:before {
-        background-image: url("../img/oph-icon-sprite.png"); }
-  ul.pagination li:first-child + li a {
-    padding-left: 41px; }
-    ul.pagination li:first-child + li a:before {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 10px;
-      height: 14px;
-      background-position: 0 -50px;
-      content: "";
-      position: absolute;
-      margin-top: 5px;
-      margin-left: -26px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg ul.pagination li:first-child + li a:before {
-        background-image: url("../img/oph-icon-sprite.png"); }
-  ul.pagination li:first-child + li + li a {
-    padding-right: 41px; }
-    ul.pagination li:first-child + li + li a:after {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 10px;
-      height: 14px;
-      background-position: 0 0px;
-      content: "";
-      position: absolute;
-      margin-top: 5px;
-      margin-left: 20px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg ul.pagination li:first-child + li + li a:after {
-        background-image: url("../img/oph-icon-sprite.png"); }
-  ul.pagination li:first-child + li + li + li a {
-    padding-right: 50px; }
-    ul.pagination li:first-child + li + li + li a:after {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 14px;
-      height: 15px;
-      background-position: 0 -100px;
-      content: "";
-      position: absolute;
-      margin-top: 5px;
-      margin-left: 20px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg ul.pagination li:first-child + li + li + li a:after {
-        background-image: url("../img/oph-icon-sprite.png"); }
+  *zoom: 1;
+}
+
+ul.pagination:before, ul.pagination:after {
+  content: "";
+  display: table;
+}
+
+ul.pagination:after {
+  clear: both;
+}
+
+ul.pagination li {
+  float: left;
+}
+
+ul.pagination li:not(.disabled) a:hover {
+  background-color: #083f51;
+}
+
+ul.pagination li a[href=""] {
+  color: white;
+  cursor: pointer;
+  background-color: #107ea2;
+  margin-right: 24px;
+  display: block;
+  padding: 3px 10px 3px 10px;
+}
+
+ul.pagination li.disabled {
+  cursor: auto;
+}
+
+ul.pagination li.disabled a {
+  background-color: #a1d8ea;
+}
+
+ul.pagination li:first-child a {
+  padding-left: 50px;
+}
+
+ul.pagination li:first-child a:before {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 14px;
+  height: 15px;
+  background-position: 0 -150px;
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -35px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.pagination li:first-child a:before {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+ul.pagination li:first-child + li a {
+  padding-left: 41px;
+}
+
+ul.pagination li:first-child + li a:before {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 10px;
+  height: 14px;
+  background-position: 0 -50px;
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -26px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.pagination li:first-child + li a:before {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+ul.pagination li:first-child + li + li a {
+  padding-right: 41px;
+}
+
+ul.pagination li:first-child + li + li a:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 10px;
+  height: 14px;
+  background-position: 0 0px;
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 20px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.pagination li:first-child + li + li a:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+ul.pagination li:first-child + li + li + li a {
+  padding-right: 50px;
+}
+
+ul.pagination li:first-child + li + li + li a:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 14px;
+  height: 15px;
+  background-position: 0 -100px;
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 20px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.pagination li:first-child + li + li + li a:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 .search-results {
-  min-height: 550px; }
+  min-height: 550px;
+}
 
 .list-controls {
   float: left;
   margin-top: -3px;
   margin-right: 9px;
-  *zoom: 1; }
-  .list-controls:before, .list-controls:after {
-    content: "";
-    display: table; }
-  .list-controls:after {
-    clear: both; }
-  .list-controls button {
-    float: left;
-    vertical-align: middle; }
+  *zoom: 1;
+}
+
+.list-controls:before, .list-controls:after {
+  content: "";
+  display: table;
+}
+
+.list-controls:after {
+  clear: both;
+}
+
+.list-controls button {
+  float: left;
+  vertical-align: middle;
+}
 
 .loader {
   background: #ffffff url("../img/ajax-loader.gif") center top no-repeat;
@@ -777,93 +1096,125 @@ ul.pagination {
   text-align: center;
   padding-top: 80px;
   position: relative;
-  top: 150px; }
+  top: 150px;
+}
 
 .loader-error {
   text-align: center;
   position: relative;
-  top: 150px; }
+  top: 150px;
+}
 
 button.luo-uusi,
 .float-right {
   float: right;
   margin-right: 0;
-  margin-left: 10px; }
+  margin-left: 10px;
+}
 
 .clear {
-  *zoom: 1; }
-  .clear:before, .clear:after {
-    content: "";
-    display: table; }
-  .clear:after {
-    clear: both; }
+  *zoom: 1;
+}
+
+.clear:before, .clear:after {
+  content: "";
+  display: table;
+}
+
+.clear:after {
+  clear: both;
+}
 
 .file-upload {
   height: 65px;
-  position: relative; }
-  .file-upload button.loading:after {
-    content: url("../select2/select2-spinner.gif");
-    position: absolute;
-    left: 27%;
-    top: 4px; }
-  .file-upload button.add-file {
-    position: absolute; }
-  .file-upload button.cancel-upload {
-    position: relative;
-    top: -48px;
-    left: 110px;
-    z-index: 2; }
-  .file-upload input[type=file] {
-    width: 70px;
-    height: 25px;
-    cursor: pointer;
-    margin: 13px 0;
-    padding: 0;
-    opacity: 0;
-    position: absolute; }
-  .file-upload input[type=text] {
-    color: gray;
-    width: 100%;
-    display: block; }
-  .file-upload form {
-    position: relative;
-    z-index: 1;
-    margin: 0;
-    padding: 0; }
+  position: relative;
+}
+
+.file-upload button.loading:after {
+  content: url("../select2/select2-spinner.gif");
+  position: absolute;
+  left: 27%;
+  top: 4px;
+}
+
+.file-upload button.add-file {
+  position: absolute;
+}
+
+.file-upload button.cancel-upload {
+  position: relative;
+  top: -48px;
+  left: 110px;
+  z-index: 2;
+}
+
+.file-upload input[type=file] {
+  width: 70px;
+  height: 25px;
+  cursor: pointer;
+  margin: 13px 0;
+  padding: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.file-upload input[type=text] {
+  color: gray;
+  width: 100%;
+  display: block;
+}
+
+.file-upload form {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+}
 
 ul.file-list {
   list-style: none;
   padding: 0;
-  margin: 0; }
-  ul.file-list li a {
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 10px; }
+  margin: 0;
+}
+
+ul.file-list li a {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 10px;
+}
 
 /* LAYOUTIN PERUSTYYLIT
 ----------------------------------------------------------------------------- */
 html {
   background: #fff;
-  height: 100%; }
+  height: 100%;
+}
 
 body {
   display: table;
   width: 100%;
-  height: 100%; }
-  body > div {
-    display: table-row; }
-  body footer {
-    display: table-row;
-    height: 100%; }
+  height: 100%;
+}
+
+body > div {
+  display: table-row;
+}
+
+body footer {
+  display: table-row;
+  height: 100%;
+}
 
 #content {
   padding: 0 6px 24px 6px;
-  min-height: 400px; }
+  min-height: 400px;
+}
 
 .app-wrapper {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 6px; }
+  padding: 0 6px;
+}
 
 /* HEADER JA FOOTER
 ----------------------------------------------------------------------------- */
@@ -874,218 +1225,330 @@ header {
   position: absolute;
   width: 100%;
   left: 0;
-  margin-top: -10px; }
-  header + .header-margin {
-    margin-top: 160px;
-    display: inline-block;
-    width: 100%; }
-  header .app-wrapper {
-    height: 160px;
-    background: #e1e1e1 url("../img/AITU-background.png") no-repeat left top;
-    height: 100%;
-    position: relative; }
-  header .vertical-center {
-    height: 160px;
-    display: table-cell;
-    vertical-align: middle; }
-  header .header-content {
-    margin-left: 6px; }
-    header .header-content h1, header .header-content .separator, header .header-content h2 {
-      display: inline-block;
-      vertical-align: middle;
-      margin-top: 0;
-      margin-bottom: 0; }
-  header .separator {
-    font-size: 4.2em;
-    font-weight: 100;
-    position: relative;
-    top: -5px; }
-  header .oph-logo {
-    width: 271px;
-    height: 70px;
-    position: absolute;
-    right: 6px;
-    top: 45px;
-    background: transparent url("../img/opetushallitus.svg") 0 center no-repeat; }
-    .no-svg header .oph-logo {
-      background-image: url("../img/opetushallitus.gif"); }
-  header h1 {
-    font-size: 4.2em; }
-  header h2 {
-    width: 500px;
-    font-size: 1.7em;
-    font-weight: 300; }
-  header form {
-    display: block;
-    color: #4d4d4d;
-    margin: 24px 0 0 0;
-    padding: 0; }
-    header form input {
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      width: 30%;
-      height: 28px;
-      border: 1px solid #107ea2; }
-    header form button {
-      height: 28px;
-      text-transform: uppercase;
-      margin: 0; }
-    header form p {
-      margin: 0;
-      padding-left: 10px; }
+  margin-top: -10px;
+}
+
+header + .header-margin {
+  margin-top: 160px;
+  display: inline-block;
+  width: 100%;
+}
+
+header .app-wrapper {
+  height: 160px;
+  background: #e1e1e1 url("../img/AITU-background.png") no-repeat left top;
+  height: 100%;
+  position: relative;
+}
+
+header .vertical-center {
+  height: 160px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+header .header-content {
+  margin-left: 6px;
+}
+
+header .header-content h1, header .header-content .separator, header .header-content h2 {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+header .separator {
+  font-size: 4.2em;
+  font-weight: 100;
+  position: relative;
+  top: -5px;
+}
+
+header .oph-logo {
+  width: 271px;
+  height: 70px;
+  position: absolute;
+  right: 6px;
+  top: 45px;
+  background: transparent url("../img/opetushallitus.svg") 0 center no-repeat;
+}
+
+.no-svg header .oph-logo {
+  background-image: url("../img/opetushallitus.gif");
+}
+
+header h1 {
+  font-size: 4.2em;
+}
+
+header h2 {
+  width: 500px;
+  font-size: 1.7em;
+  font-weight: 300;
+}
+
+header form {
+  display: block;
+  color: #4d4d4d;
+  margin: 24px 0 0 0;
+  padding: 0;
+}
+
+header form input {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 31%;
+  height: 28px;
+  border: 1px solid #107ea2;
+}
+
+header form button {
+  height: 28px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+header form p {
+  margin: 0;
+  padding-left: 10px;
+}
 
 .main-nav {
   background-color: #107ea2;
   min-height: 40px;
-  font-size: 1em; }
-  .main-nav a {
-    display: inline-block;
-    padding-top: 8px;
-    text-decoration: none;
-    color: white !important;
-    text-transform: uppercase; }
-  .main-nav ul {
-    margin: 0;
-    padding: 0;
-    *zoom: 1; }
-    .main-nav ul:before, .main-nav ul:after {
-      content: "";
-      display: table; }
-    .main-nav ul:after {
-      clear: both; }
-    .main-nav ul li {
-      border-right: 1px solid #009dcd;
-      float: left;
-      height: 40px;
-      display: table; }
-      .main-nav ul li:first-child {
-        border-left: 1px solid #009dcd; }
-      .main-nav ul li a, .main-nav ul li span {
-        padding: 0 12px;
-        display: table-cell;
-        vertical-align: middle;
-        text-transform: uppercase; }
-      .main-nav ul li a:hover {
-        background-color: #083f51; }
-      .main-nav ul li span {
-        cursor: default; }
-  .main-nav #current-user {
-    float: right;
-    color: white;
-    position: relative;
-    height: 40px; }
-    .main-nav #current-user:after {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 17px;
-      height: 16px;
-      background-position: 0 -200px;
-      position: absolute;
-      top: 11px;
-      right: 11px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg .main-nav #current-user:after {
-        background-image: url("../img/oph-icon-sprite.png"); }
-    .main-nav #current-user:hover {
-      background-color: #083f51; }
-    .main-nav #current-user li {
-      z-index: 2;
-      position: relative;
-      border: 0;
-      padding-right: 30px;
-      padding-left: 12px; }
-      .main-nav #current-user li:hover ul {
-        background-color: #107ea2;
-        left: 0px;
-        padding: 0;
-        width: auto;
-        top: 40px; }
-        .main-nav #current-user li:hover ul:hover {
-          background-color: #083f51; }
-        .main-nav #current-user li:hover ul li {
-          padding: 0; }
-          .main-nav #current-user li:hover ul li a {
-            text-transform: none; }
-            .main-nav #current-user li:hover ul li a:hover {
-              cursor: pointer; }
-          .main-nav #current-user li:hover ul li:hover {
-            background: #083f51; }
-    .main-nav #current-user ul {
-      position: absolute;
-      left: -9999px;
-      width: 100%;
-      z-index: 10; }
-      .main-nav #current-user ul a {
-        white-space: nowrap; }
-  .main-nav .impersonoitu {
-    background-color: red; }
-  .main-nav #logout {
-    border-left: 1px solid #009dcd;
-    padding: 0 15px;
-    float: right;
-    height: 40px;
-    cursor: pointer; }
-    .main-nav #logout:after {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 17px;
-      height: 16px;
-      background-position: 0 -1650px;
-      content: "";
-      position: absolute;
-      margin-top: 11px;
-      margin-left: -5px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg .main-nav #logout:after {
-        background-image: url("../img/oph-icon-sprite.png"); }
-    .main-nav #logout:hover {
-      background-color: #083f51; }
-  .main-nav .change-lang {
-    float: right; }
-  .main-nav .change-lang-active:hover {
-    background-color: #083f51; }
-  .main-nav .change-lang-inactive:hover {
-    background-color: #107ea2; }
+  font-size: 1em;
+}
+
+.main-nav a {
+  display: inline-block;
+  padding-top: 8px;
+  text-decoration: none;
+  color: white !important;
+  text-transform: uppercase;
+}
+
+.main-nav ul {
+  margin: 0;
+  padding: 0;
+  *zoom: 1;
+}
+
+.main-nav ul:before, .main-nav ul:after {
+  content: "";
+  display: table;
+}
+
+.main-nav ul:after {
+  clear: both;
+}
+
+.main-nav ul li {
+  border-right: 1px solid #009dcd;
+  float: left;
+  height: 40px;
+  display: table;
+}
+
+.main-nav ul li:first-child {
+  border-left: 1px solid #009dcd;
+}
+
+.main-nav ul li a, .main-nav ul li span {
+  padding: 0 12px;
+  display: table-cell;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+.main-nav ul li a:hover {
+  background-color: #083f51;
+}
+
+.main-nav ul li span {
+  cursor: default;
+}
+
+.main-nav #current-user {
+  float: right;
+  color: white;
+  position: relative;
+  height: 40px;
+}
+
+.main-nav #current-user:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 17px;
+  height: 16px;
+  background-position: 0 -200px;
+  position: absolute;
+  top: 11px;
+  right: 11px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg .main-nav #current-user:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.main-nav #current-user:hover {
+  background-color: #083f51;
+}
+
+.main-nav #current-user li {
+  z-index: 2;
+  position: relative;
+  border: 0;
+  padding-right: 30px;
+  padding-left: 12px;
+}
+
+.main-nav #current-user li:hover ul {
+  background-color: #107ea2;
+  left: 0px;
+  padding: 0;
+  width: auto;
+  top: 40px;
+}
+
+.main-nav #current-user li:hover ul:hover {
+  background-color: #083f51;
+}
+
+.main-nav #current-user li:hover ul li {
+  padding: 0;
+}
+
+.main-nav #current-user li:hover ul li a {
+  text-transform: none;
+}
+
+.main-nav #current-user li:hover ul li a:hover {
+  cursor: pointer;
+}
+
+.main-nav #current-user li:hover ul li:hover {
+  background: #083f51;
+}
+
+.main-nav #current-user ul {
+  position: absolute;
+  left: -9999px;
+  width: 100%;
+  z-index: 10;
+}
+
+.main-nav #current-user ul a {
+  white-space: nowrap;
+}
+
+.main-nav .impersonoitu {
+  background-color: red;
+}
+
+.main-nav #logout {
+  border-left: 1px solid #009dcd;
+  padding: 0 15px;
+  float: right;
+  height: 40px;
+  cursor: pointer;
+}
+
+.main-nav #logout:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 17px;
+  height: 16px;
+  background-position: 0 -1650px;
+  content: "";
+  position: absolute;
+  margin-top: 11px;
+  margin-left: -5px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg .main-nav #logout:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.main-nav #logout:hover {
+  background-color: #083f51;
+}
+
+.main-nav .change-lang {
+  float: right;
+}
+
+.main-nav .change-lang-active:hover {
+  background-color: #083f51;
+}
+
+.main-nav .change-lang-inactive:hover {
+  background-color: #107ea2;
+}
 
 footer {
-  color: #ffffff; }
-  footer a {
-    color: #43b1d5; }
-    footer a:hover {
-      color: #72c4e0; }
-  footer .info {
-    background-color: #4d4d4d;
-    padding: 0.5em 0; }
-  footer .separator {
-    margin: 0 10px; }
+  color: #ffffff;
+}
+
+footer a {
+  color: #43b1d5;
+}
+
+footer a:hover {
+  color: #72c4e0;
+}
+
+footer .info {
+  background-color: #4d4d4d;
+  padding: 0.5em 0;
+}
+
+footer .separator {
+  margin: 0 10px;
+}
 
 .copyright, footer.dev-footer {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  box-sizing: border-box; }
-  .copyright .app-wrapper, footer.dev-footer .app-wrapper {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box; }
+  box-sizing: border-box;
+}
+
+.copyright .app-wrapper, footer.dev-footer .app-wrapper {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
 
 .copyright {
   height: 120px;
-  background-color: #1a1a1a; }
-  .copyright .app-wrapper {
-    padding-top: 50px;
-    height: 120px;
-    background: url("../img/oph_logo_footer.svg") right 10px center no-repeat; }
-    .no-svg .copyright .app-wrapper {
-      background-image: url("../img/oph_logo_footer.png"); }
+  background-color: #1a1a1a;
+}
+
+.copyright .app-wrapper {
+  padding-top: 50px;
+  height: 120px;
+  background: url("../img/oph_logo_footer.svg") right 10px center no-repeat;
+}
+
+.no-svg .copyright .app-wrapper {
+  background-image: url("../img/oph_logo_footer.png");
+}
 
 footer.dev-footer {
-  background-color: #083f51; }
-  footer.dev-footer > div {
-    min-height: 80px; }
-  footer.dev-footer .app-wrapper {
-    padding-top: 28px;
-    color: white; }
+  background-color: #083f51;
+}
+
+footer.dev-footer > div {
+  min-height: 80px;
+}
+
+footer.dev-footer .app-wrapper {
+  padding-top: 28px;
+  color: white;
+}
 
 /* UI KOMPONENTIT
 ----------------------------------------------------------------------------- */
@@ -1096,7 +1559,8 @@ footer.dev-footer {
   right: 5em;
   background: white;
   padding: 2em;
-  z-index: 9999; }
+  z-index: 9999;
+}
 
 .ohje {
   position: relative;
@@ -1106,74 +1570,102 @@ footer.dev-footer {
   line-height: 24px;
   text-transform: none;
   font-weight: normal;
-  /* Ohjeen positiointi eri paikoissa */ }
-  .ohje .avaa {
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: middle;
-    background-color: #107ea2;
-    width: 22px;
-    height: 22px;
-    margin: 0; }
-    .ohje .avaa:after {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 11px;
-      height: 14px;
-      background-position: 0 -300px;
-      content: "";
-      position: absolute;
-      margin-top: 4px;
-      margin-left: 5px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg .ohje .avaa:after {
-        background-image: url("../img/oph-icon-sprite.png"); }
-  .ohje button.sulje {
-    position: absolute;
-    right: 4px;
-    top: 4px; }
-  .ohje .ohje-popup {
-    -moz-box-shadow: 2px 2px 8px -1px gray;
-    -webkit-box-shadow: 2px 2px 8px -1px gray;
-    box-shadow: 2px 2px 8px -1px gray;
-    z-index: 9999;
-    position: absolute;
-    border: 1px solid #b3b3b3;
-    background-color: white;
-    min-height: 100px;
-    padding: 22px 10px 20px 10px;
-    right: 37px;
-    top: 10px;
-    width: 400px; }
-    .ohje .ohje-popup.muokkaus {
-      width: 500px;
-      padding-bottom: 5px; }
-    .ohje .ohje-popup a {
-      position: absolute;
-      right: 3px;
-      bottom: 0; }
-    .ohje .ohje-popup fieldset {
-      display: block;
-      width: auto;
-      margin: 0; }
-    .ohje .ohje-popup textarea {
-      height: 150px;
-      margin-bottom: 10px; }
-    .ohje .ohje-popup button {
-      margin: 0; }
-  .ohje.right .ohje-popup {
-    left: 37px;
-    top: 6px; }
-  h1 .ohje {
-    float: right;
-    position: relative;
-    top: 13px; }
-  fieldset .ohje {
-    vertical-align: middle;
-    margin-bottom: 6px; }
+  /* Ohjeen positiointi eri paikoissa */
+}
+
+.ohje .avaa {
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  background-color: #107ea2;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+}
+
+.ohje .avaa:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 11px;
+  height: 14px;
+  background-position: 0 -300px;
+  content: "";
+  position: absolute;
+  margin-top: 4px;
+  margin-left: 5px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg .ohje .avaa:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.ohje button.sulje {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+}
+
+.ohje .ohje-popup {
+  -moz-box-shadow: 2px 2px 8px -1px gray;
+  -webkit-box-shadow: 2px 2px 8px -1px gray;
+  box-shadow: 2px 2px 8px -1px gray;
+  z-index: 9999;
+  position: absolute;
+  border: 1px solid #b3b3b3;
+  background-color: white;
+  min-height: 100px;
+  padding: 22px 10px 20px 10px;
+  right: 37px;
+  top: 10px;
+  width: 400px;
+}
+
+.ohje .ohje-popup.muokkaus {
+  width: 500px;
+  padding-bottom: 5px;
+}
+
+.ohje .ohje-popup a {
+  position: absolute;
+  right: 3px;
+  bottom: 0;
+}
+
+.ohje .ohje-popup fieldset {
+  display: block;
+  width: auto;
+  margin: 0;
+}
+
+.ohje .ohje-popup textarea {
+  height: 150px;
+  margin-bottom: 10px;
+}
+
+.ohje .ohje-popup button {
+  margin: 0;
+}
+
+.ohje.right .ohje-popup {
+  left: 37px;
+  top: 6px;
+}
+
+h1 .ohje {
+  float: right;
+  position: relative;
+  top: 13px;
+}
+
+fieldset .ohje {
+  vertical-align: middle;
+  margin-bottom: 6px;
+}
 
 div.feedback-waypoint {
-  padding-top: 10px; }
+  padding-top: 10px;
+}
 
 div.api-method-feedback {
   z-index: 1;
@@ -1181,30 +1673,43 @@ div.api-method-feedback {
   list-style: none;
   margin-left: auto;
   margin-right: auto;
-  text-align: center; }
-  div.api-method-feedback.floating {
-    position: fixed;
-    top: 0; }
-  div.api-method-feedback > div:first-child {
-    margin-top: 0; }
-  div.api-method-feedback > div {
-    border: 1px solid #5ac848;
-    background-color: #a5eb97;
-    color: #2c942b;
-    overflow: hidden;
-    margin-top: 10px;
-    margin-bottom: 10px; }
-    div.api-method-feedback > div .feedback-container {
-      display: inline-block;
-      text-align: left; }
-    div.api-method-feedback > div ul {
-      display: inline-block;
-      margin-top: 0;
-      padding-left: 15px; }
-    div.api-method-feedback > div.error {
-      border: 1px solid #cc0d0f;
-      background-color: #e39292;
-      color: #742022; }
+  text-align: center;
+}
+
+div.api-method-feedback.floating {
+  position: fixed;
+  top: 0;
+}
+
+div.api-method-feedback > div:first-child {
+  margin-top: 0;
+}
+
+div.api-method-feedback > div {
+  border: 1px solid #5ac848;
+  background-color: #a5eb97;
+  color: #2c942b;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.api-method-feedback > div .feedback-container {
+  display: inline-block;
+  text-align: left;
+}
+
+div.api-method-feedback > div ul {
+  display: inline-block;
+  margin-top: 0;
+  padding-left: 15px;
+}
+
+div.api-method-feedback > div.error {
+  border: 1px solid #cc0d0f;
+  background-color: #e39292;
+  color: #742022;
+}
 
 .modal-window {
   z-index: 100;
@@ -1217,23 +1722,28 @@ div.api-method-feedback {
   padding: 15px;
   padding-right: 25px;
   left: 50%;
-  top: 100px; }
-  .modal-window button.sulje {
-    position: absolute;
-    right: 4px;
-    top: 0px; }
+  top: 100px;
+}
+
+.modal-window button.sulje {
+  position: absolute;
+  right: 4px;
+  top: 0px;
+}
 
 .impersonointi-haku {
   min-height: 160px;
   margin-left: -250px;
-  width: 500px; }
+  width: 500px;
+}
 
 .tulosta-paatos {
   min-height: 500px;
   margin-left: -30%;
   width: 60%;
   padding-bottom: 40px;
-  top: 30px; }
+  top: 30px;
+}
 
 .modal-backdrop {
   position: fixed;
@@ -1244,75 +1754,107 @@ div.api-method-feedback {
   background-color: #000000;
   opacity: .6;
   content: "";
-  z-index: 99; }
+  z-index: 99;
+}
 
 .wizard {
   margin-bottom: 1em;
-  margin-top: 1em; }
-  .wizard .wizard-item {
-    text-align: center;
-    background-color: #e6e6e6;
-    height: 2em;
-    line-height: 2em;
-    padding: 0;
-    position: relative;
-    margin-bottom: 2px;
-    font-size: 1.14285714285714em;
-    color: gray;
-    overflow: visible; }
-    .wizard .wizard-item.active {
-      background-color: #107ea2; }
-      .wizard .wizard-item.active a {
-        color: white; }
-      .wizard .wizard-item.active:after {
-        border-left: 1em solid #107ea2; }
-      .wizard .wizard-item.active:before {
-        border-top: 1em solid #107ea2;
-        border-bottom: 1em solid #107ea2; }
-    .wizard .wizard-item:after {
-      content: ' ';
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 1.2em;
-      height: 100%;
-      border-top: 1em solid white;
-      border-left: 1em solid #e6e6e6;
-      border-bottom: 1em solid white; }
-    .wizard .wizard-item:before {
-      content: ' ';
-      position: absolute;
-      left: -1em;
-      top: 0;
-      width: 1em;
-      height: 100%;
-      border-top: 1em solid #e6e6e6;
-      border-left: 1em solid transparent;
-      border-bottom: 1em solid #e6e6e6;
-      z-index: 1000; }
-    .wizard .wizard-item:first-child:before {
-      border: 0px; }
-    .wizard .wizard-item:last-child:after {
-      border: 0px; }
+  margin-top: 1em;
+}
+
+.wizard .wizard-item {
+  text-align: center;
+  background-color: #e6e6e6;
+  height: 2em;
+  line-height: 2em;
+  padding: 0;
+  position: relative;
+  margin-bottom: 2px;
+  font-size: 1.14285714285714em;
+  color: gray;
+  overflow: visible;
+}
+
+.wizard .wizard-item.active {
+  background-color: #107ea2;
+}
+
+.wizard .wizard-item.active a {
+  color: white;
+}
+
+.wizard .wizard-item.active:after {
+  border-left: 1em solid #107ea2;
+}
+
+.wizard .wizard-item.active:before {
+  border-top: 1em solid #107ea2;
+  border-bottom: 1em solid #107ea2;
+}
+
+.wizard .wizard-item:after {
+  content: ' ';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1.2em;
+  height: 100%;
+  border-top: 1em solid white;
+  border-left: 1em solid #e6e6e6;
+  border-bottom: 1em solid white;
+}
+
+.wizard .wizard-item:before {
+  content: ' ';
+  position: absolute;
+  left: -1em;
+  top: 0;
+  width: 1em;
+  height: 100%;
+  border-top: 1em solid #e6e6e6;
+  border-left: 1em solid transparent;
+  border-bottom: 1em solid #e6e6e6;
+  z-index: 1000;
+}
+
+.wizard .wizard-item:first-child:before {
+  border: 0px;
+}
+
+.wizard .wizard-item:last-child:after {
+  border: 0px;
+}
 
 .wizard {
-  display: block; }
-  .wizard a {
-    cursor: pointer; }
-  .wizard .wizard-item {
-    width: 33%;
-    float: left; }
-    .wizard .wizard-item.active {
-      color: white; }
-    .wizard .wizard-item:after, .wizard .wizard-item:before {
-      height: auto; }
-    .wizard .wizard-item:before {
-      left: -2em; }
+  display: block;
+}
+
+.wizard a {
+  cursor: pointer;
+}
+
+.wizard .wizard-item {
+  width: 33%;
+  float: left;
+}
+
+.wizard .wizard-item.active {
+  color: white;
+}
+
+.wizard .wizard-item:after, .wizard .wizard-item:before {
+  height: auto;
+}
+
+.wizard .wizard-item:before {
+  left: -2em;
+}
 
 .dialogi {
   min-height: 160px;
   margin-left: -250px;
-  width: 500px; }
+  width: 500px;
+}
 
 /* NÄKYMÄT
 ------------------------------------------------------------------------------*/
@@ -1321,260 +1863,377 @@ div.api-method-feedback {
   width: 40%;
   margin: 24px;
   padding: 12px;
-  display: inline-block; }
-  .content-box h2 {
-    margin-top: 0; }
+  display: inline-block;
+}
+
+.content-box h2 {
+  margin-top: 0;
+}
 
 .message-container .message {
   text-decoration: none;
-  margin: 6px; }
-  .message-container .message:after {
-    content: " ";
-    display: block;
-    width: 80%;
-    margin: 0 auto;
-    border: 1px solid rgba(0, 0, 0, 0.05); }
-  .message-container .message p {
-    margin: 0 6px 6px 6px; }
+  margin: 6px;
+}
+
+.message-container .message:after {
+  content: " ";
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.message-container .message p {
+  margin: 0 6px 6px 6px;
+}
 
 .actions-container {
-  margin: 24px; }
+  margin: 24px;
+}
 
 .tiedote {
   display: inline-block;
-  width: 45%; }
-  .tiedote h1 {
-    margin-bottom: 0; }
-  .tiedote p {
-    margin: 0 0 0 0; }
-  .tiedote textarea {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100px; }
-  .tiedote label {
-    margin: 0 0 0 0;
-    width: auto; }
-  .tiedote .oikealle {
-    float: right;
-    margin-right: 0;
-    margin-left: 24px; }
+  width: 45%;
+}
+
+.tiedote h1 {
+  margin-bottom: 0;
+}
+
+.tiedote p {
+  margin: 0 0 0 0;
+}
+
+.tiedote textarea {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100px;
+}
+
+.tiedote label {
+  margin: 0 0 0 0;
+  width: auto;
+}
+
+.tiedote .oikealle {
+  float: right;
+  margin-right: 0;
+  margin-left: 24px;
+}
 
 table.toimikunnan-jasenet td:not(.voimassa), table.toimikunnan-jasenet td:not(.voimassa) a {
-  color: gray; }
+  color: gray;
+}
+
 table.toimikunnan-jasenet td .datepicker-field {
   width: 41%;
   min-width: 6.5em;
-  margin-bottom: 0; }
+  margin-bottom: 0;
+}
+
 table.toimikunnan-jasenet td .datepicker-field:first-child {
-  margin-right: 18px; }
+  margin-right: 18px;
+}
+
 table.toimikunnan-jasenet .removed td:first-child a {
   text-decoration: line-through;
-  color: gray; }
+  color: gray;
+}
 
 .sopimus-tutkinnon-osat.muokkaus {
-  margin-top: 0; }
-  .sopimus-tutkinnon-osat.muokkaus th:first-child {
-    padding-left: 44px; }
+  margin-top: 0;
+}
+
+.sopimus-tutkinnon-osat.muokkaus th:first-child {
+  padding-left: 44px;
+}
+
 .sopimus-tutkinnon-osat input[type="radio"] {
   margin-right: 10px;
-  margin-left: 24px; }
-  .sopimus-tutkinnon-osat input[type="radio"]:first-child {
-    margin-left: 0; }
+  margin-left: 24px;
+}
+
+.sopimus-tutkinnon-osat input[type="radio"]:first-child {
+  margin-left: 0;
+}
+
 .sopimus-tutkinnon-osat h2 {
-  margin-top: 8px; }
+  margin-top: 8px;
+}
+
 .sopimus-tutkinnon-osat table {
-  margin-bottom: 12px; }
-  .sopimus-tutkinnon-osat table tr:not(.valittu) td button {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 18px;
-    height: 18px;
-    background-position: 0 -1150px; }
-    .no-svg .sopimus-tutkinnon-osat table tr:not(.valittu) td button {
-      background-image: url("../img/oph-icon-sprite.png"); }
-    .sopimus-tutkinnon-osat table tr:not(.valittu) td button:hover {
-      background-position: 0 -1200px; }
-  .sopimus-tutkinnon-osat table tr:not(.valittu) .osan-tieto {
-    text-decoration: line-through;
-    opacity: 0.5; }
-  .sopimus-tutkinnon-osat table td button {
-    margin-right: 15px;
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 16px;
-    height: 16px;
-    background-position: 0 -1250px; }
-    .no-svg .sopimus-tutkinnon-osat table td button {
-      background-image: url("../img/oph-icon-sprite.png"); }
-    .sopimus-tutkinnon-osat table td button:hover {
-      background-position: 0 -1300px; }
-  .sopimus-tutkinnon-osat table td.jarjestysnumero {
-    width: 10%;
-    text-align: center; }
-    .sopimus-tutkinnon-osat table td.jarjestysnumero button {
-      float: left; }
+  margin-bottom: 12px;
+}
+
+.sopimus-tutkinnon-osat table tr:not(.valittu) td button {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 18px;
+  height: 18px;
+  background-position: 0 -1150px;
+}
+
+.no-svg .sopimus-tutkinnon-osat table tr:not(.valittu) td button {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.sopimus-tutkinnon-osat table tr:not(.valittu) td button:hover {
+  background-position: 0 -1200px;
+}
+
+.sopimus-tutkinnon-osat table tr:not(.valittu) .osan-tieto {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.sopimus-tutkinnon-osat table td button {
+  margin-right: 15px;
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 16px;
+  height: 16px;
+  background-position: 0 -1250px;
+}
+
+.no-svg .sopimus-tutkinnon-osat table td button {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+.sopimus-tutkinnon-osat table td button:hover {
+  background-position: 0 -1300px;
+}
+
+.sopimus-tutkinnon-osat table td.jarjestysnumero {
+  width: 10%;
+  text-align: center;
+}
+
+.sopimus-tutkinnon-osat table td.jarjestysnumero button {
+  float: left;
+}
 
 td .sopimus-ja-tutkinto-rivi {
   position: relative;
   padding-right: 110px;
-  border-top: 1px solid #b3b3b3; }
-  td .sopimus-ja-tutkinto-rivi:first-child {
-    border: none; }
-  td .sopimus-ja-tutkinto-rivi span.perusteen-diaarinumero {
-    position: absolute;
-    right: 5px;
-    bottom: 0;
-    width: 100px;
-    text-align: left; }
+  border-top: 1px solid #b3b3b3;
+}
+
+td .sopimus-ja-tutkinto-rivi:first-child {
+  border: none;
+}
+
+td .sopimus-ja-tutkinto-rivi span.perusteen-diaarinumero {
+  position: absolute;
+  right: 5px;
+  bottom: 0;
+  width: 100px;
+  text-align: left;
+}
 
 .sopimuksen-tutkinnon-vastuuhenkilon-muokkaus {
   border: 1px solid #b3b3b3;
   background-color: #e6e6e6;
   padding: 12px 12px 0 12px;
-  margin-bottom: 12px; }
+  margin-bottom: 12px;
+}
 
 #postinumero, #postitoimipaikka {
-  display: inline-block; }
+  display: inline-block;
+}
 
 #postinumero {
-  width: 33%; }
+  width: 33%;
+}
 
 #postitoimipaikka {
-  width: 65%; }
+  width: 65%;
+}
 
 .lisatiedot {
-  width: 100%; }
+  width: 100%;
+}
 
 .toimikunta-lista {
-  width: auto; }
+  width: auto;
+}
 
 .tutkintotyyppi {
-  width: auto; }
+  width: auto;
+}
 
 .tutkintovalitsin-container {
   height: 400px;
   overflow-y: scroll;
   overflow-x: hidden;
-  border: 1px solid #107ea2; }
+  border: 1px solid #107ea2;
+}
 
 ul.tutkintovalitsin {
   margin: 0;
-  padding: 10px 25px; }
-  ul.tutkintovalitsin ul {
-    margin: 0;
-    padding-left: 15px; }
-  ul.tutkintovalitsin li {
-    list-style: none;
-    position: relative; }
-  ul.tutkintovalitsin a {
-    cursor: pointer !important; }
-  ul.tutkintovalitsin > li > a {
-    font-weight: bold; }
-    ul.tutkintovalitsin > li > a:before {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 8px;
-      height: 5px;
-      background-position: 0 -650px;
-      content: "";
-      position: absolute;
-      margin-top: 9px;
-      margin-left: -12px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg ul.tutkintovalitsin > li > a:before {
-        background-image: url("../img/oph-icon-sprite.png"); }
-  ul.tutkintovalitsin > li > ul > li > a {
-    font-weight: bold; }
-    ul.tutkintovalitsin > li > ul > li > a:before {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 8px;
-      height: 5px;
-      background-position: 0 -650px;
-      content: "";
-      position: absolute;
-      margin-top: 9px;
-      margin-left: -12px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg ul.tutkintovalitsin > li > ul > li > a:before {
-        background-image: url("../img/oph-icon-sprite.png"); }
-  ul.tutkintovalitsin a.collapse:before {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 8px;
-    height: 5px;
-    background-position: 0 -600px;
-    content: "";
-    position: absolute;
-    margin-top: 9px;
-    margin-left: -12px;
-    z-index: 1;
-    background-repeat: no-repeat; }
-    .no-svg ul.tutkintovalitsin a.collapse:before {
-      background-image: url("../img/oph-icon-sprite.png"); }
-  ul.tutkintovalitsin a.tutkinto {
-    padding: 2px;
-    display: block; }
-    ul.tutkintovalitsin a.tutkinto.added:after {
-      background-image: url("../img/oph-icon-sprite.svg");
-      width: 16px;
-      height: 12px;
-      background-position: 0 -1350px;
-      content: "";
-      position: absolute;
-      margin-top: 5px;
-      margin-left: 5px;
-      z-index: 1;
-      background-repeat: no-repeat; }
-      .no-svg ul.tutkintovalitsin a.tutkinto.added:after {
-        background-image: url("../img/oph-icon-sprite.png"); }
+  padding: 10px 25px;
+}
+
+ul.tutkintovalitsin ul {
+  margin: 0;
+  padding-left: 15px;
+}
+
+ul.tutkintovalitsin li {
+  list-style: none;
+  position: relative;
+}
+
+ul.tutkintovalitsin a {
+  cursor: pointer !important;
+}
+
+ul.tutkintovalitsin > li > a {
+  font-weight: bold;
+}
+
+ul.tutkintovalitsin > li > a:before {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 8px;
+  height: 5px;
+  background-position: 0 -650px;
+  content: "";
+  position: absolute;
+  margin-top: 9px;
+  margin-left: -12px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.tutkintovalitsin > li > a:before {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+ul.tutkintovalitsin > li > ul > li > a {
+  font-weight: bold;
+}
+
+ul.tutkintovalitsin > li > ul > li > a:before {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 8px;
+  height: 5px;
+  background-position: 0 -650px;
+  content: "";
+  position: absolute;
+  margin-top: 9px;
+  margin-left: -12px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.tutkintovalitsin > li > ul > li > a:before {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+ul.tutkintovalitsin a.collapse:before {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 8px;
+  height: 5px;
+  background-position: 0 -600px;
+  content: "";
+  position: absolute;
+  margin-top: 9px;
+  margin-left: -12px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.tutkintovalitsin a.collapse:before {
+  background-image: url("../img/oph-icon-sprite.png");
+}
+
+ul.tutkintovalitsin a.tutkinto {
+  padding: 2px;
+  display: block;
+}
+
+ul.tutkintovalitsin a.tutkinto.added:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 16px;
+  height: 12px;
+  background-position: 0 -1350px;
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 5px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.tutkintovalitsin a.tutkinto.added:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 ul.valitut-tutkinnot {
   margin: 0;
   padding: 10px;
-  border: 1px solid #107ea2; }
-  ul.valitut-tutkinnot li {
-    list-style: none; }
-    ul.valitut-tutkinnot li .icon {
-      margin-left: 5px; }
-    ul.valitut-tutkinnot li a {
-      cursor: pointer !important;
-      padding: 2px;
-      display: block; }
-      ul.valitut-tutkinnot li a:after {
-        background-image: url("../img/oph-icon-sprite.svg");
-        width: 12px;
-        height: 12px;
-        background-position: 0 -1500px;
-        content: "";
-        position: absolute;
-        margin-top: 8px;
-        margin-left: 5px;
-        z-index: 1;
-        background-repeat: no-repeat; }
-        .no-svg ul.valitut-tutkinnot li a:after {
-          background-image: url("../img/oph-icon-sprite.png"); }
+  border: 1px solid #107ea2;
+}
+
+ul.valitut-tutkinnot li {
+  list-style: none;
+}
+
+ul.valitut-tutkinnot li .icon {
+  margin-left: 5px;
+}
+
+ul.valitut-tutkinnot li a {
+  cursor: pointer !important;
+  padding: 2px;
+  display: block;
+}
+
+ul.valitut-tutkinnot li a:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 12px;
+  height: 12px;
+  background-position: 0 -1500px;
+  content: "";
+  position: absolute;
+  margin-top: 8px;
+  margin-left: 5px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg ul.valitut-tutkinnot li a:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 .valitut-tutkinnot-otsikko {
-  margin-left: 20px; }
-  .valitut-tutkinnot-otsikko:before {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 16px;
-    height: 12px;
-    background-position: 0 -1350px;
-    content: "";
-    position: absolute;
-    margin-top: 7px;
-    margin-left: -20px;
-    z-index: 1;
-    background-repeat: no-repeat; }
-    .no-svg .valitut-tutkinnot-otsikko:before {
-      background-image: url("../img/oph-icon-sprite.png"); }
+  margin-left: 20px;
+}
+
+.valitut-tutkinnot-otsikko:before {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 16px;
+  height: 12px;
+  background-position: 0 -1350px;
+  content: "";
+  position: absolute;
+  margin-top: 7px;
+  margin-left: -20px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg .valitut-tutkinnot-otsikko:before {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 ul.osaamisalat {
   padding: 0;
-  margin: 0; }
-  ul.osaamisalat li {
-    list-style: none; }
+  margin: 0;
+}
+
+ul.osaamisalat li {
+  list-style: none;
+}
 
 .merkitse-tehdyksi {
   color: white;
@@ -1582,28 +2241,38 @@ ul.osaamisalat {
   background-color: #107ea2;
   display: block;
   padding: 3px 100px 3px 10px;
-  float: right; }
-  .merkitse-tehdyksi:after {
-    background-image: url("../img/oph-icon-sprite.svg");
-    width: 16px;
-    height: 16px;
-    background-position: 0 -400px;
-    content: "";
-    position: absolute;
-    margin-top: 6px;
-    margin-left: 72px;
-    z-index: 1;
-    background-repeat: no-repeat; }
-    .no-svg .merkitse-tehdyksi:after {
-      background-image: url("../img/oph-icon-sprite.png"); }
+  float: right;
+}
+
+.merkitse-tehdyksi:after {
+  background-image: url("../img/oph-icon-sprite.svg");
+  width: 16px;
+  height: 16px;
+  background-position: 0 -400px;
+  content: "";
+  position: absolute;
+  margin-top: 6px;
+  margin-left: 72px;
+  z-index: 1;
+  background-repeat: no-repeat;
+}
+
+.no-svg .merkitse-tehdyksi:after {
+  background-image: url("../img/oph-icon-sprite.png");
+}
 
 .organisaatiomuutos {
   border-top: 1px solid #b3b3b3;
   padding-top: 10px;
-  padding-bottom: 20px; }
-  .organisaatiomuutos:first-child {
-    border: none; }
-  .organisaatiomuutos .pvm {
-    color: #b3b3b3; }
+  padding-bottom: 20px;
+}
+
+.organisaatiomuutos:first-child {
+  border: none;
+}
+
+.organisaatiomuutos .pvm {
+  color: #b3b3b3;
+}
 
 /*# sourceMappingURL=main.css.map */
