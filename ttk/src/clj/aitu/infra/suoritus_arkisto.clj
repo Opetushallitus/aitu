@@ -75,87 +75,85 @@
    (sql/where (= :koulutustoimija koulutustoimija))))
 
 (defn toimikunta-valinta->toimikunta [t]
-  (if (= "Ei kohdistettu" t) nil t))
+  (if (= "Ei valittu" t) nil t))
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
            rahoitusmuoto tila tutkinto suoritettavatutkinto suorituskertaid suorittaja suorittajaid toimikunta kieli todistus sukupuoli
            tutkinnonosa osaamisala luotupvm_alku luotupvm_loppu]}]
-  (let [toimikunta (toimikunta-valinta->toimikunta toimikunta)]
-    (->
-      (sql/select* suorituskerta)
-      (sql/join suoritus)
-      (sql/join :tutkinnonosa (= :suoritus.tutkinnonosa :tutkinnonosa.tutkinnonosa_id))
-      (sql/join :left :osaamisala (= :suoritus.osaamisala :osaamisala.osaamisala_id))
-      (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
-      (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
-      (sql/join :left :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkintoversio_suoritettava))
-      (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
-      (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
-      (sql/fields :suorituskerta_id :tutkinto :tutkintoversio_id :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
-                  :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
-                  :jarjestamismuoto :opiskelijavuosi :liitetty_pvm :tutkintoversio_suoritettava :kouljarjestaja
-                  :valmistava_koulutus :paikka :jarjestelyt
-                  [:suorittaja.etunimi :suorittaja_etunimi]
-                  [:suorittaja.sukunimi :suorittaja_sukunimi]
-                  [:suorittaja.syntymapvm :suorittaja_syntymapvm]
-                  [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
-                  [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
-                  [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
-                  [:suoritettava-tutkinto.nimi_fi :suoritettavatutkinto_nimi_fi]
-                  [:suoritettava-tutkinto.nimi_sv :suoritettavatutkinto_nimi_sv]
-                  [:suoritettava-tutkinto.tutkintotunnus :suoritettavatutkinto_tutkintotunnus]                
-                  [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
-                  [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
-                  [:tutkinnonosa.tutkinnonosa_id :tutkinnonosa_tutkinnonosa_id]
-                  [:osaamisala.nimi_fi :osaamisala_nimi_fi]
-                  [:osaamisala.nimi_sv :osaamisala_nimi_sv]
-                  [:osaamisala.osaamisalatunnus :osaamisala_tunnus]
-                  [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
-                  [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
-                  [:suoritus.arvosana :arvosana])
-      (sql/order :suorituskerta_id :DESC)
-      (sql/order :suoritus.suoritus_id :DESC)
-      (cond->
-        (seq suorituskertaid) (sql/where {:suorituskerta.suorituskerta_id (Integer/parseInt suorituskertaid)})
-        (seq ehdotuspvm_alku) (sql/where {:ehdotusaika [>= (to-sql-date (parse-iso-date ehdotuspvm_alku))]})
-        (seq ehdotuspvm_loppu) (sql/where {:ehdotusaika [<= (to-sql-date (parse-iso-date ehdotuspvm_loppu))]})
-        (seq luotupvm_alku) (sql/where {:suorituskerta.luotuaika [>= (to-sql-date (parse-iso-date luotupvm_alku))]})
-        (seq luotupvm_loppu) (sql/where {:suorituskerta.luotuaika [<= (to-sql-date (parse-iso-date luotupvm_loppu))]})
-        (seq hyvaksymispvm_alku) (sql/where {:hyvaksymisaika [>= (to-sql-date (parse-iso-date hyvaksymispvm_alku))]})
-        (seq hyvaksymispvm_loppu) (sql/where {:hyvaksymisaika [<= (to-sql-date (parse-iso-date hyvaksymispvm_loppu))]})
-        (seq jarjestamismuoto) (sql/where {:jarjestamismuoto jarjestamismuoto})
-        (seq koulutustoimija) (sql/where {:koulutustoimija koulutustoimija})
-        (seq rahoitusmuoto) (sql/where {:rahoitusmuoto (Integer/parseInt rahoitusmuoto)})
-        (seq kieli) (sql/where {:suoritus.kieli kieli})
-        (= "todistus_ei" todistus) (sql/where {:suoritus.todistus false})
-        (= "todistus_kylla" todistus) (sql/where {:suoritus.todistus true})
-        (= "todistus_kokotutkinto" todistus) (sql/where {:suoritus.kokotutkinto true})
-        (seq sukupuoli) (sql/where {:suorittaja.sukupuoli sukupuoli})
-        (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
-        (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
-        (seq suorittajaid) (sql/where {:suorittaja.suorittaja_id (Integer/parseInt suorittajaid)})
-        (not (clojure.string/blank? suorittaja))   (sql/where (or {:suorittaja.hetu suorittaja}
-                                                                  {:suorittaja.oid suorittaja}
-                                                                  {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
-                                                                  {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
+  (->
+    (sql/select* suorituskerta)
+    (sql/join suoritus)
+    (sql/join :tutkinnonosa (= :suoritus.tutkinnonosa :tutkinnonosa.tutkinnonosa_id))
+    (sql/join :left :osaamisala (= :suoritus.osaamisala :osaamisala.osaamisala_id))
+    (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
+    (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
+    (sql/join :left :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkintoversio_suoritettava))
+    (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+    (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
+    (sql/fields :suorituskerta_id :tutkinto :tutkintoversio_id :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
+                :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
+                :jarjestamismuoto :opiskelijavuosi :liitetty_pvm :tutkintoversio_suoritettava :kouljarjestaja
+                :valmistava_koulutus :paikka :jarjestelyt
+                [:suorittaja.etunimi :suorittaja_etunimi]
+                [:suorittaja.sukunimi :suorittaja_sukunimi]
+                [:suorittaja.syntymapvm :suorittaja_syntymapvm]
+                [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
+                [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
+                [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
+                [:suoritettava-tutkinto.nimi_fi :suoritettavatutkinto_nimi_fi]
+                [:suoritettava-tutkinto.nimi_sv :suoritettavatutkinto_nimi_sv]
+                [:suoritettava-tutkinto.tutkintotunnus :suoritettavatutkinto_tutkintotunnus]
+                [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
+                [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
+                [:tutkinnonosa.tutkinnonosa_id :tutkinnonosa_tutkinnonosa_id]
+                [:osaamisala.nimi_fi :osaamisala_nimi_fi]
+                [:osaamisala.nimi_sv :osaamisala_nimi_sv]
+                [:osaamisala.osaamisalatunnus :osaamisala_tunnus]
+                [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
+                [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                [:suoritus.arvosana :arvosana])
+    (sql/order :suorituskerta_id :DESC)
+    (sql/order :suoritus.suoritus_id :DESC)
+    (cond->
+      (seq suorituskertaid) (sql/where {:suorituskerta.suorituskerta_id (Integer/parseInt suorituskertaid)})
+      (seq ehdotuspvm_alku) (sql/where {:ehdotusaika [>= (to-sql-date (parse-iso-date ehdotuspvm_alku))]})
+      (seq ehdotuspvm_loppu) (sql/where {:ehdotusaika [<= (to-sql-date (parse-iso-date ehdotuspvm_loppu))]})
+      (seq luotupvm_alku) (sql/where {:suorituskerta.luotuaika [>= (to-sql-date (parse-iso-date luotupvm_alku))]})
+      (seq luotupvm_loppu) (sql/where {:suorituskerta.luotuaika [<= (to-sql-date (parse-iso-date luotupvm_loppu))]})
+      (seq hyvaksymispvm_alku) (sql/where {:hyvaksymisaika [>= (to-sql-date (parse-iso-date hyvaksymispvm_alku))]})
+      (seq hyvaksymispvm_loppu) (sql/where {:hyvaksymisaika [<= (to-sql-date (parse-iso-date hyvaksymispvm_loppu))]})
+      (seq jarjestamismuoto) (sql/where {:jarjestamismuoto jarjestamismuoto})
+      (seq koulutustoimija) (sql/where {:koulutustoimija koulutustoimija})
+      (seq rahoitusmuoto) (sql/where {:rahoitusmuoto (Integer/parseInt rahoitusmuoto)})
+      (seq kieli) (sql/where {:suoritus.kieli kieli})
+      (= "todistus_ei" todistus) (sql/where {:suoritus.todistus false})
+      (= "todistus_kylla" todistus) (sql/where {:suoritus.todistus true})
+      (= "todistus_kokotutkinto" todistus) (sql/where {:suoritus.kokotutkinto true})
+      (seq sukupuoli) (sql/where {:suorittaja.sukupuoli sukupuoli})
+      (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
+      (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
+      (seq suorittajaid) (sql/where {:suorittaja.suorittaja_id (Integer/parseInt suorittajaid)})
+      (not (clojure.string/blank? suorittaja))   (sql/where (or {:suorittaja.hetu suorittaja}
+                                                                {:suorittaja.oid suorittaja}
+                                                                {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
+                                                                {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
+      (seq tila) (sql/where {:tila tila})
+      (seq toimikunta) (sql/where {:toimikunta (toimikunta-valinta->toimikunta toimikunta)})
+      (seq tutkinto) (sql/where {:tutkintoversio_id (Integer/parseInt tutkinto)})
+      (seq suoritettavatutkinto) (sql/where {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)}))
+    sql/exec))
 
-        (seq tila) (sql/where {:tila tila})
-        (seq toimikunta) (sql/where {:toimikunta toimikunta})
-        (seq tutkinto) (sql/where {:tutkintoversio_id (Integer/parseInt tutkinto)})
-        (seq suoritettavatutkinto) (sql/where {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)}))
-      sql/exec)))
-
-; TODO: ei vielä toimi täysin oikein... .. . 
+; TODO: ei vielä toimi täysin oikein... .. .
 ; TODO: Grouppaus pitää oikeasti tapahtua *suoritettavan tutkinnon* kautta. Liittäminen päätellään siitä onko *tutkinto* eri kuin *suoritettava tutkinto*, eikä siitä onko liittämispvm null
-(defn laske-tilastot 
+(defn laske-tilastot
   ([rakenne suoritukset]
     (let [varsinaiset-suoritukset (filter #(nil? (:liitetty_pvm %)) suoritukset)
           todistuksia-osista (count (filter #(and (not (= "Koko tutkinto" (:kokotutkinto %)))
                                                   (= "Todistus" (:todistus %))) suoritukset)) ; TODO: Ei lasketa koko tutkinto -rivejä mukaan lukumäärään
           osasuoritukset (count (filter #(nil? (:liitetty_pvm %)) suoritukset))  ; Liitetyt eivät ole osa suoritettuja
           ]
-      (assoc rakenne 
+      (assoc rakenne
              :suoritetut_kokotutkinnot (count (filter #(= "Koko tutkinto" (:kokotutkinto %)) suoritukset))
              :liitetyt_osat (count (filter #(not (nil? (:liitetty_pvm %))) suoritukset)) ; :liittaminen
              :suoritetut_osat osasuoritukset
@@ -168,7 +166,7 @@
 (defn hae-yhteenveto-raportti
   [{{:keys [luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
             tila tutkinto suoritettavatutkinto tutkinnonosa osaamisala suorittaja suorittajaid toimikunta edelliset-kayttaja] :as params} :params}]
- 
+
   ; SQLKorma makroilee or ja and -funktiot, joten niitä ei voi käyttää ehtorakenteisiin enää sql-select makron sisällä normaalisti
   ; Ärsyttävää? Kyllä, erittäin. Siksi kikkailua.
   ; Halutaan että toimikunta + suoritettava tutkinto toimivat yhdessä OR-ehtona: (...) AND .. () AND (toimikunta OR suoritettavatutkinto)
@@ -203,7 +201,7 @@
               (seq tutkinto) (sql/where {:suorituskerta.tutkintoversio_id tutkinto})
               (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
               (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
-              (seq suorittajaid) (sql/where {:suorittaja.suorittaja_id (Integer/parseInt suorittajaid)})              
+              (seq suorittajaid) (sql/where {:suorittaja.suorittaja_id (Integer/parseInt suorittajaid)})
               (seq suorittaja) (sql/where (or {:suorittaja.hetu suorittaja}
                                               {:suorittaja.oid suorittaja}
                                               {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
@@ -212,7 +210,7 @@
               (not-empty tutkinto-ehto) (sql/where {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)})
               (true? or-ehto) (sql/where (or {:suorituskerta.toimikunta toimikunta}
                                              {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)}))
-              ; hivenen ruma hack. Haetaan käyttäjän edellisen viiden minuutin aikana kirjaamat rivit, jotta saadaan se mitä äsken ladattiin haettua. 
+              ; hivenen ruma hack. Haetaan käyttäjän edellisen viiden minuutin aikana kirjaamat rivit, jotta saadaan se mitä äsken ladattiin haettua.
               ; mutta korrektimpaa olisi pitää kirjanpitoa latauksista ja käyttää sitä viitteenä. Tehdään jos tämä ei riitä.
               (not-empty edelliset-kayttaja) (sql/where {:suoritus.luotu_kayttaja @ka/*current-user-oid*
                                                          :suoritus.luotuaika [>= (sql/raw "(now() - interval '5 minutes')")]})
@@ -235,7 +233,7 @@
                         :nayttotutkinto.tutkintotunnus
                         [:suoritettava-tutkinto.nimi_fi :suoritettavatutkinto_nimi_fi]
                         [:suoritettava-tutkinto.nimi_sv :suoritettavatutkinto_nimi_sv]
-                        [:suoritettava-tutkinto.tutkintotunnus :suoritettavatutkinto_tutkintotunnus]                      
+                        [:suoritettava-tutkinto.tutkintotunnus :suoritettavatutkinto_tutkintotunnus]
                         [:tutkintoversio.peruste :tutkinto_peruste]
                         [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
                         [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
@@ -261,10 +259,10 @@
           results (->> results-sql
                     (map #(assoc % :liittaminen (if (not (nil? (:liitetty_pvm %))) ",liittämällä" " "))  )
                     (map #(assoc % :tavoitetutkinto (if (not (= (:suoritettavatutkinto_nimi_fi %) (:tutkinto_nimi_fi %))) (str "-- " (:suoritettavatutkinto_nimi_fi %)) " ")) ))
-        
+
       rapsa (->> results
                  (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
-                 (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :liitetty_pvm :liittaminen :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm 
+                 (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :liitetty_pvm :liittaminen :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
                                                  :jarjestamismuoto :opiskelijavuosi  :valmistava_koulutus :paikka :jarjestelyt
                                                  :arvosana :tunnustaminen :todistus  :osaamisen_tunnustaminen  :kokotutkinto
                                                  :ehdotusaika :osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv :arvioijat])
@@ -280,12 +278,12 @@
                                 (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat koulutustoimija)))))
       k-t (fn [koulutustoimijat]
             (map #(merge % (koulutustoimija-tilasto %)) koulutustoimijat))
-      tilastoitu (map #(update % :koulutustoimijat k-t) rapsa)    
+      tilastoitu (map #(update % :koulutustoimijat k-t) rapsa)
       ]
       ; kaikki yhteensä per toimikunta
       (map #(merge % (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (mapcat :suorittajat (mapcat :koulutustoimijat tilastoitu)))))) tilastoitu)
       )))
- 
+
 
 (defn hae-arvioijat [suorituskerta-id]
   (sql/select :arvioija
@@ -297,9 +295,7 @@
   (let [perus (first (hae-kaikki {:suorituskertaid suorituskerta-id}))
         suoritukset (hae-suoritukset (->int suorituskerta-id))
         arvioijat (hae-arvioijat (->int suorituskerta-id))]
-     (-> perus
-       (assoc :osat suoritukset)
-       (assoc :arvioijat arvioijat))))
+     (assoc perus :osat suoritukset :arvioijat arvioijat)))
 
 (defn osa->suoritus-db [osa]
   {:suorituskerta (or (:suorituskerta osa) (:suorituskerta_id osa))
@@ -319,7 +315,7 @@
                     :suorittaja :rahoitusmuoto :tutkinto :arviointikokouksen_pvm :tutkintoversio_id :toimikunta
                     :tutkintoversio_suoritettava :liitetty_pvm :kouljarjestaja])
       (assoc :tutkinto tutkintotunnus)
-      (update :opiskelijavuosi #(or (->int %) 1)) ; TODO: poistuu 
+      (update :opiskelijavuosi #(or (->int %) 1)) ; TODO: poistuu
       (update :jarjestamismuoto #(or % "oppilaitosmuotoinen")) ; TODO: poistuu
       (update :tutkintoversio_suoritettava #(or % (:tutkintoversio_id kerta)))
       (update :kouljarjestaja #(or % (:koulutustoimija kerta))) ; tut. järjestäjä = koulutustoimija, jos arvoa ei ole asetettu
@@ -375,7 +371,7 @@
   (sql-util/update-unique suorituskerta
     (sql/set-fields {:tutkintoversio_suoritettava tutkintoversio_suoritettava
                      :liitetty_pvm (parse-iso-date liitetty_pvm)})
-    (sql/where {:suorituskerta_id (->int suorituskerta_id)}))) 
+    (sql/where {:suorituskerta_id (->int suorituskerta_id)})))
 
 (defn lisaa-tai-paivita!
   [{:keys [arvioijat jarjestamismuoto valmistava_koulutus paikka jarjestelyt koulutustoimija opiskelijavuosi suorittaja rahoitusmuoto tutkinto tutkintoversio_id osat suorituskerta_id tutkintoversio_suoritettava]
