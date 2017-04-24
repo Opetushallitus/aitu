@@ -24,11 +24,10 @@
     </div>
     <div>
       <fieldset>
-       <label>[[toimikunta]]</label>
-       <select ng-options="toimikunta.tkunta as toimikunta.diaarinumero + ' ' + (toimikunta | lokalisoiKentta:'nimi') for toimikunta in tutkintotoimikunnat" ng-model="hakuForm.toimikunta" required>
-         <option value=""></option>
-         <option value="Ei kohdistettu"</option>
-       </select>
+        <label>[[toimikunta]]</label>
+        <select ng-options="toimikunta.tkunta as toimikunta.diaarinumero + ' ' + (toimikunta | lokalisoiKentta:'nimi') for toimikunta in tutkintotoimikunnat" ng-model="hakuForm.toimikunta" required>
+          <option value=""></option>
+        </select>
       </fieldset>
       <fieldset>
         <label>[[tutkinto_jarjestaja]]</label>
@@ -58,7 +57,7 @@
     <div>
       <fieldset>
         <label>[[tutkinto]]</label>
-        <select ng-model="hakuForm.tutkinto" 
+        <select ng-model="hakuForm.tutkinto"
         ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_id">
           <option value=""></option>
         </select>
@@ -79,7 +78,7 @@
     <div>
       <fieldset>
         <label>[[suoritettava_tutkinto ]]</label>
-        <select ng-model="hakuForm.suoritettavatutkinto" 
+        <select ng-model="hakuForm.suoritettavatutkinto"
         ng-options="tutkinto.tutkintoversio_id as tutkinto.tutkintotunnus + ' ' + (tutkinto | lokalisoiKentta:'nimi') + ' (' + tutkinto.peruste + ')' for tutkinto in tutkinnot" ng-model="form.tutkintoversio_id">
           <option value=""></option>
         </select>

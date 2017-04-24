@@ -21,7 +21,7 @@
             [aitu.integraatio.sql.test-data-util :refer :all]
             [aitu.infra.suoritus-excel :refer [lue-excel!]]
             [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
-            [dk.ative.docjure.spreadsheet :refer [load-workbook]]            
+            [dk.ative.docjure.spreadsheet :refer [load-workbook]]
             ))
 
 (use-fixtures :each tietokanta-fixture)
@@ -34,15 +34,14 @@
 
 (defn paivita-suoritukset-toiselle-koulutustoimijalle! []
  (sql/exec-raw (str "update suorituskerta set koulutustoimija='KT1' where suorittaja= -2")))
- 
+
 (deftest ^:integraatio yhteenvetoraportti-test-peruscase
-  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1" :nimi_fi "bar bar"}) 
+  (let [kt1 (lisaa-koulutustoimija! {:ytunnus "KT1" :nimi_fi "bar bar"})
         wb (load-workbook "test-resources/tutosat_monipuolinen.xlsx")
-        ui-log (lue-excel! wb)  ; luodaan suorituksia 
+        ui-log (lue-excel! wb)  ; luodaan suorituksia
         _ (paivita-suoritukset-toiselle-koulutustoimijalle!)
-        rapsa (rip-id (suoritus-arkisto/hae-yhteenveto-raportti {}))
-        rapsa-localized (localdate-coerce rapsa)  
-   ;     _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))    
+        rapsa-localized (localdate-coerce (rip-id (suoritus-arkisto/hae-yhteenveto-raportti {})))
+   ;     _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))
         oikea-tulos (read-string (slurp "test-resources/suoritusrapsa.edn"))]
     (is (= rapsa-localized oikea-tulos))
     (testing "yhteenvetoraportti, edelliset 5 minuuttia"
@@ -58,5 +57,28 @@
         (is (=  tuloksia-or oikea-tulos))))
     ))
 
+(defn paivita-suorituksien-toimikunnat! []
+ (sql/exec-raw (str "update suorituskerta set toimikunta='TK1' where suorittaja=-2 and jarjestelyt='asfasfasfa'")))
 
+(deftest ^:integraatio suorituskerrat-test-hae-kaikki
+  (let [tk1 (lisaa-toimikunta! {:tkunta "TK1" :nimi_fi "Testitoimikunta TK1"})
+        wb (load-workbook "test-resources/tutosat_monipuolinen.xlsx")
+        ui-log (lue-excel! wb)  ; luodaan suorituksia
+        _ (paivita-suorituksien-toimikunnat!)]
+
+    (testing "Toimikunta-hakuehtoon valittuna arvo"
+      (let [suorituskerrat (suoritus-arkisto/hae-kaikki {:toimikunta "TK1"})]
+        (is (count suorituskerrat) 1)
+        ))
+
+    (testing "Toimikunta-hakuehtoon valittuna 'Ei valittu'-arvo"
+      (let [suorituskerrat (suoritus-arkisto/hae-kaikki {:params {:toimikunta nil}})]
+        (is (count suorituskerrat) 4)
+        ))
+
+    (testing "Ei toimikunta-hakuehtoa"
+      (let [suorituskerrat (suoritus-arkisto/hae-kaikki {:params {}})]
+        (is (count suorituskerrat) 5)
+        ))
+    ))
 

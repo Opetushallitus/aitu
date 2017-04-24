@@ -20,10 +20,10 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
       restrict: 'E',
       templateUrl: 'template/direktiivit/suoritukset',
       scope: {},
-      controller: ['$location', '$scope', 'Toimikunta', 'Koulutustoimija', 'Suoritus', 'TutkintoResource', 'Tutkinnonosa', 'Osaamisala', 'Varmistus', 'i18n', 
+      controller: ['$location', '$scope', 'Toimikunta', 'Koulutustoimija', 'Suoritus', 'TutkintoResource', 'Tutkinnonosa', 'Osaamisala', 'Varmistus', 'i18n',
          function($location, $scope, Toimikunta, Koulutustoimija, Suoritus, TutkintoResource, Tutkinnonosa, Osaamisala, Varmistus, i18n) {
         $scope.hakuForm = {tila: null,
-        				   tuloksiasivulla: "10"
+                   tuloksiasivulla: "10"
         };
         $scope.filterTila = function(tila) {
           return function(item) {
@@ -46,11 +46,17 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         TutkintoResource.query(function(tutkinnot) {
           $scope.tutkinnot = tutkinnot;
         });
-        
+
         Toimikunta.haeKaikki().then(function(tutkintotoimikunnat) {
-            $scope.tutkintotoimikunnat = tutkintotoimikunnat;
+          var ei_valittu_ttk = {
+              diaarinumero: "",
+              nimi_fi: i18n.arviointipaatokset.ei_valittu,
+              nimi_sv: i18n.arviointipaatokset.ei_valittu,
+              tkunta: "Ei valittu"
+          };
+          $scope.tutkintotoimikunnat = [ei_valittu_ttk].concat(tutkintotoimikunnat);
         });
-        
+
 
         $scope.$watch('hakuForm.tutkinto', function(tutkinto) {
             if (tutkinto != undefined) {
@@ -81,9 +87,9 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
             });
           });
         };
-        
+
         $scope.muokkaaSuoritusta = function(muokattavaSuoritus) {
-        	$location.url('/muokkaa-suoritus/' + muokattavaSuoritus.suorituskerta_id);
+          $location.url('/muokkaa-suoritus/' + muokattavaSuoritus.suorituskerta_id);
         };
 
         $scope.valitutSuoritukset = function() {
@@ -98,7 +104,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
             }
           });
           // tyhjentää valintalomakkeen checkboxit kun tila muuttuu
-          _.forEach(_.keys($scope.form), function(k) { $scope.form[k]=false;}); 
+          _.forEach(_.keys($scope.form), function(k) { $scope.form[k]=false;});
 
           Suoritus.haeKaikki($scope.hakuForm).then(function(suoritukset) {
               $scope.suoritukset = suoritukset;
@@ -145,17 +151,17 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
         };
 
         $scope.haeSuoritukset = function() {
-        	Suoritus.haeKaikki($scope.hakuForm).then(function(suoritukset) {
-    			$scope.suoritukset = suoritukset;
-    			$scope.suorituksetjarjestetty = suoritukset;
-    			$scope.suoritussivu = 1;
-        	})
+          Suoritus.haeKaikki($scope.hakuForm).then(function(suoritukset) {
+          $scope.suoritukset = suoritukset;
+          $scope.suorituksetjarjestetty = suoritukset;
+          $scope.suoritussivu = 1;
+          })
           };
 
         $scope.$watch('hakuForm', function(hakuForm, oldhakuform) {
-        	if (! (angular.equals(hakuForm,oldhakuform))) { // ei haeta ensimmäisellä sivulatauksella dataa 
-        		$scope.haeSuoritukset();
-        	}
+          if (! (angular.equals(hakuForm,oldhakuform))) { // ei haeta ensimmäisellä sivulatauksella dataa
+            $scope.haeSuoritukset();
+          }
           }, true);
 
       }]
