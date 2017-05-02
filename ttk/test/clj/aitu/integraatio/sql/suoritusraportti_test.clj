@@ -58,17 +58,25 @@
     ))
 
 (defn paivita-suorituksien-toimikunnat! []
- (sql/exec-raw (str "update suorituskerta set toimikunta='TK1' where suorittaja=-2 and jarjestelyt='asfasfasfa'")))
+ (sql/exec-raw (str "update suorituskerta set toimikunta='TK1', tutkinto='924601' where suorittaja=-2 and jarjestelyt='asfasfasfa'")))
+
+(defn paivita-toimikunnan-tutkinto! []
+ (sql/exec-raw (str "update toimikunta_ja_tutkinto set tutkintotunnus='927128' where toimikunta='Gulo gulo'"))
+ (sql/exec-raw (str "insert into toimikunta_ja_tutkinto ('toimikunta', 'tutkintotunnus') values ('TK1', '924601')")))
 
 (deftest ^:integraatio suorituskerrat-test-hae-kaikki
   (let [tk1 (lisaa-toimikunta! {:tkunta "TK1" :nimi_fi "Testitoimikunta TK1"})
         wb (load-workbook "test-resources/tutosat_monipuolinen.xlsx")
         ui-log (lue-excel! wb)  ; luodaan suorituksia
-        _ (paivita-suorituksien-toimikunnat!)]
+        _ (paivita-suorituksien-toimikunnat!)
+        _ (paivita-toimikunnan-tutkinto!)
+        ]
 
     (testing "Toimikunta-hakuehtoon valittuna arvo"
-      (let [suorituskerrat (suoritus-arkisto/hae-kaikki {:toimikunta "TK1"})]
-        (is (count suorituskerrat) 1)
+      (let [suorituskerrat-tk1 (suoritus-arkisto/hae-kaikki {:toimikunta "TK1"})
+            suorituskerrat-gulo (suoritus-arkisto/hae-kaikki {:toimikunta "Gulo gulo"})]
+        (is (count suorituskerrat-tk1) 1)
+        (is (count suorituskerrat-gulo) 4)
         ))
 
     (testing "Toimikunta-hakuehtoon valittuna 'Ei valittu'-arvo"

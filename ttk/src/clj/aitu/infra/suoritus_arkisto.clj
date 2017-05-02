@@ -75,8 +75,20 @@
                [:suoritus.lisatiedot :lisatiedot])
    (sql/where (= :koulutustoimija koulutustoimija))))
 
-(defn toimikunta-valinta->toimikunta [t]
+(defn ^:private toimikunta-valinta->toimikunta [t]
   (if (= "Ei valittu" t) nil t))
+
+(defn ^:private add-toimikunta-where-ehto [toimikunta query]
+ (let [where-fn (cond
+                   ;; Toimikunta-hakuehtoa ei ole annettu
+                   (s/blank? toimikunta) nil
+                   ;; Toimikunta ei ole asetettu suoritukselle
+                   (nil? (toimikunta-valinta->toimikunta toimikunta)) #(sql/where % {:toimikunta nil})
+                   ;; suoritus on tehty sellaisesta tutkinnonosasta, joka kuuluu tutkintoon, joka kuuluu valitun toimikunnan toimialaan
+                   :else #(sql/where % {:nayttotutkinto.tutkintotunnus [in (sql/subselect :toimikuntien_tutkinnot
+                                                                             (sql/fields :tutkintotunnus)
+                                                                             (sql/where {:toimikunta toimikunta}))]}))]
+   (if (fn? where-fn) (where-fn query) query)))
 
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
@@ -140,7 +152,7 @@
                                                                 {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
                                                                 {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
       (seq tila) (sql/where {:tila tila})
-      (seq toimikunta) (sql/where {:toimikunta (toimikunta-valinta->toimikunta toimikunta)})
+      (seq toimikunta) ((partial add-toimikunta-where-ehto toimikunta))
       (seq tutkinto) (sql/where {:tutkintoversio_id (Integer/parseInt tutkinto)})
       (seq suoritettavatutkinto) (sql/where {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)}))
     sql/exec))
