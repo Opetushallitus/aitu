@@ -13,7 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.infra.suoritus-arkisto
-  (:require  [korma.core :as sql]
+  (:require  [clojure.string :as s]
+             [korma.core :as sql]
              [aitu.auditlog :as auditlog]
              [clj-time.coerce :refer [to-sql-date]]
              [oph.korma.common :as sql-util]
@@ -134,7 +135,7 @@
       (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
       (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
       (seq suorittajaid) (sql/where {:suorittaja.suorittaja_id (Integer/parseInt suorittajaid)})
-      (not (clojure.string/blank? suorittaja))   (sql/where (or {:suorittaja.hetu suorittaja}
+      (not (s/blank? suorittaja))   (sql/where (or {:suorittaja.hetu suorittaja}
                                                                 {:suorittaja.oid suorittaja}
                                                                 {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
                                                                 {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
@@ -171,8 +172,8 @@
   ; Ärsyttävää? Kyllä, erittäin. Siksi kikkailua.
   ; Halutaan että toimikunta + suoritettava tutkinto toimivat yhdessä OR-ehtona: (...) AND .. () AND (toimikunta OR suoritettavatutkinto)
   (let [toimikunta (toimikunta-valinta->toimikunta toimikunta)
-        or-ehto (and (not (clojure.string/blank? toimikunta)) (not (clojure.string/blank? suoritettavatutkinto)))
-        toimikunta-ehto (if (and (not (true? or-ehto)) (not (clojure.string/blank? toimikunta))) {:suorituskerta.toimikunta toimikunta} {})
+        or-ehto (and (not (s/blank? toimikunta)) (not (s/blank? suoritettavatutkinto)))
+        toimikunta-ehto (if (and (not (true? or-ehto)) (not (s/blank? toimikunta))) {:suorituskerta.toimikunta toimikunta} {})
         tutkinto-ehto (if (and (not (true? or-ehto)) (seq suoritettavatutkinto)) {:tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)} {})
         ]
     (let [results-sql
