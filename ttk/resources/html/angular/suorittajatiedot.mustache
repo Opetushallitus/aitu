@@ -26,7 +26,7 @@
 <hr>
   <div>
     <a ng-href="[[base-url]]/api/suoritus/suoritusraportti?suorittajaid={{suorittaja.suorittaja_id}}">
-      Lataa suoritukset PDF:nä
+      [lataa_suoritukset_pdf]
     </a>
   </div>
 <hr>
@@ -38,7 +38,7 @@
     <th jarjestettava-sarake="osaamisala_nimi" jarjestely-fn="orderByLokalisoitu">[[osaamisala]]</th>
     <th jarjestettava-sarake="arvosana">[[arvosana]]</th>
     <th>[[arvosanan_korotus]]</th>
-    <th>[[osaamisen_tunnustaminen]]</th>    
+    <th>[[osaamisen_tunnustaminen]]</th>
     <th>[[suorituskieli]]</th>
    </tr>
   </thead>
@@ -52,7 +52,7 @@
       <td><enum-arvo nimi="kieli" arvo="suoritus.kieli"></enum-arvo></td>
   </tr>
 </table>
- 
- 
+
+
 [[/i18n.yleiset]]
 [[/i18n.arviointipaatokset]]
