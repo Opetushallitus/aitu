@@ -40,6 +40,7 @@
     <th>[[arvosanan_korotus]]</th>
     <th>[[osaamisen_tunnustaminen]]</th>
     <th>[[suorituskieli]]</th>
+    <th></th>
    </tr>
   </thead>
   <tr ng-repeat="suoritus in suorituksetJarjestetty track by $index">
@@ -50,6 +51,9 @@
       <td>{{ suoritus.arvosanan_korotus | muotoileBoolean }}</td>
       <td>{{suoritus.osaamisen_tunnustaminen | date:'dd.MM.yyyy'}}</td>
       <td><enum-arvo nimi="kieli" arvo="suoritus.kieli"></enum-arvo></td>
+      <td>
+        <button class="icon edit-icon" ng-click="muokkaaSuoritusta(suoritus)" ></button>
+      </td>
   </tr>
 </table>
 

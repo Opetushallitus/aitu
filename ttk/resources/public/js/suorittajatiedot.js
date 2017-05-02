@@ -18,18 +18,21 @@ angular.module('suorittajatiedot', [])
     $routeProvider.when('/suorittaja/:suorittajaid', {controller: 'SuorittajaController', templateUrl: 'template/suorittajatiedot'});
   }])
 
-  .controller('SuorittajaController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Toimikunta', 'Rahoitusmuoto', 
-                                     'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n', 
-   function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Toimikunta, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
-	 if ($routeParams.suorittajaid) {
-	   Suorittaja.hae($routeParams.suorittajaid).then(function(suorittaja) {
-		   $scope.suorittaja = suorittaja;
-	   });
-	   var hakuForm = {suorittajaid: $routeParams.suorittajaid};
-	   Suoritus.haeKaikki(hakuForm).then(function(suoritukset) {
-		   $scope.suoritukset = suoritukset;
-		   $scope.suorituksetJarjestetty = suoritukset;
-       });
+  .controller('SuorittajaController', ['$routeParams', '$location', '$modal', '$scope', 'Arvioija', 'Osaamisala', 'Koulutustoimija', 'Toimikunta', 'Rahoitusmuoto',
+                                     'Suorittaja', 'Suoritus', 'Tutkinnonosa', 'TutkintoResource', 'Varmistus', 'i18n',
+    function($routeParams, $location, $modal, $scope, Arvioija, Osaamisala, Koulutustoimija, Toimikunta, Rahoitusmuoto, Suorittaja, Suoritus, Tutkinnonosa, TutkintoResource, Varmistus, i18n) {
+      if ($routeParams.suorittajaid) {
+        Suorittaja.hae($routeParams.suorittajaid).then(function(suorittaja) {
+          $scope.suorittaja = suorittaja;
+        });
+        var hakuForm = {suorittajaid: $routeParams.suorittajaid};
+        Suoritus.haeKaikki(hakuForm).then(function(suoritukset) {
+          $scope.suoritukset = suoritukset;
+          $scope.suorituksetJarjestetty = suoritukset;
+          });
+      }
 
-	 }
+      $scope.muokkaaSuoritusta = function(muokattavaSuoritus) {
+        $location.url('/muokkaa-suoritus/' + muokattavaSuoritus.suorituskerta_id);
+      };
   }]);
