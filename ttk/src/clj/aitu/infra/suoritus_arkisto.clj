@@ -90,6 +90,7 @@
                                                                              (sql/where {:toimikunta toimikunta}))]}))]
    (if (fn? where-fn) (where-fn query) query)))
 
+        
 (defn hae-kaikki
   [{:keys [ehdotuspvm_alku ehdotuspvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu jarjestamismuoto koulutustoimija
            rahoitusmuoto tila tutkinto suoritettavatutkinto suorituskertaid suorittaja suorittajaid toimikunta kieli todistus sukupuoli
@@ -101,8 +102,9 @@
     (sql/join :left :osaamisala (= :suoritus.osaamisala :osaamisala.osaamisala_id))
     (sql/join :suorittaja (= :suorittaja.suorittaja_id :suorittaja))
     (sql/join :nayttotutkinto (= :nayttotutkinto.tutkintotunnus :tutkinto))
-    (sql/join :left :tutkintoversio (= :tutkintoversio.tutkintoversio_id :tutkintoversio_suoritettava))
-    (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :tutkintoversio.tutkintotunnus))
+    (sql/join :tutkintoversio (= :tutkintoversio.tutkintoversio_id :suorituskerta.tutkintoversio_id))
+    (sql/join :left suoritettava-versio (= :suoritettava-versio.tutkintoversio_id :tutkintoversio_suoritettava))
+    (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :suoritettava-versio.tutkintotunnus))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :koulutustoimija))
     (sql/fields :suorituskerta_id :tutkinto :tutkintoversio_id :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
                 :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
