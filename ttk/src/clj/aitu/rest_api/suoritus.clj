@@ -41,16 +41,16 @@
       (file-download-response (.toByteArray bos) filename content-type))))
 
 (defn luontiaika []
-  (str   (unparse (formatter "dd.MM.yyyy 'klo' HH:mm" (DateTimeZone/forID "Europe/Helsinki")) (now))))
+  (unparse (formatter "dd.MM.yyyy 'klo' HH:mm" (DateTimeZone/forID "Europe/Helsinki")) (now)))
 
 (defn localdate->str [locald]
-  (clj-time.format/unparse (clj-time.format/formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
+  (unparse (formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
 
 (defn map-update
   "Update key if the form is a map and key is mapped to non-nil value."
   [form key update-fn]
-  (if (map? form)
-    (if (not (nil? (get form key))) (update form key update-fn) form)
+  (if (and (map? form) (not (nil? (get form key))))
+    (update form key update-fn)
     form))
 
 (defn koulutustoimija->toupper [form]
@@ -75,53 +75,53 @@
                 (pdf-arkisto/muodosta-pdf data))]
       (pdf-response pdf "suoritukset.pdf"))))
 
-  (defn muokkaus-sallittu? [suorituskertaid]
-    (let [suorituskerta-id (arkisto/->int suorituskertaid)]
-      (if (not (nil? suorituskerta-id))
-        (let [suorituskerta (arkisto/hae suorituskerta-id)]
-          (= "luonnos" (:tila suorituskerta)))
-        true)))
+(defn muokkaus-sallittu? [suorituskertaid]
+  (let [suorituskerta-id (arkisto/->int suorituskertaid)]
+    (if (not (nil? suorituskerta-id))
+      (let [suorituskerta (arkisto/hae suorituskerta-id)]
+        (= "luonnos" (:tila suorituskerta)))
+      true)))
 
-  (defn muokkaus-sallittu-kaikille? [suoritukset]
-    (let [suoritustiedot (arkisto/hae-tiedot-monta suoritukset)]
-      (not (some #(not (= "luonnos" (:tila %))) suoritustiedot))))
+(defn muokkaus-sallittu-kaikille? [suoritukset]
+  (let [suoritustiedot (arkisto/hae-tiedot-monta suoritukset)]
+    (not (some #(not (= "luonnos" (:tila %))) suoritustiedot))))
 
-  (defroutes reitit
-    (GET "/" [& ehdot]
-      :kayttooikeus :arviointipaatos
-      (response-or-404 (arkisto/hae-kaikki ehdot)))
-    (GET "/:suorituskerta-id" [suorituskerta-id]
-      :kayttooikeus :arviointipaatos
-      (response-or-404 (arkisto/hae-tiedot suorituskerta-id)))
-    (DELETE "/:suorituskerta-id" [suorituskerta-id]
-      :kayttooikeus :arviointipaatos
-      (if (muokkaus-sallittu? suorituskerta-id)
-        (response-or-404 (arkisto/poista! (arkisto/->int suorituskerta-id)))
-        {:status 403}))
-    (POST "/" [& suoritus]
-      :kayttooikeus :arviointipaatos
-      (if (muokkaus-sallittu? (:suorituskerta_id suoritus))
-        (response-or-404 (arkisto/lisaa-tai-paivita! suoritus))
-        {:status 403}))
-    (POST "/laheta" [suoritukset]
-      :kayttooikeus :arviointipaatos
-      (response-or-404 (arkisto/laheta! suoritukset)))
-    (POST "/hyvaksy" [& suoritukset]
-      :kayttooikeus :arviointipaatos
-      (if (muokkaus-sallittu-kaikille? (:suoritukset suoritukset))
-        (response-or-404 (arkisto/hyvaksy! suoritukset))
-        {:status 403}))
-    (POST "/palauta" [suoritukset]
-      :kayttooikeus :arviointipaatos
-      (response-or-404 (arkisto/palauta! suoritukset)))
+(defroutes reitit
+  (GET "/" [& ehdot]
+    :kayttooikeus :arviointipaatos
+    (response-or-404 (arkisto/hae-kaikki ehdot)))
+  (GET "/:suorituskerta-id" [suorituskerta-id]
+    :kayttooikeus :arviointipaatos
+    (response-or-404 (arkisto/hae-tiedot suorituskerta-id)))
+  (DELETE "/:suorituskerta-id" [suorituskerta-id]
+    :kayttooikeus :arviointipaatos
+    (if (muokkaus-sallittu? suorituskerta-id)
+      (response-or-404 (arkisto/poista! (arkisto/->int suorituskerta-id)))
+      {:status 403}))
+  (POST "/" [& suoritus]
+    :kayttooikeus :arviointipaatos
+    (if (muokkaus-sallittu? (:suorituskerta_id suoritus))
+      (response-or-404 (arkisto/lisaa-tai-paivita! suoritus))
+      {:status 403}))
+  (POST "/laheta" [suoritukset]
+    :kayttooikeus :arviointipaatos
+    (response-or-404 (arkisto/laheta! suoritukset)))
+  (POST "/hyvaksy" [& suoritukset]
+    :kayttooikeus :arviointipaatos
+    (if (muokkaus-sallittu-kaikille? (:suoritukset suoritukset))
+      (response-or-404 (arkisto/hyvaksy! suoritukset))
+      {:status 403}))
+  (POST "/palauta" [suoritukset]
+    :kayttooikeus :arviointipaatos
+    (response-or-404 (arkisto/palauta! suoritukset)))
 
-    (POST "/excel-lataus" [file]
-      :kayttooikeus :arviointipaatos
-      (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
+  (POST "/excel-lataus" [file]
+    :kayttooikeus :arviointipaatos
+    (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
 
-      ;    (sallittu-jos (contains? excel-mimetypes (:content-type file))
-      ;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
-      (let [b (FileUtils/readFileToByteArray (:tempfile file))
-            wb (load-workbook (new java.io.ByteArrayInputStream b))
-            respo (lue-excel! wb)]
-        (file-upload-response respo))))
+    ;    (sallittu-jos (contains? excel-mimetypes (:content-type file))
+    ;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
+    (let [b (FileUtils/readFileToByteArray (:tempfile file))
+          wb (load-workbook (new java.io.ByteArrayInputStream b))
+          respo (lue-excel! wb)]
+      (file-upload-response respo))))
