@@ -15,8 +15,8 @@
   :suoritettavatutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto"
   :suoritettavatutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)"
   :suoritettavatutkinto_tutkintotunnus "927128"
-  :arviointikokouksen_pvm "2016-09-02"
-  :suoritusaika_alku "2016-09-01"
+  :arviointikokouksen_pvm "02.09.2016"
+  :suoritusaika_alku "01.09.2016"
   :toimikunta "Lynx lynx"
   :tutkinnonosa_nimi_fi "Käsityöyrityksen johtaminen"
   :tutkinnonosa_nimi_sv nil
@@ -28,9 +28,9 @@
   :liitetty_pvm nil
   :tutkintoversio_suoritettava -20000
   :tutkintoversio_id -20000
-  :suoritusaika_loppu "2016-09-01"
+  :suoritusaika_loppu "01.09.2016"
   :suorittaja_sukunimi "Opiskelija", :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
-  :suorittaja_syntymapvm "1912-12-12"
+  :suorittaja_syntymapvm "12.12.1912"
   :suorittaja_suorittaja_id -1
   :jarjestamismuoto "oppisopimuskoulutus", :koulutustoimija_nimi_fi "Alkio-opiston kannatusyhdistys ry.",
   :valmistava_koulutus true
@@ -100,7 +100,7 @@
    :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", 
    :suoritusaika_alku nil
    :suoritusaika_loppu nil
-   :osat [{:osaamisen_tunnustaminen "2016-09-01", :kokotutkinto false, :arvosanan_korotus false, :osatunnus "990001", 
+   :osat [{:osaamisen_tunnustaminen "01.09.2016", :kokotutkinto false, :arvosanan_korotus false, :osatunnus "990001", 
            :todistus true, :osaamisala -20002, :kieli "fi", :nimi "Käsityöyrityksen johtaminen", 
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat []
@@ -113,7 +113,7 @@
    :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8", :arviointikokouksen_pvm nil
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
-   :suorittaja_syntymapvm "1912-12-12"
+   :suorittaja_syntymapvm "12.12.1912"
    :suorittaja_suorittaja_id -1
    :tutkinto_nimi_sv "Käsityömestarin erikoisammattitutkinto (sv)", 
    :jarjestamismuoto "oppisopimuskoulutus", 
@@ -138,15 +138,15 @@
 (def suoritus-result
   {:tila "luonnos", :jarjestelyt "Valaistus ja veneet olivat riittävät arvoimiseen. Hytisimme uimarannalla yön pimeydessä ja jossain pöllö huhuili haikeasti. ", 
    :opiskelijavuosi 8, :koulutustoimija_nimi_sv "", 
-   :suoritusaika_alku "2016-09-01"
-   :suoritusaika_loppu "2016-09-01"   
+   :suoritusaika_alku "01.09.2016"
+   :suoritusaika_loppu "01.09.2016"   
    :osat [{:osaamisen_tunnustaminen nil, :kokotutkinto false, :arvosanan_korotus true, :osatunnus "990001", 
            :todistus true, :osaamisala -20002, :kieli "fi", :nimi "Käsityöyrityksen johtaminen", 
            :tutkinnonosa -10002, :suoritus_id 1, :arvosana "hyvaksytty", :suorituskerta 1}], 
    :arvioijat [{:arvioija_id -1 :etunimi "Väinö" :sukunimi "Väinämöinen" :rooli "opettaja" :nayttotutkintomestari false}]
    :hyvaksymisaika nil, :tutkinto_nimi_fi "Käsityömestarin erikoisammattitutkinto",  :suorituskerta_id 1, 
    :suorittaja -1, :ehdotusaika nil, :rahoitusmuoto 3, :tutkinto "927128", :valmistava_koulutus true, 
-   :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8", :arviointikokouksen_pvm "2016-09-02"
+   :koulutustoimija "0208430-8", :kouljarjestaja "0208430-8", :arviointikokouksen_pvm "02.09.2016"
    :toimikunta "Lynx lynx"
    :suorittaja_sukunimi "Opiskelija", 
    :suorittaja_suorittaja_id -1,
@@ -168,7 +168,7 @@
    :osaamisala_tunnus "9875"
    :osaamisala_nimi_fi "Käsityöopettajan osaamisala (keksitty)"
    :osaamisala_nimi_sv nil  
-   :suorittaja_syntymapvm "1912-12-12"
+   :suorittaja_syntymapvm "12.12.1912"
    :suorittaja_etunimi "Orvokki"})
 
 (defn rip-suoritusid [suoritus]
@@ -278,7 +278,7 @@
                       
                       hyv-json (body-json (:response hyv-resp))]
                   (is (= (:tila hyv-json) "hyvaksytty"))
-                  (is (= (:hyvaksymisaika hyv-json) "2016-11-16"))
+                  (is (= (:hyvaksymisaika hyv-json) "16.11.2016"))
                   ))))
 
 (deftest ^:integraatio testaa-tilat 
@@ -303,6 +303,6 @@
                 (let [suoritustiedot (mock-request s (str "/api/suoritus/" skerta-id) :get {})
                       suoritus-resp (body-json (:response suoritustiedot))]
                   (is (= "0159216-7" (:kouljarjestaja suoritus-resp)))
-                  (is (= "2014-05-05" (:liitetty_pvm suoritus-resp)))
+                  (is (= "05.05.2014" (:liitetty_pvm suoritus-resp)))
         )) suoritus-erikoinen))
  
