@@ -61,7 +61,6 @@
  (sql/exec-raw (str "update suorituskerta set toimikunta='Gulo gulo', tutkinto='924601' where suorittaja=-2 and jarjestelyt='asfasfasfa'")))
 
 (defn paivita-toimikunnan-tutkinto! []
-; (sql/exec-raw (str "update toimikunta_ja_tutkinto set tutkintotunnus='927128' where toimikunta='Gulo gulo'"))
  (sql/exec-raw (str "insert into toimikunta_ja_tutkinto (toimikunta, tutkintotunnus) values ('TK1', '927128')")))
 
 (deftest ^:integraatio suorituskerrat-test-hae-kaikki
