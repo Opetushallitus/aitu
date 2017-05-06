@@ -70,7 +70,7 @@
   [asetukset]
   (if (kehitysmoodi? asetukset)
     (do
-      (log/info "!! TEST-API reititään!!")
+      (log/info "!! TEST-API reititetään!!")
       (c/routes
         (c/context "/api/test/ttk" [] aitu.test-api.ttk/reitit)
         (c/context "/api/test/tutkinto" [] aitu.test-api.tutkinto/reitit)
@@ -138,7 +138,6 @@
       (c/GET ["/template/:nimi" :nimi #"[a-z/-]+"] [nimi]
         (angular-template nimi asetukset))
       (GET "/" []
-
         :kayttooikeus :etusivu
         {:body    (s/render-file "html/ttk" {:build-id     @build-id
                                              :current-user (:kayttajan_nimi *current-user-authmap*)
