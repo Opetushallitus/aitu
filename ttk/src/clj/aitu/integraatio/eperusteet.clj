@@ -73,20 +73,27 @@
    :nimi_fi (or (get-in osa [:nimi :fi]) (get-in osa [:nimi :sv]))
    :nimi_sv (get-in osa [:nimi :sv])})
 
+(defn paattele-siirtymaajan-loppupvm [peruste]
+  (cond
+    (nil? (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1) ; "toistaiseksi voimassa"  -> siirtymäajan loppumispäivää ei aseteta, siirtymäaikakin on "toistaiseksi voimassa"
+    (nil? (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1)
+    true (to-hki-local-date (:siirtymaPaattyy peruste))))
+
 (defn muotoile-peruste [peruste]
   (let [osa-id->osatunnus (into {} (for [osa (:tutkinnonOsat peruste)]
                                      [(str (:id osa)) (osatunnus osa)]))
         osaamisalat (map muotoile-osaamisala (:osaamisalat peruste))
         tutkinnonosat (map-indexed muotoile-tutkinnonosa (:tutkinnonOsat peruste))
-        nayttotutkinto (some-value-with :suoritustapakoodi "naytto" (:suoritustavat peruste))]
+        nayttotutkinto (some-value-with :suoritustapakoodi "naytto" (:suoritustavat peruste))
+        voimassa_loppupvm (or (to-hki-local-date (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))]
     (when nayttotutkinto
       (when (and (nil? (:siirtymaPaattyy peruste)) (not (nil? (:voimassaoloLoppuu peruste))))
-        (log/warn (str "Tutkinnon " (:id peruste) " siirtymäaikaa ei ole asetettu, voimassaolon päättymispäivä on asetettu. ")))   
+        (log/warn (str "Tutkinnon " (:id peruste) " siirtymäaikaa ei ole asetettu, voimassaolon päättymispäivä on asetettu. ")))
       (merge {:diaarinumero (:diaarinumero peruste)
               :eperustetunnus (:id peruste)
               :voimassa_alkupvm (to-hki-local-date (:voimassaoloAlkaa peruste))
-              :voimassa_loppupvm (or (to-hki-local-date (:voimassaoloLoppuu peruste)) (time/local-date 2199 1 1))
-              :siirtymaajan_loppupvm (or (to-hki-local-date (:siirtymaPaattyy peruste)) (time/local-date 2199 1 1))              
+              :voimassa_loppupvm voimassa_loppupvm
+              :siirtymaajan_loppupvm (paattele-siirtymaajan-loppupvm peruste)
               :tutkinnot (map :koulutuskoodiArvo (:koulutukset peruste))
               :tutkinnonosat tutkinnonosat}
              (muotoile-suoritustapa osa-id->osatunnus osaamisalat nayttotutkinto))

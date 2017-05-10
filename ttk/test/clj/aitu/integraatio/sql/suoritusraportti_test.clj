@@ -42,7 +42,7 @@
         _ (paivita-suoritukset-toiselle-koulutustoimijalle!)
         rapsa-localized (localdate-coerce (rip-id (suoritus-arkisto/hae-yhteenveto-raportti {})))
    ;     _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))
-        oikea-tulos (read-string (slurp "test-resources/suoritusrapsa.edn"))]
+        oikea-tulos (read-string (slurp "test-resources/suoritusrapsa.edn" :encoding "UTF-8"))]
     (is (= rapsa-localized oikea-tulos))
     (testing "yhteenvetoraportti, edelliset 5 minuuttia"
       (let [rapsa-latest (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:edelliset-kayttaja "true"}})))]

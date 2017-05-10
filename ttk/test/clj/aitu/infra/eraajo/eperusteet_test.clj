@@ -15,6 +15,7 @@
 (ns aitu.infra.eraajo.eperusteet-test
   (:require [clojure.test :refer :all]
             [clj-time.core :as time]
+            [cheshire.core :as cheshire]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [aitu.infra.eraajo.eperusteet :refer :all]
             [aitu.integraatio.sql.test-data-util :refer :all]
@@ -76,6 +77,19 @@
                                                 [tutkintotunnus kolmas]]))
            [(:diaarinumero ensimmainen) (:diaarinumero kolmas)]))))
 
+
+; eperusteet-515672.json on eperusteiden palauttama json-reply, 10.5. 2017
+; https://eperusteet.opintopolku.fi/eperusteet-service/api/perusteet/515672/kaikki
+(deftest ^:integraatio eperusteet-json-test
+  (let [parsed-peruste
+        (aitu.integraatio.eperusteet/muotoile-peruste 
+          (cheshire/parse-string (slurp "test-resources/eperusteet-515672.json" :encoding "UTF-8") true))
+    ikuisesti-pvm (time/local-date 2199 1 1)]
+    (= ikuisesti-pvm (:voimassa_loppupvm parsed-peruste))
+    (= ikuisesti-pvm (:siirtymaajan_loppupvm parsed-peruste))
+    (= '("354403") (:tutkinnot parsed-peruste))))
+    
+    
 (deftest ^:integraatio paivita-perusteet-test
   (lisaa-testidata!)
   (with-redefs [aitu.integraatio.eperusteet/hae-perusteet (constantly [[tutkintotunnus ensimmainen]

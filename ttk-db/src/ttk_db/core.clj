@@ -23,7 +23,8 @@
   (:require [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]
             [stencil.core :as s]
-            [clojure.tools.cli :refer [parse-opts]]))
+            [clojure.tools.cli :refer [parse-opts]]
+            [clojure.string :as str]))
 
 
 (defn jdbc-do
@@ -36,7 +37,7 @@
   "Palauttaa vektorin, jossa on SQL-statementteja.
    TODO: parseri ei ole mitenkään täydellinen.."
   [nimi]
-   (clojure.string/split (slurp (io/resource nimi)) #";"))
+   (str/split (slurp (io/resource nimi) :encoding "UTF-8") #";"))
 
 ; aitu.kayttaja
 (defn run-sql
@@ -49,17 +50,17 @@
         (throw (.getNextException e)))))
   (jdbc-do (str "set " kayttaja-param " to default")))
 
-(defn aja-testidata-sql! 
+(defn aja-testidata-sql!
   [kayttaja-param tiedosto]
   (run-sql (sql-resurssista (str "sql/" tiedosto)) kayttaja-param))
- 
+
 (defn luo-testikayttajat!
   [kayttaja-param]
   (aja-testidata-sql! kayttaja-param "testikayttajat.sql"))
 
 (defn luo-testidata!
   [kayttaja-param]
-  (luo-testikayttajat! kayttaja-param)  
+  (luo-testikayttajat! kayttaja-param)
   (aja-testidata-sql! kayttaja-param "testitoimikunnat.sql")
   (aja-testidata-sql! kayttaja-param "testidata.sql"))
 
@@ -89,11 +90,11 @@
   "Parsitaan mappiin Posgren JDBC-URL.
    Postgren JDBC-ajuri palauttaa null Connection-olioita jos URL sisältää usernamen/passwordin."
   [uri]
-  (let [prefix (first (clojure.string/split uri #"//"))
-        etc (second (clojure.string/split uri #"//"))
-        user (URLDecoder/decode (first (clojure.string/split etc #":")))
-        passwd (URLDecoder/decode (first (clojure.string/split (second (clojure.string/split etc #":")) #"@")))
-        postfix (second (clojure.string/split etc #"@"))]
+  (let [prefix (first (str/split uri #"//"))
+        etc (second (str/split uri #"//"))
+        user (URLDecoder/decode (first (str/split etc #":")))
+        passwd (URLDecoder/decode (first (str/split (second (str/split etc #":")) #"@")))
+        postfix (second (str/split etc #"@"))]
      {:user user
       :passwd passwd
       :uri uri
@@ -147,11 +148,11 @@
         "Optiot:"
         options-summary
         ""]
-       (clojure.string/join \newline)))
+       (str/join \newline)))
 
 (defn error-msg [errors]
   (str "Virhe parametreissa:\n\n"
-       (clojure.string/join \newline errors)))
+       (str/join \newline errors)))
 
 (defn exit [status msg]
   (println msg)
@@ -188,7 +189,7 @@
                                 e))]
       ;; Annetaan käyttöoikeudet sovelluskäyttäjille, vaikka osa migraatioista
       ;; epäonnistuisi
-      (try 
+      (try
         (jdbc/with-connection {:datasource datasource}
           (aseta-oikeudet-sovelluskayttajille options)
           (when (:anonymisointi options)

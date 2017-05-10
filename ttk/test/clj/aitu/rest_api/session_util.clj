@@ -10,7 +10,7 @@
     [oph.korma.korma-auth :as ka]
     [oph.korma.korma-auth :as auth]
     [korma.db :as db]
-    [infra.test.data :as testdata]    
+    [infra.test.data :as testdata]
     [oph.common.infra.i18n :as i18n]
     [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
     [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
@@ -87,10 +87,10 @@
         (-> pool :pool :datasource .close)))))
 
 (defn body-json [response]
-  (cheshire/parse-string (slurp (:body response)) true))
+  (cheshire/parse-string (slurp (:body response) :encoding "UTF-8") true))
 
 
-(defn run-with-db 
+(defn run-with-db
   ([dataf testf]
     (run-with-db dataf testf default-usermap))
   ([dataf testf usermap]

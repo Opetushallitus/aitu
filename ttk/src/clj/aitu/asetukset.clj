@@ -123,7 +123,7 @@
                                                  :paatosteksti ""}}))
 
 (def build-id (delay (if-let [r (resource "build-id.txt")]
-                       (.trim (slurp r))
+                       (.trim (slurp r :encoding "UTF-8"))
                        "dev")))
 
 (defn kehitysmoodi?
