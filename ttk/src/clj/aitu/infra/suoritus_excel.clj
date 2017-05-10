@@ -947,7 +947,7 @@
 ;       (save-workbook! "tutosat_taydennetty.xlsx" wb)))
 
 (defn kirjoita-versionumero [sheet]
-  (let [dformat (java.text.SimpleDateFormat. "yyyy-MM-dd")]
+  (let [dformat (java.text.SimpleDateFormat. "dd.MM.yyyy")]
     (set-or-create-cell! sheet "I1" 
                          (str "Latauspäivä: " (.format dformat (new java.util.Date))))))
 
