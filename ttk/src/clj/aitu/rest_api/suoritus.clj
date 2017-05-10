@@ -25,6 +25,7 @@
             [aitu.rest-api.http-util :refer [excel-mimetypes jos-lapaisee-virustarkistuksen pdf-response]]
             [aitu.infra.suoritus-excel :refer [lue-excel! luo-excel]]
             [aitu.infra.pdf-arkisto :as pdf-arkisto]
+            [aitu.infra.i18n :as i18n]
             [aitu.util :refer [muodosta-csv lisaa-puuttuvat-avaimet]]
             [oph.common.util.http-util :refer [response-or-404 file-upload-response file-download-response sallittu-jos csv-download-response]]
             [dk.ative.docjure.spreadsheet :refer [load-workbook save-workbook-into-stream!]]
@@ -46,6 +47,11 @@
 (defn localdate->str [locald]
   (unparse (formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
 
+(defn localize-arvosana [s]
+;  (if (= "hyvaksytty" s) (get-in (i18n/tekstit) [:arviointipaatokset :arvosana_hyvaksytty] s) s)  ;; TODO: Tämä ei saa jostain syystä *locale*:a, jolloin (i18n/tekstit) ei toimi.
+  (if (= "hyvaksytty" s) "Hyväksytty" s)
+  )
+
 (defn map-update
   "Update key if the form is a map and key is mapped to non-nil value."
   [form key update-fn]
@@ -59,15 +65,18 @@
 (defn paivita-syntymapvm->str [form]
   (map-update form :suorittaja_syntymapvm localdate->str))
 
+(defn paivita-arvosana [form]
+  (map-update form :arvosana localize-arvosana))
+
 (defn paivita-raportti [yhteenveto-raportti]
-  (let [walk-fn (comp paivita-syntymapvm->str koulutustoimija->toupper)]
+  (let [walk-fn (comp paivita-syntymapvm->str koulutustoimija->toupper paivita-arvosana)]
     (clojure.walk/postwalk walk-fn yhteenveto-raportti)))
 
 (defroutes raportti-reitit
   (GET "/suoritusraportti" params
     :kayttooikeus :raportti
-    (let [footer-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti-footer.mustache"))
-          data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache"))
+    (let [footer-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti-footer.mustache") :encoding "UTF-8")
+          data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache") :encoding "UTF-8")
                                                {:toimikunnat    (paivita-raportti (arkisto/hae-yhteenveto-raportti params))
                                                 :raportti_luotu (luontiaika)})
                 :footer (stencil/render-string footer-string {:raportti_luotu (luontiaika)})}
