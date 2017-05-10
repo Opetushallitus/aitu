@@ -1,0 +1,1773 @@
+{
+  "id" : 515672,
+  "globalVersion" : {
+    "aikaleima" : 1490185081843
+  },
+  "nimi" : {
+    "fi" : "Kotitalouskoneasentajan ammattitutkinto",
+    "sv" : "Yrkesexamen för installatör av hushållsmaskiner",
+    "_id" : "1880890"
+  },
+  "koulutustyyppi" : "koulutustyyppi_11",
+  "koulutukset" : [ {
+    "nimi" : {
+      "fi" : "Kotitalouskoneasentajan ammattitutkinto",
+      "sv" : "Yrkesexamen för installatör av hushållsmaskiner",
+      "en" : "Household Appliance Fitter, FQ",
+      "_id" : "1042364"
+    },
+    "koulutuskoodiArvo" : "354403",
+    "koulutuskoodiUri" : "koulutus_354403",
+    "koulutusalakoodi" : "koulutusalaoph2002_5",
+    "opintoalakoodi" : "opintoalaoph2002_503"
+  } ],
+  "kielet" : [ "sv", "fi" ],
+  "kuvaus" : {
+    "fi" : "<p>Tutkinnon suorittanut osaa tehdä kotitalouksissa ja suurkeittiö- ja suurtalousalalla käytettävien koneiden asennus-, käyttöönotto-, huolto- ja korjaustyöt itsenäisesti voimassa olevien määräysten ja ohjeiden mukaisesti sekä suunnitella oman työnsä. Hän hallitsee tehtäviin liittyvien materiaalien ja työvälineiden käytön sekä oikeat työmenetelmät ja ottaa toiminnassaan huomioon energiatehokkuuden ja kokonaistaloudellisuuden. Hän hallitsee vianetsinnän ja osaa hyödyntää vianetsintään sekä kunnossapitojärjestelmiin liittyviä ohjeita ja ohjelmia. Hän kykenee hyödyntämään tieto- ja viestintätekniikkaa tiedon hankinnassa sekä osaa käyttää alan työtehtävien edellyttämiä muita ohjelmia. Hän osaa tehdä käyttöönotot yhteistyössä käyttäjän kanssa ja antaa käytönopastuksen sekä tehdä tarvittavat dokumentit. Tutkinnon suorittanut tietää ja osaa kertoa laitteen kestävyyteen (elinkaareen) vaikuttavat tekijät. Hän hallitsee työnaikaisen työ- ja sähkötyöturvallisuuden ja osaa tarkastaa työnsä niin, että asennuksen lopputulos on toimiva, turvallinen ja tarkoituksenmukainen koneen tai laitteen luotettavan toiminnan kannalta. Hän on suorittanut sähköturvallisuustutkinnon ST3, lainsäädännön mukaisen sähkötyöturvallisuuskoulutuksen (SFS 6002) ja tulityöturvallisuuskoulutuksen (tulityökortti).</p>\n\n<p>Kotitalouskoneasentajan ammattitutkinnon suorittanut voi toimia kotitalouksissa ja suurkeittiö- ja suurtalousalalla käytettävien koneiden asennus-, käyttöönotto-, korjaus- ja huoltotehtävissä.</p>",
+    "sv" : "<p>Personer som har avlagt denna examen kan självständigt utföra installation, ibruktagning, underhåll och reparation av utrustning som används i privathushåll samt i storkök och storhushåll i enlighet med gällande föreskrifter och instruktioner samt planera sitt eget arbete. De kan använda de material och verktyg som behövs i uppgifterna, använda korrekta arbetsmetoder och beakta energieffektivitet och totalekonomisk fördelaktighet i sitt arbete. De kan utföra felsökning och använda instruktioner och program som behövs vid felsökning och som ingår i underhållssystem. De kan använda informations- och kommunikationsteknik för att söka information och kan använda andra program som arbetsuppgifterna kräver. De kan utföra ibruktagning i samarbete med användaren, ge användarna instruktioner och göra upp de dokument som behövs. De känner till och kan uppge de faktorer som inverkar på utrustningens hållbarhet (livscykel). De behärskar arbetarskyddet och elsäkerheten under arbetet och kan kontrollera sitt arbete så att den färdiga installationen fungerar samt är säker och ändamålsenlig med tanke på att maskinen eller utrustningen ska fungera tillförlitligt. De har genomgått elsäkerhetsexamen 3, den utbildning i säkert elarbete (SFS 6002) som lagstiftningen kräver och utbildningen för heta arbeten (certifikatet för heta arbeten).</p>\n\n<p>Personer som har avlagt yrkesexamen för installatör av hushållsmaskiner kan utföra installation, ibruktagning, reparation och underhåll av utrustning som används i privathushåll samt i storkök och storhushåll.</p>",
+    "_id" : "2125739"
+  },
+  "maarayskirje" : {
+    "id" : 1709766,
+    "url" : { }
+  },
+  "muutosmaaraykset" : [ ],
+  "diaarinumero" : "98/011/2014",
+  "voimassaoloAlkaa" : 1420063200000,
+  "siirtymaPaattyy" : 1483135200000,
+  "voimassaoloLoppuu" : null,
+  "paatospvm" : 1414011600000,
+  "luotu" : 1423771137888,
+  "muokattu" : 1490185081843,
+  "tila" : "valmis",
+  "tyyppi" : "normaali",
+  "koulutusvienti" : false,
+  "korvattavatDiaarinumerot" : [ "16/011/2004" ],
+  "osaamisalat" : [ ],
+  "suoritustavat" : [ {
+    "suoritustapakoodi" : "naytto",
+    "rakenne" : {
+      "kuvaus" : {
+        "fi" : "<p>Kotitalouskoneasentajan ammattitutkinnon suorittaminen edellyttää neljän osan, yhden pakollisen ja kolmen valinnaisen tutkinnon osan, suorittamista. Valinnaiseksi voi valita vain toisen osista Pienlaitteiden asennus-, huolto- ja korjaustyöt tai Kaasulaitteiden asennus-, huolto- ja korjaustyöt.</p>",
+        "sv" : "<p>För att få yrkesexamen för installatör av hushållsmaskiner krävs att fyra examensdelar avläggs, en obligatorisk och tre valbara examensdelar. Av de valbara delarna Installation, underhåll och reparation av småapparater och Installation, underhåll och reparation av gasutrustning kan endast den ena väljas.</p>",
+        "_id" : "1865855"
+      },
+      "vieras" : null,
+      "tunniste" : "cc0db56f-7993-4a04-b45f-b6bc94bf81c1",
+      "nimi" : null,
+      "rooli" : null,
+      "muodostumisSaanto" : null,
+      "osaamisala" : null,
+      "osat" : [ {
+        "kuvaus" : null,
+        "vieras" : null,
+        "tunniste" : "23dc5faf-7d8f-4abd-9a0f-98ce4fb5a336",
+        "nimi" : {
+          "fi" : "Pakolliset tutkinnon osat",
+          "sv" : "Obligatorisk examensdel",
+          "_id" : "1865857"
+        },
+        "rooli" : "määritelty",
+        "muodostumisSaanto" : {
+          "laajuus" : null,
+          "koko" : {
+            "minimi" : 1,
+            "maksimi" : 1
+          }
+        },
+        "osaamisala" : null,
+        "osat" : [ {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "bd02398b-140d-4dbb-a289-210133cd9c77",
+          "pakollinen" : true,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "781599"
+        } ],
+        "versioId" : null
+      }, {
+        "kuvaus" : {
+          "fi" : "Valitaan kolme tutkinnon osaa. Valinnaiseksi voi valita vain toisen osista Pienlaitteiden asennus-, huolto- ja korjaustyöt tai Kaasulaitteiden asennus-, huolto- ja korjaustyöt.",
+          "sv" : "Av delarna 2–6 väljs tre delar, dock så att av delarna 5 och 6 kan endast den ena väljas.",
+          "_id" : "1865858"
+        },
+        "vieras" : null,
+        "tunniste" : "2f0f7523-ece1-4206-b495-4beb35dbada1",
+        "nimi" : {
+          "fi" : "Valinnaiset tutkinnon osat",
+          "sv" : "Valbara examensdelar",
+          "_id" : "1865859"
+        },
+        "rooli" : "määritelty",
+        "muodostumisSaanto" : {
+          "laajuus" : null,
+          "koko" : {
+            "minimi" : 3,
+            "maksimi" : 3
+          }
+        },
+        "osaamisala" : null,
+        "osat" : [ {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "9fc79f7c-ff42-48de-9eef-1282bb5f8d9b",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "781950"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "a8590c8c-5074-4c42-a542-0a6c2510cba0",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "781951"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "08aa9789-30b8-4033-a75d-5bcd4782b8e1",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "781955"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "296a8103-2a98-49f6-a5b0-b0308e247a03",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "781954"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "12bbb0e3-da3e-44b3-bfd5-1b4e35f4e347",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "781956"
+        } ],
+        "versioId" : null
+      } ],
+      "versioId" : null
+    },
+    "sisalto" : {
+      "id" : 515646,
+      "lapset" : [ {
+        "id" : 515647,
+        "perusteenOsa" : {
+          "id" : 515587,
+          "luotu" : 1423771137888,
+          "muokattu" : 1470997795735,
+          "muokkaaja" : "1.2.246.562.24.79470804498",
+          "nimi" : {
+            "fi" : "Tutkinnon muodostuminen",
+            "sv" : "Uppbyggnaden av examen",
+            "_id" : "1865930"
+          },
+          "tila" : "valmis",
+          "tunniste" : "rakenne",
+          "valmis" : false,
+          "kaannettava" : false,
+          "teksti" : null,
+          "osaamisala" : null,
+          "osanTyyppi" : "tekstikappale"
+        },
+        "lapset" : [ ],
+        "_perusteenOsa" : "515587"
+      }, {
+        "id" : 780339,
+        "perusteenOsa" : {
+          "id" : 781752,
+          "luotu" : 1426443562578,
+          "muokattu" : 1470997545073,
+          "muokkaaja" : "1.2.246.562.24.79470804498",
+          "nimi" : {
+            "fi" : "Kotitalouskoneasentajan ammattitutkinnon ammattitaitovaatimukset ja osaamisen arviointi",
+            "sv" : "Krav på yrkesskicklighet och bedömning av kunnande",
+            "_id" : "1865781"
+          },
+          "tila" : "valmis",
+          "valmis" : false,
+          "kaannettava" : false,
+          "teksti" : {
+            "fi" : "<p>Tutkinnon osan ammattitaitovaatimukset määrittävät, mitä tutkinnon suorittajan tulee osata suorittaessaan kyseistä tutkinnon osaa. Ammattitaidon osoittaminen -kohdassa määritellään, mitä tutkinnon suorittaja tekee osoittaakseen ammattitaitonsa. Tutkintotilaisuudessa osoitettava ammattitaito arvioidaan hyväksytyn suorituksen kriteerien mukaisesti. Tutkinnon suorittajan ammattitaitoa arvioivat työnantajien, työntekijöiden ja opettajien edustajat, joilla on hyvä ammattitaito kyseisen näyttötutkinnon alalta.</p>",
+            "sv" : "<p>I examensdelens krav på yrkesskicklighet anges vad examinanden ska kunna vid avläggande av examensdelen i fråga. Under punkten Påvisande av yrkesskicklighet anges hur examinanden ska påvisa sin yrkesskicklighet. Den yrkesskicklighet som examinanden visar vid ett examenstillfälle bedöms utifrån kriterier för godkänd prestation. Yrkesskickligheten bedöms av personer som representerar arbetsgivarna, arbetstagarna och lärarna och som har god yrkesskicklighet inom det område som yrkesexamen gäller.</p>",
+            "_id" : "1865782"
+          },
+          "osaamisala" : null,
+          "osanTyyppi" : "tekstikappale"
+        },
+        "lapset" : [ ],
+        "_perusteenOsa" : "781752"
+      }, {
+        "id" : 1205126,
+        "perusteenOsa" : {
+          "id" : 446708,
+          "luotu" : 1422440238284,
+          "muokattu" : 1489137583484,
+          "muokkaaja" : "1.2.246.562.24.77925329174",
+          "nimi" : {
+            "fi" : "Liite. Tutkinnon kuvaus (ei sisälly määräykseen)",
+            "_id" : "1134891"
+          },
+          "tila" : "luonnos",
+          "valmis" : false,
+          "kaannettava" : false,
+          "teksti" : null,
+          "osaamisala" : null,
+          "osanTyyppi" : "tekstikappale"
+        },
+        "lapset" : [ {
+          "id" : 1205127,
+          "perusteenOsa" : {
+            "id" : 1205333,
+            "luotu" : 1435238557941,
+            "muokattu" : 1470997597026,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "fi" : "Tutkinnon muodostuminen",
+              "sv" : "Yrkesexamen för installatör av hushållsmaskiner",
+              "_id" : "1865785"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Kotitalouskoneasentajan ammattitutkinnon suorittaminen edellyttää <strong>pakollisen osan </strong><em>Sähkötekniikka ja laitteiden asennus ja liitäntä sähköverkkoon </em><strong>ja </strong>seuraavista <strong>valinnaisista osista </strong><em>Pesulaitteiden asennus-, huolto- ja korjaus- työt, Lämpölaitteiden asennus-, huolto- ja korjaustyöt, Kylmäteknisten laitteiden asennus-, huolto- ja korjaustyöt, Pienlaitteiden asennus-, huolto- ja korjaustyöt </em>ja <em>Kaasulaitteiden asennus-, huolto- ja korjaustyöt </em><strong>kolmen osan </strong>suorittamista <strong>kuitenkin siten, että osista </strong><em>Pienlaitteiden asennus-, huolto- ja korjaustyöt </em>ja <em>Kaasulaitteiden asennus-, huolto- ja korjaustyöt </em><strong>voi valita vain toisen</strong>.</p>",
+              "sv" : "<p>Examensgrunderna träder i kraft 1.1.2015(98/011/2014)</p>",
+              "_id" : "1865786"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "1205333"
+        }, {
+          "id" : 1205128,
+          "perusteenOsa" : {
+            "id" : 1205334,
+            "luotu" : 1435238655578,
+            "muokattu" : 1470997611695,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "fi" : "Tutkinnon suorittaneen osaaminen",
+              "sv" : "Examens uppbyggnad",
+              "_id" : "1865787"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Tutkinnon suorittanut osaa tehdä kotitalouksissa ja suurkeittiö- ja suurtalous- alalla käytettävien koneiden asennus-, käyttöönotto-, huolto- ja korjaustyöt itsenäisesti voimassa olevien määräysten ja ohjeiden mukaisesti sekä suunnitella oman työnsä. Hän hallitsee tehtäviin liittyvien materiaalien ja työvälineiden käytön sekä oikeat työmenetelmät ja ottaa toiminnassaan huomioon energiatehokkuuden ja kokonaistaloudellisuuden. Hän hallitsee vianetsinnän ja osaa hyödyntää vianetsintään sekä kunnossapitojärjestelmiin liittyviä ohjeita ja ohjelmia. Hän kykenee hyödyntämään tieto- ja viestintätekniikkaa tiedon hankinnassa sekä osaa käyttää alan työtehtävien edellyttämiä muita ohjelmia. Hän osaa tehdä käyttöönotot yhteistyössä käyttäjän kanssa ja antaa käytönopastuksen sekä tehdä tarvittavat dokumentit. Tutkinnon suorittanut tietää ja osaa kertoa lait- teen kestävyyteen (elinkaareen) vaikuttavat tekijät. Hän hallitsee työnaikaisen työ- ja sähkötyöturvallisuuden ja osaa tarkastaa työnsä niin, että asennuksen lopputulos on toimiva, turvallinen ja tarkoituksenmukainen koneen tai laitteen luotettavan toiminnan kannalta. Hän on suorittanut sähköturvallisuustutkinnon ST3, lainsäädännön mukaisen sähkötyöturvallisuuskoulutuksen (SFS 6002) ja tulityöturvallisuuskoulutuksen (tulityökortti).</p>",
+              "sv" : "<p>För att få yrkesexamen för installatör av hushållsmaskiner krävs att examinanden avlägger <strong>den obligatoriska examensdelen </strong><em>Elteknik och installation av utrustning </em><strong>och tre delar av de valbara delarna </strong><em>Installation, underhåll och reparation av tvättutrustning, Installation, underhåll och reparation av uppvärmningsutrustning, Installation, underhåll och reparation av kylteknisk utrustning, Installation, underhåll och reparation av småapparater </em>och <em>Installation, underhåll och reparation av gasutrustning </em><strong>dock så att av delarna </strong><em>Installation, underhåll och reparation av småapparater </em>och <em>Installation, underhåll och reparation av gasutrustning </em><strong>kan endast den ena väljas</strong>.</p>",
+              "_id" : "1865788"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "1205334"
+        }, {
+          "id" : 1205129,
+          "perusteenOsa" : {
+            "id" : 1205335,
+            "luotu" : 1435238727820,
+            "muokattu" : 1470997633084,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "fi" : "Työtehtäviä, joissa tutkinnon suorittanut voi toimia",
+              "sv" : "Kunnande hos personer som avlagt denna examen",
+              "_id" : "1865789"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Kotitalouskoneasentajan ammattitutkinnon suorittanut voi toimia kotitalouksissa ja suurkeittiö- ja suurtalousalalla käytettävien koneiden asennus-, käyttöönotto-, korjaus- ja huoltotehtävissä.</p>",
+              "sv" : "<p>Personer som har avlagt denna examen kan självständigt utföra installation, ibruktagning, underhåll och reparation av utrustning som används i privathushåll samt i storkök och storhushåll i enlighet med gällande föreskrifter och instruktioner samt planera sitt eget arbete. De kan använda de material och verktyg som behövs i uppgifterna, använda korrekta arbetsmetoder och beakta energieffektivitet och totalekonomisk fördelaktighet i sitt arbete. De kan utföra felsökning och använda instruktioner och program som behövs vid felsökning och som ingår i underhållssystem. De kan använda informations- och kommunikationsteknik för att söka information och kan använda andra program som arbetsuppgifterna kräver. De kan utföra ibruktagning i samarbete med användaren, ge användarna instruktioner och göra upp de dokument som behövs. De känner till och kan uppge de faktorer som inverkar på utrustningens hållbarhet (livscykel). De behärskar arbetarskyddet och elsäkerheten under arbetet och kan kontrollera sitt arbete så att den färdiga installationen fungerar samt är säker och ändamålsenlig med tanke på att maskinen eller utrustningen ska fungera tillförlitligt. De har genomgått elsäkerhetsexamen 3, den utbildning i säkert elarbete (SFS 6002) som lagstiftningen kräver och utbildningen för heta arbeten (certifikatet för heta arbeten). </p>",
+              "_id" : "1865850"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "1205335"
+        }, {
+          "id" : 1207940,
+          "perusteenOsa" : {
+            "id" : 448333,
+            "luotu" : 1422440366350,
+            "muokattu" : 1492519394456,
+            "muokkaaja" : "1.2.246.562.24.81055904918",
+            "nimi" : {
+              "fi" : "Tutkintotodistuksen antajan nimi ja asema",
+              "_id" : "448295"
+            },
+            "tila" : "luonnos",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Tutkintotodistuksen antaa Opetushallituksen asettama tutkintotoimikunta.</p>",
+              "_id" : "448296"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "448333"
+        }, {
+          "id" : 1207941,
+          "perusteenOsa" : {
+            "id" : 448334,
+            "luotu" : 1422440454896,
+            "muokattu" : 1492519397520,
+            "muokkaaja" : "1.2.246.562.24.81055904918",
+            "nimi" : {
+              "fi" : "Tutkinnosta päättävän kansallisen/alueellisen viranomaisen nimi ja asema",
+              "_id" : "448297"
+            },
+            "tila" : "luonnos",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Opetus- ja kulttuuriministeriö</p>\n\n<p>Opetushallitus, opetus- ja kulttuuriministeriön alainen keskusvirasto</p>",
+              "_id" : "448298"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "448334"
+        }, {
+          "id" : 1207942,
+          "perusteenOsa" : {
+            "id" : 1142596,
+            "luotu" : 1433743568254,
+            "muokattu" : 1487400665077,
+            "muokkaaja" : "1.2.246.562.24.81055904918",
+            "nimi" : {
+              "fi" : "Tutkinnon taso (kansallinen tai kansainvälinen)",
+              "_id" : "448609"
+            },
+            "tila" : "poistettu",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>ISCED 3</p>",
+              "_id" : "1143039"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "1142596"
+        }, {
+          "id" : 1207943,
+          "perusteenOsa" : {
+            "id" : 448336,
+            "luotu" : 1422440529946,
+            "muokattu" : 1492519397781,
+            "muokkaaja" : "1.2.246.562.24.81055904918",
+            "nimi" : {
+              "fi" : "Arvosana-asteikko/hyväksymisvaatimukset",
+              "_id" : "448621"
+            },
+            "tila" : "luonnos",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Hyväksytty/hylätty</p>",
+              "_id" : "448622"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "448336"
+        }, {
+          "id" : 1207944,
+          "perusteenOsa" : {
+            "id" : 448337,
+            "luotu" : 1422440556826,
+            "muokattu" : 1492519397936,
+            "muokkaaja" : "1.2.246.562.24.81055904918",
+            "nimi" : {
+              "fi" : "Jatko-opintokelpoisuus",
+              "_id" : "448710"
+            },
+            "tila" : "luonnos",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Tutkinto tuottaa kelpoisuuden korkeakouluopintoihin.</p>",
+              "_id" : "448711"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "448337"
+        }, {
+          "id" : 1207945,
+          "perusteenOsa" : {
+            "id" : 448338,
+            "luotu" : 1422440594857,
+            "muokattu" : 1492519398111,
+            "muokkaaja" : "1.2.246.562.24.81055904918",
+            "nimi" : {
+              "fi" : "Säädösperusta",
+              "_id" : "448712"
+            },
+            "tila" : "luonnos",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Laki ammatillisesta aikuiskoulutuksesta 631/1998, asetus ammatillisesta aikuiskoulutuksesta 812/1998</p>",
+              "_id" : "448713"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "448338"
+        }, {
+          "id" : 1207946,
+          "perusteenOsa" : {
+            "id" : 448339,
+            "luotu" : 1422440613978,
+            "muokattu" : 1492519398298,
+            "muokkaaja" : "1.2.246.562.24.81055904918",
+            "nimi" : {
+              "fi" : "Tutkintotodistuksen voi säädösten mukaan saada seuraavilla tavoilla",
+              "_id" : "448714"
+            },
+            "tila" : "luonnos",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Tutkinto suoritetaan osoittamalla tutkintotilaisuuksissa Opetushallituksen päättämissä tutkinnon perusteissa vaadittu ammattitaito. Tarvittaessa järjestetään tutkintoon valmistavaa koulutusta. Koulutuksen järjestäjä huolehtii näyttötutkintoon ja siihen valmistavaan koulutukseen hakeutumisen, tutkinnon suorittamisen ja tarvittavan ammattitaidon hankkimisen henkilökohtaistamisesta.</p>",
+              "_id" : "448715"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "448339"
+        }, {
+          "id" : 1207947,
+          "perusteenOsa" : {
+            "id" : 448770,
+            "luotu" : 1422440646561,
+            "muokattu" : 1492519398420,
+            "muokkaaja" : "1.2.246.562.24.81055904918",
+            "nimi" : {
+              "fi" : "Pohjakoulutusvaatimukset",
+              "_id" : "448716"
+            },
+            "tila" : "luonnos",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "fi" : "<p>Näyttötutkinnon suorittaminen on ammattitaidon hankkimistavasta riippumatonta. Tutkintoon osallistujalle ei ole asetettu muodollisia koulutusvaatimuksia.</p>",
+              "_id" : "448717"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "448770"
+        } ],
+        "_perusteenOsa" : "446708"
+      } ]
+    },
+    "tutkinnonOsaViitteet" : [ {
+      "id" : 781950,
+      "jarjestys" : 2,
+      "_tutkinnonOsa" : "781754"
+    }, {
+      "id" : 781951,
+      "jarjestys" : 3,
+      "_tutkinnonOsa" : "781755"
+    }, {
+      "id" : 781599,
+      "jarjestys" : 1,
+      "_tutkinnonOsa" : "781753"
+    }, {
+      "id" : 781955,
+      "jarjestys" : 4,
+      "_tutkinnonOsa" : "781759"
+    }, {
+      "id" : 781954,
+      "jarjestys" : 5,
+      "_tutkinnonOsa" : "781758"
+    }, {
+      "id" : 781956,
+      "jarjestys" : 6,
+      "_tutkinnonOsa" : "782910"
+    } ]
+  } ],
+  "tutkinnonOsat" : [ {
+    "id" : 781753,
+    "luotu" : 1426443676650,
+    "muokattu" : 1490185081799,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "fi" : "Sähkötekniikka ja laitteiden asennus ja liitäntä sähköverkkoon",
+      "sv" : "Elteknik, installation av utrustning och anslutning av utrustning till elnätet",
+      "_id" : "1865931"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 780492,
+      "lisatiedot" : null,
+      "arvioinninKohdealueet" : [ {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja osaa sähkötekniikan  perusteet.",
+          "sv" : "Examinanden kan grunderna i elteknik.",
+          "_id" : "1865934"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "osaa sähkötekniikan  perussuureet",
+              "sv" : "kan grundstorheterna i elteknik",
+              "_id" : "1865935"
+            }, {
+              "fi" : "tietää alan tyypilliset puolijohdetekniikan  komponentit",
+              "sv" : "känner till de typiska halvledarkomponenterna inom branschen",
+              "_id" : "1865936"
+            }, {
+              "fi" : "osaa tasa- ja vaihtosähköön liittyvät  ohmin ja kirchoffin lait sekä virtaan, vastukseen ja jännitteeseen liittyvät  yhteydet",
+              "sv" : "kan Ohms och Kirchhoffs lagar, som gäller lik- och växelström, samt relationen mellan ström, motstånd och spänning",
+              "_id" : "1865937"
+            }, {
+              "fi" : "osaa virtapiirien laskumenetelmät",
+              "sv" : "kan beräkningsmetoderna för strömkretsar",
+              "_id" : "1865938"
+            }, {
+              "fi" : "osaa vaihtosähkön tehosuureet, tehokertoimen,  vaihesiirtokulman  ja hyötysuhteen",
+              "sv" : "kan effektstorheterna, effektfaktorn, fasförskjutningsvinkeln och verkningsgraden för växelström",
+              "_id" : "1865939"
+            }, {
+              "fi" : "osaa vaihtosähköpiirien  keskeiset laskumenetelmät",
+              "sv" : "kan de viktigaste beräkningsmetoderna för växelströmskretsar",
+              "_id" : "1865950"
+            }, {
+              "fi" : "osaa sähkömagnetismin  ja induktion perusteet",
+              "sv" : "kan grunderna i elektromagnetism och induktion",
+              "_id" : "1865951"
+            }, {
+              "fi" : "tietää lämpötilan vaikutuksen resistanssiin",
+              "sv" : "vet hur temperaturen påverkar resistansen",
+              "_id" : "1865952"
+            }, {
+              "fi" : "osaa vastusten ja kondensaattorien  sarjaan- ja rinnankytkennän laskemisen",
+              "sv" : "kan göra beräkningarna för serie- och parallellkopplingar av motstånd och kondensatorer",
+              "_id" : "1865953"
+            }, {
+              "fi" : "tuntee alan sähkötekniset komponentit  ja niiden toimintaperiaatteet",
+              "sv" : "känner till branschens eltekniska komponenter och deras funktionsprinciper",
+              "_id" : "1865954"
+            }, {
+              "fi" : "mittaa alan sähköteknisiä komponentteja ja hyödyntää mittaustuloksia  huollossa, korjauksessa ja vianmäärityksessä",
+              "sv" : "gör mätningar av de eltekniska komponenter som används inom branschen och använder mätresultaten vid underhåll, reparationer och felsökning",
+              "_id" : "1865955"
+            }, {
+              "fi" : "tuntee johdotus-, liitäntä- ja piirikaavion sekä komponenttien piirrosmerkit.",
+              "sv" : "kan de grafiska symbolerna för lednings-, kopplings- och kretsscheman samt för komponenter.",
+              "_id" : "1865956"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja  osaa sähköasennustekniikan.",
+          "sv" : "Examinanden kan elinstallationsteknik.",
+          "_id" : "1865957"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "osaa yleiset kotitalouskoneiden  ja suurtalouslaitteiden sähkönjakelujärjestelmät",
+              "sv" : "kan de vanliga eldistributionssystemen för hushållsmaskiner, även för hushållsmaskiner i storhushåll",
+              "_id" : "1865958"
+            }, {
+              "fi" : "tietää johdinten värijärjestelmän",
+              "sv" : "kan färgsystemet för ledningar",
+              "_id" : "1865959"
+            }, {
+              "fi" : "tietää myös eri aikakausina käytetyt sähkönjakelujärjestelmät ja johdinvärit",
+              "sv" : "vet också vilka eldistributionssystem och vilka ledningsfärger som använts under olika tidsperioder",
+              "_id" : "1865960"
+            }, {
+              "fi" : "tietää lainsäädännön ja standardien vaatimat asennusmääräykset",
+              "sv" : "känner till bestämmelserna om installationer i lagstiftning och standarder",
+              "_id" : "1865961"
+            }, {
+              "fi" : "ottaa asennuksessa huomioon sähköisen ja mekaanisen suojauksen sekä ylikuormitus- ja oikosulkusuojauksen",
+              "sv" : "beaktar i installationsarbetet det elektriska och mekaniska skyddet samt överbelastnings- och kortslutningsskyddet",
+              "_id" : "1865962"
+            }, {
+              "fi" : "tuntee sähköasennuksissa käytettävät  tarvikkeet.",
+              "sv" : "är förtrogen med materielen som används vid elinstallationer.",
+              "_id" : "1865963"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja osaa sähkö- ja sähkötyöturvallisuuden.",
+          "sv" : "Examinanden behärskar elsäkerheten och säkerheten vid elarbete.",
+          "_id" : "1865964"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "suorittaa voimassa olevan lainsäädännön mukaisen sähkötyöturvallisuuskoulutuksen (SFS 6002)   tai hänellä on voimassa oleva koulutus",
+              "sv" : "genomgår den utbildning i säkert elarbete (SFS 6002) som lagstiftningen kräver eller så har examinanden redan genom-gått den",
+              "_id" : "1865965"
+            }, {
+              "fi" : "suorittaa sähköturvallisuustutkinnon  S3 tai vastaavan tutkinnon  tai hänellä on voimassa oleva tutkinto",
+              "sv" : "avlägger elsäkerhetsexamen 3 eller en motsvarande examen eller så har examinanden en gällande examen",
+              "_id" : "1865966"
+            }, {
+              "fi" : "noudattaa työssään sähkötyöturvallisuussäädöksiä.",
+              "sv" : "iakttar lagstiftningen om säkerhet vid elarbete.",
+              "_id" : "1865967"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja asentaa ryhmäjohdon.",
+          "sv" : "Examinanden installerar en gruppledning.",
+          "_id" : "1865968"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "valitsee tarvikkeet asennustyöhön",
+              "sv" : "väljer tillbehör för installationsarbetet",
+              "_id" : "1865969"
+            }, {
+              "fi" : "asentaa yksittäisen syöttöjohdon kiinteistön tai vastaavaan käyttöpaikan  keskukselta noudattaen asennusmääräyksiä",
+              "sv" : "installerar enskilda matarledningar från centralen i en fastighet eller motsvarande plats enligt installationsföreskrifterna",
+              "_id" : "1865970"
+            }, {
+              "fi" : "liittää asentamaansa ryhmään koti- tai suurtalouksissa käytettävän laitteen noudattaen asennusmääräyksiä",
+              "sv" : "ansluter utrustning som ska användas i ett enskilt hushåll eller i ett storhushåll till den installerade gruppen enligt installationsföreskrifterna",
+              "_id" : "1865971"
+            }, {
+              "fi" : "tekee asentamalleen ryhmälle sähköturvallisuussäädösten mukaisen käyttöönottotarkastuksen   siihen  kuuluvine tarkastuksineen ja mittauksineen",
+              "sv" : "gör den ibruktagningsbesiktning av den installerade gruppen som krävs i lagstiftningen om elsäkerhet inklusive besiktning och mätningar",
+              "_id" : "1865972"
+            }, {
+              "fi" : "dokumentoi  asennuksen ja käyttöönottotarkastuksen   työn edellyttämällä tavalla.",
+              "sv" : "dokumenterar installationen och ibruktagningsbesiktningen på det sätt som arbetet kräver.",
+              "_id" : "1865973"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja tekee laitekohtaisen asennuksen.",
+          "sv" : "Examinanden installerar en enskild utrustning.",
+          "_id" : "1865974"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tulkitsee  asennettavan  laitteen  asennus- ja laitekuvia",
+              "sv" : "läser installations- och apparatritningar",
+              "_id" : "1865975"
+            }, {
+              "fi" : "noudattaa laitteeseen liittyviä  asennusohjeita sekä valmistajan tai vastaavan tahon ohjeita ja määräyksiä",
+              "sv" : "följer installationsanvisningarna samt de anvisningar och di-rektiv som tillverkaren eller någon annan har gett",
+              "_id" : "1865976"
+            }, {
+              "fi" : "valitsee oikean liitäntäkaapelin ja tarvikkeet asennettavaan laitteeseen",
+              "sv" : "väljer korrekt anslutningskabel och korrekta tillbehör för den utrustning som ska installeras",
+              "_id" : "1865977"
+            }, {
+              "fi" : "asentaa laitteen ottaen huomioon käyttöpaikan  vaatimukset",
+              "sv" : "installerar utrustning med hänsyn till de krav som installat-ionsplatsen ställer",
+              "_id" : "1865978"
+            }, {
+              "fi" : "tekee asentamalleen laitteelle työn edellyttämät  sähköturvallisuusmittaukset",
+              "sv" : "utför de elsäkerhetsmätningar på utrustningen som arbetet kräver",
+              "_id" : "1865979"
+            }, {
+              "fi" : "tulkitsee oikein mittaustuloksia ja dokumentoi ne",
+              "sv" : "tolkar mätresultaten rätt och dokumenterar dem",
+              "_id" : "1865980"
+            }, {
+              "fi" : "tekee laitteelle asennuksen jälkeen toimintakokeen",
+              "sv" : "utför en funktionstest efter installationen",
+              "_id" : "1865981"
+            }, {
+              "fi" : "antaa tarvittaessa laitteen käytönopastuksen.",
+              "sv" : "ger vid behov instruktioner om användning av utrustningen.",
+              "_id" : "1865982"
+            } ]
+          } ]
+        } ]
+      } ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "30f386e1-5e81-4c7d-bd35-6570ec9b6ee7",
+      "fi" : "<p>Tutkinnon suorittaja osaa</p>\n\n<ul>\n\t<li>sähkötekniikan perusteet</li>\n\t<li>sähköasennustekniikan</li>\n\t<li>sähkö- ja sähkötyöturvallisuuden</li>\n\t<li>ryhmäjohdon asennuksen</li>\n\t<li>laitekohtaisen asennuksen.</li>\n</ul>",
+      "sv" : "<p>Examinanden kan</p>\n\n<ul>\n\t<li>grunderna i elteknik </li>\n\t<li>elinstallationsteknik</li>\n\t<li>elsäkerhet och säkerhet vid elarbete</li>\n\t<li>installation av gruppledningar</li>\n\t<li>installation av en enskild utrustning.</li>\n</ul>",
+      "_id" : "2412959"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "fi" : "<p>Tutkinnon suorittaja osoittaa ammattitaitonsa tekemällä ammattitaitovaatimusten mukaisia asennus- ja liitäntätöitä kriteerien mukaisesti aidoissa työelämän tilanteissa. Ammattitaito osoitetaan sekä käytännön taitojen että alalla tarvittavan teoreettisen tietämyksen osalta. Siltä osin kuin vaadittavaa ammattitaitoa ei voida osoittaa työtehtävissä, ammattitaidon osoittamista täydennetään muulla tavoin.</p>",
+      "sv" : "<p>Examinanderna påvisar sin yrkesskicklighet genom att i autentiska arbetslivssituationer enligt kriterierna utföra installations- och anslutningsuppgifter som överensstämmer med kraven på yrkesskicklighet. Examinanderna påvisar sin yrkesskicklighet i fråga om både praktiska färdigheter och det teoretiska kunnande som behövs inom branschen. Till den del som det inte är möjligt att påvisa yrkesskickligheten genom att utföra arbetsuppgifter kan påvisandet kompletteras på andra sätt.</p>",
+      "_id" : "1865932"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodiUri" : "tutkinnonosat_101768",
+    "koodiArvo" : "101768",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali"
+  }, {
+    "id" : 781754,
+    "luotu" : 1426444478224,
+    "muokattu" : 1470998296430,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "fi" : "Pesulaitteiden asennus-, huolto- ja korjaustyöt",
+      "sv" : "Installation, underhåll och reparation av tvättutrustning",
+      "_id" : "1865983"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 780493,
+      "lisatiedot" : null,
+      "arvioinninKohdealueet" : [ {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja asentaa pesulaitteet ottaen huomioon käyttöolosuhteet ja laitekohtaiset vaatimukset.",
+          "sv" : "Examinanden kan installera tvättutrustning under beaktande av användningsförhållandena och de krav som utrustningen ställer.",
+          "_id" : "1865986"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tietää käyttöolosuhteiden vaikutukset laitteen toiminnalle",
+              "sv" : "känner till användningsförhållandenas inverkan på utrust-ningens funktion",
+              "_id" : "1865987"
+            }, {
+              "fi" : "valitsee laitteelle soveltuvan asennuspaikan ottaen huomioon ympäristölämpötilat  ja ilmankosteuden",
+              "sv" : "väljer en lämplig installationsplats för utrustningen och beaktar då temperaturerna och luftfuktigheten i omgivningen",
+              "_id" : "1865988"
+            }, {
+              "fi" : "ottaa huomioon laitekohtaiset vaatimukset",
+              "sv" : "beaktar de krav som gäller utrustningen i fråga",
+              "_id" : "1865989"
+            }, {
+              "fi" : "asentaa laitteen  ja liittää  sen sähkö- vesi- ja viemäriverkkoon.",
+              "sv" : "installerar utrustningen och ansluter den till el-, vatten- och avloppsnätet.",
+              "_id" : "1866010"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja tuntee pesu- ja kuivaustapahtuman.",
+          "sv" : "Examinanden är insatt i tvätt- och torkprocessen.",
+          "_id" : "1866011"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tietää erilaisten pesu- ja huuhteluaineiden  vaikutuksen  koneen toimintaan ja pesutulokseen",
+              "sv" : "vet hur olika tvätt- och sköljmedel inverkar på maskinens funktion och tvättresultatet",
+              "_id" : "1866012"
+            }, {
+              "fi" : "tietää suolan ja kirkasteaineen tarkoituksen  sekä vaikutuksen pesutulokseen",
+              "sv" : "vet syftet med salt och optiskt vitmedel samt deras inverkan på tvättresultatet",
+              "_id" : "1866013"
+            }, {
+              "fi" : "tietää pesu- ja kuivaustapahtumien  päävaiheet.",
+              "sv" : "känner till de huvudsakliga stegen i tvätt- och torkprocesserna.",
+              "_id" : "1866014"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja tuntee laitteiden rakenteen ja toiminnan.",
+          "sv" : "Examinanden är insatt i utrustningens konstruktion och funktion.",
+          "_id" : "1866015"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tuntee pesulaitteiden, kuten pesukoneiden, astianpesukoneiden ja kuivauslaitteiden, rakenteet",
+              "sv" : "känner till konstruktionen för tvättutrustningar, exempelvis tvättmaskiner, diskmaskiner och torktumlare",
+              "_id" : "1866016"
+            }, {
+              "fi" : "tuntee erilaisten pesulaitteiden toiminnan",
+              "sv" : "vet hur de olika tvättutrustningarna fungerar",
+              "_id" : "1866017"
+            }, {
+              "fi" : "tuntee erilaisten pesulaitteiden komponentit  ja niiden rakenteet sekä mekaanisen ja sähköisen toiminnan",
+              "sv" : "känner till komponenterna i olika tvättutrustningar och deras konstruktion samt mekaniska och elektriska funktion",
+              "_id" : "1866018"
+            }, {
+              "fi" : "tunnistaa laitteiden oikean ja virheellisen toiminnan.",
+              "sv" : "identifierar korrekt och felaktig funktion hos tvättutrustning.",
+              "_id" : "1866019"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja osaa laitteen sähkötekniikan.",
+          "sv" : "Examinanden kan eltekniken i anknytning till utrustning.",
+          "_id" : "1866040"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "käyttää tarvittaessa myös englanninkielisiä huolto-ohjeita",
+              "sv" : "använder vid behov även engelska underhållsinstruktioner",
+              "_id" : "1866041"
+            }, {
+              "fi" : "käyttää kytkentä-, johdotus- ja ajoituskaavioita ja tunnistaa yleisimmät kaavioiden piirrosmerkit",
+              "sv" : "använder kopplings-, lednings- och tidsscheman och identifierar de vanligaste grafiska symbolerna i scheman",
+              "_id" : "1866042"
+            }, {
+              "fi" : "suorittaa järjestelmällisen vianhaun em. kaavioita käyttäen",
+              "sv" : "utför systematisk felsökning med de scheman som nämns ovan",
+              "_id" : "1866043"
+            }, {
+              "fi" : "suorittaa laitteelle tarvittavat sähköturvallisuusmittaukset ja tulkitsee mittaustuloksia oikein",
+              "sv" : "utför de elsäkerhetsmätningar som behövs för utrustningen och tolkar mätresultaten korrekt",
+              "_id" : "1866044"
+            }, {
+              "fi" : "dokumentoi työn sen edellyttämällä tavalla",
+              "sv" : "dokumenterar arbetet enligt kraven",
+              "_id" : "1866045"
+            }, {
+              "fi" : "noudattaa työssään sähkötyöturvallisuussäädöksiä.",
+              "sv" : "iakttar lagstiftningen om säkerhet vid elarbete.",
+              "_id" : "1866046"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja huoltaa ja korjaa pesulaitteita.",
+          "sv" : "Examinanden underhåller och reparerar tvättutrustning.",
+          "_id" : "1866055"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "käyttää valmistajien työohjeita ja verkosta saatavia ohjeita",
+              "sv" : "använder tillverkarnas arbetsinstruktioner och instruktioner på webben",
+              "_id" : "1866047"
+            }, {
+              "fi" : "suorittaa laitteelle mekaanisen ja sähköisen vianhaun",
+              "sv" : "utför mekanisk och elektrisk felsökning av utrustningen",
+              "_id" : "1866048"
+            }, {
+              "fi" : "huoltaa laitteen valmistajan ohjeiden mukaisesti",
+              "sv" : "underhåller utrustningen enligt tillverkarens instruktioner",
+              "_id" : "1866049"
+            }, {
+              "fi" : "korjaa ja vaihtaa osia käyttäen oikeita työvälineitä ja mittalaitteita",
+              "sv" : "reparerar och byter delar med hjälp av rätt verktyg och mätinstrument",
+              "_id" : "1866050"
+            }, {
+              "fi" : "koekäyttää laitteen toiminnan varmistamiseksi",
+              "sv" : "testar utrustningen för att säkerställa driften",
+              "_id" : "1866051"
+            }, {
+              "fi" : "opastaa asiakasta laitteen oikeassa, turvallisessa ja energia- taloudellisessa käytössä",
+              "sv" : "vägleder kunden i rätt, säker och energieffektiv användning",
+              "_id" : "1866052"
+            }, {
+              "fi" : "opastaa asiakasta laitteen kierrätykseen liittyvissä asioissa",
+              "sv" : "vägleder kunden i frågor som rör återvinning",
+              "_id" : "1866053"
+            }, {
+              "fi" : "suorittaa tulityöturvallisuuskoulutuksen (tulityökortti).",
+              "sv" : "genomgår säkerhetsutbildningen för heta arbeten (certifikatet för heta arbeten).",
+              "_id" : "1866054"
+            } ]
+          } ]
+        } ]
+      } ]
+    },
+    "ammattitaitovaatimukset" : {
+      "fi" : "<p>Tutkinnon suorittaja</p>\n\n<ul>\n\t<li>osaa asentaa pesulaitteet ottaen huomioon käyttöolosuhteet ja laitekohtaiset vaatimukset</li>\n\t<li>tuntee pesu- ja kuivaustapahtuman</li>\n\t<li>tuntee laitteiden rakenteen ja toiminnan</li>\n\t<li>osaa laitteen sähkötekniikan</li>\n\t<li>osaa huoltaa ja korjata pesulaitteita.</li>\n</ul>",
+      "sv" : "<p>Examinanden</p>\n\n<ul>\n\t<li>kan installera tvättutrustning under beaktande av användningsförhållandena och de krav som utrustningen ställer</li>\n\t<li>är insatt i tvätt- och torkprocessen</li>\n\t<li>är insatt i utrustningens konstruktion och funktion</li>\n\t<li>kan eltekniken i anknytning till utrustning</li>\n\t<li>kan underhålla och reparera tvättutrustning.</li>\n</ul>",
+      "_id" : "1865985"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "fi" : "<p>Tutkinnon suorittaja osoittaa ammattitaitonsa tekemällä ammattitaitovaatimusten mukaisia asennus-, huolto- ja korjaustöitä kriteerien mukaisesti. Työtehtävät suoritetaan aidoissa työympäristöissä noudattaen sähkö- ja työturvallisuutta. Ammattitaito osoitetaan sekä käytännön taitojen että alalla tarvittavan teoreettisen tietämyksen osalta. Siltä osin kuin vaadittavaa ammattitaitoa ei voida aidossa työympäristössä osoittaa, ammattitaidon osoittamista voidaan täydentää erillisillä työsuorituksilla todellisuutta vastaavassa työympäristössä. Ammattitaidon arviointia voidaan täydentää haastattelulla tai muulla menettelyllä, jolla ammattitaidon arviointi voidaan varmistaa.</p>",
+      "sv" : "<p>Examinanderna påvisar sin yrkesskicklighet genom att enligt kriterierna utföra installations-, underhålls och reparationsarbeten som överensstämmer med kraven på yrkesskicklighet. Arbetsuppgifterna utförs i autentiska arbetsmiljöer enligt kraven på elsäkerhet och arbetarskydd. Examinanderna påvisar sin yrkesskicklighet i fråga om både praktiska färdigheter och det teoretiska kunnande som behövs inom branschen. Till den del som det inte är möjligt att påvisa den yrkesskicklighet som krävs i en autentisk arbetsmiljö kan påvisandet kompletteras med olika arbeten i en arbetsmiljö som motsvarar en autentisk miljö. Bedömningen av yrkesskickligheten kan kompletteras med en intervju eller något annat förfarande genom vilket bedömningen kan säkerställas.</p>",
+      "_id" : "1865984"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodiUri" : "tutkinnonosat_101769",
+    "koodiArvo" : "101769",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali"
+  }, {
+    "id" : 781755,
+    "luotu" : 1426445403119,
+    "muokattu" : 1470998535862,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "fi" : "Lämpölaitteiden asennus-, huolto- ja korjaustyöt",
+      "sv" : "Installation, underhåll och reparation av uppvärmningsutrustning",
+      "_id" : "1866056"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 780494,
+      "lisatiedot" : null,
+      "arvioinninKohdealueet" : [ {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja asentaa lämpölaitteet  ottaen huomioon käyttöolosuhteet ja laitekohtaiset vaatimukset.",
+          "sv" : "Examinanden installerar uppvärmningsutrustning under beaktande av användningsförhållandena och de krav som utrustningen ställer.",
+          "_id" : "1866059"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tietää käyttöolosuhteiden vaikutukset laitteen toiminnalle",
+              "sv" : "känner till användningsförhållandenas inverkan på utrust-ningens funktion",
+              "_id" : "1866080"
+            }, {
+              "fi" : "valitsee laitteelle soveltuvan asennuspaikan ottaen huomioon ympäristölämpötilat,  ilmanvaihdon ja ilmankosteuden",
+              "sv" : "väljer en lämplig installationsplats för utrustningen och beaktar då temperaturerna, ventilationen och luftfuktigheten i omgivningen",
+              "_id" : "1866081"
+            }, {
+              "fi" : "asentaa laitteen  ja liittää  sen sähkö-, vesi- ja viemäriverkkoon",
+              "sv" : "installerar utrustningen och ansluter den till el-, vatten- och avloppsnätet",
+              "_id" : "1866082"
+            }, {
+              "fi" : "ottaa huomioon laitekohtaiset vaatimukset",
+              "sv" : "beaktar de krav som gäller utrustningen i fråga",
+              "_id" : "1866083"
+            }, {
+              "fi" : "ymmärtää ilmanvaihdon ja iv-putkiston vaikutuksen erilaisten liesituulettimien toimintaan.",
+              "sv" : "förstår hur ventilationen och ventilationskanalerna inverkar på olika spisfläktars funktion.",
+              "_id" : "1866084"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja osaa lämpölaitteiden toiminnan ja rakenteen.",
+          "sv" : "Examinanden är insatt i uppvärmningsutrustningars funktion och konstruktion.",
+          "_id" : "1866085"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tuntee erilaisten lämpölaitteiden  toiminnan ja osaa opastaa niiden oikeassa, turvallisessa, ja energiataloudellisessa käytössä",
+              "sv" : "är insatt i olika uppvärmningsutrustningars funktion och kan ge råd om rätt, säker och energieffektiv användning",
+              "_id" : "1866086"
+            }, {
+              "fi" : "tietää oikeiden lämpötilojen merkityksen",
+              "sv" : "vet vilken betydelse rätt temperatur har",
+              "_id" : "1866087"
+            }, {
+              "fi" : "valitsee oikean lämmitysastian laitteen toimintaperiaatteen  mukaan",
+              "sv" : "väljer rätt uppvärmningskärl enligt utrustningens funktionsprincip",
+              "_id" : "1866088"
+            }, {
+              "fi" : "mittaa lämpötiloja ja tulkitsee mittaustuloksia",
+              "sv" : "mäter temperaturer och tolkar mätresultat",
+              "_id" : "1866089"
+            }, {
+              "fi" : "osaa vastus- ja induktiotekniikan  sekä niiden tehonsäädön",
+              "sv" : "behärskar motstånds- och induktionstekniken och effekt-justeringen i samband med den",
+              "_id" : "1866090"
+            }, {
+              "fi" : "tuntee mikroaaltouunin toiminnan",
+              "sv" : "är förtrogen med mikrovågsugnens funktion",
+              "_id" : "1866091"
+            }, {
+              "fi" : "mittaa ja laskee lämmitystehon ja tulkitsee tulokset",
+              "sv" : "mäter och beräknar värmeeffekt och tolkar resultaten",
+              "_id" : "1866092"
+            }, {
+              "fi" : "tuntee em. laitteiden pääkomponentit, niiden rakenteet ja niiden sähköisen ja mekaanisen toiminnan",
+              "sv" : "är förtrogen med de ovannämnda utrustningarnas huvudkomponenter, deras konstruktion samt elektriska och mekaniska funktion",
+              "_id" : "1866093"
+            }, {
+              "fi" : "tunnistaa laitteiden oikean ja virheellisen toiminnan.",
+              "sv" : "identifierar korrekt och felaktig funktion hos utrustning.",
+              "_id" : "1866094"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja  osaa lämpölaitteen  sähkötekniikan.",
+          "sv" : "Examinanden kan eltekniken i anknytning till uppvärmningsutrustning.",
+          "_id" : "1866095"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "käyttää tarvittaessa suomen- ja englanninkielisiä  huolto-ohjeita",
+              "sv" : "använder vid behov finska och engelska underhållsinstruktioner",
+              "_id" : "1866096"
+            }, {
+              "fi" : "käyttää kytkentä-, johdotus- ja toimintakaavioita  ja tunnistaa yleisimmät kaavioiden piirrosmerkit",
+              "sv" : "använder kopplings-, lednings- och funktionsscheman och identifierar de vanligaste grafiska symbolerna i scheman",
+              "_id" : "1866097"
+            }, {
+              "fi" : "suorittaa järjestelmällisen vianhaun em. kaavioita käyttäen",
+              "sv" : "utför systematisk felsökning med de scheman som nämns ovan",
+              "_id" : "1866098"
+            }, {
+              "fi" : "suorittaa laitteelle tarvittavat sähköturvallisuusmittaukset ja tulkitsee mittaustuloksia oikein",
+              "sv" : "utför de elsäkerhetsmätningar som behövs för utrustningen och tolkar mätresultaten korrekt",
+              "_id" : "1866099"
+            }, {
+              "fi" : "dokumentoi työn sen edellyttämällä tavalla",
+              "sv" : "dokumenterar arbetet enligt kraven",
+              "_id" : "1866100"
+            }, {
+              "fi" : "mittaa mikroaaltolaitteiden vuotosäteilyn",
+              "sv" : "mäter läckstrålningen från en mikrovågsutrustning",
+              "_id" : "1866101"
+            }, {
+              "fi" : "mittaa suurjännitekomponentit turvallisesti",
+              "sv" : "mäter högspänningskomponenter säkert",
+              "_id" : "1866102"
+            }, {
+              "fi" : "noudattaa työssään sähköturvallisuussäädöksiä.",
+              "sv" : "följer lagstiftningen om elsäkerhet i sitt arbete.",
+              "_id" : "1866103"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja huoltaa ja korjaa lämpölaitteita.",
+          "sv" : "Examinanden underhåller och reparerar uppvärmningsutrustning.",
+          "_id" : "1866104"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "käyttää valmistajien työohjeita, tietotekniikkaa ja niiden ohjelmistoja",
+              "sv" : "använder tillverkarnas arbetsinstruktioner, informationstek-nik och datorprogram",
+              "_id" : "1866105"
+            }, {
+              "fi" : "suorittaa laitteelle mekaanisen ja sähköisen vianhaun",
+              "sv" : "utför mekanisk och elektrisk felsökning av utrustningen",
+              "_id" : "1866106"
+            }, {
+              "fi" : "huoltaa laitteen valmistajan ohjeiden mukaisesti",
+              "sv" : "underhåller utrustningen enligt tillverkarens instruktioner",
+              "_id" : "1866107"
+            }, {
+              "fi" : "korjaa ja vaihtaa osia käyttäen oikeita työvälineitä ja mittalaitteita",
+              "sv" : "reparerar och byter delar med hjälp av rätt verktyg och mätinstrument",
+              "_id" : "1866108"
+            }, {
+              "fi" : "koekäyttää laitteen toiminnan varmistamiseksi",
+              "sv" : "testar utrustningen för att säkerställa driften",
+              "_id" : "1866109"
+            }, {
+              "fi" : "opastaa asiakasta laitteen oikeassa, turvallisessa ja energiataloudellisessa käytössä",
+              "sv" : "vägleder kunden i rätt, säker och energieffektiv användning",
+              "_id" : "1866110"
+            }, {
+              "fi" : "opastaa asiakasta laitteen kierrätykseen liittyvissä asioissa",
+              "sv" : "vägleder kunden i frågor som rör återvinning",
+              "_id" : "1866111"
+            }, {
+              "fi" : "suorittaa tulityöturvallisuuskoulutuksen (tulityökortti).",
+              "sv" : "genomgår säkerhetsutbildningen för heta arbeten (certifikatet för heta arbeten).",
+              "_id" : "1866112"
+            } ]
+          } ]
+        } ]
+      } ]
+    },
+    "ammattitaitovaatimukset" : {
+      "fi" : "<p>Tutkinnon suorittaja osaa</p>\n\n<ul>\n\t<li>asentaa lämpölaitteet ottaen huomioon käyttöolosuhteet ja laitekohtaiset vaatimukset</li>\n\t<li>lämpölaitteiden toiminnan ja rakenteen</li>\n\t<li>lämpölaitteen sähkötekniikan</li>\n\t<li>huoltaa ja korjata lämpölaitteita.</li>\n</ul>",
+      "sv" : "<p>Examinanden kan</p>\n\n<ul>\n\t<li>installera uppvärmningsutrustning under beaktande av användningsförhållandena och de krav som utrustningen ställer</li>\n\t<li>uppvärmningsutrustningars funktion och konstruktion</li>\n\t<li>eltekniken i anknytning till uppvärmningsutrustning</li>\n\t<li>underhålla och reparera uppvärmningsutrustning.</li>\n</ul>",
+      "_id" : "1866058"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "fi" : "<p>Tutkinnon suorittaja osoittaa ammattitaitonsa tekemällä ammattitaitovaatimusten mukaisia asennus-, huolto- ja korjaustöitä kriteerien mukaisesti. Työtehtävät suoritetaan aidoissa työympäristöissä noudattaen sähkö- ja työturvallisuutta. Ammattitaito osoitetaan sekä käytännön taitojen että alalla tarvittavan teoreettisen tietämyksen osalta. Siltä osin kuin vaadittavaa ammattitaitoa ei voida aidossa työympäristössä osoittaa, ammattitaidon osoittamista voidaan täydentää erillisillä työsuorituksilla todellisuutta vastaavassa työympäristössä. Ammattitaidon arviointia voidaan täydentää haastattelulla tai muulla menettelyllä, jolla ammattitaidon arviointi voidaan varmistaa.</p>",
+      "sv" : "<p>Examinanderna påvisar sin yrkesskicklighet genom att enligt kriterierna utföra de installations-, underhålls- och reparationsarbeten som överensstämmer med kraven på yrkesskicklighet. Arbetsuppgifterna utförs i autentiska arbetsmiljöer enligt kraven på elsäkerhet och arbetarskydd. Examinanderna påvisar sin yrkesskicklighet i fråga om både praktiska färdigheter och det teoretiska kunnande som behövs inom branschen. Till den del som det inte är möjligt att påvisa den yrkesskicklighet som krävs i en autentisk arbetsmiljö kan påvisandet kompletteras med olika arbeten i en arbetsmiljö som motsvarar en autentisk miljö. Bedömningen av yrkesskickligheten kan kompletteras med en intervju eller något annat förfarande genom vilket bedömningen kan säkerställas.</p>",
+      "_id" : "1866057"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodiUri" : "tutkinnonosat_101770",
+    "koodiArvo" : "101770",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali"
+  }, {
+    "id" : 781759,
+    "luotu" : 1426523046040,
+    "muokattu" : 1470998945667,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "fi" : "Kylmäteknisten laitteiden asennus-, huolto- ja korjaustyöt",
+      "sv" : "Installation, underhåll och reparation av kylteknisk utrustning",
+      "_id" : "1866116"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 780496,
+      "lisatiedot" : null,
+      "arvioinninKohdealueet" : [ {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja osaa kylmätekniikan  perusteet.",
+          "sv" : "Examinanden kan grunderna i kylteknik.",
+          "_id" : "1866119"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "osaa termodynamiikan  perusteet",
+              "sv" : "kan grunderna i termodynamik",
+              "_id" : "1866150"
+            }, {
+              "fi" : "tietää SI-järjestelmän ja osaa käyttää sitä",
+              "sv" : "känner till SI-systemet och kan använda det",
+              "_id" : "1866151"
+            }, {
+              "fi" : "osaa kylmätekniikan  taulukkojen ja diagrammien käytön mm. log p, h-digrammi",
+              "sv" : "kan använda tabellerna och diagrammen inom kylteknik, bl.a. log p, h-diagrammet",
+              "_id" : "1866152"
+            }, {
+              "fi" : "tietää kylmäjärjestelmän pääkomponentit, toimintaperiaatteen ja rakenteen",
+              "sv" : "känner till huvudkomponenterna i kylsystem samt kylsystemens funktionsprincip och konstruktion",
+              "_id" : "1866153"
+            }, {
+              "fi" : "tunnistaa pääkomponenttien piirrosmerkit",
+              "sv" : "identifierar de grafiska symbolerna för huvudkomponenterna",
+              "_id" : "1866154"
+            }, {
+              "fi" : "osaa kylmäteknisen  kiertoprosessin ja sen eri vaiheet,  kylmäaineiden olomuodot, paineet ja lämpötilat kylmäaineesta ja komponenteista riippuen.",
+              "sv" : "kan den kyltekniska cirkulationsprocessen och dess olika steg, köldmediernas tillstånd, tryck, temperaturer beroende på köldmedium och komponenter.",
+              "_id" : "1866155"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja tietää kylmäalan lainsäädännön ja standardien merkityksen.",
+          "sv" : "Examinanden känner till lagstiftningens och standardernas betydelse.",
+          "_id" : "1866156"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tietää voimassa olevan kylmäalan ja kylmäaineita koskevan lainsäädännön ja toimii sen mukaisesti kylmätöitä tehtäessä",
+              "sv" : "känner till den gällande lagstiftningen om kylbranschen och köldmedierna och följer den i kylarbete",
+              "_id" : "1866157"
+            }, {
+              "fi" : "tuntee kylmäalan standardeja ja hyödyntää niitä kylmätöissä tutkinnon vaatimassa laajuudessa.",
+              "sv" : "känner till standarderna för kylbranschen och använder dem i kylarbete i den omfattning som krävs i examen.",
+              "_id" : "1866158"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja asentaa, huoltaa ja korjaa kylmäjärjestelmän.",
+          "sv" : "Examinanden installerar, underhåller och reparerar kylsystem.",
+          "_id" : "1866159"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "käyttää kylmäalan työvälineitä",
+              "sv" : "använder kylbranschens verktyg",
+              "_id" : "1866180"
+            }, {
+              "fi" : "noudattaa kylmäalan työturvallisuusohjeita",
+              "sv" : "följer arbetarskyddsanvisningarna inom kylbranschen",
+              "_id" : "1866181"
+            }, {
+              "fi" : "hallitsee kylmäaineiden talteenoton ja kylmäaineen jatkokäsittelyn",
+              "sv" : "behärskar återvinningen av köldmedier och vidarebearbetningen av köldmedier",
+              "_id" : "1866182"
+            }, {
+              "fi" : "asentaa tai vaihtaa kylmälaitteen  komponentin tai sen osan laitekohtaisen ohjeen mukaisesti",
+              "sv" : "installerar eller byter en komponent eller del av en komponent i en kylutrustning enligt instruktionerna",
+              "_id" : "1866183"
+            }, {
+              "fi" : "tekee kovajuotos-, lokring- tai vastaavia liitoksia materiaaleista ja kylmäaineista riippuen",
+              "sv" : "gör hårdlödnings- och lokringfogar eller motsvarande fogar beroende på material och köldmedium",
+              "_id" : "1866184"
+            }, {
+              "fi" : "tunnistaa laitteen oikean ja virheellisen toiminnan",
+              "sv" : "identifierar korrekt och felaktig funktion hos utrustning",
+              "_id" : "1866185"
+            }, {
+              "fi" : "tietää kondenssi- ja sulatusvesiasiat ja ottaa ne huomioon asennuksissa",
+              "sv" : "är insatt i frågor kring kondens och smältvatten och beaktar dem i installationerna",
+              "_id" : "1866186"
+            }, {
+              "fi" : "tekee korjatulle laitteelle painekokeen tiiveyden varmistamiseksi",
+              "sv" : "utför ett tryckprov på den reparerade utrustningen för att säkerställa tätheten",
+              "_id" : "1866187"
+            }, {
+              "fi" : "tyhjiöi laitteen alan ohjeiden edellyttämällä tavalla",
+              "sv" : "vakuumsuger utrustningen enligt branschens instruktioner",
+              "_id" : "1866188"
+            }, {
+              "fi" : "tekee tyhjökokeen tiiveyden varmistamiseksi",
+              "sv" : "utför vakuumprovet för att kontrollera tätheten",
+              "_id" : "1866189"
+            }, {
+              "fi" : "täyttää kylmälaitteen  laitteistoon soveltuvalla kylmäaineella ottaen huomioon oikean täytösmäärän",
+              "sv" : "fyller systemet med korrekt mängd lämpligt köldmedium",
+              "_id" : "1866190"
+            }, {
+              "fi" : "koekäyttää laitteen ja tarkistaa toimivuuden mittaamalla  paineet ja lämpötilat",
+              "sv" : "provkör utrustningen och kontrollerar funktionen genom att mäta tryck och temperatur",
+              "_id" : "1866191"
+            }, {
+              "fi" : "tarkistaa mahdolliset kylmäainevuodot",
+              "sv" : "kontrollerar för eventuella läckage av köldmedium",
+              "_id" : "1866192"
+            }, {
+              "fi" : "tekee tarvittavat kylmäalan dokumentit",
+              "sv" : "gör den dokumentation som behövs inom kylbranschen",
+              "_id" : "1866193"
+            }, {
+              "fi" : "antaa tarvittaessa laitteen käytönopastuksen",
+              "sv" : "ger vid behov instruktioner om användning av utrustningen",
+              "_id" : "1866194"
+            }, {
+              "fi" : "käyttää tarvittaessa laitteen valmistajan ohjeita",
+              "sv" : "använder vid behov tillverkarens anvisningar",
+              "_id" : "1866195"
+            }, {
+              "fi" : "opastaa asiakasta laitteen oikeassa, turvallisessa ja energiataloudellisessa käytössä",
+              "sv" : "vägleder kunden i rätt, säker och energieffektiv användning",
+              "_id" : "1866196"
+            }, {
+              "fi" : "opastaa asiakasta laitteen kierrätykseen liittyvistä asioista",
+              "sv" : "instruerar kunden i frågor som rör återvinning av utrustningen",
+              "_id" : "1866197"
+            }, {
+              "fi" : "suorittaa tulityöturvallisuuskoulutuksen (tulityökortti).",
+              "sv" : "genomgår säkerhetsutbildningen för heta arbeten (certifikatet för heta arbeten).",
+              "_id" : "1866198"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja tekee kylmätöihin liittyvät  sähkötyöt.",
+          "sv" : "Examinanden utför de elarbeten som behövs i samband med kylarbeten.",
+          "_id" : "1866199"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "käyttää tarvittaessa suomen- ja englanninkielisiä  huolto-ohjeita",
+              "sv" : "använder vid behov finska och engelska underhållsinstruktioner",
+              "_id" : "1866200"
+            }, {
+              "fi" : "tekee kylmätöihin liittyvän sähkötyön, mittaukset ja komponentin vaihdon kylmä- ja sähköalan säännösten ja määräysten mukaisesti",
+              "sv" : "utför de elarbeten, mätningar och komponentbyten som behövs i samband med kylarbeten i enlighet med kyl- och elbranschens lagstiftning och föreskrifter",
+              "_id" : "1866201"
+            }, {
+              "fi" : "käyttää kytkentä-,  johdotus- ja piirikaavioita  korjauksissa ja vianhaussa",
+              "sv" : "använder kopplings-, lednings- och kretsscheman vid reparationer och felsökning",
+              "_id" : "1866202"
+            }, {
+              "fi" : "tekee tarvittavat sähköturvallisuusmittaukset ja tulkitsee mittaus- tuloksia oikein",
+              "sv" : "utför de elsäkerhetsmätningar som behövs och tolkar mätresultaten rätt",
+              "_id" : "1866203"
+            }, {
+              "fi" : "dokumentoi työn sen edellyttämällä tavalla",
+              "sv" : "dokumenterar arbetet enligt kraven",
+              "_id" : "1866204"
+            }, {
+              "fi" : "noudattaa työssään sähkötyöturvallisuussäädöksiä.",
+              "sv" : "följer lagstiftningen om säkerhet vid elarbete.",
+              "_id" : "1866205"
+            } ]
+          } ]
+        } ]
+      } ]
+    },
+    "ammattitaitovaatimukset" : {
+      "fi" : "<p>Tämä tutkinnon osa koskee enintään 3 kg kylmäainetta sisältäviä järjestelmiä.</p>\n\n<p> </p>\n\n<p>Tutkinnon suorittaja</p>\n\n<p>■ osaa kylmätekniikan perusteet</p>\n\n<p>■ tietää kylmäalan lainsäädännön ja standardien merkityksen</p>\n\n<p>■ osaa asentaa, huoltaa ja korjata kylmäjärjestelmän</p>\n\n<p>■ osaa kylmätöihin liittyvät sähkötyöt.</p>",
+      "sv" : "<p>Examinanden</p>\n\n<ul>\n\t<li>kan grunderna i kylteknik</li>\n\t<li>känner till lagstiftningens och standardernas betydelse</li>\n\t<li>kan installera, underhålla och reparera kylsystem</li>\n\t<li>kan de elarbeten som behövs i samband med kylarbeten.</li>\n</ul>",
+      "_id" : "1866118"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "fi" : "<p>Tutkinnon suorittaja osoittaa ammattitaitonsa tekemällä ammattitaitovaatimusten mukaisia asennus-, huolto- ja korjaustöitä kriteerien mukaisesti. Työtehtävät suoritetaan aidoissa työympäristöissä noudattaen kylmä- ja sähköalan työturvallisuutta. Ammattitaito osoitetaan sekä käytännön taitojen että alalla tarvittavan teoreettisen tietämyksen osalta. Siltä osin kuin vaadittavaa ammattitaitoa ei voida aidossa työympäristössä osoittaa, ammattitaidon osoittamista voidaan täydentää erillisillä työsuorituksilla todellisuutta vastaavassa työympäristössä. Ammattitaidon arviointia voidaan täydentää haastattelulla tai muulla menettelyllä, jolla ammattitaidon arviointi voidaan varmistaa</p>",
+      "sv" : "<p>Examinanderna påvisar sin yrkesskicklighet genom att enligt kriterierna utföra installations-, underhålls- och reparationsarbeten som överensstämmer med kraven på yrkesskicklighet. Arbetsuppgifterna utförs i autentiska arbetsmiljöer under beaktande av arbetarskyddet inom kyl- och elbranschen. Examinanderna påvisar sin yrkesskicklighet i fråga om både praktiska färdigheter och det teoretiska kunnande som behövs inom branschen. Till den del som det inte är möjligt att påvisa den yrkesskicklighet som krävs i en autentisk arbetsmiljö kan påvisandet kompletteras med olika arbeten i en arbetsmiljö som motsvarar en autentisk miljö. Bedömningen av yrkesskickligheten kan kompletteras med en intervju eller något annat förfarande genom vilket bedömningen kan säkerställas.</p>",
+      "_id" : "1866117"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodiUri" : "tutkinnonosat_101771",
+    "koodiArvo" : "101771",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali"
+  }, {
+    "id" : 781758,
+    "luotu" : 1426449659997,
+    "muokattu" : 1470999130995,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "fi" : "Pienlaitteiden asennus-, huolto- ja korjaustyöt",
+      "sv" : "Installation, underhåll och reparation av småapparater",
+      "_id" : "1866206"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 780497,
+      "lisatiedot" : null,
+      "arvioinninKohdealueet" : [ {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja asentaa laitteet ottaen huomioon käyttöolosuhteet ja laitekohtaiset vaatimukset.",
+          "sv" : "Examinanden installerar småapparater under beaktande av användningsförhållandena och de krav som apparaten ställer.",
+          "_id" : "1866209"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tietää käyttöolosuhteiden vaikutukset laitteen toiminnalle",
+              "sv" : "känner till användningsförhållandenas inverkan på apparatens funktion",
+              "_id" : "1866220"
+            }, {
+              "fi" : "valitsee laitteelle soveltuvan asennuspaikan ottaen huomioon ympäristölämpötilat  ja ilmanvaihdon",
+              "sv" : "väljer en lämplig installationsplats för apparaten och beaktar då temperaturerna och ventilationen",
+              "_id" : "1866221"
+            }, {
+              "fi" : "asentaa laitteen ja liittää sen sähkö- ja vesiverkkoon",
+              "sv" : "installerar apparaten och ansluter den till el- och vattennätet",
+              "_id" : "1866222"
+            }, {
+              "fi" : "ottaa huomioon laitekohtaiset vaatimukset",
+              "sv" : "beaktar de krav som gäller apparaten i fråga",
+              "_id" : "1866223"
+            }, {
+              "fi" : "ymmärtää ilmanvaihdon merkityksen erilaisten laitteiden toimintaan.",
+              "sv" : "förstår ventilationens inverkan på olika apparaters funktion.",
+              "_id" : "1866224"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja osaa pienlaitteiden toiminnan ja rakenteen.",
+          "sv" : "Examinanden kan småapparatens funktion och konstruktion.",
+          "_id" : "1866225"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tuntee erilaisten pienlaitteiden toiminnan",
+              "sv" : "vet hur olika småapparater fungerar",
+              "_id" : "1866226"
+            }, {
+              "fi" : "tietää oikeiden lämpötilojen merkityksen",
+              "sv" : "vet vilken betydelse rätt temperatur har",
+              "_id" : "1866227"
+            }, {
+              "fi" : "mittaa lämpötiloja ja tulkitsee mittaustuloksia oikein",
+              "sv" : "mäter temperaturer och tolkar mätresultaten rätt",
+              "_id" : "1866228"
+            }, {
+              "fi" : "tuntee em. laitteiden komponentit, niiden rakenteet sekä mekaanisen ja sähköisen toiminnan",
+              "sv" : "känner till komponenterna i de ovannämnda apparaterna, deras konstruktion samt mekaniska och elektriska funktion",
+              "_id" : "1866229"
+            }, {
+              "fi" : "tunnistaa laitteiden oikean ja virheellisen toiminnan.",
+              "sv" : "identifierar korrekt och felaktig funktion hos apparaterna.",
+              "_id" : "1866230"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja tuntee pienlaitteiden sähkötekniikan.",
+          "sv" : "Examinanden är insatt i eltekniken i anknytning till småapparater.",
+          "_id" : "1866231"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "käyttää tarvittaessa suomen- ja englanninkielisiä  huolto-ohjeita",
+              "sv" : "använder vid behov finska och engelska underhållsinstruktioner",
+              "_id" : "1866232"
+            }, {
+              "fi" : "käyttää kytkentä-, johdotus- ja toimintakaavioita  ja tunnistaa yleisimmät kaavioiden piirrosmerkit",
+              "sv" : "använder kopplings-, lednings- och funktionsscheman och identifierar de vanligaste grafiska symbolerna i scheman",
+              "_id" : "1866233"
+            }, {
+              "fi" : "suorittaa järjestelmällisen vianhaun em. kaavioita käyttäen",
+              "sv" : "utför systematisk felsökning med de scheman som nämns ovan",
+              "_id" : "1866234"
+            }, {
+              "fi" : "suorittaa laitteelle tarvittavat sähköturvallisuusmittaukset ja tulkitsee mittaustuloksia",
+              "sv" : "utför de elsäkerhetsmätningar som behövs för apparaten och tolkar mätresultaten",
+              "_id" : "1866235"
+            }, {
+              "fi" : "mittaa suurjännitekomponentit turvallisesti",
+              "sv" : "utför mätningar av högspänningskomponenter på ett säkert sätt",
+              "_id" : "1866236"
+            }, {
+              "fi" : "noudattaa työssään sähkötyöturvallisuussäädöksiä",
+              "sv" : "följer lagstiftningen om säkerhet vid elarbete",
+              "_id" : "1866237"
+            }, {
+              "fi" : "dokumentoi työn sen edellyttämällä tavalla.",
+              "sv" : "dokumenterar arbetet enligt kraven.",
+              "_id" : "1866238"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja huoltaa ja korjaa pienlaitteen.",
+          "sv" : "Examinanden underhåller och reparerar småapparater.",
+          "_id" : "1866239"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "käyttää valmistajien työohjeita sekä tietotekniikkaa  ja niiden ohjelmistoja",
+              "sv" : "använder tillverkarnas arbetsinstruktioner, informationstek-nik och datorprogram",
+              "_id" : "1866240"
+            }, {
+              "fi" : "suorittaa laitteelle mekaanisen ja sähköisen vianhaun",
+              "sv" : "utför mekanisk och elektrisk felsökning av anordningen",
+              "_id" : "1866241"
+            }, {
+              "fi" : "ymmärtää osien puhtauden merkityksen toimintaan ja laatuun",
+              "sv" : "förstår betydelsen av att komponenterna är rena med tanke på funktion och kvalitet",
+              "_id" : "1866242"
+            }, {
+              "fi" : "huoltaa laitteen valmistajan ohjeiden mukaisesti",
+              "sv" : "underhåller apparaten enligt tillverkarens instruktioner",
+              "_id" : "1866243"
+            }, {
+              "fi" : "korjaa ja vaihtaa osia käyttäen oikeita työvälineitä ja mittalaitteita",
+              "sv" : "reparerar och byter delar med hjälp av rätt verktyg och mät-instrument",
+              "_id" : "1866244"
+            }, {
+              "fi" : "testaa laitteen toiminnan",
+              "sv" : "testar apparatens funktion",
+              "_id" : "1866245"
+            }, {
+              "fi" : "opastaa asiakasta laitteen oikeassa, turvallisessa ja energiataloudellisessa käytössä",
+              "sv" : "vägleder kunden i rätt, säker och energieffektiv användning",
+              "_id" : "1866246"
+            }, {
+              "fi" : "opastaa asiakasta laitteen kierrätykseen liittyvissä asioissa",
+              "sv" : "vägleder kunden i frågor som rör återvinning",
+              "_id" : "1866247"
+            }, {
+              "fi" : "suorittaa tulityöturvallisuuskoulutuksen (tulityökortti).",
+              "sv" : "genomgår säkerhetsutbildningen för heta arbeten (certifikatet för heta arbeten).",
+              "_id" : "1866248"
+            } ]
+          } ]
+        } ]
+      } ]
+    },
+    "ammattitaitovaatimukset" : {
+      "fi" : "<p>Tutkinnon suorittaja</p>\n\n<ul>\n\t<li>osaa asentaa laitteet ottaen huomioon käyttöolosuhteet ja laite- kohtaiset vaatimukset</li>\n\t<li>osaa pienlaitteen toiminnan ja rakenteen</li>\n\t<li>tuntee pienlaitteen sähkötekniikan</li>\n\t<li>osaa huoltaa ja korjata pienlaitteita.</li>\n</ul>",
+      "sv" : "<p>Examinanden</p>\n\n<ul>\n\t<li>kan installera småapparater under beaktande av användningsförhållandena och de krav som apparaten ställer</li>\n\t<li>kan småapparatens funktion och konstruktion</li>\n\t<li>är insatt i eltekniken i anknytning till småapparaten</li>\n\t<li>kan underhålla och reparera småapparater.</li>\n</ul>",
+      "_id" : "1866208"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "fi" : "<p>Tutkinnon suorittaja osoittaa ammattitaitonsa tekemällä ammattitaitovaatimusten mukaisia asennus-, huolto- ja korjaustöitä kriteerien mukaisesti. Työtehtävät suortaan aidossa työympäristössä noudattaen sähkö- ja työturvallisuutta. Ammattitaito osoitetaan sekä käytännön taitojen että alalla tarvittavan teoreettisen tietämyksen osalta. Siltä osin kuin vaadittavaa ammattitaitoa ei voida aidossa työympäristössä osoittaa, ammattitaidon osoittamista voidaan täydentää erillisillä työsuorituksilla todellisuutta vastaavassa työympäristössä. Ammattitaidon arviointia voidaan täydentää haastattelulla tai muulla menettelyllä, jolla ammattitaidon arviointi voidaan varmistaa.</p>",
+      "sv" : "<p>Examinanderna påvisar sin yrkesskicklighet genom att enligt kriterierna utföra installations-, underhålls- och reparationsarbeten som överensstämmer med kraven på yrkesskicklighet. Arbetsuppgifterna utförs i autentiska arbetsmiljöer enligt kraven på elsäkerhet och arbetarskydd. Examinanderna påvisar sin yrkesskicklighet i fråga om både praktiska färdigheter och det teoretiska kunnande som behövs inom branschen. Till den del som det inte är möjligt att påvisa den yrkesskicklighet som krävs i en autentisk arbetsmiljö kan påvisandet kompletteras med olika arbeten i en arbetsmiljö som motsvarar en autentisk miljö. Bedömningen av yrkesskickligheten kan kompletteras med en intervju eller något annat förfarande genom vilket bedömningen kan säkerställas.</p>",
+      "_id" : "1866207"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodiUri" : "tutkinnonosat_101772",
+    "koodiArvo" : "101772",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali"
+  }, {
+    "id" : 782910,
+    "luotu" : 1426524102747,
+    "muokattu" : 1470999378673,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "fi" : "Kaasulaitteiden asennus-, huolto- ja korjaustyöt",
+      "sv" : "Installation, underhåll och reparation av gasutrustning",
+      "_id" : "1866249"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 780498,
+      "lisatiedot" : null,
+      "arvioinninKohdealueet" : [ {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja  osaa neste- ja maakaasun perusteet.",
+          "sv" : "Examinanden kan grunderna i fråga om flyt- och naturgas.",
+          "_id" : "1866262"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tietää neste- ja maakaasun fysikaaliset  ominaisuudet  ja käsittelyn vaarat",
+              "sv" : "känner till flyt- och naturgasens fysikaliska egenskaper och riskerna vid hantering",
+              "_id" : "1866263"
+            }, {
+              "fi" : "tuntee kaasujen palamisreaktion",
+              "sv" : "är insatt i gasernas förbränningsreaktion",
+              "_id" : "1866264"
+            }, {
+              "fi" : "osaa neste- ja maakaasun väri-, varoitus- ja turvamerkinnät.",
+              "sv" : "kan färg-, varnings- och säkerhetsmärkningarna för flyt- och naturgas.",
+              "_id" : "1866265"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja osaa lainsäädännön ja standardit.",
+          "sv" : "Examinanden kan lagstiftningen och standarderna.",
+          "_id" : "1866266"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tietää kaasualaa koskevat viranomaismääräykset, eri pätevyydet ja vaatimukset",
+              "sv" : "är insatt i myndigheternas föreskrifter för gasbranschen, olika behörigheter och krav",
+              "_id" : "1866267"
+            }, {
+              "fi" : "tuntee alan standardit",
+              "sv" : "känner till standarderna inom branschen",
+              "_id" : "1866268"
+            }, {
+              "fi" : "osaa nestekaasua koskevat asennuspiirustukset ja piirrosmerkit",
+              "sv" : "kan installationsritningarna och de grafiska symbolerna för gasol",
+              "_id" : "1866269"
+            }, {
+              "fi" : "tietää nestekaasukäyttölaitteiden sijaintia ja etäisyyksiä palavista materiaaleista koskevat määräykset",
+              "sv" : "känner till föreskrifterna om placering av gasolutrustning och avstånd till brännbart material",
+              "_id" : "1866280"
+            }, {
+              "fi" : "tietää palamisilman ja palamiskaasujen poistoa koskevat määräykset",
+              "sv" : "känner till föreskrifterna om förbränningsluften och bortledningen av förbränningsgaser",
+              "_id" : "1866281"
+            }, {
+              "fi" : "suorittaa   kaasualan   P- tutkinnon  tai vastaavan tutkinnon.",
+              "sv" : "avlägger gasbranschens behörighetsprov i klass P eller en motsvarande examen.",
+              "_id" : "1866282"
+            } ]
+          } ]
+        } ]
+      }, {
+        "otsikko" : {
+          "fi" : "Tutkinnon suorittaja asentaa, huoltaa ja korjaa kaasulaitteen.",
+          "sv" : "Examinanden installerar, underhåller och reparerar en gasutrustning.",
+          "_id" : "1866283"
+        },
+        "arvioinninKohteet" : [ {
+          "otsikko" : null,
+          "selite" : null,
+          "_arviointiAsteikko" : "1",
+          "osaamistasonKriteerit" : [ {
+            "_osaamistaso" : "1",
+            "kriteerit" : [ {
+              "fi" : "tuntee kaasulaitteen rakenteen, toimintaperiaatteen  ja komponentit",
+              "sv" : "känner till gasutrustningens konstruktion, funktionsprincip och komponenter",
+              "_id" : "1866284"
+            }, {
+              "fi" : "opastaa asiakasta kaasulaitteen  hankinnassa, asennuksessa ja laitteen turvallisessa käytössä",
+              "sv" : "ger kunden råd om anskaffning, installation och säker användning av gasutrustning",
+              "_id" : "1866285"
+            }, {
+              "fi" : "käyttää valmistajien työohjeita",
+              "sv" : "använder tillverkarnas arbetsinstruktioner",
+              "_id" : "1866286"
+            }, {
+              "fi" : "suorittaa asennuksen ja tekee lopuksi koeponnistuksen laitekoko- naisuuden tiiviyden tarkistamiseksi sekä antaa vaatimusten- vastaavuustodistuksen",
+              "sv" : "utför installationen och efteråt tryckprovet för att kontrollera helhetens täthet samt ger intyget om överensstämmelse",
+              "_id" : "1866287"
+            }, {
+              "fi" : "huoltaa laitteen valmistajan ohjeiden mukaisesti",
+              "sv" : "underhåller utrustning enligt tillverkarens instruktioner",
+              "_id" : "1866288"
+            }, {
+              "fi" : "suorittaa kaasulaitteiden vianhaun ja korjauksen",
+              "sv" : "utför felsökning av gasutrustning och reparerar fel",
+              "_id" : "1866289"
+            }, {
+              "fi" : "käyttää työhön tarkoitettuja työvälineitä ja varaosia",
+              "sv" : "använder verktyg och reservdelar som är avsedda för arbetet",
+              "_id" : "1866300"
+            }, {
+              "fi" : "laittaa turva-, varoitus-, komponentti- ja käyttöpainemerkinnät oikeisiin kohtiin",
+              "sv" : "placerar säkerhets-, varnings- och komponentmärkningarna samt märkningen om arbetstryck på korrekta ställen",
+              "_id" : "1866301"
+            }, {
+              "fi" : "tekee käyttöönottotarkastuksen  ja dokumentoi työn sen edellyttämällä tavalla",
+              "sv" : "utför ibruktagningsbesiktningen och dokumenterar arbetet enligt kraven",
+              "_id" : "1866302"
+            }, {
+              "fi" : "testaa laitteen toiminnan",
+              "sv" : "testar utrustningens funktion",
+              "_id" : "1866303"
+            }, {
+              "fi" : "noudattaa työssään työturvallisuussäädöksiä",
+              "sv" : "följer lagstiftningen om arbetarskydd",
+              "_id" : "1866304"
+            }, {
+              "fi" : "opastaa asiakasta laitteen oikeassa, turvallisessa ja energiataloudellisessa käytössä",
+              "sv" : "vägleder kunden i rätt, säker och energieffektiv användning",
+              "_id" : "1866305"
+            }, {
+              "fi" : "opastaa asiakasta laitteen kierrätykseen liittyvissä asioissa.",
+              "sv" : "vägleder kunden i frågor som rör återvinning.",
+              "_id" : "1866306"
+            } ]
+          } ]
+        } ]
+      } ]
+    },
+    "ammattitaitovaatimukset" : {
+      "fi" : "<p>Tutkinnon suorittaja osaa</p>\n\n<p>■ neste- ja maakaasun perusteet</p>\n\n<p>■ lainsäädännön ja standardit</p>\n\n<p>■ asentaa, huoltaa ja korjata kaasulaitteita.</p>",
+      "sv" : "<p>Examinanden kan</p>\n\n<ul>\n\t<li>grunderna i fråga om flyt- och naturgas</li>\n\t<li>lagstiftningen och standarderna</li>\n\t<li>installera, underhålla och reparera gasutrustning.</li>\n</ul>",
+      "_id" : "1866261"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "fi" : "<p>Tutkinnon suorittaja osoittaa ammattitaitonsa tekemällä ammattitaitovaatimusten mukaisia asennus-, huolto- ja korjaustöitä kriteerien mukaisesti. Työtehtävät suoritetaan aidoissa työympäristöissä noudattaen kaasualan ja yleistä työturvallisuutta. Ammattitaito osoitetaan sekä käytännön taitojen että alalla tarvittavan teoreettisen tietämyksen osalta. Siltä osin kuin vaadittavaa ammattitaitoa ei voida aidossa työympäristössä osoittaa, ammattitaidon osoittamista voidaan täydentää erillisillä työsuorituksilla todellisuutta vastaavassa työympäristössä. Ammattitaidon arviointia voidaan täydentää haastattelulla tai muulla menettelyllä, jolla ammattitaidon arviointi voidaan varmistaa.</p>",
+      "sv" : "<p>Examinanderna påvisar sin yrkesskicklighet genom att enligt kriterierna utföra installations-, underhålls- och reparationsarbeten som överensstämmer med kraven på yrkesskicklighet. Arbetsuppgifterna utförs i autentiska arbetsmiljöer enligt arbetarskyddskraven inom gasbranschen och de allmänna arbetarskyddskraven. Examinanderna påvisar sin yrkesskicklighet i fråga om både praktiska färdigheter och det teoretiska kunnande som behövs inom branschen. Till den del som det inte är möjligt att påvisa den yrkesskicklighet som krävs i en autentisk arbetsmiljö kan påvisandet kompletteras med olika arbeten i en arbetsmiljö som motsvarar en autentisk miljö. Bedömningen av yrkesskickligheten kan kompletteras med en intervju eller något annat förfarande genom vilket bedömningen kan säkerställas.</p>",
+      "_id" : "1866260"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodiUri" : "tutkinnonosat_101773",
+    "koodiArvo" : "101773",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali"
+  } ]
+}
