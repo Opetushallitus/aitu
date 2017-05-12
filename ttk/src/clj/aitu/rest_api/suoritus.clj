@@ -47,7 +47,7 @@
 (defn localdate->str [locald]
   (unparse (formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
 
-(defn localize-arvosana [s]
+(defn lokalisoi-arvosana [s]
 ;  (if (= "hyvaksytty" s) (get-in (i18n/tekstit) [:arviointipaatokset :arvosana_hyvaksytty] s) s)  ;; TODO: Tämä ei saa jostain syystä *locale*:a, jolloin (i18n/tekstit) ei toimi.
   (if (= "hyvaksytty" s) "Hyväksytty" s)
   )
@@ -63,10 +63,10 @@
   (map-update form :koulutustoimija_nimi_fi clojure.string/upper-case))
 
 (defn paivita-syntymapvm->str [form]
-  (map-update form :suorittaja_syntymapvm localdate->str))
+  (map-update form :suorittaja_syntymapvm localdate->str))  ;; TODO: Miksi vain :suorittaja_syntymapvm muutetaan, eikä muihin dateihin kosketa? Testeissä kuitenkin niin tehdään!
 
 (defn paivita-arvosana [form]
-  (map-update form :arvosana localize-arvosana))
+  (map-update form :arvosana lokalisoi-arvosana))
 
 (defn paivita-raportti [yhteenveto-raportti]
   (let [walk-fn (comp paivita-syntymapvm->str koulutustoimija->toupper paivita-arvosana)]
@@ -76,9 +76,9 @@
   (GET "/suoritusraportti" params
     :kayttooikeus :raportti
     (let [footer-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti-footer.mustache") :encoding "UTF-8")
-          data {:teksti (stencil/render-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache") :encoding "UTF-8")
-                                               {:toimikunnat    (paivita-raportti (arkisto/hae-yhteenveto-raportti params))
-                                                :raportti_luotu (luontiaika)})
+          data-string   (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache") :encoding "UTF-8")
+          data {:teksti (stencil/render-string data-string {:toimikunnat (paivita-raportti (arkisto/hae-yhteenveto-raportti params))
+                                                            :raportti_luotu (luontiaika)})
                 :footer (stencil/render-string footer-string {:raportti_luotu (luontiaika)})}
           pdf (binding [pdf-arkisto/*sisennys* 64.0]
                 (pdf-arkisto/muodosta-pdf data))]
