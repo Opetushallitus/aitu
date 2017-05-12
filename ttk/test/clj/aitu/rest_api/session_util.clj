@@ -89,6 +89,8 @@
 (defn body-json [response]
   (cheshire/parse-string (slurp (:body response) :encoding "UTF-8") true))
 
+(defn generate-escaped-json-string [form]
+  (cheshire/generate-string form {:escape-non-ascii true}))
 
 (defn run-with-db
   ([dataf testf]

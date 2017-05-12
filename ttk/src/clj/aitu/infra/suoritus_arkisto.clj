@@ -155,14 +155,11 @@
 ;    (add-toimikunta-plus-suoritettavatutkinto-where-ehto toimikunta suoritettavatutkinto)
     ))
 
-(def ^:private hae-kaikki-valitut-sql-kentat
-  [:suorituskerta_id
-   :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika :liitetty_pvm :arviointikokouksen_pvm
-   :suoritusaika_alku :suoritusaika_loppu
-   :jarjestamismuoto :opiskelijavuosi
-   :valmistava_koulutus :paikka :jarjestelyt
+#_(def ^:private hae-kaikki-valitut-sql-kentat
+   [:suorituskerta_id
+   :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika :liitetty_pvm :arviointikokouksen_pvm :suoritusaika_alku :suoritusaika_loppu
+   :jarjestamismuoto :opiskelijavuosi :valmistava_koulutus :paikka :jarjestelyt
    [:suoritus.arvosana :arvosana]
-   [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
    [:suorittaja.etunimi :suorittaja_etunimi]
    [:suorittaja.sukunimi :suorittaja_sukunimi]
    [:suorittaja.syntymapvm :suorittaja_syntymapvm]
@@ -176,9 +173,9 @@
    [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
    [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
    :koulutustoimija  ;; TODO: Tämä puuttuu "hae-yhteenveto-raportti"-versiosta. Duplikaatti kentän :koulutustoimija.ytunnus kanssa, mutta tarvitaanko tätä kenttää frontissa? Tarvii sitten muuttaa myös where-ehto.
-   :koulutustoimija.ytunnus
+    :koulutustoimija.ytunnus
    [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
-   [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+    [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
    ])
 
 (defn hae-kaikki
@@ -207,11 +204,35 @@
       (seq sukupuoli) (sql/where {:suorittaja.sukupuoli sukupuoli})
       )
 
-    ;; "Hae-kaikki"-versio. Alla olevat kentät puuttuvat "hae-yhteenveto-raportti"-versiosta.
-    (#(apply sql/fields %
+    (sql/fields :suorituskerta_id :tutkinto :tutkintoversio_id :rahoitusmuoto :suorittaja :koulutustoimija :tila :ehdotusaika :hyvaksymisaika
+                :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm :toimikunta
+                :jarjestamismuoto :opiskelijavuosi :liitetty_pvm :tutkintoversio_suoritettava :kouljarjestaja
+                :valmistava_koulutus :paikka :jarjestelyt
+                [:suorittaja.etunimi :suorittaja_etunimi]
+                [:suorittaja.sukunimi :suorittaja_sukunimi]
+                [:suorittaja.syntymapvm :suorittaja_syntymapvm]
+                [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
+                [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
+                [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
+                [:suoritettava-tutkinto.nimi_fi :suoritettavatutkinto_nimi_fi]
+                [:suoritettava-tutkinto.nimi_sv :suoritettavatutkinto_nimi_sv]
+                [:suoritettava-tutkinto.tutkintotunnus :suoritettavatutkinto_tutkintotunnus]
+                [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
+                [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
+                [:tutkinnonosa.tutkinnonosa_id :tutkinnonosa_tutkinnonosa_id]
+                [:osaamisala.nimi_fi :osaamisala_nimi_fi]
+                [:osaamisala.nimi_sv :osaamisala_nimi_sv]
+                [:osaamisala.osaamisalatunnus :osaamisala_tunnus]
+                [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
+                [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                [:suoritus.arvosana :arvosana])
+
+    ;; Alla olevat kentät puuttuvat "hae-yhteenveto-raportti"-versiosta.
+    #_(#(apply sql/fields %
       :tutkinto :tutkintoversio_id :tutkintoversio_suoritettava
       :toimikunta :kouljarjestaja
       :suorittaja
+       [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
       [:osaamisala.nimi_fi :osaamisala_nimi_fi]
       [:osaamisala.nimi_sv :osaamisala_nimi_sv]
       [:osaamisala.osaamisalatunnus :osaamisala_tunnus]
@@ -251,69 +272,104 @@
 
           (hae-kaikki-where-ehdot
             luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu
-              jarjestamismuoto koulutustoimija tutkinto tutkinnonosa
+            jarjestamismuoto koulutustoimija tutkinto tutkinnonosa
             suoritettavatutkinto suorittaja suorittajaid toimikunta osaamisala tila)
 
           (cond->
-              ; hivenen ruma hack. Haetaan käyttäjän edellisen viiden minuutin aikana kirjaamat rivit, jotta saadaan se mitä äsken ladattiin haettua.
-              ; mutta korrektimpaa olisi pitää kirjanpitoa latauksista ja käyttää sitä viitteenä. Tehdään jos tämä ei riitä.
-              (not-empty edelliset-kayttaja) (sql/where {:suoritus.luotu_kayttaja @ka/*current-user-oid*
-                                                         :suoritus.luotuaika [>= (sql/raw "(now() - interval '5 minutes')")]})
-              )
+            ; hivenen ruma hack. Haetaan käyttäjän edellisen viiden minuutin aikana kirjaamat rivit, jotta saadaan se mitä äsken ladattiin haettua.
+            ; mutta korrektimpaa olisi pitää kirjanpitoa latauksista ja käyttää sitä viitteenä. Tehdään jos tämä ei riitä.
+            (not-empty edelliset-kayttaja) (sql/where {:suoritus.luotu_kayttaja @ka/*current-user-oid*
+                                                       :suoritus.luotuaika [>= (sql/raw "(now() - interval '5 minutes')")]})
+            )
 
-            (#(apply sql/fields %
-              [(sql/raw "case when suoritus.osaamisen_tunnustaminen is not null then ',tunnustamalla' else ' ' end") :tunnustaminen]
-              [(sql/raw "case when suoritus.todistus then 'Todistus' else ' ' end") :todistus]
-              [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
-              [(sql/raw "case when suoritus.kokotutkinto then 'Koko tutkinto' else ' ' end") :kokotutkinto]
-              :nayttotutkinto.tutkintotunnus
-              [:tutkintoversio.peruste :tutkinto_peruste]
-              [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi]
-              [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv]
-              [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
-              [:arvioija.etunimi :arvioija_etunimi]
-              [:arvioija.sukunimi :arvioija_sukunimi]
-              [(sql/raw "case arvioija.rooli when 'itsenainen' then 'itsenäinen' when 'tyonantaja' then 'työnantaja' when 'tyontekija' then 'työntekijä' else arvioija.rooli end") :arvioija_rooli]
-              hae-kaikki-valitut-sql-kentat))
+          (sql/fields :suorituskerta_id :rahoitusmuoto :tila :ehdotusaika :hyvaksymisaika :liitetty_pvm
+                      :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
+                      :jarjestamismuoto :opiskelijavuosi
+                      :valmistava_koulutus :paikka :jarjestelyt
+                      [(sql/raw "case suoritus.arvosana when 'hyvaksytty' then 'Hyväksytty' else suoritus.arvosana end") :arvosana]
+                      [(sql/raw "case when suoritus.osaamisen_tunnustaminen is not null then ',tunnustamalla' else ' ' end") :tunnustaminen]
+                      [(sql/raw "case when suoritus.todistus then 'Todistus' else ' ' end") :todistus]
+                      [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
+                      [(sql/raw "case when suoritus.kokotutkinto then 'Koko tutkinto' else ' ' end") :kokotutkinto]
+                      [:suorittaja.etunimi :suorittaja_etunimi]
+                      [:suorittaja.sukunimi :suorittaja_sukunimi]
+                      [:suorittaja.syntymapvm :suorittaja_syntymapvm]
+                      [:nayttotutkinto.nimi_fi :tutkinto_nimi_fi]
+                      [:nayttotutkinto.nimi_sv :tutkinto_nimi_sv]
+                      :nayttotutkinto.tutkintotunnus
+                      [:suoritettava-tutkinto.nimi_fi :suoritettavatutkinto_nimi_fi]
+                      [:suoritettava-tutkinto.nimi_sv :suoritettavatutkinto_nimi_sv]
+                      [:suoritettava-tutkinto.tutkintotunnus :suoritettavatutkinto_tutkintotunnus]
+                      [:tutkintoversio.peruste :tutkinto_peruste]
+                      [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi]
+                      [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                      :koulutustoimija.ytunnus
+                      [:tutkinnonosa.osatunnus :osatunnus]
+                      [:tutkinnonosa.nimi_sv :tutkinnonosa_nimi_sv]
+                      [:tutkinnonosa.nimi_fi :tutkinnonosa_nimi_fi]
+                      [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi]
+                      [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv]
+                      [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
+                      [:arvioija.etunimi :arvioija_etunimi]
+                      [:arvioija.sukunimi :arvioija_sukunimi]
+                      [(sql/raw "case arvioija.rooli when 'itsenainen' then 'itsenäinen' when 'tyonantaja' then 'työnantaja' when 'tyontekija' then 'työntekijä' else arvioija.rooli end")
+                       :arvioija_rooli])
 
-            ;; "hae-kaikki"-funkkarissa tässä: (sql/order :suorituskerta_id :DESC)  (sql/order :suoritus.suoritus_id :DESC)
+          #_(#(apply sql/fields %
+               [(sql/raw "case when suoritus.osaamisen_tunnustaminen is not null then ',tunnustamalla' else ' ' end") :tunnustaminen]
+               [(sql/raw "case when suoritus.todistus then 'Todistus' else ' ' end") :todistus]
+               [:suoritus.osaamisen_tunnustaminen :osaamisen_tunnustaminen]
+               [(sql/raw "case when suoritus.kokotutkinto then 'Koko tutkinto' else ' ' end") :kokotutkinto]
+               :nayttotutkinto.tutkintotunnus
+               [:tutkintoversio.peruste :tutkinto_peruste]
+               [:tutkintotoimikunta.nimi_fi :tutkintotoimikunta_nimi_fi]
+               [:tutkintotoimikunta.nimi_sv :tutkintotoimikunta_nimi_sv]
+               [:tutkintotoimikunta.diaarinumero :tutkintotoimikunta_diaarinumero]
+               [:arvioija.etunimi :arvioija_etunimi]
+               [:arvioija.sukunimi :arvioija_sukunimi]
+               [(sql/raw "case arvioija.rooli when 'itsenainen' then 'itsenäinen' when 'tyonantaja' then 'työnantaja' when 'tyontekija' then 'työntekijä' else arvioija.rooli end") :arvioija_rooli]
+               hae-kaikki-valitut-sql-kentat))
 
-            (sql/order :tutkintotoimikunta_nimi_fi :ASC)
-            (sql/order :suorittaja_sukunimi :ASC)
-            (sql/order :suorittaja_etunimi :ASC)
-            (sql/order :tutkinto_nimi_fi :ASC)
-            (sql/order :tutkinnonosa_nimi_fi :ASC)
-            (sql/order :arvioija_sukunimi :ASC)
-            (sql/order :arvioija_etunimi :ASC)
-            sql/exec)
-          results (->> results-sql
-                    (map #(assoc % :liittaminen (if (not (nil? (:liitetty_pvm %))) ",liittämällä" " "))  )
-                    (map #(assoc % :tavoitetutkinto (if (not (= (:suoritettavatutkinto_nimi_fi %) (:tutkinto_nimi_fi %))) (str "-- " (:suoritettavatutkinto_nimi_fi %)) " ")) ))
+          ;; "hae-kaikki"-funkkarissa tässä: (sql/order :suorituskerta_id :DESC)  (sql/order :suoritus.suoritus_id :DESC)
+          (sql/order :tutkintotoimikunta_nimi_fi :ASC)
+          (sql/order :suorittaja_sukunimi :ASC)
+          (sql/order :suorittaja_etunimi :ASC)
+          (sql/order :tutkinto_nimi_fi :ASC)
+          (sql/order :tutkinnonosa_nimi_fi :ASC)
+          (sql/order :arvioija_sukunimi :ASC)
+          (sql/order :arvioija_etunimi :ASC)
+          sql/exec)
 
-      rapsa (->> results
-                 (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
-                 (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :liitetty_pvm :liittaminen :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
-                                                 :jarjestamismuoto :opiskelijavuosi  :valmistava_koulutus :paikka :jarjestelyt
-                                                 :arvosana :tunnustaminen :todistus  :osaamisen_tunnustaminen  :kokotutkinto
-                                                 :ehdotusaika :osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv
-                                                 :arvioijat])
-                 (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste  :tavoitetutkinto :suoritettavatutkinto_nimi_fi :suoritettavatutkinto_nimi_sv :suoritettavatutkinto_tutkintotunnus
-                                             :tutkinnonosat])
-                 (erottele-lista :suorittajat [:suorittaja_etunimi :suorittaja_sukunimi :suorittaja_syntymapvm
-                                               :tutkinnot])
-                 (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv
-                                                    :suorittajat])
-                 )
-      ; kaikki yhteensä per koulutustoimija
-      koulutustoimija-tilasto (fn [koulutustoimija]
-                                (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat koulutustoimija)))))
-      k-t (fn [koulutustoimijat]
-            (map #(merge % (koulutustoimija-tilasto %)) koulutustoimijat))
-      tilastoitu (map #(update % :koulutustoimijat k-t) rapsa)
-      ]
-      ; kaikki yhteensä per toimikunta
-      (map #(merge % (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (mapcat :suorittajat (mapcat :koulutustoimijat tilastoitu)))))) tilastoitu)
-      )
+        results (->> results-sql
+                  (map #(assoc % :liittaminen (if (not (nil? (:liitetty_pvm %))) ",liittämällä" " "))  )
+                  (map #(assoc % :tavoitetutkinto (if (not (= (:suoritettavatutkinto_nimi_fi %) (:tutkinto_nimi_fi %))) (str "-- " (:suoritettavatutkinto_nimi_fi %)) " ")) ))
+
+        rapsa (->> results
+                (erottele-lista :arvioijat [:arvioija_etunimi :arvioija_sukunimi :arvioija_rooli])
+                (erottele-lista :tutkinnonosat [:suorituskerta_id :rahoitusmuoto :tila :hyvaksymisaika :liitetty_pvm :liittaminen
+                                                :suoritusaika_alku :suoritusaika_loppu :arviointikokouksen_pvm
+                                                :jarjestamismuoto :opiskelijavuosi  :valmistava_koulutus :paikka :jarjestelyt
+                                                :arvosana :tunnustaminen :todistus  :osaamisen_tunnustaminen  :kokotutkinto
+                                                :ehdotusaika :osatunnus :tutkinnonosa_nimi_fi :tutkinnonosa_nimi_sv
+                                                :arvioijat])
+                (erottele-lista :tutkinnot [:tutkintotunnus :tutkinto_nimi_fi :tutkinto_nimi_sv :tutkinto_peruste
+                                            :tavoitetutkinto :suoritettavatutkinto_nimi_fi :suoritettavatutkinto_nimi_sv :suoritettavatutkinto_tutkintotunnus
+                                            :tutkinnonosat])
+                (erottele-lista :suorittajat [:suorittaja_etunimi :suorittaja_sukunimi :suorittaja_syntymapvm
+                                              :tutkinnot])
+                (erottele-lista :koulutustoimijat [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv
+                                                   :suorittajat])
+                )
+        ; kaikki yhteensä per koulutustoimija
+        koulutustoimija-tilasto (fn [koulutustoimija]
+                                  (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (:suorittajat koulutustoimija)))))
+        k-t (fn [koulutustoimijat]
+              (map #(merge % (koulutustoimija-tilasto %)) koulutustoimijat))
+        tilastoitu (map #(update % :koulutustoimijat k-t) rapsa)
+        ]
+    ; kaikki yhteensä per toimikunta
+    (map #(merge % (laske-tilastot {} (mapcat :tutkinnonosat (mapcat :tutkinnot (mapcat :suorittajat (mapcat :koulutustoimijat tilastoitu)))))) tilastoitu)
+    )
   )
 
 

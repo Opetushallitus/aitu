@@ -48,9 +48,9 @@
   (unparse (formatter "dd.MM.yyyy" (org.joda.time.DateTimeZone/forID "Europe/Helsinki")) (clj-time.coerce/to-date-time locald)))
 
 (defn lokalisoi-arvosana [s]
-;  (if (= "hyvaksytty" s) (get-in (i18n/tekstit) [:arviointipaatokset :arvosana_hyvaksytty] s) s)  ;; TODO: Tämä ei saa jostain syystä *locale*:a, jolloin (i18n/tekstit) ei toimi.
-  (if (= "hyvaksytty" s) "Hyväksytty" s)
-  )
+  ;; TODO: Tämä ei saa jostain syystä *locale*:a, jolloin (i18n/tekstit) ei toimi.
+;  (if (= "hyvaksytty" s) (get-in (i18n/tekstit) [:arviointipaatokset :arvosana_hyvaksytty] s) s)
+  (if (= "hyvaksytty" s) "Hyväksytty" s))
 
 (defn map-update
   "Update key if the form is a map and key is mapped to non-nil value."

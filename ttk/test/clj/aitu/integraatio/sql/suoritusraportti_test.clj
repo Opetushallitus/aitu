@@ -14,23 +14,25 @@
 
 (ns aitu.integraatio.sql.suoritusraportti-test
   (:require [clojure.test :refer [deftest testing is are use-fixtures]]
-            [clojure.data]
             [korma.core :as sql]
+            [dk.ative.docjure.spreadsheet :refer [load-workbook]]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [aitu.rest-api.suoritus :as suoritus-api]
             [aitu.integraatio.sql.test-data-util :refer :all]
             [aitu.infra.suoritus-excel :refer [lue-excel!]]
-            [aitu.infra.suoritus-arkisto :as suoritus-arkisto]
-            [dk.ative.docjure.spreadsheet :refer [load-workbook]]
-            ))
+            [aitu.infra.suoritus-arkisto :as suoritus-arkisto]))
 
 (use-fixtures :each tietokanta-fixture)
 
-(defn localdate-coerce [raps]
-  (clojure.walk/postwalk #(if (= org.joda.time.LocalDate (type %)) (suoritus-api/localdate->str %) %) raps))
+(defn localdate-coerce [form]
+  (if (= org.joda.time.LocalDate (type form)) (suoritus-api/localdate->str form) form))
 
-(defn rip-id [raps]
-  (clojure.walk/postwalk #(if (map? %) (dissoc % :suorituskerta_id) %) raps))
+(defn rip-id [form]
+  (if (map? form) (dissoc form :suorituskerta_id) form))
+
+(defn ^:private paivita-raportti [yhteenveto-raportti]
+  (let [walk-fn (comp localdate-coerce rip-id suoritus-api/paivita-arvosana)]
+    (clojure.walk/postwalk walk-fn yhteenveto-raportti)))
 
 (defn paivita-suoritukset-toiselle-koulutustoimijalle! []
  (sql/exec-raw (str "update suorituskerta set koulutustoimija='KT1' where suorittaja= -2")))
@@ -40,22 +42,26 @@
         wb (load-workbook "test-resources/tutosat_monipuolinen.xlsx")
         ui-log (lue-excel! wb)  ; luodaan suorituksia
         _ (paivita-suoritukset-toiselle-koulutustoimijalle!)
-        rapsa-localized (localdate-coerce (rip-id (suoritus-arkisto/hae-yhteenveto-raportti {})))
-   ;     _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))
+        rapsa-localized (paivita-raportti (suoritus-arkisto/hae-yhteenveto-raportti {}))
+;        _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))
         oikea-tulos (read-string (slurp "test-resources/suoritusrapsa.edn" :encoding "UTF-8"))]
     (is (= rapsa-localized oikea-tulos))
-    (testing "yhteenvetoraportti, edelliset 5 minuuttia"
-      (let [rapsa-latest (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:edelliset-kayttaja "true"}})))]
-        (is (=  rapsa-latest oikea-tulos))))
-    (testing "yhteenvetoraportti, OR-ehto toimikunta ja suoritettava tutkinto"
-      (let [tuntematon-toimikunta (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau"}})))
-            molemmat-vaarin (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau" :suoritettavatutkinto "-200"}})))
-            tuloksia-or (localdate-coerce (rip-id  (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau" :suoritettavatutkinto "-20000"}})))
-            ]
-        (is (empty? tuntematon-toimikunta))
-        (is (empty? molemmat-vaarin))
-        (is (=  tuloksia-or oikea-tulos))))
-    ))
+
+   (testing "yhteenvetoraportti, edelliset 5 minuuttia"
+     (let [rapsa-latest (paivita-raportti (suoritus-arkisto/hae-yhteenveto-raportti {:params {:edelliset-kayttaja "true"}}))]
+       (is (=  rapsa-latest oikea-tulos))))
+
+   (testing "yhteenvetoraportti, OR-ehto toimikunta ja suoritettava tutkinto"
+     (let [tuntematon-toimikunta (paivita-raportti (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau"}}))
+           molemmat-vaarin (paivita-raportti (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau" :suoritettavatutkinto "-200"}}))
+           tuloksia-or (paivita-raportti (suoritus-arkisto/hae-yhteenveto-raportti {:params {:toimikunta "vuffmiau" :suoritettavatutkinto "-20000"}}))]
+       (is (empty? tuntematon-toimikunta))
+       (is (empty? molemmat-vaarin))
+       ;; Hakuehto "suoritettavatutkinto" ei enää toimi OR-ehtona "toimikunnan" kanssa.
+       (is (empty? tuloksia-or))
+;       (is (=  tuloksia-or oikea-tulos))
+       ))
+   ))
 
 (defn paivita-suorituksien-toimikunnat! []
  (sql/exec-raw (str "update suorituskerta set toimikunta='Gulo gulo', tutkinto='924601' where suorittaja=-2 and jarjestelyt='asfasfasfa'")))
