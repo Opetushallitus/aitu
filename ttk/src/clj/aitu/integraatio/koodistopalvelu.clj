@@ -185,10 +185,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn muutokset
   [uusi vanha]
   (into {}
-        (for [[avain [vanha-arvo uusi-arvo :as diff]] (muutos vanha uusi)]
+        (for [[avain [uusi-arvo vanha-arvo :as diff]] (diff-maps uusi vanha)
+              :when diff]
           [avain (cond
                    (or (nil? vanha-arvo) (nil? uusi-arvo)) diff
-                   (map? uusi-arvo) (muutos vanha-arvo uusi-arvo)
+                   (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
                    :else diff)])))
 
 (def ^:private tutkinnon-kentat
