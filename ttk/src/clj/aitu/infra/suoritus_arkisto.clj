@@ -90,9 +90,14 @@
     (sql/join :left suoritettava-tutkinto (= :suoritettava-tutkinto.tutkintotunnus :suoritettava-versio.tutkintotunnus))
     (sql/join :koulutustoimija (= :koulutustoimija.ytunnus :suorituskerta.koulutustoimija))
     (sql/join :left :tutkintotoimikunta {:tutkintotoimikunta.tkunta :suorituskerta.toimikunta})
+    ))
+
+(defn ^:private add-arvioija-joins [query]
+  (-> query
     (sql/join :left :suorituskerta_arvioija (= :suorituskerta_arvioija.suorituskerta_id :suorituskerta_id))
     (sql/join :left :arvioija (= :arvioija.arvioija_id :suorituskerta_arvioija.arvioija_id))
     ))
+
 
 (defn ^:private add-toimikunta-where-ehto [query toimikunta]
   (let [where-fn (cond
@@ -105,26 +110,6 @@
                                                                              (sql/fields :tutkintotunnus)
                                                                              (sql/where {:toimikunta toimikunta}))]}))]
     (if (fn? where-fn) (where-fn query) query)))
-
-#_(defn ^:private add-toimikunta-plus-suoritettavatutkinto-where-ehto [query toimikunta suoritettavatutkinto]
-   (let [toimikunta-query (cond
-                            ;; Toimikunta-hakuehtoa ei ole annettu
-                            (s/blank? toimikunta)                              nil
-                            ;; Toimikunta ei ole asetettu suoritukselle
-                            (nil? (toimikunta-valinta->toimikunta toimikunta)) {:suorituskerta.toimikunta nil}
-                           ;; suoritus on tehty sellaisesta tutkinnonosasta, joka kuuluu tutkintoon, joka kuuluu valitun toimikunnan toimialaan
-                            :else                                              {:nayttotutkinto.tutkintotunnus [in (sql/subselect :toimikuntien_tutkinnot
-                                                                                                                     (sql/fields :tutkintotunnus)
-                                                                                                                    (sql/where {:toimikunta toimikunta}))]})
-         suoritettavatutkinto-query (when (not (s/blank? suoritettavatutkinto))
-                                      {:suorituskerta.tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)})
-         where-fn (cond
-                    (and
-                      (not (s/blank? toimikunta))
-                      (not (s/blank? suoritettavatutkinto))) #(sql/where % (or toimikunta-query suoritettavatutkinto-query))             ;; TODO: Varmista, että tämä "or" on nimenomaan Korman "or". Testi tälle!
-                    toimikunta-query                         #(sql/where % toimikunta-query)
-                   suoritettavatutkinto-query               #(sql/where % suoritettavatutkinto-query))]
-     (if (fn? where-fn) (where-fn query) query)))
 
 (defn ^:private hae-kaikki-where-ehdot [query
                                    luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu
@@ -152,7 +137,6 @@
       (seq toimikunta) (add-toimikunta-where-ehto toimikunta)
       (seq suoritettavatutkinto) (sql/where {:suorituskerta.tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)})
       )
-;    (add-toimikunta-plus-suoritettavatutkinto-where-ehto toimikunta suoritettavatutkinto)
     ))
 
 #_(def ^:private hae-kaikki-valitut-sql-kentat
@@ -269,6 +253,7 @@
         (->
           (sql/select* suorituskerta)
           add-joins
+          add-arvioija-joins
 
           (hae-kaikki-where-ehdot
             luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu
@@ -339,7 +324,7 @@
           (sql/order :arvioija_sukunimi :ASC)
           (sql/order :arvioija_etunimi :ASC)
           sql/exec)
-
+                
         results (->> results-sql
                   (map #(assoc % :liittaminen (if (not (nil? (:liitetty_pvm %))) ",liittämällä" " "))  )
                   (map #(assoc % :tavoitetutkinto (if (not (= (:suoritettavatutkinto_nimi_fi %) (:tutkinto_nimi_fi %))) (str "-- " (:suoritettavatutkinto_nimi_fi %)) " ")) ))
