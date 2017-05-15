@@ -13,16 +13,16 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.integraatio.organisaatiopalvelu
-  (:require [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
+  (:require [clojure.tools.logging :as log]
+            [clj-time.core :as time]
+            [clj-time.coerce :as time-coerce]
+            [korma.db :as db]
+            [oph.common.util.util :refer [get-json-from-url map-by some-value parse-ymd muutos]]
+            [aitu.infra.koulutustoimija-arkisto :as koulutustoimija-arkisto]
             [aitu.infra.jarjesto-arkisto :as jarjesto-arkisto]
             [aitu.infra.oppilaitos-arkisto :as oppilaitos-arkisto]
             [aitu.infra.organisaatiomuutos-arkisto :as organisaatiomuutos-arkisto]
-            [aitu.infra.organisaatiopalvelu-arkisto :as organisaatiopalvelu-arkisto]
-            [clj-time.core :as time]
-            [clj-time.coerce :as time-coerce]
-            [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value parse-ymd muutos]]
-            [clojure.tools.logging :as log]
-            [korma.db :as db]))
+            [aitu.infra.organisaatiopalvelu-arkisto :as organisaatiopalvelu-arkisto]))
 
 (defn halutut-kentat [koodi]
   (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid :lakkautusPvm]))

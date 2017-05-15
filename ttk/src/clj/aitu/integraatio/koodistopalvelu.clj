@@ -14,11 +14,11 @@
 
 (ns aitu.integraatio.koodistopalvelu
   (:require [clj-time.format :as time]
+            [clojure.set :refer [intersection difference rename-keys]]
+            [oph.common.util.util :refer :all]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.koulutusala-arkisto :as koulutusala-arkisto]
             [aitu.infra.opintoala-arkisto :as opintoala-arkisto]
-            [clojure.set :refer [intersection difference rename-keys]]
-            [oph.common.util.util :refer :all]
             [aitu.util :refer :all]))
 
 ;; Tässä nimiavaruudessa viitataan "koodi"-sanalla koodistopalvelun palauttamaan tietorakenteeseen.
@@ -185,12 +185,10 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn muutokset
   [uusi vanha]
   (into {}
-        (for [[avain [uusi-arvo vanha-arvo :as diff]] (diff-maps uusi vanha)
-              :when diff]
+        (for [[avain [vanha-arvo uusi-arvo :as diff]] (muutos vanha uusi)]
           [avain (cond
-                   (nil? uusi-arvo) diff
-                   (nil? vanha-arvo) diff
-                   (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
+                   (or (nil? vanha-arvo) (nil? uusi-arvo)) diff
+                   (map? uusi-arvo) (muutos vanha-arvo uusi-arvo)
                    :else diff)])))
 
 (def ^:private tutkinnon-kentat
