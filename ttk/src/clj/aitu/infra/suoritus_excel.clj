@@ -316,7 +316,10 @@
   ([sheet ui-log] (luo-arvioijat! sheet ui-log 0 1)))
 
 (defn  nilstr [str]
-  (if (empty? str) nil str)) 
+  (if (empty? str) nil str))
+
+(defn niltrimstr [str]
+  (if (empty? str) nil (clojure.string/trim str)))
 
 (defn ^:private map-opiskelijat! [sheet]
   (let [suorittajat (->> (suorittaja-arkisto/hae-kaikki)
@@ -350,7 +353,7 @@
         loppu (last osat)
         oid-hetu (clojure.string/split (.substring loppu 0 (- (.length loppu) 1)) #"\,")
         oid (nilstr (first oid-hetu))
-        hetu (when (> (count oid-hetu) 1) (nilstr (last oid-hetu)))]
+        hetu (when (> (count oid-hetu) 1) (niltrimstr (last oid-hetu)))]
     {:nimi (clojure.string/trim (first osat))
      :oid oid
      :hetu hetu}))
@@ -414,7 +417,7 @@
                                            id (get-cell-str opiskelija 3)]
                                        (when (not (empty? sukunimi))
                                          (let [oid (nilstr (get-cell-str opiskelija 4))
-                                               hetu (nilstr (get-cell-str opiskelija 5))
+                                               hetu (niltrimstr (get-cell-str opiskelija 5))
                                                opiskelija {:etunimi          etunimi
                                                            :sukunimi         sukunimi
                                                            :hetu             hetu

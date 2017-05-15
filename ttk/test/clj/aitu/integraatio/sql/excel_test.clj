@@ -82,7 +82,8 @@
 (deftest ^:integraatio parse-opiskelija-test
   (is (= {:nimi "a b", :oid nil, :hetu nil} (parse-opiskelija "a b ()")))
   (is (= {:nimi "a b", :oid "d", :hetu nil} (parse-opiskelija "a b (d)")))
-  (is (= {:nimi "a b", :oid "d", :hetu "1234-x"} (parse-opiskelija "a b (d,1234-x)"))))
+  (is (= {:nimi "a b", :oid "d", :hetu "1234-x"} (parse-opiskelija "a b (d,1234-x)")))
+  (is (= {:nimi "a b", :oid "d", :hetu "1234-x"} (parse-opiskelija "a b (d, 1234-x  )"))))
 
 (deftest ^:integraatio paivita-opiskelija-test
   (let [ui-log (atom [])
