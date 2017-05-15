@@ -74,7 +74,7 @@
 
 (defroutes raportti-reitit
   (GET "/suoritusraportti" params
-    :kayttooikeus :raportti
+    :kayttooikeus :arviointipaatos
     (let [footer-string (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti-footer.mustache") :encoding "UTF-8")
           data-string   (slurp (io/resource "pdf-sisalto/mustache/suoritusraportti.mustache") :encoding "UTF-8")
           data {:teksti (stencil/render-string data-string {:toimikunnat (paivita-raportti (arkisto/hae-yhteenveto-raportti params))

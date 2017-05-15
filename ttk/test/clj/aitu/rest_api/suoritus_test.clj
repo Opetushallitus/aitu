@@ -29,7 +29,7 @@
    :liitetty_pvm nil
    :tutkintoversio_suoritettava -20000
    :tutkintoversio_id -20000
-   :arvioijat [{:arvioija_id -1}]
+   :arvioijat [{:arvioija_id -1} {:arvioija_id -2}]
    :koulutustoimija "0208430-8"
    :valmistava_koulutus true
    :paikka "Yöttäjän harjoitusalue"
@@ -112,7 +112,14 @@
                   :etunimi "Väinö"
                   :sukunimi "Väinämöinen"
                   :rooli "opettaja"
-                  :nayttotutkintomestari false}]}))
+                  :nayttotutkintomestari false}
+                 {:arvioija_id -2
+                  :etunimi "Seppo"
+                  :sukunimi "Ilmarinen"
+                  :rooli "itsenainen"
+                  :nayttotutkintomestari true
+                  }
+                 ]}))
 
 (def ^:private suoritus-result-tunnustaminen
   (merge suoritus-result
@@ -214,7 +221,7 @@
               suorituslista-resp (body-json (:response suorituksia))
               ei-suorituksia (mock-request s "/api/suoritus" :get (assoc haku-map :tutkinto "-10000"))]
           (is (= '() (body-json (:response ei-suorituksia))))
-          (is (= (count (list suorituslista-result)) 1))
+          (is (= (count suorituslista-resp) 1))
           ))
       suoritus-data)))
 
