@@ -31,4 +31,4 @@
                                            :keskusjarjestotieto keskusjarjestotieto
                                            :keskusjarjestoid keskusjarjestoid})]
         {:status 200
-         :body (cheshire/generate-string uusi-jarjesto)}))))
+         :body (cheshire/generate-string uusi-jarjesto {:escape-non-ascii true})}))))

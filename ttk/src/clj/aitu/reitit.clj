@@ -146,7 +146,7 @@
                                              :logout-url   (str (-> asetukset :cas-auth-server :url) "/logout")
                                              :ominaisuus   (:ominaisuus asetukset)
                                              :i18n         (i18n/tekstit)
-                                             :i18n-json    (json/generate-string (i18n/tekstit))
+                                             :i18n-json    (json/generate-string (i18n/tekstit) {:escape-non-ascii true})
                                              :yllapitaja   yllapitaja?})
          :status  200
          :headers {"Content-Type" "text/html"

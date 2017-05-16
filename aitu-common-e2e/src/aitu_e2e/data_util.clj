@@ -237,7 +237,7 @@
                  "Cookie" "XSRF-TOKEN=e2e-xsrf-token"
                  "X-XSRF-TOKEN" "e2e-xsrf-token"}
        :throw-entire-message true
-       :body (json/generate-string entity)})))
+       :body (json/generate-string entity {:escape-non-ascii true})})))
 
 (defn on-olemassa
   [entityt url-fn]
