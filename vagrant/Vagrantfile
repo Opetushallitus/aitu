@@ -12,10 +12,13 @@ Vagrant.configure("2") do |config|
     }
   end
 
+  vmbox = "CentOS-6.5-x86_64-v20140311.box"
+  vmbox_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
+  
   # Kehitystyön tietokantapalvelin
   config.vm.define "db" do |db|
-    db.vm.box = "CentOS-6.5-x86_64-v20140311.box"
-    db.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
+    db.vm.box = vmbox
+    db.vm.box_url = vmbox_url
 
     db.vm.synced_folder "../env", "/env"
     if File.directory?("../../oph-konversio")
@@ -30,8 +33,8 @@ Vagrant.configure("2") do |config|
 
   # Uuden AITU:n e2e-testien ajamiseen
   config.vm.define "aitu" do |aitu|
-    aitu.vm.box = "CentOS-6.5-x86_64-v20140311.box"
-    aitu.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
+    aitu.vm.box = vmbox
+    aitu.vm.box_url = vmbox_url
 
     aitu.vm.synced_folder "../env", "/env"
     aitu.vm.provision "shell", inline: "cd /env && ./app-server.sh '192.168.50.51' 'http://192.168.50.52/aitu' ssh/dev_id_rsa.pub"
@@ -41,8 +44,8 @@ Vagrant.configure("2") do |config|
 
   # CAS- ja LDAP autentikaation palvelin kehitystyötä varten
   config.vm.define "auth" do |auth|
-    auth.vm.box = "CentOS-6.5-x86_64-v20140311.box"
-    auth.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
+    auth.vm.box = vmbox
+    auth.vm.box_url = vmbox_url
 
     auth.vm.provision "ansible" do |ansible|
       ansible.playbook = "../ansible/auth/auth.yml"

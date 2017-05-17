@@ -111,7 +111,7 @@
                               (.withMillisOfSecond 0))]
       (if (> 0 (compare cache-muokattu henkilot-muokattu))
         {:status 200
-         :body (cheshire/generate-string (map rajaa-henkilon-kentat henkilot))
+         :body (cheshire/generate-string (map rajaa-henkilon-kentat henkilot) {:escape-non-ascii true})
          :headers (get-cache-headers henkilot-muokattu)}
         {:status 304})))
 
