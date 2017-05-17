@@ -75,6 +75,7 @@
          #(let [s (peridot/session crout)
                 kirjaa (mock-json-post s "/api/suorittaja" (generate-escaped-json-string uusi-suorittaja-viallinen-hetu))
                 kirjaus-respo (:response kirjaa)
-                ]
+                oikea-tulos (cheshire/generate-string {:errors [:hetu "Viallinen henkilötunnus"]})]
             (is (= 400 (:status kirjaus-respo)))
-            (is (= "{\"errors\":[\"hetu\",\"Viallinen henkilötunnus\"]}" (:body kirjaus-respo)))))))))
+            (is (= oikea-tulos (:body kirjaus-respo)))
+            ))))))

@@ -41,14 +41,13 @@
         (is (= '({:nimi_fi "Testiopisto KT4", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT4", :sopimusten_maara 0}
                   {:nimi_fi "Testiopisto KT5", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT5", :sopimusten_maara 1})
                (body-json (:response tutkinto-ei-sopimuksia))))
-        
+
 
         (is (= 5 (count (body-json (:response kaikki)))))
-        (is (= '({:nimi_fi "bar bar", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1} 
+        (is (= '({:nimi_fi "bar bar", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1}
                   {:nimi_fi "Testiopisto BAR", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT2", :sopimusten_maara 1}
                   {:nimi_fi "Testiopisto KT5", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT5", :sopimusten_maara 1}
                   ;{:nimi_fi "Urheilupainotteinen koulutuskuntayhtymä", :nimi_sv nil, :ytunnus "1060155-5", :sopimusten_maara 1}
                   )
               (body-json (:response kaikki-voimassaolevat))))
          ))))
-  

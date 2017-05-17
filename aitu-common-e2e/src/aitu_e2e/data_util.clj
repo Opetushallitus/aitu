@@ -232,12 +232,12 @@
   [entityt url-fn metodi]
   (doseq [entity entityt]
     (metodi (aitu-url (url-fn entity))
-      {:headers {"Content-Type" "application/json"
+      {:headers {"Content-Type" "application/json; charset=utf-8"
                  "Accept-Language" "fi"
                  "Cookie" "XSRF-TOKEN=e2e-xsrf-token"
                  "X-XSRF-TOKEN" "e2e-xsrf-token"}
        :throw-entire-message true
-       :body (json/generate-string entity {:escape-non-ascii true})})))
+       :body (json/generate-string entity)})))
 
 (defn on-olemassa
   [entityt url-fn]

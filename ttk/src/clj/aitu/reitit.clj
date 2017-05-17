@@ -139,18 +139,18 @@
         (angular-template nimi asetukset))
       (GET "/" []
         :kayttooikeus :etusivu
-        {:body    (s/render-file "html/ttk" {:build-id     @build-id
+        {:status  200
+         :headers {"Content-Type" "text/html; charset=utf-8"
+                   "Set-cookie"   (aseta-csrf-token (-> asetukset :server :base-url service-path))}
+         :body    (s/render-file "html/ttk" {:build-id     @build-id
                                              :current-user (:kayttajan_nimi *current-user-authmap*)
                                              :impersonoitu (if *impersonoitu-oid* "true" "false")
                                              :base-url     (-> asetukset :server :base-url)
                                              :logout-url   (str (-> asetukset :cas-auth-server :url) "/logout")
                                              :ominaisuus   (:ominaisuus asetukset)
                                              :i18n         (i18n/tekstit)
-                                             :i18n-json    (json/generate-string (i18n/tekstit) {:escape-non-ascii true})
-                                             :yllapitaja   yllapitaja?})
-         :status  200
-         :headers {"Content-Type" "text/html"
-                   "Set-cookie"   (aseta-csrf-token (-> asetukset :server :base-url service-path))}})
+                                             :i18n-json    (json/generate-string (i18n/tekstit))
+                                             :yllapitaja   yllapitaja?})})
       (GET "/status" []
         :summary "Tietoa Aitun asetuksista palvelimella. Versionumerot yms. ongelmien selvittämistä varten."
         :kayttooikeus :status

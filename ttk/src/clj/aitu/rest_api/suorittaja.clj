@@ -26,18 +26,16 @@
 (defn hetu-virhevastaus
   []
   {:status 400
-   :headers {"Content-Type" "application/json"}
+   :headers {"Content-Type" "application/json; charset=utf-8"}
    :body (cheshire/generate-string
-           {:errors [:hetu "Viallinen henkilötunnus"]}
-           {:escape-non-ascii true})})
+           {:errors [:hetu "Viallinen henkilötunnus"]})})
 
 (defn hetu-kaytossa-virhevastaus
   []
   {:status 400
-   :headers {"Content-Type" "application/json"}
+   :headers {"Content-Type" "application/json; charset=utf-8"}
    :body (cheshire/generate-string
-           {:errors [:hetu "Henkilötunnus on toisella opiskelijalla käytössä."]}
-           {:escape-non-ascii true})})
+           {:errors [:hetu "Henkilötunnus on toisella opiskelijalla käytössä."]})})
 
 (defroutes reitit
   (GET "/:suorittajaid" [suorittajaid]
