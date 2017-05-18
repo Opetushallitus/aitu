@@ -31,4 +31,5 @@
                                            :keskusjarjestotieto keskusjarjestotieto
                                            :keskusjarjestoid keskusjarjestoid})]
         {:status 200
-         :body (cheshire/generate-string uusi-jarjesto {:escape-non-ascii true})}))))
+         :headers {"Content-Type" "application/json; charset=utf-8"}
+         :body (cheshire/generate-string uusi-jarjesto)}))))

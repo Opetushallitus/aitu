@@ -62,4 +62,5 @@
           (s/validate skeema/Henkilo henkilodto)
           (let [uusi-henkilo (arkisto/lisaa! henkilodto)]
             {:status 200
-             :body (cheshire/generate-string uusi-henkilo {:escape-non-ascii true})}))))))
+             :headers {"Content-Type" "application/json; charset=utf-8"}
+             :body (cheshire/generate-string uusi-henkilo)}))))))
