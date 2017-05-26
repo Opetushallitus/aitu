@@ -93,6 +93,4 @@
       (let [suorituskerrat (suoritus-arkisto/hae-kaikki {})]
         (is (= (count suorituskerrat) 5))
         ))
-        ))
     ))
-
