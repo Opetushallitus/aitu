@@ -355,6 +355,7 @@
   (let [opintoalat (sql/select opintoala
                      (sql/fields [:opintoala_tkkoodi :tunnus] [:selite_fi :nimi_fi] [:selite_sv :nimi_sv]))
         osaamisalat (sql/select osaamisala
+                      (sql/modifier "DISTINCT")
                       (sql/fields [:osaamisalatunnus :tunnus] :nimi_fi :nimi_sv))
         tutkinnonosat (sql/select tutkinnonosa
                         (sql/fields [:osatunnus :tunnus] :nimi_fi :nimi_sv))
