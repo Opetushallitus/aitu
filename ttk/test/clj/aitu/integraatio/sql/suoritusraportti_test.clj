@@ -43,7 +43,7 @@
         ui-log (lue-excel! wb)  ; luodaan suorituksia
         _ (paivita-suoritukset-toiselle-koulutustoimijalle!)
         rapsa-localized (paivita-raportti (suoritus-arkisto/hae-yhteenveto-raportti {}))
-;        _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))
+        _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))
         oikea-tulos (read-string (slurp "test-resources/suoritusrapsa.edn" :encoding "UTF-8"))]
     (is (= rapsa-localized oikea-tulos))
 
@@ -75,6 +75,7 @@
         ui-log (lue-excel! wb)  ; luodaan suorituksia
         _ (paivita-suorituksien-toimikunnat!)
         _ (lisaa-toimikunnan-tutkinto!)
+        hae-suorittajia-fn (fn [hakutermi] (suoritus-arkisto/hae-kaikki {:suorittaja hakutermi}))
         ]
 
     (testing "Toimikunta-hakuehtoon valittuna arvo"
@@ -93,6 +94,20 @@
       (let [suorituskerrat (suoritus-arkisto/hae-kaikki {})]
         (is (= (count suorituskerrat) 5))
         ))
+
+    (testing "Suorittaja-hakuterminä yksi yhtenäinen sana"
+      (let [suorituskerrat (hae-suorittajia-fn "Orvokki")]
+        (is (every? #(= "Orvokki" (:suorittaja_etunimi %)) suorituskerrat))
+        (is (= (count suorituskerrat) 3))
+        ))
+
+    (testing "Suorittaja-hakuterminä kaksi tai yli kaksi sanaa välilyönnillä erotettuna"
+      (let [suorituskerrat-2-termia (hae-suorittajia-fn "Orvokki Opiskelija")
+            suorituskerrat-2-termia-toisinpain (hae-suorittajia-fn "Opiskelija Orvokki")
+            suorituskerrat-yli-2-termia (hae-suorittajia-fn "Orvokki Opiskelija jepjep")]
+        (is (= 2 (count suorituskerrat-2-termia)))
+        (is (= suorituskerrat-2-termia suorituskerrat-2-termia-toisinpain))
+        (is (= suorituskerrat-2-termia suorituskerrat-yli-2-termia))
         ))
     ))
 
