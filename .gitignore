@@ -7,3 +7,4 @@ ansible/aitu_vagrant/salasanat/
 .idea/
 *.iml
 /ttk/resources/public/css/main.css.map
+*.orig

@@ -43,7 +43,7 @@
         ui-log (lue-excel! wb)  ; luodaan suorituksia
         _ (paivita-suoritukset-toiselle-koulutustoimijalle!)
         rapsa-localized (paivita-raportti (suoritus-arkisto/hae-yhteenveto-raportti {}))
-        _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))
+;        _    (spit "test-resources/suoritusrapsa.edn" (with-out-str (pr rapsa-localized)))
         oikea-tulos (read-string (slurp "test-resources/suoritusrapsa.edn" :encoding "UTF-8"))]
     (is (= rapsa-localized oikea-tulos))
 
