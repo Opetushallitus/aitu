@@ -105,13 +105,19 @@
 
 <h2>[[nayttotutkinnot]]
     <div class="list-controls">
-        <auth-toiminto auth-nappi sallitut-roolit="['PAIVITTAJA']" ng-show="salliMuokkaus()" oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" class="icon add-icon muokkaa-tutkintoja" ng-click="muokkaaTutkintoja()"></auth-toiminto>
+        <auth-toiminto auth-nappi sallitut-roolit="['PAIVITTAJA']"
+                       ng-show="salliMuokkaus()" ng-click="muokkaaTutkintoja()"
+                       oikeus="sopimustiedot_paivitys" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}"
+                       class="icon add-icon muokkaa-tutkintoja"></auth-toiminto>
     </div>
 </h2>
 
 <p ng-hide="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0">[[sopimuksella-ei-tutkintoja]]</p>
 <div class="accordion-container">
-  <div ng-show="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0" class="accordion" ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto" oletuksena-auki="{{muokkausTila}}" accordion>
+  <div ng-show="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0"
+       ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto"
+       ng-class="{'ei-voimassa': !sopimusJaTutkinto.tutkintoversio.voimassa}"
+       oletuksena-auki="{{muokkausTila}}" class="accordion" accordion>
     <div class="accordion-header e2e-tutkintoversio" id="tutkinto{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">
         {{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}} {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}} {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}} – {{sopimusJaTutkinto.tutkintoversio.peruste}}
         <button ng-show="salliMuokkaus()" class="icon edit-icon" style="float: right; margin: 0 5px 5px 0; " ng-click="muokkaa('tutkinto'+sopimusJaTutkinto.tutkintoversio.tutkintotunnus)"></button>
@@ -163,22 +169,26 @@
           <div ng-show="sopimusJaTutkinto.jarjestamissuunnitelmat.length == 0">-</div>
           <ul class="file-list">
             <li ng-repeat="suunnitelma in sopimusJaTutkinto.jarjestamissuunnitelmat">
-              <a href="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/suunnitelma/' + suunnitelma.jarjestamissuunnitelma_id}}" target="_blank">{{suunnitelma.jarjestamissuunnitelma_filename}}</a>
+              <a href="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/suunnitelma/' + suunnitelma.jarjestamissuunnitelma_id}}"
+                 target="_blank">{{suunnitelma.jarjestamissuunnitelma_filename}}</a>
               <button ng-show="muokkausTila" ng-click="poistaSuunnitelma()" class="icon remove-icon-small"></button>
             </li>
           </ul>
-          <file-upload ng-show="muokkausTila" api-metodi="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/suunnitelma/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}" upload-valmis="uploadValmis" liitetyyppi="jarjestamissuunnitelmat"></file-upload>
+          <file-upload ng-show="muokkausTila" upload-valmis="uploadValmis" liitetyyppi="jarjestamissuunnitelmat"
+                       api-metodi="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/suunnitelma/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}"></file-upload>
         </fieldset>
         <fieldset ng-controller="jarjestamissuunnitelmaController">
           <label>[[liitteet]]</label>
           <div ng-show="sopimusJaTutkinto.liitteet.length == 0">-</div>
           <ul class="file-list">
             <li ng-repeat="liite in sopimusJaTutkinto.liitteet">
-              <a href="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/liite/' + liite.sopimuksen_liite_id}}" target="_blank">{{liite.sopimuksen_liite_filename}}</a>
+              <a href="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/liite/' + liite.sopimuksen_liite_id}}"
+                 target="_blank">{{liite.sopimuksen_liite_filename}}</a>
               <button ng-show="muokkausTila" ng-click="poistaLiite()" class="icon remove-icon-small"></button>
             </li>
           </ul>
-          <file-upload ng-show="muokkausTila" api-metodi="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/liite/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}" upload-valmis="uploadValmis" liitetyyppi="liitteet"></file-upload>
+          <file-upload ng-show="muokkausTila" upload-valmis="uploadValmis" liitetyyppi="liitteet"
+                       api-metodi="{{'[[base-url]]/api/jarjestamissopimus/' + sopimus.jarjestamissopimusid + '/liite/' + sopimusJaTutkinto.sopimus_ja_tutkinto_id}}"></file-upload>
         </fieldset>
       </div>
       <div class="sopimus-tutkinnon-osat" ng-class="{'muokkaus' : muokkausTila}">
@@ -195,7 +205,8 @@
 </div>
 
 [[#i18n]]
-<tallenna formi-validi="sopimuksenMuokkausForm.$valid" disabloi-pyyntojen-ajaksi="['sopimuksen-luonti', 'sopimuksen-tietojen-muokkaus']" ng-hide="!muokkausTila" ng-click="tallenna()" teksti="!luontiTila ? '[[yleiset.tallenna]]' : '[[jarjestamissopimus.jatka-tutkintojen-lisaykseen]]'"></tallenna>
+<tallenna formi-validi="sopimuksenMuokkausForm.$valid" disabloi-pyyntojen-ajaksi="['sopimuksen-luonti', 'sopimuksen-tietojen-muokkaus']"
+          ng-hide="!muokkausTila" ng-click="tallenna()" teksti="!luontiTila ? '[[yleiset.tallenna]]' : '[[jarjestamissopimus.jatka-tutkintojen-lisaykseen]]'"></tallenna>
 <button ng-hide="!muokkausTila" ng-click="peruuta()">[[yleiset.peruuta]]</button>
 [[/i18n]]
 

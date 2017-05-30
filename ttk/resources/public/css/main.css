@@ -852,6 +852,11 @@ table.few-columns th:last-child {
   margin-bottom: 10px;
 }
 
+.ei-voimassa .accordion-header {
+  color: gray;
+  font-style: italic;
+}
+
 .accordion-header {
   background-color: #72c4e0;
   padding: 5px 0;

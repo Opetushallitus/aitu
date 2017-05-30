@@ -3,6 +3,11 @@
   margin-bottom: 10px;
 }
 
+.ei-voimassa .accordion-header {
+  color: $gray-color;
+  font-style: italic;
+}
+
 .accordion-header {
   @include icon-before(-31px, 5px){@include arrow-down-icon;};
   background-color: $lightest-primary;
