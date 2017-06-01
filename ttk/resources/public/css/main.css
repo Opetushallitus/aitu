@@ -852,7 +852,7 @@ table.few-columns th:last-child {
   margin-bottom: 10px;
 }
 
-.ei-voimassa .accordion-header {
+.accordion.ei-voimassa .accordion-header {
   color: gray;
   font-style: italic;
 }
