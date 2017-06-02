@@ -101,11 +101,11 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
         toimikuntaResource.save($scope.toimikunta, function(response) {
           crudLocation.naytaTiedot(response['diaarinumero'], '/toimikunta');
         });
-      }
+      };
       $scope.peruuta = function() {
         varmistaPoistuminen.kysyVarmistusPoistuttaessa();
         $location.path('/search-toimikunta');
-      }
+      };
     }])
 
   .controller('ToimikuntaController', ['$scope', '$routeParams', 'toimikuntaResource', 'ToimikuntaUtil', '$filter', 'crudLocation', '$window', 'kieli', 'pvm', '$http',
@@ -113,6 +113,8 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       $scope.toimikunta = toimikuntaResource.get({"diaarinumero": $routeParams.id});
       $scope.nykyisetJasenet = [];
       $scope.entisetJasenet = [];
+      $scope.naytaVanhatSopimukset = false;
+      $scope.naytaVanhatJasenyydet = false;
 
       $scope.salliMuokkaus = function() {
         return !$scope.muokkausTila && ($scope.toimikunta.voimassa !== false || $scope.toimikunta.vanhentunut === false);
@@ -142,9 +144,6 @@ angular.module('toimikunnat', ['ngRoute', 'services', 'resources', 'crud'])
       }
 
       $scope.$watchCollection('toimikunta', eritteleVoimassaolonMukaan);
-
-      $scope.naytaVanhatSopimukset = false;
-      $scope.naytaVanhatJasenyydet = false;
     }
   ])
 

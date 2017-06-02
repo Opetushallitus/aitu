@@ -4,16 +4,22 @@
   <h2>{{otsikko}}</h2>
   <table jarjestettava-taulukko="sopimukset" jarjestetty-data="sopimuksetJarjestetty">
     <thead>
-    <tr>
-      <th jarjestettava-sarake="sopimusnumero" oletus-jarjestely>[[sopimusnumero]]</th>
-      <th ng-show="naytaTutkinnot">[[tutkinnot]]</th>
-      <th ng-show="naytaPerusteSarake">[[tutkinnonperusteiden-diaarinumero]]</th>
-      <th jarjestettava-sarake="koulutustoimija.nimi" jarjestely-fn="orderByLokalisoitu" ng-hide="piilotaKoulutustoimijat">[[koulutustoimija]]</th>
-      <th jarjestettava-sarake="alkupvm" jarjestely-fn="orderByDate">[[voimassaolo]]</th>
-    </tr>
+      <tr>
+        <th jarjestettava-sarake="sopimusnumero" oletus-jarjestely>[[sopimusnumero]]</th>
+        <th ng-show="naytaTutkinnot">[[tutkinnot]]</th>
+        <th ng-show="naytaPerusteSarake">[[tutkinnonperusteiden-diaarinumero]]</th>
+        <th jarjestettava-sarake="koulutustoimija.nimi" jarjestely-fn="orderByLokalisoitu" ng-hide="piilotaKoulutustoimijat">[[koulutustoimija]]</th>
+        <th jarjestettava-sarake="alkupvm" jarjestely-fn="orderByDate">[[voimassaolo]]</th>
+      </tr>
     </thead>
     <tr ng-repeat="sopimus in sopimuksetJarjestetty">
-      <td><auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA', 'PAIVITTAJA']" oikeus="sopimustiedot_luku" konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}" href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot" class="e2e-sopimus-sopimusnumero">{{sopimus.sopimusnumero}}</auth-toiminto></td>
+      <td>
+        <auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA', 'PAIVITTAJA']" oikeus="sopimustiedot_luku"
+                       konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}"
+                       href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot" class="e2e-sopimus-sopimusnumero">
+            {{sopimus.sopimusnumero}}
+        </auth-toiminto>
+     </td>
       <td ng-show="naytaTutkinnot">
         <div class="sopimus-ja-tutkinto-rivi" ng-repeat="tutkinto in sopimus.tutkinnot">
           <a href="#/tutkinto/{{tutkinto.tutkintotunnus}}" class="e2e-sopimusjatutkinto-tutkintoversio-nimi">{{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a>

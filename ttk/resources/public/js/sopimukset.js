@@ -318,7 +318,7 @@
       return function(entityt, tutkinnonosatJarjestysnumerolla, reverse){
         return $filter('orderBy')(entityt, function(entity){
           var tutkinnonosaJaJarjestysnumero = _.find(tutkinnonosatJarjestysnumerolla, {osatunnus: entity.osatunnus});
-          return tutkinnonosaJaJarjestysnumero? parseInt(tutkinnonosaJaJarjestysnumero.jarjestysnumero) : 0;
+          return tutkinnonosaJaJarjestysnumero ? parseInt(tutkinnonosaJaJarjestysnumero.jarjestysnumero) : 0;
         }, reverse);
       };
     }])
@@ -326,7 +326,7 @@
     .filter('naytaJarjestysnumeroValitulleTutkinnonosalle', function(){
       return function(tutkinnonosa, tutkinnonosatJarjestysnumerolla) {
         var tutkinnonosaJaJarjestysnumero = _.find(tutkinnonosatJarjestysnumerolla, {osatunnus: tutkinnonosa.osatunnus});
-        return tutkinnonosaJaJarjestysnumero? tutkinnonosaJaJarjestysnumero.jarjestysnumero : '';
+        return tutkinnonosaJaJarjestysnumero ? tutkinnonosaJaJarjestysnumero.jarjestysnumero : '';
       };
     });
 })();

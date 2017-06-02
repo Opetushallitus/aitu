@@ -116,7 +116,7 @@
 <div class="accordion-container">
   <div ng-show="sopimus.sopimus_ja_tutkinto && sopimus.sopimus_ja_tutkinto.length > 0"
        ng-repeat="sopimusJaTutkinto in sopimus.sopimus_ja_tutkinto"
-       ng-class="{'ei-voimassa': !sopimusJaTutkinto.tutkintoversio.voimassa}"
+       ng-class="{'ei-voimassa': sopimusJaTutkinto.tutkintoversio.voimassa === false}"
        oletuksena-auki="{{muokkausTila}}" class="accordion" accordion>
     <div class="accordion-header e2e-tutkintoversio" id="tutkinto{{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}">
         {{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}} {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}} {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}} – {{sopimusJaTutkinto.tutkintoversio.peruste}}

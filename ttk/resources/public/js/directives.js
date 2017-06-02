@@ -49,7 +49,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         scope.i18n = i18n;
       }
     };
-  })  
+  })
   .directive('hakutulokset', function($parse, i18n){
     return {
       restrict: 'E',
@@ -471,9 +471,9 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
                                     "application/msword"];
           var file = this.files[0];
           if (! _.contains(allowed_mime_types, file.type)) {
-        	  alert("Tiedostotyyppi ei kelpaa: " + file.type);
+            alert("Tiedostotyyppi ei kelpaa: " + file.type);
           } else {
-        	  scope.$apply();
+            scope.$apply();
           }
         });
 
@@ -484,8 +484,8 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
 
 
         function reset() {
-        	scope.tiedostoValittu = false;
-        	el.find('form')[0].reset();
+          scope.tiedostoValittu = false;
+          el.find('form')[0].reset();
         }
       }
     };

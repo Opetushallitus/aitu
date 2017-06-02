@@ -24,10 +24,11 @@
 (def ^:private valittavat-kentat-perus [:tutkintoversio.peruste :nayttotutkinto.tutkintotunnus
                                         :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv])
 
-(def ^:private valittavat-kentat-laaja (concat valittavat-kentat-perus [:tutkintoversio.voimassa_alkupvm
-                                                                        :tutkintoversio.voimassa_loppupvm
-                                                                        :tutkintoversio.siirtymaajan_loppupvm
-                                                                        :sopimus_ja_tutkinto.sopimus_ja_tutkinto_id]))
+(def ^:private valittavat-kentat-laaja (concat valittavat-kentat-perus
+                                         [:tutkintoversio.voimassa_alkupvm
+                                          :tutkintoversio.voimassa_loppupvm
+                                          :tutkintoversio.siirtymaajan_loppupvm
+                                          :sopimus_ja_tutkinto.sopimus_ja_tutkinto_id]))
 
 (defn ^:private do-hae-jarjestamissopimuksen-tutkinnot
   [jarjestamissopimusid valittavat-kentat]
