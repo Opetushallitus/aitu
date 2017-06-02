@@ -157,7 +157,7 @@
                                        (s/optional-key :toimiala) s/Str}))
 
 (s/defschema UusiToimikunta (-> ToimikunnanTiedot
-                             (dissoc ToimikunnanTiedot :tkunta)
+                             (dissoc :tkunta)
                              (assoc (s/optional-key :tkunta) s/Str)))
 
 (s/defschema SisaltaaToimikunnanTiedot (assoc ToimikunnanTiedot s/Keyword s/Any))
