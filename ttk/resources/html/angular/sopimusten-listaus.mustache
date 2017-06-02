@@ -21,8 +21,10 @@
         </auth-toiminto>
      </td>
       <td ng-show="naytaTutkinnot">
-        <div class="sopimus-ja-tutkinto-rivi" ng-repeat="tutkinto in sopimus.tutkinnot">
-          <a href="#/tutkinto/{{tutkinto.tutkintotunnus}}" class="e2e-sopimusjatutkinto-tutkintoversio-nimi">{{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}}</a>
+        <div class="sopimus-ja-tutkinto-rivi" ng-repeat="tutkinto in sopimus.tutkinnot" ng-class="{'ei-voimassa': tutkinto.voimassa === false}">
+          <a href="#/tutkinto/{{tutkinto.tutkintotunnus}}" class="e2e-sopimusjatutkinto-tutkintoversio-nimi">
+            {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}} {{tutkintoEiVoimassa(tutkinto)}}
+          </a>
           <span class="perusteen-diaarinumero e2e-perusteen-diaarinumero">{{tutkinto.peruste}}</span>
         </div>
       </td>

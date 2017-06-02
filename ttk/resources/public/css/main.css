@@ -2035,6 +2035,11 @@ td .sopimus-ja-tutkinto-rivi span.perusteen-diaarinumero {
   text-align: left;
 }
 
+td .sopimus-ja-tutkinto-rivi.ei-voimassa a {
+  color: gray;
+  font-style: italic;
+}
+
 .sopimuksen-tutkinnon-vastuuhenkilon-muokkaus {
   border: 1px solid #b3b3b3;
   background-color: #e6e6e6;

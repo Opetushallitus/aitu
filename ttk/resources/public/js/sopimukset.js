@@ -152,6 +152,10 @@
           return ' (' + otsikko + ')';
         };
 
+        $scope.tutkintoEiVoimassa = function(tutkintoversio) {
+          return tutkintoversio.voimassa === false ? "("+i18n.yleiset['ei-voimassa']+")" : "";
+        };
+
         function siirryToimikunnanSivulle(toimikunta) {
           $location.path('/toimikunta/' + toimikunta + '/tiedot');
         }

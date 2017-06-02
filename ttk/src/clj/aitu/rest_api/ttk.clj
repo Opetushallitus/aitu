@@ -339,7 +339,7 @@
     :summary "Hakee toimikunnan diaarinumeron perusteella"
     :return ToimikuntaLaajatTiedot
     :kayttooikeus :toimikunta_katselu
-    (response-or-404 (toimikunta/taydenna-toimikunta (ttk-arkisto/hae diaarinumero))))  ;; Lähtökohta
+    (response-or-404 (toimikunta/taydenna-toimikunta (ttk-arkisto/hae diaarinumero))))
 
   (GET "/haku" [:as req]
     :summary "Hakee toimikunnat, joiden nimi sisältää annetun termin"

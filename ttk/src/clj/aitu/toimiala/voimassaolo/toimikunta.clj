@@ -13,13 +13,23 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.toimiala.voimassaolo.toimikunta
-  (:require [aitu.toimiala.voimassaolo.jarjestamissopimus :as sopimus-paivitys]
-            [aitu.toimiala.voimassaolo.saanto.toimikunta :as toimikunta]
-            [aitu.toimiala.voimassaolo.saanto.jasenyys :as jasenyys-saanto]))
+  (:require [aitu.toimiala.voimassaolo.saanto.toimikunta :as toimikunta]
+            [aitu.toimiala.voimassaolo.saanto.jasenyys :as jasenyys-saanto]
+            [aitu.toimiala.voimassaolo.saanto.tutkinto :as tutkinto-saanto]))
 
-(defn taydenna-toimikunnan-jarjestamissopimukset
+(defn ^:private taydenna-tutkintojen-voimassaolo
+  [tutkinnot]
+  (mapv
+    #(-> %
+       tutkinto-saanto/taydenna-tutkinnon-voimassaolo
+       (dissoc :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm :siirtymaaika_paattyy))
+    tutkinnot))
+
+(defn ^:private taydenna-toimikunnan-jarjestamissopimuksien-tutkintojen-voimassaolo
   [toimikunta]
-  (update-in toimikunta [:jarjestamissopimus] #(mapv sopimus-paivitys/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo %)))
+  (update-in toimikunta [:jarjestamissopimus]
+    (fn [jarjestamissopimukset]
+      (mapv #(update-in % [:tutkinnot] taydenna-tutkintojen-voimassaolo) jarjestamissopimukset))))
 
 (defn taydenna-jasenyyksien-voimassaolo
   [jasenyydet toimikunta-voimassa]
@@ -34,4 +44,6 @@
   [toimikunta]
   (some-> toimikunta
           toimikunta/taydenna-toimikunnan-voimassaolo
-          taydenna-toimikunnan-jasenyyksien-voimassaolo))
+          taydenna-toimikunnan-jasenyyksien-voimassaolo
+          taydenna-toimikunnan-jarjestamissopimuksien-tutkintojen-voimassaolo
+          ))

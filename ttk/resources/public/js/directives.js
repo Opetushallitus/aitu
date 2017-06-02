@@ -147,7 +147,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
       }
     };
   }])
-  .directive('sopimustenListaus', function(){
+  .directive('sopimustenListaus', function(i18n){
     return {
       restrict: 'E',
       replace: true,
@@ -159,7 +159,11 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         piilotaKoulutustoimijat : '='
       },
       templateUrl : 'template/sopimusten-listaus',
-      link: function(scope) {}
+      link: function(scope) {
+        scope.tutkintoEiVoimassa = function(tutkintoversio) {
+          return tutkintoversio.voimassa === false ? "("+i18n.yleiset['ei-voimassa']+")" : "";
+        };
+      }
     };
   })
   .directive('enumValikko', ['i18n', 'EnumResource', '$compile', function (i18n, EnumResource, $compile) {
