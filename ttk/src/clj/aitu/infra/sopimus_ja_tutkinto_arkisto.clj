@@ -31,12 +31,14 @@
 
 (defn ^:private do-hae-jarjestamissopimuksen-tutkinnot
   [jarjestamissopimusid valittavat-kentat]
-  (sql/select sopimus-ja-tutkinto
+  (-> (sql/select* sopimus-ja-tutkinto)
     (sql/with tutkintoversio
       (sql/with nayttotutkinto))
     (sql/where {:jarjestamissopimusid jarjestamissopimusid
                 :poistettu false})
-    (apply sql/fields valittavat-kentat)))
+    (#(apply sql/fields % valittavat-kentat))
+    sql/exec
+    ))
 
 (defn hae-jarjestamissopimuksen-tutkinnot-rajatut-tiedot
   [jarjestamissopimusid]
