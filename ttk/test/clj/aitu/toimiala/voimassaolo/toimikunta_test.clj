@@ -22,13 +22,29 @@
    (with-redefs [aitu.toimiala.voimassaolo.saanto.toimikunta/taydenna-toimikunnan-voimassaolo
                  (fn [toimikunta] (merge toimikunta
                                          {:toimikunta-taydennetty true}))
-                 aitu.toimiala.voimassaolo.jarjestamissopimus/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
-                 (fn [sopimus] (merge sopimus
-                                      {:sopimus-taydennetty true}))]
-     (let [toimikunta {}]
+                 aitu.toimiala.voimassaolo.saanto.jasenyys/taydenna-jasenyyden-voimassaolo
+                 (fn [jasenyys _] (merge jasenyys
+                                         {:jasenyys-taydennetty true}))
+                 aitu.toimiala.voimassaolo.saanto.tutkinto/taydenna-tutkinnon-voimassaolo
+                 (fn [tutkinto] (merge tutkinto
+                                       {:tutkinto-taydennetty true}))]
+     (let [toimikunta {:jasenyys [{} {}]
+                       :jarjestamissopimus [{:tutkinnot [{} {}]}
+                                            {:tutkinnot [{} {}]}]}
+           taydennetty-toimikunta (taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo toimikunta)]
        (testing
          "täydentää toimikunnan"
-         (is (true? (:toimikunta-taydennetty (taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo toimikunta))))))
+         (is (true? (:toimikunta-taydennetty taydennetty-toimikunta))))
+       (testing
+         "täydentää toimikunnan jasenyydet"
+         (is (every? #(true? (:jasenyys-taydennetty %)) (:jasenyys taydennetty-toimikunta))))
+       (testing
+         "täydentää toimikunnan sopimusten tutkinnot"
+         (is (every?
+               (fn [sopimus] (every?
+                               (fn [tutkinto] (true? (:tutkinto-taydennetty tutkinto)))
+                               (:tutkinnot sopimus)))
+               (:jarjestamissopimus taydennetty-toimikunta)))))
      (testing
        "ei muuta nil-arvoa"
        (is (nil? (taydenna-toimikunnan-ja-liittyvien-tietojen-voimassaolo nil)))))))

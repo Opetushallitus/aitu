@@ -45,5 +45,4 @@
   (some-> toimikunta
           toimikunta/taydenna-toimikunnan-voimassaolo
           taydenna-toimikunnan-jasenyyksien-voimassaolo
-          taydenna-toimikunnan-jarjestamissopimuksien-tutkintojen-voimassaolo
-          ))
+          taydenna-toimikunnan-jarjestamissopimuksien-tutkintojen-voimassaolo))
