@@ -49,7 +49,7 @@
     }])
 
     .config(function($routeProvider) {
-      var resolve = {resource : 'sopimusResource', config : controllerConfig, peruste: function() { return true; }};
+      var resolve = {resource : 'sopimusResource', config : controllerConfig};
 
       var luonninRiippuvuudet = {resource: 'sopimusResource', config: 'sopimuksenLuonninAsetukset'};
 
