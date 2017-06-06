@@ -54,7 +54,7 @@
       var luonninRiippuvuudet = {resource: 'sopimusResource', config: 'sopimuksenLuonninAsetukset'};
 
       $routeProvider.
-        when('/sopimus/:id/tiedot', {controller:'sopimuksenTiedotController', templateUrl: 'template/sopimus'}).
+        when('/sopimus/:id/tiedot', {controller:'sopimuksenTiedotController', resolve: resolve, templateUrl: 'template/sopimus'}).
         when('/sopimus/:id/muokkaa', {controller:'crudController', resolve: resolve, templateUrl: 'template/sopimus'}).
         when('/sopimus/uusi', {controller:'crudController', resolve: luonninRiippuvuudet, templateUrl: 'template/sopimus'}).
         when('/sopimus/:id/tutkinnot', {controller:'TutkintojenLisaysController', resolve : resolve,  templateUrl: 'template/tutkintojen-lisays'});
@@ -106,9 +106,9 @@
       });
     }])
 
-    .controller('sopimuksenTiedotController', ['$scope', '$routeParams', 'sopimusResource', 'crudLocation', '$location', '$anchorScroll', 'i18n',
-      function($scope, $routeParams, sopimusResource, crudLocation, $location, $anchorScroll, i18n){
-        $scope.sopimus = sopimusResource.get();
+    .controller('sopimuksenTiedotController', ['$scope', '$routeParams', '$filter', 'resource', 'config', 'crudLocation', '$location', '$anchorScroll', 'i18n',
+      function($scope, $routeParams, $filter, resource, config, crudLocation, $location, $anchorScroll, i18n){
+        $scope.sopimus = resource.get();
 
         $scope.salliMuokkaus = function() {
           return !$scope.muokkausTila;
@@ -120,7 +120,7 @@
 
         $scope.poista = function() {
           if(confirm(i18n.jarjestamissopimus['varmista-sopimuksen-poisto'])) {
-            sopimusResource.delete({jarjestamissopimusid : $routeParams.id }, function(){
+            resource.delete({jarjestamissopimusid : $routeParams.id }, function(){
               siirryToimikunnanSivulle($scope.sopimus.toimikunta.diaarinumero);
             });
           }
@@ -129,6 +129,7 @@
         $scope.muokkaaTutkintoja = function() {
           $location.path('/sopimus/' + $routeParams.id + '/tutkinnot');
         };
+
         $scope.siirryToimikunnanSivulle = siirryToimikunnanSivulle;
 
         $scope.sopimusJaTutkintoOtsikko = function(sopimusJaTutkinto) {
@@ -152,13 +153,31 @@
           return ' (' + otsikko + ')';
         };
 
+        function siirryToimikunnanSivulle(toimikunta) {
+          $location.path('/toimikunta/' + toimikunta + '/tiedot');
+        }
+
         $scope.tutkintoEiVoimassa = function(tutkintoversio) {
           return tutkintoversio.voimassa === false ? "("+i18n.yleiset['ei-voimassa']+")" : "";
         };
 
-        function siirryToimikunnanSivulle(toimikunta) {
-          $location.path('/toimikunta/' + toimikunta + '/tiedot');
+        function varmistaPoistaminen(tutkinto) {
+          var viesti = i18n.jarjestamissopimus['varmista-sopimuksen-tutkinnon-poisto'] + '\n\n' + $filter('lokalisoi')(null, tutkinto, 'nimi') + $scope.sopimusJaTutkintoOtsikko(tutkinto);
+          if (tutkinto.tutkintoversio.peruste) {
+            viesti += " - " + tutkinto.tutkintoversio.peruste;
+          }
+          return confirm(viesti);
         }
+
+        $scope.poistaTutkintoversio = function(sopimusJaTutkinto, clickEvent) {
+          clickEvent.stopPropagation();
+          if (varmistaPoistaminen(sopimusJaTutkinto)) {
+            _.remove($scope.sopimus[config.tutkinnotProperty], function(tutkinto) {
+              return tutkinto.sopimus_ja_tutkinto_id == sopimusJaTutkinto.sopimus_ja_tutkinto_id;
+            });
+            resource.tutkinnot($scope.sopimus); // muuttuneen sopimuksen tallennus
+          }
+        };
       }])
 
     .controller('jarjestamissuunnitelmaController', ['$scope', '$routeParams', 'jarjestamissuunnitelmaResource', 'i18n', function($scope, $routeParams, resource, i18n){

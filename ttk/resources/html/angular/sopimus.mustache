@@ -124,6 +124,8 @@
         {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}}
         <span ng-show="sopimusJaTutkinto.tutkintoversio.peruste">- {{sopimusJaTutkinto.tutkintoversio.peruste}}</span>
         {{tutkintoEiVoimassa(sopimusJaTutkinto.tutkintoversio)}}
+
+        <button ng-show="salliMuokkaus()" class="icon delete-icon" style="float: right; margin: 0 5px 5px 0; " ng-click="poistaTutkintoversio(sopimusJaTutkinto, $event)"></button>
         <button ng-show="salliMuokkaus()" class="icon edit-icon" style="float: right; margin: 0 5px 5px 0; " ng-click="muokkaa('tutkinto'+sopimusJaTutkinto.tutkintoversio.tutkintotunnus)"></button>
     </div>
     <div class="accordion-body">
