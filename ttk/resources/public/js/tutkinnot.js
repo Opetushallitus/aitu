@@ -199,7 +199,7 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       }
 
       function varmistaTallennus() {
-        var poistettavat = _.reject(tutkinnotAlussa, function(tutkinto){return _.find($scope.valitutTutkinnot, {tutkintotunnus : tutkinto.tutkintotunnus}); });
+        var poistettavat = _.reject(tutkinnotAlussa, function(tutkinto){return _.find($scope.valitutTutkinnot, {tutkintoversio_id : tutkinto.tutkintoversio_id}); });
         if(poistettavat.length > 0) {
           var viesti = i18n.tutkinnot['tutkintojen-poistamisen-varmistus'];
           var tutkinnot = _.reduce(poistettavat, function(viesti, tutkinto){ return viesti + $filter('lokalisoi')(null, tutkinto, 'nimi') + '\n';}, '');
