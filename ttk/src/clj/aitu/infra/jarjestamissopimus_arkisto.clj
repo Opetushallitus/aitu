@@ -51,6 +51,7 @@
 
 (defn ^:integration-api aseta-sopimuksen-voimassaolo!
   [jarjestamissopimusid voimassa]
+  ; TODO: update-unique
   (sql/update jarjestamissopimus
     (sql/set-fields {:voimassa voimassa})
     (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
@@ -62,23 +63,33 @@
   (doseq [{:keys [jarjestamissopimusid voimassa]} (hae-kaikki)]
     (aseta-sopimuksen-voimassaolo! jarjestamissopimusid voimassa)))
 
+(defn ^:interatio-api hae-perustiedot [jarjestamissopimusid]
+  (sql-util/select-unique jarjestamissopimus
+                          (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
+
 (defn ^:integration-api paivita-sopimuksen-voimassaolo!
   "Päivittää annetulla id:llä olevan sopimuksen voimassaolotiedon"
   [jarjestamissopimusid]
-  (let [tutkinnot (sql/select sopimus-ja-tutkinto
+  ; valitaan loppupvm ja alkupvm siten että ne ovat sopimuksen tiedoista ja tutkinto-liitoksista valittuina maksimi ja minimi
+  (let [sopimus (hae-perustiedot jarjestamissopimusid)
+        tutkinnot (sql/select sopimus-ja-tutkinto
                               (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
-        alkupvm (when-let [paivat (seq (keep :alkupvm tutkinnot))]
+        alkupvm (when-let [paivat (seq (keep :alkupvm (conj tutkinnot {:alkupvm (:alkupvm sopimus)})))]
                   (apply min-date paivat))
-        loppupvm (when (and (seq tutkinnot)
-                            (every? :loppupvm tutkinnot))
-                   (apply max-date (keep :loppupvm tutkinnot)))]
+        loppupvm (when-let [loppupaivat (seq (keep :loppupvm (conj tutkinnot {:loppupvm (:loppupvm sopimus)})))]
+                   (apply max-date loppupaivat))]
     (sql/update jarjestamissopimus
                 (sql/set-fields {:alkupvm alkupvm, :loppupvm loppupvm})
       (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
     (let [sopimus (voimassaolo-saanto/taydenna-sopimuksen-voimassaolo
                     (voimassaolo/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
-                      (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid)))]
+                      (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid)))]   
       (aseta-sopimuksen-voimassaolo! jarjestamissopimusid (:voimassa sopimus)))))
+
+(defn ^:integration-api paivita-sopimusten-voimassaolo2!
+  []
+  (doseq [{:keys [jarjestamissopimusid ]} (hae-kaikki)]
+    (paivita-sopimuksen-voimassaolo! jarjestamissopimusid )))
 
 (defn merkitse-sopimus-poistetuksi!
   "Asettaa sopimukselle poistettu -flagin"
