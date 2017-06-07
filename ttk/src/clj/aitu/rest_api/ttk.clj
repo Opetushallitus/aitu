@@ -15,7 +15,7 @@
 (ns aitu.rest-api.ttk
   (:require [schema.core :as sc]
             aitu.compojure-util
-            [aitu.infra.ttk-arkisto :as arkisto]
+            [aitu.infra.ttk-arkisto :as ttk-arkisto]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.paatos-arkisto :as paatos-arkisto]
             [aitu.rest-api.http-util :refer [pdf-response]]
@@ -38,7 +38,7 @@
 ; TODO: miksi some? milloin saa olla nil?
 (defn salli-toimikunnan-paivitys? [diaarinumero]
   (some->
-    (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero))
+    (toimikunta/taydenna-toimikunta (ttk-arkisto/hae diaarinumero))
     :vanhentunut
     not))
 
@@ -90,7 +90,7 @@
 
 (defn paivita-jasenyydet [diaarinumero jasenyydet]
   (doseq [jasenyys jasenyydet]
-    (arkisto/paivita-tai-poista-jasenyys! diaarinumero jasenyys))
+    (ttk-arkisto/paivita-tai-poista-jasenyys! diaarinumero jasenyys))
   {:status 200})
 
 (def toimikuntakenttien-jarjestys [:nimi_fi :nimi_sv :diaarinumero :tilikoodi :voimassa :kielisyys :sahkoposti])
@@ -165,7 +165,7 @@
 (defroutes raportti-reitit
   (GET "/tilastoraportti" [toimikausi]
     :kayttooikeus :raportti
-    (csv-download-response (arkisto/hae-tilastot-toimikunnista (Integer/parseInt toimikausi))
+    (csv-download-response (ttk-arkisto/hae-tilastot-toimikunnista (Integer/parseInt toimikausi))
                            "toimikunnat.csv"))
   (GET "/jasenraportti" [toimikausi rooli edustus jarjesto kieli yhteystiedot opintoala]
     :kayttooikeus :raportti
@@ -176,18 +176,18 @@
                      :kieli (->vector kieli)
                      :yhteystiedot (Boolean/parseBoolean yhteystiedot)
                      :opintoala (->vector opintoala)}]
-      (csv-download-response (muodosta-csv (arkisto/hae-jasenyydet-ehdoilla hakuehdot) jasenraporttikenttien-jarjestys)
+      (csv-download-response (muodosta-csv (ttk-arkisto/hae-jasenyydet-ehdoilla hakuehdot) jasenraporttikenttien-jarjestys)
                              "jasenet.csv")))
   (GET "/raportti" [toimikausi kieli opintoala]
     :kayttooikeus :raportti
     (let [hakuehdot {:toimikausi (Integer/parseInt toimikausi)
                      :kieli (->vector kieli)
                      :opintoala (->vector opintoala)}]
-      (csv-download-response (muodosta-csv (arkisto/hae-toimikuntaraportti hakuehdot) raporttikenttien-jarjestys)
+      (csv-download-response (muodosta-csv (ttk-arkisto/hae-toimikuntaraportti hakuehdot) raporttikenttien-jarjestys)
                              "toimikunnat.csv")))
   (GET "/csv" req
     :kayttooikeus :toimikunta_haku
-    (csv-download-response (muodosta-csv (arkisto/hae-ehdoilla (assoc (:params req) :avaimet toimikuntakenttien-jarjestys))
+    (csv-download-response (muodosta-csv (ttk-arkisto/hae-ehdoilla (assoc (:params req) :avaimet toimikuntakenttien-jarjestys))
                                          toimikuntakenttien-jarjestys)
                            "toimikunnat.csv"))
   (GET "/:tkunta/toimiala" [tkunta]
@@ -197,12 +197,12 @@
                            "toimiala.csv"))
   (GET "/:tkunta/jasenet" [tkunta]
     :kayttooikeus :toimikunta_haku
-    (csv-download-response (muodosta-csv (arkisto/hae-jasenet tkunta)
+    (csv-download-response (muodosta-csv (ttk-arkisto/hae-jasenet tkunta)
                                          jasenkenttien-jarjestys)
                            "jasenet.csv"))
   (GET "/:tkunta/aiemmat-jasenet" [tkunta]
     :kayttooikeus :toimikunta_haku
-    (csv-download-response (muodosta-csv (arkisto/hae-jasenet tkunta {:voimassa false})
+    (csv-download-response (muodosta-csv (ttk-arkisto/hae-jasenet tkunta {:voimassa false})
                                          jasenkenttien-jarjestys)
                            "aiemmat-jasenet.csv")))
 
@@ -210,7 +210,7 @@
   (PUT "/:diaarinumero/jasenet" [diaarinumero jasenet]
     :kayttooikeus :toimikuntajasen_yllapito
     (sallittu-jos (salli-toimikunnan-paivitys? diaarinumero)
-      (let [toimikunta (arkisto/hae diaarinumero)
+      (let [toimikunta (ttk-arkisto/hae diaarinumero)
             jasenyydet (map
                          (partial toimikunnan-jasenyys toimikunta)
                          jasenet)]
@@ -266,23 +266,23 @@
                                  [:toimikausi_loppu #(not (nil? %)) :pakollinen]
                                  [:kielisyys present? :pakollinen]]
                                 ((i18n/tekstit) :validointi)
-                                (arkisto/paivita! diaarinumero paivitettava)
+                                (ttk-arkisto/paivita! diaarinumero paivitettava)
                                 {:status 200})))))
 
   (POST "/" [tkunta diaarinumero nimi_fi nimi_sv tilikoodi toimiala toimikausi toimikausi_alku toimikausi_loppu kielisyys sahkoposti]
     :kayttooikeus :toimikunta_luonti
-    (arkisto/lisaa! (merge {:diaarinumero diaarinumero
-                            :nimi_fi nimi_fi
-                            :nimi_sv nimi_sv
-                            :tilikoodi tilikoodi
-                            :toimiala (or toimiala "Valtakunnallinen")
-                            :toimikausi_id toimikausi
-                            :kielisyys kielisyys
-                            :toimikausi_alku (parse-iso-date toimikausi_alku)
-                            :toimikausi_loppu (parse-iso-date toimikausi_loppu)
-                            :sahkoposti sahkoposti}
-                           (when tkunta
-                             {:tkunta tkunta})))
+    (ttk-arkisto/lisaa! (merge {:diaarinumero diaarinumero
+                                :nimi_fi nimi_fi
+                                :nimi_sv nimi_sv
+                                :tilikoodi tilikoodi
+                                :toimiala (or toimiala "Valtakunnallinen")
+                                :toimikausi_id toimikausi
+                                :kielisyys kielisyys
+                                :toimikausi_alku (parse-iso-date toimikausi_alku)
+                                :toimikausi_loppu (parse-iso-date toimikausi_loppu)
+                                :sahkoposti sahkoposti}
+                          (when tkunta
+                            {:tkunta tkunta})))
     {:status 200})
 
   (POST "/:diaarinumero/jasenet" [diaarinumero henkilo rooli alkupvm loppupvm edustus asiantuntijaksi vapaateksti_kokemus esittaja status]
@@ -292,7 +292,7 @@
             (= (:roolitunnus kayttajaoikeudet/*current-user-authmap*) "JARJESTO")
             (not= status "esitetty"))
         (throw (IllegalArgumentException. "JARJESTO-roolilla ei voi luoda jäsenyyttä muissa kuin esitetty-tilassa")))
-      (let [tutkintotoimikunta (arkisto/hae diaarinumero)
+      (let [tutkintotoimikunta (ttk-arkisto/hae diaarinumero)
             kayttaja-jarjesto (:jarjesto kayttajaoikeudet/*current-user-authmap*)
             jasen {:toimikunta (:tkunta tutkintotoimikunta)
                    :henkiloid (:henkiloid henkilo)
@@ -305,7 +305,7 @@
                    :esittaja (or kayttaja-jarjesto (:jarjesto esittaja))
                    :status status}
             jasen (into {} (remove (comp nil? second) jasen))
-            ex-jasenyydet (arkisto/hae-jasenyydet (:henkiloid jasen) (:tkunta tutkintotoimikunta))
+            ex-jasenyydet (ttk-arkisto/hae-jasenyydet (:henkiloid jasen) (:tkunta tutkintotoimikunta))
             entiset-jasenyydet (if (= status "esitetty") (filter #(= (:esittaja %) (:esittaja jasen)) ex-jasenyydet) ex-jasenyydet)]
         (validoi jasen
           (toimikunnan-jasenen-validaatiosaannot
@@ -313,7 +313,7 @@
             jasen
             entiset-jasenyydet)
           ((i18n/tekstit) :validointi)
-          (arkisto/lisaa-jasen! jasen)
+          (ttk-arkisto/lisaa-jasen! jasen)
           {:status 200}))))
   (POST "/:tkunta/tutkinnot" []
     :path-params [tkunta]
@@ -322,8 +322,8 @@
                   ; TODO tarpeettomia, pitäisi poistaa frontista
                   voimassa jasenyys muutettu_kayttaja nimi_fi toimikausi_loppu sahkoposti loppupvm nimi_sv kielisyys tkunta luotuaika vanhentunut diaarinumero luotu_kayttaja toimiala toimikausi_alku alkupvm tilikoodi muutettuaika jarjestamissopimus]
     :kayttooikeus [:toimikunta_paivitys tkunta]
-    (sallittu-jos (salli-toimikunnan-paivitys? (arkisto/hae-toimikunnan-diaarinumero tkunta))
-      (arkisto/paivita-tutkinnot! tkunta nayttotutkinto)
+    (sallittu-jos (salli-toimikunnan-paivitys? (ttk-arkisto/hae-toimikunnan-diaarinumero tkunta))
+      (ttk-arkisto/paivita-tutkinnot! tkunta nayttotutkinto)
       {:status 200})))
 
 (defroutes reitit
@@ -331,27 +331,27 @@
     :summary "Hakee toimikunnat, jotka ovat vastuussa tietystä tutkinnosta, opintoalasta, osaamisalasta tai tutkinnonosasta"
     :return [Toimikuntalista]
     :kayttooikeus :toimikunta_haku
-    (cachable-response req (arkisto/hae-ehdoilla {:tunnus tunnus
-                                                  :toimikausi toimikausi
-                                                  :avaimet [:tkunta :diaarinumero :nimi_fi :nimi_sv :kielisyys :tilikoodi :voimassa :toimikausi_alku :toimikausi_loppu]})))
+    (cachable-response req (ttk-arkisto/hae-ehdoilla {:tunnus tunnus
+                                                      :toimikausi toimikausi
+                                                      :avaimet [:tkunta :diaarinumero :nimi_fi :nimi_sv :kielisyys :tilikoodi :voimassa :toimikausi_alku :toimikausi_loppu]})))
 
   (GET ["/:diaarinumero" :diaarinumero #"[0-9%F]+"] [diaarinumero]
     :summary "Hakee toimikunnan diaarinumeron perusteella"
     :return ToimikuntaLaajatTiedot
     :kayttooikeus :toimikunta_katselu
-    (response-or-404 (toimikunta/taydenna-toimikunta (arkisto/hae diaarinumero))))
+    (response-or-404 (toimikunta/taydenna-toimikunta (ttk-arkisto/hae diaarinumero))))
 
   (GET "/haku" [:as req]
     :summary "Hakee toimikunnat, joiden nimi sisältää annetun termin"
     :query [params TermiParams]
     :return [ToimikunnanHakuTiedot]
     :kayttooikeus :toimikunta_haku
-    (cachable-response req (arkisto/hae-toimikaudet-termilla (:termi params) false)))
+    (cachable-response req (ttk-arkisto/hae-toimikaudet-termilla (:termi params) false)))
 
   (GET "/haku-uudet" [:as req]
     :summary "Hakee uusimman toimikauden toimikunnat, joiden nimi sisältää annetun termin"
     :query [params TermiParams]
     :return [ToimikunnanHakuTiedot]
     :kayttooikeus :toimikunta_haku
-    (cachable-response req (arkisto/hae-toimikaudet-termilla (:termi params) true)))
+    (cachable-response req (ttk-arkisto/hae-toimikaudet-termilla (:termi params) true)))
   private-reitit)

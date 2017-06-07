@@ -223,6 +223,13 @@
     (some-> jarjestamissopimus
       (assoc :tutkinnot sopimus-ja-tutkinto-rivit))))
 
+(defn ^:private liita-tutkinnot-sopimukseen-laajat-tiedot
+  [jarjestamissopimus]
+  (let [id (:jarjestamissopimusid jarjestamissopimus)
+        sopimus-ja-tutkinto-rivit (mapv :tutkintoversio (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimuksen-tutkinnot id))]
+    (some-> jarjestamissopimus
+      (assoc :tutkinnot sopimus-ja-tutkinto-rivit))))
+
 (defn ^:private liita-tutkinnot-ja-tutkinnonosat-sopimukseen
   [jarjestamissopimus]
   (let [id (:jarjestamissopimusid jarjestamissopimus)
@@ -330,7 +337,7 @@
   [toimikunta]
   (->> (sopimus-kaytava/hae-toimikunnan-sopimukset toimikunta)
     (mapv liita-perustiedot-sopimukseen)
-    (mapv liita-tutkinnot-sopimukseen-rajatut-tiedot)))
+    (mapv liita-tutkinnot-sopimukseen-laajat-tiedot)))
 
 (defn hae-oppilaitoksen-sopimukset
   "Hakee oppilaitoksen järjestämissopimukset ja liittää niihin tarvittavat tiedot"
@@ -345,11 +352,9 @@
    (mapv liita-tutkinnot-sopimukseen-rajatut-tiedot)))
 
 (defn uniikki-sopimusnumero? [sopimusnumero jarjestamissopimusid]
-  (-> (sql/select jarjestamissopimus
-        (sql/where {:sopimusnumero sopimusnumero
-                    :jarjestamissopimusid [not= jarjestamissopimusid]}))
-      (count)
-      (= 0)))
+  (zero? (count (sql/select jarjestamissopimus
+                  (sql/where {:sopimusnumero sopimusnumero
+                              :jarjestamissopimusid [not= jarjestamissopimusid]})))))
 
 (defn poista-tutkinnot-sopimukselta!
   "Poistaa tutkintoja järjestämissopimukselta asettamalla poistettu = true"

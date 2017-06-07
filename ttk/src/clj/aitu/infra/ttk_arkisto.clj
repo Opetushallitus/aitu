@@ -157,8 +157,7 @@
   "Hakee toimikunnan diaarinumeron perusteella"
   [diaarinumero]
   (let [toimikunta ; (sql-util/select-unique
-        (first (sql/select
-                       tutkintotoimikunta
+        (first (sql/select tutkintotoimikunta
                        (sql/fields :tkunta :diaarinumero :nimi_fi :nimi_sv :sahkoposti :kielisyys
                                    :tilikoodi :toimiala :toimikausi_alku :toimikausi_loppu
                                    :luotu_kayttaja :luotuaika :muutettu_kayttaja :muutettuaika)
@@ -206,13 +205,13 @@
   []
   (let [nykyinen-toimikausi (sql-util/select-unique toimikausi
                                                     (sql/where  {:toimikausi.voimassa true}))]
-        
+
     (for [toimikunta (sql/select
                         tutkintotoimikunta
-                      
+
                         (sql/with jasenyys
                           (sql/fields :alkupvm :loppupvm :rooli :edustus)
-                          (sql/where {:status "nimitetty"})                        
+                          (sql/where {:status "nimitetty"})
                           (sql/with henkilo
                             (sql/fields :etunimi :sukunimi :sahkoposti :aidinkieli
                                         :osoite :postinumero :postitoimipaikka

@@ -50,6 +50,10 @@ td .sopimus-ja-tutkinto-rivi {
     width: 100px;
     text-align: left;
   }
+  &.ei-voimassa a {
+    color: $gray-color;
+    font-style: italic;
+  }
 }
 
 .sopimuksen-tutkinnon-vastuuhenkilon-muokkaus {

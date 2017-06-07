@@ -132,11 +132,9 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
                                               '$routeParams',
                                               'i18n',
                                               'debounce',
-                                              'peruste',
-    function($scope, tutkintorakenneResource, resource, config, $filter, varmistaPoistuminen, $location, $routeParams, i18n, debounce, peruste){
+    function($scope, tutkintorakenneResource, resource, config, $filter, varmistaPoistuminen, $location, $routeParams, i18n, debounce){
       $scope.suodatettuTutkintorakenne = [];
       $scope.suodatus = false;
-      $scope.peruste = peruste;
       var tutkinnotAlussa = [];
       var entity = resource.get({}, function(r) {
         tutkinnotAlussa = _.map(r[config.tutkinnotProperty], function(tutkinto){return _.pick(tutkinto, ['tutkintotunnus', 'nimi_fi', 'nimi_sv', 'tutkintoversio_id', 'peruste']);});
@@ -158,12 +156,7 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       $scope.$watch('tutkintoHakuehto', debounce(hakuEhtoMuuttunut, 500));
 
       $scope.lisaa = function() {
-        var tutkinto;
-        if(peruste) {
-          tutkinto = _.find($scope.valitutTutkinnot, {tutkintoversio_id: this.tutkinto.tutkintoversio_id});
-        } else {
-          tutkinto = _.find($scope.valitutTutkinnot, {tutkintotunnus : this.tutkinto.tutkintotunnus });
-        }
+        var tutkinto = _.find($scope.valitutTutkinnot, {tutkintoversio_id: this.tutkinto.tutkintoversio_id});
         if(tutkinto === undefined) {
           $scope.valitutTutkinnot.push(this.tutkinto);
         }
@@ -172,11 +165,7 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       $scope.poista = function() {
         var poistettava = this.tutkinto;
         _.remove($scope.valitutTutkinnot, function(tutkinto) {
-          if(peruste) {
-            return tutkinto.tutkintoversio_id == poistettava.tutkintoversio_id;
-          } else {
-            return tutkinto.tutkintotunnus == poistettava.tutkintotunnus;
-          }
+          return tutkinto.tutkintoversio_id == poistettava.tutkintoversio_id;
         });
       };
 
@@ -190,11 +179,7 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       };
 
       $scope.valittu = function() {
-        if(peruste) {
-          return _.find($scope.valitutTutkinnot, {tutkintoversio_id: this.tutkinto.tutkintoversio_id}) !== undefined;
-        } else {
-          return _.find($scope.valitutTutkinnot, {tutkintotunnus : this.tutkinto.tutkintotunnus }) !== undefined;
-        }
+        return _.find($scope.valitutTutkinnot, {tutkintoversio_id: this.tutkinto.tutkintoversio_id}) !== undefined;
       };
 
       $scope.peruuta = function() {
@@ -204,7 +189,7 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       $scope.haeTutkintorakenne = haeTutkintorakenne;
 
       function haeTutkintorakenne() {
-        $scope.tutkintoRakenne = tutkintorakenneResource.query({peruste: peruste}, suodataTutkintorakenne);
+        $scope.tutkintoRakenne = tutkintorakenneResource.query({peruste: true}, suodataTutkintorakenne);
       }
 
       function suodataTutkintorakenne() {
@@ -214,7 +199,7 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       }
 
       function varmistaTallennus() {
-        var poistettavat = _.reject(tutkinnotAlussa, function(tutkinto){return _.find($scope.valitutTutkinnot, {tutkintotunnus : tutkinto.tutkintotunnus}); });
+        var poistettavat = _.reject(tutkinnotAlussa, function(tutkinto){return _.find($scope.valitutTutkinnot, {tutkintoversio_id : tutkinto.tutkintoversio_id}); });
         if(poistettavat.length > 0) {
           var viesti = i18n.tutkinnot['tutkintojen-poistamisen-varmistus'];
           var tutkinnot = _.reduce(poistettavat, function(viesti, tutkinto){ return viesti + $filter('lokalisoi')(null, tutkinto, 'nimi') + '\n';}, '');

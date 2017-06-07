@@ -33,8 +33,7 @@
   "Hakee järjestämissopimus-taulun rivin jarjestamissopimusid:n perusteella"
   [jarjestamissopimusid]
   (first
-    (sql/select
-      jarjestamissopimus
+    (sql/select jarjestamissopimus
       (jarjestamissopimuksen-kentat)
       (sql/where {:jarjestamissopimusid jarjestamissopimusid
                   :poistettu false}))))
@@ -43,8 +42,7 @@
   "Hakee toimikuntaan liittyvät järjestämissopimus-taulun rivit"
   [toimikunta]
   (vec
-    (sql/select
-     jarjestamissopimus
+    (sql/select jarjestamissopimus
      (sql/fields :jarjestamissopimusid :sopimusnumero :alkupvm :loppupvm :voimassa :koulutustoimija)
      (sql/where {:toimikunta toimikunta
                  :poistettu false}))))
@@ -53,8 +51,7 @@
   "Hakee oppilaitokseen liittyvät järjestämissopimus-taulun rivit"
   [oppilaitoskoodi]
   (vec
-    (sql/select
-      jarjestamissopimus
+    (sql/select jarjestamissopimus
       (jarjestamissopimuksen-rajatut-kentat)
       (sql/where {:tutkintotilaisuuksista_vastaava_oppilaitos oppilaitoskoodi
                   :poistettu false}))))
@@ -71,8 +68,7 @@
 (defn hae-sopimus-ja-tutkinto-rivin-jarjestamissuunnitelmat
   [sopimus-ja-tutkinto-id]
   (vec
-    (sql/select
-      jarjestamissuunnitelma
+    (sql/select jarjestamissuunnitelma
       (sql/fields :jarjestamissuunnitelma_id :jarjestamissuunnitelma_filename)
       (sql/where {:sopimus_ja_tutkinto sopimus-ja-tutkinto-id
                   :poistettu false}))))
@@ -80,8 +76,7 @@
 (defn hae-sopimus-ja-tutkinto-rivin-liitteet
   [sopimus-ja-tutkinto-id]
   (vec
-    (sql/select
-      sopimuksen-liite
+    (sql/select sopimuksen-liite
       (sql/fields :sopimuksen_liite_id :sopimuksen_liite_filename)
       (sql/where {:sopimus_ja_tutkinto sopimus-ja-tutkinto-id
                   :poistettu false}))))

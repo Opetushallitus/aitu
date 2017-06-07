@@ -98,6 +98,29 @@
     (sql/join :left :arvioija (= :arvioija.arvioija_id :suorituskerta_arvioija.arvioija_id))
     ))
 
+(defn ^:private add-suorittaja-where-ehto [query suorittaja]
+  (let [suorittaja-jaettu (when (not (s/blank? suorittaja))
+                            (take 2 (clojure.string/split suorittaja #" "))) ;; Jos yli kaksi hakutermiä välilyönnillä eroteltuina, jätetään loput huomiotta.
+        suorittaja-nimiosa-1 (first suorittaja-jaettu)
+        suorittaja-nimiosa-2 (second suorittaja-jaettu)]
+
+    (if suorittaja-jaettu
+      (cond-> query
+        ;; vain yksi "suorittaja"-hakutermi -> matchaa: hetu, oid, etunimi, sukunimi
+        (and suorittaja-nimiosa-1 (nil? suorittaja-nimiosa-2)) (sql/where (or
+                                                                            {:suorittaja.hetu suorittaja-nimiosa-1}
+                                                                            {:suorittaja.oid suorittaja-nimiosa-1}
+                                                                            {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}
+                                                                            {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}))
+        ;; kaksi "suorittaja"-hakutermi -> matchaa vain etu- ja sukunimiin. "george jansson" == "jansson george"
+        (and suorittaja-nimiosa-1 suorittaja-nimiosa-2) (sql/where (and
+                                                                     (or
+                                                                       {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}
+                                                                       {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja-nimiosa-2 "%")]})
+                                                                     (or
+                                                                       {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}
+                                                                       {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja-nimiosa-2 "%")]}))))
+      query)))
 
 (defn ^:private add-toimikunta-where-ehto [query toimikunta]
   (let [where-fn (cond
@@ -112,31 +135,24 @@
     (if (fn? where-fn) (where-fn query) query)))
 
 (defn ^:private hae-kaikki-where-ehdot [query
-                                   luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu
-                                   jarjestamismuoto koulutustoimija tutkinto tutkinnonosa
-                                   suoritettavatutkinto suorittaja suorittajaid toimikunta osaamisala tila]
-  (-> query
-    (cond->
-      (seq luotupvm_alku) (sql/where {:suorituskerta.luotuaika [>= (to-sql-date (parse-iso-date luotupvm_alku))]})
-      (seq luotupvm_loppu) (sql/where {:suorituskerta.luotuaika [<= (to-sql-date (parse-iso-date luotupvm_loppu))]})
-      (seq hyvaksymispvm_alku) (sql/where {:suorituskerta.hyvaksymisaika [>= (to-sql-date (parse-iso-date hyvaksymispvm_alku))]})
-      (seq hyvaksymispvm_loppu) (sql/where {:suorituskerta.hyvaksymisaika [<= (to-sql-date (parse-iso-date hyvaksymispvm_loppu))]})
-      (seq jarjestamismuoto) (sql/where {:suorituskerta.jarjestamismuoto jarjestamismuoto})
-      (seq koulutustoimija) (sql/where {:suorituskerta.koulutustoimija koulutustoimija})
-      (seq tila) (sql/where {:suorituskerta.tila tila})
-      (seq tutkinto) (sql/where {:suorituskerta.tutkintoversio_id (Integer/parseInt tutkinto)})
-      (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
-      (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
-      (seq suorittajaid) (sql/where {:suorittaja.suorittaja_id (Integer/parseInt suorittajaid)})
-      ;; TODO: Tarviiko olla "not blank", vai voiko olla (seq suorittaja)? Eli voiko sisältää white spaceja?
-      (not (s/blank? suorittaja)) (sql/where (or
-                                               {:suorittaja.hetu suorittaja}
-                                               {:suorittaja.oid suorittaja}
-                                               {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja "%")]}
-                                               {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja "%")]}))
-      (seq toimikunta) (add-toimikunta-where-ehto toimikunta)
-      (seq suoritettavatutkinto) (sql/where {:suorituskerta.tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)})
-      )
+                                        luotupvm_alku luotupvm_loppu hyvaksymispvm_alku hyvaksymispvm_loppu
+                                        jarjestamismuoto koulutustoimija tutkinto tutkinnonosa
+                                        suoritettavatutkinto suorittaja suorittajaid toimikunta osaamisala tila]
+  (cond-> query
+    (seq luotupvm_alku) (sql/where {:suorituskerta.luotuaika [>= (to-sql-date (parse-iso-date luotupvm_alku))]})
+    (seq luotupvm_loppu) (sql/where {:suorituskerta.luotuaika [<= (to-sql-date (parse-iso-date luotupvm_loppu))]})
+    (seq hyvaksymispvm_alku) (sql/where {:suorituskerta.hyvaksymisaika [>= (to-sql-date (parse-iso-date hyvaksymispvm_alku))]})
+    (seq hyvaksymispvm_loppu) (sql/where {:suorituskerta.hyvaksymisaika [<= (to-sql-date (parse-iso-date hyvaksymispvm_loppu))]})
+    (seq jarjestamismuoto) (sql/where {:suorituskerta.jarjestamismuoto jarjestamismuoto})
+    (seq koulutustoimija) (sql/where {:suorituskerta.koulutustoimija koulutustoimija})
+    (seq tila) (sql/where {:suorituskerta.tila tila})
+    (seq tutkinto) (sql/where {:suorituskerta.tutkintoversio_id (Integer/parseInt tutkinto)})
+    (seq tutkinnonosa) (sql/where {:tutkinnonosa.tutkinnonosa_id (Integer/parseInt tutkinnonosa)})
+    (seq osaamisala) (sql/where {:suoritus.osaamisala (Integer/parseInt osaamisala)})
+    (seq suorittajaid) (sql/where {:suorittaja.suorittaja_id (Integer/parseInt suorittajaid)})
+    (not (s/blank? suorittaja)) (add-suorittaja-where-ehto suorittaja)
+    (seq toimikunta) (add-toimikunta-where-ehto toimikunta)
+    (seq suoritettavatutkinto) (sql/where {:suorituskerta.tutkintoversio_suoritettava (Integer/parseInt suoritettavatutkinto)})
     ))
 
 #_(def ^:private hae-kaikki-valitut-sql-kentat
@@ -213,14 +229,14 @@
 
     ;; Alla olevat kentät puuttuvat "hae-yhteenveto-raportti"-versiosta.
     #_(#(apply sql/fields %
-      :tutkinto :tutkintoversio_id :tutkintoversio_suoritettava
-      :toimikunta :kouljarjestaja
-      :suorittaja
-       [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
-      [:osaamisala.nimi_fi :osaamisala_nimi_fi]
-      [:osaamisala.nimi_sv :osaamisala_nimi_sv]
-      [:osaamisala.osaamisalatunnus :osaamisala_tunnus]
-      hae-kaikki-valitut-sql-kentat))
+          :tutkinto :tutkintoversio_id :tutkintoversio_suoritettava
+            :toimikunta :kouljarjestaja
+            :suorittaja
+            [:suorittaja.suorittaja_id :suorittaja_suorittaja_id]
+            [:osaamisala.nimi_fi :osaamisala_nimi_fi]
+            [:osaamisala.nimi_sv :osaamisala_nimi_sv]
+            [:osaamisala.osaamisalatunnus :osaamisala_tunnus]
+            hae-kaikki-valitut-sql-kentat))
 
     (sql/order :suorituskerta_id :DESC)
     (sql/order :suoritus.suoritus_id :DESC)
@@ -324,7 +340,7 @@
           (sql/order :arvioija_sukunimi :ASC)
           (sql/order :arvioija_etunimi :ASC)
           sql/exec)
-                
+
         results (->> results-sql
                   (map #(assoc % :liittaminen (if (not (nil? (:liitetty_pvm %))) ",liittämällä" " "))  )
                   (map #(assoc % :tavoitetutkinto (if (not (= (:suoritettavatutkinto_nimi_fi %) (:tutkinto_nimi_fi %))) (str "-- " (:suoritettavatutkinto_nimi_fi %)) " ")) ))

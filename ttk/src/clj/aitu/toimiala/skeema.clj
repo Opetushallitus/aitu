@@ -128,7 +128,9 @@
 (s/defschema TutkintoversioLinkki {:tutkintotunnus s/Str
                                    :nimi_fi s/Str
                                    :nimi_sv (s/maybe s/Str)
-                                   :peruste (s/maybe s/Str)})
+                                   :peruste (s/maybe s/Str)
+                                   (s/optional-key :voimassa) Boolean
+                                   })
 
 (s/defschema Tutkintolinkki {:tutkintotunnus s/Str
                              (s/optional-key :opintoala_nimi_fi) s/Str
@@ -157,7 +159,7 @@
                                        (s/optional-key :toimiala) s/Str}))
 
 (s/defschema UusiToimikunta (-> ToimikunnanTiedot
-                             (dissoc ToimikunnanTiedot :tkunta)
+                             (dissoc :tkunta)
                              (assoc (s/optional-key :tkunta) s/Str)))
 
 (s/defschema SisaltaaToimikunnanTiedot (assoc ToimikunnanTiedot s/Keyword s/Any))
@@ -170,7 +172,7 @@
                                       :tutkinnot [TutkintoversioLinkki]})
 
 (s/defschema JarjestamissopimusJaKoulutustoimija (assoc JarjestamissopimusLista
-                                                        :koulutustoimija KoulutustoimijaLinkki))
+                                                   :koulutustoimija KoulutustoimijaLinkki))
 
 (s/defschema ToimikuntaLaajatTiedot (merge ToimikunnanTiedot
                                            AuditTiedotJaKayttajat

@@ -1,6 +1,11 @@
 .accordion {
   border: 1px solid $gray-color;
   margin-bottom: 10px;
+
+  &.ei-voimassa .accordion-header {
+    color: $gray-color;
+    font-style: italic;
+  }
 }
 
 .accordion-header {
