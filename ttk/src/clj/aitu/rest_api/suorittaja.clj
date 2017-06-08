@@ -17,7 +17,7 @@
             [cheshire.core :as cheshire]
             [schema.core :as s]
             [clojure.string :as str]
-            [oph.common.util.http-util :refer [response-or-404 luo-validoinnin-virhevastaus]]
+            [oph.common.util.http-util :refer [response-or-404 response-nocache-strict luo-validoinnin-virhevastaus]]
             [sade.validators :as sade-validators]
             [aitu.compojure-util :refer :all]
             [aitu.infra.suorittaja-arkisto :as arkisto]
@@ -47,17 +47,17 @@
         (hetu-virhevastaus)
         (if (arkisto/hetu-kaytossa? suorittajaid hetu)
           (hetu-kaytossa-virhevastaus)
-          (response-or-404 (suorittaja-operaatio-fn)))))
+          (response-nocache-strict (suorittaja-operaatio-fn)))))
     (catch Exception _
       (hetu-virhevastaus))))
 
 (defroutes reitit
   (GET "/:suorittajaid" [suorittajaid]
     :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/hae (Integer/parseInt suorittajaid))))
+    (response-nocache-strict (arkisto/hae (Integer/parseInt suorittajaid))))
   (GET "/" []
     :kayttooikeus :arviointipaatos
-    (response-or-404 (arkisto/hae-kaikki)))
+    (response-nocache-strict (arkisto/hae-kaikki)))
   (POST "/" []
     :kayttooikeus :arviointipaatos
     :body [suorittaja Suorittaja]
