@@ -16,26 +16,37 @@
   (:require [compojure.api.core :refer [DELETE GET POST PUT defroutes]]
             [cheshire.core :as cheshire]
             [schema.core :as s]
+            [clojure.string :as str]
             [oph.common.util.http-util :refer [response-or-404 luo-validoinnin-virhevastaus]]
             [sade.validators :as sade-validators]
-            aitu.compojure-util
+            [aitu.compojure-util :refer :all]
             [aitu.infra.suorittaja-arkisto :as arkisto]
             [aitu.toimiala.skeema :refer [Suorittaja]]))
 
 ; TODO: luo-validoinnin-virhevastaus mieluummin..  OPH-1877
-(defn hetu-virhevastaus
+(defn- hetu-virhevastaus
   []
   {:status 400
    :headers {"Content-Type" "application/json; charset=utf-8"}
    :body (cheshire/generate-string
            {:errors [:hetu "Viallinen henkilötunnus"]})})
 
-(defn hetu-kaytossa-virhevastaus
+(defn- hetu-kaytossa-virhevastaus
   []
   {:status 400
    :headers {"Content-Type" "application/json; charset=utf-8"}
    :body (cheshire/generate-string
            {:errors [:hetu "Henkilötunnus on toisella opiskelijalla käytössä."]})})
+
+(defn- hetu-validated [suorittaja suorittaja-operaatio-fn]
+  (let [hetu (:hetu suorittaja)
+        suorittajaid (when (:suorittajaid suorittaja)
+                       (Integer/parseInt (:suorittajaid suorittaja)))]
+    (if (or (str/blank? hetu) (not (sade-validators/valid-hetu? hetu)))
+      (hetu-virhevastaus)
+      (if (arkisto/hetu-kaytossa? suorittajaid hetu)
+        (hetu-kaytossa-virhevastaus)
+        (response-or-404 (suorittaja-operaatio-fn))))))
 
 (defroutes reitit
   (GET "/:suorittajaid" [suorittajaid]
@@ -47,18 +58,12 @@
   (POST "/" []
     :kayttooikeus :arviointipaatos
     :body [suorittaja Suorittaja]
-    (if (and (:hetu suorittaja) (not (sade-validators/valid-hetu? (:hetu suorittaja))))
-      (hetu-virhevastaus)
-      (if (arkisto/hetu-kaytossa? nil (:hetu suorittaja))
-        (hetu-kaytossa-virhevastaus)
-        (response-or-404 (arkisto/lisaa! suorittaja)))))
+    (let [suorittaja-operaatio-fn (fn [] (arkisto/lisaa! suorittaja))]
+      (hetu-validated suorittaja suorittaja-operaatio-fn)))
   (PUT "/:suorittajaid" [suorittajaid & suorittaja]
     :kayttooikeus :arviointipaatos
-    (if (and (:hetu suorittaja) (not (sade-validators/valid-hetu? (:hetu suorittaja))))
-      (hetu-virhevastaus)
-      (if (arkisto/hetu-kaytossa? (Integer/parseInt suorittajaid) (:hetu suorittaja))
-        (hetu-kaytossa-virhevastaus)
-        (response-or-404 (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja)))))
+    (let [suorittaja-operaatio-fn (fn [] (arkisto/tallenna! (Integer/parseInt suorittajaid) suorittaja))]
+      (hetu-validated suorittaja suorittaja-operaatio-fn)))
   (DELETE "/:suorittajaid" [suorittajaid]
     :kayttooikeus :arviointipaatos
     (arkisto/poista! (Integer/parseInt suorittajaid))))
