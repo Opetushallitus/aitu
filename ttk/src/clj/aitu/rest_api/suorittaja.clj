@@ -39,14 +39,17 @@
            {:errors [:hetu "Henkilötunnus on toisella opiskelijalla käytössä."]})})
 
 (defn- hetu-validated [suorittaja suorittaja-operaatio-fn]
-  (let [hetu (:hetu suorittaja)
-        suorittajaid (when (:suorittajaid suorittaja)
-                       (Integer/parseInt (:suorittajaid suorittaja)))]
-    (if (or (str/blank? hetu) (not (sade-validators/valid-hetu? hetu)))
-      (hetu-virhevastaus)
-      (if (arkisto/hetu-kaytossa? suorittajaid hetu)
-        (hetu-kaytossa-virhevastaus)
-        (response-or-404 (suorittaja-operaatio-fn))))))
+  (try
+    (let [hetu (:hetu suorittaja)
+          suorittajaid (when (:suorittajaid suorittaja)
+                         (Integer/parseInt (:suorittajaid suorittaja)))]
+      (if (or (str/blank? hetu) (not (sade-validators/valid-hetu? hetu)))
+        (hetu-virhevastaus)
+        (if (arkisto/hetu-kaytossa? suorittajaid hetu)
+          (hetu-kaytossa-virhevastaus)
+          (response-or-404 (suorittaja-operaatio-fn)))))
+    (catch Exception _
+      (hetu-virhevastaus))))
 
 (defroutes reitit
   (GET "/:suorittajaid" [suorittajaid]
