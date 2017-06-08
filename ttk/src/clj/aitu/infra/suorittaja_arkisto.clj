@@ -22,9 +22,9 @@
   "Onko hetu käytössä jollain toisella opiskelijalla?"
   [suorittajaid hetu]
   (if-not (s/blank? hetu)
-    (< 0 (count (sql/select :suorittaja
-                  (sql/where (and (= :hetu hetu)
-                                  (not (= :suorittaja_id suorittajaid)))))))
+    (pos? (count (sql/select :suorittaja
+                   (sql/where (and (= :hetu hetu)
+                                   (not= :suorittaja_id suorittajaid))))))
     false))
 
 (defn hae
