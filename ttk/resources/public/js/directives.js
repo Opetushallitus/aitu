@@ -457,6 +457,7 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
         scope.apiMetodi = attrs.apiMetodi;
         scope.tiedostoValittu = false;
         scope.reset = reset;
+        var pelkkaExcelHyvaksytaan = attrs.pelkkaExcelHyvaksytaan === "true" ? true : false;
 
         // http://stackoverflow.com/questions/651700/how-to-have-jquery-restrict-file-types-on-upload
         el.find('input[type=file]').change(function(event){
@@ -467,12 +468,17 @@ angular.module('directives', ['services', 'resources', 'ngCookies'])
           scope.tiedostoValittu = filename.length > 0;
           el.find('input.valittu-tiedosto').val(filename);
 
-          // Kts. palvelinpään http-util/allowed-mimetypes
-          var allowed_mime_types = ["application/pdf",
-                                    "image/gif", "image/jpeg", "image/png",
-                                    "text/plain", "text/rtf",
-                                    "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                                    "application/msword"];
+          // Kts. palvelinpään http-util/allowed-mimetypes ja http-util/excel-mimetypes
+          var allowed_mime_types =
+            pelkkaExcelHyvaksytaan ?
+                ["application/vnd.ms-excel",
+                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] :
+                ["application/pdf",
+                 "image/gif", "image/jpeg", "image/png",
+                 "text/plain", "text/rtf",
+                 "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                 "application/msword"];
+
           var file = this.files[0];
           if (! _.contains(allowed_mime_types, file.type)) {
             alert("Tiedostotyyppi ei kelpaa: " + file.type);
