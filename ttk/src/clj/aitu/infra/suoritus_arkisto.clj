@@ -76,7 +76,7 @@
    (sql/where (= :koulutustoimija koulutustoimija))))
 
 (defn ^:private toimikunta-valinta->toimikunta [t]
-  (if (= "Ei valittu" t) nil t))
+  (if (= "Ei kohdistettu toimikunnalle" t) nil t))
 
 (defn ^:private add-joins [query]
   (-> query

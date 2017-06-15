@@ -85,8 +85,8 @@
         (is (= (count suorituskerrat-tk1) 4))
         ))
 
-    (testing "Toimikunta-hakuehtoon valittuna 'Ei valittu'-arvo"
-      (let [suorituskerrat (suoritus-arkisto/hae-kaikki {:toimikunta "Ei valittu"})]
+    (testing "Toimikunta-hakuehtoon valittuna 'Ei kohdistettu toimikunnalle'-arvo"
+      (let [suorituskerrat (suoritus-arkisto/hae-kaikki {:toimikunta "Ei kohdistettu toimikunnalle"})]
         (is (= (count suorituskerrat) 4))
         ))
 
