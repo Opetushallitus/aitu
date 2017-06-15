@@ -56,7 +56,7 @@ angular.module('direktiivit.suoritukset', ['rest.suoritus'])
               diaarinumero: "",
               nimi_fi: i18n.arviointipaatokset.ei_valittu,
               nimi_sv: i18n.arviointipaatokset.ei_valittu,
-              tkunta: "Ei valittu"
+              tkunta: "Ei kohdistettu toimikunnalle"
           };
           $scope.tutkintotoimikunnat = [ei_valittu_ttk].concat(tutkintotoimikunnat);
         });
