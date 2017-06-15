@@ -38,7 +38,7 @@
                  [org.flatland/useful "0.11.5"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.slf4j/slf4j-log4j12 "1.7.1"]
-                 [peridot "0.4.2"]
+                 [peridot "0.4.4"]
                  [prismatic/schema "1.0.3"]
                  [ring/ring-core "1.4.0"]
                  [ring/ring-headers "0.1.0"]

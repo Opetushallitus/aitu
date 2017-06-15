@@ -127,10 +127,9 @@
   (POST "/excel-lataus" [file]
     :kayttooikeus :arviointipaatos
     (log/info "Luetaan excel " (:filename file) " .. " (:content-type file))
-
     (sallittu-jos (contains? excel-mimetypes (:content-type file))
       ;    (jos-lapaisee-virustarkistuksen file ; TODO: jumittuuko testi tähän? Onko socketin timeout asetettu? Javassa ääretön defaulttina
       (let [b (FileUtils/readFileToByteArray (:tempfile file))
-            wb (load-workbook (new java.io.ByteArrayInputStream b))
+            wb (load-workbook (java.io.ByteArrayInputStream. b))
             respo (lue-excel! wb)]
         (file-upload-response respo)))))
