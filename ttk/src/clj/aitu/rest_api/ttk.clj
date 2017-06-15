@@ -216,7 +216,7 @@
                          jasenet)]
         (if-let [validaatioVirheet (validoi-paivitettavat-jasenyydet
                                      toimikunta
-                                     (filter #(not (:poistettu %)) jasenyydet))]
+                                     (remove :poistettu jasenyydet))]
           (luo-validoinnin-virhevastaus
             validaatioVirheet
             ((i18n/tekstit) :validointi))

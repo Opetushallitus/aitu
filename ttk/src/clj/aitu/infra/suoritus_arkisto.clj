@@ -113,13 +113,13 @@
                                                                             {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}
                                                                             {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}))
         ;; kaksi "suorittaja"-hakutermi -> matchaa vain etu- ja sukunimiin. "george jansson" == "jansson george"
-        (and suorittaja-nimiosa-1 suorittaja-nimiosa-2) (sql/where (and
-                                                                     (or
-                                                                       {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}
-                                                                       {:suorittaja.etunimi [sql-util/ilike (str "%" suorittaja-nimiosa-2 "%")]})
-                                                                     (or
-                                                                       {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}
-                                                                       {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja-nimiosa-2 "%")]}))))
+        (and suorittaja-nimiosa-1 suorittaja-nimiosa-2) (sql/where (or
+                                                                     (and
+                                                                       {:suorittaja.etunimi  [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}
+                                                                       {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja-nimiosa-2 "%")]})
+                                                                     (and
+                                                                       {:suorittaja.etunimi  [sql-util/ilike (str "%" suorittaja-nimiosa-2 "%")]}
+                                                                       {:suorittaja.sukunimi [sql-util/ilike (str "%" suorittaja-nimiosa-1 "%")]}))))
       query)))
 
 (defn ^:private add-toimikunta-where-ehto [query toimikunta]
