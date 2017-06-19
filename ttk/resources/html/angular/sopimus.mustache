@@ -122,7 +122,7 @@
         {{sopimusJaTutkinto.tutkintoversio.tutkintotunnus}}
         {{sopimusJaTutkinto.tutkintoversio.nimi | lokalisoi:sopimusJaTutkinto.tutkintoversio:'nimi'}}
         {{sopimusJaTutkintoOtsikko(sopimusJaTutkinto)}}
-        <span ng-show="sopimusJaTutkinto.tutkintoversio.peruste">- {{sopimusJaTutkinto.tutkintoversio.peruste}}</span>
+        <span ng-show="sopimusJaTutkinto.tutkintoversio.peruste">– {{sopimusJaTutkinto.tutkintoversio.peruste}}</span>
         {{tutkintoEiVoimassa(sopimusJaTutkinto.tutkintoversio)}}
 
         <button ng-show="salliMuokkaus()" class="icon delete-icon" style="float: right; margin: 0 5px 5px 0; " ng-click="poistaTutkintoversio(sopimusJaTutkinto, $event)"></button>
