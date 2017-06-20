@@ -61,7 +61,7 @@
         (klikkaa-linkkia "Testi koulutusala")
         (klikkaa-linkkia "Testi opintoala")
         (->
-          (w/find-element {:xpath "//a[starts-with(., 'TU1 – Testialan tutkinto')]"})
+          (w/find-element {:xpath "//a[starts-with(., 'TU1 - Testialan tutkinto')]"})
           (elementilla-luokka? "added")
           (is))))))
 
@@ -74,7 +74,7 @@
         (muokkaa-toimialaa)
         (klikkaa-linkkia "Testi koulutusala")
         (klikkaa-linkkia "Testi opintoala")
-        (w/click {:xpath "//a[starts-with(., 'TU1 – Testialan tutkinto')]"})
+        (w/click {:xpath "//a[starts-with(., 'TU1 - Testialan tutkinto')]"})
         (odota-angular-pyyntoa)
         (tallenna-ja-hyvaksy-dialogi)
         (is (= (viestin-teksti) "Toimialan muokkaus onnistui"))
