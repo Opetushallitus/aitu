@@ -61,7 +61,9 @@
         (klikkaa-linkkia "Testi koulutusala")
         (klikkaa-linkkia "Testi opintoala")
         (->
-          (w/find-element {:xpath "//a[starts-with(., 'TU2 - Testialan tutkinto')]"})
+          ; Valitaan toinen TU1, koska ensimmäinen on vanha tutkinto, joka ei kuulu toimialaan
+          (w/find-element {:xpath "//a[starts-with(., 'TU1 - Testialan tutkinto')]"
+                            :index 1})
           (elementilla-luokka? "added")
           (is))))))
 
