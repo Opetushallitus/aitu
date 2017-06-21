@@ -63,7 +63,7 @@
         (->>
           ; Valitaan toinen TU1, koska ensimmäinen on vanha tutkinto, joka ei kuulu toimialaan
           (w/find-elements {:xpath "//a[starts-with(., 'TU1 - Testialan tutkinto')]"})
-          (map #(elementilla-luokka? % "added"))
+          (every? #(elementilla-luokka? % "added"))
           (is))))))
 
 (deftest toimikunnan-tutkintojen-poisto-test
@@ -75,7 +75,7 @@
         (muokkaa-toimialaa)
         (klikkaa-linkkia "Testi koulutusala")
         (klikkaa-linkkia "Testi opintoala")
-        (w/click {:xpath "//button[contains(@class, 'remove-icon-small')]"})
+        (w/click {:xpath "//ul[contains(@class, 'valitut-tutkinnot')]//button[contains(@class, 'remove-icon-small')]"})
         (odota-angular-pyyntoa)
         (tallenna-ja-hyvaksy-dialogi)
         (is (= (viestin-teksti) "Toimialan muokkaus onnistui"))
