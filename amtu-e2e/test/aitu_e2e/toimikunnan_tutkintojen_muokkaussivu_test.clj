@@ -60,10 +60,9 @@
         (muokkaa-toimialaa)
         (klikkaa-linkkia "Testi koulutusala")
         (klikkaa-linkkia "Testi opintoala")
-        (->>
-          ; Valitaan toinen TU1, koska ensimmäinen on vanha tutkinto, joka ei kuulu toimialaan
-          (w/find-elements {:xpath "//a[starts-with(., 'TU1 - Testialan tutkinto')]"})
-          (map #(elementilla-luokka? % "added"))
+        (->
+          (w/find-element {:xpath "//ul[contains(@class, 'tutkintovalitsin')]//a[starts-with(., 'TU1 - Testialan tutkinto')]"})
+          (elementilla-luokka? "added")
           (is))))))
 
 (deftest toimikunnan-tutkintojen-poisto-test
