@@ -63,7 +63,7 @@
         (->>
           ; Valitaan toinen TU1, koska ensimmäinen on vanha tutkinto, joka ei kuulu toimialaan
           (w/find-elements {:xpath "//a[starts-with(., 'TU1 - Testialan tutkinto')]"})
-          (every? #(elementilla-luokka? % "added"))
+          (map #(elementilla-luokka? % "added"))
           (is))))))
 
 (deftest toimikunnan-tutkintojen-poisto-test
