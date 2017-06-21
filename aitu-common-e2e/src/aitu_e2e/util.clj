@@ -243,6 +243,7 @@
                                      (.repeater "virhe in palaute.virheet"))))))
 
 (defn elementilla-luokka? [elementti luokka]
+  (println "\n ****** elementilla-luokka?, elementti: " elementti ", luokka: " luokka "\n")
   (->
     elementti
     (w/attribute "class")
