@@ -28,7 +28,7 @@
       <th>[[poista]] / [[palauta]]</th>
     </tr>
     </thead>
-    <tr ng-repeat="henkilo in toimikunta.jasenyys | orderBy:'voimassa':true" ng-class="{removed : henkilo.poistettu}">
+    <tr ng-repeat="henkilo in toimikunta.jasenyys | orderBy:'voimassa':true | orderBy:'alkupvm'" ng-class="{removed : henkilo.poistettu}">
       <td ng-class="{voimassa : henkilo.voimassa}">
         <a href="#/henkilot/{{henkilo.henkiloid}}/tiedot">{{henkilo.etunimi}} {{henkilo.sukunimi}}</a>
         <span ng-hide="henkilo.voimassa">([[ei-voimassa]])</span>
