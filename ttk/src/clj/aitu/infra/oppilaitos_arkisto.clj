@@ -98,24 +98,34 @@
 (defn hae-kaikki-toimipaikat []
   (sql/select toimipaikka))
 
+;; Tämä on moninpaikoin samanlainen funktio kuin koulutustoimija_arkistossa olevasta vastaavasta funktiosta. Nämä olisi hyvä yhdistää.
 (defn hae-ehdoilla
   "Hakee kaikki ehtoja vastaavat oppilaitokset. Ala sisältää opintoalan, tutkinnon, osaamisalan ja tutkinnon osan."
   [ehdot]
-  (let [nimi (str "%" (:nimi ehdot) "%")
-        sop-kylla (= (:sopimuksia ehdot) "kylla")
-        sop-ei (= (:sopimuksia ehdot) "ei")
-
+  (let [sop-voimassa-kylla? (= (:sopimuksia ehdot) "kylla")
+        sop-voimassa-ei? (= (:sopimuksia ehdot) "ei")
+        tunnus-ehto-puuttuu? (blank? (:tunnus ehdot))
+        nimi-ehto-puuttuu?   (blank? (:nimi ehdot))
+        nimi (str "%" (:nimi ehdot) "%")
         oppilaitokset (->
                         (sql/select* oppilaitos)
-                        (sql/join :inner :jarjestamissopimus
-                                  (= :oppilaitos.oppilaitoskoodi :jarjestamissopimus.tutkintotilaisuuksista_vastaava_oppilaitos))
+
+                        (sql/join :inner :jarjestamissopimus   ; inner -> ei koulutustoimijoita, joilla ei ole koskaan ollut sopimusta.
+                                  (and
+                                    (= :oppilaitos.oppilaitoskoodi :jarjestamissopimus.tutkintotilaisuuksista_vastaava_oppilaitos)
+                                    (= :jarjestamissopimus.poistettu false)))
+                        (sql/join :inner sopimus-ja-tutkinto
+                          (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid))
+                        (sql/join :inner tutkintoversio
+                          (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
+
                         (sql/fields :oppilaitoskoodi :nimi :kieli :koulutustoimija :alue :muutettu_kayttaja :luotu_kayttaja :muutettuaika
                                     :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
-                        (sql/aggregate (sum (sql/raw "case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END")) :sopimusten_maara)
+                        (sql/aggregate (sum (sql/raw "case WHEN (jarjestamissopimus.voimassa and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END")) :sopimusten_maara)
                         (sql/group :oppilaitoskoodi :nimi :kieli :koulutustoimija :alue :muutettu_kayttaja :luotu_kayttaja :muutettuaika
                                    :luotuaika :sahkoposti :puhelin :osoite :postinumero :postitoimipaikka :www_osoite)
                         (cond->
-                          (not (blank? (:tunnus ehdot))) (sql/where (sql/sqlfn exists (sql/subselect jarjestamissopimus
+                          (not tunnus-ehto-puuttuu?) (sql/where (sql/sqlfn exists (sql/subselect jarjestamissopimus
                                                                                         (sql/join :inner sopimus-ja-tutkinto
                                                                                                   (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid))
                                                                                         (sql/join :inner tutkintoversio
@@ -134,18 +144,28 @@
                                                                                                             {:tutkinnonosa.osatunnus (:tunnus ehdot)}
                                                                                                             {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)})
                                                                                                        ))
-                                                                                        (cond->   
-                                                                                          sop-kylla
+                                                                                        (cond->
+                                                                                          sop-voimassa-kylla?
+                                                                                            ;; alkupvm <= current date <= loppupvm
+                                                                                            ;; tutkintoversio.siirtymaajan_loppupvm kenttä on tietokannassa NOT NULL
                                                                                             (sql/where (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
-                                                                                                            (<= (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")) )))  ; alkupvm <= current date <= loppupvm
-                                                                                          sop-ei
+                                                                                                            (<= (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")))
+                                                                                                            (<= (sql/raw "current_date") :tutkintoversio.siirtymaajan_loppupvm)
+                                                                                                            ))
+                                                                                          sop-voimassa-ei?
+                                                                                            ;; alkupvm <= current_date && current date > loppupvm
+                                                                                            ;; tutkintoversio.siirtymaajan_loppupvm kenttä on tietokannassa NOT NULL
                                                                                             (sql/where (and (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
-                                                                                                         (> (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")) ))) ; alkupvm <= current_date && current date > loppupvm
+                                                                                                         (> (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")))
+                                                                                                         (> (sql/raw "current_date") :tutkintoversio.siirtymaajan_loppupvm)
+                                                                                                         ))
                                                                                                    ))))
-                          (not (blank? (:nimi ehdot))) (sql/where {:nimi [ilike nimi]})
-                          ; tämä ehto vain jos ei ole rajattu tunnuksella
-                          (and (blank? (:tunnus ehdot)) sop-kylla) (sql/having (> (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
-                          (and (blank? (:tunnus ehdot)) sop-ei) (sql/having (= (sql/raw "sum(case WHEN jarjestamissopimus.voimassa THEN 1 ELSE 0 END)") 0))
+                          (not nimi-ehto-puuttuu?) (sql/where {:nimi [ilike nimi]})
+
+                          ; nämä ehtot vain jos ei ole rajattu tunnuksella
+                          ;; TODO: Miksi eivät ole käytössä, jos on annettu tunnus-ehto? Muuten "Voimassa"-valinta ei vaikuta ollenkaan näytettäviin tutkintoihin.
+                          (and tunnus-ehto-puuttuu? sop-voimassa-kylla?) (sql/having (> (sql/raw "sum(case WHEN (jarjestamissopimus.voimassa and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END)") 0))
+                          (and tunnus-ehto-puuttuu? sop-voimassa-ei?)    (sql/having (= (sql/raw "sum(case WHEN (jarjestamissopimus.voimassa and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END)") 0))
                           )
                         (sql/order :nimi :ASC)
                         sql/exec)]
