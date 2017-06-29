@@ -14,21 +14,21 @@
 
 (ns aitu.infra.jarjestamissopimus-arkisto
   (:import org.apache.commons.io.FileUtils)
-  (:require  korma.db
+  (:require  [clj-time.core :as time]
+             [korma.db :refer :all]
              [korma.core :as sql]
              [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists max-date min-date map-by]]
              [oph.korma.common :as sql-util]
-             [aitu.toimiala.jarjestamissopimus :as domain]
-             [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
-             [aitu.integraatio.sql.oppilaitos :as oppilaitos-kaytava]
-             [aitu.integraatio.sql.koulutustoimija :as koulutustoimija-kaytava]
+             [aitu.infra.sopimus-ja-tutkinto-arkisto  :as sopimus-ja-tutkinto-arkisto]
+             [aitu.integraatio.sql.oppilaitos         :as oppilaitos-kaytava]
+             [aitu.integraatio.sql.koulutustoimija    :as koulutustoimija-kaytava]
              [aitu.integraatio.sql.jarjestamissopimus :as sopimus-kaytava]
-             [aitu.integraatio.sql.toimikunta :as toimikunta-kaytava]
-             [aitu.infra.kayttaja-arkisto :as kayttaja-arkisto]
+             [aitu.integraatio.sql.toimikunta         :as toimikunta-kaytava]
+             [aitu.infra.kayttaja-arkisto             :as kayttaja-arkisto]
+             [aitu.toimiala.jarjestamissopimus :as domain]
              [aitu.toimiala.voimassaolo.jarjestamissopimus :as voimassaolo]
              [aitu.toimiala.voimassaolo.saanto.jarjestamissopimus :as voimassaolo-saanto]
              [aitu.toimiala.voimassaolo.saanto.osoitepalvelu-jarjestamissopimus :as osoitepalvelu-voimassaolo]
-             [clj-time.core :as time]
              [aitu.auditlog :as auditlog]
              [aitu.integraatio.sql.korma :refer :all]))
 
@@ -83,7 +83,7 @@
       (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
     (let [sopimus (voimassaolo-saanto/taydenna-sopimuksen-voimassaolo
                     (voimassaolo/taydenna-sopimukseen-liittyvien-tietojen-voimassaolo
-                      (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid)))]   
+                      (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid)))]
       (aseta-sopimuksen-voimassaolo! jarjestamissopimusid (:voimassa sopimus)))))
 
 (defn ^:integration-api paivita-sopimusten-voimassaolo2!

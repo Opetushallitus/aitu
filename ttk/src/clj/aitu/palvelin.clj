@@ -129,7 +129,7 @@
   (json-gen/add-encoder org.joda.time.LocalDate
                         (fn [c json-generator]
                           (.writeString json-generator (.toString c "dd.MM.yyyy"))))
-  
+
   (let [session-store (memory-store)
         reitit (aitu.reitit/reitit asetukset)]
     (->

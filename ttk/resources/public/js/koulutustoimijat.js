@@ -44,7 +44,7 @@ angular.module('koulutustoimijat', ['ngRoute'])
     });
   }])
 
-  .controller('KoulutustoimijatController', ['$scope', 'KoulutustoimijaHakuResource', '$filter', 'i18n', 
+  .controller('KoulutustoimijatController', ['$scope', 'KoulutustoimijaHakuResource', '$filter', 'i18n',
     function($scope, KoulutustoimijaHakuResource, $filter, i18n) {
       $scope.i18n = i18n;
       $scope.kaikkiKoulutustoimijat = [];
@@ -62,9 +62,9 @@ angular.module('koulutustoimijat', ['ngRoute'])
       }
 
       function haeKoulutustoimijat() {
-        $scope.kaikkiKoulutustoimijat = 
-        	KoulutustoimijaHakuResource.query({tunnus: $scope.search.ala && $scope.search.ala.tunnus,
-        									   sopimuksia: $scope.search.sopimuksia});
+        $scope.kaikkiKoulutustoimijat =
+          KoulutustoimijaHakuResource.query({tunnus: $scope.search.ala && $scope.search.ala.tunnus,
+                                             sopimuksia: $scope.search.sopimuksia});
       }
     }
   ])
