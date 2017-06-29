@@ -2019,7 +2019,7 @@ table.toimikunnan-jasenet .removed td:first-child a {
 
 td .sopimus-ja-tutkinto-rivi {
   position: relative;
-  padding-right: 110px;
+  padding-right: 105px;
   border-top: 1px solid #b3b3b3;
 }
 
@@ -2029,13 +2029,13 @@ td .sopimus-ja-tutkinto-rivi:first-child {
 
 td .sopimus-ja-tutkinto-rivi span.perusteen-diaarinumero {
   position: absolute;
-  right: 5px;
+  right: 0;
   bottom: 0;
   width: 100px;
   text-align: left;
 }
 
-td .sopimus-ja-tutkinto-rivi.ei-voimassa a {
+td .sopimus-ja-tutkinto-rivi.ei-voimassa a, td .sopimus-ja-tutkinto-rivi.ei-voimassa span, td .sopimus-ja-tutkinto-rivi.ei-voimassa div {
   color: gray;
   font-style: italic;
 }

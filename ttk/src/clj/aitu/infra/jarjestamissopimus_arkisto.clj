@@ -18,6 +18,7 @@
              [korma.db :refer :all]
              [korma.core :as sql]
              [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists max-date min-date map-by]]
+             [oph.common.util.util :as util]
              [oph.korma.common :as sql-util]
              [aitu.infra.sopimus-ja-tutkinto-arkisto  :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos         :as oppilaitos-kaytava]
@@ -223,10 +224,16 @@
     (some-> jarjestamissopimus
       (assoc :tutkinnot sopimus-ja-tutkinto-rivit))))
 
+(defn ^:private piilota-tutkinnolta-forever-voimassa-loppupvm [tutkinto]
+  (update tutkinto :voimassa_loppupvm #(when-not (= % util/time-forever) %)))
+
 (defn ^:private liita-tutkinnot-sopimukseen-laajat-tiedot
   [jarjestamissopimus]
   (let [id (:jarjestamissopimusid jarjestamissopimus)
-        sopimus-ja-tutkinto-rivit (mapv :tutkintoversio (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimuksen-tutkinnot id))]
+        sopimus-ja-tutkinto-rivit (->> (sopimus-ja-tutkinto-arkisto/hae-jarjestamissopimuksen-tutkinnot id)
+                                    (mapv voimassaolo/taydenna-sopimus-ja-tutkinto-rivi)
+                                    (mapv :tutkintoversio)
+                                    (mapv piilota-tutkinnolta-forever-voimassa-loppupvm))]
     (some-> jarjestamissopimus
       (assoc :tutkinnot sopimus-ja-tutkinto-rivit))))
 
@@ -343,13 +350,13 @@
   "Hakee oppilaitoksen järjestämissopimukset ja liittää niihin tarvittavat tiedot"
   [oppilaitoskoodi]
   (->> (sopimus-kaytava/hae-oppilaitoksen-sopimukset oppilaitoskoodi)
-    (mapv liita-tutkinnot-sopimukseen-rajatut-tiedot)))
+    (mapv liita-tutkinnot-sopimukseen-laajat-tiedot)))
 
 (defn hae-koulutustoimijan-sopimukset
   "Hakee koulutustoimijan järjestämissopimukset ja liittää niihin tarvittavat tiedot"
   [y-tunnus]
   (->> (sopimus-kaytava/hae-koulutustoimijan-sopimukset y-tunnus)
-   (mapv liita-tutkinnot-sopimukseen-rajatut-tiedot)))
+    (mapv liita-tutkinnot-sopimukseen-laajat-tiedot)))
 
 (defn uniikki-sopimusnumero? [sopimusnumero jarjestamissopimusid]
   (zero? (count (sql/select jarjestamissopimus

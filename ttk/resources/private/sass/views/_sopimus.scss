@@ -40,17 +40,18 @@
 
 td .sopimus-ja-tutkinto-rivi {
   position: relative;
-  padding-right: 110px;
+  padding-right: 105px;
   border-top: 1px solid $lighter-gray;
   &:first-child {border: none;}
+
   span.perusteen-diaarinumero {
     position: absolute;
-    right: 5px;
+    right: 0;
     bottom: 0;
     width: 100px;
     text-align: left;
   }
-  &.ei-voimassa a {
+  &.ei-voimassa a, &.ei-voimassa span, &.ei-voimassa div {
     color: $gray-color;
     font-style: italic;
   }

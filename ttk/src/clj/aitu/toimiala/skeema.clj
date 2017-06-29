@@ -129,8 +129,13 @@
                                    :nimi_fi s/Str
                                    :nimi_sv (s/maybe s/Str)
                                    :peruste (s/maybe s/Str)
-                                   (s/optional-key :voimassa) Boolean
-                                   })
+                                   (s/optional-key :voimassa) Boolean})
+
+(s/defschema TutkintoversioLinkkiLaaja (merge TutkintoversioLinkki
+                                         {:voimassa_alkupvm org.joda.time.LocalDate
+                                          :voimassa_loppupvm (s/maybe org.joda.time.LocalDate)
+                                          :siirtymaajan_loppupvm org.joda.time.LocalDate
+                                          (s/optional-key :siirtymaaika_paattyy) org.joda.time.LocalDate}))
 
 (s/defschema Tutkintolinkki {:tutkintotunnus s/Str
                              (s/optional-key :opintoala_nimi_fi) s/Str
@@ -171,7 +176,10 @@
                                       (s/optional-key :voimassa) Boolean
                                       :tutkinnot [TutkintoversioLinkki]})
 
-(s/defschema JarjestamissopimusJaKoulutustoimija (assoc JarjestamissopimusLista
+(s/defschema JarjestamissopimusListaLaajatTutkintoTiedot (assoc JarjestamissopimusLista
+                                                           :tutkinnot [TutkintoversioLinkkiLaaja]))
+
+(s/defschema JarjestamissopimusJaKoulutustoimija (assoc JarjestamissopimusListaLaajatTutkintoTiedot
                                                    :koulutustoimija KoulutustoimijaLinkki))
 
 (s/defschema ToimikuntaLaajatTiedot (merge ToimikunnanTiedot
@@ -181,11 +189,11 @@
                                             :jarjestamissopimus [JarjestamissopimusJaKoulutustoimija]}))
 
 (s/defschema OppilaitosLaajatTiedot (merge OppilaitoksenTiedot
-                                          {:jarjestamissopimus [JarjestamissopimusLista]
+                                          {:jarjestamissopimus [JarjestamissopimusListaLaajatTutkintoTiedot]
                                            :koulutustoimija KoulutustoimijaLinkki}))
 
 (s/defschema KoulutustoimijaLaajatTiedot (merge KoulutustoimijanTiedot
-                                               {:jarjestamissopimus [JarjestamissopimusLista]
+                                               {:jarjestamissopimus [JarjestamissopimusListaLaajatTutkintoTiedot]
                                                 :oppilaitokset [OppilaitosLinkki]}))
 
 (s/defschema Suorittaja {(s/optional-key :hetu) s/Str

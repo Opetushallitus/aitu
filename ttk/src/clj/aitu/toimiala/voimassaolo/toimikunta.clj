@@ -20,9 +20,7 @@
 (defn ^:private taydenna-tutkintojen-voimassaolo
   [tutkinnot]
   (mapv
-    #(-> %
-       tutkinto-saanto/taydenna-tutkinnon-voimassaolo
-       (dissoc :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm :siirtymaaika_paattyy))
+    tutkinto-saanto/taydenna-tutkinnon-voimassaolo
     tutkinnot))
 
 (defn ^:private taydenna-toimikunnan-jarjestamissopimuksien-tutkintojen-voimassaolo

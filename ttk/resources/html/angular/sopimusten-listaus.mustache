@@ -9,28 +9,44 @@
         <th ng-show="naytaTutkinnot">[[tutkinnot]]</th>
         <th ng-show="naytaPerusteSarake">[[tutkinnonperusteiden-diaarinumero]]</th>
         <th jarjestettava-sarake="koulutustoimija.nimi" jarjestely-fn="orderByLokalisoitu" ng-hide="piilotaKoulutustoimijat">[[koulutustoimija]]</th>
-        <th jarjestettava-sarake="alkupvm" jarjestely-fn="orderByDate">[[voimassaolo]]</th>
+        <th jarjestettava-sarake="alkupvm" jarjestely-fn="orderByDate" ng-if="!naytaTutkinnot">[[voimassaolo]]</th>
       </tr>
     </thead>
     <tr ng-repeat="sopimus in sopimuksetJarjestetty">
+
       <td>
         <auth-toiminto auth-linkki sallitut-roolit="['OPH-KATSELIJA', 'PAIVITTAJA']" oikeus="sopimustiedot_luku"
                        konteksti="jarjestamissopimus" entity-id="{{sopimus.jarjestamissopimusid}}"
                        href="#/sopimus/{{sopimus.jarjestamissopimusid}}/tiedot" class="e2e-sopimus-sopimusnumero">
             {{sopimus.sopimusnumero}}
         </auth-toiminto>
-     </td>
+      </td>
+
       <td ng-show="naytaTutkinnot">
         <div class="sopimus-ja-tutkinto-rivi" ng-repeat="tutkinto in sopimus.tutkinnot" ng-class="{'ei-voimassa': tutkinto.voimassa === false}">
           <a href="#/tutkinto/{{tutkinto.tutkintotunnus}}" class="e2e-sopimusjatutkinto-tutkintoversio-nimi">
             {{tutkinto.nimi |lokalisoi:tutkinto:'nimi'}} {{tutkintoEiVoimassa(tutkinto)}}
           </a>
-          <span class="perusteen-diaarinumero e2e-perusteen-diaarinumero">{{tutkinto.peruste}}</span>
+          <div class="perusteen-diaarinumero e2e-perusteen-diaarinumero">{{tutkinto.peruste}}</div>
+          <div class="tutkinnon-voimassaolo">
+            {{tutkinto.voimassa_alkupvm}} - {{tutkinto.voimassa_loppupvm}}
+            <span ng-if="tutkinto.siirtymaaika_paattyy">([[siirtymaaika-paattyy]] {{tutkinto.siirtymaaika_paattyy}})</span>
+          </div>
         </div>
       </td>
-      <td ng-show="naytaPerusteSarake"><div ng-repeat="tutkinto in sopimus.tutkinnot" class="e2e-perustesarake-peruste">{{tutkinto.peruste}}</div></td>
-      <td ng-hide="piilotaKoulutustoimijat"><a href="#/koulutustoimija/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi |lokalisoi:sopimus.koulutustoimija:'nimi'}}</a></td>
-      <td>{{sopimus.alkupvm | date:'dd.MM.yyyy'}} – {{sopimus.loppupvm | date:'dd.MM.yyyy'}}</td>
+
+      <td ng-show="naytaPerusteSarake">
+        <div ng-repeat="tutkinto in sopimus.tutkinnot" class="e2e-perustesarake-peruste">{{tutkinto.peruste}}</div>
+      </td>
+
+      <td ng-hide="piilotaKoulutustoimijat">
+        <a href="#/koulutustoimija/{{sopimus.koulutustoimija.ytunnus}}/tiedot">{{sopimus.koulutustoimija.nimi |lokalisoi:sopimus.koulutustoimija:'nimi'}}</a>
+      </td>
+
+      <td ng-if="!naytaTutkinnot">
+        {{sopimus.alkupvm | date:'dd.MM.yyyy'}} – {{sopimus.loppupvm | date:'dd.MM.yyyy'}}
+      </td>
+
     </tr>
   </table>
 </div>
