@@ -40,13 +40,13 @@
                     (sql/join :inner opintoala {:nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi})
                     (sql/join :inner koulutusala {:opintoala.koulutusala_tkkoodi :koulutusala.koulutusala_tkkoodi})
                     (sql/where (or peruste? {:nayttotutkinto.uusin_versio_id :tutkintoversio.tutkintoversio_id}))
-                    (sql/fields :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv :tutkintoversio.peruste :nayttotutkinto.tutkintotunnus :tutkintoversio.siirtymaajan_loppupvm :tutkintoversio.tutkintoversio_id
+                    (sql/fields :nayttotutkinto.nimi_fi :nayttotutkinto.nimi_sv :tutkintoversio.peruste :nayttotutkinto.tutkintotunnus :tutkintoversio.voimassa_alkupvm :tutkintoversio.voimassa_loppupvm :tutkintoversio.siirtymaajan_loppupvm :tutkintoversio.tutkintoversio_id
                                 :opintoala.selite_fi :opintoala.selite_sv :opintoala.opintoala_tkkoodi
                                 [:koulutusala.selite_fi :koulutusala_selite_fi] [:koulutusala.selite_sv :koulutusala_selite_sv] :koulutusala.koulutusala_tkkoodi)
                     (sql/order :nayttotutkinto.nimi_fi)
                     (sql/order :tutkintoversio.peruste))
         opintoalat (sort-by :opintoala_tkkoodi (for [[opintoala tutkinnot] (groupings #(select-keys % [:selite_fi :selite_sv :opintoala_tkkoodi :koulutusala_selite_fi :koulutusala_selite_sv :koulutusala_tkkoodi])
-                                                                                      #(select-keys % [:nimi_fi :nimi_sv :peruste :tutkintotunnus :siirtymaajan_loppupvm :tutkintoversio_id])
+                                                                                      #(select-keys % [:nimi_fi :nimi_sv :peruste :tutkintotunnus :voimassa_alkupvm :voimassa_loppupvm :siirtymaajan_loppupvm :tutkintoversio_id])
                                                                                       tutkinnot)]
                                                  (assoc opintoala :nayttotutkinto tutkinnot)))
         koulutusalat (sort-by :koulutusala_tkkoodi (for [[koulutusala opintoalat] (groupings #(select-and-rename-keys % [[:koulutusala_selite_fi :selite_fi] [:koulutusala_selite_sv :selite_sv] :koulutusala_tkkoodi])

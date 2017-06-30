@@ -18,7 +18,11 @@
           <a ng-class="{collapse : opintoalaAvattu}" href="" ng-click="opintoalaAvattu = opintoalaAvattu ? !opintoalaAvattu : true">{{opintoala.selite | lokalisoi:opintoala:'selite'}}</a>
           <ul ng-show="suodatus || opintoalaAvattu">
             <li ng-repeat="tutkinto in opintoala.nayttotutkinto">
-              <a class="tutkinto" ng-class="{added : valittu()}" href="" ng-click="valittu() ? poista() : lisaa()">{{tutkinto.tutkintotunnus + ' - '}}{{tutkinto.nimi | lokalisoi:tutkinto:'nimi'}} <span ng-show="tutkinto.peruste">({{tutkinto.peruste}})</span></a>
+              <a class="tutkinto" ng-class="{added : valittu()}" href="" ng-click="valittu() ? poista() : lisaa()">
+                {{tutkinto.tutkintotunnus + ' - '}}{{tutkinto.nimi | lokalisoi:tutkinto:'nimi'}}
+                <span ng-show="tutkinto.peruste">({{tutkinto.peruste}})</span>
+                <span>, [[voimassaolo]]: {{tutkinto.voimassaoloTeksti}}</span>
+              </a>
             </li>
           </ul>
         </li>
@@ -29,7 +33,10 @@
 <h3 class="valitut-tutkinnot-otsikko">[[valitut-tutkinnot]]</h3>
 <ul class="valitut-tutkinnot">
     <li ng-repeat="tutkinto in valitutTutkinnot" ng-show="valitutTutkinnot.length > 0">
-      <span>{{tutkinto.tutkintotunnus + ' - '}}{{tutkinto.nimi | lokalisoi:tutkinto:'nimi'}} <span ng-show="tutkinto.peruste">({{tutkinto.peruste}})</span></span>
+      <span>{{tutkinto.tutkintotunnus + ' - '}}{{tutkinto.nimi | lokalisoi:tutkinto:'nimi'}}
+        <span ng-show="tutkinto.peruste">({{tutkinto.peruste}})</span>
+        <span>, [[voimassaolo]]: {{tutkinto.tutkintoversio.voimassaoloTeksti}}</span>
+      </span>
       <button class="icon remove-icon-small" ng-click="poista()"></button>
     </li>
     <li ng-show="valitutTutkinnot.length == 0">[[ei-valittuja-tutkintoja]]</li>

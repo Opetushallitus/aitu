@@ -137,8 +137,12 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       $scope.suodatus = false;
       var tutkinnotAlussa = [];
       var entity = resource.get({}, function(r) {
-        tutkinnotAlussa = _.map(r[config.tutkinnotProperty], function(tutkinto){return _.pick(tutkinto, ['tutkintotunnus', 'nimi_fi', 'nimi_sv', 'tutkintoversio_id', 'peruste']);});
-        $scope.valitutTutkinnot = r[config.tutkinnotProperty];
+        var tutkinnot = _.map(r[config.tutkinnotProperty], function(tutkinto) {
+          tutkinto.tutkintoversio = lisaaVoimassaoloTeksti(tutkinto.tutkintoversio);
+          return tutkinto;
+          });
+        tutkinnotAlussa = _.map(tutkinnot, function(tutkinto){return _.pick(tutkinto, ['tutkintotunnus', 'nimi_fi', 'nimi_sv', 'tutkintoversio_id', 'peruste', 'tutkintoversio.voimassa_alkupvm', 'tutkintoversio.voimassa_loppupvm']);});
+        $scope.valitutTutkinnot = tutkinnot;
       });
 
       varmistaPoistuminen.kysyVarmistusPoistuttaessa();
@@ -192,9 +196,29 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
         $scope.tutkintoRakenne = tutkintorakenneResource.query({peruste: true}, suodataTutkintorakenne);
       }
 
+      var lisaaVoimassaoloTeksti = function(tutkinto) {
+        var loppuPvm = (tutkinto.voimassa_loppupvm !== "01.01.2199") ? tutkinto.voimassa_loppupvm : "";         // TODO: Onko tälle parempaa keinoa?
+        var voimassaoloTeksti = $filter('voimassaoloAika')(tutkinto.voimassa_alkupvm, loppuPvm);
+        tutkinto.voimassaoloTeksti = voimassaoloTeksti;
+        return tutkinto;
+      };
+
+      var generoiTutkinnoilleVoimassaoloTeksti = function (tutkintoRakenne) {
+        return _.map($scope.suodatettuTutkintorakenne, function(tutkinto) {
+            tutkinto.opintoala = _.map(tutkinto.opintoala, function(opintoala) {
+              opintoala.nayttotutkinto = _.map(opintoala.nayttotutkinto, function(nayttotutkinto) {
+                return lisaaVoimassaoloTeksti(nayttotutkinto);
+              });
+              return opintoala;
+              });
+            return tutkinto;
+          });
+      }
+
       function suodataTutkintorakenne() {
         if($scope.tutkintoRakenne.$resolved) {
           $scope.suodatettuTutkintorakenne = $filter('tutkintorakenneHakuFilter')($scope.tutkintoRakenne, $scope.tutkintoHakuehto);
+          $scope.suodatettuTutkintorakenne = generoiTutkinnoilleVoimassaoloTeksti($scope.suodatettuTutkintorakenne);  // Tämä toimi vain kun teki uuden sijoituksen näin.  Miksi ei voi käyttää väli-varria?
         }
       }
 
