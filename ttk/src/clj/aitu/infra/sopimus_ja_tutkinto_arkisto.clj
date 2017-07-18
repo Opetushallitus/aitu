@@ -45,6 +45,11 @@
   [jarjestamissopimusid]
   (do-hae-jarjestamissopimuksen-tutkinnot jarjestamissopimusid valittavat-kentat-perus))
 
+(defn hae-sopimus-ja-tutkinto [jarjestamissopimusid]
+  (sql/select sopimus-ja-tutkinto
+              (sql/where {:jarjestamissopimusid jarjestamissopimusid
+                          :poistettu false})))
+                                         
 (defn hae-jarjestamissopimuksen-tutkinnot
   [jarjestamissopimusid]
   (let [sopimus-ja-tutkinto-rivit (do-hae-jarjestamissopimuksen-tutkinnot jarjestamissopimusid valittavat-kentat-laaja)]
