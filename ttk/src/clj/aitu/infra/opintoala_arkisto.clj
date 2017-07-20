@@ -39,10 +39,18 @@
 
 (defn ^:integration-api paivita!
   [ala]
-  {:pre [(domain/opintoala? ala)]}
-  (sql/update opintoala
-   (sql/set-fields (dissoc ala :opintoala_tkkoodi))
-   (sql/where {:opintoala_tkkoodi (:opintoala_tkkoodi ala)})))
+;  {:pre [(domain/opintoala? ala)]}
+  (if (domain/opintoala? ala)
+    (sql/update opintoala
+     (sql/set-fields (dissoc ala :opintoala_tkkoodi))
+     (sql/where {:opintoala_tkkoodi (:opintoala_tkkoodi ala)}))
+    (clojure.pprint/pprint ala)))
+
+(defn hae-voimassaolevat
+  "Hakee voimassaolevat opintoalat"
+  []
+  (sql/select opintoala
+              (sql/where {:voimassa_loppupvm [>= (sql/sqlfn now)]})))
 
 (defn hae-kaikki
   "Hakee kaikki opintoalat."

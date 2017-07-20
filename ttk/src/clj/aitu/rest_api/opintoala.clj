@@ -26,7 +26,7 @@
   (GET "/" []
     :summary "Kaikki opintoalat. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
-    (response-or-404 (arkisto/hae-kaikki)))
+    (response-or-404 (arkisto/hae-kaikki))) ; TODO: hae voimassaolevat?
   (GET "/:koodi" [koodi]
     :summary "Opintoala tunnuksella. (Aitu ei master, julkista tietoa)"
     :kayttooikeus :yleinen-rest-api
