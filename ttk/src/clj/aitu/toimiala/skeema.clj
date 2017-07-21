@@ -135,6 +135,8 @@
                                          {:voimassa_alkupvm org.joda.time.LocalDate
                                           :voimassa_loppupvm (s/maybe org.joda.time.LocalDate)
                                           :siirtymaajan_loppupvm org.joda.time.LocalDate
+                                          (s/optional-key :alkupvm) (s/maybe org.joda.time.LocalDate)
+                                          (s/optional-key :loppupvm) (s/maybe org.joda.time.LocalDate)
                                           (s/optional-key :siirtymaaika_paattyy) org.joda.time.LocalDate}))
 
 (s/defschema Tutkintolinkki {:tutkintotunnus s/Str

@@ -28,6 +28,8 @@
                                          [:tutkintoversio.voimassa_alkupvm
                                           :tutkintoversio.voimassa_loppupvm
                                           :tutkintoversio.siirtymaajan_loppupvm
+                                          :sopimus_ja_tutkinto.alkupvm
+                                          :sopimus_ja_tutkinto.loppupvm
                                           :sopimus_ja_tutkinto.sopimus_ja_tutkinto_id]))
 
 (defn ^:private do-hae-jarjestamissopimuksen-tutkinnot
