@@ -73,12 +73,12 @@
   [jarjestamissopimusid]
   ; valitaan loppupvm ja alkupvm siten että ne ovat sopimuksen tiedoista ja tutkinto-liitoksista valittuina maksimi ja minimi
   (let [sopimus (hae-perustiedot jarjestamissopimusid)
-        tutkinnot (sql/select sopimus-ja-tutkinto
-                              (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
+        tutkinnot (sopimus-ja-tutkinto-arkisto/hae-sopimus-ja-tutkinto jarjestamissopimusid)
         alkupvm (when-let [paivat (seq (keep :alkupvm (conj tutkinnot {:alkupvm (:alkupvm sopimus)})))]
                   (apply min-date paivat))
-        loppupvm (when-let [loppupaivat (seq (keep :loppupvm (conj tutkinnot {:loppupvm (:loppupvm sopimus)})))]
-                   (apply max-date loppupaivat))]
+        loppupvm (when (and (seq tutkinnot)
+                            (every? :loppupvm tutkinnot))
+                   (apply max-date (keep :loppupvm tutkinnot)))]
     (sql/update jarjestamissopimus
                 (sql/set-fields {:alkupvm alkupvm, :loppupvm loppupvm})
       (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
@@ -404,16 +404,10 @@
       (paivita-sopimuksen-voimassaolo! jarjestamissopimusid)
       sopimus-tutkinto-liitokset)))
 
-(defn hae-sopimuksen-tutkinnot
-  "Hakee tutkinnot sopimukselle"
-  [jarjestamissopimusid]
-  (sql/select sopimus-ja-tutkinto
-    (sql/where {:jarjestamissopimusid jarjestamissopimusid :poistettu false})))
-
 (defn paivita-tutkinnot!
   "Päivittää tutkinnot järjestämissopimukselle"
   [jarjestamissopimusid sopimus_ja_tutkinto]
-  (let [vanha-sopimus-ja-tutkinto (hae-sopimuksen-tutkinnot jarjestamissopimusid)
+  (let [vanha-sopimus-ja-tutkinto (sopimus-ja-tutkinto-arkisto/hae-sopimus-ja-tutkinto jarjestamissopimusid)
         vanhat-tutkintoversiot (set (map :tutkintoversio vanha-sopimus-ja-tutkinto))
         uudet-tutkintoversiot (set (map :tutkintoversio_id sopimus_ja_tutkinto))
         poistettavat (clojure.set/difference vanhat-tutkintoversiot uudet-tutkintoversiot)
@@ -448,7 +442,7 @@
 (defn ^:test-api lisaa-suunnitelma-kantaan!
   "Lisää järjestämissuunnitelman kantaan."
   [jarjestamissopimusid tutkintoversio jarjestamissuunnitelma_content_type jarjestamissuunnitelma_filename]
-  (let [sopimus-ja-tutkinto-lista (hae-sopimuksen-tutkinnot jarjestamissopimusid)
+  (let [sopimus-ja-tutkinto-lista (sopimus-ja-tutkinto-arkisto/hae-sopimus-ja-tutkinto jarjestamissopimusid)
         sopimus-ja-tutkinto (first (filter #(= (:tutkintoversio %) tutkintoversio) sopimus-ja-tutkinto-lista))
         sopimus_ja_tutkinto_id (:sopimus_ja_tutkinto_id sopimus-ja-tutkinto)]
     (sql/insert jarjestamissuunnitelma
@@ -459,7 +453,7 @@
 (defn ^:test-api poista-sopimuksen-suunnitelmat!
   "Poistaa suunnitelmat sopimukselta kokonaan tietokannasta."
   [jarjestamissopimusid]
-  (doseq [sopimus_ja_tutkinto (hae-sopimuksen-tutkinnot jarjestamissopimusid)]
+  (doseq [sopimus_ja_tutkinto (sopimus-ja-tutkinto-arkisto/hae-sopimus-ja-tutkinto jarjestamissopimusid)]
     (sql/delete jarjestamissuunnitelma
       (sql/where {:sopimus_ja_tutkinto (:sopimus_ja_tutkinto_id sopimus_ja_tutkinto)}))))
 

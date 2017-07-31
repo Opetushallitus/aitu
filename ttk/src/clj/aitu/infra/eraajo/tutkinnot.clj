@@ -118,7 +118,7 @@
                 tutkintonimikkeet (map tutkintonimikkeet (:tutkintonimikkeet t))]
             (tallenna-tutkintonimikkeet! tutkintoversio-id tutkintonimikkeet)))))
     (doseq [t (keep muuttunut tutkinnot)]
-      #_(log/info "Päivitetään tutkinto " (:tutkintotunnus t) ", muutokset: " (dissoc t :tutkintotunnus))
+      (log/info "Päivitetään tutkinto " (:tutkintotunnus t) ", muutokset: " (dissoc t :tutkintotunnus))
       (let [tutkintoversio-id (paivita-tutkinto! t)
             tutkintonimikkeet (map tutkintonimikkeet (:tutkintonimikkeet t))]
         (tallenna-tutkintonimikkeet! tutkintoversio-id tutkintonimikkeet)))))
@@ -134,7 +134,9 @@
       (db/transaction
         (log/info "Aloitetaan tutkintojen päivitys koodistopalvelusta")
         (tallenna-koulutusalat! (koodisto/hae-koulutusala-muutokset asetukset))
+        (log/info "Koulutusalat päivitetty")
         (tallenna-opintoalat! (koodisto/hae-opintoala-muutokset asetukset))
+        (log/info "Opintoalat päivitetty")
         (paivita-tutkinnot! (koodisto/hae-tutkinto-muutokset asetukset))
         (log/info "Tutkintojen päivitys koodistopalvelusta valmis")))
     (catch org.postgresql.util.PSQLException e

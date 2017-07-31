@@ -41,6 +41,12 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
        :voimassa_alkupvm (or (some-> (:voimassaAlkuPvm koodi) parse-ymd) (clj-time.core/local-date 2199 1 1))
        :voimassa_loppupvm (or (some-> (:voimassaLoppuPvm koodi) parse-ymd) (clj-time.core/local-date 2199 1 1))})))
 
+;  "koulutusalaoph2002"
+(def ^:private koulutusala-koodisto "isced2011koulutusalataso1")
+
+; "opintoalaoph2002"
+(def ^:private opintoala-koodisto "isced2011koulutusalataso2")
+
 (defn koodi->tutkinto [koodi]
   (koodi->kasite koodi :tutkintotunnus))
 
@@ -73,11 +79,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn ^:private opintoala-koodi?
   [koodi]
-  ((kuuluu-koodistoon "opintoalaoph2002") koodi))
+  ((kuuluu-koodistoon opintoala-koodisto) koodi))
 
 (defn ^:private koulutusala-koodi?
   [koodi]
-  ((kuuluu-koodistoon "koulutusalaoph2002") koodi))
+  ((kuuluu-koodistoon koulutusala-koodisto) koodi))
 
 (defn ^:private osaamisala-koodi?
   [koodi]
@@ -169,15 +175,15 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-koulutusalat
   [asetukset]
-  (let [koodistoversio (koodiston-uusin-versio asetukset "koulutusalaoph2002")]
-    (->> (hae-koodit asetukset "koulutusalaoph2002" koodistoversio)
+  (let [koodistoversio (koodiston-uusin-versio asetukset koulutusala-koodisto)]
+    (->> (hae-koodit asetukset koulutusala-koodisto koodistoversio)
       (map koodi->koulutusala)
       (map #(dissoc % :kuvaus_fi :kuvaus_sv)))))
 
 (defn hae-opintoalat
   [asetukset]
-  (let [koodistoversio (koodiston-uusin-versio asetukset "opintoalaoph2002")]
-    (->> (hae-koodit asetukset "opintoalaoph2002" koodistoversio)
+  (let [koodistoversio (koodiston-uusin-versio asetukset opintoala-koodisto)]
+    (->> (hae-koodit asetukset opintoala-koodisto koodistoversio)
       (map koodi->opintoala)
       (map (partial lisaa-opintoalaan-koulutusala asetukset))
       (map #(dissoc % :kuvaus_fi :kuvaus_sv)))))
@@ -264,6 +270,9 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                       (map #(dissoc % :koodiUri :versio) (hae-koulutusalat asetukset)))]
     (muutokset uudet vanhat)))
 
+(defn updaterf [defaultv]
+  (fn [v] (if (nil? v) defaultv v)))
+
 (defn hae-opintoala-muutokset
   [asetukset]
   (let [vanhat (into {} (for [opintoala (opintoala-arkisto/hae-kaikki)]
@@ -273,6 +282,8 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                                                            :nimi_sv (:selite_sv opintoala)
                                                            :voimassa_alkupvm (:voimassa_alkupvm opintoala)
                                                            :voimassa_loppupvm (:voimassa_loppupvm opintoala)}]))
+        ; TODO: toimiiko tämä nyt vielä?
+        opintoalat (map #(update % :voimassa_loppupvm (updaterf (clj-time.core/local-date 2199 1 1))) (hae-opintoalat asetukset))
         uudet (map-by :opintoala_tkkoodi
-                      (map #(dissoc % :koodiUri :versio) (hae-opintoalat asetukset)))]
+                      (map #(dissoc % :koodiUri :versio) opintoalat))]
     (muutokset uudet vanhat)))

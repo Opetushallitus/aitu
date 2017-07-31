@@ -28,6 +28,8 @@
                                          [:tutkintoversio.voimassa_alkupvm
                                           :tutkintoversio.voimassa_loppupvm
                                           :tutkintoversio.siirtymaajan_loppupvm
+                                          :sopimus_ja_tutkinto.alkupvm
+                                          :sopimus_ja_tutkinto.loppupvm
                                           :sopimus_ja_tutkinto.sopimus_ja_tutkinto_id]))
 
 (defn ^:private do-hae-jarjestamissopimuksen-tutkinnot
@@ -45,6 +47,11 @@
   [jarjestamissopimusid]
   (do-hae-jarjestamissopimuksen-tutkinnot jarjestamissopimusid valittavat-kentat-perus))
 
+(defn hae-sopimus-ja-tutkinto [jarjestamissopimusid]
+  (sql/select sopimus-ja-tutkinto
+              (sql/where {:jarjestamissopimusid jarjestamissopimusid
+                          :poistettu false})))
+                                         
 (defn hae-jarjestamissopimuksen-tutkinnot
   [jarjestamissopimusid]
   (let [sopimus-ja-tutkinto-rivit (do-hae-jarjestamissopimuksen-tutkinnot jarjestamissopimusid valittavat-kentat-laaja)]

@@ -18,6 +18,7 @@
   (:require [clojure.test :refer :all]
             [clojure.walk :refer [postwalk]]
             [aitu.infra.jarjestamissopimus-arkisto :as arkisto]
+            [aitu.infra.sopimus-ja-tutkinto-arkisto :as sopimus-ja-tutkinto-arkisto]
             [aitu.infra.ttk-arkisto :as toimikunta-arkisto]
             [aitu.toimiala.jarjestamissopimus :refer :all]
             [korma.core :as sql]
@@ -242,7 +243,7 @@ tietorakenteen osia."
     (lisaa-tutkintoversio! {:tutkintoversio_id id}))
   (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
   (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
-  (is (= #{1 2 3} (set (map :tutkintoversio (arkisto/hae-sopimuksen-tutkinnot 99))))))
+  (is (= #{1 2 3} (set (map :tutkintoversio (sopimus-ja-tutkinto-arkisto/hae-sopimus-ja-tutkinto 99))))))
 
 (deftest ^:integraatio lisaa-tutkinnot-sopimukselle!-tutkintoversio-map-test
   (lisaa-koulutus-ja-opintoala!)
@@ -262,7 +263,7 @@ tietorakenteen osia."
             :kieli "2k"}
            {:tutkintoversio 3
             :kieli "sv"}}
-         (->> (arkisto/hae-sopimuksen-tutkinnot 99)
+         (->> (sopimus-ja-tutkinto-arkisto/hae-sopimus-ja-tutkinto 99)
            (map #(select-keys % [:tutkintoversio :kieli]))
            set))))
 
@@ -286,7 +287,7 @@ tietorakenteen osia."
   (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99})
   (arkisto/lisaa-tutkinnot-sopimukselle! 99 [1 2 3])
   (arkisto/poista-tutkinnot-sopimukselta! 99 [2 3])
-  (is (= #{1} (set (map :tutkintoversio (arkisto/hae-sopimuksen-tutkinnot 99))))))
+  (is (= #{1} (set (map :tutkintoversio (sopimus-ja-tutkinto-arkisto/hae-sopimus-ja-tutkinto 99))))))
 
 (deftest ^:integraatio poista-tutkinnot-sopimukselta!-auditlog-test
   (testing "poista-tutkinnot-sopimukselta! kirjaa sopimuksen ja tutkinnot auditlogiin"
