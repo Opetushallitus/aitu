@@ -57,8 +57,8 @@ angular.module('koulutustoimijat', ['ngRoute'])
 
       function suodataKoulutustoimijat() {
         var filteredNimella = $filter('suomiJaRuotsi')($scope.kaikkiKoulutustoimijat, 'nimi', $scope.search.nimi);
-        var filteredSopimuksilla = $filter('sopimukset')(filteredNimella, $scope.search.sopimuksia);
-        $scope.koulutustoimijat = $filter('orderByLokalisoitu')(filteredSopimuksilla, 'nimi');
+//        var filteredSopimuksilla = $filter('sopimukset')(filteredNimella, $scope.search.sopimuksia);  // TODO: OPH-1936, Onko tälle filtterille enää tarvetta?
+        $scope.koulutustoimijat = $filter('orderByLokalisoitu')(filteredNimella /*filteredSopimuksilla*/, 'nimi');
       }
 
       function haeKoulutustoimijat() {

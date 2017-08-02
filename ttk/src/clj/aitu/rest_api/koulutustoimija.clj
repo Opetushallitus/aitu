@@ -16,7 +16,6 @@
   (:require [compojure.api.core :refer [GET defroutes]]
             aitu.compojure-util
             [aitu.infra.koulutustoimija-arkisto :as arkisto]
-            [aitu.toimiala.koulutustoimija :as koulutustoimija]
             [oph.common.util.http-util :refer [csv-download-response cachable-response response-or-404]]
             [aitu.toimiala.skeema :refer :all]
             [aitu.util :refer [muodosta-csv]]))
@@ -36,21 +35,25 @@
     :return [KoulutustoimijaLista]
     :kayttooikeus :yleinen-rest-api
     (cachable-response req (arkisto/hae-julkiset-tiedot)))
+
   (GET "/haku" [termi :as req]
     :summary "Hakee kaikki koulutustoimijat joiden nimi sisältää annetun termin"
     :return [KoulutustoimijaLinkki]
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (arkisto/hae-termilla termi)))
+
   (GET "/nimet" req
     :summary "Hakee listan koulutustoimijoiden nimistä"
     :kayttooikeus :yleinen-rest-api
     :return [KoulutustoimijaLinkki]
     (cachable-response req (arkisto/hae-nimet)))
+
   (GET "/:ytunnus" [ytunnus]
     :summary "Hakee koulutustoimijan y-tunnuksella"
     :return KoulutustoimijaLaajatTiedot
     :kayttooikeus :yleinen-rest-api
     (response-or-404 (arkisto/hae ytunnus)))
+
   (GET "/haku/ala" req
     :summary "Hakee kaikki koulutustoimijat joiden opintoalan, tutkinnon, osaamisalan tai tutkinnonosan tunnus on annettu"
     :return [KoulutustoimijaLista]
