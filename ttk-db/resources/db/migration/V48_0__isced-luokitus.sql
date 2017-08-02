@@ -4,9 +4,12 @@
 -- 4. tämän jälkeen kaikki muut tutkinnot ovat päivittyneet, paitsi tässä erikseen listatut muutamat, joille ei löydy
 --    uudesta luokituksesta ainakaan vielä paikkaa.
 -- 5. integraation jälkeen keksityn opintoalan voisi poistaa tietokannasta.
-insert into opintoala(opintoala_tkkoodi, koulutusala_tkkoodi, selite_fi, voimassa_alkupvm, voimassa_loppupvm)
-values ('007', '0', 'Keksitty opintoala ISCED-päivitystä varten', to_date('2017-01-01','YYYY-MM-DD'), to_date('2017-01-01','YYYY-MM-DD'));
 
+-- Testitapausten kannalta tietokanta on tyhjä ja insert ei tapahdu. Asennuksessa olemassaolevan tietokannan päälle tapahtuu.
+insert into opintoala(opintoala_tkkoodi, koulutusala_tkkoodi, selite_fi, voimassa_alkupvm, voimassa_loppupvm)
+  select '007', koulutusala_tkkoodi, 'Keksitty opintoala ISCED-päivitystä varten', to_date('2017-01-01','YYYY-MM-DD'), to_date('2017-01-01','YYYY-MM-DD')
+  from koulutusala where koulutusala_tkkoodi = '0';
+  
 update nayttotutkinto set opintoala = '007' where tutkintotunnus not in
 ('321603','377111','371113','354116','351108','354204','200003','010001','324503');
 
