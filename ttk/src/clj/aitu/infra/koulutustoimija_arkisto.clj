@@ -86,14 +86,10 @@
         tunnus-ehto-puuttuu? (blank? (:tunnus ehdot))
         nimi-ehto-puuttuu?   (blank? (:nimi ehdot))
         nimi                 (str "%" (:nimi ehdot) "%")
-        ;;
-        ;; TODO: Tämä kysely ei toimi oikein, kun on tunnus-ehto (esim "Tuotekehitystyön EAT", jonka tunnus '358902').
-        ;;       Alla oleva Exists-subquery kai vaan katsoo, että koulutustoimijalla ON JOKIN ehdot täyttävä sopimus,
-        ;;       ja sitten koko query palauttaa (virheellisesti) KAIKKI sopimukset filtteröimättä niitä tunnuksen mukaan.
-        ;;       Pitäisi _ehkä_ tehdä samat joinit kuin subqueryssa ja lisätä sum-aggregaattiin samat tunnusta tarkastelevat where-ehdot kuin subqueryssa...
-        ;;
+
         query (if (and tunnus-ehto-puuttuu? sop-voimassa-ei?)
                 ;; TODO: Liittyy caseen: "Ei rajata tunnus-ehdolla, ei-voimassaolevat sopimukset"   => integroi tämä allaolevaan
+                ;; Tässä casessa halutaan sellaiset sopimukset, joilla on aiemmin ollut voimassaolevia sopimuksia, mutta ei ole nyt. Pitäisi siis olla kaksi where-lausetta (exists ja not-exists).
                 (->
                   (sql/select* koulutustoimija)
                   (sql/join :inner :jarjestamissopimus ; inner -> ei koulutustoimijoita, joilla ei ole koskaan ollut sopimusta.
@@ -120,56 +116,58 @@
                   (sql/aggregate (count :js.jarjestamissopimusid) :sopimusten_maara)
                   (sql/group :ytunnus :nimi_fi :nimi_sv)
                   (cond->
-                    (not tunnus-ehto-puuttuu?) (sql/where (sql/sqlfn exists (sql/subselect jarjestamissopimus
-                                                                              (sql/join :inner sopimus-ja-tutkinto
-                                                                                (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid))
-                                                                              (sql/join :inner tutkintoversio
-                                                                                (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
-                                                                              (sql/join :inner nayttotutkinto
-                                                                                (= :tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus))
-                                                                              (sql/join :left opintoala
-                                                                                (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
-                                                                              (sql/join :left tutkinnonosa
-                                                                                (= :tutkintoversio.tutkintoversio_id :tutkinnonosa.tutkintoversio))
-                                                                              (sql/join :left osaamisala
-                                                                                (= :tutkintoversio.tutkintoversio_id :osaamisala.tutkintoversio))
-                                                                              (sql/where (and {:js.jarjestamissopimusid :jarjestamissopimus.jarjestamissopimusid
-                                                                                               :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus}
-                                                                                              (or {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}
-                                                                                                  {:opintoala.opintoala_tkkoodi   (:tunnus ehdot)}
-                                                                                                  {:tutkinnonosa.osatunnus        (:tunnus ehdot)}
-                                                                                                  {:osaamisala.osaamisalatunnus   (:tunnus ehdot)}
-                                                                                                  )))
-                                                                              (cond->
-                                                                                sop-voimassa-kylla?
-                                                                                ;; alkupvm <= current date <= loppupvm  &&  current date <= siirtymaajan_loppupvm
-                                                                                ;; tutkintoversio.siirtymaajan_loppupvm kenttä on tietokannassa NOT NULL
-                                                                                (sql/where (and {:jarjestamissopimus.voimassa true}
-                                                                                                (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
-                                                                                                (<= (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")))
-                                                                                                (<= (sql/raw "current_date") :tutkintoversio.siirtymaajan_loppupvm)
-                                                                                                ))
-                                                                                sop-voimassa-ei?
-                                                                                ;; alkupvm > current_date || current date > loppupvm || current date > siirtymaajan_loppupvm
-                                                                                (sql/where (or {:jarjestamissopimus.voimassa false}
-                                                                                               (> :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
-                                                                                               (> (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")))
-                                                                                               (> (sql/raw "current_date") :tutkintoversio.siirtymaajan_loppupvm)
-                                                                                               ))
-                                                                                ))))
+                    nimi-ehto-puuttuu? (sql/where (sql/sqlfn exists (sql/subselect jarjestamissopimus
+                                                                      (sql/join :inner sopimus-ja-tutkinto
+                                                                        (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid))
+                                                                      (sql/join :inner tutkintoversio
+                                                                        (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
+
+                                                                      (cond-> (not tunnus-ehto-puuttuu?)
+                                                                        (->
+                                                                          (sql/join :inner nayttotutkinto
+                                                                            (= :tutkintoversio.tutkintotunnus :nayttotutkinto.tutkintotunnus))
+                                                                          (sql/join :left opintoala
+                                                                            (= :nayttotutkinto.opintoala :opintoala.opintoala_tkkoodi))
+                                                                          (sql/join :left tutkinnonosa
+                                                                            (= :tutkintoversio.tutkintoversio_id :tutkinnonosa.tutkintoversio))
+                                                                          (sql/join :left osaamisala
+                                                                            (= :tutkintoversio.tutkintoversio_id :osaamisala.tutkintoversio))
+                                                                          (sql/where (and {:js.jarjestamissopimusid :jarjestamissopimus.jarjestamissopimusid
+                                                                                           :jarjestamissopimus.koulutustoimija :koulutustoimija.ytunnus}
+                                                                                          (or {:nayttotutkinto.tutkintotunnus (:tunnus ehdot)}
+                                                                                              {:opintoala.opintoala_tkkoodi   (:tunnus ehdot)}
+                                                                                              {:tutkinnonosa.osatunnus        (:tunnus ehdot)}
+                                                                                              {:osaamisala.osaamisalatunnus   (:tunnus ehdot)}
+                                                                                              )))))
+                                                                      (cond->
+                                                                        (and (not tunnus-ehto-puuttuu?) sop-voimassa-kylla?)
+                                                                        ;; alkupvm <= current date <= loppupvm  &&  current date <= siirtymaajan_loppupvm
+                                                                        ;; tutkintoversio.siirtymaajan_loppupvm kenttä on tietokannassa NOT NULL
+                                                                        (sql/where (and {:jarjestamissopimus.voimassa true}
+                                                                                        (<= :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
+                                                                                        (<= (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")))
+                                                                                        (<= (sql/raw "current_date") :tutkintoversio.siirtymaajan_loppupvm)
+                                                                                        ))
+
+                                                                        (and (not tunnus-ehto-puuttuu?) sop-voimassa-ei?)
+                                                                        ;; alkupvm > current_date || current date > loppupvm || current date > siirtymaajan_loppupvm
+                                                                        (sql/where (or {:jarjestamissopimus.voimassa false}
+                                                                                       (> :sopimus_ja_tutkinto.alkupvm (sql/raw "current_date"))
+                                                                                       (> (sql/raw "current_date") (sql/sqlfn coalesce :sopimus_ja_tutkinto.loppupvm (sql/raw "current_date")))
+                                                                                       (> (sql/raw "current_date") :tutkintoversio.siirtymaajan_loppupvm)
+                                                                                       ))
+
+                                                                        (and tunnus-ehto-puuttuu? (or sop-voimassa-kylla? sop-voimassa-kaikki?))
+                                                                        ;; Case (and tunnus-ehto-puuttuu? sop-voimassa-ei) käsitelty jo aiemmin yllä.
+                                                                        (cond->
+                                                                          sop-voimassa-kylla? (sql/where (and {:jarjestamissopimus.voimassa true}
+                                                                                                              (> (sql/raw "current_date") :tutkintoversio.siirtymaajan_loppupvm))))
+                                                                        ))))
+
                     (not nimi-ehto-puuttuu?) (sql/where (or {:nimi_fi [ilike nimi]}
                                                             {:nimi_sv [ilike nimi]}))
-                    (and tunnus-ehto-puuttuu?
-                      (or sop-voimassa-kylla? sop-voimassa-kaikki?)) (sql/where (sql/sqlfn exists (sql/subselect jarjestamissopimus
-                                                                                                    (sql/join :inner sopimus-ja-tutkinto
-                                                                                                      (= :jarjestamissopimus.jarjestamissopimusid :sopimus_ja_tutkinto.jarjestamissopimusid))
-                                                                                                    (sql/join :inner tutkintoversio
-                                                                                                      (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
-                                                                                                    (cond->
-                                                                                                      sop-voimassa-kylla? (sql/where (and (= :jarjestamissopimus.voimassa true)
-                                                                                                                                          (> (sql/raw "current_date") :tutkintoversio.siirtymaajan_loppupvm))))
-                                                                                                    )))
                     )
+
                   (sql/order :nimi_fi :ASC)
                   ))
         koulutustoimijat (sql/exec query)
