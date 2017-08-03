@@ -138,6 +138,9 @@
                                                          "and (sopimus_ja_tutkinto.alkupvm <= current_date) "
                                                          "and (current_date <= COALESCE(sopimus_ja_tutkinto.loppupvm, current_date)) "
                                                          "and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END)")) 0))
+                  (cond->
+                    nimi-ehto-annettu? (sql/where {:nimi [ilike nimi]})
+                    )
                   (sql/order :nimi :ASC)
                   )
                 ;; Muut
