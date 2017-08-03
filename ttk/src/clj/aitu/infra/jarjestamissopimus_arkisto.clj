@@ -15,11 +15,12 @@
 (ns aitu.infra.jarjestamissopimus-arkisto
   (:import org.apache.commons.io.FileUtils)
   (:require  [clj-time.core :as time]
+             [clojure.tools.logging :as log]
              [korma.db :refer :all]
              [korma.core :as sql]
              [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists max-date min-date map-by]]
              [oph.common.util.util :as util]
-             [oph.korma.common :as sql-util]
+             [oph.korma.common :as sql-util] 
              [aitu.infra.sopimus-ja-tutkinto-arkisto  :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos         :as oppilaitos-kaytava]
              [aitu.integraatio.sql.koulutustoimija    :as koulutustoimija-kaytava]
@@ -59,11 +60,6 @@
 
 (declare hae-kaikki hae-ja-liita-tutkinnonosiin-asti)
 
-(defn ^:integration-api paivita-sopimusten-voimassaolo!
-  []
-  (doseq [{:keys [jarjestamissopimusid voimassa]} (hae-kaikki)]
-    (aseta-sopimuksen-voimassaolo! jarjestamissopimusid voimassa)))
-
 (defn ^:interatio-api hae-perustiedot [jarjestamissopimusid]
   (sql-util/select-unique jarjestamissopimus
                           (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
@@ -79,6 +75,8 @@
         loppupvm (when (and (seq tutkinnot)
                             (every? :loppupvm tutkinnot))
                    (apply max-date (keep :loppupvm tutkinnot)))]
+    (when (not (= (:loppupvm sopimus) loppupvm))
+      (log/info "Päivitetään sopimuksen " (:sopimusnumero sopimus) " voimassaolon loppu: " (:loppupvm sopimus) " -> " loppupvm))
     (sql/update jarjestamissopimus
                 (sql/set-fields {:alkupvm alkupvm, :loppupvm loppupvm})
       (sql/where {:jarjestamissopimusid jarjestamissopimusid}))
@@ -87,7 +85,7 @@
                       (hae-ja-liita-tutkinnonosiin-asti jarjestamissopimusid)))]
       (aseta-sopimuksen-voimassaolo! jarjestamissopimusid (:voimassa sopimus)))))
 
-(defn ^:integration-api paivita-sopimusten-voimassaolo2!
+(defn ^:integration-api paivita-sopimusten-voimassaolo!
   []
   (doseq [{:keys [jarjestamissopimusid ]} (hae-kaikki)]
     (paivita-sopimuksen-voimassaolo! jarjestamissopimusid )))

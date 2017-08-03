@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [clj-time.core :as time]
             [korma.core :as sql]
+            [clojure.data]
             [aitu.integraatio.sql.korma :refer :all]
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture]]
             [aitu.infra.eraajo.eperusteet :refer :all]
@@ -57,63 +58,71 @@
 (defn paivita-voimaan! [jarjestamissopimusid]
   (sql/update jarjestamissopimus
               (sql/set-fields {:voimassa true
-                               :alkupvm (time/now)})
+                               :alkupvm (time/local-date 2015 1 1)})
               (sql/where {:jarjestamissopimusid jarjestamissopimusid})))
 
 (deftest ^:integraatio sopimus-paivitys-test
   (lisaa-testidata!)
 
   ;voimassa, tutkinto voimassa -> tälle ei tapahdu mitään
-  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99
-                              :voimassa true
-                              :alkupvm (time/now)
-                              })
-  (arkisto/lisaa-tutkinnot-sopimukselle! 99 [-1])
-
-  ; ei-voimassa, tutkinto voimassa -> tämän pitäisi tulla voimassaolevaksi
-  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 98
-                              :voimassa false
-                              })  
-  (arkisto/lisaa-tutkinnot-sopimukselle! 98 [-1])
-
-  ; voimassa, tutkinto lakannut, siirtymäaika menossa -> tämän pitäisi pysyä voimassa
-  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 97
-                              :voimassa true
-                              })
-  (arkisto/lisaa-tutkinnot-sopimukselle! 97 [-3])
-
-  ; voimassa, tutkinto lakannut, siirtymäaika loppu -> tämän pitäisi lakata olemasta voimassa
   (lisaa-jarjestamissopimus! {:jarjestamissopimusid 96
                               :voimassa true
+                              :alkupvm (time/local-date 2015 1 1)
                               })
-  (arkisto/lisaa-tutkinnot-sopimukselle! 96 [-4])
+  (arkisto/lisaa-tutkinnot-sopimukselle! 96 [-1])
 
-  (paivita-voimaan! 99)
-  (paivita-voimaan! 97)
-  (paivita-voimaan! 96)
+  ; ei-voimassa, tutkinto voimassa -> tämän pitäisi tulla voimassaolevaksi
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 97
+                              :voimassa false
+                              })  
+  (arkisto/lisaa-tutkinnot-sopimukselle! 97 [-1])
+
+  ; voimassa, tutkinto lakannut, siirtymäaika menossa -> tämän pitäisi pysyä voimassa
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 98
+                              :voimassa true
+                              })
+  (arkisto/lisaa-tutkinnot-sopimukselle! 98 [-3])
+
+  ; voimassa, tutkinto lakannut, siirtymäaika loppu -> tämän pitäisi lakata olemasta voimassa
+  (lisaa-jarjestamissopimus! {:jarjestamissopimusid 99
+                              :voimassa true
+                              })
+  (arkisto/lisaa-tutkinnot-sopimukselle! 99 [-4])
   
-  (let [sopimus (arkisto/hae 99)
-        sopimus2 (arkisto/hae 98)
-        sopi3 (arkisto/hae 97)
-        sopi4 (arkisto/hae 96)]
-    (is (true? (:voimassa sopimus)))
-    (is (false? (:voimassa sopimus2)))
-    (is (true? (:voimassa sopi3)))
-    (is (true? (:voimassa sopi4)))
-;    (clojure.pprint/pprint sopimus2)
-    )
-  ; ohitetaan testidatassa kiinteästi oleva sopimus, jotta testidatan siivous ei yritä siivota sitä pois (mikä epäonnistuisi)
-  (doseq [{:keys [jarjestamissopimusid voimassa]} (arkisto/hae-kaikki)]
-    (when (> jarjestamissopimusid 0)
-      (arkisto/aseta-sopimuksen-voimassaolo! jarjestamissopimusid voimassa)))
+  (paivita-voimaan! 96)
+  (paivita-voimaan! 98)
+  (paivita-voimaan! 99)
+  (sql/update jarjestamissopimus
+              (sql/set-fields {:voimassa false
+                               :alkupvm (time/local-date 2015 1 1)})
+              (sql/where {:jarjestamissopimusid 97}))
+  (sql/update sopimus-ja-tutkinto
+              (sql/set-fields {:alkupvm (time/local-date 2015 1 1)})
+              (sql/where (> :jarjestamissopimusid 0))
+              )
+ 
+  (let [sop1-ennen (arkisto/hae 96)
+        sop2-ennen (arkisto/hae 97)
+        sop3-ennen (arkisto/hae 98)
+        sop4-ennen (arkisto/hae 99)]
+    (is (true? (:voimassa sop1-ennen)))
+    (is (false? (:voimassa sop2-ennen)))
+    (is (true? (:voimassa sop3-ennen)))
+    (is (true? (:voimassa sop4-ennen))))    
 
-  ;  (arkisto/paivita-sopimusten-voimassaolo!)
-  (let [sopimus (arkisto/hae 99)
-        sopimus2 (arkisto/hae 98)
-        sopi3 (arkisto/hae 97)
-        sopi4 (arkisto/hae 96)]
-    (is (true? (:voimassa sopimus)))
-;    (is (true? (:voimassa sopimus2)))
-    (is (true? (:voimassa sopi3)))
-    (is (false? (:voimassa sopi4))))
-)
+  ; ohitetaan testidatassa kiinteästi oleva sopimus, jotta testidatan siivous ei yritä siivota sitä pois (mikä epäonnistuisi)
+  (arkisto/paivita-sopimuksen-voimassaolo! 96)
+  (arkisto/paivita-sopimuksen-voimassaolo! 97)
+  (arkisto/paivita-sopimuksen-voimassaolo! 98)
+  (arkisto/paivita-sopimuksen-voimassaolo! 99)
+  
+  (let [sop1 (arkisto/hae 96)
+        sop2 (arkisto/hae 97)
+        sop3 (arkisto/hae 98)
+        sop4 (arkisto/hae 99)]
+ 
+    (is (true? (:voimassa sop1)))
+    (is (true? (:voimassa sop2)))
+    (is (true? (:voimassa sop3)))
+    (is (false? (:voimassa sop4)))
+))
