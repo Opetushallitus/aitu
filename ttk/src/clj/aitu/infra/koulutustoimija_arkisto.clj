@@ -100,8 +100,14 @@
                   (sql/join :inner tutkintoversio
                     (= :sopimus_ja_tutkinto.tutkintoversio :tutkintoversio.tutkintoversio_id))
                   (sql/fields :ytunnus :nimi_fi :nimi_sv)
-                  (sql/aggregate (sum (sql/raw "case WHEN (jarjestamissopimus.voimassa and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END")) :sopimusten_maara)
-;                  (sql/aggregate (sum (sql/raw "case WHEN (jarjestamissopimus.voimassa = false or (current_date > tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END")) :eivoimassalkm)
+                  (sql/aggregate (sum (sql/raw (str "case WHEN (jarjestamissopimus.voimassa "
+                                                          "and (sopimus_ja_tutkinto.alkupvm <= current_date) "
+                                                          "and (current_date <= COALESCE(sopimus_ja_tutkinto.loppupvm, current_date)) "
+                                                          "and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END"))) :sopimusten_maara)
+;                  (sql/aggregate (sum (sql/raw (str "case WHEN (jarjestamissopimus.voimassa = false "
+;                                                          "and (sopimus_ja_tutkinto.alkupvm > current_date) "
+;                                                          "and (current_date > COALESCE(sopimus_ja_tutkinto.loppupvm, current_date)) "
+;                                                          "and (current_date > tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END"))) :eivoimassalkm)
                   (sql/group :ytunnus :nimi_fi :nimi_sv)
                   (sql/having (= (sql/raw "sum(case WHEN (jarjestamissopimus.voimassa and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END)") 0))
                   (sql/order :nimi_fi :ASC)
