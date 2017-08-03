@@ -42,7 +42,7 @@
                  {:nimi_fi "Testiopisto KT5", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT5", :sopimusten_maara 1})
               (body-json (:response tuloksia))))
 
-        (is (= '({:nimi_fi "Testiopisto KT4" :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT4", :sopimusten_maara 0}
+        (is (= '({:nimi_fi "Testiopisto KT4" :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT4", :sopimusten_maara 1}
                  {:nimi_fi "Testiopisto KT5" :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT5", :sopimusten_maara 1})
                (body-json (:response tutkinto-ei-sopimuksia))))
 
