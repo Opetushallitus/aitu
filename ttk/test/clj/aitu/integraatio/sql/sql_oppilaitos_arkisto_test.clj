@@ -39,7 +39,7 @@
 (deftest ^:integraatio hae-ehdoilla-nimi
   (kt-testidata!)
   (testing "nimellä haku ei välitä isoista ja pienistä kirjaimista"
-    (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:nimi "bar"})))
+    (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "kaikki" :nimi "bar"})))
            #{"OL1" "OL2"}))))
 
 (deftest ^:integraatio hae-ehdoilla-sopimuksia
@@ -53,7 +53,7 @@
   (is (= (set (map :oppilaitoskoodi (arkisto/hae-ehdoilla {:sopimuksia "kaikki"
                                                            :nimi "Oppilaitos"})))
         #{"OL1" "OL2" "OL4" "OL5"})))
- 
+
 (deftest ^:integraatio hae-ehdoilla-tutkinto
   (kt-testidata!)
   (testing "tutkinnon tunnuksella haku toimii"

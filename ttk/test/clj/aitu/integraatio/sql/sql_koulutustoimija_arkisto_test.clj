@@ -69,22 +69,22 @@
         o2 (lisaa-oppilaitos! {:koulutustoimija "KT2" :nimi "Oppilaitos o2 BAR" :oppilaitoskoodi "OL2"})
         sop2 (lisaa-jarjestamissopimus! kt2 o2)
         _ (lisaa-tutkinto-sopimukselle! sop2 -20000)
-        
+
         kt3 (lisaa-koulutustoimija! {:ytunnus "KT3" :nimi_fi "Testiopisto KT3" })
-              
+
         kt4 (lisaa-koulutustoimija! {:ytunnus "KT4" :nimi_fi "Testiopisto KT4" })
         o4 (lisaa-oppilaitos! {:koulutustoimija "KT4" :nimi "Oppilaitos o4" :oppilaitoskoodi "OL4"})
         sop4 (lisaa-jarjestamissopimus! kt4 o4 {:voimassa false :loppupvm menneisyydessa}) ;  nämä overridataan koska sopimus_ja_tutkinto voimassaolo määrää asian. Sinänsä siis oikein kyllä.
         _ (lisaa-tutkinto-sopimukselle! sop4 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa)
-        
+
         kt5 (lisaa-koulutustoimija! {:ytunnus "KT5" :nimi_fi "Testiopisto KT5" })
         o5 (lisaa-oppilaitos! {:koulutustoimija "KT5" :nimi "Oppilaitos o2" :oppilaitoskoodi "OL5"})
         sop5 (lisaa-jarjestamissopimus! kt5 o5)
         _ (lisaa-tutkinto-sopimukselle! sop5 (:tutkintoversio_id tv1)  (time/local-date 2011 1 1) menneisyydessa)
         _ (lisaa-tutkinto-sopimukselle! sop5 -20000) ; tutkintotunnus "927128"
-        
+
         ]))
-  
+
 (deftest ^:integraatio hae-ehdoilla-tutkinto
   (kt-testidata!)
 
@@ -100,7 +100,7 @@
 (deftest ^:integraatio hae-nimen-avulla
   (testing "nimihaku toimii ja on case insensitive"
     (kt-testidata!)
-    (is (= (set (map :ytunnus (arkisto/hae-ehdoilla {:nimi "bar"})))
+    (is (= (set (map :ytunnus (arkisto/hae-ehdoilla {:nimi "bar" :sopimuksia "kaikki"})))
            #{"KT1" "KT2"}))))
 
 (deftest ^:integraatio hae-termilla-test
