@@ -113,7 +113,10 @@
                     nimi-ehto-annettu? (sql/where (or {:nimi_fi [ilike nimi]}
                                                       {:nimi_sv [ilike nimi]}))
                     )
-                  (sql/having (= (sql/raw "sum(case WHEN (jarjestamissopimus.voimassa and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END)") 0))
+                  (sql/having (= (sql/raw (str "sum(case WHEN (jarjestamissopimus.voimassa "
+                                                         "and (sopimus_ja_tutkinto.alkupvm <= current_date) "
+                                                         "and (current_date <= COALESCE(sopimus_ja_tutkinto.loppupvm, current_date)) "
+                                                         "and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END)")) 0))
                   (sql/order :nimi_fi :ASC)
                   )
                 ;; Muut
