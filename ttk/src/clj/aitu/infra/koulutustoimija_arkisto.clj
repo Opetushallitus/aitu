@@ -109,6 +109,10 @@
 ;                                                          "and (current_date > COALESCE(sopimus_ja_tutkinto.loppupvm, current_date)) "
 ;                                                          "and (current_date > tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END"))) :eivoimassalkm)
                   (sql/group :ytunnus :nimi_fi :nimi_sv)
+                  (cond->
+                    nimi-ehto-annettu? (sql/where (or {:nimi_fi [ilike nimi]}
+                                                      {:nimi_sv [ilike nimi]}))
+                    )
                   (sql/having (= (sql/raw "sum(case WHEN (jarjestamissopimus.voimassa and (current_date <= tutkintoversio.siirtymaajan_loppupvm)) THEN 1 ELSE 0 END)") 0))
                   (sql/order :nimi_fi :ASC)
                   )
