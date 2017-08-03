@@ -16,10 +16,9 @@
   (:require [compojure.api.core :refer [GET defroutes]]
             aitu.compojure-util
             [aitu.infra.oppilaitos-arkisto :as arkisto]
-            [oph.common.util.http-util :refer [cachable-response response-or-404]]
+            [oph.common.util.http-util :refer [csv-download-response cachable-response response-or-404]]
             [aitu.toimiala.skeema :refer :all]
-            [aitu.util :refer [muodosta-csv]]
-            [oph.common.util.http-util :refer [csv-download-response]]))
+            [aitu.util :refer [muodosta-csv]]))
 
 (def oppilaitoskenttien-jarjestys [:nimi :oppilaitoskoodi :sopimusten_maara])
 
@@ -31,7 +30,7 @@
                            "oppilaitokset.csv")))
 
 (defroutes reitit
-  (GET "/" [:as req]
+  (GET "/" req
     :summary "Hakee kaikki oppilaitokset"
     :return [OppilaitosLista]
     :kayttooikeus :yleinen-rest-api

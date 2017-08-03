@@ -51,19 +51,20 @@ angular.module('oppilaitokset', ['ngRoute'])
       $scope.oppilaitokset = [];
       $scope.search = {nimi: "", ala: {tunnus: ""}, sopimuksia: "kylla"};
       $scope.$watch('search.nimi', suodataOppilaitokset);
-      $scope.$watch('search.sopimuksia', suodataOppilaitokset);
       $scope.$watch('search.sopimuksia', haeOppilaitokset);
       $scope.$watch('search.ala', haeOppilaitokset);
       $scope.$watchCollection('kaikkiOppilaitokset', suodataOppilaitokset);
 
       function suodataOppilaitokset() {
         var filteredNimella = $filter('filter')($scope.kaikkiOppilaitokset, {nimi: $scope.search.nimi});
-        var filteredSopimuksilla = $filter('sopimukset')(filteredNimella, $scope.search.sopimuksia);
-        $scope.oppilaitokset = $filter('orderBy')(filteredSopimuksilla, 'nimi');
+//        var filteredSopimuksilla = $filter('sopimukset')(filteredNimella, $scope.search.sopimuksia);  // TODO: OPH-1936, Onko tälle filtterille enää tarvetta?
+        $scope.oppilaitokset = $filter('orderBy')(filteredNimella /*filteredSopimuksilla*/, 'nimi');
       }
 
       function haeOppilaitokset() {
-        $scope.kaikkiOppilaitokset = OppilaitosHakuResource.query({tunnus: $scope.search.ala && $scope.search.ala.tunnus, sopimuksia: $scope.search.sopimuksia});
+        $scope.kaikkiOppilaitokset =
+          OppilaitosHakuResource.query({tunnus: $scope.search.ala && $scope.search.ala.tunnus,
+                                        sopimuksia: $scope.search.sopimuksia});
       }
     }
   ])
