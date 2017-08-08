@@ -25,17 +25,17 @@
                  :paivitys "päivitys"})
 
 (defn ^:private kirjoita!
-  ([tieto operaatio tiedot-map]
-  {:pre [(bound? #'ka/*current-user-uid*),
-         (contains? operaatiot operaatio)
-         (keyword? tieto)
-         (map? tiedot-map)]}
-  (let [uid ka/*current-user-uid*
-        msg (str "uid: " uid " oper: " (operaatio operaatiot) " kohde: " (name tieto) " meta: (" tiedot-map ")")]
-    (binding [aitulog/*lisaa-uid-ja-request-id?* false]
-      (log/info msg))))
   ([tieto operaatio]
-    (kirjoita! tieto operaatio {})))
+    (kirjoita! tieto operaatio {}))
+  ([tieto operaatio tiedot-map]
+    {:pre [(bound? #'ka/*current-user-uid*),
+           (contains? operaatiot operaatio)
+           (keyword? tieto)
+           (map? tiedot-map)]}
+    (let [uid ka/*current-user-uid*
+          msg (str "uid: " uid " oper: " (operaatio operaatiot) " kohde: " (name tieto) " meta: (" tiedot-map ")")]
+      (binding [aitulog/*lisaa-uid-ja-request-id?* false]
+        (log/info msg)))))
 
 (defn jarjestamissopimus-paivitys!
   [sopimusid diaarinumero]
@@ -128,9 +128,9 @@
   (kirjoita! :suoritus operaatio tiedot))
 
 (defn lisaa-arvioija!
-  [tiedot] 
+  [tiedot]
   (kirjoita! :arvioija :lisays tiedot))
 
 (defn lue-suoritukset-excel!
-  [] 
+  []
   (kirjoita! :suoritus :lisays {}))
