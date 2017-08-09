@@ -51,21 +51,23 @@
 
 (defn lisaa!
   [form]
-  (auditlog/suorittaja-operaatio! :lisays (dissoc form :hetu :oid))
-  (sql/insert :suorittaja
-    (sql/values (-> form
-                  (assoc :rahoitusmuoto (:rahoitusmuoto_id form))
-                  (select-keys  [:rahoitusmuoto :etunimi :sukunimi :hetu :oid])))))
+  (let [suorittaja (sql/insert :suorittaja
+                     (sql/values (-> form
+                                   (assoc :rahoitusmuoto (:rahoitusmuoto_id form))
+                                   (select-keys  [:rahoitusmuoto :etunimi :sukunimi :hetu :oid]))))]
+    (auditlog/suorittaja-operaatio! (:oid form) (:suorittaja_id suorittaja) :lisays (dissoc form :hetu :oid))
+    suorittaja
+    ))
 
 (defn poista!
   [suorittajaid]
-  (auditlog/suorittaja-operaatio! :poisto {:suorittajaid suorittajaid})
+  (auditlog/suorittaja-operaatio! nil suorittajaid :poisto {:suorittajaid suorittajaid})
   (sql/delete :suorittaja
     (sql/where {:suorittaja_id suorittajaid})))
 
 (defn tallenna!
   [suorittajaid suorittaja]
-  (auditlog/suorittaja-operaatio! :paivitys (assoc suorittaja :suorittaja_id suorittajaid))
+  (auditlog/suorittaja-operaatio! nil suorittajaid :paivitys (assoc suorittaja :suorittaja_id suorittajaid))
   (sql/update :suorittaja
     (sql/set-fields (-> suorittaja
                       (assoc :rahoitusmuoto (:rahoitusmuoto_id suorittaja))
