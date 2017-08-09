@@ -18,12 +18,13 @@
             [clojure.tools.logging :as log]
             oph.log
             [oph.common.util.util :refer [pisteavaimet->puu
-                              deep-merge
-                              deep-update-vals
-                              paths]]
+                                          deep-merge
+                                          deep-update-vals
+                                          paths]]
             [aitu.util :refer [kaikki-optional]]
             [schema.core :as s]
-            [schema.coerce :as sc]))
+            [schema.coerce :as sc]
+            [clj-time.local :as time-local]))
 
 (def asetukset (promise))
 
@@ -121,6 +122,11 @@
                                                  :hyvaksyja ""
                                                  :jakelu ""
                                                  :paatosteksti ""}}))
+
+(def common-audit-log-asetukset {:boot-time        (time-local/local-now)
+                                 :hostname         "localhost"
+                                 :service-name     "aitu"
+                                 :application-type "virkailija"})
 
 (def build-id (delay (if-let [r (resource "build-id.txt")]
                        (.trim (slurp r :encoding "UTF-8"))
