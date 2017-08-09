@@ -20,7 +20,7 @@
              [korma.core :as sql]
              [oph.common.util.util :refer [map-values select-and-rename-keys update-in-if-exists max-date min-date map-by]]
              [oph.common.util.util :as util]
-             [oph.korma.common :as sql-util] 
+             [oph.korma.common :as sql-util]
              [aitu.infra.sopimus-ja-tutkinto-arkisto  :as sopimus-ja-tutkinto-arkisto]
              [aitu.integraatio.sql.oppilaitos         :as oppilaitos-kaytava]
              [aitu.integraatio.sql.koulutustoimija    :as koulutustoimija-kaytava]
@@ -139,7 +139,7 @@
   [sopimus_ja_tutkinto sopimus_ja_tutkinto_id]
   (auditlog/sopimuksen-osaamisalat-paivitys!
     sopimus_ja_tutkinto_id
-    (map #(-> % :sopimus_ja_tutkinto_ja_osaamisala :osaamisala_id) sopimus_ja_tutkinto))
+    (map :osaamisala_id (:sopimus_ja_tutkinto_ja_osaamisala sopimus_ja_tutkinto)))
   (sql/delete sopimus-ja-tutkinto-ja-osaamisala
     (sql/where {:sopimus_ja_tutkinto sopimus_ja_tutkinto_id}))
   (doseq [osaamisala (:sopimus_ja_tutkinto_ja_osaamisala sopimus_ja_tutkinto)]
