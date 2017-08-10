@@ -37,20 +37,21 @@
             [aitu.asetukset :refer [lue-asetukset oletusasetukset build-id kehitysmoodi? service-path]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.i18n :as i18n]
+            [oph.common.infra.common-audit-log :refer [req-metadata-saver-wrapper konfiguroi-common-audit-lokitus]]
             [aitu.infra.auth-wrapper :as auth]
             [clj-cas-client.core :refer [cas]]
             [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
             [oph.common.infra.anon-auth :as anon-auth]
             [oph.korma.korma-auth :as ka]
-            [aitu.toimiala.kayttajaoikeudet
-             :refer [*current-user-authmap* yllapitaja?]]
+            [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap* yllapitaja?]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.kayttooikeuspalvelu :as kop]
             [aitu.integraatio.clamav :as clamav]
             [aitu.infra.eraajo :as eraajo]
             [aitu.infra.eraajo.sopimusten-voimassaolo :as sopimusten-voimassaolo]
             aitu.compojure-util
-            aitu.reitit))
+            aitu.reitit)
+  (:import [java.net.URL]))
 
 (schema.core/set-fn-validation! true)
 
@@ -141,6 +142,7 @@
                                   :timeout-response (timeout-response asetukset)})
       (auth-middleware asetukset)
       log-request-wrapper
+      req-metadata-saver-wrapper   ;; Huom: Tämän oltava "auth-middleware":n jälkeen
 
       (clamav-mock asetukset)
       wrap-multipart-params
@@ -159,6 +161,9 @@
     (let [asetukset (lue-asetukset oletus-asetukset)
           _ (deliver aitu.asetukset/asetukset asetukset)
           _ (konfiguroi-lokitus asetukset)
+          _ (let [hostname (-> asetukset :server :base-url java.net.URL. .getHost)
+                  audit-asetukset (assoc aitu.asetukset/common-audit-log-asetukset :hostname hostname)]
+              (konfiguroi-common-audit-lokitus audit-asetukset))
           _ (log/info "Käynnistetään Aitu" @build-id)
           _ (oph.korma.korma/luo-db (:db asetukset))
           upload-limit (* 10 1024 1024) ; max file upload (and general HTTP body) size in bytes

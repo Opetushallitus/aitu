@@ -20,10 +20,10 @@
 
 (defn hae-kaikki []
   (sql/select arvioija
-    (sql/fields :arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari)              
+    (sql/fields :arvioija_id :etunimi :sukunimi :rooli :nayttotutkintomestari)
     (sql/order :sukunimi)
     (sql/order :etunimi)))
-  
+
 (defn hae-nimella
   "Hakee arvioijia nimen perusteella."
   [nimi]
@@ -35,6 +35,8 @@
 (defn lisaa!
   "lisää uuden arvioijan"
   [uusi-arvioija]
-  (auditlog/lisaa-arvioija! uusi-arvioija)
-  (sql/insert arvioija
-    (sql/values uusi-arvioija)))
+  (let [arvioija (sql/insert arvioija
+                   (sql/values uusi-arvioija))]
+    (auditlog/lisaa-arvioija! (:arvioija-id arvioija) uusi-arvioija)
+    arvioija
+    ))

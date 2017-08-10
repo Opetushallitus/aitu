@@ -418,7 +418,7 @@
    (sql/values (osa->suoritus-db osa))))
 
 (defn lisaa-koko-tutkinnon-suoritus! [suoritusid tutkintoversio suorittaja]
-  (auditlog/suoritus-operaatio! :lisays {:kokotutkinto tutkintoversio :suorittaja suorittaja})
+  (auditlog/suoritus-operaatio! suoritusid :lisays {:kokotutkinto tutkintoversio :suorittaja suorittaja})
   (sql/insert :tutkintosuoritus
     (sql/values {:suoritus_id  suoritusid
                  :tutkintoversio_id tutkintoversio
@@ -438,8 +438,9 @@
 
 (defn lisaa!
   [suoritus]
-  (auditlog/suoritus-operaatio! :lisays suoritus)
-  (let [suorituskerta (sql/insert suorituskerta (sql/values (kerta->suorituskerta-db suoritus) ))]
+  (let [suorituskerta-info (kerta->suorituskerta-db suoritus)
+        suorituskerta (sql/insert suorituskerta (sql/values suorituskerta-info ))]
+    (auditlog/suorituskerta-operaatio! (:suorituskerta_id suorituskerta) :lisays suorituskerta-info)
     (doseq [osa (:osat suoritus)]
       (let [suor (lisaa-suoritus! (assoc osa :suorituskerta_id (:suorituskerta_id suorituskerta)))]
         (when (true? (:kokotutkinto osa))
@@ -456,7 +457,7 @@
 (defn liita-suoritus!
   "Liitä tutkinnon osan suoritukseen suoritettava (toinen tutkinto, johon tämä osa ei kuulu) tutkinto"
   [{:keys [suorituskerta_id tutkintoversio_suoritettava liitetty_pvm] :as suoritustiedot}]
-  (auditlog/suoritus-operaatio! :paivitys suoritustiedot)
+  (auditlog/suorituskerta-operaatio! (->int suorituskerta_id) :paivitys suoritustiedot)
   (sql-util/update-unique suorituskerta
     (sql/set-fields {:tutkintoversio_suoritettava tutkintoversio_suoritettava
                      :liitetty_pvm (parse-iso-date liitetty_pvm)})
@@ -469,8 +470,8 @@
     (lisaa! suoritustiedot)
     ; päivitys
     (do
-;      (auditlog/suoritus-operaatio! :paivitys {:suorituskerta_id suorituskerta_id})
-       (auditlog/suoritus-operaatio! :paivitys suoritustiedot)
+;      (auditlog/suorituskerta-operaatio! (->int suorituskerta_id) :paivitys {:suorituskerta_id suorituskerta_id})
+      (auditlog/suorituskerta-operaatio! (->int suorituskerta_id) :paivitys suoritustiedot)
       (sql-util/update-unique suorituskerta
          (sql/set-fields (kerta->suorituskerta-db suoritustiedot))
          (sql/where {:suorituskerta_id (->int suorituskerta_id)}))
@@ -502,8 +503,8 @@
 
 (defn laheta!
   [suoritukset]
-  (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
-                                           :tila "ehdotettu"})
+  (doseq [suorituskerta-id suoritukset]
+    (auditlog/suorituskerta-operaatio! suorituskerta-id :paivitys {:tila "ehdotettu"}))
   (sql/update :suorituskerta
     (sql/set-fields {:tila "ehdotettu"
                      :ehdotusaika (sql/sqlfn now)
@@ -516,8 +517,8 @@
 
 (defn hyvaksy!
   [{:keys [hyvaksymispvm suoritukset] :as suoritusdata}]
-  (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
-                                           :tila "hyvaksytty"})
+  (doseq [suorituskerta-id suoritukset]
+    (auditlog/suorituskerta-operaatio! suorituskerta-id :paivitys {:tila "hyvaksytty"}))
   (sql/update suorituskerta
     (sql/set-fields {:tila "hyvaksytty"
                      :hyvaksymisaika (or (to-hki-local-date (parse-iso-date hyvaksymispvm)) (sql/sqlfn now))}) ; (sql/sqlfn now)
@@ -525,7 +526,7 @@
 
 (defn poista!
   [suorituskerta-id]
-  (auditlog/suoritus-operaatio! :poisto {:suoritus-id suorituskerta-id})
+  (auditlog/suorituskerta-operaatio! suorituskerta-id :poisto {:suoritus-id suorituskerta-id})
   ; TODO: delete-unique olisi siistimpi, mutta REST rajapinta olettaa ilmeisesti saavansa paluuarvona poistetun entityn
   (sql/delete :suorituskerta_arvioija
     (sql/where {:suorituskerta_id suorituskerta-id}))
@@ -536,8 +537,8 @@
 
 (defn palauta!
   [suoritukset]
-  (auditlog/suoritus-operaatio! :paivitys {:suoritukset suoritukset
-                                           :tila "luonnos"})
+  (doseq [suorituskerta-id suoritukset]
+    (auditlog/suorituskerta-operaatio! suorituskerta-id :paivitys {:tila "luonnos"}))
   (sql/update :suorituskerta
     (sql/set-fields {:tila "luonnos"
                      :hyvaksymisaika nil
