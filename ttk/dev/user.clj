@@ -63,6 +63,10 @@
 (defmacro with-testikayttaja
   [& body]
   `(binding [oph.korma.korma-auth/*current-user-oid* (promise)
-             oph.korma.korma-auth/*current-user-uid* oph.korma.korma-auth/default-test-user-uid]
+             oph.korma.korma-auth/*current-user-uid* oph.korma.korma-auth/default-test-user-uid
+;             *request-meta* {:user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36"
+;                             :session    "955d43a3-c02d-4ab8-a61f-141f29c44a84"
+;                             :ip         "192.168.50.1"}
+             ]
      (deliver oph.korma.korma-auth/*current-user-oid* oph.korma.korma-auth/default-test-user-oid)
      ~@body))
