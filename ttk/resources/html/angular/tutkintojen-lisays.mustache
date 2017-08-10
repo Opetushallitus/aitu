@@ -35,7 +35,7 @@
     <li ng-repeat="tutkinto in valitutTutkinnot" ng-show="valitutTutkinnot.length > 0">
       <span>{{tutkinto.tutkintotunnus + ' - '}}{{tutkinto.nimi | lokalisoi:tutkinto:'nimi'}}
         <span ng-show="tutkinto.peruste">({{tutkinto.peruste}})</span>
-        <span>, [[voimassaolo]]: {{tutkinto.tutkintoversio.voimassaoloTeksti}}</span>
+        <span>, [[voimassaolo]]: {{tutkinto.voimassaoloTeksti}}</span>
       </span>
       <button class="icon remove-icon-small" ng-click="poista()"></button>
     </li>

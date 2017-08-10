@@ -38,7 +38,7 @@
         (klikkaa-linkkia "Testi koulutusala")
         (klikkaa-linkkia "Testi opintoala")
         (->
-          (w/find-element {:xpath "//a[starts-with(., 'TU1 - Testialan tutkinto')]"})
+          (w/find-element {:xpath "//ul[contains(@class, 'tutkintovalitsin')]//a[contains(., 'TU1 - Testialan tutkinto')]"})
           (elementilla-luokka? "added")
           (is)))))
   (testing "Järjestämissopimuksen tutkintojen muokkaussivulla voi poistaa tutkintoja hyväksymällä confirm"
@@ -47,7 +47,7 @@
         (avaa-tutkintojen-muokkaussivu 1230)
         (klikkaa-linkkia "Testi koulutusala")
         (klikkaa-linkkia "Testi opintoala")
-        (w/click {:xpath "//a[starts-with(., 'TU1 - Testialan tutkinto')]"})
+        (w/click {:xpath "//ul[contains(@class, 'tutkintovalitsin')]//a[contains(., 'TU1 - Testialan tutkinto')]"})
         (odota-angular-pyyntoa)
         (w/click "button[ng-click=\"tallenna()\"]")
         (odota-dialogia #"Oletko varma")
@@ -63,7 +63,7 @@
         (avaa-tutkintojen-muokkaussivu 1230)
         (klikkaa-linkkia "Testi koulutusala")
         (klikkaa-linkkia "Testi opintoala")
-        (w/click {:xpath "//a[starts-with(., 'TU2 - Testialan tutkinto2')]"})
+         (w/click {:xpath "//ul[contains(@class, 'tutkintovalitsin')]//a[contains(., 'TU2 - Testialan tutkinto2')]"})
         (odota-angular-pyyntoa)
         (tallenna)
         (is (= (viestin-teksti) "Tutkintojen muokkaus onnistui"))
