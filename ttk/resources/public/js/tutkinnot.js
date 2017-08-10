@@ -136,19 +136,28 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       $scope.suodatettuTutkintorakenne = [];
       $scope.suodatus = false;
       var tutkinnotAlussa = [];
+      
       var entity = resource.get({}, function(r) {
-        var tutkinnot = _.map(r[config.tutkinnotProperty], function(tutkinto) {
-          tutkinto.tutkintoversio = lisaaVoimassaoloTeksti(tutkinto.tutkintoversio);
-          return tutkinto;
+         var tutkinnot = _.map(r[config.tutkinnotProperty], function(tutkinto) {
+        	// Toimikunnan toimialan tapauksessa tutkintoversio on undefined
+        	if (tutkinto.tutkintoversio !== undefined) {
+            	tutkinto.voimassaoloTeksti = generoiVoimassaoloTeksti(tutkinto.tutkintoversio);
+        	}
+            return tutkinto;
           });
-        tutkinnotAlussa = _.map(tutkinnot, function(tutkinto){return _.pick(tutkinto, ['tutkintotunnus', 'nimi_fi', 'nimi_sv', 'tutkintoversio_id', 'peruste', 'tutkintoversio.voimassa_alkupvm', 'tutkintoversio.voimassa_loppupvm']);});
-        $scope.valitutTutkinnot = tutkinnot;
+          tutkinnotAlussa = _.map(tutkinnot, function(tutkinto){return _.pick(tutkinto, ['tutkintotunnus', 'nimi_fi', 'nimi_sv', 'tutkintoversio_id', 'peruste', 'tutkintoversio.voimassa_alkupvm', 'tutkintoversio.voimassa_loppupvm']);});
+          $scope.valitutTutkinnot = tutkinnot;
       });
 
       varmistaPoistuminen.kysyVarmistusPoistuttaessa();
 
       haeTutkintorakenne();
-
+      //  tässä kohdassa:
+      // $scope.tutkintorakenne = kaikki tutkintojen relevantit tiedot
+      // $scope.valitutTutkinnot = valitun toimikunnan toimialaan nyt kuuluvat tutkinnot. Tämä on se taulukko, jota voidaan muuttaa tällä näytöllä.
+      // tutkinnotAlussa = UI:n valintaosuudessa näkyvä listaus tutkinnoista
+      // $scope.suodatettuTutkintorakenne = UI:ssa filtteröity lista tutkinnoista, joka näkyy ruudulla. Alussa suodatettu = kaikki tutkinnot..
+      
       var hakuEhtoMuuttunut = function(value, oldValue) {
         $scope.suodatus = value && value.length > 0;
         if(value !== oldValue) {
@@ -174,6 +183,8 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       };
 
       $scope.tallenna = function() {
+    	entity[config.tutkinnotProperty] = $scope.valitutTutkinnot;
+
         if(varmistaTallennus()) {
           varmistaPoistuminen.tallenna(resource.tutkinnot(entity),
             function() {
@@ -196,18 +207,18 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
         $scope.tutkintoRakenne = tutkintorakenneResource.query({peruste: true}, suodataTutkintorakenne);
       }
 
-      var lisaaVoimassaoloTeksti = function(tutkinto) {
-        var loppuPvm = (tutkinto.voimassa_loppupvm !== "01.01.2199") ? tutkinto.voimassa_loppupvm : "";         // TODO: Onko tälle parempaa keinoa?
-        var voimassaoloTeksti = $filter('voimassaoloAika')(tutkinto.voimassa_alkupvm, loppuPvm);
-        tutkinto.voimassaoloTeksti = voimassaoloTeksti;
-        return tutkinto;
+      var generoiVoimassaoloTeksti = function(tutkinto) {
+        var loppuPvm = (tutkinto.voimassa_loppupvm !== "01.01.2199") ? tutkinto.voimassa_loppupvm : "";  // TODO: Onko tälle parempaa keinoa?
+        var teksti =  $filter('voimassaoloAika')(tutkinto.voimassa_alkupvm, loppuPvm);
+        return teksti;
       };
 
       var generoiTutkinnoilleVoimassaoloTeksti = function (tutkintoRakenne) {
-        return _.map($scope.suodatettuTutkintorakenne, function(tutkinto) {
+        return _.map(tutkintoRakenne, function(tutkinto) {
             tutkinto.opintoala = _.map(tutkinto.opintoala, function(opintoala) {
               opintoala.nayttotutkinto = _.map(opintoala.nayttotutkinto, function(nayttotutkinto) {
-                return lisaaVoimassaoloTeksti(nayttotutkinto);
+            	nayttotutkinto.voimassaoloTeksti = generoiVoimassaoloTeksti(nayttotutkinto);
+            	return nayttotutkinto;
               });
               return opintoala;
               });
@@ -216,9 +227,9 @@ angular.module('tutkinnot', ['ngRoute', 'resources'])
       }
 
       function suodataTutkintorakenne() {
-        if($scope.tutkintoRakenne.$resolved) {
-          $scope.suodatettuTutkintorakenne = $filter('tutkintorakenneHakuFilter')($scope.tutkintoRakenne, $scope.tutkintoHakuehto);
-          $scope.suodatettuTutkintorakenne = generoiTutkinnoilleVoimassaoloTeksti($scope.suodatettuTutkintorakenne);  // Tämä toimi vain kun teki uuden sijoituksen näin.  Miksi ei voi käyttää väli-varria?
+        if ($scope.tutkintoRakenne.$resolved) {
+          var rajatutTutkinnot = $filter('tutkintorakenneHakuFilter')($scope.tutkintoRakenne, $scope.tutkintoHakuehto);
+          $scope.suodatettuTutkintorakenne = generoiTutkinnoilleVoimassaoloTeksti(rajatutTutkinnot);
         }
       }
 
