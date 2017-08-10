@@ -27,25 +27,21 @@
 
 ;; TODO: Viimeistele tämä ja ota käyttöön.
 ;; OPH-1966
-#_(defn ^:private logita-common-audit-logiin
-   "Logittaa OPH:n projektien yhteiseen audit-logiin"
-   [tieto oid tieto-id operaatio tiedot-map]
-   {:pre [(bound? #'ka/*current-user-oid*)]}
-   (let [data  {:operation   operaatio
+(defn ^:private ->common-audit-log-json-entry
+  "Logittaa OPH:n projektien yhteiseen audit-logiin"
+  [tieto oid tieto-id operaatio tiedot-map]
+  {:pre [(bound? #'ka/*current-user-oid*)]}
+  (let [data  {:operation   operaatio
                :user        {:oid @ka/*current-user-oid*}
                :resource    (name tieto)
                :resourceOid oid
                :id          (str tieto-id)
-                :delta       (reduce-kv
-                               (fn [result k v] (conj result {:op (operaatio operaatiot) :path (name k) :value v}))
+               :delta       (reduce-kv
+                              (fn [result k v] (conj result {:op (operaatio operaatiot) :path (name k) :value v}))
                               []
-                              tiedot-map)}
-         entry (common-audit-log/->audit-log-entry data)
-         ]
-     ;;
-     ;; TODO: Kirjoita logientry logifileen.
-     ;;
-     ))
+                              tiedot-map)}]
+    (common-audit-log/->audit-log-entry data)
+    ))
 
 (defn ^:private kirjoita!
   ([tieto oid tieto-id operaatio]
@@ -55,11 +51,10 @@
            (contains? operaatiot operaatio)
            (keyword? tieto)
            (map? tiedot-map)]}
-    (let [uid ka/*current-user-uid*
-          msg (str "uid: " uid " oper: " (operaatio operaatiot) " kohde: " (name tieto) " meta: (" tiedot-map ")")]
-      (binding [aitulog/*lisaa-uid-ja-request-id?* false]
-;        (logita-common-audit-logiin tieto oid tieto-id operaatio tiedot-map)    ;; TODO: Hoida tässä OPH:n projektien yhteiseen audit-logiin lisääminen, eli ota tämä käyttöön.
-        (log/info msg)))))
+    (binding [aitulog/*lisaa-uid-ja-request-id?* false]
+      (let [log-entry (->common-audit-log-json-entry tieto oid tieto-id operaatio tiedot-map)]
+        (log/info log-entry)
+        ))))
 
 (defn jarjestamissopimus-paivitys!
   [sopimusid diaarinumero]
