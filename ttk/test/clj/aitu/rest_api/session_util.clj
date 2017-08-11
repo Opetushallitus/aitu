@@ -13,6 +13,8 @@
     [infra.test.data :as testdata]
     [oph.common.infra.i18n :as i18n]
     [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
+     [oph.common.infra.common-audit-log :as common-audit-log]
+     [oph.common.infra.common-audit-log-test :as common-audit-log-test]    
     [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
 (def default-usermap
@@ -26,7 +28,8 @@
     (binding [ka/*current-user-uid* (:uid olemassaoleva-kayttaja)
               ka/*current-user-oid* (promise)
               i18n/*locale* testi-locale
-              *current-user-authmap* olemassaoleva-kayttaja]
+              *current-user-authmap* olemassaoleva-kayttaja
+              ]
       (deliver ka/*current-user-oid* (:oid olemassaoleva-kayttaja))
       (f))))
 
@@ -37,15 +40,24 @@
                    :request-method method
                    :params params))
 
+ (def http-headers
+  { "x-xsrf-token" "token"
+   "uid" (:uid default-usermap)
+   "user-agent" (:user-agent common-audit-log-test/test-request-meta)
+   "X-Forwarded-For" "192.168.50.1"})
+
+(def http-cookies
+  { "XSRF-TOKEN" {:value "token"}
+    "ring-session" {:value (:session common-audit-log-test/test-request-meta)}})
+
 (defn mock-json-post
   "Autentikoitu testikäyttäjä ja fake CSRF-token."
   [app url json-body]
   (with-auth-user
     #(peridot/request app url
        :request-method :post
-       :headers { "x-xsrf-token" "token"
-                  "uid" (:uid default-usermap)}
-       :cookies { "XSRF-TOKEN" {:value "token"}}
+       :headers http-headers
+       :cookies http-cookies
        :content-type "application/json; charset=utf-8"
        :body json-body)
     default-usermap))
@@ -56,9 +68,8 @@
     (with-auth-user
       #(peridot/request app url
          :request-method method
-         :headers { "x-xsrf-token" "token"
-                    "uid" (:uid user-map)}
-         :cookies { "XSRF-TOKEN" {:value "token"}}
+         :headers http-headers
+         :cookies http-cookies
          :params params)
       user-map))
   ([app url method params]
@@ -75,16 +86,18 @@
 (defn with-peridot
   "Alustaa app stackin ja Korman, mutta ei avaa transaktiota tietokantaan. Parametrina annettu f on funktio, joka ottaa parametrina peridot-session testikoodia varten."
   [f]
-  (let [asetukset
-        (-> oletusasetukset
-          (assoc-in [:cas-auth-server :enabled] true)
-          (assoc :development-mode true))
-        pool (alusta-korma! asetukset)
-        crout (palvelin/app asetukset)]
-    (try
-      (f crout)
-      (finally
-        (-> pool :pool :datasource .close)))))
+  (binding [ common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
+     (common-audit-log/konfiguroi-common-audit-lokitus common-audit-log-test/test-environment-meta)
+     (let [asetukset
+           (-> oletusasetukset
+             (assoc-in [:cas-auth-server :enabled] true)
+             (assoc :development-mode true))
+           pool (alusta-korma! asetukset)
+           crout (palvelin/app asetukset)]
+       (try
+         (f crout)
+         (finally
+           (-> pool :pool :datasource .close))))))
 
 (defn body-json [response]
   (cheshire/parse-string (slurp (:body response) :encoding "UTF-8") true))

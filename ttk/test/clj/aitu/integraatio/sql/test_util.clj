@@ -26,6 +26,8 @@
             [aitu.infra.kayttajaoikeudet-arkisto :as kayttajaoikeudet-arkisto]
             [aitu.integraatio.sql.test-data-util :refer [default-toimikunta]]
             [aitu.test-timeutil :refer [menneisyydessa tulevaisuudessa]]
+            [oph.common.infra.common-audit-log :as common-audit-log]
+            [oph.common.infra.common-audit-log-test :as common-audit-log-test]            
             oph.korma.korma))
 
 (def testikayttaja-uid "MAN-O-TEST")
@@ -70,8 +72,10 @@
     (luo-testikayttaja!) ; eri transaktio kuin loppuosassa!
     (binding [ka/*current-user-uid* uid ; testin aikana eri käyttäjä
               ka/*current-user-oid* (promise)
-              i18n/*locale* testi-locale]
+              i18n/*locale* testi-locale
+              common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
       (deliver ka/*current-user-oid* oid)
+      (common-audit-log/konfiguroi-common-audit-lokitus common-audit-log-test/test-environment-meta)
       ; avataan transaktio joka on voimassa koko kutsun (f) ajan
       (db/transaction
         (binding [ko/*current-user-authmap* (kayttajaoikeudet-arkisto/hae-oikeudet oid)]
