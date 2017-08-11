@@ -1,13 +1,11 @@
 (ns aitu.rest-api.session-util
     (:require
     aitu.compojure-util
-    [aitu.integraatio.sql.test-util :refer [tietokanta-fixture alusta-korma!]]
-    [aitu.integraatio.sql.test-util :refer :all]
+    [aitu.integraatio.sql.test-util :refer [tietokanta-fixture alusta-korma! with-authenticated-user]]
     [aitu.asetukset :refer [lue-asetukset oletusasetukset]]
     [aitu.palvelin :as palvelin]
     [peridot.core :as peridot]
     [cheshire.core :as cheshire]
-    [oph.korma.korma-auth :as ka]
     [oph.korma.korma-auth :as auth]
     [korma.db :as db]
     [infra.test.data :as testdata]
@@ -25,13 +23,8 @@
   ([f]
     (with-auth-user f default-usermap))
   ([f olemassaoleva-kayttaja]
-    (binding [ka/*current-user-uid* (:uid olemassaoleva-kayttaja)
-              ka/*current-user-oid* (promise)
-              i18n/*locale* testi-locale
-              *current-user-authmap* olemassaoleva-kayttaja
-              ]
-      (deliver ka/*current-user-oid* (:oid olemassaoleva-kayttaja))
-      (f))))
+    (binding [*current-user-authmap* olemassaoleva-kayttaja]
+      (with-authenticated-user f (:oid olemassaoleva-kayttaja) (:uid olemassaoleva-kayttaja)))))
 
 (defn mock-plain-request
   "Ei autentikoitua käyttäjää, eikä CSRF-tokeneita."

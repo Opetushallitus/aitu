@@ -65,26 +65,36 @@
         (finally
           (-> pool :pool :datasource .close))))))
 
+
+(defn with-authenticated-user
+  "Suorittaa funktion, sitoo sovelluksen vaatimat dynamic variablet."
+  ([f oid uid]
+    (binding [ka/*current-user-uid* uid
+              ka/*current-user-oid* (promise)
+              i18n/*locale* testi-locale 
+              common-audit-log/*request-meta* common-audit-log-test/test-request-meta
+              ]
+      (deliver ka/*current-user-oid* oid)
+      (f))))
+
 (defn tietokanta-fixture-oid
   "Annettu käyttäjätunnus sidotaan Kormalle testifunktion ajaksi."
   [f oid uid]
   (let [pool (alusta-korma!)]
     (luo-testikayttaja!) ; eri transaktio kuin loppuosassa!
-    (binding [ka/*current-user-uid* uid ; testin aikana eri käyttäjä
-              ka/*current-user-oid* (promise)
-              i18n/*locale* testi-locale
-              common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
-      (deliver ka/*current-user-oid* oid)
-      (common-audit-log/konfiguroi-common-audit-lokitus common-audit-log-test/test-environment-meta)
-      ; avataan transaktio joka on voimassa koko kutsun (f) ajan
-      (db/transaction
-        (binding [ko/*current-user-authmap* (kayttajaoikeudet-arkisto/hae-oikeudet oid)]
-          (try
-            (f)
-            (finally
-              (testdata/tyhjenna-testidata! oid)
-              (poista-testikayttaja!)))))
-      (-> pool :pool :datasource .close))))
+    ; testin aikana eri käyttäjä
+    (with-authenticated-user
+      #(do
+        (common-audit-log/konfiguroi-common-audit-lokitus common-audit-log-test/test-environment-meta)
+        ; avataan transaktio joka on voimassa koko kutsun (f) ajan
+        (db/transaction
+          (binding [ko/*current-user-authmap* (kayttajaoikeudet-arkisto/hae-oikeudet oid)]
+            (try
+              (f)
+              (finally
+                (testdata/tyhjenna-testidata! oid)
+                (poista-testikayttaja!)))))) oid uid)        
+      (-> pool :pool :datasource .close)))
 
 (defn tietokanta-fixture [f]
   (tietokanta-fixture-oid f testikayttaja-oid testikayttaja-uid))
