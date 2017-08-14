@@ -24,8 +24,7 @@
   ([f]
     (with-auth-user f default-usermap))
   ([f olemassaoleva-kayttaja]
-    (binding [*current-user-authmap* olemassaoleva-kayttaja]
-      (with-authenticated-user f (:oid olemassaoleva-kayttaja) (:uid olemassaoleva-kayttaja)))))
+    (with-authenticated-user f (:oid olemassaoleva-kayttaja) (:uid olemassaoleva-kayttaja))))
 
 (defn mock-plain-request
   "Ei autentikoitua käyttäjää, eikä CSRF-tokeneita."
