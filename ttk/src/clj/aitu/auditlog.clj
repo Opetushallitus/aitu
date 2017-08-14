@@ -25,7 +25,6 @@
                  :lisays "lisäys"
                  :paivitys "päivitys"})
 
-;; TODO: Viimeistele tämä ja ota käyttöön.
 ;; OPH-1966
 (defn ^:private ->common-audit-log-json-entry
   "Logittaa OPH:n projektien yhteiseen audit-logiin"
