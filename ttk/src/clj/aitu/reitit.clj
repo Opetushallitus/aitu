@@ -1,7 +1,7 @@
 (ns aitu.reitit
   (:require [clojure.pprint :refer [pprint]]
             [clojure.tools.logging :as log]
-
+            [oph.common.infra.common-audit-log :as common-auditlog]
             [cheshire.core :as json]
             [compojure.api.sweet :refer [GET api context swagger-routes]]
             [compojure.core :as c]
@@ -66,25 +66,39 @@
                         :base-url (-> asetukset :server :base-url)
                         :yllapitaja yllapitaja?})))
 
+; :middleware [wrap-tarkasta-csrf-token] 
+
+;{:user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36"
+;                        :session    "955d43a3-c02d-4ab8-a61f-141f29c44a84"
+;                        :ip         "192.168.50.1"}
+ 
+(defn ^:private req-metadata-auditlog-mocker
+  "Asettaa keksityn session id:n auditlogia varten. Vain e2e testauksen rajapintojen käyttöä varten."
+  [ring-handler]
+  (fn [request]
+    (let [meta (assoc common-auditlog/*request-meta* :session "faked")]      
+      (binding [common-auditlog/*request-meta* meta]
+        (ring-handler request)))))
+
 (defn testapi
   [asetukset]
   (if (kehitysmoodi? asetukset)
     (do
       (log/info "!! TEST-API reititetään!!")
       (c/routes
-        (c/context "/api/test/ttk" [] aitu.test-api.ttk/reitit)
-        (c/context "/api/test/tutkinto" [] aitu.test-api.tutkinto/reitit)
-        (c/context "/api/test/tutkintoversio" [] aitu.test-api.tutkintoversio/reitit)
-        (c/context "/api/test/tutkintotyyppi" [] aitu.test-api.tutkintotyyppi/reitit)
-        (c/context "/api/test/koulutusala" [] aitu.test-api.koulutusala/reitit)
-        (c/context "/api/test/opintoala" [] aitu.test-api.opintoala/reitit)
-        (c/context "/api/test/peruste" [] aitu.test-api.peruste/reitit)
-        (c/context "/api/test/koulutustoimija" [] aitu.test-api.koulutustoimija/reitit)
-        (c/context "/api/test/oppilaitos" [] aitu.test-api.oppilaitos/reitit)
-        (c/context "/api/test/jarjestamissopimus" [] aitu.test-api.jarjestamissopimus/reitit)
-        (c/context "/api/test/henkilo" [] aitu.test-api.henkilo/reitit)
-        (c/context "/api/test/e2e" [] aitu.test-api.e2e/reitit)
-        (c/context "/api/test/jarjesto" [] aitu.test-api.jarjesto/reitit)))
+        (c/context "/api/test/ttk" [] (c/wrap-routes aitu.test-api.ttk/reitit req-metadata-auditlog-mocker))
+        (c/context "/api/test/tutkinto" [] (c/wrap-routes   aitu.test-api.tutkinto/reitit req-metadata-auditlog-mocker))
+        (c/context "/api/test/tutkintoversio" [] (c/wrap-routes aitu.test-api.tutkintoversio/reitit req-metadata-auditlog-mocker  ))
+        (c/context "/api/test/tutkintotyyppi" [] (c/wrap-routes   aitu.test-api.tutkintotyyppi/reitit req-metadata-auditlog-mocker))
+        (c/context "/api/test/koulutusala" [] (c/wrap-routes  aitu.test-api.koulutusala/reitit  req-metadata-auditlog-mocker))
+        (c/context "/api/test/opintoala" [] (c/wrap-routes  aitu.test-api.opintoala/reitit req-metadata-auditlog-mocker))
+        (c/context "/api/test/peruste" [] (c/wrap-routes aitu.test-api.peruste/reitit req-metadata-auditlog-mocker  ))
+        (c/context "/api/test/koulutustoimija" [] (c/wrap-routes aitu.test-api.koulutustoimija/reitit req-metadata-auditlog-mocker  ))
+        (c/context "/api/test/oppilaitos" [] (c/wrap-routes  aitu.test-api.oppilaitos/reitit req-metadata-auditlog-mocker))
+        (c/context "/api/test/jarjestamissopimus" [] (c/wrap-routes   aitu.test-api.jarjestamissopimus/reitit req-metadata-auditlog-mocker))
+        (c/context "/api/test/henkilo" [] (c/wrap-routes aitu.test-api.henkilo/reitit req-metadata-auditlog-mocker ))
+        (c/context "/api/test/e2e" [] (c/wrap-routes aitu.test-api.e2e/reitit req-metadata-auditlog-mocker ))
+        (c/context "/api/test/jarjesto" [] (c/wrap-routes aitu.test-api.jarjesto/reitit req-metadata-auditlog-mocker  ))))
     (c/routes)))
 
 (defn reitit [asetukset]
