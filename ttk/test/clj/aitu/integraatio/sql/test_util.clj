@@ -65,7 +65,6 @@
         (finally
           (-> pool :pool :datasource .close))))))
 
-
 (defn with-authenticated-user
   "Suorittaa funktion, sitoo sovelluksen vaatimat dynamic variablet."
   ([f oid uid]

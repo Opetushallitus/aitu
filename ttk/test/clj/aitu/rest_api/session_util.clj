@@ -10,9 +10,10 @@
     [korma.db :as db]
     [infra.test.data :as testdata]
     [oph.common.infra.i18n :as i18n]
+                [clojure.tools.logging :as log]
     [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
-     [oph.common.infra.common-audit-log :as common-audit-log]
-     [oph.common.infra.common-audit-log-test :as common-audit-log-test]    
+    [oph.common.infra.common-audit-log :as common-audit-log]
+    [oph.common.infra.common-audit-log-test :as common-audit-log-test]    
     [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
 (def default-usermap
@@ -33,11 +34,14 @@
                    :request-method method
                    :params params))
 
- (def http-headers
-  { "x-xsrf-token" "token"
-   "uid" (:uid default-usermap)
-   "user-agent" (:user-agent common-audit-log-test/test-request-meta)
-   "X-Forwarded-For" "192.168.50.1"})
+(defn http-headers
+  ([]
+    (http-headers (:uid default-usermap)))
+  ([uid] 
+    {"x-xsrf-token" "token"
+     "uid" uid
+     "user-agent" (:user-agent common-audit-log-test/test-request-meta)
+     "X-Forwarded-For" "192.168.50.1"}))
 
 (def http-cookies
   { "XSRF-TOKEN" {:value "token"}
@@ -49,7 +53,7 @@
   (with-auth-user
     #(peridot/request app url
        :request-method :post
-       :headers http-headers
+       :headers (http-headers)
        :cookies http-cookies
        :content-type "application/json; charset=utf-8"
        :body json-body)
@@ -61,7 +65,7 @@
     (with-auth-user
       #(peridot/request app url
          :request-method method
-         :headers http-headers
+         :headers (http-headers (:uid user-map))
          :cookies http-cookies
          :params params)
       user-map))
