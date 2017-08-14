@@ -66,12 +66,6 @@
                         :base-url (-> asetukset :server :base-url)
                         :yllapitaja yllapitaja?})))
 
-; :middleware [wrap-tarkasta-csrf-token] 
-
-;{:user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36"
-;                        :session    "955d43a3-c02d-4ab8-a61f-141f29c44a84"
-;                        :ip         "192.168.50.1"}
- 
 (defn ^:private req-metadata-auditlog-mocker
   "Asettaa keksityn session id:n auditlogia varten. Vain e2e testauksen rajapintojen käyttöä varten."
   [ring-handler]
