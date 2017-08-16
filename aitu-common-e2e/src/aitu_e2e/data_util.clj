@@ -234,7 +234,7 @@
     (metodi (aitu-url (url-fn entity))
       {:headers {"Content-Type" "application/json; charset=utf-8"
                  "Accept-Language" "fi"
-                 "Cookie" "XSRF-TOKEN=e2e-xsrf-token"
+                 "Cookie" "XSRF-TOKEN=e2e-xsrf-token;ring-session=faked"
                  "X-XSRF-TOKEN" "e2e-xsrf-token"}
        :throw-entire-message true
        :body (json/generate-string entity)})))
