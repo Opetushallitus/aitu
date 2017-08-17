@@ -17,7 +17,7 @@
 (deftest ^:integraatio koulutustoimija-haku
   (let [crout (init-peridot!)]
     (run-with-db kt-testidata!
-      #(let [ei-tuloksia (-> (peridot/session crout)
+      #(let [yksi-tulos (-> (peridot/session crout)
                            (mock-request "/api/koulutustoimija/haku/ala" :get {:sopimuksia "kylla"
                                                                                :tunnus "924601"}))
              tuloksia (-> (peridot/session crout)
@@ -34,8 +34,8 @@
                                      (mock-request "/api/koulutustoimija/haku/ala" :get {:sopimuksia "kylla"
                                                                                          :tunnus ""}))
              ]
-        (is (= '()
-              (body-json (:response ei-tuloksia))))
+        (is (= '({:nimi_fi "Urheilupainotteinen koulutuskuntayhtymä", :nimi_sv nil, :ytunnus "1060155-5", :sopimusten_maara 1})
+              (body-json (:response yksi-tulos))))
 
         (is (= '({:nimi_fi "bar bar"          :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1}
                  {:nimi_fi "Testiopisto KT4", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT4", :sopimusten_maara 1}
@@ -51,7 +51,7 @@
         (is (= '({:nimi_fi "bar bar",         :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT1", :sopimusten_maara 1}
                  {:nimi_fi "Testiopisto BAR", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT2", :sopimusten_maara 1}
                  {:nimi_fi "Testiopisto KT5", :nimi_sv "Testikoulutustoimijan nimi (sv)", :ytunnus "KT5", :sopimusten_maara 1}
-;                 {:nimi_fi "Urheilupainotteinen koulutuskuntayhtymä", :nimi_sv nil, :ytunnus "1060155-5", :sopimusten_maara 1}
+                 {:nimi_fi "Urheilupainotteinen koulutuskuntayhtymä", :nimi_sv nil, :ytunnus "1060155-5", :sopimusten_maara 1}
                  )
               (body-json (:response kaikki-voimassaolevat))))
          ))))
