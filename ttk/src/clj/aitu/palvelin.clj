@@ -124,6 +124,9 @@
       handler)))
 
 (defn app [asetukset]
+  (let [hostname (-> asetukset :server :base-url java.net.URL. .getHost)
+        audit-asetukset (assoc aitu.asetukset/common-audit-log-asetukset :hostname hostname)]
+    (konfiguroi-common-audit-lokitus audit-asetukset))
   (json-gen/add-encoder org.joda.time.DateTime
                         (fn [c json-generator]
                           (.writeString json-generator (.toString c))))
@@ -161,9 +164,6 @@
     (let [asetukset (lue-asetukset oletus-asetukset)
           _ (deliver aitu.asetukset/asetukset asetukset)
           _ (konfiguroi-lokitus asetukset)
-          _ (let [hostname (-> asetukset :server :base-url java.net.URL. .getHost)
-                  audit-asetukset (assoc aitu.asetukset/common-audit-log-asetukset :hostname hostname)]
-              (konfiguroi-common-audit-lokitus audit-asetukset))
           _ (log/info "Käynnistetään Aitu" @build-id)
           _ (oph.korma.korma/luo-db (:db asetukset))
           upload-limit (* 10 1024 1024) ; max file upload (and general HTTP body) size in bytes

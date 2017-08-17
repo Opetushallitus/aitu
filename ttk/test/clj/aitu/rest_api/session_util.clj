@@ -75,7 +75,8 @@
   (let [asetukset
         (-> oletusasetukset
           (assoc-in [:cas-auth-server :enabled] true)
-          (assoc :development-mode true))
+          (assoc :development-mode true)
+          (assoc-in [:server :base-url] "http://localhost:8080"))
         _ (alusta-korma! asetukset)]
     (palvelin/app asetukset)))
 
@@ -87,7 +88,8 @@
      (let [asetukset
            (-> oletusasetukset
              (assoc-in [:cas-auth-server :enabled] true)
-             (assoc :development-mode true))
+             (assoc :development-mode true)
+             (assoc-in [:server :base-url] "http://localhost:8080"))
            pool (alusta-korma! asetukset)
            crout (palvelin/app asetukset)]
        (try
