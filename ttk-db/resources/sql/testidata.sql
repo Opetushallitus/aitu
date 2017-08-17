@@ -54,11 +54,11 @@ update nayttotutkinto set uusin_versio_id = -20000 where tutkintotunnus = '92712
 insert into toimikunta_ja_tutkinto(toimikunta, tutkintotunnus)
   values ('Gulo gulo', '924601');
   
-insert into jarjestamissopimus (jarjestamissopimusid, sopimusnumero, toimikunta, sopijatoimikunta, voimassa, oppilaitos, koulutustoimija)
-  values (-324601, '123456', 'Gulo gulo', 'Gulo gulo', true, '54545', '1060155-5');
+insert into jarjestamissopimus (jarjestamissopimusid, sopimusnumero, toimikunta, sopijatoimikunta, alkupvm, loppupvm, voimassa, oppilaitos, koulutustoimija)
+  values (-324601, '123456', 'Gulo gulo', 'Gulo gulo', to_date('2005-01-01', 'YYYY-MM-DD'), to_date('2080-01-01', 'YYYY-MM-DD'), true, '54545', '1060155-5');
 
-insert into sopimus_ja_tutkinto(jarjestamissopimusid, tutkintoversio)
-  values (-324601, -10000);
+insert into sopimus_ja_tutkinto(jarjestamissopimusid, tutkintoversio, alkupvm, loppupvm)
+  values (-324601, -10000, to_date('2005-01-01', 'YYYY-MM-DD'), to_date('2080-01-01', 'YYYY-MM-DD'));
 
 insert into suorittaja (suorittaja_id, etunimi, sukunimi, oid, hetu, rahoitusmuoto)
   values (-1, 'Orvokki', 'Opiskelija', 'fan.far.12345', '121212-912X', 1);
