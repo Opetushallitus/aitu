@@ -58,6 +58,12 @@
        :body json-body)
     default-usermap))
 
+(def ^:private testiasetukset
+  (-> oletusasetukset
+    (assoc-in [:cas-auth-server :enabled] true)
+    (assoc :development-mode true)
+    (assoc-in [:server :base-url] "http://localhost:8080")))
+
 (defn mock-request
   "Autentikoitu testikäyttäjä ja fake CSRF-token."
   ([app url method params user-map]
@@ -72,26 +78,15 @@
     (mock-request app url method params default-usermap)))
 
 (defn init-peridot! []
-  (let [asetukset
-        (-> oletusasetukset
-          (assoc-in [:cas-auth-server :enabled] true)
-          (assoc :development-mode true)
-          (assoc-in [:server :base-url] "http://localhost:8080"))
-        _ (alusta-korma! asetukset)]
-    (palvelin/app asetukset)))
+  (alusta-korma! testiasetukset)
+  (palvelin/app testiasetukset))
 
 (defn with-peridot
   "Alustaa app stackin ja Korman, mutta ei avaa transaktiota tietokantaan. Parametrina annettu f on funktio, joka ottaa parametrina peridot-session testikoodia varten."
   [f]
   (binding [ common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
-     (common-audit-log/konfiguroi-common-audit-lokitus common-audit-log-test/test-environment-meta)
-     (let [asetukset
-           (-> oletusasetukset
-             (assoc-in [:cas-auth-server :enabled] true)
-             (assoc :development-mode true)
-             (assoc-in [:server :base-url] "http://localhost:8080"))
-           pool (alusta-korma! asetukset)
-           crout (palvelin/app asetukset)]
+     (let [pool (alusta-korma! testiasetukset)
+           crout (palvelin/app testiasetukset)]
        (try
          (f crout)
          (finally
