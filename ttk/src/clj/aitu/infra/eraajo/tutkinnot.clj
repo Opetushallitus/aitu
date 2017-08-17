@@ -1,11 +1,9 @@
 (ns aitu.infra.eraajo.tutkinnot
   (:require [aitu.integraatio.koodistopalvelu :as koodisto]
-            [clojurewerkz.quartzite.jobs :as j
-             :refer [defjob]]
+            [clojurewerkz.quartzite.jobs :as j :refer [defjob]]
             [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
-            [oph.korma.korma-auth
-             :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
+            [oph.korma.korma-auth :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
             [aitu.infra.tutkinto-arkisto :as tutkinto-arkisto]
             [aitu.infra.opintoala-arkisto :as opintoala-arkisto]
             [aitu.infra.koulutusala-arkisto :as koulutusala-arkisto]

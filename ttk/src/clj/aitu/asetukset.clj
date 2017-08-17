@@ -103,8 +103,8 @@
                                             :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
                                             :password "salasana"
                                             :ssl false}
-                         :eperusteet-palvelu {:url "https://virkailija.opintopolku.fi/eperusteet-service/"}
-                         :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
+                         :eperusteet-palvelu  {:url "https://virkailija.opintopolku.fi/eperusteet-service/"}
+                         :koodistopalvelu     {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
                          :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
                          :eraajo false
                          :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.

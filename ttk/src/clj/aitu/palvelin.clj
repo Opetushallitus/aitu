@@ -127,6 +127,7 @@
   (let [hostname (-> asetukset :server :base-url java.net.URL. .getHost)
         audit-asetukset (assoc aitu.asetukset/common-audit-log-asetukset :hostname hostname)]
     (konfiguroi-common-audit-lokitus audit-asetukset))
+
   (json-gen/add-encoder org.joda.time.DateTime
                         (fn [c json-generator]
                           (.writeString json-generator (.toString c))))
