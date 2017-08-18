@@ -84,15 +84,25 @@
     (log/info "Päivitetään tutkintonimike " (:nimiketunnus tutkintonimike) ", muutokset " (dissoc tutkintonimike :nimiketunnus))
     (tutkinto-arkisto/lisaa-tai-paivita-tutkintonimike! tutkintoversio-id tutkintonimike)))
 
+(defn ^:private validi-muuttuneet-nimike? [nimike]
+  (cond
+    (nil? (:nimiketunnus nimike)) (do (log/warn "Nimikkeellä" (:nimiketunnus nimike) (or (:nimi_fi nimike) (:nimi_sv nimike)) "ei ole nimiketunnusta") false)
+    :else true))
+
+(defn ^:private validi-uudet-nimike? [nimike]
+  (cond
+    (nil? (:nimi_fi nimike))      (do (log/warn "Nimikkeellä" (:nimiketunnus nimike) (or (:nimi_fi nimike) (:nimi_sv nimike)) "ei ole suomenkielistä nimeä") false)
+    :else (validi-muuttuneet-nimike? nimike)))
+
 (defn ^:integration-api tallenna-tutkintonimikkeet! [tutkintoversio-id tutkintonimikkeet]
-  (when (seq tutkintonimikkeet)
-    (tutkinto-arkisto/poista-tutkinnon-tutkintonimikkeet! tutkintoversio-id))
   (let [uudet (for [nimike tutkintonimikkeet
-                    :when (vector? nimike)]
+                    :when (and (vector? nimike) (validi-uudet-nimike? (first nimike)))]
                 (first nimike))
         muuttuneet (for [nimike tutkintonimikkeet
-                         :when (map? nimike)]
+                         :when (and (map? nimike) (validi-muuttuneet-nimike? (uudet-arvot nimike)))]  ;; "uudet-arvot" pudottaa nil-valueiset avaimet pois
                      (uudet-arvot nimike))]
+    (when (or (seq uudet) (seq muuttuneet))
+      (tutkinto-arkisto/poista-tutkinnon-tutkintonimikkeet! tutkintoversio-id))
     (tallenna-uudet-tutkintonimikkeet! tutkintoversio-id uudet)
     (tallenna-muuttuneet-tutkintonimikkeet! tutkintoversio-id muuttuneet)))
 
@@ -106,15 +116,14 @@
 (defn ^:integration-api paivita-tutkinnot! [tutkintomuutokset]
   (let [opintoalat (set (map :opintoala_tkkoodi (opintoala-arkisto/hae-kaikki)))
         {:keys [tutkinnot tutkintonimikkeet]} tutkintomuutokset]
+    (println "tutkintonimikkeet: " tutkintonimikkeet "\n")
     (doseq [t (keep uusi tutkinnot)]
-      (if-not (contains? opintoalat (:opintoala t))
-        (log/warn "Tutkinnolla" (:tutkintotunnus t) (or (:nimi_fi t) (:nimi_sv t)) "ei ole opintoalaa")
-        (do
-          (log/info "Lisätään tutkinto " (:tutkintotunnus t))
-          (let [tutkintoversio-id (tutkinto-arkisto/lisaa-tutkinto-ja-versio! (assoc (dissoc t :osaamisalat :tutkinnonosat)
-                                                                                     :versio 1))
-                tutkintonimikkeet (map tutkintonimikkeet (:tutkintonimikkeet t))]
-            (tallenna-tutkintonimikkeet! tutkintoversio-id tutkintonimikkeet)))))
+      (cond
+        (not (contains? opintoalat (:opintoala t))) (log/warn "Tutkinnolla" (:tutkintotunnus t) (or (:nimi_fi t) (:nimi_sv t)) "ei ole opintoalaa")
+        (nil? (:tutkintotaso t))                    (log/warn "Tutkinnolla" (:tutkintotunnus t) (or (:nimi_fi t) (:nimi_sv t)) "ei ole tutkintotasoa")
+        :else (let [tutkintoversio-id (tutkinto-arkisto/lisaa-tutkinto-ja-versio! (-> t (dissoc :osaamisalat :tutkinnonosat) (assoc :versio 1)))
+                    tutkintonimikkeet (map tutkintonimikkeet (:tutkintonimikkeet t))]
+                (tallenna-tutkintonimikkeet! tutkintoversio-id tutkintonimikkeet))))
     (doseq [t (keep muuttunut tutkinnot)]
       (log/info "Päivitetään tutkinto " (:tutkintotunnus t) ", muutokset: " (dissoc t :tutkintotunnus))
       (let [tutkintoversio-id (paivita-tutkinto! t)
