@@ -17,9 +17,11 @@
      [clojure.test :refer :all]
      [clj-time.local :as time-local]
      [oph.log-util :as log-util]
+     [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
      [oph.common.infra.common-audit-log :as common-audit-log]
      [oph.common.infra.common-audit-log-test :as common-audit-log-test]
      [oph.korma.korma-auth :as ka]
+     [aitu.asetukset :refer [oletusasetukset]]
      [aitu.auditlog :as auditlog]))
 
 (defn ^:private log-through-with-mock-user
@@ -28,6 +30,7 @@
             ka/*current-user-oid* (promise)
             common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
     (deliver ka/*current-user-oid* "T-X-oid")
+    (konfiguroi-lokitus oletusasetukset)  ;; Tarpeen, jotta käytetty loglevel (info) enabloituu
     (common-audit-log/konfiguroi-common-audit-lokitus
       (common-audit-log-test/test-environment-meta "aitu"))
     (log-util/log-through f)))
