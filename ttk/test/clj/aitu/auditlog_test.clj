@@ -34,7 +34,7 @@
 (deftest test-jarjestamissopimus-paivitys
   (testing "logittaa oikein järjestämissopimuksen päivityksen"
     (let [msg (second (first (log-through-with-mock-user
-      #(auditlog/jarjestamissopimus-paivitys! 123 "12/12"))))]
+                               #(auditlog/jarjestamissopimus-paivitys! 123 "12/12"))))]
       (is (and
             (.contains msg
               "{\"operation\":\"päivitys\",\"type\":\"log\",\"hostname\":\"host\",\"applicationType\":\"virkailija\",\"delta\":[{\"op\":\"päivitys\",\"path\":\"sopimusid\",\"value\":123},{\"op\":\"päivitys\",\"path\":\"diaarinumero\",\"value\":\"12/12\"}],")
@@ -45,7 +45,7 @@
 (deftest test-jarjestamissopimus-lisays
   (testing "logittaa oikein järjestämissopimuksen lisäyksen"
     (let [msg (second (first (log-through-with-mock-user
-      #(auditlog/jarjestamissopimus-lisays! 123 "12/12"))))]
+                               #(auditlog/jarjestamissopimus-lisays! 123 "12/12"))))]
       (is (and
             (.contains msg
               "{\"operation\":\"lisäys\",\"type\":\"log\",\"hostname\":\"host\",\"applicationType\":\"virkailija\",\"delta\":[{\"op\":\"lisäys\",\"path\":\"sopimusid\",\"value\":123},{\"op\":\"lisäys\",\"path\":\"diaarinumero\",\"value\":\"12/12\"}],")
