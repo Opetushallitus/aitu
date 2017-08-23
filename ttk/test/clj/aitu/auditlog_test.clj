@@ -16,11 +16,11 @@
    (:require
      [clojure.test :refer :all]
      [clj-time.local :as time-local]
-     [oph.korma.korma-auth :as ka]
+     [oph.log-util :as log-util]
      [oph.common.infra.common-audit-log :as common-audit-log]
      [oph.common.infra.common-audit-log-test :as common-audit-log-test]
-     [aitu.auditlog :as auditlog]
-     [oph.log-util :refer :all]))
+     [oph.korma.korma-auth :as ka]
+     [aitu.auditlog :as auditlog]))
 
 (defn ^:private log-through-with-mock-user
   [f]
@@ -28,8 +28,9 @@
             ka/*current-user-oid* (promise)
             common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
     (deliver ka/*current-user-oid* "T-X-oid")
-    (common-audit-log/konfiguroi-common-audit-lokitus common-audit-log-test/test-environment-meta)
-    (log-through f)))
+    (common-audit-log/konfiguroi-common-audit-lokitus
+      (common-audit-log-test/test-environment-meta "aitu"))
+    (log-util/log-through f)))
 
 (deftest test-jarjestamissopimus-paivitys
   (testing "logittaa oikein järjestämissopimuksen päivityksen"
