@@ -20,7 +20,7 @@
      [oph.common.infra.common-audit-log :as common-audit-log]
      [oph.common.infra.common-audit-log-test :as common-audit-log-test]
      [aitu.auditlog :as auditlog]
-     [aitu.log-util :refer :all]))
+     [oph.log-util :refer :all]))
 
 (defn ^:private log-through-with-mock-user
   [f]
