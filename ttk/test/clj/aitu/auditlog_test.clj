@@ -35,10 +35,10 @@
   (testing "logittaa oikein järjestämissopimuksen päivityksen"
     (let [msg (second (first (log-through-with-mock-user
       #(auditlog/jarjestamissopimus-paivitys! 123 "12/12"))))]
-      (is (and 
+      (is (and
             (.contains msg
               "{\"operation\":\"päivitys\",\"type\":\"log\",\"hostname\":\"host\",\"applicationType\":\"virkailija\",\"delta\":[{\"op\":\"päivitys\",\"path\":\"sopimusid\",\"value\":123},{\"op\":\"päivitys\",\"path\":\"diaarinumero\",\"value\":\"12/12\"}],")
-            (.contains msg            
+            (.contains msg
                "\"user\":{\"oid\":\"T-X-oid\",\"ip\":\"192.168.50.1\",\"session\":\"955d43a3-c02d-4ab8-a61f-141f29c44a84\",\"userAgent\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36\"}}")
            )))))
 
@@ -46,10 +46,10 @@
   (testing "logittaa oikein järjestämissopimuksen lisäyksen"
     (let [msg (second (first (log-through-with-mock-user
       #(auditlog/jarjestamissopimus-lisays! 123 "12/12"))))]
-      (is (and 
+      (is (and
             (.contains msg
               "{\"operation\":\"lisäys\",\"type\":\"log\",\"hostname\":\"host\",\"applicationType\":\"virkailija\",\"delta\":[{\"op\":\"lisäys\",\"path\":\"sopimusid\",\"value\":123},{\"op\":\"lisäys\",\"path\":\"diaarinumero\",\"value\":\"12/12\"}],")
-            (.contains msg            
+            (.contains msg
                "\"user\":{\"oid\":\"T-X-oid\",\"ip\":\"192.168.50.1\",\"session\":\"955d43a3-c02d-4ab8-a61f-141f29c44a84\",\"userAgent\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36\"}}")
            )))))
 

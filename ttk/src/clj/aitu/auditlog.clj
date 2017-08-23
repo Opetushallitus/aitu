@@ -46,12 +46,11 @@
   ([tieto oid tieto-id operaatio]
     (kirjoita! tieto oid tieto-id operaatio {}))
   ([tieto oid tieto-id operaatio tiedot-map]
-    {:pre [(bound? #'ka/*current-user-uid*),
-           (contains? operaatiot operaatio)
+    {:pre [(contains? operaatiot operaatio)
            (keyword? tieto)
            (map? tiedot-map)]}
-    (binding [aitulog/*lisaa-uid-ja-request-id?* false]
-      (let [log-entry (->common-audit-log-json-entry tieto oid tieto-id operaatio tiedot-map)]
+    (let [log-entry (->common-audit-log-json-entry tieto oid tieto-id operaatio tiedot-map)]
+      (binding [aitulog/*lisaa-uid-ja-request-id?* false]
         (log/info log-entry)
         ))))
 

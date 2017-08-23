@@ -34,7 +34,7 @@
             oph.korma.korma
 
             [oph.common.infra.print-wrapper :refer [debug-request log-request-wrapper]]
-            [aitu.asetukset :refer [lue-asetukset oletusasetukset build-id kehitysmoodi? service-path]]
+            [aitu.asetukset :refer [asetukset oletusasetukset common-audit-log-asetukset lue-asetukset oletusasetukset build-id kehitysmoodi? service-path] :rename {asetukset asetukset-promise}]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.i18n :as i18n]
             [oph.common.infra.common-audit-log :refer [req-metadata-saver-wrapper konfiguroi-common-audit-lokitus]]
@@ -125,7 +125,7 @@
 
 (defn app [asetukset]
   (let [hostname (-> asetukset :server :base-url java.net.URL. .getHost)
-        audit-asetukset (assoc aitu.asetukset/common-audit-log-asetukset :hostname hostname)]
+        audit-asetukset (assoc common-audit-log-asetukset :hostname hostname)]
     (konfiguroi-common-audit-lokitus audit-asetukset))
 
   (json-gen/add-encoder org.joda.time.DateTime
@@ -163,7 +163,7 @@
 (defn ^:integration-api kaynnista! [oletus-asetukset]
   (try
     (let [asetukset (lue-asetukset oletus-asetukset)
-          _ (deliver aitu.asetukset/asetukset asetukset)
+          _ (deliver asetukset-promise asetukset)
           _ (konfiguroi-lokitus asetukset)
           _ (log/info "Käynnistetään Aitu" @build-id)
           _ (oph.korma.korma/luo-db (:db asetukset))
