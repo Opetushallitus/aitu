@@ -14,23 +14,23 @@
 (deftest ^:integraatio henkilo-haku-kenttien-nakyvyydet
   (let [crout (init-peridot!)]
     (binding [ common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
-      (common-audit-log/konfiguroi-common-audit-lokitus common-audit-log-test/test-environment-meta)
-      (run-with-db 
+      (common-audit-log/konfiguroi-common-audit-lokitus (common-audit-log-test/test-environment-meta "aitu"))
+      (run-with-db
         #(let ; [toimikunta-1 (lisaa-toimikunta-voimassaolevalle-kaudelle! {:nimi_fi "foo"})]
            [_ (lisaa-henkilo! {:henkiloid 1000
                                :etunimi "foo bar baz"
                                :puhelin "SIIKRIT"
                                :puhelin_julkinen false
-                               :jarjesto -1})]) 
+                               :jarjesto -1})])
         #(let [response-jarj-omat (-> (peridot/session crout)
                                     (mock-request "/api/henkilo/-1000" :get {} jarjesto-usermap)) ; Puhelinnumero julkinen = false
                response-admin (-> (peridot/session crout)
                                 (mock-request "/api/henkilo/-1000" :get {})) ; Puhelinnumero julkinen = false
                response-jarj-lisatty (-> (peridot/session crout)
-                                       (mock-request "/api/henkilo/1000" :get {} jarjesto-usermap))]  
+                                       (mock-request "/api/henkilo/1000" :get {} jarjesto-usermap))]
            (is (nil? (get (body-json (:response response-jarj-omat)) :puhelin)))
            (is (= "050-TIUKKA-PAIKKA" (get (body-json (:response response-admin)) :puhelin)))
            (is (nil? (get (body-json (:response response-jarj-lisatty)) :puhelin)))
-           
+
            (is (= (:status (:response response-admin)) 200)))
         jarjesto-usermap))))
