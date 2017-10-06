@@ -23,7 +23,7 @@ echo 'host    all             all             all  md5' >> "$PG_HBA"
 chown postgres:postgres "$PG_HBA"
 
 echo "listen_addresses = '*'" >> /var/lib/pgsql/9.4/data/postgresql.conf
-echo "aipal.kayttaja = '-'" >> /var/lib/pgsql/9.4/data/postgresql.conf
+echo "aitu.kayttaja = '-'" >> /var/lib/pgsql/9.4/data/postgresql.conf
 
 # kayntiin
 service postgresql-9.4 start
