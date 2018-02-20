@@ -116,7 +116,6 @@
 (defn ^:integration-api paivita-tutkinnot! [tutkintomuutokset]
   (let [opintoalat (set (map :opintoala_tkkoodi (opintoala-arkisto/hae-kaikki)))
         {:keys [tutkinnot tutkintonimikkeet]} tutkintomuutokset]
-    (println "tutkintonimikkeet: " tutkintonimikkeet "\n")
     (doseq [t (keep uusi tutkinnot)]
       (cond
         (not (contains? opintoalat (:opintoala t))) (log/warn "Tutkinnolla" (:tutkintotunnus t) (or (:nimi_fi t) (:nimi_sv t)) "ei ole opintoalaa")

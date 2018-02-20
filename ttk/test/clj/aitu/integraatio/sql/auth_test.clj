@@ -23,7 +23,7 @@
             [aitu.integraatio.sql.test-util :refer [tietokanta-fixture testikayttaja-oid tietokanta-fixture-oid testi-locale alusta-korma!]]
             [aitu.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
             [aitu.toimiala.kayttajaroolit :refer [kayttajaroolit]]
-            [aitu.log-util :refer [log-through]]))
+            [oph.log-util :refer [log-through]]))
 
 (deftest ^:integraatio auth-user-set!
   (testing "testaa että authorization systeemi audit-trailia varten toimii"

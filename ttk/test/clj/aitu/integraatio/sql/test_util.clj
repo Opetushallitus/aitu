@@ -27,7 +27,7 @@
             [aitu.integraatio.sql.test-data-util :refer [default-toimikunta]]
             [aitu.test-timeutil :refer [menneisyydessa tulevaisuudessa]]
             [oph.common.infra.common-audit-log :as common-audit-log]
-            [oph.common.infra.common-audit-log-test :as common-audit-log-test]            
+            [oph.common.infra.common-audit-log-test :as common-audit-log-test]
             oph.korma.korma))
 
 (def testikayttaja-uid "MAN-O-TEST")
@@ -43,16 +43,16 @@
   (testdata/poista-testikayttaja! testikayttaja-oid))
 
 (defn alusta-korma!
+  ([]
+    (let [dev-asetukset (assoc oletusasetukset :development-mode true)
+          asetukset (lue-asetukset dev-asetukset)]
+      (alusta-korma! asetukset)))
   ([asetukset]
     (let [db-asetukset (merge-with #(or %2 %1)
                          (:db asetukset)
                          {:host (System/getenv "AMTU_DB_HOST")
                           :port (System/getenv "AMTU_DB_PORT")})]
-      (oph.korma.korma/luo-db db-asetukset)))
-    ([]
-    (let [dev-asetukset (assoc oletusasetukset :development-mode true)
-          asetukset (lue-asetukset dev-asetukset)]
-      (alusta-korma! asetukset))))
+      (oph.korma.korma/luo-db db-asetukset))))
 
 ; (user/with-testikayttaja (aitu.integraatio.sql.test-util/with-db #(println (arkisto/hae-ehdoilla {:tunnus "T1" :sopimuksia "ei"}))))
 (defn with-db
@@ -70,7 +70,7 @@
   ([f oid uid]
     (binding [ka/*current-user-uid* uid
               ka/*current-user-oid* (promise)
-              i18n/*locale* testi-locale 
+              i18n/*locale* testi-locale
               common-audit-log/*request-meta* common-audit-log-test/test-request-meta
               ]
       (deliver ka/*current-user-oid* oid)
@@ -84,7 +84,7 @@
     ; testin aikana eri käyttäjä
     (with-authenticated-user
       #(do
-        (common-audit-log/konfiguroi-common-audit-lokitus common-audit-log-test/test-environment-meta)
+        (common-audit-log/konfiguroi-common-audit-lokitus (common-audit-log-test/test-environment-meta "aitu"))
         ; avataan transaktio joka on voimassa koko kutsun (f) ajan
         (db/transaction
           (binding [ko/*current-user-authmap* (kayttajaoikeudet-arkisto/hae-oikeudet oid)]
@@ -92,7 +92,7 @@
               (f)
               (finally
                 (testdata/tyhjenna-testidata! oid)
-                (poista-testikayttaja!)))))) oid uid)        
+                (poista-testikayttaja!)))))) oid uid)
       (-> pool :pool :datasource .close)))
 
 (defn tietokanta-fixture [f]

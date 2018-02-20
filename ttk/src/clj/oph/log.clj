@@ -13,20 +13,20 @@
 ;; European Union Public Licence for more details.
 
 (ns oph.log
-  (:require oph.common.infra.print-wrapper
-            oph.korma.korma-auth
-            [clojure.tools.logging]
-            [robert.hooke :refer [add-hook]]))
+  (:require [clojure.tools.logging :as log]
+            [robert.hooke :refer [add-hook]]
+            [oph.common.infra.print-wrapper :as print-wrapper]
+            [oph.korma.korma-auth :as ka]))
 
 (def ^:dynamic *lisaa-uid-ja-request-id?* true)
 
 (defn lisaa-uid-ja-requestid
   [f logger level throwable message]
-  (let [uid (if (bound? #'oph.korma.korma-auth/*current-user-uid*)
-              oph.korma.korma-auth/*current-user-uid*
+  (let [uid (if (bound? #'ka/*current-user-uid*)
+              ka/*current-user-uid*
               "-")
-        requestid (if (bound? #'oph.common.infra.print-wrapper/*requestid*)
-                    oph.common.infra.print-wrapper/*requestid*
+        requestid (if (bound? #'print-wrapper/*requestid*)
+                    print-wrapper/*requestid*
                     "-")
         message-with-id (str "[User: " uid ", request: " requestid "] " message)]
     (if *lisaa-uid-ja-request-id?*
@@ -34,4 +34,4 @@
       (f logger level throwable message))))
 
 (defn lisaa-uid-ja-requestid-hook []
-  (add-hook #'clojure.tools.logging/log* #'lisaa-uid-ja-requestid))
+  (add-hook #'log/log* #'lisaa-uid-ja-requestid))

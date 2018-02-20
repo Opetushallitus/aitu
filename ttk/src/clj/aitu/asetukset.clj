@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aitu.asetukset
-  (:require [clojure.java.io :refer [file resource]]
+  (:require [clojure.java.io :as io]
             clojure.set
             [clojure.tools.logging :as log]
             oph.log
@@ -128,7 +128,7 @@
                                  :service-name     "aitu"
                                  :application-type "virkailija"})
 
-(def build-id (delay (if-let [r (resource "build-id.txt")]
+(def build-id (delay (if-let [r (io/resource "build-id.txt")]
                        (.trim (slurp r :encoding "UTF-8"))
                        "dev")))
 
