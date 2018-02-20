@@ -597,9 +597,9 @@
                       _ (reset! solu "tutkintotilaisuus, loppupvm")
                       suoritus-loppupvm (date-or-nil suoritus 9) ; voi olla tyhjä jos osaamisen tunnustaminen
                       _ (reset! solu "paikka")
-                      paikka (get-cell-str suoritus 10)
+                      paikka (get-cell-str suoritus 10 "-")
                       _ (reset! solu "järjestelyt/työtehtävät")
-                      jarjestelyt (get-cell-str suoritus 11)
+                      jarjestelyt (get-cell-str suoritus 11 "-")
                       _ (reset! solu "arviointikokous pvm")
                       arviointikokous-pvm (date-or-nil suoritus 12) ; voi olla tyhjä jos osaamisen tunnustaminen
                       _ (reset! solu "arvosana")
@@ -614,15 +614,15 @@
                       korotus (excel->boolean (get-cell-str suoritus 16 "Ei"))
                   
                       _ (reset! solu "arvioija1")
-                      arvioija1 (get-cell-str suoritus 18)
+                      arvioija1 (get-cell-str suoritus 18 "-")
                       _ (reset! solu "arvioija2")
-                      arvioija2 (get-cell-str suoritus 19)
-                      _ (reset! solu "arvioija3")
-                      arvioija3 (get-cell-str suoritus 20)
+                      arvioija2 (get-cell-str suoritus 19 "-")
+                     _ (reset! solu "arvioija3")
+                     arvioija3 (get-cell-str suoritus 20 "-")
                     
-                      a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
-                      a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
-                      a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
+                     a1 (hae-arvioija-id arvioija1 arvioijatiedot db-arvioijat)
+                     a2 (hae-arvioija-id arvioija2 arvioijatiedot db-arvioijat)
+                     a3 (hae-arvioija-id arvioija3 arvioijatiedot db-arvioijat)
 
                       vastuutoimikunta (:toimikunta (suoritus-arkisto/hae-vastuutoimikunta tutkintotunnus (parse-kieli suorituskieli)))
                       suorituskerta-map {:suorittaja suorittaja-id
